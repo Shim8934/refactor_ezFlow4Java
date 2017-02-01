@@ -114,8 +114,8 @@
 			SELECT 
 				containerid,
 				usedepid,
-				(SELECT displayname FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE cn = A.usedepid) as containerTypeName,
-				(SELECT displayname2 FROM TBLDEPTMASTER@DBLK_EZHRMASTER WHERE cn = A.usedepid) as containerTypeName2
+				(SELECT displayname FROM TBLDEPTMASTER WHERE cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBLDEPTMASTER WHERE cn = A.usedepid) as containerTypeName2
 			FROM
 				EZAPPROVALG_${companyID}.TBCONTAINERUSEDEP A
 			WHERE
@@ -249,13 +249,14 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskName" parameterClass="Map" -->
-<!-- 		resultClass="ApprGTaskVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKNAME(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getTaskName" parameterClass="Map" resultClass="ApprGTaskVO">
+	<!-- <procedure id="EzApprovalGAdmin.getTaskName" parameterClass="Map" -->
+	<!-- resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKNAME(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskName" parameterClass="Map"
+		resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
 				taskname,
@@ -269,14 +270,14 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskFullList" -->
-<!-- 		parameterClass="Map" resultClass="ApprGTaskVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKFULLLIST(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getTaskFullList"
-		parameterClass="Map" resultClass="ApprGTaskVO">
+	<!-- <procedure id="EzApprovalGAdmin.getTaskFullList" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKFULLLIST(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskFullList" parameterClass="Map"
+		resultClass="ApprGTaskVO">
 		<![CDATA[
 			SELECT
 				processdeptcode,
@@ -309,7 +310,7 @@
 			WHERE
 				TENANT_ID = #tenantID#
 		]]>
-		
+
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
@@ -327,12 +328,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->
-<!-- 		parameterClass="Map" resultClass="ApprGTaskDeptInfoVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDEPTINFO(#v_TASKCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptInfo" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskDeptInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDEPTINFO(#v_TASKCODE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCodeDeptInfo"
 		parameterClass="Map" resultClass="ApprGTaskDeptInfoVO">
 		<![CDATA[
@@ -353,12 +355,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getSealList" parameterClass="Map" -->
-<!-- 		resultClass="ApprGSealInfoVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETSEALLIST(#v_LISTFLAG#, #v_PMULTIDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getSealList" parameterClass="Map" -->
+	<!-- resultClass="ApprGSealInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETSEALLIST(#v_LISTFLAG#, #v_PMULTIDATA#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getSealList" parameterClass="Map"
 		resultClass="ApprGSealInfoVO">
 		<isEqual property="v_PMULTIDATA" compareValue="1">
@@ -382,7 +385,7 @@
 						regdate DESC
 				]]>
 			</isEqual>
-			
+
 			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
@@ -406,7 +409,7 @@
 				]]>
 			</isNotEqual>
 		</isEqual>
-		
+
 		<isNotEqual property="v_PMULTIDATA" compareValue="1">
 			<isEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
@@ -426,7 +429,7 @@
 						regdate DESC
 				]]>
 			</isEqual>
-			
+
 			<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 				<![CDATA[
 					SELECT
@@ -452,14 +455,15 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getSealDeptList" -->
-<!-- 		parameterClass="Map" resultClass="ApprGSealInfoVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getSealDeptList"
-		parameterClass="Map" resultClass="ApprGSealInfoVO">
+	<!-- <procedure id="EzApprovalGAdmin.getSealDeptList" -->
+	<!-- parameterClass="Map" resultClass="ApprGSealInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETSEALDEPTLIST(#v_LISTFLAG#, #v_DEPTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getSealDeptList" parameterClass="Map"
+		resultClass="ApprGSealInfoVO">
 		<isEqual property="v_LISTFLAG" compareValue="ADMIN">
 			<![CDATA[
 				SELECT
@@ -483,7 +487,7 @@
 					regdate DESC
 			]]>
 		</isEqual>
-		
+
 		<isNotEqual property="v_LISTFLAG" compareValue="ADMIN">
 			<![CDATA[
 				SELECT
@@ -511,12 +515,16 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.searchManageAprDocList" -->
-<!-- 		parameterClass="Map" resultClass="ApprGAprDocInfoVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SEARCHMANAGEAPRDOCLIST(#v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.searchManageAprDocList" -->
+	<!-- parameterClass="Map" resultClass="ApprGAprDocInfoVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SEARCHMANAGEAPRDOCLIST(#v_SUBQUERY#, 
+		#v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #v_DOCNUMBER#, 
+		#v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, 
+		#v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, 
+		#v_LANGTYPE#, #v_APPROVUSER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
 		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
 		<![CDATA[
@@ -594,7 +602,7 @@
 						WHERE
 							TENANT_ID = #tenantID#
 		]]>
-		
+
 		<isNotEqual property="v_APPROVUSER" compareValue="">
 			<![CDATA[
 				AND
@@ -619,84 +627,84 @@
 			AND
 				(startdate IS NOT NULL)
 		]]>
-		
+
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
 					docno LIKE '%' || #v_DOCNUMBER# || '%'
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
 					doctitle LIKE '%' || #v_DOCTITLE# || '%'
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
 					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
 					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_FORMID" compareValue="">
 			<![CDATA[
 				AND
 					formid = #v_FORMID#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_DOCSTATE" compareValue="">
 			<![CDATA[
 				AND
 					docstate = #v_DOCSTATE#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_STARTDATE1" compareValue="">
 			<![CDATA[
 				AND
 					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_STARTDATE2" compareValue="">
 			<![CDATA[
 				AND
 					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_ENDDATE1" compareValue="">
 			<![CDATA[
 				AND
 					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_ENDDATE2" compareValue="">
 			<![CDATA[
 				AND
 					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_SUBQUERY" compareValue="">
 			<![CDATA[
 				AND
 					#v_SUBQUERY#
 			]]>
 		</isNotEqual>
-		
+
 		<isNotEqual property="v_ORDEROPTION" compareValue="">
 			<isEqual property="v_ORDEROPTION" compareValue="StartDate">
 				<![CDATA[
@@ -704,7 +712,7 @@
 						#v_ORDEROPTION#
 				]]>
 			</isEqual>
-			
+
 			<isNotEqual property="v_ORDEROPTION" compareValue="StartDate">
 				<![CDATA[
 					ORDER BY
@@ -713,7 +721,7 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-		
+
 		<isEqual property="v_ORDEROPTION" compareValue="">
 			<![CDATA[
 				ORDER BY
@@ -727,7 +735,7 @@
 			WHERE
 				rnum <= #v_PAGESIZE#) A
 		]]>
-		
+
 		<isNotEqual property="v_ORDEROPTION2" compareValue="">
 			<isEqual property="v_ORDEROPTION2" compareValue="StartDate">
 				<![CDATA[
@@ -735,7 +743,7 @@
 						#v_ORDEROPTION2#
 				]]>
 			</isEqual>
-			
+
 			<isNotEqual property="v_ORDEROPTION2" compareValue="StartDate">
 				<![CDATA[
 					ORDER BY
@@ -744,7 +752,7 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-		
+
 		<isEqual property="v_ORDEROPTION2" compareValue="">
 			<![CDATA[
 				ORDER BY
@@ -761,12 +769,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getGroupDept" parameterClass="Map" -->
-<!-- 		resultClass="ApprGFormVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETFORMCONTAINERUSEGROUP(#v_FORMCONTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getGroupDept" parameterClass="Map" -->
+	<!-- resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETFORMCONTAINERUSEGROUP(#v_FORMCONTID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getGroupDept" parameterClass="Map"
 		resultClass="ApprGFormVO">
 		<![CDATA[
@@ -781,14 +790,15 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getFormContent" -->
-<!-- 		parameterClass="Map" resultClass="ApprGFormVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETFORMCONTENT(#v_PFORMID#, #v_PLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getFormContent"
-		parameterClass="Map" resultClass="ApprGFormVO">
+	<!-- <procedure id="EzApprovalGAdmin.getFormContent" -->
+	<!-- parameterClass="Map" resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETFORMCONTENT(#v_PFORMID#, #v_PLANG#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
+		resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
 				formcontid,
@@ -808,14 +818,14 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->
-<!-- 		parameterClass="Map" resultClass="ApprGFormVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETFORMRECVADMIN(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getFormRecvAdmin"
-		parameterClass="Map" resultClass="ApprGFormVO">
+	<!-- <procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->
+	<!-- parameterClass="Map" resultClass="ApprGFormVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETFORMRECVADMIN(#v_FORMID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
+		resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
 				deptid
@@ -830,14 +840,15 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
-<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, #v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getTaskCategotyTree"
-		remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO">
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGTaskVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYTREE(#v_CATETYPE#, 
+		#v_PARENTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCategotyTree" remapResults="true"
+		parameterClass="Map" resultClass="ApprGTaskVO">
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				SELECT
@@ -895,14 +906,15 @@
 		</isEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getReceiveGroupInfo" -->
-<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, #v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getReceiveGroupInfo"
-		remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+	<!-- <procedure id="EzApprovalGAdmin.getReceiveGroupInfo" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETRECEIVEGROUPINFO(#v_MAINID#, 
+		#v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true"
+		parameterClass="Map" resultClass="ApprGAdminReceiveVO">
 		<isEqual property="v_MODE" compareValue="ITEM">
 			<![CDATA[
 				SELECT
@@ -950,16 +962,18 @@
 				]]>
 			</isNotEqual>
 		</isNotEqual>
-		
+
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskHistory" remapResults="true" -->
-<!-- 		parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKHISTORY(#v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getTaskHistory"		remapResults="true"		parameterClass="Map"		resultClass="ApprGTaskCodeHistoryVO">
+	<!-- <procedure id="EzApprovalGAdmin.getTaskHistory" remapResults="true" -->
+	<!-- parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKHISTORY(#v_TASKCODE#, #v_LANGTYPE#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskHistory" remapResults="true"
+		parameterClass="Map" resultClass="ApprGTaskCodeHistoryVO">
 		<isEqual property="v_LANGTYPE" compareValue="1">
 			<isNotEqual property="v_TASKCODE" compareValue="">
 				<![CDATA[
@@ -1049,12 +1063,13 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getDeptTranSendDocCount" -->
-<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETDEPTTRANSENDDOCCOUNT(#v_MODE#, #v_FROM#, #v_TO#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getDeptTranSendDocCount" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETDEPTTRANSENDDOCCOUNT(#v_MODE#, 
+		#v_FROM#, #v_TO#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getDeptTranSendDocCount"
 		remapResults="true" parameterClass="Map" resultClass="ApprGReceiveDocVO">
 		<isEqual property="v_LANGTYPE" compareValue="1">
@@ -1217,14 +1232,15 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getUserDocCount" -->
-<!-- 		remapResults="true" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETUSERDOCCOUNT(#v_APRTYPE#, #v_FROM#, #v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getUserDocCount"
-		remapResults="true" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<!-- <procedure id="EzApprovalGAdmin.getUserDocCount" -->
+	<!-- remapResults="true" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETUSERDOCCOUNT(#v_APRTYPE#, #v_FROM#, 
+		#v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getUserDocCount" remapResults="true"
+		parameterClass="Map" resultClass="ApprGAprLineVO">
 		<![CDATA[
 			SELECT
 				aprmemberdeptid,
@@ -1255,12 +1271,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteContainerType" -->
-<!-- 		parameterClass="Map" resultClass="String"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETECONTAINERTYPE(#v_CONTTYPEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteContainerType" -->
+	<!-- parameterClass="Map" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETECONTAINERTYPE(#v_CONTTYPEID#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.deleteContainerTypeSelect"
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1280,7 +1297,7 @@
 				TBCONTAINER.TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
+
 	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete1"
 		parameterClass="Map">
 		<![CDATA[
@@ -1292,7 +1309,7 @@
         		TENANT_ID = #tenantID#
 		]]>
 	</delete>
-	
+
 	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete2"
 		parameterClass="Map">
 		<![CDATA[
@@ -1305,12 +1322,15 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map" -->
-<!-- 		resultClass="String"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, #v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, #v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.setFormData" parameterClass="Map" -->
+	<!-- resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SETFORMDATA(#iv_PFORMID#, #v_PFORMCONTAINERID#, 
+		#v_PFORMFORMAT#, #v_PYEAR#, #v_PFORMNAME#, #v_PFORMNAME2#, #v_PFORMDESCRIPT#, 
+		#v_PFORMKIND#, #v_PCOMPANYID#, #v_PFORMCONNFLAG#, #v_PFORMRECVGROUPDATA#, 
+		#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.setFormDataSelect" parameterClass="Map"
 		resultClass="String">
 		<![CDATA[
@@ -1322,7 +1342,7 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
+
 	<insert id="EzApprovalGAdmin.setFormDataInsert1" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBFORMINFO
@@ -1347,7 +1367,7 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
+
 	<update id="EzApprovalGAdmin.setFormDataUpdate" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1366,7 +1386,7 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</update>
-	
+
 	<delete id="EzApprovalGAdmin.setFormDataDelete" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -1377,7 +1397,7 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</delete>
-	
+
 	<insert id="EzApprovalGAdmin.setFormDataInsert2" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBFORMRECV
@@ -1392,13 +1412,14 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
-<!-- 	<procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
-<!-- 		parameterClass="Map" resultClass="String"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SETCONTAINERIDFORDOC1(#v_CONTTYPEID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+
+	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
+	<!-- parameterClass="Map" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SETCONTAINERIDFORDOC1(#v_CONTTYPEID#, 
+		#v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.setContainerIDForDoc1"
 		parameterClass="Map" resultClass="String">
 		<![CDATA[
@@ -1415,12 +1436,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategoryDuplicate" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYDUPLICATE(#v_CATETYPE#, 
+		#v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCategoryDuplicate"
 		remapResults="true" parameterClass="Map" resultClass="Integer">
 		<isEqual property="v_CATETYPE" compareValue="1">
@@ -1462,12 +1484,13 @@
 		</isEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, #v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCategoryNodeExist" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCATEGORYNODEEXIST(#v_CATETYPE#, 
+		#v_CATECODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCategoryNodeExist"
 		remapResults="true" parameterClass="Map" resultClass="Integer">
 		<isEqual property="v_CATETYPE" compareValue="1">
@@ -1514,12 +1537,13 @@
 		</isEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDuplicate" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDUPLICATE(#v_TASKCODE#, 
+		#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCodeDuplicate"
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1534,12 +1558,13 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCodeNodeExist" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODENODEEXIST(#v_TASKCODE#, #v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeNodeExist" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODENODEEXIST(#v_TASKCODE#, 
+		#v_DEPTID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCodeNodeExist"
 		parameterClass="Map" resultClass="Integer">
 		<isEqual property="v_DEPTID" compareValue="">
@@ -1570,19 +1595,20 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.getTaskCodeDeptCnt" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDEPTCNT(#v_TASKCODE#, #v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.getTaskCodeDeptCnt"
-		parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzApprovalGAdmin.getTaskCodeDeptCnt" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_GETTASKCODEDEPTCNT(#v_TASKCODE#, 
+		#v_DEPTCODE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.getTaskCodeDeptCnt" parameterClass="Map"
+		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NCL(COUNT(taskcode), 0)
+				NVL(COUNT(taskcode), 0)
 			FROM
-				TBTASK_DEPTINFO 
+				EZAPPROVALG_${companyID}.TBTASK_DEPTINFO 
 			WHERE
 				taskcode = #v_TASKCODE#
 			AND
@@ -1592,12 +1618,15 @@
 		]]>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.searchManageAprDocListCount" -->
-<!-- 		parameterClass="Map" resultClass="Integer"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SEARCHMANAGEAPRDOCLISTCOU(#v_SUBQUERY#, #v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, #v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.searchManageAprDocListCount" -->
+	<!-- parameterClass="Map" resultClass="Integer"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SEARCHMANAGEAPRDOCLISTCOU(#v_SUBQUERY#, 
+		#v_DOCNUMBER#, #v_DOCTITLE#, #v_DRAFTER#, #v_DRAFTER2#, #v_DEPTNAME#, #v_DEPTNAME2#, 
+		#v_FORMID#, #v_DOCSTATE#, #v_STARTDATE1#, #v_STARTDATE2#, #v_ENDDATE1#, #v_ENDDATE2#, 
+		#v_LANGTYPE#, #v_APPROVUSER#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocListCount"
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -1614,7 +1643,7 @@
 				WHERE
 					TBAPRLINEINFO.TENANT_ID = #tenantID#
 		]]>
-		
+
 		<isNotEqual property="v_APPROVUSER" compareValue="">
 			<![CDATA[
 				AND
@@ -1641,7 +1670,7 @@
 			AND
 				TBAPRDOCINFO.TENANT_ID = #tenantID#
 		]]>
-		
+
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
@@ -1710,12 +1739,13 @@
 		</isNotEqual>
 	</select>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertContainerType" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTCONTAINERTYPE(#v_CONTTYPENAME#, #v_CONTTYPENAME2#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTCONTAINERTYPE(#v_CONTTYPENAME#, 
+		#v_CONTTYPENAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<insert id="EzApprovalGAdmin.insertContainerType"
 		parameterClass="Map">
 		<![CDATA[
@@ -1737,14 +1767,13 @@
 		]]>
 	</insert>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteContainer" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETECONTAINER(#v_CONTID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<delete id="EzApprovalGAdmin.deleteContainer1"
-		parameterClass="Map">
+	<!-- <procedure id="EzApprovalGAdmin.deleteContainer" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETECONTAINER(#v_CONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<delete id="EzApprovalGAdmin.deleteContainer1" parameterClass="Map">
 		<![CDATA[
 			DELETE
 				EZAPPROVALG_${companyID}.tbContainerUseDep
@@ -1754,9 +1783,8 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</delete>
-	
-	<delete id="EzApprovalGAdmin.deleteContainer2"
-		parameterClass="Map">
+
+	<delete id="EzApprovalGAdmin.deleteContainer2" parameterClass="Map">
 		<![CDATA[
 			DELETE
 				EZAPPROVALG_${companyID}.tbContainer
@@ -1767,17 +1795,19 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.insertReceiveGroupItemInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTRECEIVEGROUPITEMINF(#v_MAINID#, 
+		#v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_COMPANYID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<insert id="EzApprovalGAdmin.insertReceiveGroupItemInfo"
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_SUB
 				(mainid,
+				subid,
 				deptid,
 				deptname,
 				deptname2,
@@ -1785,6 +1815,10 @@
 				TENANT_ID)
 			VALUES 
 				(#v_MAINID#,
+				(SELECT
+					MAX(subid) + 1
+				FROM
+					EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_SUB),
 				#v_DEPTID#,
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
@@ -1793,12 +1827,12 @@
 		]]>
 	</insert>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupItemInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETERECEIVEGROUPITEMINF(#v_SUBID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteReceiveGroupItemInfo"
 		parameterClass="Map">
 		<![CDATA[
@@ -1811,12 +1845,13 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.updateReceiveGroupInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, #v_MAINNAME#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.updateReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_UPDATERECEIVEGROUPINFO(#v_MAINID#, 
+		#v_MAINNAME#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<update id="EzApprovalGAdmin.updateReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
@@ -1831,30 +1866,37 @@
 		]]>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertReceiveGroupInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.insertReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTRECEIVEGROUPINFO(#v_MAINNAME#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<insert id="EzApprovalGAdmin.insertReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_MAIN
-				(mainname,
+				(mainid,
+				mainname,
 				TENANT_ID)
 			VALUES
-				(#v_MAINNAME#,
+				((SELECT
+					MAX(mainid) + 1
+				FROM
+					EZAPPROVALG_${companyID}.TBADMINRECEIPTGROUP_MAIN
+				WHERE
+					tenant_ID = #tenantID#),
+				#v_MAINNAME#,
 				#tenantID#)
 		]]>
 	</insert>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteReceiveGroupInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETERECEIVEGROUPINFO(#v_MAINID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteReceiveGroupInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETERECEIVEGROUPINFO(#v_MAINID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
@@ -1867,12 +1909,13 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.setTaskCategory" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SETTASKCATEGORY(#v_MODE#, #v_CATETYPE#, #v_CATECODE#, #v_NAME#, #v_NAME2#, #v_DESC#, #v_CODE#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.setTaskCategory" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SETTASKCATEGORY(#v_MODE#, #v_CATETYPE#, 
+		#v_CATECODE#, #v_NAME#, #v_NAME2#, #v_DESC#, #v_CODE#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<insert id="EzApprovalGAdmin.setTaskCategoryInsert"
 		parameterClass="Map">
 		<isEqual property="v_CATETYPE" compareValue="1">
@@ -1934,7 +1977,7 @@
 			]]>
 		</isEqual>
 	</insert>
-	
+
 	<update id="EzApprovalGAdmin.setTaskCategoryUpdate"
 		parameterClass="Map">
 		<isEqual property="v_CATETYPE" compareValue="1">
@@ -1983,14 +2026,14 @@
 		</isEqual>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.removeTaskCategory" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_REMOVETASKCATEGORY(#v_CATETYPE#, #v_CATECODE#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<update id="EzApprovalGAdmin.removeTaskCategory"
-		parameterClass="Map">
+	<!-- <procedure id="EzApprovalGAdmin.removeTaskCategory" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_REMOVETASKCATEGORY(#v_CATETYPE#, 
+		#v_CATECODE#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.removeTaskCategory" parameterClass="Map">
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				UPDATE
@@ -2029,14 +2072,13 @@
 		</isEqual>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteSealInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETESEALINFO(#v_SEALNUM#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<update id="EzApprovalGAdmin.deleteSealInfo"
-		parameterClass="Map">
+	<!-- <procedure id="EzApprovalGAdmin.deleteSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETESEALINFO(#v_SEALNUM#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<update id="EzApprovalGAdmin.deleteSealInfo" parameterClass="Map">
 		<isEqual property="v_SEALNUM" compareValue="">
 			<![CDATA[
 				UPDATE
@@ -2063,12 +2105,13 @@
 		</isNotEqual>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteSealDeptInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, #v_DEPTID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteSealDeptInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETESEALDEPTINFO(#v_SEALNUM#, 
+		#v_DEPTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<update id="EzApprovalGAdmin.deleteSealDeptInfo" parameterClass="Map">
 		<isEqual property="v_SEALNUM" compareValue="">
 			<![CDATA[
@@ -2100,13 +2143,16 @@
 		</isNotEqual>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertSealInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.insertSealInfoSelect" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzApprovalGAdmin.insertSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTSEALINFO(#v_SEALNUM#, #v_SEALNAME#, 
+		#v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, 
+		#v_REGUSERNAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.insertSealInfoSelect"
+		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(sealnum), 0)
@@ -2118,7 +2164,7 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
+
 	<insert id="EzApprovalGAdmin.insertSealInfoInsert"
 		parameterClass="Map">
 		<![CDATA[
@@ -2151,7 +2197,7 @@
 			#tenantID#)
 		]]>
 	</insert>
-	
+
 	<update id="EzApprovalGAdmin.insertSealInfoUpdate"
 		parameterClass="Map">
 		<![CDATA[
@@ -2172,13 +2218,16 @@
 		]]>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertDeptSealInfo" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, #v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, #v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalGAdmin.insertDeptSealInfoSelect" parameterClass="Map" resultClass="Integer">
+	<!-- <procedure id="EzApprovalGAdmin.insertDeptSealInfo" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTSEALDELTINFO(#v_SEALNUM#, 
+		#v_DEPTID#, #v_SEALNAME#, #v_SEALPATH#, #v_SEALWIDTH#, #v_SEALHEIGHT#, #v_REGUSERID#, 
+		#v_REGUSERNAME#, #v_REGUSERNAME2#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
+	<select id="EzApprovalGAdmin.insertDeptSealInfoSelect"
+		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(sealnum), 0)
@@ -2192,8 +2241,9 @@
 				TENANT_ID = #tenantID#
 		]]>
 	</select>
-	
-	<insert id="EzApprovalGAdmin.insertDeptSealInfoInsert" parameterClass="Map">
+
+	<insert id="EzApprovalGAdmin.insertDeptSealInfoInsert"
+		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO EZAPPROVALG_${companyID}.TBSEALDEPTINFO
 				(sealnum,
@@ -2230,8 +2280,9 @@
 				#tenantID#)
 		]]>
 	</insert>
-	
-	<update id="EzApprovalGAdmin.insertDeptSealInfoUpdate" parameterClass="Map">
+
+	<update id="EzApprovalGAdmin.insertDeptSealInfoUpdate"
+		parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				EZAPPROVALG_${companyID}.TBSEALDEPTINFO
@@ -2252,11 +2303,12 @@
 		]]>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, #v_pFORMCONTID#, #cv_1#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.setFormOrder" parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SETFORMORDER(#v_pFORMIDLIST#, #v_pFORMLISTCOUNT#, 
+		#v_pFORMCONTID#, #cv_1#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<update id="EzApprovalGAdmin.setFormOrder" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -2272,12 +2324,12 @@
 		]]>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteFormContainer" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETEFORMCONTAINER(#v_FORMCONTID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteFormContainer" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETEFORMCONTAINER(#v_FORMCONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteFormContainer1"
 		parameterClass="Map">
 		<![CDATA[
@@ -2301,11 +2353,11 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.deleteForm" parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_DELETEFORM(#v_FORMID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.deleteForm" parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_DELETEFORM(#v_FORMID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteForm1" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -2327,12 +2379,13 @@
 		]]>
 	</delete>
 
-<!-- 	<procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
-<!-- 		parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_SETCONTAINERIDFORDOC2(#v_DOCID#, #v_CONTID#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc2" -->
+	<!-- parameterClass="Map"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_SETCONTAINERIDFORDOC2(#v_DOCID#, 
+		#v_CONTID#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<update id="EzApprovalGAdmin.setContainerIDForDoc2"
 		parameterClass="Map">
 		<![CDATA[
@@ -2347,12 +2400,12 @@
 		]]>
 	</update>
 
-<!-- 	<procedure id="EzApprovalGAdmin.insertFormContainerConti" -->
-<!-- 		parameterClass="String" resultClass="String"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			{CALL EZAPPROVALG_${companyID}.EZSP_INSERTFORMCONTAINER_CONTI(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 		]]> -->
-<!-- 	</procedure> -->
+	<!-- <procedure id="EzApprovalGAdmin.insertFormContainerConti" -->
+	<!-- parameterClass="String" resultClass="String"> -->
+	<!-- <![CDATA[ -->
+	<!-- {CALL EZAPPROVALG_${companyID}.EZSP_INSERTFORMCONTAINER_CONTI(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+	<!-- ]]> -->
+	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.insertFormContainerConti"
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -2502,7 +2555,7 @@
 				#v_SC3#,
 				#v_DISPLAYUSAGE#,
 				#v_DESCRIPTION#,
-				#v_SUBCATEGORYCODE#
+				#v_SUBCATEGORYCODE#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2741,9 +2794,9 @@
         		
 	    ]]>
 	</delete>
-	
-	<select id="EzApprovalGAdmin.getFormProperty"
-		parameterClass="Map" resultClass="ApprGFormVO">
+
+	<select id="EzApprovalGAdmin.getFormProperty" parameterClass="Map"
+		resultClass="ApprGFormVO">
 		<![CDATA[
 			SELECT
 				sn,
@@ -2758,9 +2811,8 @@
 				uppercode = #upperCode#
 		]]>
 	</select>
-	
-	<update id="EzApprovalGAdmin.formMove"
-		parameterClass="Map">
+
+	<update id="EzApprovalGAdmin.formMove" parameterClass="Map">
 		<![CDATA[
 			UPDATE
 				EZAPPROVALG_${companyID}.TBFORMINFO

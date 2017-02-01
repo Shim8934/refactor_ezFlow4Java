@@ -655,6 +655,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			result = "TRUE";
 		} catch (Exception e) {
 			logger.debug("insertReceiveGroupItemInfo catch.");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "FALSE";			
 		}
 		

@@ -1,7 +1,13 @@
 package egovframework.ezEKP.ezBoard.service.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
@@ -36,6 +43,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -362,16 +370,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 	
 	@Override
-	public void setMainImageID(String mainImageID, String itemID, String type, int tenantID) throws Exception {
+	public void setMainImageID(String mainImageID, String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_IMAGEID", mainImageID);
 		map.put("v_ITEMID", itemID);
-		map.put("v_TYPE", type);
 		map.put("v_TENANTID", tenantID);
 		
 		ezBoardDAO.setMainImageID(map);
-		ezBoardDAO.setMainImageID2(map);
-		
 	}
 
 	@Override
@@ -411,8 +416,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		ezBoardDAO.photoListUpdate(map);
 		
-		if(mainFg.equals("Y")){
-			setMainImageID(imageID, itemID, "1", tenantID);
+		if (mainFg.equals("Y")) {
+			setMainImageID(imageID, itemID, tenantID);
 		}
 	}
 
@@ -1709,8 +1714,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			map.put("v_pWriterName", boardListVO.getWriterName());
 			map.put("v_pWriterDeptID", boardListVO.getWriterDeptID());
 			map.put("v_pFilePath", strFilePath);
-			map.put("v_pWriteDate", boardListVO.getWriteDate());
+ 			map.put("v_pWriteDate", boardListVO.getWriteDate());
 			map.put("v_TENANTID", boardListVO.getTenantID());
+			map.put("mainImageID", boardListVO.getMainImageID());
 			
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent().split(";:;")[i]);
@@ -2145,4 +2151,349 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.getSendApprMailList(map);
 	}
 
+	@Override
+	public String saveImageItem(String requestXML, String uploadFilePath, LoginSimpleVO userInfo) throws Exception {
+		logger.debug("saveImageItem started");
+		
+		String resultValue = "";
+
+		try {
+			Document doc = commonUtil.convertStringToDocument(requestXML);
+			BoardListVO boardListVO = new BoardListVO();
+			
+			boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+			boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+			boardListVO.setImageID(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
+			boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+			boardListVO.setFileContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
+			boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+			boardListVO.setWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+			boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+			boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+			boardListVO.setTenantID(userInfo.getTenantId());
+			
+			int savecount = 0;
+			String[] imageIDs = boardListVO.getImageID().split(";");
+			String[] filePaths = boardListVO.getFilePath().split(";");
+			String[] fileContents = boardListVO.getFileContent().split(";:;");
+			String[] imageName = boardListVO.getImageNames().split(";");
+			
+			savecount = boardListVO.getImageID().split(";").length;
+			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
+			
+			for (int k = 0; k < savecount; k++) {
+				File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
+				if (file.exists()) {
+					boardListVO.setFilePath(uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", ""));
+				}
+				FileUtils.copyFile(file, new File(boardListVO.getFilePath()));
+				FileUtils.deleteQuietly(file);
+				
+				File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
+				if (file2.exists()) {
+					filePaths[k] = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
+				}
+				FileUtils.copyFile(file2, new File(filePaths[k]));
+				FileUtils.deleteQuietly(file2);
+				
+				boardListVO.setImageID(imageIDs[k].trim());
+				boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
+				
+				if (fileContents.length == 0) {
+					boardListVO.setFileContent("");
+				} else {
+					boardListVO.setFileContent(fileContents[k]);
+				}
+				boardListVO.setImageNames(imageName[k].trim());
+				
+				photoListInsert(boardListVO);
+			}
+			
+			resultValue = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			resultValue = "ERROR";
+		}
+
+		logger.debug("saveImageItem ended");
+		
+		return resultValue;
+	}
+	
+	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception {
+		logger.debug("newItemPhoto started");
+		
+		String result = "";
+		
+		try {
+			BoardListVO boardListVO = new BoardListVO();
+
+			boolean saveMHTResult = false;
+			boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+			boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+			boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+			boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+			boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+			boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+			boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+			boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
+			boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+			boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
+			boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
+			boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
+			boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
+			boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+			boardListVO.setMainImageID(mainImageID);
+			boardListVO.setRealPath(realPath);
+			boardListVO.setTenantID(userInfo.getTenantId());
+			
+			if (mode.equals("copy")) {
+				boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+			} else {
+				boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+			}
+			
+			boardListVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			
+			if (boardListVO.getStartDate() != null && boardListVO.getStartDate().equals("")) {
+				boardListVO.setStartDate(boardListVO.getWriteDate());
+			}
+			
+			boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+			boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+			boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
+			
+			if (mode.equals("reply")) {
+				boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
+			}
+			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
+			
+			if (!mode.equals("copy")) {
+				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			} else {
+				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+			}
+			
+			if (boardListVO.getParentWriteDate().equals("")) {
+				boardListVO.setParentWriteDate(boardListVO.getStartDate());
+			}
+
+			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
+				boardListVO.setExtensionAttribute1("0");
+			} else {
+				boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
+			}
+			
+			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
+				boardListVO.setExtensionAttribute2("0");
+			} else {
+				boardListVO.setExtensionAttribute2(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+			}
+			
+			boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
+			boardListVO.setExtensionAttribute32(doc.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
+			boardListVO.setExtensionAttribute4(doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
+			boardListVO.setExtensionAttribute5(doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
+			boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+			
+			if (!mode.equals("copy")) {
+				saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath);
+				if (saveMHTResult == false) {
+					return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+				}
+			}
+			
+			if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
+				boardListVO.setHasAttach("1");
+			} else {
+				boardListVO.setHasAttach("0");
+			}
+			
+			if (boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")) {
+				boardListVO.setItemLevel("0");
+			}
+			
+			boardListVO.setImageCount(Integer.parseInt(doc.getElementsByTagName("IMAGE_COUNT").item(0).getTextContent()));
+			boardListVO.setImagePath(doc.getElementsByTagName("IMAGE_ID").item(0).getTextContent());
+			boardListVO.setImageContent(doc.getElementsByTagName("CONTENT2").item(0).getTextContent());
+			boardListVO.setImageNames(doc.getElementsByTagName("IMAGE_FILENAME").item(0).getTextContent());
+			
+			if (mode.equals("modify")) {
+				brdUpdateItem(boardListVO, "PHOTO");
+			} else if (mode.equals("temp")) {
+				brdNewItemTempPhoto(boardListVO);
+			} else {
+				brdNewItemPhoto(boardListVO);
+			}
+			
+			if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
+				if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId())) {
+					return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
+				}
+				boardListVO.setHasAttach("1");
+			} else {
+				boardListVO.setHasAttach("0");
+			}
+			
+			result = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			result = "ERROR";
+		}		
+		
+		logger.debug("newItemPhoto ended");
+		
+		return result;
+	}
+
+	/**
+	 * 게시판 게시물 첨부파일저장 실행 Method
+	 */
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
+        long fileSize = 0;
+        boolean rtnValue = false;
+        String filePath = "";
+        String filePath2 = "";
+        String fileName = "";
+        String[] temp = null;
+        
+        try {
+        	if (!strAttachments.substring(strAttachments.length() - 1).equals(";")) {
+        		strAttachments += ";";
+        	}
+        	
+        	for (int i = 0; i < strAttachments.split(";").length; i++) {
+        		if (strType.equals("BOARD")) {
+        			
+        			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
+        				filePath = strAttachments.split(";")[i];
+        			} else {
+        				filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
+        			}
+        			File file = new File(realPath + filePath);
+        			fileSize = file.length();
+        			
+        			if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
+        				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
+        				File fileinfo = new File(realPath + filePath2);
+        				
+        				if (!fileinfo.exists()) {
+        					FileUtils.moveFile(file, fileinfo);
+        				}
+        			} else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
+        				filePath2 = strAttachments.split(";")[i];
+        			} else {
+        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
+        			}
+        			file = null;
+        		} else {
+        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
+        			fileSize = file.length();
+        			
+        			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
+        			
+        			File fileinfo = new File(realPath + filePath2);
+        			
+        			if (!fileinfo.exists()) {
+        				FileUtils.moveFile(file, fileinfo);
+        				file.delete();
+        			}
+        			file = null;
+        		}
+        		temp = strAttachments.split(";")[i].split("}_");
+        		
+        		for (int j = 1; j < temp.length; j++) {
+        			if (j == 1) {
+        				fileName = temp[j];
+        			}
+        		}
+        		
+        		saveAttachInfo(strItemID, filePath2, fileSize, fileName, tenantID);
+        		temp = null;
+        	}
+        	
+        	rtnValue = true;
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = false;
+		}
+        
+        return rtnValue;
+	}
+	
+	/**
+	 * 게시판 mht저장 실행 Method
+	 */
+	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
+		String docPath = "";
+		String mhtFilePath = "";
+		boolean ret = true;
+		
+        if (strType.equals("BOARD")) {
+            strHTML = strHTML.replace("'", "''");
+        }
+        
+		docPath = strFilePath + commonUtil.separator + strBoardID;
+		mhtFilePath = strMHTFilename + ".mht";
+		
+		String stordFilePathReal = docPath + commonUtil.separator + "doc";
+		
+		File file = new File(realPath + stordFilePathReal);
+		
+		if (!file.exists()) {
+			boolean _flag = file.mkdirs();
+			file = new File(realPath + docPath + commonUtil.separator + "uploadFile");
+			file.mkdirs();
+			
+			if (!_flag) {
+			    throw new IOException("Directory creation Failed ");
+			}
+		}
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+			ret = true;
+		} catch (Exception e) {
+			ret = false;
+		} finally {
+			bos.close();
+			stream.close();
+		}
+		
+		return ret;
+	}
+	
+	/**
+	 * 게시판 9999년도부터 뒤로 날짜계산 표출 Method
+	 */
+	public String getReverseDateNow() {
+		StringBuilder reverseDate = new StringBuilder();
+		Calendar cal = Calendar.getInstance();
+		
+		reverseDate.append(9999 - cal.get(Calendar.YEAR));
+		reverseDate.append(21 - cal.get(Calendar.MONTH));
+		reverseDate.append(41 - cal.get(Calendar.DATE));
+		reverseDate.append(33 - cal.get(Calendar.HOUR));
+		reverseDate.append(69 - cal.get(Calendar.MINUTE));
+		reverseDate.append(69 - cal.get(Calendar.SECOND));
+		
+		return reverseDate.toString();
+	}
 }

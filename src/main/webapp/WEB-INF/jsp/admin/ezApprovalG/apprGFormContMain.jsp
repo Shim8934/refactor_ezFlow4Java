@@ -75,10 +75,6 @@
 			    gManageID = Para[3];
 			    companyID = Para[7];
 			    
-			    $("#btnManage").css("pointer-events", "none");
-			    $("#btnUseDept").css("pointer-events", "none");
-			    $("#btnDelDept").css("pointer-events", "none");
-			    
 			    if (Para[3] != "ALL") {
 			    	document.getElementById("rdGroup").checked = true;
 			        rdGroup_onclick();

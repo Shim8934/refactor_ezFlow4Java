@@ -333,7 +333,7 @@
 	            var filecount = document.getElementsByName('checkmenuSub').length;
 	            var imageid = "";
 	            for (var i = 0; i < filecount ; i++) {  
-	                var tmpId = "{" + GetGUID() + "} ";
+	                var tmpId = "{" + GetGUID() + "}";
 	                if(document.getElementsByName("mainFG")[i].checked)
 	                    mainImageID = tmpId;
 	

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import org.w3c.dom.Document;
+
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
@@ -15,6 +17,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReadVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzBoardService {
@@ -187,7 +190,7 @@ public interface EzBoardService {
 
 	public void setTabUsed(String pUserID, String pBoardList, String tabUsed, int tenantID) throws Exception;
 	
-	public void setMainImageID(String mainImageID, String itemID, String type, int tenantID) throws Exception;
+	public void setMainImageID(String mainImageID, String itemID, int tenantID) throws Exception;
 	
 	public String setNotiOrder(String itemID, int tenantID) throws Exception;
 	
@@ -220,5 +223,15 @@ public interface EzBoardService {
 	public List<BoardListVO> getReplyNoticeMail(String boardID, String itemTreeID, String lang, int tenantID) throws Exception;
 
 	public List<LoginVO> getSendApprMailList(String boardID, String lang, int tenantID) throws Exception;
+
+	public String saveImageItem(String requestXML, String uploadFilePath, LoginSimpleVO userInfo) throws Exception;
+
+	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception;
+
+	public boolean saveAttachmentsInfo(String attachments, String itemID, String boardID, String filePath, String strType, String realPath, int tenantID) throws Exception;
+
+	public boolean saveMHT(String mainContent, String itemID, String boardID, String filePath, String string, String realPath) throws Exception;
+
+	public String getReverseDateNow() throws Exception;
 
 }

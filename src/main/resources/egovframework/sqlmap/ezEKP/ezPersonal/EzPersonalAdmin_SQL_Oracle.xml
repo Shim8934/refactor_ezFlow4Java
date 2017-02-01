@@ -43,7 +43,7 @@
              	CONTENT,
              	ITEMSEQ
         	FROM
-        		EZPERSONAL.TBLNOTICE 
+        		EZPERSONAL.TBL_PS_NOTICE 
        		WHERE
        			ITEMSEQ = #v_pItemSeq#
        		AND
@@ -95,7 +95,7 @@
                     		TITLE ,
                     		TITLE2 
            				FROM
-           					EZPERSONAL.TBLNOTICE 
+           					EZPERSONAL.TBL_PS_NOTICE 
           				WHERE
           					COMPANYID = #v_pCompanyID#
           				AND
@@ -126,7 +126,7 @@
                                   			TITLE ,
                                   			TITLE2 
                   						FROM
-                  							EZPERSONAL.TBLNOTICE 
+                  							EZPERSONAL.TBL_PS_NOTICE 
                    						WHERE
                    							CompanyID = #v_pCompanyID#
                    						AND
@@ -134,7 +134,7 @@
                     					ORDER BY
                     						ITEMSEQ ASC )
                     			WHERE
-                    				ROWNUM <= #v_pTotal# - #v_pStart# ) TEMPTBLNOTICE
+                    				ROWNUM <= #v_pTotal# - #v_pStart# ) TEMPTBL_PS_NOTICE
            				ORDER BY
            					ITEMSEQ DESC )
            		WHERE
@@ -491,7 +491,7 @@
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBLNOTICE 
+           			EZPERSONAL.TBL_PS_NOTICE 
           		WHERE
           			COMPANYID = #v_pCompanyID#
           		AND
@@ -503,7 +503,7 @@
 				SELECT
 					COUNT(ITEMSEQ)
            		FROM
-           			EZPERSONAL.TBLNOTICE 
+           			EZPERSONAL.TBL_PS_NOTICE 
           		WHERE
           			COMPANYID = #v_pCompanyID#
                 OR
@@ -558,7 +558,7 @@
 	 <insert id="EzPersonalAdmin.EZSP_INSERTNOTICE" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZPERSONAL.TBLNOTICE
+				EZPERSONAL.TBL_PS_NOTICE
      			( COMPANYID, TITLE, TITLE2, CONTENT, POSTDATE, TENANT_ID )
      		VALUES
      			( #companyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID# )
@@ -638,7 +638,7 @@
 	<update id="EzPersonalAdmin.EZSP_UPDATENOTICE" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZPERSONAL.TBLNOTICE
+				EZPERSONAL.TBL_PS_NOTICE
       		SET
       			TITLE = #v_pTitle#,
           		TITLE2 = #v_pTitle2#,
@@ -913,7 +913,7 @@
 	<delete id="EzPersonalAdmin.EZSP_DELETENOTICE" parameterClass="Map">
 		<![CDATA[
 			 DELETE
-			 	EZPERSONAL.TBLNOTICE
+			 	EZPERSONAL.TBL_PS_NOTICE
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
     		AND

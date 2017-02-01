@@ -2,11 +2,9 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezCommunityAdmin">
-	<typeAlias alias="CommunityCComCloseVO"				type="egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO"/>
-	<typeAlias alias="CommunityClubVO" 					type="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO"/>
 
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet1"					parameterClass="Map"			resultClass="CommunityCComCloseVO"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select1"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
 		<isEqual property="v_S" compareValue="">
@@ -19,9 +17,9 @@
 					C_SYSOPID,
 					APPLICATIONDATE
 				FROM
-					EZCOMMUNITY.C_COMCLOSE A
+					C_COMCLOSE A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -45,9 +43,9 @@
 					C_SYSOPID,
 					APPLICATIONDATE
 				FROM
-					EZCOMMUNITY.C_COMCLOSE A
+					C_COMCLOSE A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -73,9 +71,9 @@
 					C_SYSOPID,
 					APPLICATIONDATE
 				FROM
-					EZCOMMUNITY.C_COMCLOSE A
+					C_COMCLOSE A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -97,9 +95,9 @@
 					C_SYSOPID,
 					APPLICATIONDATE
 				FROM
-					EZCOMMUNITY.C_COMCLOSE A
+					C_COMCLOSE A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -113,14 +111,14 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_CLOSE_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(C_CLUBNO), 0)
 			FROM
-				EZCOMMUNITY.C_COMCLOSE
+				C_COMCLOSE
 			WHERE
 				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
@@ -132,13 +130,13 @@
 		SELECT
 			NVL(COUNT(C_CLUBNO), 0)
 		FROM
-			EZCOMMUNITY.C_COMCLOSE
+			C_COMCLOSE
 		WHERE
 			TENANT_ID = #tenantID#
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet1"					parameterClass="Map"			resultClass="CommunityClubVO"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select1"				parameterClass="Map"		resultClass="CommunityClubVO">
 		<isEqual property="v_S" compareValue="">
@@ -150,9 +148,9 @@
 					C_SYSOPID,
 					C_REGDATE
 				FROM
-					EZCOMMUNITY.C_CLUB A
+					C_CLUB A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -177,9 +175,9 @@
 					C_SYSOPID,
 					C_REGDATE
 				FROM
-					EZCOMMUNITY.C_CLUB A
+					C_CLUB A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -206,9 +204,9 @@
 					C_SYSOPID,
 					C_REGDATE
 				FROM
-					EZCOMMUNITY.C_CLUB A
+					C_CLUB A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = B.USERID
 				AND
@@ -231,9 +229,9 @@
 					C_SYSOPID,
 					C_REGDATE
 				FROM
-					EZCOMMUNITY.C_CLUB A
+					C_CLUB A
 				INNER JOIN
-					EZCOMMUNITY.C_MEMBERINFO B
+					C_MEMBERINFO B
 				ON
 					RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 				AND
@@ -249,7 +247,7 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_ADMIT_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_ADMIT_COM_GET2(#v_KEYWORD#, #v_S_RADIO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
@@ -257,7 +255,7 @@
 			SELECT
 				NVL(COUNT(C_CLUBNO), 0) 
 			FROM
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
 			AND
@@ -272,7 +270,7 @@
 			SELECT
 				NVL(COUNT(C_CLUBNO), 0)
 			FROM
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				C_ADMINCONFIRM = 'N'
 			AND
@@ -281,7 +279,7 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet1"				parameterClass="Map"			resultClass="CommunityClubVO"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET1(#v_USERINFO_LANG#, #v_IQUERYCOUNT#, #v_STRSELECT#, #v_STRQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_SEARCH_KEY_GET1(#v_USERINFO_LANG#, #v_IQUERYCOUNT#, #v_STRSELECT#, #v_STRQUERY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
@@ -305,7 +303,7 @@
 							C_CLUBDESC,
 							C_REGDATE
 						FROM
-							EZCOMMUNITY.C_CLUB
+							C_CLUB
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -314,7 +312,7 @@
 					C_CLUBNO IN (SELECT
 									C_CLUBNO
 								FROM
-									EZCOMMUNITY.C_CLUB
+									C_CLUB
 								WHERE
 									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
 								AND
@@ -333,7 +331,7 @@
 					 	C_CLUBNO IN (SELECT
 					 					C_CLUBNO
 									FROM
-										EZCOMMUNITY.C_CLUB
+										C_CLUB
 									WHERE
 										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
 									AND
@@ -368,14 +366,14 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_SEARCH_KEY_GET2(#v_USERINFO_LANG#, #v_STRSELECT#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_SEARCH_KEY_GET2(#v_USERINFO_LANG#, #v_STRSELECT#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(C_CLUBNO), 0) 
 			FROM
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -384,7 +382,7 @@
 				 	C_CLUBNO IN (SELECT
 									C_CLUBNO
 								FROM
-									EZCOMMUNITY.C_CLUB
+									C_CLUB
 								WHERE
 									C_CLUBDESC LIKE '%' || #v_STRQUERY# || '%'
 								AND
@@ -403,7 +401,7 @@
 						C_CLUBNO IN (SELECT
 										C_CLUBNO
 									FROM
-										EZCOMMUNITY.C_CLUB
+										C_CLUB
 									WHERE
 										C_CLUBNAME$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
 									AND
@@ -427,7 +425,7 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT(#v_USERINFO_LANG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ADM_COMMUNITY_INFO_EDIT(#v_USERINFO_LANG#, #v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.admCommunityInfoEdit"				parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
@@ -442,7 +440,7 @@
 				C_CATE_B,
 				C_CATE_C
 			FROM
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				RTRIM(C_CLUBNO) = #v_CODE#
 			AND
@@ -451,12 +449,12 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEditOk"			parameterClass="Map"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)} -->
+<!-- 		{CALL EZSP_ADM_COMMUNITY_INFO_EDIT_O(#v_USERINFO_LANG#, #v_C_CATE_A#, #v_C_CATE_B#, #v_C_CATE_C#, #v_C_CLUBNAME#, #v_CODE#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityAdminDAO.admCommunityInfoEditOk"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			SET
 				C_CATE_A = #v_C_CATE_A#,
 				C_CATE_B = #v_C_CATE_B#,
@@ -471,14 +469,14 @@
 	</update>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="String"			resultClass="String"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_INFO_GET3(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCommInfoGet3"					parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
 				CLOSEREASON
 			FROM
-				EZCOMMUNITY.C_COMCLOSE
+				C_COMCLOSE
 			WHERE
 				RTRIM(C_CLUBNO) = #v_CODE#
 			AND
@@ -487,14 +485,14 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="String"			resultClass="String"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_INFO_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_INFO_GET4(#v_CODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCommInfoGet4"					parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT
 				C_CLUBDESC
 			FROM
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				RTRIM(C_CLUBNO) = #v_CODE#
 			AND
@@ -503,12 +501,12 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommCloseAllUpdate"			parameterClass="Map"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_UPDATE(#v_CODE#, #v_PCLOSESTATE#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_CLOSE_ALL_UPDATE(#v_CODE#, #v_PCLOSESTATE#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityAdminDAO.aspCommCloseAllUpdate"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMUNITY.C_COMCLOSE
+				C_COMCLOSE
 			SET
 				CLOSESTATE = #v_PCLOSESTATE#
 			WHERE
@@ -519,12 +517,12 @@
 	</update>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet1"				parameterClass="Map"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_ADMIT_OK_SET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet1Update"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			SET
 				C_ADMINCONFIRM = 'C'
 			WHERE
@@ -536,7 +534,7 @@
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				RTRIM(C_CLUBNO) = #v_CODE#
 			AND
@@ -545,12 +543,12 @@
 	</delete>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommAdmitOkSet2"				parameterClass="Map"> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_ADMIT_OK_SET2(#v_CODE#, #v_USERINFO_LANG#, #v_USE_EZKMS#, #v_COMNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_ADMIT_OK_SET2(#v_CODE#, #v_USERINFO_LANG#, #v_USE_EZKMS#, #v_COMNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityAdminDAO.aspCommAdmitOkSet2Update"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			SET
 				C_ADMINCONFIRM = 'Y'
 			WHERE
@@ -562,7 +560,7 @@
 	
 	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert1"			parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZCOMMUNITY.USER
+			INSERT INTO USER
 				(USERID,
 				USERNM,
 				PASSWD,
@@ -621,7 +619,7 @@
 	
 	<insert id="EzCommunityAdminDAO.aspCommAdmitOkSet2Insert2"			parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZCOMMUNITY.ROLE
+			INSERT INTO ROLE
 				(USERID,
 				ROLETYPE,
 				TENANT_ID)
@@ -639,9 +637,9 @@
 				B.USERNAME$v_USERINFO_LANG$,
 				A.C_CLUBNAME$v_USERINFO_LANG$
 			FROM
-				EZCOMMUNITY.C_CLUB A
+				C_CLUB A
 			INNER JOIN
-				EZCOMMUNITY.C_MEMBERINFO B
+				C_MEMBERINFO B
 			ON
 				RTRIM(A.C_SYSOPID) = RTRIM(B.USERID)
 			AND
@@ -656,12 +654,12 @@
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCommCloseAllDel"				parameterClass="String"	> -->
-<!-- 		{CALL EZCOMMUNITY.EZSP_ASP_COMM_CLOSE_ALL_DEL(#v_CODE#)} -->
+<!-- 		{CALL EZSP_ASP_COMM_CLOSE_ALL_DEL(#v_CODE#)} -->
 <!-- 	</procedure> -->
 	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZCOMMUNITY.C_CLUB
+				C_CLUB
 			WHERE
 				RTRIM(C_CLUBNO) = #v_CODE#
 			AND
@@ -674,7 +672,7 @@
 			SELECT 
 				USERNAME
 			FROM
-				EZCOMMUNITY.C_MEMBERINFO
+				C_MEMBERINFO
 			WHERE
 				RTRIM(USERID) = #v_ID#
 			AND
