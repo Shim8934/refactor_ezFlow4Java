@@ -588,4 +588,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<LoginVO>) list("EzBoardDAO.getSendApprMailList", map);
 	}
 
+	public String getContentInfo(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getContentInfo", map);
+	}
+
 }

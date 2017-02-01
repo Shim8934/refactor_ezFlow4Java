@@ -37,6 +37,7 @@ import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -61,6 +62,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzCommonDAO")
 	private EzCommonDAO ezCommonDAO;
+	
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
 	
     @Autowired
     private EzEmailUtil ezEmailUtil;
@@ -779,7 +783,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String url = "";
         if (type.equals("HTMLPORTLET")) {
         	url = request.getParameter("href");
+        } else if (type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM")) {
+        	url = ezBoardService.getContentInfo(type, itemID, tenantID);
         } else {
+        	//나머지도 바꿔야함~
         	url = getContentInfo(type, itemID);
         }
         

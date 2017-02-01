@@ -3092,13 +3092,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
                     returnQuery += " AND TBAPRDOCINFO.WriterDeptName LIKE '%" + xmlDomSub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                 }
             }
-
+            
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01", userInfo.getOffset(), false) +"','YYYY-MM-DD HH24:MI:SS') ";
+            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
-            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false) +"','YYYY-MM-DD HH24:MI:SS') "; 
+            	returnQuery += " AND TBAPRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {

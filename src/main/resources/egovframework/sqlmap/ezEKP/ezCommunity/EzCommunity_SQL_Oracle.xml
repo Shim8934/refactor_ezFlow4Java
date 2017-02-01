@@ -249,7 +249,7 @@
 	        		no,
 	        		title 
 				FROM
-	               	C_BOARD
+	               	TBL_C_BOARD
 	            WHERE
 	            	tenant_id = #tenantID# 
 				ORDER BY
@@ -451,7 +451,7 @@
 			SELECT
 				c_clubno
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				c_clubname$v_USERINFO_LANG$ = #v_CLUBNAME#
 			AND
@@ -490,7 +490,7 @@
              	isin,
              	T1.itemcnt
         	FROM
-        		C_CLUB
+        		TBL_C_CLUB
 			CROSS JOIN
 				(	SELECT
 						NVL(COUNT(*), 0) ITEMCNT
@@ -524,9 +524,9 @@
 				A.c_clubconfirmtype,
 				B.permit
 			FROM
-				C_CLUB A
+				TBL_C_CLUB A
 			JOIN
-				C_CLUBUSER B
+				TBL_C_CLUBUSER B
 			ON
 				A.c_clubno = B.c_clubno
 			JOIN
@@ -954,38 +954,38 @@
 	<select id="EzCommunityDAO.getItemXML"						parameterClass="Map"		resultMap="CommunityBoardItem">
 		<![CDATA[
 			SELECT
-				ItemID,
-				WriterID,
-				WriterName,
-				WriterName2,
-				WriterDeptName,
-				WriterDeptName2,
-				WriterCompanyName,
-				WriterCompanyName2,
-				WriteDate,
-				ParentWriteDate,
-				Importance,
-				Title,
-				ContentLocation,
-				StartDate,
-				EndDate,
-				Abstract,
-				Attachments,
-				UpperItemIDTree,
-				ItemLevel,
-				copiedItem,
-				ExtensionAttribute1,
-				ExtensionAttribute2,
-				ExtensionAttribute3,
-				ExtensionAttribute32,
-				ExtensionAttribute4,
-				ExtensionAttribute5 
+				itemid,
+				writerid,
+				writername,
+				writername2,
+				writerdeptname,
+				writerdeptname2,
+				writercompanyname,
+				writercompanyname2,
+				writedate,
+				parentwritedate,
+				importance,
+				title,
+				contentlocation,
+				startdate,
+				enddate,
+				abstract,
+				attachments,
+				upperitemidtree,
+				itemlevel,
+				copieditem,
+				extensionattribute1,
+				extensionattribute2,
+				extensionattribute3,
+				extensionattribute32,
+				extensionattribute4,
+				extensionattribute5 
 			FROM
 				TBL_COMM_ITEM 
 			WHERE
-				ItemID = #v_pItemID#
+				itemid = #v_pItemID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -995,26 +995,26 @@
 	<select id="EzCommunityDAO.getAdjacentItemGet1"				parameterClass="Map"		resultClass="CommunityBoardItemVO">
 		<![CDATA[
 			SELECT
-				ITEMID,
-				TITLE 
+				itemid,
+				title 
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				BOARDID = #v_pBoardID#
+				boardid = #v_pBoardID#
 			AND
-				PARENTWRITEDATE = #v_pParentWriteDate#
+				parentwritedate = #v_pParentWriteDate#
 			AND
-				UPPERITEMIDTREE LIKE #v_pUpperItemIDTree#
+				upperitemidtree LIKE #v_pUpperItemIDTree#
 			AND
-				STARTDATE <= #v_pNow#
+				startdate <= #v_pNow#
 			AND
-				ENDDATE > #v_pNow#
+				enddate > #v_pNow#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 			ORDER BY
-				PARENTWRITEDATE DESC,
-				TO_CHAR(UPPERITEMIDTREE) DESC,
-				STARTDATE ASC
+				parentwritedate DESC,
+				TO_CHAR(upperitemidtree) DESC,
+				startdate ASC
 		]]>
 	</select>
 	
@@ -1027,24 +1027,24 @@
 				*
 			FROM
 				(SELECT
-					ITEMID,
-					TITLE
+					itemid,
+					title
 				FROM
 					TBL_COMM_ITEM
 				WHERE
-					BOARDID = #v_pBoardID#
+					boardid = #v_pBoardID#
 				AND
-					PARENTWRITEDATE >= #v_pParentWriteDate#
+					parentwritedate >= #v_pParentWriteDate#
 				AND
-					STARTDATE <= #v_pNow#
+					startdate <= #v_pNow#
 				AND
-					ENDDATE > #v_pNow#
+					enddate > #v_pNow#
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 				ORDER BY
-					PARENTWRITEDATE DESC,
-					TO_CHAR(UPPERITEMIDTREE) DESC,
-					STARTDATE ASC
+					parentwritedate DESC,
+					TO_CHAR(upperitemidtree) DESC,
+					startdate ASC
 				)
 			WHERE
 				ROWNUM <= 20
@@ -1061,30 +1061,30 @@
 					*
                 FROM
                 	(SELECT
-                		ITEMID,
-						TITLE 
+                		itemid,
+						title 
 					FROM
 						TBL_COMM_ITEM
 					WHERE
-						BOARDID = #v_pBoardID#
+						boardid = #v_pBoardID#
 					AND
-						PARENTWRITEDATE <= #v_pParentWriteDate#
+						parentwritedate <= #v_pParentWriteDate#
 					AND
-						ITEMID <> #v_pItemID#
+						itemid <> #v_pItemID#
 					AND
-						UPPERITEMIDTREE NOT LIKE #v_pUpperItemIDTree#
+						upperitemidtree NOT LIKE #v_pUpperItemIDTree#
 					AND
-						STARTDATE <= #v_pNow#
+						startdate <= #v_pNow#
 					AND
-						ENDDATE > #v_pNow#
+						enddate > #v_pNow#
 					AND
-						ITEMID <> #v_previousItemID#
+						itemid <> #v_previousItemID#
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY 
-						PARENTWRITEDATE DESC,
-						TO_CHAR(UPPERITEMIDTREE) DESC,
-						STARTDATE ASC
+						parentwritedate DESC,
+						TO_CHAR(upperitemidtree) DESC,
+						startdate ASC
 					)
 				WHERE
 					ROWNUM <= 1
@@ -1097,28 +1097,28 @@
 					*
 				FROM
 					(SELECT
-						ITEMID,
-						TITLE
+						itemid,
+						title
 					FROM
 						TBL_COMM_ITEM
 					WHERE
-						BOARDID = #v_pBoardID#
+						boardid = #v_pBoardID#
 					AND
-						PARENTWRITEDATE <= #v_pParentWriteDate#
+						parentwritedate <= #v_pParentWriteDate#
 					AND
-						ITEMID <> #v_pItemID#
+						itemid <> #v_pItemID#
 					AND
-						UPPERITEMIDTREE NOT LIKE #v_pUpperItemIDTree#
+						upperitemidtree NOT LIKE #v_pUpperItemIDTree#
 					AND
-						STARTDATE <= #v_pNow#
+						startdate <= #v_pNow#
 					AND
-						ENDDATE > #v_pNow#
+						enddate > #v_pNow#
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY 
-						PARENTWRITEDATE DESC,
-						TO_CHAR(UPPERITEMIDTREE) DESC,
-						STARTDATE ASC
+						parentwritedate DESC,
+						TO_CHAR(upperitemidtree) DESC,
+						startdate ASC
 					)
 				WHERE
 					ROWNUM <= 1
@@ -1135,37 +1135,37 @@
 				*
 			FROM
 				(SELECT
-					A.ITEMID,
-					A.STARTDATE,
-					A.ENDDATE,
-					A.TITLE,
-					A.ATTACHMENTS,
-					A.IMPORTANCE,
-					B.BOARDID,
-					B.BOARDNAME$v_strLang$,
-					A.ABSTRACT
+					A.itemid,
+					A.startdate,
+					A.enddate,
+					A.title,
+					A.attachments,
+					A.importance,
+					B.boardid,
+					B.boardname$v_strLang$,
+					A.abstract
 				FROM
 					TBL_COMM_ITEM A
 				INNER JOIN
 					(SELECT
-						BOARDID,
-						BOARDNAME$v_strLang$,
-						TENANT_ID
+						boardid,
+						boardname$v_strLang$,
+						tenant_id
 					FROM
 						TBL_COMM_BOARDINFO
 					WHERE
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					) B
 				ON
-					A.BOARDID = B.BOARDID
+					A.boardid = B.boardid
 				AND
-					A.TENANT_ID = B.TENANT_ID
+					A.tenant_id = B.tenant_id
 				WHERE
-					A.WRITERID = #v_pUserID#
+					A.writerid = #v_pUserID#
 				AND
-					A.STARTDATE > #v_pNow#
+					A.startdate > #v_pNow#
 				AND
-					A.TENANT_ID = #tenantID#
+					A.tenant_id = #tenantID#
 		]]>
 		<isEqual compareProperty="v_pSortBy" compareValue="">
 			ORDER BY A.parentwritedate DESC
@@ -1188,21 +1188,21 @@
 	<select id="EzCommunityDAO.readOneLineReply"				parameterClass="Map"		resultClass="CommunityOneLineReplyVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				REPLYID,
-				USERNAME$v_userInfo_lang$,
-				USERID,
-				CONTENT,
-				WRITEDATE
+				replyid,
+				username$v_userInfo_lang$,
+				userid,
+				content,
+				writedate
 			FROM
 				TBL_COMM_ONELINEREPLY
 			WHERE
-				BOARDID = #v_pBoardID#
+				boardid = #v_pBoardID#
 			AND
-				ITEMID = #v_pItemID#
+				itemid = #v_pItemID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 			ORDER BY
-				WRITEDATE ASC
+				writedate ASC
 		]]>
 	</select>
 	
@@ -1215,26 +1215,26 @@
 				*
 			FROM
 				(SELECT
-					UserID,
-					UserName,
-					UserName2,
-					UserDeptName,
-					UserDeptName2,
-					UserCompanyName,
-					UserCompanyName2,
-					UserTitle,
-					UserTitle2,
-					ReadDate
+					userid,
+					username,
+					username2,
+					userdeptname,
+					userdeptname2,
+					usercompanyname,
+					usercompanyname2,
+					usertitle,
+					usertitle2,
+					readdate
 				FROM
 					TBL_COMM_ITEM_READ 
 				WHERE
-					BoardID = #v_pBoardID#
+					boardid = #v_pBoardID#
 				AND
-					ItemID = #v_pItemID#
+					itemid = #v_pItemID#
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 				ORDER BY
-					ReadDate DESC
+					readdate DESC
 				)
 			WHERE
 				ROWNUM <= 50
@@ -1251,11 +1251,11 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				ItemID = #v_pOrgItemID#
+				itemid = #v_pOrgItemID#
 			AND
-				BoardID = #v_pOrgBoardID#
+				boardid = #v_pOrgBoardID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 
 	</select>
@@ -1269,15 +1269,15 @@
 				SELECT
 					*
 				FROM
-					C_CLUBGUEST
+					TBL_C_CLUBGUEST
 				WHERE
-					RTRIM(C_CLUBNO) = #v_code#
+					RTRIM(c_clubno) = #v_code#
 				AND
-					CONTENT LIKE '%' || #v_keyword# || '%'
+					content LIKE '%' || #v_keyword# || '%'
 				AND
-					TENANT_ID = #tenantID#
+					tenant_id = #tenantID#
 				ORDER BY
-					C_NO DESC
+					c_no DESC
 			]]>
 		</isEqual>
 		<isNotEqual property="v_s_radio" compareValue="TITLECONTENT">
@@ -1286,15 +1286,15 @@
 					SELECT
 						*
 					FROM
-						C_CLUBGUEST
+						TBL_C_CLUBGUEST
 					WHERE
-						RTRIM(C_CLUBNO) = #v_code#
+						RTRIM(c_clubno) = #v_code#
 					AND
-						USERNAME$v_userInfo_lang$ LIKE '%'|| #v_keyword# ||'%'
+						username$v_userInfo_lang$ LIKE '%'|| #v_keyword# ||'%'
 					AND
-						TENANT_ID = #tenantID# 
+						tenant_id = #tenantID# 
 					ORDER BY
-						C_NO DESC
+						c_no DESC
 				]]>
 			</isEqual>
 			<isNotEqual property="v_s_radio" compareValue="WRITER">
@@ -1302,13 +1302,13 @@
 					SELECT
 						*
 					FROM
-						C_CLUBGUEST
+						TBL_C_CLUBGUEST
 					WHERE
-						RTRIM(C_CLUBNO) = #v_code#
+						RTRIM(c_clubno) = #v_code#
 					AND
-						TENANT_ID = #tenantID#
+						tenant_id = #tenantID#
 					ORDER BY
-						C_NO DESC
+						c_no DESC
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -1320,20 +1320,20 @@
 	<select id="EzCommunityDAO.guestEditGet"					parameterClass="Map"		resultClass="CommunityCClubGuestVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				ID,
-				USERNAME$v_userInfo_lang$,
-				C_NO,
-				CONTENT
+				id,
+				username$v_userInfo_lang$,
+				c_no,
+				content
 			FROM
-				C_CLUBGUEST
+				TBL_C_CLUBGUEST
 			WHERE
-				RTRIM(C_NO) = #v_no#
+				RTRIM(c_no) = #v_no#
 			AND
-				RTRIM(ID) = #v_userInfo_userID#
+				RTRIM(id) = #v_userInfo_userID#
 			AND
-				RTRIM(C_CLUBNO) = #v_code#
+				RTRIM(c_clubno) = #v_code#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1346,7 +1346,7 @@
 				SELECT
 					*
 				FROM
-					C_CLUBUSER 
+					TBL_C_CLUBUSER 
 				WHERE
 					RTRIM(c_clubno) = #v_code#
 				AND
@@ -1366,21 +1366,21 @@
 					SELECT
 						*
 					FROM
-						C_CLUBUSER
+						TBL_C_CLUBUSER
 					JOIN
-						C_MEMBERINFO
+						TBL_C_MEMBERINFO
 					ON
-						C_MEMBERINFO.userid = RTRIM(C_CLUBUSER.c_id)
+						TBL_C_MEMBERINFO.userid = RTRIM(TBL_C_CLUBUSER.c_id)
 					WHERE
-						RTRIM(C_CLUBUSER.c_clubno) = #v_code#
+						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_code#
 					AND
-						C_MEMBERINFO.username$v_userInfo_lang$ LIKE '%'||#v_keyword#||'%'
+						TBL_C_MEMBERINFO.username$v_userInfo_lang$ LIKE '%'||#v_keyword#||'%'
 					AND
-						C_CLUBUSER.permit <> 0
+						TBL_C_CLUBUSER.permit <> 0
 					AND
-						C_CLUBUSER.tenant_id = #tenantID#
+						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					ORDER BY
-						C_CLUBUSER.c_visited DESC
+						TBL_C_CLUBUSER.c_visited DESC
 				]]>
 			</isEqual>
 			
@@ -1389,7 +1389,7 @@
 					SELECT
 						*
 					FROM
-						C_CLUBUSER
+						TBL_C_CLUBUSER
 					WHERE
 						RTRIM(c_clubno) = #v_code#
 					AND
@@ -1409,16 +1409,16 @@
 	<select id="EzCommunityDAO.commViewMemberGet3"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				USERNAME$v_USERINFO_LANG$,
-				EMAIL
+				username$v_USERINFO_LANG$,
+				email
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
-				USERID = #v_USERID#
+				userid = #v_USERID#
 			AND
-				COMPANYID = #v_COMPANYID#
+				companyid = #v_COMPANYID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1430,7 +1430,7 @@
 			SELECT
 				username$v_USERINFO_LANG$ userName
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
 				RTRIM(userid) = #v_C_SYSOPID#
 			AND
@@ -1448,13 +1448,13 @@
 			SELECT
 				NVL(COUNT(*), 0)
 			FROM
-				C_OUTAPPLICATION
+				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
 				RTRIM(userid) = #v_USERINFO_USERID#
 			AND
-				TENANT_ID = #tenantID#
+				tenant_id = #tenantID#
 		]]>
 	</select>
 
@@ -1464,22 +1464,22 @@
 	<select id="EzCommunityDAO.commOutOkGet2"					parameterClass="Map"		resultClass="CommunityClubVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
-				C_CLUB.c_sysopid,
-				C_MEMBERINFO.email,
-				C_MEMBERINFO.username
+				TBL_C_CLUB.c_clubname$v_userInfo_lang$ c_clubname,
+				TBL_C_CLUB.c_sysopid,
+				TBL_C_MEMBERINFO.email,
+				TBL_C_MEMBERINFO.username
 			FROM
-				C_CLUB 
+				TBL_C_CLUB 
 			INNER JOIN
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			ON
-				TRIM(C_CLUB.c_sysopid) = C_MEMBERINFO.userid
+				TRIM(TBL_C_CLUB.c_sysopid) = TBL_C_MEMBERINFO.userid
 			AND
-				C_CLUB.TENANT_ID = C_MEMBERINFO.TENANT_ID
+				TBL_C_CLUB.tenant_id = TBL_C_MEMBERINFO.tenant_id
 			WHERE
-				TRIM(C_CLUB.c_clubno) = #v_code#
+				TRIM(TBL_C_CLUB.c_clubno) = #v_code#
 			AND
-				C_CLUB.TENANT_ID = #tenantID#
+				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -1491,7 +1491,7 @@
 			SELECT
 				USERNAME$v_USERINFO_LANG$
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
 				userid = #v_RECORD_C_SYSOPID#
 			AND
@@ -1509,7 +1509,7 @@
 				c_clubbanner,
 				c_clubname$v_USERINFO_LANG$
 			FROM
-				C_CLUB 
+				TBL_C_CLUB 
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -1589,9 +1589,9 @@
 				A.outreason,
 				B.username$v_USERINFO_LANG$ userName
 			FROM
-				C_OUTAPPLICATION A 
+				TBL_C_OUTAPPLICATION A 
 			INNER JOIN
-				C_MEMBERINFO B
+				TBL_C_MEMBERINFO B
 			ON
 				A.userid = B.userid
 			AND
@@ -1614,9 +1614,9 @@
 					A.companyid,
 					B.username$v_USERINFO_LANG$
 				FROM
-					C_CLUBUSER A
+					TBL_C_CLUBUSER A
 				INNER JOIN
-					C_MEMBERINFO B
+					TBL_C_MEMBERINFO B
 				ON
 					RTRIM(A.c_id) = RTRIM(B.userid)
 				AND
@@ -1639,9 +1639,9 @@
 						A.companyid,
 						B.username$v_USERINFO_LANG$
 					FROM
-						C_CLUBUSER A
+						TBL_C_CLUBUSER A
 					INNER JOIN
-						C_MEMBERINFO B
+						TBL_C_MEMBERINFO B
 					ON
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
@@ -1663,9 +1663,9 @@
 						A.companyid,
 						B.username$v_USERINFO_LANG$
 					FROM
-						C_CLUBUSER A
+						TBL_C_CLUBUSER A
 					INNER JOIN
-						C_MEMBERINFO B
+						TBL_C_MEMBERINFO B
 					ON
 						RTRIM(A.c_id) = RTRIM(B.userid)
 					AND
@@ -1689,7 +1689,7 @@
 			SELECT
 				*
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -1712,7 +1712,7 @@
 				c_membercnt,
 				c_clubconfirmtype
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -1728,7 +1728,7 @@
 			SELECT
 				*
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
 				companyid = #v_USERINFO_COMPANYID#
 			AND
@@ -1749,9 +1749,9 @@
 				A.c_indate,
 				B.username$v_USERINFO_LANG$
 			FROM
-				C_CLUBUSER A
+				TBL_C_CLUBUSER A
 			INNER JOIN
-				C_MEMBERINFO B
+				TBL_C_MEMBERINFO B
 			ON
 				RTRIM(A.c_id) = RTRIM(B.userid)
 			AND
@@ -1776,21 +1776,21 @@
 					c_cate_a CATE,
 					NVL(COUNT(c_code), 0) CNT
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				JOIN
-					C_CATEGORY
+					TBL_C_CATEGORY
 				ON
-					C_CLUB.c_cate_a = C_CATEGORY.c_code
+					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
 				AND
-					C_CLUB.tenant_id = C_CATEGORY.tenant_id
+					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				WHERE
 					c_cate_a = #code#
 				AND
-					C_CATEGORY.c_cat = #cat#
+					TBL_C_CATEGORY.c_cat = #cat#
 				AND
 					c_adminconfirm = 'Y'
 				AND
-					C_CLUB.tenant_id = #tenantID#
+					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
 					c_name,
 					c_cate_a
@@ -1804,21 +1804,21 @@
 					c_cate_b CATE,
 					NVL(COUNT(c_code), 0) CNT
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				JOIN
-					C_CATEGORY
+					TBL_C_CATEGORY
 				ON
-					C_CLUB.c_cate_b = C_CATEGORY.c_code
+					TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
 				AND
-					C_CLUB.tenant_id = C_CATEGORY.tenant_id
+					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				WHERE
 					c_cate_b = #code#
 				AND
-					C_CATEGORY.c_cat = #cat#
+					TBL_C_CATEGORY.c_cat = #cat#
 				AND
 					c_adminconfirm = 'Y'
 				AND
-					C_CLUB.tenant_id = #tenantID#
+					TBL_C_CLUB.tenant_id = #tenantID#
 				GROUP BY
 					c_name,
 					c_cate_b
@@ -1835,7 +1835,7 @@
 				*
 			FROM
 				(SELECT
-					C_CLUB.c_clubno,
+					TBL_C_CLUB.c_clubno,
 					c_clubname,
 					c_clubname2,
 					c_logo_thumbnail,
@@ -1846,27 +1846,27 @@
 					c_membercnt,
 					description,
 					description2,
-					ROW_NUMBER() OVER ( ORDER BY C_CLUB.c_clubno ) ROWNUM_
+					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno ) ROWNUM_
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				JOIN
-					C_CATEGORY
+					TBL_C_CATEGORY
 				ON
-					C_CLUB.c_cate_a = C_CATEGORY.c_code
+					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
 				AND
-					C_CLUB.tenant_id = C_CATEGORY.tenant_id
+					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 				JOIN
 					EZHRMASTER.TBLUSERMASTER T2
 				ON
-					RTRIM(C_CLUB.c_sysopid) = RTRIM(T2.cn)
+					RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
 				AND
-					C_CLUB.tenant_id = T2.tenant_id
+					TBL_C_CLUB.tenant_id = T2.tenant_id
 				WHERE
 					c_cate_a = #code#
 				AND
-					C_CATEGORY.c_cat = LOWER(#cat#)
+					TBL_C_CATEGORY.c_cat = LOWER(#cat#)
 				AND
-					C_CLUB.tenant_id = #tenantID#
+					TBL_C_CLUB.tenant_id = #tenantID#
 				) T1
 			WHERE
 				ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
@@ -1878,7 +1878,7 @@
 					*
 				FROM
 					(SELECT
-						C_CLUB.c_clubno,
+						TBL_C_CLUB.c_clubno,
 						c_clubname,
 						c_clubname2,
 						c_logo_thumbnail,
@@ -1889,27 +1889,27 @@
 						c_membercnt,
 						description,
 						description2,
-						ROW_NUMBER() OVER ( ORDER BY C_CLUB.c_clubno  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno  ) ROWNUM_
 					FROM
-						C_CLUB 
+						TBL_C_CLUB 
 					JOIN
-						C_CATEGORY
+						TBL_C_CATEGORY
 					ON
-						C_CLUB.c_cate_b = C_CATEGORY.c_code
+						TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
 					AND
-						C_CLUB.tenant_id = C_CATEGORY.tenant_id
+						TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
 					JOIN
 						EZHRMASTER.TBLUSERMASTER T2
 					ON
-						RTRIM(C_CLUB.c_sysopid) = RTRIM(T2.cn)
+						RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
 					AND
-						C_CLUB.tenant_id = T2.tenant_id
+						TBL_C_CLUB.tenant_id = T2.tenant_id
 					WHERE
 						c_cate_b = #code#
 					AND
-						C_CATEGORY.c_cat = LOWER(#cat#)
+						TBL_C_CATEGORY.c_cat = LOWER(#cat#)
 					AND
-						C_CLUB.tenant_id = #tenantID#
+						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
 					ROWNUM_ BETWEEN #v_pStart# AND #v_pEnd#
@@ -1940,7 +1940,7 @@
 						description2,
 						ROW_NUMBER() OVER (ORDER BY T1.c_clubno) AS ROWNUM_
 					FROM
-						C_CLUB T1
+						TBL_C_CLUB T1
 					JOIN
 						EZHRMASTER.TBLUSERMASTER T2
 					ON
@@ -1975,7 +1975,7 @@
 						description2,
 						ROW_NUMBER() OVER (ORDER BY T1.c_clubno) AS ROWNUM_
 					FROM
-						C_CLUB T1
+						TBL_C_CLUB T1
 					JOIN
 						EZHRMASTER.TBLUSERMASTER T2
 					ON
@@ -2001,9 +2001,9 @@
 				A.c_clubconfirmtype ,
 				B.permit 
 			FROM
-				C_CLUB A
+				TBL_C_CLUB A
 			JOIN
-				C_CLUBUSER B
+				TBL_C_CLUBUSER B
 			ON
 				A.c_clubno = B.c_clubno
 			AND
@@ -2178,7 +2178,7 @@
 				c_id,
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_STRNO#
 			AND
@@ -2197,7 +2197,7 @@
 				c_sysopid,
 				isin
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_PCLUBID#
 			AND
@@ -2211,34 +2211,34 @@
 	<select id="EzCommunityDAO.leftCommunityGet3"				parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				C_CLUBUSER.c_clubno,
-				C_CLUBUSER.permit,
-				C_CLUBUSER.c_visited,
-				C_CLUB.c_clubname,
-				C_CLUB.c_clubname2,
-				C_CLUB.c_membercnt,
-				C_CLUB.c_sysopid,
-				C_CLUB.c_clubgubun,
-				C_CLUB.c_clubconfirmtype,
-				C_CLUB.c_logo_thumbnail
+				TBL_C_CLUBUSER.c_clubno,
+				TBL_C_CLUBUSER.permit,
+				TBL_C_CLUBUSER.c_visited,
+				TBL_C_CLUB.c_clubname,
+				TBL_C_CLUB.c_clubname2,
+				TBL_C_CLUB.c_membercnt,
+				TBL_C_CLUB.c_sysopid,
+				TBL_C_CLUB.c_clubgubun,
+				TBL_C_CLUB.c_clubconfirmtype,
+				TBL_C_CLUB.c_logo_thumbnail
 			FROM
-				C_CLUBUSER 
+				TBL_C_CLUBUSER 
 			JOIN
-				C_CLUB
+				TBL_C_CLUB
 			ON
-				C_CLUBUSER.c_clubno = C_CLUB.c_clubno
+				TBL_C_CLUBUSER.c_clubno = TBL_C_CLUB.c_clubno
 			AND
-				C_CLUBUSER.tenant_id = C_CLUB.tenant_id
+				TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
 			WHERE
 				RTRIM(C_CLUBUSER.c_id) = #v_USERID#
 			AND
-				C_CLUB.c_adminconfirm = 'Y'
+				TBL_C_CLUB.c_adminconfirm = 'Y'
 			AND
 				permit <> 0
 			AND
-				C_CLUBUSER.tenant_id = #tenantID#
+				TBL_C_CLUBUSER.tenant_id = #tenantID#
 			ORDER BY
-				C_CLUBUSER.c_visited DESC
+				TBL_C_CLUBUSER.c_visited DESC
 		]]>
 
 	</select>
@@ -2366,7 +2366,7 @@
 			SELECT
 				*
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2381,7 +2381,7 @@
 			SELECT
 				questionid
 			FROM
-				C_POLLQUESTION
+				TBL_C_POLLQUESTION
 			WHERE
 				RTRIM(pollmanagerid) = #v_MANAGERID#
 			AND
@@ -2397,7 +2397,7 @@
 			SELECT
 				*
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(managerid) = #v_POLLMANAGERID#
 			AND
@@ -2413,7 +2413,7 @@
 			SELECT
 				*
 			FROM
-				c_pollquestion
+				TBL_C_POLLQUESTION
 			WHERE
 				RTRIM(pollmanagerid) = #v_POLLMANAGERID#
 			AND
@@ -2429,7 +2429,7 @@
 			SELECT
 				*
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(managerid) = #v_MANAGERID#
 			AND
@@ -2445,7 +2445,7 @@
 			SELECT
 				*
 			FROM
-				C_POLLQUESTION
+				TBL_C_POLLQUESTION
 			WHERE
 				RTRIM(pollmanagerid) = #v_MANAGERID#
 			AND
@@ -2461,7 +2461,7 @@
 			SELECT
 				*
 			FROM
-				C_POLLRESPONSE
+				TBL_C_POLLRESPONSE
 			WHERE
 				questionid = #v_QUESTIONID#
 			AND
@@ -2485,7 +2485,7 @@
 				companyid,
 				c_clubconfirmtype
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2503,7 +2503,7 @@
              	isin,
              	companyid
         	FROM
-        		C_CLUB
+        		TBL_C_CLUB
         	WHERE
         		RTRIM(c_clubno) = #v_CODE#
         	AND
@@ -2519,7 +2519,7 @@
 			SELECT
 				*
 			FROM
-				C_COMCLOSE
+				TBL_C_COMCLOSE
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2535,7 +2535,7 @@
 			SELECT
 				*
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2616,11 +2616,11 @@
 						c_clubname2,
 						c_membercnt
                    	FROM
-                   		C_CLUB
+                   		TBL_C_CLUB
                    	WHERE
                    		RTRIM(c_clubno) = #v_copNo#
                    	AND
-						C_CLUB.tenant_id = #tenantID#
+						TBL_C_CLUB.tenant_id = #tenantID#
                    	) T3
         		WHERE
         			RTRIM(A.c_clubno) = #v_copNo#
@@ -2656,7 +2656,7 @@
 					c_membercnt,
 					c_clubconfirmtype
                 FROM
-                	C_CLUB
+                	TBL_C_CLUB
                 WHERE
                 	c_adminconfirm = 'Y'
                 AND
@@ -2687,7 +2687,7 @@
 					c_membercnt,
 					c_clubconfirmtype
                 FROM
-                	C_CLUB
+                	TBL_C_CLUB
                 WHERE
                 	(c_regdate >=  (TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -30))
                 AND
@@ -2710,7 +2710,7 @@
 				c_sysopid,
 				isin
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2727,7 +2727,7 @@
 				c_sysopid,
 				companyid
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -2743,7 +2743,7 @@
 			SELECT
 				*
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_cat = #cat#
 			AND
@@ -2762,7 +2762,7 @@
 			SELECT
 				answerid
 			FROM
-				C_POLLANSWER
+				TBL_C_POLLANSWER
 			WHERE
 				pollquestionid = #v_QUESTIONID#
 			AND
@@ -2780,9 +2780,9 @@
 			FROM
 				(SELECT
 					c_sysopid,
-					ROW_NUMBER() OVER ( ORDER BY C_CLUB.c_clubno DESC ) ROWNUM_
+					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC ) ROWNUM_
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					tenant_id = #tenantID#
 				) T1
@@ -2796,17 +2796,17 @@
 			SELECT
 				NVL(COUNT(*), 0)
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			JOIN
 				EZHRMASTER.TBLUSERMASTER T2
 			ON
-				RTRIM(C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
 			AND
-				C_CLUB.tenant_id = T2.tenant_id
+				TBL_C_CLUB.tenant_id = T2.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
-				C_CLUB.tenant_id = #tenantID#
+				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -2841,19 +2841,19 @@
 						c_clubconfirmtype,
 						displayname,
 						displayname2,
-						ROW_NUMBER() OVER ( ORDER BY C_CLUB.c_clubno DESC  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC  ) ROWNUM_
 					FROM
-						C_CLUB
+						TBL_C_CLUB
 					JOIN
 						EZHRMASTER.TBLUSERMASTER T2
 					ON
-						RTRIM(C_CLUB.c_sysopid) = RTRIM(T2.cn)
+						RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
 					AND
-						C_CLUB.tenant_id = T2.tenant_id
+						TBL_C_CLUB.tenant_id = T2.tenant_id
 					WHERE
 						c_adminconfirm = 'Y'
 					AND
-						C_CLUB.tenant_id = #tenantID#
+						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
 					ROWNUM_ = #num#
@@ -2877,13 +2877,13 @@
 						c_clubconfirmtype,
 						' ' displayname,
 						' ' displayname2,
-						ROW_NUMBER() OVER ( ORDER BY C_CLUB.c_clubno DESC  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC  ) ROWNUM_
 					FROM
-						C_CLUB
+						TBL_C_CLUB
 					WHERE
 						c_adminconfirm = 'Y'
 					AND
-						C_CLUB.tenant_id = #tenantID#
+						TBL_C_CLUB.tenant_id = #tenantID#
 					) T1
 				WHERE
 					ROWNUM_ = #num#
@@ -2900,7 +2900,7 @@
 			SELECT
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				TRIM(c_id) = #v_USERINFO_USERID#
 			AND
@@ -2971,7 +2971,7 @@
 				SELECT
 					c_clubnoticetitle ONEVALUE  
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					RTRIM(c_clubno) = #v_STRCLUBNO#
 				AND
@@ -2983,7 +2983,7 @@
 				SELECT
 					c_clubboardtitle ONEVALUE  
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					RTRIM(c_clubno) = #v_STRCLUBNO#
 				AND
@@ -2995,7 +2995,7 @@
 				SELECT
 					c_clubboard1title ONEVALUE  
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					RTRIM(c_clubno) = #v_STRCLUBNO#
 				AND
@@ -3007,7 +3007,7 @@
 				SELECT
 					c_clubboard2title ONEVALUE  
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					RTRIM(c_clubno) = #v_STRCLUBNO#
 				AND
@@ -3019,7 +3019,7 @@
 				SELECT
 					c_clubpdstitle ONEVALUE  
 				FROM
-					C_CLUB
+					TBL_C_CLUB
 				WHERE
 					RTRIM(c_clubno) = #v_STRCLUBNO#
 				AND
@@ -3036,7 +3036,7 @@
 			SELECT
 				userid 
         	FROM
-        		ASPADMIN 
+        		TBL_ASPADMIN 
 			WHERE
 				userid = #v_STRUSERID#
 			AND
@@ -3113,7 +3113,7 @@
 			SELECT
 				companyid 
 			FROM
-				C_MEMBERINFO 
+				TBL_C_MEMBERINFO 
 			WHERE
 				companyid = #v_USERINFO_COMPANYID#
 			AND
@@ -3145,7 +3145,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_CLUBUSER 
+				TBL_C_CLUBUSER 
 			WHERE
 				RTRIM(c_id) = #v_PUSERID#
 		]]>
@@ -3175,7 +3175,7 @@
 	    	SELECT
 	    		NVL(COUNT(c_clubno), 0)
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				c_clubgubun = '2'
 		]]>
@@ -3209,7 +3209,7 @@
 			SELECT
 				c_lastdate
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3476,7 +3476,7 @@
 				SELECT
 					NVL(COUNT(c_clubno), 0)  
 				FROM
-					C_CLUBGUEST
+					TBL_C_CLUBGUEST
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -3491,7 +3491,7 @@
 					SELECT
 						NVL(COUNT(c_clubno), 0)
 					FROM
-						C_CLUBGUEST
+						TBL_C_CLUBGUEST
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
@@ -3503,7 +3503,7 @@
 					SELECT
 						NVL(COUNT(c_clubno), 0)
 					FROM
-						C_CLUBGUEST
+						TBL_C_CLUBGUEST
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 				]]>
@@ -3519,7 +3519,7 @@
 			SELECT
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_id) = #v_USERINFO_USERID#
 			AND
@@ -3537,7 +3537,7 @@
 			SELECT
 				managerid
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3555,7 +3555,7 @@
 			SELECT
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3573,7 +3573,7 @@
 			SELECT
 				username$v_USERINFO_LANG$
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
 				userid = #v_POLLREGUSER#
 			AND
@@ -3590,7 +3590,7 @@
 				SELECT
 					NVL(COUNT(c_clubno), 0)
 				FROM
-					C_CLUBUSER 
+					TBL_C_CLUBUSER 
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -3605,21 +3605,21 @@
 			<isEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
 					SELECT
-						NVL(COUNT(C_CLUBUSER.c_clubno), 0)
+						NVL(COUNT(TBL_C_CLUBUSER.c_clubno), 0)
 					FROM
-						C_CLUBUSER
+						TBL_C_CLUBUSER
 					JOIN
-						C_MEMBERINFO
+						TBL_C_MEMBERINFO
 					ON
-						RTRIM(C_MEMBERINFO.userid) = RTRIM(C_CLUBUSER.c_id)
+						RTRIM(TBL_C_MEMBERINFO.userid) = RTRIM(TBL_C_CLUBUSER.c_id)
 					WHERE
-						RTRIM(C_CLUBUSER.c_clubno) = #v_CODE#
+						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_CODE#
 					AND 
-						C_MEMBERINFO.username$v_USERINFO_LANG$ LIKE '%'|| #v_KEYWORD# ||'%'
+						TBL_C_MEMBERINFO.username$v_USERINFO_LANG$ LIKE '%'|| #v_KEYWORD# ||'%'
 					AND
-						C_CLUBUSER.permit <> 0
+						TBL_C_CLUBUSER.permit <> 0
 					AND
-						C_CLUBUSER.tenant_id = #tenantID#
+						TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
@@ -3627,7 +3627,7 @@
 					SELECT
 						NVL(COUNT(c_clubno), 0)
 					FROM
-						C_CLUBUSER
+						TBL_C_CLUBUSER
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
@@ -3647,7 +3647,7 @@
 			SELECT
 				c_name
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_code = #v_C_CODE#
 			AND
@@ -3672,22 +3672,22 @@
                         ROW_NUMBER() OVER (ORDER BY writedate DESC) ROWNUM_  
                   	FROM 
                   		(SELECT
-							DISTINCT C_CLUBUSER.c_clubno,
+							DISTINCT TBL_C_CLUBUSER.c_clubno,
 							MAX(writedate) WRITEDATE  
                        	FROM
-                       		C_CLUBUSER 
+                       		TBL_C_CLUBUSER 
                        	JOIN
-                       		C_CLUB
+                       		TBL_C_CLUB
                        	ON
-                       		C_CLUBUSER.c_clubno = C_CLUB.c_clubno
+                       		TBL_C_CLUBUSER.c_clubno = TBL_C_CLUB.c_clubno
                        	AND
-                       		C_CLUBUSER.tenant_id = C_CLUB.tenant_id
+                       		TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
                        	JOIN
                        		TBL_COMM_BOARDINFO
                        	ON
-                       		TBL_COMM_BOARDINFO.c_clubno = C_CLUBUSER.c_clubno
+                       		TBL_COMM_BOARDINFO.c_clubno = TBL_C_CLUBUSER.c_clubno
                        	AND
-                       		TBL_COMM_BOARDINFO.tenant_id = C_CLUBUSER.tenant_id
+                       		TBL_COMM_BOARDINFO.tenant_id = TBL_C_CLUBUSER.tenant_id
                        	JOIN
                        		TBL_COMM_ITEM
                        	ON
@@ -3695,15 +3695,15 @@
                        	AND
                        		TBL_COMM_ITEM.tenant_id = TBL_COMM_BOARDINFO.tenant_id
                        	WHERE
-                       		RTRIM(C_CLUBUSER.c_id) = #v_USERID#
+                       		RTRIM(TBL_C_CLUBUSER.c_id) = #v_USERID#
                        	AND
-                       		C_CLUB.c_adminconfirm = 'Y'
+                       		TBL_C_CLUB.c_adminconfirm = 'Y'
                        	AND
-                       		C_CLUBUSER.permit <> 0
+                       		TBL_C_CLUBUSER.permit <> 0
                        	AND
-                       		C_CLUBUSER.tenant_id = #tenantID#
+                       		TBL_C_CLUBUSER.tenant_id = #tenantID#
                        	GROUP BY
-                       		C_CLUBUSER.c_clubno 
+                       		TBL_C_CLUBUSER.c_clubno 
 						) T1 
 					) T2
 				WHERE
@@ -3720,25 +3720,25 @@
 					DISTINCT T1.c_clubno 
 				FROM
 					(SELECT
-						C_CLUBUSER.c_clubno,
-						C_CLUBUSER.tenant_id,
-						ROW_NUMBER() OVER ( ORDER BY C_CLUBUSER.c_visited DESC ) ROWNUM_
+						TBL_C_CLUBUSER.c_clubno,
+						TBL_C_CLUBUSER.tenant_id,
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUBUSER.c_visited DESC ) ROWNUM_
 					FROM
-						C_CLUBUSER 
+						TBL_C_CLUBUSER 
 					JOIN
-						C_CLUB
+						TBL_C_CLUB
 					ON
-						C_CLUBUSER.c_clubno = C_CLUB.c_clubno
+						TBL_C_CLUBUSER.c_clubno = TBL_C_CLUB.c_clubno
 					AND
-						C_CLUBUSER.tenant_id = C_CLUB.tenant_id
+						TBL_C_CLUBUSER.tenant_id = TBL_C_CLUB.tenant_id
 					WHERE
-						RTRIM(C_CLUBUSER.c_id) = #v_USERID#
+						RTRIM(TBL_C_CLUBUSER.c_id) = #v_USERID#
 					AND
-						C_CLUB.c_adminconfirm = 'Y'
+						TBL_C_CLUB.c_adminconfirm = 'Y'
 					AND
 						permit <> 0
 					AND
-						C_CLUBUSER.tenant_id = #tenantID#
+						TBL_C_CLUBUSER.tenant_id = #tenantID#
 					) T1
 				JOIN 
 					TBL_COMM_BOARDINFO
@@ -3767,7 +3767,7 @@
 			SELECT
 				c_clubname$v_USERINFO_LANG$
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_NO#
 			AND
@@ -3783,7 +3783,7 @@
 			SELECT
 				c_clubname$v_USERINFO_LANG$
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3799,7 +3799,7 @@
 			SELECT
 				username$v_USERINFO_LANG$
 			FROM
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			WHERE
 				RTRIM(userid) = #v_SYSOPID#
 			AND
@@ -3817,7 +3817,7 @@
 			SELECT
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3835,7 +3835,7 @@
 			SELECT
 				c_id
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3853,7 +3853,7 @@
 			SELECT
 				permit
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_id) = #v_UID#
 			AND
@@ -3872,7 +3872,7 @@
 				SELECT
 					c_name
 				FROM
-					C_CATEGORY
+					TBL_C_CATEGORY
 				WHERE
 					c_cat = 'a'
 				AND
@@ -3886,7 +3886,7 @@
 				SELECT
 					c_name
 				FROM
-					C_CATEGORY
+					TBL_C_CATEGORY
 				WHERE
 					c_cat = 'b'
 				AND
@@ -3905,7 +3905,7 @@
 			SELECT
 				c_clubconfirmtype
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3921,7 +3921,7 @@
 			SELECT
 				c_type
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -3971,7 +3971,7 @@
 			SELECT
 				questionid
 			FROM
-				C_POLLQUESTION
+				TBL_C_POLLQUESTION
 			WHERE
 				pollmanagerid = #v_MANAGERID#
 			AND
@@ -3987,7 +3987,7 @@
 			SELECT
 				NVL(COUNT(questionid), 0)
 			FROM
-				C_POLLRESPONSE
+				TBL_C_POLLRESPONSE
 			WHERE
 				questionid = #v_STRQUESTIONID#
 			AND
@@ -4003,7 +4003,7 @@
 			SELECT
 				NVL(MAX(pollgroupno), 0)
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4019,7 +4019,7 @@
 			SELECT
 				questionid
 			FROM
-				C_POLLQUESTION 
+				TBL_C_POLLQUESTION 
 			WHERE
 				RTRIM(pollmanagerid) = #v_MANAGERID#
 			AND
@@ -4037,7 +4037,7 @@
 			SELECT
 				pollreguser
 			FROM
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				RTRIM(managerid) = #v_MANAGERID#
 			AND
@@ -4053,7 +4053,7 @@
 			SELECT
 				c_sysopid 
 			FROM
-				C_CLUB 
+				TBL_C_CLUB 
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4069,7 +4069,7 @@
 			SELECT
 				NVL(COUNT(questionid), 0)
 			FROM
-				C_POLLRESPONSE
+				TBL_C_POLLRESPONSE
 			WHERE
 				questionid = #v_QUESTIONID#
 			AND
@@ -4087,7 +4087,7 @@
 			SELECT
 				c_sysopid
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4103,7 +4103,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4121,12 +4121,12 @@
 			SELECT
 				c_name
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
 							c_cate_a
 						FROM
-							C_CLUB
+							TBL_C_CLUB
 						WHERE
 							RTRIM(c_clubno) = #v_CODE#
 						AND
@@ -4146,12 +4146,12 @@
 			SELECT
 				c_name
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_code=(SELECT
 							c_cate_b
 						FROM
-							C_CLUB
+							TBL_C_CLUB
 						WHERE
 							RTRIM(c_clubno) = #v_CODE#
 						AND
@@ -4187,7 +4187,7 @@
 			SELECT
 				c_clubgubun
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CID#
 			AND
@@ -4225,7 +4225,7 @@
 			SELECT
 				userid
 			FROM
-				ASPADMIN
+				TBL_ASPADMIN
 			WHERE
 				tenant_id = #tenantID#
 		]]>
@@ -4239,7 +4239,7 @@
 			SELECT
 				NVL(COUNT(*), 0) CNT
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
@@ -4376,7 +4376,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4428,7 +4428,7 @@
 			SELECT
 				NVL(COUNT(userid), 0)
 			FROM
-				C_OUTAPPLICATION
+				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4446,7 +4446,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)
 			FROM
-				C_OUTAPPLICATION
+				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4462,7 +4462,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)  
 			FROM
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -4669,7 +4669,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.joinOkInsert"					parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_MEMBERINFO
+			INSERT INTO TBL_C_MEMBERINFO
 				(companyid,
 				userid,
 				username,
@@ -4716,7 +4716,7 @@
 	<update id="EzCommunityDAO.commMakeOkSet1Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_logo = #v_LOGOFILENAME#,
 				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
@@ -4728,7 +4728,7 @@
 	</update>
 	<insert id="EzCommunityDAO.commMakeOkSet1Insert"				parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBLLOGO_SIZE
+			INSERT INTO TBL_LOGO_SIZE
 				(c_clubno,
 				logo_size,
 				tenant_id)
@@ -4745,7 +4745,7 @@
 	<update id="EzCommunityDAO.commMAkeOkSet2Update"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_clubbanner = #v_BANNERFILENAME#
 			WHERE
@@ -4759,7 +4759,7 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0)
 			FROM
-				TBLLOGO_SIZE
+				TBL_LOGO_SIZE
 			WHERE
 				RTRIM(c_clubno) = #v_FILENAME#
 			AND
@@ -4769,7 +4769,7 @@
 	<update id="EzCommunityDAO.commMAkeOkSet2Update1"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBLLOGO_SIZE
+				TBL_LOGO_SIZE
 			SET
 				banner_size = v_FILESIZE
 			WHERE
@@ -4778,7 +4778,7 @@
 	</update>
 	<insert id="EzCommunityDAO.commMAkeOkSet2Insert"				parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBLLOGO_SIZE
+			INSERT INTO TBL_LOGO_SIZE
 				(c_clubno,
 				banner_size,
 				tenant_id)
@@ -4805,7 +4805,7 @@
 	
 	<insert id="EzCommunityDAO.insertClub"			parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_CLUB
+			INSERT INTO TBL_C_CLUB
     			(c_clubno,
     			c_regdate,
    				c_clubname,
@@ -4912,7 +4912,7 @@
 	
 	<insert id="EzCommunityDAO.insertClubUser"						parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_CLUBUSER
+			INSERT INTO TBL_C_CLUBUSER
      			(c_clubno,
      			c_id,
     			c_indate,
@@ -5192,7 +5192,7 @@
 <!-- 		{CALL EZSP_GUEST_EDIT_OK_INSERT(#v_CODE#, #v_USERINFO_USERID#, #v_USERINFO_DISPLAYNAME1#, #v_USERINFO_DISPLAYNAME2#, #v_USERINFO_COMPANYID#, #v_MEMO#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.guestEditOkInsert"			parameterClass="Map">
-		INSERT INTO C_CLUBGUEST
+		INSERT INTO TBL_C_CLUBGUEST
        		(c_no,
        		id,
        		username,
@@ -5231,7 +5231,7 @@
 			SELECT
 				NVL(COUNT(id), 0)
 			FROM
-				C_CLUBGUEST 
+				TBL_C_CLUBGUEST 
 			WHERE
 				RTRIM(c_no) = #c_no#
 			AND
@@ -5246,9 +5246,9 @@
 	<update id="EzCommunityDAO.guestEditOkUpdateUpdate"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUBGUEST
+				TBL_C_CLUBGUEST
 			SET
-				CONTENT = #memo#
+				content = #memo#
 			WHERE
 				RTRIM(c_no) = #c_no#
 			AND
@@ -5263,7 +5263,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.pollAddOkGoInsert1"			parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_POLLMANAGER
+			INSERT INTO TBL_C_POLLMANAGER
 				(c_clubno,
 				pollgroupno,
 				pollsubject,
@@ -5293,7 +5293,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.pollAddOkGoInsert2"			parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_POLLQUESTION
+			INSERT INTO TBL_C_POLLQUESTION
 				(pollmanagerid,
 				questionno,
 				questioncontent,
@@ -5318,7 +5318,7 @@
 	<delete id="EzCommunityDAO.pollDeleteDel1"				parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_POLLRESPONSE
+				TBL_C_POLLRESPONSE
 			WHERE
 				questionid = #v_QUESTIONID#
 			AND
@@ -5336,7 +5336,7 @@
 			SELECT
 				answerid
 			FROM
-				C_POLLANSWER
+				TBL_C_POLLANSWER
 			WHERE
 				pollquestionid = #v_QUESTIONID#
 			AND
@@ -5347,7 +5347,7 @@
 	</select>
 	<insert id="EzCommunityDAO.pollResOkSetInsert"					parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_POLLRESPONSE
+			INSERT INTO TBL_C_POLLRESPONSE
 				(questionid,
 				answerid,
 				answerno,
@@ -5399,7 +5399,7 @@
 	<update id="EzCommunityDAO.pollResOkSetUpdate"					parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_POLLRESPONSE
+				TBL_C_POLLRESPONSE
 			SET
 				answerid = #v_ANSWERID#,
 				answerno = #v_POLLSELECT#
@@ -5435,7 +5435,7 @@
 	<update id="EzCommunityDAO.pollEditOkUpdateManager"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			SET
 				pollsubject = #v_SUBJECT#,
 				pollstartdate = TO_DATE(#v_POLLSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
@@ -5450,7 +5450,7 @@
 	<update id="EzCommunityDAO.pollEditOkUpdateQuestion"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_POLLQUESTION
+				TBL_C_POLLQUESTION
 			SET
 				questioncontent = #v_SUBJECT#
 			WHERE
@@ -5465,7 +5465,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.commOutOkInsert"				parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_OUTAPPLICATION
+			INSERT INTO TBL_C_OUTAPPLICATION
 				(c_clubno,
 				userid,
 				outdate,
@@ -5486,7 +5486,7 @@
 	<update id="EzCommunityDAO.adminBasicOkUpdate"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_clubname = #v_C_CLUBNAME#,
 				c_clubname2 =#v_C_CLUBNAME2#,
@@ -5505,15 +5505,17 @@
 <!-- 		{CALL EZSP_ADMIN_LOGO_OK_UPDATE1(#v_LOGOFILENAME#, #v_LOGOFILENAME_THUMBNAIL#, #v_FILENAME#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.adminLogoOkUpdate1"			parameterClass="Map">
-		UPDATE
-			C_CLUB
-		SET
-			c_logo = #v_LOGOFILENAME#,
-			c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
-		WHERE
-			RTRIM(c_clubno) = #v_FILENAME#
-		AND
-			tenant_id = #tenantID#
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUB
+			SET
+				c_logo = #v_LOGOFILENAME#,
+				c_logo_thumbnail = #v_LOGOFILENAME_THUMBNAIL#
+			WHERE
+				RTRIM(c_clubno) = #v_FILENAME#
+			AND
+				tenant_id = #tenantID#
+		]]>
 	</update>
 	
 <!-- 	<procedure id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map"> -->
@@ -5522,7 +5524,7 @@
 	<update id="EzCommunityDAO.adminLogoOkUpdate2"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_clubbanner = #v_BANNERFILENAME#
 			WHERE
@@ -5538,7 +5540,7 @@
 	<update id="EzCommunityDAO.adminCommType"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_type = #v_COPTYPE#
 			WHERE
@@ -5826,7 +5828,7 @@
 	<delete id="EzCommunityDAO.adminOuterOkNoSetDelete1"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -5839,7 +5841,7 @@
 	<delete id="EzCommunityDAO.adminOuterOkNoSetDelete2"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_OUTAPPLICATION
+				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -5852,7 +5854,7 @@
 	<update id="EzCommunityDAO.adminOuterOkNoSetUpdate"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_membercnt = c_membercnt - 1
 			WHERE
@@ -5908,7 +5910,7 @@
 	<update id="EzCommunityDAO.adminMemberListGoSEUpdate1"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_sysopid = #v_C_ID#
 			WHERE
@@ -5956,7 +5958,7 @@
 	<delete id="EzCommunityDAO.adminMemberListGoSEDelete1"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -5969,7 +5971,7 @@
 	<update id="EzCommunityDAO.adminMemberListGoSEUpdate3"			parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_membercnt = c_membercnt - 1
 			WHERE
@@ -5982,7 +5984,7 @@
 	<delete id="EzCommunityDAO.adminMemberListGoSEDelete2"			parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_OUTAPPLICATION
+				TBL_C_OUTAPPLICATION
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -5997,7 +5999,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzCommunityDAO.adminCommCloseOkInsert"				parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_COMCLOSE
+			INSERT INTO TBL_C_COMCLOSE
 				(c_clubno,
 				c_clubname,
 				c_clubname2,
@@ -6026,7 +6028,7 @@
 	<update id="EzCommunityDAO.joinOkSet1Update"					parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_membercnt = c_membercnt + 1
 			WHERE
@@ -6038,7 +6040,7 @@
 	
 	<insert id="EzCommunityDAO.joinOkSet1Insert"					parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_CLUBUSER
+			INSERT INTO TBL_C_CLUBUSER
      			(c_clubno,
      			c_id,
      			c_indate,
@@ -6065,7 +6067,7 @@
 	<update id="EzCommunityDAO.joinOkUpdate1"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			SET
 				c_email = #v_OPENEMAIL#,
 				c_hphone = #v_OPENHP#,
@@ -6089,7 +6091,7 @@
 	<update id="EzCommunityDAO.joinOkUpdate2"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			SET
 				c_email = #v_OPENEMAIL#,
 				c_hphone = #v_OPENHP#,
@@ -6115,7 +6117,7 @@
 	<update id="EzCommunityDAO.joinOkUpdate3"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_MEMBERINFO
+				TBL_C_MEMBERINFO
 			SET
 				birthday = #v_BIRTHDAY#
 			WHERE
@@ -6130,7 +6132,7 @@
 	<update id="EzCommunityDAO.okNoSetUpdate1"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			SET
 				permit = 1
 			WHERE
@@ -6145,7 +6147,7 @@
 	<update id="EzCommunityDAO.okNoSetUpdate2"				parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				C_CLUB
+				TBL_C_CLUB
 			SET
 				c_membercnt = C_MEMBERCNT - 1
             WHERE
@@ -6158,7 +6160,7 @@
 	<delete id="EzCommunityDAO.okNoSetDelete"				parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_CLUBUSER
+				TBL_C_CLUBUSER
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -6190,7 +6192,7 @@
 	<delete id="EzCommunityDAO.pollDeleteDel2"					parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_POLLANSWER
+				TBL_C_POLLANSWER
 			WHERE
 				pollquestionid = #v_QUESTIONID#
 			AND
@@ -6204,7 +6206,7 @@
 	<delete id="EzCommunityDAO.pollDeleteDel3"					parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_POLLQUESTION
+				TBL_C_POLLQUESTION
 			WHERE
 				pollmanagerid = #v_MANAGERID#
 			AND
@@ -6215,7 +6217,7 @@
 	<delete id="EzCommunityDAO.pollDeleteDel4"					parameterClass="Map">
 		<![CDATA[
 			DELETE
-				C_POLLMANAGER
+				TBL_C_POLLMANAGER
 			WHERE
 				managerid = #v_MANAGERID#
 			AND
@@ -6345,7 +6347,7 @@
 			SELECT 
 				*
 			FROM 
-	        	C_POLLRESPONSE
+	        	TBL_C_POLLRESPONSE
 			WHERE  
 	       		questionid = #v_QUESTIONID#
 	       	AND
@@ -6362,7 +6364,7 @@
 			SELECT 
 				*
 			FROM 
-	        	C_MEMBERINFO
+	        	TBL_C_MEMBERINFO
 			WHERE  
 	       		companyid = #v_COMPANYID#
 	       	AND
@@ -6405,7 +6407,7 @@
 			SELECT 
 				*
 			FROM 
-	        	C_POLLANSWER
+	        	TBL_C_POLLANSWER
 			WHERE  
 	       		pollquestionid = #v_QUESTIONID#
 	       	AND
@@ -6420,7 +6422,7 @@
 			SELECT 
 				*
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_cat=N'a'
 			AND
@@ -6436,7 +6438,7 @@
 			SELECT 
 				*
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_cat=N'b'
 			AND
@@ -6452,7 +6454,7 @@
 			SELECT 
 				*
 			FROM
-				C_CATEGORY
+				TBL_C_CATEGORY
 			WHERE
 				c_cat=N'c'
 			AND
@@ -6468,7 +6470,7 @@
 			SELECT 
 				c_id
 			FROM 
-	        	ezCommunity.C_CLUBUSER
+	        	TBL_C_CLUBUSER
 			WHERE  
 	       		RTRIM(c_clubno) = #v_PCOMID#
 	       	AND
@@ -6496,7 +6498,7 @@
 			SELECT 
 				NVL(COUNT(*), 0)
         	FROM 
-        		C_POLLRESPONSE
+        		TBL_C_POLLRESPONSE
        		WHERE 
        			questionid = #v_QUESTIONID#
        		AND
@@ -6511,7 +6513,7 @@
 			SELECT 
 				NVL(COUNT(*), 0)
         	FROM 
-        		C_POLLRESPONSE
+        		TBL_C_POLLRESPONSE
        		WHERE 
        			questionid = #v_QUESTIONID#
        		AND
@@ -6522,7 +6524,7 @@
 	<update id="EzCommunityDAO.updateLastDate"					parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				C_CLUBUSER
+				TBL_C_CLUBUSER
         	SET
         		c_visited = c_visited + 1,
         		c_lastdate = #STRNOW# 
@@ -6560,7 +6562,7 @@
 	
 	<insert id="EzCommunityDAO.pollAddOkGoInsert3"				parameterClass="Map">
 		<![CDATA[
-			INSERT INTO C_POLLANSWER
+			INSERT INTO TBL_C_POLLANSWER
 				(answerid,
 				pollquestionid,
 				answerno,
@@ -6591,7 +6593,7 @@
 		<![CDATA[
 			DELETE
         	FROM
-        		C_CLUBGUEST
+        		TBL_C_CLUBGUEST
         	WHERE
         		RTRIM(c_no) = #c_no#
         	AND
@@ -6654,7 +6656,7 @@
 			SELECT
 				RTRIM(c_sysopID)
 			FROM
-				C_CLUB
+				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = RTRIM(#code#)
 			AND
@@ -6668,7 +6670,7 @@
 				displayname$v_userInfo_lang$ displayName,
 				mail email
 			FROM
-				EZHRMASTER.TBLUSERMASTER
+				TBLUSERMASTER
 			WHERE
 				cn = RTRIM(#clubMasterID#)
 			AND

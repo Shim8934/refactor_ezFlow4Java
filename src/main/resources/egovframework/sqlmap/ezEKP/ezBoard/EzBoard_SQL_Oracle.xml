@@ -145,7 +145,7 @@
 			SELECT 
 				BOARDGROUPID 
         	FROM 
-        		EZBOARDSTD.TBL_Board_BoardInfo 
+        		TBL_Board_BoardInfo 
        		WHERE
        			TENANT_ID = #v_TENANTID#  
        		AND
@@ -160,7 +160,7 @@
 				TABUSED, 
 				VIEWORDER
     		FROM 
-    			EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO 
+    			TBL_BOARD_NEWBOARD_ORDERINFO 
     		WHERE  
     			TENANT_ID = #v_TENANTID#
     		AND
@@ -170,7 +170,7 @@
 	
 	<update id="EzBoardDAO.updateMyBoard" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyBoards
+			UPDATE TBL_Board_MyBoards
 			SET 
 				TABUSED = #tabUsed#,
 	            VIEWORDER = #viewOrder#
@@ -183,7 +183,7 @@
 	
 	<insert id="EzBoardDAO.insertBoardNewBoardOrder" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO ( 
+			INSERT INTO TBL_BOARD_NEWBOARD_ORDERINFO ( 
 				BOARDID, 								  USERID, 	  TABUSED, VIEWORDER, TENANT_ID 
 			)
             VALUES ( 
@@ -201,7 +201,7 @@
 	                BOARDNAME2 ,
 	                TABUSED 
 	            FROM 
-	            	EZBOARDSTD.TBL_Board_MyBoards 
+	            	TBL_Board_MyBoards 
 	            WHERE  
 	            	TENANT_ID = #v_TENANTID#
 	            AND
@@ -221,9 +221,9 @@
                     TABUSED ,
                     B.Gubun 
                 FROM 
-                	EZBOARDSTD.TBL_Board_MyBoards A
+                	TBL_Board_MyBoards A
                 JOIN 
-                	EZBOARDSTD.TBL_Board_BoardInfo B   
+                	TBL_Board_BoardInfo B   
                 ON 
                 	A.BoardID = B.BoardID
                 AND
@@ -246,7 +246,7 @@
 			SELECT 
 				BOARDGROUPID 
             FROM 
-            	EZBOARDSTD.TBL_Board_BoardInfo      
+            	TBL_Board_BoardInfo      
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND
@@ -260,7 +260,7 @@
 				SELECT 
 					BOARDNAME 
 				FROM 
-					EZBOARDSTD.TBL_Board_BoardInfo
+					TBL_Board_BoardInfo
 				WHERE  
 					TENANT_ID = #v_TENANTID#
 				AND
@@ -272,7 +272,7 @@
 				SELECT 
 					NVL(BOARDNAME2, BOARDNAME) 
 				FROM 
-					EZBOARDSTD.TBL_Board_BoardInfo
+					TBL_Board_BoardInfo
 				WHERE  
 					TENANT_ID = #v_TENANTID#
 				AND
@@ -289,7 +289,7 @@
 					WIDTH, 
 					COLNAME 
 				FROM 
-					EZBOARDSTD.TBL_Board_Item_ListOption  
+					TBL_Board_Item_ListOption  
                 WHERE
                 	TENANT_ID = #v_TENANTID#
                 AND 
@@ -311,7 +311,7 @@
 						WIDTH, 
 						COLNAME 
 					FROM 
-						EZBOARDSTD.TBL_Board_Item_ListOption  
+						TBL_Board_Item_ListOption  
                     WHERE 
                     	TENANT_ID = #v_TENANTID#
                     AND
@@ -329,7 +329,7 @@
 						WIDTH, 
 						COLNAME 
 					FROM 
-						EZBOARDSTD.TBL_Board_Item_ListOption 
+						TBL_Board_Item_ListOption 
                     WHERE
                     	TENANT_ID = #v_TENANTID#
                     AND 
@@ -348,7 +348,7 @@
 			SELECT 
 				distinct boardID
 			FROM 
-				EZBOARDSTD.TBL_Board_Item_ListOption_Boar 
+				TBL_Board_Item_ListOption_Boar 
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -364,7 +364,7 @@
 					WIDTH, 
 					COLNAME 
 				FROM 
-					EZBOARDSTD.TBL_Board_Item_ListOption_Boar  
+					TBL_Board_Item_ListOption_Boar  
 				WHERE 
 					TENANT_ID = #v_TENANTID#
 				AND
@@ -386,7 +386,7 @@
 						WIDTH, 
 						COLNAME 
 					FROM 
-						EZBOARDSTD.TBL_Board_Item_ListOption_Boar  
+						TBL_Board_Item_ListOption_Boar  
 					WHERE 
 						TENANT_ID = #v_TENANTID#
 					AND
@@ -404,7 +404,7 @@
 						WIDTH, 
 						COLNAME 
 					FROM 
-						EZBOARDSTD.TBL_Board_Item_ListOption_Boar  
+						TBL_Board_Item_ListOption_Boar  
 					WHERE
 						TENANT_ID = #v_TENANTID#
 					AND 
@@ -432,7 +432,7 @@
                     main_Flag FLAG  ,
                     ImageName 
                	  FROM 
-               	  	EZBOARDSTD.TBL_Photo_ImageItem 
+               	  	TBL_Photo_ImageItem 
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
@@ -453,7 +453,7 @@
 	            imagename ,
 	            main_Flag FLAG  
 	        FROM 
-	        	EZBOARDSTD.TBL_Photo_ImageItem 
+	        	TBL_Photo_ImageItem 
 	       	WHERE  
 	       		tenant_id = #v_TENANTID#
 	       	AND
@@ -483,7 +483,7 @@
                          	A.Abstract ,
                          	A.DocNo 
            			   FROM 
-           			   		EZBOARDSTD.TBL_Board_Item A
+           			   		TBL_Board_Item A
                   	   JOIN 
                   	   		( SELECT 
                   	   			BOARDID ,
@@ -491,7 +491,7 @@
                                 BOARDNAME2,
                                 TENANT_ID 
                          	  FROM 
-                         	  	EZBOARDSTD.TBL_Board_BoardInfo
+                         	  	TBL_Board_BoardInfo
                          	  WHERE
                          	  	TENANT_ID = #v_TENANTID#  ) B   
                        ON 
@@ -525,7 +525,7 @@
 	      			A.ABSTRACT,
 	      			A.DocNo
 	      		FROM 
-	      			EZBOARDSTD.TBL_BOARD_ITEM A 
+	      			TBL_BOARD_ITEM A 
 	      		INNER JOIN 
 	      			( SELECT 
 	      				BOARDID, 
@@ -533,7 +533,7 @@
 	      				BOARDNAME2,
 	      				TENANT_ID
 	      			  FROM 
-	      			  	EZBOARDSTD.TBL_BOARD_BOARDINFO 
+	      			  	TBL_BOARD_BOARDINFO 
 	      			  WHERE 
 	      			  	TENANT_ID = #v_TENANTID# ) B 
 	      		ON 
@@ -559,13 +559,13 @@
 			SELECT 
 				COUNT(A.ItemID) cnt
         	FROM 
-        		EZBOARDSTD.TBL_Board_Item A
+        		TBL_Board_Item A
             JOIN 
             	( SELECT 
             		boardid,
             		tenant_id
                   FROM 
-                  	EZBOARDSTD.TBL_Board_MyBoards 
+                  	TBL_Board_MyBoards 
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
@@ -575,7 +575,7 @@
             AND
             	A.BoardID = B.boardid
             JOIN 
-            	EZBOARDSTD.TBL_Board_BoardInfo P   
+            	TBL_Board_BoardInfo P   
            	ON 
            		P.TENANT_ID = B.TENANT_ID
            	AND
@@ -584,7 +584,7 @@
        			( NOT EXISTS ( SELECT 
        								userid 
                                FROM 
-                               		EZBOARDSTD.TBL_Board_Item_Read 
+                               		TBL_Board_Item_Read 
                                WHERE
                                		tenant_id = #v_TENANTID#
                                AND  
@@ -615,7 +615,7 @@
              	PREVIEWHLIST ,
              	PREVIEWHCONTENT 
         	FROM 
-        		ezBoardSTD.TBL_Board_Configuration 
+        		TBL_Board_Configuration 
        		WHERE  
        			TENANT_ID = #tenantId#
        		AND
@@ -628,7 +628,7 @@
 			SELECT 
 				ITEMID
             FROM 
-            	EZBOARDSTD.TBL_Board_Item 
+            	TBL_Board_Item 
             WHERE
             	TENANT_ID = #tenantID#
             AND  
@@ -648,9 +648,9 @@
                     A.WriterName2,
                     A.CONTENTLOCATION
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Board_BoardInfo B   
+                	TBL_Board_BoardInfo B   
                 ON 
                 	A.tenant_id = B.tenant_id
                 AND
@@ -667,7 +667,7 @@
 					BOARDID, 
                     CONTENTLOCATION 
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item_temp 
+              		TBL_Board_Item_temp 
               	WHERE  
               		TENANT_ID = #tenantID#
               	AND
@@ -686,7 +686,7 @@
 				UserTitle$lang$ AS UserTitle, 
 				ReadDate 
 		   	FROM 
-		   		EZBOARDSTD.TBL_Board_Item_Read 
+		   		TBL_Board_Item_Read 
 		   	WHERE 
 		   		tenant_id = #tenantID#
 		   	AND
@@ -699,7 +699,7 @@
 		   		UserID NOT IN ( SELECT 
 		   							WRITERID 
 		   						FROM 
-		   							EZBOARDSTD.TBL_BOARD_ITEM 
+		   							TBL_BOARD_ITEM 
 		   						WHERE 
 		   							TENANT_ID = #tenantID#
 		   						AND
@@ -755,7 +755,7 @@
                 EXTENSIONATTRIBUTE9 ,
                 EXTENSIONATTRIBUTE10  
         	FROM 
-        		EZBOARDSTD.TBL_Board_Item 
+        		TBL_Board_Item 
        		WHERE
        			TENANT_ID = #v_TENANTID#
        		AND  
@@ -776,7 +776,7 @@
                 		ITEMID,
                 		TITLE 
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item 
+                      	TBL_Board_Item 
                       WHERE  
                       	TENANT_ID = #v_TENANTID#
                       AND
@@ -810,7 +810,7 @@
                 		ITEMID,
                 		TITLE 
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item 
+                      	TBL_Board_Item 
                       WHERE  
                       	TENANT_ID = #v_TENANTID#
                       AND
@@ -864,7 +864,7 @@
       				(SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -875,7 +875,7 @@
       				P.GUBUN,
       				A.MAINCONTENT
       			  FROM 
-      			  	EZBOARDSTD.TBL_BOARD_ITEM A 
+      			  	TBL_BOARD_ITEM A 
       			  INNER JOIN 
       					( SELECT 
       						BOARDID, 
@@ -883,7 +883,7 @@
       						BOARDNAME2,
       						TENANT_ID 
       					  FROM 
-      					  	EZBOARDSTD.TBL_BOARD_MYBOARDS 
+      					  	TBL_BOARD_MYBOARDS 
       					  WHERE   
       					  	TENANT_ID = #v_TENANTID#
       					  AND
@@ -893,7 +893,7 @@
       			  AND
       			  	A.BOARDID = B.BOARDID                
       			  INNER JOIN 
-      			  	EZBOARDSTD.TBL_BOARD_BOARDINFO P  
+      			  	TBL_BOARD_BOARDINFO P  
       			  ON 
       			  	A.TENANT_ID = P.TENANT_ID
       			  AND
@@ -914,7 +914,7 @@
       							(SELECT 
       								USERID 
       							 FROM 
-      							 	EZBOARDSTD.TBL_BOARD_ITEM_READ S 
+      							 	TBL_BOARD_ITEM_READ S 
       							 WHERE 
       							 	S.TENANT_ID = A.TENANT_ID
       							 AND
@@ -962,7 +962,7 @@
 	   				(SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -977,14 +977,14 @@
 	   				A.EXTENSIONATTRIBUTE9,
 	   				A.EXTENSIONATTRIBUTE10 
    				  FROM 
-   				  	EZBOARDSTD.TBL_BOARD_ITEM A 
+   				  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
    				  	( SELECT 
    				  		COUNT(USERID) AS TOTALCOUNT, 
    				  		ITEMID,
    				  		TENANT_ID 
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+   					  	TBL_BOARD_ITEM_READ
    					  WHERE 
    					  	TENANT_ID = #v_TENANTID#
    					  AND
@@ -1035,7 +1035,7 @@
 	   				( SELECT 
 	   					COUNT(*)
 					  FROM 
-					  	EZBOARDSTD.TBL_Board_OneLineReply
+					  	TBL_Board_OneLineReply
 					  WHERE  
 					  	TENANT_ID = A.TENANT_ID
 					  AND
@@ -1049,14 +1049,14 @@
 	   				A.EXTENSIONATTRIBUTE9,
 	   				A.EXTENSIONATTRIBUTE10 
    				FROM 
-   					EZBOARDSTD.TBL_BOARD_ITEM A 
+   					TBL_BOARD_ITEM A 
    				LEFT OUTER JOIN 
    					( SELECT 
    						COUNT(USERID) AS TOTALCOUNT, 
    						ITEMID ,
    						TENANT_ID
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ 
+   					  	TBL_BOARD_ITEM_READ 
    					  WHERE
    					  	TENANT_ID = #v_TENANTID#
    					  AND 
@@ -1112,7 +1112,7 @@
 	                (SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -1128,7 +1128,7 @@
 	                A.extensionAttribute9 ,
 	                A.extensionAttribute10 
 	              FROM 
-	              	EZBOARDSTD.TBL_Board_Item A
+	              	TBL_Board_Item A
 	              WHERE  
 	              	TENANT_ID = #v_TENANTID#
 	              AND
@@ -1182,7 +1182,7 @@
 	                    (SELECT 
 		                	COUNT(*)  
 	     				FROM 
-	     					EZBOARDSTD.TBL_Board_OneLineReply 
+	     					TBL_Board_OneLineReply 
 	    				WHERE  
 	    					TENANT_ID = A.TENANT_ID
 	    				AND
@@ -1193,9 +1193,9 @@
 	                    B.BoardName BoardName  ,
 	                    A.APPRFLAG APPRFLAG  
 	            	 FROM 
-	            	 	EZBOARDSTD.TBL_Board_Item A
+	            	 	TBL_Board_Item A
 	            	 JOIN 
-	            	 	EZBOARDSTD.TBL_Board_BoardInfo B   
+	            	 	TBL_Board_BoardInfo B   
 	            	 ON 
 	            	 	A.TENANT_ID = B.TENANT_ID
 	            	 AND
@@ -1242,7 +1242,7 @@
                     (SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -1253,9 +1253,9 @@
                     B.BoardName BoardName  ,
                     A.APPRFLAG APPRFLAG  
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Board_BoardInfo B   
+                	TBL_Board_BoardInfo B   
                 ON 
                 	A.TENANT_ID = B.TENANT_ID
                 AND
@@ -1309,7 +1309,7 @@
 	   				(SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -1321,9 +1321,9 @@
 	   			    '' AS NOTICE,
 	   				A.APPRFLAG AS APPRFLAG
 	   			  FROM 
-	   			  	EZBOARDSTD.TBL_BOARD_ITEM A  
+	   			  	TBL_BOARD_ITEM A  
 	   			  INNER JOIN 
-	   			  	EZBOARDSTD.TBL_BOARD_BOARDINFO B
+	   			  	TBL_BOARD_BOARDINFO B
    				  ON 
    				  	A.TENANT_ID = B.TENANT_ID
    				  AND
@@ -1334,7 +1334,7 @@
    				  		ITEMID,
    				  		TENANT_ID 
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+   					  	TBL_BOARD_ITEM_READ
    					  WHERE 
    					  	TENANT_ID = #v_TENANTID#
    					  AND
@@ -1389,7 +1389,7 @@
 	   				(SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -1400,9 +1400,9 @@
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE
    				  FROM 
-   				  	EZBOARDSTD.TBL_BOARD_ITEM_TEMP A  
+   				  	TBL_BOARD_ITEM_TEMP A  
    				  INNER JOIN 
-   				  	EZBOARDSTD.TBL_BOARD_BOARDINFO B
+   				  	TBL_BOARD_BOARDINFO B
    				  ON 
    				  	A.TENANT_ID = B.TENANT_ID
    				  AND
@@ -1413,7 +1413,7 @@
    				  		ITEMID,
    				  		TENANT_ID 
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+   					  	TBL_BOARD_ITEM_READ
    					  WHERE 
    					  	TENANT_ID = #v_TENANTID#
    					  AND
@@ -1463,7 +1463,7 @@
 		   				(SELECT 
 		                	COUNT(*)  
 	     				FROM 
-	     					EZBOARDSTD.TBL_Board_OneLineReply 
+	     					TBL_Board_OneLineReply 
 	    				WHERE  
 	    					TENANT_ID = A.TENANT_ID
 	    				AND
@@ -1474,9 +1474,9 @@
 		   				B.GUBUN  AS GUBUN,
 		   			    '' AS NOTICE
    				   FROM 
-   				   		EZBOARDSTD.TBL_BOARD_ITEM A 
+   				   		TBL_BOARD_ITEM A 
    				   INNER JOIN 
-   				   		EZBOARDSTD.TBL_BOARD_BOARDINFO B
+   				   		TBL_BOARD_BOARDINFO B
    				   ON 
    				   		A.TENANT_ID = B.TENANT_ID
    				   AND
@@ -1487,7 +1487,7 @@
    				   			ITEMID,
    				   			TENANT_ID 
    						  FROM 
-   						  	EZBOARDSTD.TBL_BOARD_ITEM_READ 
+   						  	TBL_BOARD_ITEM_READ 
    						  WHERE 
    						  	TENANT_ID = #v_TENANTID#
    						  AND
@@ -1500,7 +1500,7 @@
    				   AND
    				   		A.ITEMID = D.ITEMID
    				   INNER JOIN 
-   				   		EZBOARDSTD.TBL_BOARD_APPRLIST APPR
+   				   		TBL_BOARD_APPRLIST APPR
    				   ON 
    				   		A.BOARDID = APPR.BOARDID
    				   WHERE
@@ -1528,7 +1528,7 @@
 	            B.DESCRIPTION ,
 	            B.DESCRIPTION2 
         	FROM 
-        		EZBOARDSTD.TBL_Board_ApprList A
+        		TBL_Board_ApprList A
             JOIN 
             	EZHRMASTER.TBLUserMaster B   
             ON 
@@ -1564,7 +1564,7 @@
 	   				(SELECT 
 	                	COUNT(*)  
      				FROM 
-     					EZBOARDSTD.TBL_Board_OneLineReply 
+     					TBL_Board_OneLineReply 
     				WHERE  
     					TENANT_ID = A.TENANT_ID
     				AND
@@ -1574,9 +1574,9 @@
 	   				B.FILEPATH,
 	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
    				  FROM 
-   				  	EZBOARDSTD.TBL_BOARD_ITEM A 
+   				  	TBL_BOARD_ITEM A 
    				  INNER JOIN 
-   				  	EZBOARDSTD.TBL_Photo_ImageItem B
+   				  	TBL_Photo_ImageItem B
    				  ON 
    				  	A.TENANT_ID = B.TENANT_ID
    				  AND
@@ -1587,7 +1587,7 @@
    				  		ITEMID,
    				  		TENANT_ID
    				  	  FROM 
-   				  	  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+   				  	  	TBL_BOARD_ITEM_READ
    				  	  WHERE 
    				  	  	TENANT_ID = #v_TENANTID#
    				  	  AND
@@ -1633,7 +1633,7 @@
 	   				(SELECT 
 	                	COUNT(*)  
 	   				FROM 
-	   					EZBOARDSTD.TBL_Board_OneLineReply 
+	   					TBL_Board_OneLineReply 
 	   				WHERE  
 	   					TENANT_ID = A.TENANT_ID
 	   				AND
@@ -1643,9 +1643,9 @@
 	   				B.FILEPATH,
 	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
 	   			  FROM 
-	   			  	EZBOARDSTD.TBL_BOARD_ITEM A 
+	   			  	TBL_BOARD_ITEM A 
 	   			  INNER JOIN 
-	   			  	EZBOARDSTD.TBL_Photo_ImageItem B
+	   			  	TBL_Photo_ImageItem B
 	   			  ON 
 	   			  	A.TENANT_ID = B.TENANT_ID
 	   			  AND
@@ -1656,7 +1656,7 @@
 	    		  		ITEMID,
 	    		  		TENANT_ID 
 	   				  FROM 
-	   				  	EZBOARDSTD.TBL_BOARD_ITEM_READ
+	   				  	TBL_BOARD_ITEM_READ
 	   				  WHERE 
 	   				  	TENANT_ID = #v_TENANTID#
 	   				  AND
@@ -1713,7 +1713,7 @@
                 (SELECT 
                 	COUNT(*)  
     			FROM 
-    				EZBOARDSTD.TBL_Board_OneLineReply 
+    				TBL_Board_OneLineReply 
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
@@ -1722,7 +1722,7 @@
                 A.DocNo , 
                 A.extensionAttribute2 NOTICE  
            	FROM 
-           		EZBOARDSTD.TBL_Board_Item A
+           		TBL_Board_Item A
           	WHERE  
           		TENANT_ID = #tenantID#
           	AND
@@ -1772,7 +1772,7 @@
    					(SELECT 
 	                	COUNT(*)  
 	    			FROM 
-	    				EZBOARDSTD.TBL_Board_OneLineReply 
+	    				TBL_Board_OneLineReply 
 	   				WHERE  
 	   					TENANT_ID = A.TENANT_ID
 	   				AND
@@ -1783,14 +1783,14 @@
    			    	I.BOARDNAME,
    					I.BOARDNAME2
    				  FROM 
-   				  	EZBOARDSTD.TBL_BOARD_ITEM A 
+   				  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
    				  	( SELECT 
    				  		COUNT(USERID) AS TOTALCOUNT, 
    				  		ITEMID,
    				  		TENANT_ID 
    				  	  FROM 
-   				  	  	EZBOARDSTD.TBL_BOARD_ITEM_READ  
+   				  	  	TBL_BOARD_ITEM_READ  
    					  WHERE 
    					  	TENANT_ID = #v_TENANTID#
    					  AND
@@ -1803,7 +1803,7 @@
    				  AND
    				  	A.ITEMID = D.ITEMID
    				  INNER JOIN 
-   				  	EZBOARDSTD.TBL_BOARD_BOARDINFO I  
+   				  	TBL_BOARD_BOARDINFO I  
    				  ON 
    				  	A.TENANT_ID = I.TENANT_ID
    				  AND
@@ -1852,7 +1852,7 @@
    					(SELECT 
 	                	COUNT(*)  
 	    			FROM 
-	    				EZBOARDSTD.TBL_Board_OneLineReply 
+	    				TBL_Board_OneLineReply 
 	   				WHERE  
 	   					TENANT_ID = A.TENANT_ID
 	   				AND
@@ -1864,14 +1864,14 @@
 	   				I.BOARDNAME2,
    					I.GUBUN AS GUBUN
    		     	  FROM 
-   		     	  	EZBOARDSTD.TBL_BOARD_ITEM A 
+   		     	  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
    				  	( SELECT 
    				  		COUNT(USERID) AS TOTALCOUNT, 
    				  		ITEMID,
    				  		TENANT_ID
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ 
+   					  	TBL_BOARD_ITEM_READ 
    					  WHERE 
    					  	TENANT_ID = #v_TENANTID#
    					  AND
@@ -1884,7 +1884,7 @@
    				  AND
    				  	A.ITEMID = D.ITEMID
    				  INNER JOIN 
-   				  	EZBOARDSTD.TBL_BOARD_BOARDINFO I  
+   				  	TBL_BOARD_BOARDINFO I  
    				  ON 
    				  	A.TENANT_ID = I.TENANT_ID
    				  AND
@@ -1933,7 +1933,7 @@
    					(SELECT 
 	                	COUNT(*)  
 	    			FROM 
-	    				EZBOARDSTD.TBL_Board_OneLineReply 
+	    				TBL_Board_OneLineReply 
 	   				WHERE  
 	   					TENANT_ID = A.TENANT_ID
 	   				AND
@@ -1945,14 +1945,14 @@
    					I.BOARDNAME2,
    					I.GUBUN AS GUBUN
    				FROM 
-   					EZBOARDSTD.TBL_BOARD_ITEM_TEMP A 
+   					TBL_BOARD_ITEM_TEMP A 
    				LEFT OUTER JOIN 
    					( SELECT 
    						COUNT(USERID) AS TOTALCOUNT, 
    						ITEMID,
    						TENANT_ID
    					  FROM 
-   					  	EZBOARDSTD.TBL_BOARD_ITEM_READ 
+   					  	TBL_BOARD_ITEM_READ 
    					  WHERE
    					  	TENANT_ID = #v_TENANTID#
    					  AND 
@@ -1965,7 +1965,7 @@
    				AND
    					A.ITEMID = D.ITEMID
    				INNER JOIN 
-   					EZBOARDSTD.TBL_BOARD_BOARDINFO I 
+   					TBL_BOARD_BOARDINFO I 
    				ON
    					A.TENANT_ID = I.TENANT_ID
    				AND 
@@ -1985,7 +1985,7 @@
 			SELECT 
 				FILEPATH 
         	FROM 
-        		EZBOARDSTD.TBL_Board_Item_Attachments 
+        		TBL_Board_Item_Attachments 
        		WHERE
        			TENANT_ID = #tenantID#
        		AND  
@@ -1999,7 +1999,7 @@
 				SELECT 
 					COUNT(REPLYID)
             	FROM 
-            		EZBOARDSTD.TBL_Board_OneLineReply 
+            		TBL_Board_OneLineReply 
             	WHERE
             		TENANT_ID = #v_TENANTID#
             	AND  
@@ -2013,7 +2013,7 @@
 				SELECT 
 					COUNT(REPLYID) 
             	FROM 
-            		EZBOARDSTD.TBL_Board_OneLineReply 
+            		TBL_Board_OneLineReply 
             	WHERE
             		TENANT_ID = #v_TENANTID#
             	AND  
@@ -2024,7 +2024,7 @@
 	
 	<delete id="EzBoardDAO.deleteOneLineReply" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_OneLineReply
+			DELETE TBL_Board_OneLineReply
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -2071,9 +2071,9 @@
 	            extensionAttribute10 ,
 	            A.BoardID 
 	        FROM 
-	        	EZBOARDSTD.TBL_Board_Item A
+	        	TBL_Board_Item A
             JOIN 
-            	EZBOARDSTD.TBL_Board_BoardInfo B   
+            	TBL_Board_BoardInfo B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -2121,7 +2121,7 @@
 	            extensionAttribute9 ,
 	            extensionAttribute10 
 	        FROM 
-	        	EZBOARDSTD.TBL_Board_Item_temp 
+	        	TBL_Board_Item_temp 
        		WHERE
        			TENANT_ID = #v_TENANTID#
        		AND  
@@ -2134,12 +2134,12 @@
 			SELECT 
 				COUNT(A.ItemID) cnt
 			FROM 
-				EZBOARDSTD.TBL_Board_Item A
+				TBL_Board_Item A
 			JOIN 
 				( SELECT 
 					boardid 
                   FROM 
-                  	EZBOARDSTD.TBL_Board_MyBoards
+                  	TBL_Board_MyBoards
                   WHERE
                   	TENANT_ID = #v_TENANTID#
                   AND  
@@ -2149,7 +2149,7 @@
             AND
             	A.BoardID = B.boardid
             JOIN 
-            	EZBOARDSTD.TBL_Board_BoardInfo P   
+            	TBL_Board_BoardInfo P   
             ON 
             	P.TENANT_ID = B.TENANT_ID
             AND
@@ -2158,7 +2158,7 @@
        			( NOT EXISTS ( SELECT 
        								userid
        						   FROM 
-       						   		EZBOARDSTD.TBL_Board_Item_Read 
+       						   		TBL_Board_Item_Read 
                                WHERE
                                		TENANT_ID = #v_TENANTID#
                                AND  
@@ -2184,9 +2184,9 @@
 			SELECT 
 				distinct B.boardid
             FROM 
-            	EZBOARDSTD.TBL_Board_ApprList A
+            	TBL_Board_ApprList A
             JOIN 
-            	EZBOARDSTD.TBL_Board_Item B   
+            	TBL_Board_Item B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -2204,7 +2204,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
              		FROM 
-             			EZBOARDSTD.TBL_Board_Item 
+             			TBL_Board_Item 
             		WHERE  
             			TENANT_ID = #v_TENANTID#
             		AND
@@ -2224,14 +2224,14 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
                 	FROM 
-                		EZBOARDSTD.TBL_Board_Item A
+                		TBL_Board_Item A
                    LEFT JOIN 
                    	( SELECT 
                    		COUNT(USERID)  TOTALCOUNT  ,
                    		ITEMID,
                    		TENANT_ID 
                    	  FROM 
-                   	  	EZBOARDSTD.TBL_Board_Item_Read
+                   	  	TBL_Board_Item_Read
                    	  WHERE
                    	  	TENANT_ID = #V_TENANTID#
                    	  AND  
@@ -2265,7 +2265,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
                    FROM 
-                   	EZBOARDSTD.TBL_Board_Item 
+                   	TBL_Board_Item 
                   	WHERE  
                   		TENANT_ID = #v_TENANTID#
                   	AND
@@ -2288,7 +2288,7 @@
 				SELECT 
 					COUNT(BOARDID) CNT 
                 FROM 
-                	EZBOARDSTD.TBL_Board_BoardInfo 
+                	TBL_Board_BoardInfo 
                 WHERE  
                 	TENANT_ID = #v_TENANTID#
                 AND
@@ -2304,7 +2304,7 @@
 				SELECT 
 					COUNT(BOARDID) CNT 
                	FROM 
-               		EZBOARDSTD.TBL_Board_BoardInfo 
+               		TBL_Board_BoardInfo 
                	WHERE  
                		TENANT_ID = #v_TENANTID#
                	AND
@@ -2320,7 +2320,7 @@
 			SELECT 
 				COUNT(ItemID)
         	FROM 
-        		EZBOARDSTD.TBL_Board_Item 
+        		TBL_Board_Item 
        		WHERE  
        			tenant_id = #v_TENANTID#
        		AND
@@ -2336,7 +2336,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item 
+              		TBL_Board_Item 
              	WHERE  
              		TENANT_ID = #tenantID#
              	AND
@@ -2354,13 +2354,13 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 LEFT JOIN 
                 	( SELECT 
                 		COUNT(USERID)  TOTALCOUNT  ,
                         ITEMID 
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item_Read 
+                      	TBL_Board_Item_Read 
                       WHERE  
                       	TENANT_ID = #tenantID#
                       AND
@@ -2392,7 +2392,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item 
+                	TBL_Board_Item 
                 WHERE
                 	TENANT_ID = #tenantID#
                 AND  
@@ -2413,7 +2413,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item 
+              		TBL_Board_Item 
              	WHERE  
              		TENANT_ID = #tenantID#
              	AND
@@ -2429,14 +2429,14 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 LEFT JOIN 
                 	( SELECT 
                 		COUNT(USERID)  TOTALCOUNT  ,
                         ITEMID,
                         TENANT_ID 
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item_Read 
+                      	TBL_Board_Item_Read 
                       WHERE  
                       	TENANT_ID = #tenantID#
                       AND
@@ -2467,7 +2467,7 @@
 				SELECT 
 					COUNT(ITEMID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item 
+                	TBL_Board_Item 
                 WHERE
                 	TENANT_ID = #tenantID#
                 AND  
@@ -2485,7 +2485,7 @@
 			SELECT 
 				COUNT(ITEMID)
 			FROM 
-				EZBOARDSTD.TBL_Board_Item
+				TBL_Board_Item
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -2501,7 +2501,7 @@
 			SELECT 
 				COUNT(ITEMID)
             FROM 
-            	EZBOARDSTD.TBL_Board_Item_temp 
+            	TBL_Board_Item_temp 
             WHERE  
             	TENANT_ID = #v_TENANTID#
             AND
@@ -2514,9 +2514,9 @@
 			SELECT 
        			distinct B.BOARDID
        		FROM 
-       		 	EZBOARDSTD.TBL_Board_ApprList A
+       		 	TBL_Board_ApprList A
             JOIN 
-            	EZBOARDSTD.TBL_Board_Item B   
+            	TBL_Board_Item B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -2534,9 +2534,9 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT 
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item A
+              		TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Photo_ImageItem B   
+                	TBL_Photo_ImageItem B   
                 ON 
                 	A.TENANT_ID = B.TENANT_ID
                 AND
@@ -2560,9 +2560,9 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Photo_ImageItem B   
+                	TBL_Photo_ImageItem B   
                	ON 
                		A.TENANT_ID = B.TENANT_ID
                	AND
@@ -2572,7 +2572,7 @@
                 		COUNT(USERID)  TOTALCOUNT  ,
                         ITEMID 
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item_Read 
+                      	TBL_Board_Item_Read 
                       WHERE  
                       	TENANT_ID = #tenantID#
                       AND
@@ -2607,9 +2607,9 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
 				FROM 
-					EZBOARDSTD.TBL_Board_Item A
+					TBL_Board_Item A
 				JOIN 
-					EZBOARDSTD.TBL_Photo_ImageItem B   
+					TBL_Photo_ImageItem B   
 				ON 
 					A.TENANT_ID = B.TENANT_ID
 				AND
@@ -2631,9 +2631,9 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
                 FROM 
-                	EZBOARDSTD.TBL_Board_Item A
+                	TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Photo_ImageItem B   
+                	TBL_Photo_ImageItem B   
                 ON 
                 	A.TENANT_ID = B.TENANT_ID
                 AND
@@ -2643,7 +2643,7 @@
                 		COUNT(USERID)  TOTALCOUNT  ,
                         ITEMID
                       FROM 
-                      	EZBOARDSTD.TBL_Board_Item_Read 
+                      	TBL_Board_Item_Read 
                       WHERE  
                       	TENANT_ID = #tenantID#
                       AND
@@ -2673,9 +2673,9 @@
 				SELECT 
 					COUNT(A.ItemID)  TOTALCOUNT
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item A
+              		TBL_Board_Item A
                 JOIN 
-                	EZBOARDSTD.TBL_Photo_ImageItem B   
+                	TBL_Photo_ImageItem B   
                 ON 
                 	A.TENANT_ID = B.TENANT_ID
                 AND
@@ -2698,7 +2698,7 @@
 				SELECT 
 					COUNT(ACCESSID)  cnt  
 	            FROM 
-	            	EZBOARDSTD.TBL_Board_BoardManage 
+	            	TBL_Board_BoardManage 
 	            WHERE
 	            	TENANT_ID = #v_TENANTID#
 	            AND  
@@ -2709,7 +2709,7 @@
 	            	BOARDID = ( SELECT 
 	            					BOARDID
 	                 			FROM 
-	                 				EZBOARDSTD.TBL_Board_Item 
+	                 				TBL_Board_Item 
 	                 			WHERE
 	                 				TENANT_ID = #v_TENANTID#
 	                 			AND  
@@ -2721,7 +2721,7 @@
 				SELECT 
 					COUNT(BOARDID)
               	FROM 
-              		EZBOARDSTD.TBL_Board_Item_temp 
+              		TBL_Board_Item_temp 
               	WHERE
               		TENANT_ID = #v_TENANTID#
               	AND  
@@ -2737,7 +2737,7 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				EZBOARDSTD.TBL_BOARD_ITEM A 
+   				TBL_BOARD_ITEM A 
    			WHERE    				
    				$v_PWHEREBOARD$ 
    			AND
@@ -2755,7 +2755,7 @@
 			SELECT 
 				COUNT(ITEMID)  cnt
 			FROM 
-				EZBOARDSTD.TBL_Board_Item 
+				TBL_Board_Item 
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -2776,7 +2776,7 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				EZBOARDSTD.TBL_BOARD_ITEM A 
+   				TBL_BOARD_ITEM A 
    			WHERE 
    				TENANT_ID = #v_TENANTID#
    			AND
@@ -2794,7 +2794,7 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				EZBOARDSTD.TBL_BOARD_ITEM_TEMP A 
+   				TBL_BOARD_ITEM_TEMP A 
    			WHERE
    				TENANT_ID = #v_TENANTID#
    			AND
@@ -2803,297 +2803,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Item_Attachments ( 
-				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
-			)
-       		VALUES ( 
-       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
-       		)
-		]]>
-	</insert>
-	
-	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
-		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Photo_ImageItem
-			WHERE  
-				TENANT_ID = #v_TENANTID#
-			AND
-				IMAGEID = #v_pIMAGEID#
-		]]>
-	</delete>
-	
-	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Photo_ImageItem ( 
-				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
-			)
-     		VALUES ( 
-     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
-     		)
-		]]>
-	</insert>
-	
-	<select id="EzBoardDAO.getApprFlag" parameterClass="BoardListVO" resultClass="String">
-		<![CDATA[
-			SELECT
-				apprflag
-			FROM 
-				EZBOARDSTD.TBL_Board_BoardInfo
-			WHERE 
-				TENANT_ID = #tenantID#
-			AND
-				boardid = #boardID#
-		]]>
-	</select>
-	
-	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
-		INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
-			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-        VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
-        )
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItem2" parameterClass="BoardListVO">
-		INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
-			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-        VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
-        )
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
-		INSERT INTO EZBOARDSTD.TBL_Board_Item_temp ( 
-			ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-       	VALUES ( 
-       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item_temp WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
-       	)
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, APPRFLAG, TENANT_ID 
-			)
-	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
-	        )
-		]]>
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemPhoto2" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, TENANT_ID 
-			)
-	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
-	        )
-		]]>
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemTempPhoto" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Item_temp ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, tenant_id 
-			)
-        	VALUES ( 
-        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM EZBOARDSTD.TBL_Board_Item_temp WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
-        	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.set_ListOrder_U" parameterClass="Map">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyBoards
-            SET 
-            	VIEWORDER = #count#
-            WHERE  
-            	TENANT_ID = #tenantID#
-            AND
-            	BOARDID = #boardID#
-            AND 
-            	( USERID = #userID#
-            	  OR USERID = 'everyone' )
-		]]>
-	</update>
-	
-	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
-		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_MyBoards
-			WHERE  
-				TENANT_ID = #tenantID#
-			AND
-				BOARDID = #boardID#
-            AND 
-            	USERID = #userID#
-		]]>
-	</delete>
-	
-	<update id="EzBoardDAO.set_ListOrder" parameterClass="Map">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO
-		    SET
-		    	VIEWORDER = ( SELECT 
-		      						VIEWORDER
-		        			  FROM 
-		        					EZBOARDSTD.TBL_Board_MyBoards 
-		        			  WHERE
-		        					TENANT_ID = #tenantID#
-		        			  AND  
-		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
-		    WHERE
-		    	TENANT_ID = #tenantID#
-		    AND  
-		    	USERID = #userID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.set_TabUsed" parameterClass="Map">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_BOARD_NEWBOARD_ORDERINFO
-          	SET 
-          		TABUSED = #v_TABUSED#
-          	WHERE
-          		TENANT_ID = #v_TENANTID#
-          	AND  
-          		USERID = #v_USERID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.set_TabUsed2" parameterClass="Map">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_MyBoards
-          	SET 
-          		TABUSED = #v_TABUSED#
-          	WHERE  
-          		TENANT_ID = #v_TENANTID#
-          	AND
-          		BOARDID = #v_BOARDID#
-		]]>
-	</update>
-	
-
-	<select id="EzBoardDAO.getBoardConfig" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				USERID
-			FROM 
-				EZBOARDSTD.TBL_Board_Configuration
-			WHERE  
-				TENANT_ID = #v_TENANTID#
-			AND
-				USERID = #v_USERID#
-		]]>
-	</select>
-	
-	<update id="EzBoardDAO.setBoardList_Config_U" parameterClass="BoardConfigVO">
-		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Configuration
-            SET 
-            	LISTCOUNT = #listCount#,
-            	PREVIEW = #preview#,
-            	PREVIEWWLIST = #previewWList#,
-            	PREVIEWWCONTENT = #previewWContent#,
-            	PREVIEWHLIST = #previewHList#,
-            	PREVIEWHCONTENT = #previewHContent#
-            WHERE  
-            	TENANT_ID = #tenantID#
-            AND
-            	USERID = #userId#
-		]]>
-	</update>
-	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
-		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
-			)
-          	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
-          	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.setBoardList_Config2_U" parameterClass="Map">
-		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
-			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Configuration
-          		SET 
-          			PREVIEW = #v_PREVIEWMODE#
-        		WHERE  
-        			TENANT_ID = #v_TENANTID#
-        		AND
-        			USERID = #v_USERID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="W">
-			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Configuration
-                SET 
-                	PREVIEW = #v_PREVIEWMODE#,
-                    PREVIEWWLIST = #v_LIST#,
-                    PREVIEWWCONTENT = #v_CONTENT#,
-                    ListCount = #v_LISTCNT#
-                WHERE
-                	TENANT_ID = #v_TENANTID#
-                AND  
-                	USERID = #v_USERID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="H">
-			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Configuration
-                SET 
-                	PREVIEW = #v_PREVIEWMODE#,
-                    PREVIEWHLIST = #v_LIST#,
-                    PREVIEWHCONTENT = #v_CONTENT#,
-                    ListCount = #v_LISTCNT#
-                WHERE
-                	TENANT_ID = #v_TENANTID#
-                AND  
-                	USERID = #v_USERID#
-			]]>
-		</isEqual>
-	</update>
-	
-	<insert id="EzBoardDAO.setBoardList_Config2_I" parameterClass="Map">
-		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
-			<![CDATA[
-				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW,   	  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 50, 		   50, 				#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="W">
-			<![CDATA[
-				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, 	#v_CONTENT#, 	 50, 		   50, 				#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="H">
-			<![CDATA[
-				INSERT INTO EZBOARDSTD.TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 #v_LIST#, 	   #v_CONTENT#, 	#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-	</insert>
-
 	<select id="EzBoardDAO.getBoardItemRead" parameterClass="Map" resultClass="String">
 		<isEqual property="v_pBoardID" compareValue="{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}">
 			<![CDATA[
@@ -3105,7 +2814,7 @@
       				NOT EXISTS ( SELECT 
       								ItemID 
       							 FROM 
-      							 	EZBOARDSTD.TBL_Board_Item_Read 
+      							 	TBL_Board_Item_Read 
                         		 WHERE  
                         		 	TENANT_ID = #v_TENANTID#
                         		 AND
@@ -3116,7 +2825,7 @@
                                  	BoardID = ( SELECT 
                                  					BoardID 
                                  				FROM 
-                                 					EZBOARDSTD.TBL_Board_Item
+                                 					TBL_Board_Item
                                  				WHERE
                                  					TENANT_ID = #v_TENANTID#
                                  				AND  
@@ -3133,7 +2842,7 @@
       				NOT EXISTS ( SELECT 
       								ItemID 
       							 FROM 
-      							 	EZBOARDSTD.TBL_Board_Item_Read 
+      							 	TBL_Board_Item_Read 
                         		 WHERE  
                         		 	TENANT_ID = #v_TENANTID#
                         		 AND
@@ -3151,7 +2860,7 @@
 			SELECT 
 				WriterID
 			FROM 
-				EZBOARDSTD.TBL_Board_Item 
+				TBL_Board_Item 
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -3159,9 +2868,339 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getContentInfo" parameterClass="Map" resultClass="String">
+		<isEqual property="type" compareValue="BOARDCONTENT">
+			<![CDATA[
+				SELECT 
+					CONTENTLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_ITEM
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					ITEMID = #docID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BOARDCONTENTTEMP">
+			<![CDATA[
+				SELECT 
+					CONTENTLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_ITEM_TEMP
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					ITEMID = #docID#
+			]]>
+		</isEqual>
+		<isEqual property="type" compareValue="BOARDFORM">
+			<![CDATA[
+				SELECT 
+					FORMLOCATION AS FILEPATH 
+				FROM 
+					TBL_BOARD_BOARDINFO
+				WHERE 
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #docID#
+			]]>
+		</isEqual>
+	</select>
+	
+	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item_Attachments ( 
+				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
+			)
+       		VALUES ( 
+       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       		)
+		]]>
+	</insert>
+	
+	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
+		<![CDATA[
+			DELETE TBL_Photo_ImageItem
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				IMAGEID = #v_pIMAGEID#
+		]]>
+	</delete>
+	
+	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Photo_ImageItem ( 
+				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
+			)
+     		VALUES ( 
+     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<select id="EzBoardDAO.getApprFlag" parameterClass="BoardListVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				apprflag
+			FROM 
+				TBL_Board_BoardInfo
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				boardid = #boardID#
+		]]>
+	</select>
+	
+	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItem2" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item_temp ( 
+			ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+       	VALUES ( 
+       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item_temp WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
+       	)
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, APPRFLAG, TENANT_ID 
+			)
+	        VALUES ( 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
+	        )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemPhoto2" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, TENANT_ID 
+			)
+	        VALUES ( 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
+	        )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemTempPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item_temp ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, tenant_id 
+			)
+        	VALUES ( 
+        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT NVL(MAX(DOCNO), 0) + 1 FROM TBL_Board_Item_temp WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
+        	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.set_ListOrder_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_MyBoards
+            SET 
+            	VIEWORDER = #count#
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	BOARDID = #boardID#
+            AND 
+            	( USERID = #userID#
+            	  OR USERID = 'everyone' )
+		]]>
+	</update>
+	
+	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
+		<![CDATA[
+			DELETE TBL_Board_MyBoards
+			WHERE  
+				TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardID#
+            AND 
+            	USERID = #userID#
+		]]>
+	</delete>
+	
+	<update id="EzBoardDAO.set_ListOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
+		    SET
+		    	VIEWORDER = ( SELECT 
+		      						VIEWORDER
+		        			  FROM 
+		        					TBL_Board_MyBoards 
+		        			  WHERE
+		        					TENANT_ID = #tenantID#
+		        			  AND  
+		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND  
+		    	USERID = #userID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.set_TabUsed" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
+          	SET 
+          		TABUSED = #v_TABUSED#
+          	WHERE
+          		TENANT_ID = #v_TENANTID#
+          	AND  
+          		USERID = #v_USERID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.set_TabUsed2" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_MyBoards
+          	SET 
+          		TABUSED = #v_TABUSED#
+          	WHERE  
+          		TENANT_ID = #v_TENANTID#
+          	AND
+          		BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
+
+	<select id="EzBoardDAO.getBoardConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM 
+				TBL_Board_Configuration
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				USERID = #v_USERID#
+		]]>
+	</select>
+	
+	<update id="EzBoardDAO.setBoardList_Config_U" parameterClass="BoardConfigVO">
+		<![CDATA[
+			UPDATE TBL_Board_Configuration
+            SET 
+            	LISTCOUNT = #listCount#,
+            	PREVIEW = #preview#,
+            	PREVIEWWLIST = #previewWList#,
+            	PREVIEWWCONTENT = #previewWContent#,
+            	PREVIEWHLIST = #previewHList#,
+            	PREVIEWHCONTENT = #previewHContent#
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	USERID = #userId#
+		]]>
+	</update>
+	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Configuration ( 
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
+			)
+          	VALUES ( 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
+          	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.setBoardList_Config2_U" parameterClass="Map">
+		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+          		SET 
+          			PREVIEW = #v_PREVIEWMODE#
+        		WHERE  
+        			TENANT_ID = #v_TENANTID#
+        		AND
+        			USERID = #v_USERID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="W">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+                SET 
+                	PREVIEW = #v_PREVIEWMODE#,
+                    PREVIEWWLIST = #v_LIST#,
+                    PREVIEWWCONTENT = #v_CONTENT#,
+                    ListCount = #v_LISTCNT#
+                WHERE
+                	TENANT_ID = #v_TENANTID#
+                AND  
+                	USERID = #v_USERID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="H">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+                SET 
+                	PREVIEW = #v_PREVIEWMODE#,
+                    PREVIEWHLIST = #v_LIST#,
+                    PREVIEWHCONTENT = #v_CONTENT#,
+                    ListCount = #v_LISTCNT#
+                WHERE
+                	TENANT_ID = #v_TENANTID#
+                AND  
+                	USERID = #v_USERID#
+			]]>
+		</isEqual>
+	</update>
+	
+	<insert id="EzBoardDAO.setBoardList_Config2_I" parameterClass="Map">
+		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW,   	  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 50, 		   50, 				#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="W">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, 	#v_CONTENT#, 	 50, 		   50, 				#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="H">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 #v_LIST#, 	   #v_CONTENT#, 	#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+	</insert>
+
 	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_Item_Read ( 
+			INSERT INTO TBL_Board_Item_Read ( 
 				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
 			)
         	VALUES ( 
@@ -3172,7 +3211,7 @@
 	
 	<update id="EzBoardDAO.setAsRead2">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
             SET 
             	ReadCount = ReadCount + 1
           	WHERE
@@ -3184,7 +3223,7 @@
 	
 	<update id="EzBoardDAO.setNotiOrder" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
           	SET 
           		NOTINO = #sn#
         	WHERE  
@@ -3196,7 +3235,7 @@
 	
 	<update id="EzBoardDAO.setMainImageID" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Photo_ImageItem
+			UPDATE TBL_Photo_ImageItem
         	SET 
         		main_Flag = CASE
         					WHEN imageID = #v_IMAGEID# THEN 'Y'
@@ -3213,7 +3252,7 @@
 		SELECT
 			main_flag
 		FROM
-			EZBOARDSTD.TBL_Photo_ImageItem
+			TBL_Photo_ImageItem
 		WHERE
        		tenant_id = #v_TENANTID#
        	AND  
@@ -3224,7 +3263,7 @@
 	
 <!-- 	<update id="EzBoardDAO.setMainImageID2" parameterClass="Map"> -->
 <!-- 		<![CDATA[ -->
-<!-- 			UPDATE EZBOARDSTD.TBL_Photo_ImageItem -->
+<!-- 			UPDATE TBL_Photo_ImageItem -->
 <!--         	SET  -->
 <!--         		main_Flag = 'Y' -->
 <!--         	WHERE   -->
@@ -3238,7 +3277,7 @@
 	
 	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
 		<![CDATA[
-			UPDATE ezBoardSTD.TBL_Board_Configuration
+			UPDATE TBL_Board_Configuration
         	SET 
         		ListCount = #v_LISTCOUNT#,
               	PreView = #v_PREVIEW#
@@ -3251,7 +3290,7 @@
 	
 	<insert id="EzBoardDAO.setBoardConfig2" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO ezBoardSTD.TBL_Board_Configuration ( 
+			INSERT INTO TBL_Board_Configuration ( 
 				UserID, 	ListCount, 	   PreView, 	tenant_id
 			)
       		VALUES ( 
@@ -3262,7 +3301,7 @@
 	
 	<update id="EzBoardDAO.updateMoveItem" parameterClass="Map">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
       		SET 
       			COPIEDITEM = 1
     		WHERE  
@@ -3277,9 +3316,9 @@
 			SELECT 
 				APPRUSERID 
 			FROM 
-				EZBOARDSTD.TBL_Board_ApprList A
+				TBL_Board_ApprList A
             JOIN 
-            	EZBOARDSTD.TBL_Board_Item B   
+            	TBL_Board_Item B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -3296,7 +3335,7 @@
 	<update id="EzBoardDAO.apprItem" parameterClass="Map">
 		<isEqual property="v_MODE" compareValue="Y">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Item
+				UPDATE TBL_Board_Item
                 SET 
                 	APPRFLAG = 'Y'
                 WHERE  
@@ -3307,7 +3346,7 @@
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="C">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Board_Item
+				UPDATE TBL_Board_Item
                 SET 
                 	APPRFLAG = 'C'
                 WHERE  
@@ -3319,7 +3358,7 @@
 		<isNotEqual property="v_MODE" compareValue="Y">
 			<isNotEqual property="v_MODE" compareValue="C">
 				<![CDATA[
-					UPDATE EZBOARDSTD.TBL_Board_Item
+					UPDATE TBL_Board_Item
 	                SET 
 	                	APPRFLAG = 'N'
 	                WHERE  
@@ -3334,7 +3373,7 @@
 	<update id="EzBoardDAO.photoListUpdate" parameterClass="Map">
 		<isNotEmpty property="v_FilePath">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Photo_ImageItem
+				UPDATE TBL_Photo_ImageItem
          		SET 
          			FilePath = #v_FilePath#,
              		FileContent = #v_FileContent#,
@@ -3350,7 +3389,7 @@
 		</isNotEmpty>
 		<isEmpty property="v_FilePath">
 			<![CDATA[
-				UPDATE EZBOARDSTD.TBL_Photo_ImageItem
+				UPDATE TBL_Photo_ImageItem
          		SET 
          			FileContent = #v_FileContent#
        			WHERE  
@@ -3364,7 +3403,7 @@
 	</update>
 	
 	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
 		    SET 
 		    	UpdateDate = #writeDate#,
 		    	Importance = #importance#,
@@ -3400,7 +3439,7 @@
 	
 	<update id="EzBoardDAO.setInitReadCount" parameterClass="BoardListVO">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
 			SET 
 				ReadCount = 0
 	      	WHERE
@@ -3412,7 +3451,7 @@
 	
 	<update id="EzBoardDAO.setApprFlag" parameterClass="BoardListVO">
 		<![CDATA[
-			UPDATE EZBOARDSTD.TBL_Board_Item
+			UPDATE TBL_Board_Item
          	SET 
          		APPRFLAG = 'N'
        		WHERE
@@ -3426,7 +3465,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_Item_Read
+			DELETE TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3436,7 +3475,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_Item_Read
+			DELETE TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3446,7 +3485,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_Item
+			DELETE TBL_Board_Item
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3456,7 +3495,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_OneLineReply
+			DELETE TBL_Board_OneLineReply
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3466,7 +3505,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_Item_Attachments
+			DELETE TBL_Board_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3476,7 +3515,7 @@
 	
 	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZBOARDSTD.TBL_Board_DeleteReservedItem (
+			INSERT INTO TBL_Board_DeleteReservedItem (
 				BOARDID,   ITEMID,   TENANT_ID 
 			)
       		VALUES ( 
@@ -3487,7 +3526,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Board_Item_temp
+			DELETE TBL_Board_Item_temp
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3497,7 +3536,7 @@
 	
 	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
 		<![CDATA[
-			DELETE EZBOARDSTD.TBL_Photo_ImageItem
+			DELETE TBL_Photo_ImageItem
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
@@ -3512,7 +3551,7 @@
 			SELECT 
 				BOARDNAME 
         	FROM 
-        		EZBOARDSTD.TBL_Board_BoardInfo 
+        		TBL_Board_BoardInfo 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -3525,7 +3564,7 @@
 			SELECT 
 				*
 			FROM 
-				ezBoardSTD.TBL_BOARD_BOARDINFO 
+				TBL_BOARD_BOARDINFO 
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -3543,7 +3582,7 @@
 			 	previewhlist ,
               	previewhcontent 
         	FROM 
-        	    ezBoardSTD.TBL_BOARD_CONFIGURATION 
+        	    TBL_BOARD_CONFIGURATION 
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -3556,7 +3595,7 @@
 			SELECT 
 				* 
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS 
+	        	TBL_BOARD_ITEM_ATTACHMENTS 
 	       	WHERE  
 	       		tenant_id = #tenantID#
 	       	AND
@@ -3569,7 +3608,7 @@
 			SELECT 
 				itemid ,title 
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        	TBL_BOARD_ITEM 
 	        WHERE  
 	        	tenant_id = #v_TENANTID#
 	        AND
@@ -3597,7 +3636,7 @@
 	        		itemid ,
 	                title 
 	        	 FROM 
-	        	 	ezBoardSTD.TBL_BOARD_ITEM 
+	        	 	TBL_BOARD_ITEM 
 	        	 WHERE  
 	        	 	tenant_id = #v_TENANTID#
 	        	 AND
@@ -3626,7 +3665,7 @@
 	        	(SELECT 
 	        		itemid ,title 
 	             FROM 
-	             	ezBoardSTD.TBL_BOARD_ITEM 
+	             	TBL_BOARD_ITEM 
 	        	 WHERE  
 	        	 	tenant_id = #v_TENANTID#
 	        	 AND
@@ -3656,7 +3695,7 @@
         			 itemid ,
                      title 
         		  FROM 
-        		  	 ezBoardSTD.TBL_BOARD_ITEM 
+        		  	 TBL_BOARD_ITEM 
        			  WHERE
        			  	 tenant_id = #v_TENANTID#
        			  AND  
@@ -3683,7 +3722,7 @@
 			SELECT 
 				COUNT(itemid) cnt  
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        	TBL_BOARD_ITEM 
 	        WHERE  
 	        	tenant_id = #tenantID#
 	        AND
@@ -3704,9 +3743,9 @@
 			SELECT 
 				COUNT(B.appruserid) AS cnt
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ITEM A
+	        	TBL_BOARD_ITEM A
 	        JOIN 
-	        	ezBoardSTD.TBL_BOARD_APPRLIST B   
+	        	TBL_BOARD_APPRLIST B   
 	        ON 
 	        	A.tenant_id = B.tenant_id
 	        AND
@@ -3725,7 +3764,7 @@
 			SELECT 
 				COUNT(boardid)
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_BOARDINFO 
+	        	TBL_BOARD_BOARDINFO 
 	        WHERE  
 	        	tenant_id = #tenantID#
 	        AND
@@ -3744,7 +3783,7 @@
 				content, 
 				writedate
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ONELINEREPLY 
+	        	TBL_BOARD_ONELINEREPLY 
 	        WHERE  
 	        	tenant_id = #v_TENANTID#
 	        AND
@@ -3761,7 +3800,7 @@
 			SELECT 
 				COUNT(replyid)
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ONELINEREPLY 
+	        	TBL_BOARD_ONELINEREPLY 
 	        WHERE  
 	        	tenant_id = #v_TENANTID#
 	        AND
@@ -3776,9 +3815,9 @@
 			SELECT 
 				COUNT(B.appruserid)
         	FROM 
-        		ezBoardSTD.TBL_BOARD_ITEM A
+        		TBL_BOARD_ITEM A
 	        JOIN 
-	        	ezBoardSTD.TBL_BOARD_APPRLIST B   
+	        	TBL_BOARD_APPRLIST B   
 	        ON 
 	        	A.tenant_id = B.tenant_id
 	        AND
@@ -3797,7 +3836,7 @@
 			SELECT 
 				parentboardid 
         	FROM 
-        		ezBoardSTD.TBL_BOARD_BOARDINFO 
+        		TBL_BOARD_BOARDINFO 
         	WHERE  
         		tenant_id = #tenantID#
         	AND
@@ -3810,7 +3849,7 @@
 			SELECT 
 				docpassword 
 			FROM 
-				ezBoardSTD.TBL_BOARD_ITEM 
+				TBL_BOARD_ITEM 
 			WHERE 
 				tenant_id = #tenantID#
 			AND
@@ -3823,7 +3862,7 @@
 			SELECT 
 				COUNT(itemid)
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_ITEM 
+	        	TBL_BOARD_ITEM 
 	        WHERE  
 	        	tenant_id = #tenantID#
 	        AND
@@ -3838,9 +3877,9 @@
 			SELECT 
 				COUNT(*)
 	        FROM 
-	        	ezBoardSTD.TBL_BOARD_APPRLIST A
+	        	TBL_BOARD_APPRLIST A
 			JOIN
-				ezBoardSTD.TBL_BOARD_ITEM B
+				TBL_BOARD_ITEM B
 			ON 
 				A.tenant_id = B.tenant_id
 			AND
@@ -3865,7 +3904,7 @@
 				WriterName$lang$ AS WriterName, 
 				TUM.MAIL 
 			FROM 
-				ezBoardSTD.TBL_Board_Item TBI
+				TBL_Board_Item TBI
             INNER JOIN 
             	EZHRMASTER.TBLUSERMASTER TUM
 			ON 
@@ -3888,7 +3927,7 @@
 				B.MAIL AS EMAIL, 
 				B.DisplayName$lang$ AS DISPLAYNAME, 
    			FROM 
-   				EZBOARDSTD.TBL_BOARD_APPRLIST A 
+   				TBL_BOARD_APPRLIST A 
    			INNER JOIN 
    				EZHRMASTER.TBLUserMaster B
    			ON 
@@ -3902,81 +3941,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO ezBoardSTD.TBL_PHOTO_IMAGEITEM(
-				boardid, 	itemid, 	imageid, 	filepath, 	filecontent, 	writedate, 	 writerdeptid, 	 writerid, 	 writername,   imagename, 	 main_flag, tenant_id
-			)
-        	VALUES(
-        	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N', 		#tenantID#
-        	)
-		]]>
-	</insert>
-	
-	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
-		<![CDATA[
-			INSERT INTO ezBoardSTD.TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   									  content, 		password, 	  tenant_id
-			)
-        	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
-        	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.updateCopyItem" parameterClass="Map">
-		<![CDATA[
-			UPDATE ezBoardSTD.TBL_BOARD_ITEM
-           	SET 
-           		copieditem = 1
-           	WHERE  
-           		tenant_id = #tenantID#
-           	AND
-           		itemid = #destItemID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.photoListAlbumEdit" parameterClass="Map">
-		<![CDATA[
-			UPDATE ezBoardSTD.TBL_BOARD_ITEM
-	        SET 
-	        	title 		= #v_TITLE#,
-	        	maincontent = #v_CONTENT#
-	        WHERE  
-	        	tenant_id = #v_TENANTID#
-	        AND
-	        	boardid = #v_BOARDID#
-	        AND 
-	        	itemid = #v_ITEMID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.photoListAlbumEditTemp" parameterClass="Map">
-		<![CDATA[
-			UPDATE ezBoardSTD.TBL_BOARD_ITEM_TEMP
-	        SET 
-	        	title 		= #v_TITLE#,
-	        	maincontent = #v_CONTENT#
-	        WHERE  
-	        	tenant_id = #v_TENANTID#
-	        AND
-	        	boardid = #v_BOARDID#
-	        AND 
-	        	itemid = #v_ITEMID#
-		]]>
-	</update>
-	
-	<delete id="EzBoardDAO.newItem" parameterClass="BoardListVO">
-		<![CDATA[
-			DELETE FROM
-				ezBoardSTD.TBL_BOARD_ITEM_ATTACHMENTS
-	   		WHERE  
-	   			tenant_id = #tenantID#
-	   		AND
-	   			itemid = #itemID#
-   		]]>
-	</delete>
-	
 	<select id="EzBoardDAO.getPostNotiMailUserList" parameterClass="Map" resultClass="BoardAccessVO">
 		<isEqual property="primary" compareValue="1">
 			<![CDATA[
@@ -3984,7 +3948,7 @@
 					accessid,
 					accessname
 				FROM
-					ezBoardSTD.TBL_BOARD_BOARDMANAGE
+					TBL_BOARD_BOARDMANAGE
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -4001,7 +3965,7 @@
 					accessid,
 					accessname2 AS accessname
 				FROM
-					ezBoardSTD.TBL_BOARD_BOARDMANAGE
+					TBL_BOARD_BOARDMANAGE
 				WHERE
 					tenant_id = #tenantID#
 				AND
@@ -4015,16 +3979,94 @@
 	</select>
 	
 	<select id="EzBoardDAO.getItemViewNew" parameterClass="Map" resultClass="Integer">
-		SELECT
-			COUNT(*)
-		FROM
-			ezBoardSTD.TBL_BOARD_ITEM
-		WHERE
-			tenant_id = #tenantID#
-		AND
-			boardid = #boardID#
-        AND
-        	itemid = #itemID#
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_BOARD_ITEM
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				boardid = #boardID#
+	        AND
+	        	itemid = #itemID#
+		]]>
 	</select>
+	
+	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_PHOTO_IMAGEITEM(
+				boardid, 	itemid, 	imageid, 	filepath, 	filecontent, 	writedate, 	 writerdeptid, 	 writerid, 	 writername,   imagename, 	 main_flag, tenant_id
+			)
+        	VALUES(
+        	 	#boardID#,  #itemID#,   #imageID#,  #filePath#, #fileContent#,  #writeDate#, #writerDeptID#, #writerID#, #writerName#, #imageNames#, 'N', 		#tenantID#
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_BOARD_ONELINEREPLY (
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   									  content, 		password, 	  tenant_id
+			)
+        	VALUES (
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
+        	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.updateCopyItem" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ITEM
+           	SET 
+           		copieditem = 1
+           	WHERE  
+           		tenant_id = #tenantID#
+           	AND
+           		itemid = #destItemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.photoListAlbumEdit" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ITEM
+	        SET 
+	        	title 		= #v_TITLE#,
+	        	maincontent = #v_CONTENT#
+	        WHERE  
+	        	tenant_id = #v_TENANTID#
+	        AND
+	        	boardid = #v_BOARDID#
+	        AND 
+	        	itemid = #v_ITEMID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.photoListAlbumEditTemp" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_ITEM_TEMP
+	        SET 
+	        	title 		= #v_TITLE#,
+	        	maincontent = #v_CONTENT#
+	        WHERE  
+	        	tenant_id = #v_TENANTID#
+	        AND
+	        	boardid = #v_BOARDID#
+	        AND 
+	        	itemid = #v_ITEMID#
+		]]>
+	</update>
+	
+	<delete id="EzBoardDAO.newItem" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_BOARD_ITEM_ATTACHMENTS
+	   		WHERE  
+	   			tenant_id = #tenantID#
+	   		AND
+	   			itemid = #itemID#
+   		]]>
+	</delete>
+	
 </sqlMap>
 

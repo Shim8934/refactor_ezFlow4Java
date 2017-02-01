@@ -9331,9 +9331,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 
-		int result = ezApprovalGDAO.spGetSerialNo(map);
+		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
-		if (result == 0) {
+		if (result == null) {
 			ezApprovalGDAO.insertSerialNo(map);
 			map.put("v_CurSN", "1");
 		}
@@ -11493,9 +11493,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
 		
-		int result = ezApprovalGDAO.spGetSerialNo(map);
+		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
-		if (result == 0) {
+		if (result == null) {
 			ezApprovalGDAO.insertSerialNo(map);
 			map.put("v_CurSN", "1");
 		}
@@ -12081,7 +12081,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL.append("isPublic, TENANT_ID) SELECT '" + newID + "', FormID, '" + docID + "', DocType, '" + docState);
 			strSQL.append("', '" + staASDoJak + "', '" + url + "', DocTitle, DocNo, HasAttachYN, ");
             strSQL.append("'N', NULL, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, ");
-            strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID FROM TBAPRDOCINFO WHERE DocID = '" + docID + "';\n");
+            strSQL.append("WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID FROM TBAPRDOCINFO WHERE DocID = '" + docID + "' , TENANT_ID =" + tenantID +";\n");
 
 			// 수정(2005.08.29) : 보안결재 필드(SecurityApproval) 추가
             // 2010.08.03 다국어

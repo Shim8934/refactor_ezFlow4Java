@@ -234,4 +234,6 @@ public interface EzBoardService {
 
 	public String getReverseDateNow() throws Exception;
 
+	public String getContentInfo(String type, String docID, int tenantID) throws Exception;
+
 }

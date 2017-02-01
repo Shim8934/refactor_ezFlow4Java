@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezPersonal.dao;
 
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -22,7 +22,6 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzPersonalDAO")
@@ -150,7 +149,10 @@ public class EzPersonalDAO extends EgovAbstractDAO{
     }
 	
     private String getPasswordForLocal (String cn, int tenantID) {
-        return (String) select("EzPersonalDAO.getPassword", cn);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("cn", cn);
+    	map.put("tenantID", tenantID);
+        return (String) select("EzPersonalDAO.getPassword", map);
     }
     
     public String getApprovNotiConfig_S1 (Map<String, Object> map) {

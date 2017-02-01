@@ -791,11 +791,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		
 		strSQL += "SELECT A.*, B.DISPLAYNAME AS THEMENM, B.DISPLAYNAME2 AS THEMENM2, B.DISPLAYNAME3 AS THEMENM3,B.DISPLAYNAME4 AS THEMENM4,"
    					+"(SELECT DISPLAYNAME" 
-   					+" FROM EZPORTAL.TBL_PORTALPAGE_CATEGORY "
+   					+" FROM TBL_PORTALPAGE_CATEGORY "
    					+"WHERE TENANT_ID="+tenantID+" AND CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
-   					+"FROM EZPORTAL.TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN EZPORTAL.TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
-   					+"WHERE (NOT EXISTS(SELECT UID_ FROM EZPORTAL.TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
+   					+"FROM TBL_PORTALPAGE_GENERAL A "
+   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
+   					+"WHERE (NOT EXISTS(SELECT UID_ FROM TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
 		if (pUseFlag != null && !pUseFlag.equals("")) {
@@ -1458,7 +1458,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pCOMPANYID", pCompanyID);*/
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
-		String strSQL = "SELECT COUNT(UID_) FROM EZPORTAL.TBL_PORTLET_GENERAL WHERE DISPLAYNAME like '%"+pDisplayName+"%'";
+		String strSQL = "SELECT COUNT(UID_) FROM TBL_PORTLET_GENERAL WHERE DISPLAYNAME like '%"+pDisplayName+"%'";
 		
 		if (pGubunFlag != null && !pGubunFlag.equals("")) {
 			strSQL += " AND PORTLET_TYPE="+"'"+pGubunFlag+"'";
@@ -1499,7 +1499,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String strSQL = "";
 		
 		strSQL += "SELECT * FROM ("
-   					+"SELECT A.*, ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM FROM EZPORTAL.TBL_PORTLET_GENERAL A "  
+   					+"SELECT A.*, ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM FROM TBL_PORTLET_GENERAL A "  
    					+"WHERE DISPLAYNAME like '%"+pDisplayName+"%'";
 		
 		if (pGubunFlag != null && !pGubunFlag.equals("")) {

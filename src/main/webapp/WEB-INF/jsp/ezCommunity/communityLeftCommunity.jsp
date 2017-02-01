@@ -66,11 +66,11 @@
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Notice&type=notice&userLevel=" + UserLevel;
+		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Notice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
-				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Board&type=board&userLevel=" + UserLevel;
+				            window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
 				            document.getElementById('Map520').click();
 				        }else if (funCode == "3") {
 				            GoTopNavigate("<spring:message code='ezCommunity.t1117' />");
@@ -165,7 +165,7 @@
                     var title = cBoardVO.title;
                     var boardNum = cBoardVO.no;
                     var _li = document.createElement("li");
-                    _li.setAttribute("onClick", "btn_bbsView(" + boardNum + ",'c_board')");
+                    _li.setAttribute("onClick", "btn_bbsView(" + boardNum + ",'tbl_c_board')");
                     
                     if (CrossYN()){
                         _li.textContent = title;
@@ -403,10 +403,10 @@
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
 	                    case "<spring:message code = 'ezCommunity.t73' />":
-                            window.open("/ezCommunity/board/bbsList.do?bName=c_Notice&type=notice", "right");
+                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_Notice&type=notice", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t74' />":
-                            window.open("/ezCommunity/board/bbsList.do?bName=c_Board&type=board", "right");
+                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t1117' />":
                             window.open("/ezCommunity/searchKey.do?sRadio=c_ClubName&keyword=&key", "right");
@@ -538,7 +538,7 @@
                 var url = "";
                 switch (idx) {
                     case 1:
-                        url = "/ezCommunity/Board/bbsList.do?bName=c_Notice&type=notice";
+                        url = "/ezCommunity/Board/bbsList.do?bName=tbl_c_Notice&type=notice";
                         break;
 
                     case 2:
@@ -549,7 +549,7 @@
             }
             
             function List_more() {
-                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=c_Board&type=board&userLevel=" + UserLevel;
+                window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board&userLevel=" + UserLevel;
             }
             
             function make_Cop() {
