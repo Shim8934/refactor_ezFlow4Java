@@ -174,8 +174,14 @@
 			    document.getElementById("file1").multiple = false;
 			}
 			
-			if (document.getElementById("eSubject").value == "")
+			if (document.getElementById("eSubject").value == "") {
 			    document.getElementById("MsgTo").focus();
+			}
+			
+			// 전달의 경우 쿼터 초과 시 팝업창띄움
+			<c:if test="${overQuota == true}">
+				alert(strLang241);
+            </c:if>
 		}
 	    
 		var isAutoSave = false;
@@ -189,18 +195,18 @@
 	    window.onresize = function () {       
 	        if (document.getElementById("BccViewer").getAttribute("status") == "off") {
 	            <c:if test="${isCrossBrowser == true}">
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+	            	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
 	            </c:if>
                 <c:if test="${isCrossBrowser != true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
                 </c:if>	            
 	        }
 	        else {
 	            <c:if test="${isCrossBrowser == true}">
-	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+	            	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
 	            </c:if>
                 <c:if test="${isCrossBrowser != true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
                 </c:if>	            
 	        }
 	    }
@@ -753,18 +759,18 @@
 	        }
             if (document.getElementById("BccViewer").getAttribute("status") == "off") {
                 <c:if test="${isCrossBrowser == true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 400 + "PX";
                 </c:if>
                 <c:if test="${isCrossBrowser != true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 307 + "PX";
                 </c:if>             
             }
             else {
                 <c:if test="${isCrossBrowser == true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 460 + "PX";
                 </c:if>
                 <c:if test="${isCrossBrowser != true}">
-                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
+                	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 367 + "PX";
                 </c:if>             
             }	        
 	    }

@@ -877,8 +877,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)select("EzApprovalG.setLastOpinionToOrgDocOpinionSN", map1);
 	}
 	
-	public int spGetSerialNo(Map<String, Object> map) throws Exception{
-		return (int)select("EzApprovalG.spGetSerialNo", map);
+	public String spGetSerialNo(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.spGetSerialNo", map);
 	}
 	
 	public int getMaxTmpDocSN(Map<String, Object> map) throws Exception{
@@ -1296,7 +1296,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateHistoryForLine", map);
+		insert("EzApprovalG.updateHistoryForLine", map);
 	}
 	
 	public void setJijung(Map<String, Object> map) throws Exception{

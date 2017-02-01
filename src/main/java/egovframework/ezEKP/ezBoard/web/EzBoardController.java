@@ -537,7 +537,9 @@ public class EzBoardController extends EgovFileMngUtil{
             	boardInfo.setSortBy(boardPropertyVO.getSortBy());
             }
             
-            pBoardName = boardInfo.getBoardName();
+            if (boardInfo.getBoardName() != null) {
+            	pBoardName = boardInfo.getBoardName();
+            }
         }
 
         model.addAttribute("boardInfo", boardInfo);
@@ -4491,12 +4493,14 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/getContentInfo.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String getContentInfo(HttpServletRequest request) throws Exception{
+	public String getContentInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
 		String type = request.getParameter("type");
 		String docID = request.getParameter("docID");
 		String filePath = "";
 		
-		filePath = ezCommonService.getContentInfo(type, docID);
+		filePath = ezBoardService.getContentInfo(type, docID, userInfo.getTenantId());
 		
 		return filePath;
 	}

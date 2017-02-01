@@ -1934,7 +1934,7 @@ function selFirstRow(Resultxml) {
 }
 
 function getDataInfo(jobState) {
-    var xmlpara = createXmlDom();
+	var xmlpara = createXmlDom();
 
     switch (jobState) {
         case "3":
