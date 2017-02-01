@@ -5801,8 +5801,11 @@
 		   		ROWNUM <= #v_PAGESIZE# 
 		   	AND 
 		   		TBEXPENDAPRDOCINFO.DELFLAG IS NULL 
+		   	AND
+		   		TBENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
 		   	AND 
 		   		TBENDRECEIPTPOINTINFO.RECEIPTPOINTID
+		   
 		   	]]>
 		   	<isEqual property="v_MODELENGTH" compareValue="2">
 		   	NOT
@@ -6996,7 +6999,7 @@
 			END
 		FROM (
 				 SELECT 
-				 	tbContainerType.ContainerTypeID ContainerTypeID,
+				 	tbContainerType.ContainerTypeID ContainerTypeID
 		         FROM 
 		         	EZAPPROVALG_${companyID}.tbContainerType 
 		         JOIN 
@@ -7769,9 +7772,9 @@
 <!-- 	<procedure id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="int"> -->
 <!-- 		{CALL EZAPPROVALG_${companyID}.spGetSerialNo(#iv_Type1#, #iv_Type2#, #iv_Type3#, #v_AccountYear#, #v_RtnSN,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="int">
+	<select id="EzApprovalG.spGetSerialNo" parameterClass="Map" resultClass="String">
 			SELECT 
-					MIN(RegSerialNo)  
+				 MIN(RegSerialNo)  
 		    FROM 
 		    		EZAPPROVALG_${companyID}.TBSERIALNUMGEN 
 		    WHERE  
@@ -7853,10 +7856,11 @@
         		  Type3, 
         		  TimeSep, 
         		  RegSerialNo, 
-        		  RollbackFlag )
+        		  RollbackFlag,
+        		  TENANT_ID )
         	VALUES ( (
     					SELECT 
-    						CASE WHEN ISUsed ='0' THEN 0 
+    						CASE WHEN ISUsed ='0' THEN '0' 
           					ELSE #iv_Type1# 
           					END
      					FROM (
@@ -7872,7 +7876,7 @@
     					WHERE  Code = '1'), 
     					(
      		 			  SELECT 
-     		 			  	  CASE WHEN ISUsed ='0' THEN 0 
+     		 			  	  CASE WHEN ISUsed ='0' THEN '0' 
           					  ELSE #iv_Type2# 
           					  END
 					      FROM (
@@ -7888,8 +7892,8 @@
 					       WHERE  Code = '2'), 
 					       (
 	     		 			   SELECT 
-	     		 			   		CASE WHEN ISUsed ='0' THEN 0 
-	          						ELSE #iv_Type3# 
+	     		 			   		CASE WHEN ISUsed ='0' THEN '0' 
+	          						ELSE #iv_Type3#
 	         					 	END
 	     						FROM (
 	     								SELECT 
@@ -7919,18 +7923,19 @@
    												TENANT_ID =#v_TENANTID# )
    		 						WHERE  Code = '4'), 
    		 						1, 
-   		 						0 );
+   		 						0,
+   		 						#v_TENANTID# )
 	</insert>
 	<select id="EzApprovalG.rollBackFlag" parameterClass="Map" resultClass="int">
 			SELECT 
-					RollbackFlag 
+ 					RollbackFlag    
 		    FROM 
 		    		EZAPPROVALG_${companyID}.TBSERIALNUMGEN 
 		    WHERE  
 		    		Type1 = (
     					SELECT 
-    						CASE WHEN ISUsed ='0' THEN '0' 
-          					ELSE #iv_Type1# 
+    						CASE WHEN ISUsed ='0' THEN '0'
+          					ELSE #iv_Type1#
           					END
      					FROM (
      							SELECT 
@@ -8463,7 +8468,7 @@
    		 <isNotEmpty property="v_CONTID">
    			<![CDATA[
       		 AND 
-      		 	CONTAINERID IN (#v_CONTID#)
+      		 	CONTAINERID IN ($v_CONTID$)
    		 	]]>  
    		 </isNotEmpty>
    		 </isNotEqual>
@@ -8925,10 +8930,11 @@
      				  Type3, 
      				  TimeSep, 
      				  RegSerialNo, 
-     				  RollbackFlag )
+     				  RollbackFlag,
+     				  TENANT_ID )
      		VALUES ( (
 		   				SELECT 
-		   					CASE WHEN ISUsed ='0' THEN 0 
+		   					CASE WHEN ISUsed ='0' THEN '0' 
 		          			ELSE #iv_Type1# end
 		     			FROM (
 		     					SELECT 
@@ -8939,7 +8945,7 @@
 		   	 					WHERE  
 		   	 							CodeType = '007'
 		   	 					AND
-   	 								TENANT_ID=#TENANTID# )
+   	 								TENANT_ID=#v_TENANTID# )
 		    			WHERE  
 		    					Code = '1'), 
 		    		(
@@ -8955,7 +8961,7 @@
    	 							WHERE  
    	 								CodeType = '007'
    	 							AND
-   	 								TENANT_ID=#TENANTID# )
+   	 								TENANT_ID=#v_TENANTID# )
     					WHERE  
     							Code = '2'), 
     				(
@@ -8971,7 +8977,7 @@
    	 							WHERE  
    	 								CodeType = '007'
    	 							AND
-   	 								TENANT_ID=#TENANTID# )
+   	 								TENANT_ID=#v_TENANTID# )
     					WHERE  Code = '3'), 
     				(
     					SELECT 
@@ -8986,10 +8992,11 @@
    	 							WHERE  
    	 								CodeType = '007'
    	 							AND
-   	 								TENANT_ID=#TENANTID# )
+   	 								TENANT_ID=#v_TENANTID# )
     					WHERE  Code = '4'), 
     					#v_CurSN#, 
-    					1 )
+    					1 ,
+    					#v_TENANTID#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
@@ -9060,7 +9067,6 @@
 			]]>
 		</isEqual>
 		
-		<!-- ێܭ ݶޅȔ -->
 		<isEqual property="v_LISTTYPE" compareValue="4">
 			<![CDATA[
 				SELECT 
@@ -11375,7 +11381,7 @@
 	<insert id="EzApprovalG.updateHistoryForLine" parameterClass="Map">
 		 INSERT INTO 
 		 			EZAPPROVALG_${companyID}.TBHISTORYLINEINFO
-        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG )
+        			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID)
         ( SELECT 
         			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, SYSDATE, (
         																																																																				SELECT 
@@ -11385,7 +11391,7 @@
 																																																																					    WHERE  
 																																																																					    	DOCID = #v_DOCID#
 																																																																					    AND
-																																																																					    	TENANT_ID = #v_TENANTID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' 
+																																																																					    	TENANT_ID = #v_TENANTID#), #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, ' ' , TENANT_ID
           FROM 
         			EZAPPROVALG_${companyID}.TBAPRLINEINFO 
           WHERE  
