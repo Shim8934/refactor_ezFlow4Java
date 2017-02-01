@@ -961,7 +961,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM ezPortal.TBL_TOPMENU_ITEMS  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
 		
 		while (count < 10) {
 			
@@ -971,7 +971,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				break;
 			}
 			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TOPMENU_ITEMS  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
 			count ++;
 		}
 
@@ -1020,7 +1020,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
 		
 		while (count < 10) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1032,7 +1032,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				break;
 			}
 			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
 			count ++;
 		}
 
@@ -2091,7 +2091,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         String parentPortalPageID = pPortalPageID;
         int count = 0;
 
-        strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+        strSQL = "SELECT * FROM ezPortal.TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
         
         while (count < 10) {
         	
@@ -2102,7 +2102,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         	}
         	//String param = String.valueOf(count);
         	String param = parentPortalPageID;
-        	strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
         	count ++;
         }
         
@@ -2233,13 +2233,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         String parentPortalPageID = pCallingPageID;
         int count = 0;
   ///////////////////////tenantID      
-        strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+        strSQL = "SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
         
         while (count < 10) {
         	parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
 
         	String param = parentPortalPageID;
-        	strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+        	strSQL += " UNION ALL SELECT * FROM ezPortal.TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
         	count ++;
         }
         

@@ -310,7 +310,7 @@
 	
 	<!-- <procedure id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
-			{CALL EZSP_GETTOPMENUCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZPORTAL.EZSP_GETTOPMENUCONFIGITEM(#v_pITEMNAME#, #v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzPortalDAO.getTopMenuConfigItem" parameterClass="Map" resultClass="String" remapResults="true">
