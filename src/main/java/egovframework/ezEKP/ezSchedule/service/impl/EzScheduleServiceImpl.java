@@ -18,11 +18,11 @@ import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzScheduleService")
@@ -38,10 +38,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	private CommonUtil commonUtil;
 
 	@Override
-	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany) throws Exception {
+	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyId);
 		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		
 		return ezScheduleDAO.getTholiday(map);
 	}
 
@@ -83,7 +85,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<PubScheSecVO> getPublicScheduleSec(String userId, String lang) throws Exception {
+	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userId);
 		map.put("v_LANG", lang);
@@ -149,8 +151,12 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 	
 	@Override
-	public List<ScheduleGroupListVO> getScheduleGroupList(String userID) throws Exception {		
-		List<ScheduleGroupListVO> gList = ezScheduleDAO.getScheduleGroupList(userID);
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userID);
+		map.put("v_TENANTID", tenantId);
+		
+		List<ScheduleGroupListVO> gList = ezScheduleDAO.getScheduleGroupList(map);
 		
 		return gList;
 	}
@@ -289,11 +295,45 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		ezScheduleDAO.insertScheduleGroup(map);
 	}
-	
-	
-	
-	
-	
+
+	@Override
+	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		String result = ezScheduleDAO.scheduleGetLunarUse(map);
+		
+		if (result == null || result.equals("")) {
+			result = "0";
+		}		
+		return result;
+	}
+
+	@Override
+	public String scheduleGetRegi(String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		String result = ezScheduleDAO.scheduleGetRegi(map);
+		
+		if (result == null || result.equals("")) {
+			result = "0";
+		}		
+		return result;
+	}
+
+	@Override
+	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userId);		
+		map.put("tenantID", tenantId);
+		
+		List<ScheduleSecretaryVO> sList = ezScheduleDAO.getSecretaryList(map);
+		
+		return sList;
+	}
 	
 	
 }

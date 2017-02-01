@@ -231,7 +231,7 @@
 			        </td>
 			  	</tr>
 			  	<tr>
-			    	<th style="white-space:nowrap"> <spring:message code='ezSchedule.t292' />
+			    	<th style="white-space:nowrap"> <spring:message code='ezSchedule.t292' /></th>
 			    	<td colspan="2">
 			       		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" /> ~ 
 			       		<input type="text" id="Edatepicker" style="width:80px;text-align:center"/>
