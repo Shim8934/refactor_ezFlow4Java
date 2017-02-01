@@ -2633,6 +2633,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	logger.debug("Sending the message");
 		        	
 		        	// 편지함 용량 초과 메세지 확인을 위해 임시저장
+		        	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
 		    		message.setFlag(Flags.Flag.SEEN, true);
 		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
 		    		if (uids != null && uids[0] != null) {
@@ -2675,7 +2676,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            	
 			            	Address[] allRecipients = message.getAllRecipients();
 			            	
-			            	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
 			            	message.removeHeader("TO");
 			        		message.removeHeader("CC");
 			        		message.removeHeader("BCC");
