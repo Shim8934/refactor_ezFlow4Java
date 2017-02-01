@@ -26,25 +26,11 @@
 	        var _subCode = "<c:out value='${subCode}'/>";
 	        var defaultView = "<c:out value='${defaultView}'/>";
 	        var pStartday = "<c:out value='${startDay}'/>";
-	        var xmlDom_treeview = createXmlDom();
-	        var xmlhttp = createXMLHttpRequest();
+	        var xmlDom_treeview = createXmlDom();	        
 	        var ch_selected = false;
-			var totalCnt = 0;
-			var xmlhttp;
-			var xmlhttp2;
-			
-	   	    var xmlhttp2 = createXMLHttpRequest();
+			var totalCnt = 0;						
+				   	    
 		    function schedule_get_holiday() {
-/* 		        xmlhttp2 = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "COMPANYID", "VIEW");
-	
-		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do", true);
-		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
-		        xmlhttp2.send(xmlDom); */
-
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -81,8 +67,7 @@
 			                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
 			                    }
 			                }
-			            }
-			            xmlhttp2 = null;
+			            }			            
 			            CalendarMiniDataSource();
 		    		}
 		    	});
@@ -358,7 +343,7 @@
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
-		                window.open("/MyOffice/ezSchedule/PIMS_config_Cross.aspx", "right");
+		                window.open("/ezSchedule/scheduleConfigMain.do", "right");
 		                break;
 		        }
 		    }
@@ -470,16 +455,9 @@
 		    <ul>
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
-		    </ul>
-		   <%-- <h2 ><span id='Address_Main' onClick="Function_Flag('4')" style="width:100%;display:inline-block;" ><spring:message code='ezSchedule.t1017'/></span></h2>
-		    <ul>
-			    <div class="tree" style="MARGIN-LEFT:5px;WIDTH:179px;HEIGHT:auto;background-color:White;white-space:nowrap;overflow-x:auto;overflow-y:auto;margin-left:20px;background-color:#e6e6e6;" id="AddressTreeView"></div>
-			    <li><span id='Address_Search' onClick="Function_Flag('8')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1020'/></span></li>
-	            <li evt="0"><span onClick="address_foldermanage()" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1023'/></span></li>
-		    </ul>--%>
+		    </ul>		   
 	        <h3><span  onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
-		</div>
-		
+		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");
 	    </script>

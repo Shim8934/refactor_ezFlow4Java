@@ -50,14 +50,14 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
+			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
      			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, TENANT_ID )
      		VALUES
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 1,# v_CN#, #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
@@ -66,7 +66,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
+			{CALL EZSP_INSERTDBDATA_DEPT(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, 
 												    #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, #v_LDAPPATH#)}
 		]]>											    
 	</procedure> -->
@@ -74,7 +74,7 @@
 	<insert id="EzOrganAdminDAO.insertDBData_dept" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
     			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID )
      		VALUES
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
@@ -84,18 +84,18 @@
 	<statement id="EzOrganAdminDAO.updateDeptMaster" parameterClass="Map">
 		<![CDATA[
 			 MERGE INTO
-			 	EZHRMASTER.TBLDEPTMASTER 
+			 	TBL_DEPTMASTER 
    			USING (
    				SELECT
-   					TBLDEPTMASTER.ROWID ROW_ID, B.COMPNM2, B.EXTENSIONATTRIBUTE2, B.EXTENSIONATTRIBUTE3, B.Dept_CD_Path || ',' || TBLDEPTMASTER.CN AS pos_5
+   					TBL_DEPTMASTER.ROWID ROW_ID, B.COMPNM2, B.EXTENSIONATTRIBUTE2, B.EXTENSIONATTRIBUTE3, B.Dept_CD_Path || ',' || TBL_DEPTMASTER.CN AS pos_5
    				FROM
-   					EZHRMASTER.TBLDEPTMASTER ,
+   					TBL_DEPTMASTER ,
    					( SELECT
    						B.* 
                       FROM
-                      	EZHRMASTER.TBLDEPTMASTER A
+                      	TBL_DEPTMASTER A
                       JOIN
-                      	EZHRMASTER.TBLDEPTMASTER B   ON B.CN = A.EXTENSIONATTRIBUTE1 AND A.TENANT_ID = B.TENANT_ID
+                      	TBL_DEPTMASTER B   ON B.CN = A.EXTENSIONATTRIBUTE1 AND A.TENANT_ID = B.TENANT_ID
                       WHERE
                       	A.CN = #v_CN#
                       AND
@@ -103,24 +103,24 @@
                       AND
                       	B.TENANT_ID = #v_TENANT_ID#		 ) B 
     			WHERE
-    				TBLDEPTMASTER.CN = #v_CN#
+    				TBL_DEPTMASTER.CN = #v_CN#
     			AND
-    				TBLDEPTMASTER.TENANT_ID = #v_TENANT_ID#	) src
-    			ON ( TBLDEPTMASTER.ROWID = src.row_id )
+    				TBL_DEPTMASTER.TENANT_ID = #v_TENANT_ID#	) src
+    			ON ( TBL_DEPTMASTER.ROWID = src.row_id )
     			WHEN
     				MATCHED
     			THEN
     				UPDATE SET
-    					TBLDEPTMASTER.COMPNM2 = src.CompNm2,
-                        TBLDEPTMASTER.EXTENSIONATTRIBUTE2 = src.extensionAttribute2,
-                        TBLDEPTMASTER.EXTENSIONATTRIBUTE3 = src.extensionAttribute3,
-                        TBLDEPTMASTER.DEPT_CD_PATH = pos_5
+    					TBL_DEPTMASTER.COMPNM2 = src.CompNm2,
+                        TBL_DEPTMASTER.EXTENSIONATTRIBUTE2 = src.extensionAttribute2,
+                        TBL_DEPTMASTER.EXTENSIONATTRIBUTE3 = src.extensionAttribute3,
+                        TBL_DEPTMASTER.DEPT_CD_PATH = pos_5
 		]]>
 	</statement>
 	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
+			{CALL EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
 													#v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, 
 													#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#)}
 		]]>
@@ -129,7 +129,7 @@
 	<insert id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID )
    			VALUES
    				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID# )
@@ -138,14 +138,14 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
+			{CALL EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
 		]]>	
 	</procedure> -->
 	
 	<delete id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
           	WHERE
           		CN = #v_CN#
           	AND
@@ -156,7 +156,7 @@
 	<delete id="EzOrganAdminDAO.deleteDBData_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
             WHERE
             	CN = #v_CN#
             AND
@@ -167,7 +167,7 @@
 	<delete id="EzOrganAdminDAO.deleteDBData_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOB
+				TBL_ADDJOB
             WHERE
             	USERID = #v_CN#
             AND
@@ -178,7 +178,7 @@
 	<delete id="EzOrganAdminDAO.deleteDBData_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOB2
+				TBL_ADDJOB2
             WHERE
             	USERID = #v_CN#
             AND
@@ -189,7 +189,7 @@
 	<delete id="EzOrganAdminDAO.deleteDBData_D4" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOBMASTER
+				TBL_ADDJOBMASTER
             WHERE
             	CN = #v_CN#
             AND
@@ -200,7 +200,7 @@
 	<delete id="EzOrganAdminDAO.deleteDBData_D5" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLUSERMASTER_RETIRE
+				TBL_USERMASTER_RETIRE
             WHERE
             	CN = #v_CN#
             AND
@@ -211,7 +211,7 @@
 	<update id="EzOrganAdminDAO.deleteDBData_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
             SET
             	EXTENSIONATTRIBUTE4 = NULL
             WHERE
@@ -223,7 +223,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.moveDBData" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
+			{CALL EZSP_MOVEGROUPUSER(#v_PARENTCN#, #v_CN#, #v_CLASS#)}
 		]]>
 	</procedure> -->
 	
@@ -237,7 +237,7 @@
              	EXTENSIONATTRIBUTE3 ,
              	DEPT_CD_PATH 
 	       	FROM
-	       		EZHRMASTER.TBLDEPTMASTER 
+	       		TBL_DEPTMASTER 
        		WHERE
        			CN = #v_PARENTCN#
        		AND
@@ -250,7 +250,7 @@
 			SELECT
 				DEPT_CD_PATH
       		FROM
-      			EZHRMASTER.TBLDEPTMASTER 
+      			TBL_DEPTMASTER 
       		WHERE
       			CN = #v_CN#
       		AND
@@ -261,7 +261,7 @@
 	<update id="EzOrganAdminDAO.moveDBData_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
       		SET
       			COMPNM2 = #v_COMPNM2#,
           		EXTENSIONATTRIBUTE4 = #v_EXTENSIONATTRIBUTE4#,
@@ -280,7 +280,7 @@
 	<update id="EzOrganAdminDAO.moveDBData_U2" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
       		SET
       			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#)
       		WHERE
@@ -291,10 +291,10 @@
 	<statement id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO
-				EZHRMASTER.TBLUSERMASTER B
+				TBL_USERMASTER B
       		USING (	SELECT B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, COMPNM2, A.EXTENSIONATTRIBUTE2
-      					FROM EZHRMASTER.TBLDEPTMASTER A
-      					JOIN EZHRMASTER.TBLUSERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
+      					FROM TBL_DEPTMASTER A
+      					JOIN TBL_USERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
       					WHERE A.CN = #v_CN#
       					AND A.TENANT_ID = #v_TENANT_ID#) src
       		ON ( B.ROWID = src.row_id )
@@ -310,7 +310,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -323,7 +323,7 @@
       		WHERE (  	SELECT
       							COUNT(*)  
                				FROM
-               					EZHRMASTER.TBLPROXYINFO 
+               					TBL_PROXYINFO 
                				WHERE
                					PROXYUSERID = #v_CN#
                				AND
@@ -433,7 +433,7 @@
                         		BIRTH ,
                         		BIRTHTYPE 
              FROM
-             	EZHRMASTER.TBLUSERMASTER 
+             	TBL_USERMASTER 
              WHERE
              	CN = LOWER(#v_CN#)
              AND
@@ -539,7 +539,7 @@
 		                        BIRTH ,
 		                        BIRTHTYPE 
 		          FROM
-		          		EZHRMASTER.TBLUSERMASTER
+		          		TBL_USERMASTER
                   WHERE
                   		CN = LOWER(#v_CN#)
                   AND
@@ -549,14 +549,14 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+			{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
 		]]>
 	</procedure> -->
 	
 	<update id="EzOrganAdminDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			SET
 				$v_PROPNAME$ = #v_PROPVALUE#
 			WHERE
@@ -569,7 +569,7 @@
 	<update id="EzOrganAdminDAO.updateProperty_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
 			SET
 				$v_PROPNAME$ = #v_PROPVALUE# 
 			WHERE
@@ -582,17 +582,17 @@
 	<statement id="EzOrganAdminDAO.updateProperty_U1" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO
-				EZHRMASTER.TBLUSERMASTER 
+				TBL_USERMASTER 
    			USING (	SELECT
-   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2
+   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2
           				FROM
-          					EZHRMASTER.TBLUSERMASTER 
+          					TBL_USERMASTER 
           				JOIN
-          					EZHRMASTER.TBLDEPTMASTER    ON TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN  AND TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID
+          					TBL_DEPTMASTER    ON TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN  AND TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
           				WHERE
-          					TBLDEPTMASTER.CN = #v_CN#
+          					TBL_DEPTMASTER.CN = #v_CN#
           				AND
-          					TBLDEPTMASTER	) src ON ( TBLUSERMASTER.ROWID = src.ROW_ID )
+          					TBL_DEPTMASTER	) src ON ( TBL_USERMASTER.ROWID = src.ROW_ID )
    			WHEN
    				MATCHED
    			THEN 
@@ -604,7 +604,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_DB_SETRETIREUSER(#v_CN#)}
+			{CALL EZSP_DB_SETRETIREUSER(#v_CN#)}
 		]]>
 	</procedure> -->
 	
@@ -618,7 +618,7 @@
             	NOT EXISTS ( 	SELECT
             							CN 
                                		FROM
-                               			EZHRMASTER.TBLUSERMASTER_RETIRE 
+                               			TBL_USERMASTER_RETIRE 
                                		WHERE
                                			CN = #v_CN#
                                		AND
@@ -628,7 +628,7 @@
 	
 	<insert id="EzOrganAdminDAO.retireDBData_I" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO ezHrmaster.TBLUserMaster_RETIRE
+			INSERT INTO TBL_USERMASTER_RETIRE
               ( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, DESCRIPTION, DESCRIPTION2, DESCRIPTION3, PHYSICALDELIVERYOFFICENAME, COMPANY, COMPANY2, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, INFO, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE7, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE11, EXTENSIONATTRIBUTE12, EXTENSIONATTRIBUTE13, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, UPDATEDT, MOBILE_ENABLE, MOBILE_NOTUSE, MOBILE_PIN, SIPURI,PASSWORD,
                        TENANT_ID )
               ( SELECT
@@ -678,7 +678,7 @@
                     SIPURI ,
                     PASSWORD ,
                     TENANT_ID
-                FROM EZHRMASTER.TBLUSERMASTER 
+                FROM TBL_USERMASTER 
                 WHERE  CN = #v_CN#
                  )
 		]]>
@@ -687,7 +687,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
          	WHERE
          		CN = #v_CN#
          	AND
@@ -698,7 +698,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOB
+				TBLADDJOB
          	WHERE
          		USERID = #v_CN#
          	AND
@@ -709,7 +709,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOB2
+				TBLADDJOB2
          	WHERE
          		USERID = #v_CN#
          	AND
@@ -720,7 +720,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOBMASTER
+				TBL_ADDJOBMASTER
          	WHERE
          		CN = #v_CN#
          	AND
@@ -731,7 +731,7 @@
 	<update id="EzOrganAdminDAO.retireDBData_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
          	SET
          		EXTENSIONATTRIBUTE4 = NULL
          	WHERE
@@ -744,7 +744,7 @@
 	<update id="EzOrganAdminDAO.retireDBData_U2" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER_RETIRE
+				TBL_USERMASTER_RETIRE
          	SET
          		EXTENSIONATTRIBUTE4 = NULL
          	WHERE
@@ -756,7 +756,7 @@
 	
 <!-- 	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO"> -->
 <!-- 		<![CDATA[ -->
-<!-- 			{CALL EZHRMASTER.EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 			{CALL EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 		]]> -->
 <!-- 	</procedure> -->
 	
@@ -779,7 +779,7 @@
                         END DISPLAYNAME2,
                   SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15                    
                	  FROM 
-               	  	EZHRMASTER.TBLDeptmaster 
+               	  	TBL_DEPTMASTER 
                	  WHERE
                	  	TENANT_ID = #tenantID#
                	  AND  
@@ -793,7 +793,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -845,7 +845,7 @@
                 	COMPANY  ,
              	EXTENSIONATTRIBUTE4 
         	FROM
-        		EZHRMASTER.TBLUSERMASTER 
+        		TBL_USERMASTER 
 			WHERE
 				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
        		AND
@@ -859,7 +859,7 @@
 	
 	<!-- <procedure id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -868,7 +868,7 @@
 			SELECT
 				* 
       		FROM
-      			EZHRMASTER.TBLPROXYINFO 
+      			TBLPROXYINFO 
       		WHERE
       			USERID = #v_USERID#
       		AND
@@ -878,7 +878,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserAddJobList" parameterClass="Map" resultMap="userAddJobList">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETUSERADDJOBLIST(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -931,11 +931,11 @@
              	A.TITLE T1  ,
              	A.TITLE2 T2  
         	FROM
-        		EZHRMASTER.TBLADDJOBMASTER A
+        		TBL_ADDJOBMASTER A
             JOIN
-            	EZHRMASTER.TBLDEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+            	TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
             JOIN
-            	EZHRMASTER.TBLUSERMASTER C   ON A.CN = C.CN AND A.TENANT_ID = C.TENANT_ID
+            	TBL_USERMASTER C   ON A.CN = C.CN AND A.TENANT_ID = C.TENANT_ID
        		WHERE
        			A.CN = #v_CN#
        		AND
@@ -949,14 +949,14 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_SETADDJOB(#v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_DELFLAG#)}
+			{CALL EZSP_SETADDJOB(#v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_DELFLAG#)}
 		]]>
 	</procedure> -->
 	
 	<delete id="EzOrganAdminDAO.setAddJob" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLADDJOBMASTER
+				TBL_ADDJOBMASTER
             WHERE
             	CN = #v_CN#
             AND
@@ -967,7 +967,7 @@
 	<insert id="EzOrganAdminDAO.setAddJob_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZHRMASTER.TBLADDJOBMASTER
+				TBL_ADDJOBMASTER
               	( CN, DEPTID, TITLE, TITLE2, TENANT_ID )
            VALUES
            		( #v_CN#, #v_DEPTID#, #v_TITLE1#, #v_TITLE2#, #v_TENANT_ID# )
@@ -976,7 +976,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_GETPERMISSIONLISTCOUNT(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -985,7 +985,7 @@
 			SELECT
 				COUNT(EXTENSIONATTRIBUTE1 )
 	 		FROM
-	 			EZHRMASTER.TBLUSERMASTER
+	 			TBL_USERMASTER
    			WHERE
    				NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL 
       		AND
@@ -999,7 +999,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETPERMISSIONLIST(#v_COMPANYID#, #v_TYPE#, #v_LANGDATA#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1054,7 +1054,7 @@
             				EXTENSIONATTRIBUTE1 ,
             				ROW_NUMBER() OVER (ORDER BY DISPLAYNAME) AS ROWNUM_
         				FROM
-        					EZHRMASTER.TBLUSERMASTER 
+        					TBL_USERMASTER 
         				WHERE
         					NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL
         				AND
@@ -1075,7 +1075,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_DB_GETRETIRELISTCOUNT(#v_PAGE#, #v_ROWPERPAGE#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1084,7 +1084,7 @@
 			SELECT
 				COUNT(CN)TOTALCNT
             FROM
-            	EZHRMASTER.TBLUSERMASTER_RETIRE
+            	TBL_USERMASTER_RETIRE
             WHERE
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
@@ -1092,7 +1092,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireList" parameterClass="Map" resultMap="retireList">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_DB_GETRETIRELIST(#v_PAGE#, #v_ROWPERPAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_DB_GETRETIRELIST(#v_PAGE#, #v_ROWPERPAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1111,12 +1111,12 @@
                 EXTENSIONATTRIBUTE14 ,
                 REPLACE(SUBSTR(UpdateDT,1,10),'.','') UPDATEDT  
            FROM
-           		EZHRMASTER.TBLUSERMASTER_RETIRE 
+           		TBL_USERMASTER_RETIRE 
           WHERE
           		CN NOT IN ( 	SELECT
           								CN 
                               		FROM
-                              			EZHRMASTER.TBLUSERMASTER_RETIRE  
+                              			TBL_USERMASTER_RETIRE  
                               		WHERE
                               			ROWNUM <= #v_ROWPERPAGE# * (#v_PAGE# - 1) )
            							AND
@@ -1128,7 +1128,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
+			{CALL EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
 		]]>
 	</procedure> -->
 	
@@ -1142,7 +1142,7 @@
            		NOT EXISTS ( 	SELECT
            								CN 
                               		FROM
-                              			EZHRMASTER.TBLUSERMASTER 
+                              			TBL_USERMASTER 
                               		WHERE
                               			CN = #v_CN#
                               		AND
@@ -1153,7 +1153,7 @@
 	<insert id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
 		<![CDATA[
 			 INSERT INTO
-			 	EZHRMASTER.TBLUSERMASTER
+			 	TBL_USERMASTER
            		( CN, DisplayName, DisplayName2, mail, MAILNICKNAME, UPNNAME, Department, Description, Description2, Description3, PhysicalDeliveryOfficeName, Company, Company2, Title, Title2, TelephoneNumber, HomePhone, FACSIMILETELEPHONENUMBER, Mobile, postalcode, streetaddress, info, extensionAttribute1, extensionAttribute2, extensionAttribute3, extensionAttribute4, extensionAttribute5, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, extensionAttribute102, extensionAttribute11, extensionAttribute12, extensionAttribute13, extensionAttribute14, extensionAttribute15, ADSPath, UpdateDT, Mobile_Enable, Mobile_NotUse, Mobile_PIN, SIPURI ,PASSWORD, TENANT_ID )
            		( 	SELECT
            				CN ,
@@ -1203,7 +1203,7 @@
 	                    PASSWORD,
 	                    TENANT_ID
               			FROM
-              				EZHRMASTER.TBLUSERMASTER_RETIRE 
+              				TBL_USERMASTER_RETIRE 
               			WHERE
               				CN = #v_CN#
               	 )
@@ -1213,7 +1213,7 @@
 	<delete id="EzOrganAdminDAO.restoreRetireEntry_D" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLUSERMASTER_RETIRE
+				TBL_USERMASTER_RETIRE
    			WHERE
    				CN = #v_CN#
    			AND
@@ -1224,32 +1224,32 @@
 	<statement id="EzOrganAdminDAO.updateUserMaster" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO
-				EZHRMASTER.TBLUSERMASTER 
+				TBL_USERMASTER 
    			USING ( SELECT
-   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2, 
-   							TBLDEPTMASTER.EXTENSIONATTRIBUTE3, TBLDEPTMASTER.COMPNM2, TBLDEPTMASTER.EXTENSIONATTRIBUTE2
+   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2, 
+   							TBL_DEPTMASTER.EXTENSIONATTRIBUTE3, TBL_DEPTMASTER.COMPNM2, TBL_DEPTMASTER.EXTENSIONATTRIBUTE2
    						FROM
-   							EZHRMASTER.TBLUSERMASTER 
+   							TBL_USERMASTER 
    						JOIN
-   							EZHRMASTER.TBLDEPTMASTER
+   							TBL_DEPTMASTER
    						ON
-   							TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN
+   							TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN
    						AND
-   							TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID	 
+   							TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID	 
    						WHERE
-   							TBLUSERMASTER.CN = #v_CN#
+   							TBL_USERMASTER.CN = #v_CN#
    						AND
-   							TBLUSERMASTER.TENANT_ID = #v_TENANT_ID#	) src
-   			ON ( TBLUSERMASTER.ROWID = src.row_id )
+   							TBL_USERMASTER.TENANT_ID = #v_TENANT_ID#	) src
+   			ON ( TBL_USERMASTER.ROWID = src.row_id )
    			WHEN
    				MATCHED
    			THEN
    				UPDATE SET
-   					TBLUSERMASTER.DESCRIPTION = src.DisplayName,
-                    TBLUSERMASTER.DESCRIPTION2 = src.DisplayName2,
-                    TBLUSERMASTER.COMPANY = src.extensionAttribute3,
-                    TBLUSERMASTER.COMPANY2 = src.CompNm2,
-                    TBLUSERMASTER.PHYSICALDELIVERYOFFICENAME = src.extensionAttribute2
+   					TBL_USERMASTER.DESCRIPTION = src.DisplayName,
+                    TBL_USERMASTER.DESCRIPTION2 = src.DisplayName2,
+                    TBL_USERMASTER.COMPANY = src.extensionAttribute3,
+                    TBL_USERMASTER.COMPANY2 = src.CompNm2,
+                    TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = src.extensionAttribute2
 		]]>
 	</statement>
 	
@@ -1260,7 +1260,7 @@
           		NVL(TITLE2, ' ') as title2,
           		NVL(EXTENSIONATTRIBUTE102, ' ') as extensionAttribute102 
     		FROM
-    			EZHRMASTER.TBLUSERMASTER 
+    			TBL_USERMASTER 
     		WHERE
     			CN = #v_CN#
     		AND
@@ -1271,7 +1271,7 @@
 	<update id="EzOrganAdminDAO.updateUserMaster_U" parameterClass="OrganUserVO">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			SET	
 				DISPLAYNAME2 = DISPLAYNAME
 			WHERE
@@ -1284,7 +1284,7 @@
 	<update id="EzOrganAdminDAO.updateUserMaster_U1" parameterClass="OrganUserVO">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			SET	
 				TITLE2 = TITLE
 			WHERE
@@ -1297,7 +1297,7 @@
 	<update id="EzOrganAdminDAO.updateUserMaster_U2" parameterClass="OrganUserVO">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			SET	
 				EXTENSIONATTRIBUTE102 = EXTENSIONATTRIBUTE10
 			WHERE
@@ -1313,7 +1313,7 @@
 				DISPLAYNAME as displayName,
              	DISPLAYNAME2 as displayName2
 		    FROM
-		    	EZHRMASTER.TBLDEPTMASTER 
+		    	TBL_DEPTMASTER 
       		WHERE
       			CN = #v_PARENTCN#
       		AND
@@ -1324,14 +1324,14 @@
 	<statement id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO
-				EZHRMASTER.TBLUSERMASTER B
+				TBL_USERMASTER B
       		USING
       			(	SELECT
       					B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, A.COMPNM2, A.CN, A.DISPLAYNAME, A.DISPLAYNAME2, A.EXTENSIONATTRIBUTE2
       				FROM
-      					EZHRMASTER.TBLDEPTMASTER A
+      					TBL_DEPTMASTER A
              		JOIN
-             			EZHRMASTER.TBLUSERMASTER B   ON A.CN = #v_PARENTCN# AND A.TENANT_ID = B.TENANT_ID 
+             			TBL_USERMASTER B   ON A.CN = #v_PARENTCN# AND A.TENANT_ID = B.TENANT_ID 
        				WHERE
        					B.CN = #v_CN#
        				AND
@@ -1353,7 +1353,7 @@
 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
-			{CALL EZHRMASTER.EZSP_GETUSERINFO_RETIRE(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETUSERINFO_RETIRE(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -1450,7 +1450,7 @@
              	'user' TYPE  ,
              	' ' DISPLAYNAMEPRINTABLE  
         	FROM
-        		EZHRMASTER.TBLUSERMASTER_RETIRE 
+        		TBL_USERMASTER_RETIRE 
        		WHERE
        			CN = #v_CN#
        		AND
@@ -1463,9 +1463,9 @@
 			SELECT 
 				a.cn
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER a 
+	    		TBL_USERMASTER a 
 	    	INNER JOIN 
-	    		ezHrmaster.TBLDEPTMASTER b
+	    		TBL_DEPTMASTER b
 	    	ON a.department=b.cn AND a.tenant_id = b.tenant_id
 	    	ORDER BY cn
 	    ]]>    		 				
@@ -1480,14 +1480,14 @@
      				SELECT 
      					cn
      				FROM
-     					ezHrmaster.TBLUSERMASTER
+     					TBL_USERMASTER
      				AND
      					tenant_id = #v_TENANT_ID#	
      				UNION
      				SELECT 
      					cn
      				FROM
-     					ezHrmaster.TBLDEPTMASTER
+     					TBL_DEPTMASTER
      				AND
      					tenant_id = #tenantID#	
      			 )
@@ -1501,7 +1501,7 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLDEPTMASTER 
+     			TBL_DEPTMASTER 
       		WHERE  
       			extensionattribute1 = #cn#
       		AND
@@ -1518,21 +1518,21 @@
      				SELECT 
      					cn
      				FROM
-     					ezHrmaster.TBLUSERMASTER
+     					TBL_USERMASTER
      				WHERE
      					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
-     					ezHrmaster.TBLDEPTMASTER
+     					TBL_DEPTMASTER
      				WHERE
      					tenant_id = #tenantID#	
      				UNION
      				SELECT 
      					cn
      				FROM
-     					ezHrmaster.TBLUSERMASTER_RETIRE
+     					TBL_USERMASTER_RETIRE
      				WHERE
      					tenant_id = #tenantID#	
      			 )
@@ -1546,7 +1546,7 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLUSERMASTER 
+     			TBL_USERMASTER 
       		WHERE  
       			department = #cn#
       		AND
@@ -1556,7 +1556,7 @@
 	<update id="EzOrganAdminDAO.updateDBData_dept" parameterClass="OrganDeptVO">
 		<![CDATA[
 			UPDATE 
-				ezHrmaster.TBLDEPTMASTER
+				TBL_DEPTMASTER
      		SET
      			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') 
      	]]>		
@@ -1589,7 +1589,7 @@
 	<update id="EzOrganAdminDAO.updateDBData_user" parameterClass="OrganUserVO">
 		<![CDATA[
 			UPDATE
-				ezHrmaster.TBLUSERMASTER
+				TBL_USERMASTER
      		SET
      			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
      	]]>	
@@ -1627,7 +1627,7 @@
 	<update id="EzOrganAdminDAO.setUserMail" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				ezHrmaster.TBLUSERMASTER
+				TBL_USERMASTER
 			SET
      			mail = #MAIL#
      		WHERE
@@ -1639,7 +1639,7 @@
 	
     <delete id="EzOrganAdminDAO.deleteAddJob" parameterClass="Map">
         DELETE 
-            ezHrmaster.TBLADDJOBMASTER
+            TBL_ADDJOBMASTER
         WHERE  
             cn = #v_CN#
         AND 

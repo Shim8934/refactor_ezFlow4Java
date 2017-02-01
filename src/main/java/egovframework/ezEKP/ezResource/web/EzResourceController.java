@@ -525,7 +525,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdNm = req.getParameter("brdNm");
 		}
 		
-		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()); 
+		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()); 
 		logger.debug("adminFg="+adminFg);
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
@@ -589,7 +589,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("goToPage") != null) {
 			curPage = req.getParameter("goToPage");
 		}
-		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId());
+		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId());
 
 		//brdNm = brdNm.replace(String.valueOf(38), "&");
 		
@@ -746,7 +746,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdID = req.getParameter("brdID");
 		}
 			
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId()).equals("Y")) {
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
 			boolean returnValue = ezResourceService.multiDelResData(xmlDom, userInfo.getTenantId());
 			strXML.append("<RTN>"+ String.valueOf(returnValue) + "</RTN>");
 			return strXML.toString();
@@ -784,7 +784,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			resID = req.getParameter("resID");
 		}
 		
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId()).equals("Y")) {
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
 			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
 			strBrdID = resBrd.getBrdID();
 			strBrdExplain = resBrd.getBrdExplain();

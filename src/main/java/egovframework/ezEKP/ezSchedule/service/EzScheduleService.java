@@ -7,16 +7,16 @@ import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 
 
 public interface EzScheduleService {
 	
-	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany) throws Exception;
+	public List<ScheGetHolidayVO> getTholiday (String companyID, String userCompany, int tenantId) throws Exception;
 	
 	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
 	
@@ -28,7 +28,7 @@ public interface EzScheduleService {
 	
 	public List<PubScheHqVO> getPublicScheduleHq(String userId) throws Exception;
 	
-	public List<PubScheSecVO> getPublicScheduleSec(String userId, String lang) throws Exception;
+	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang) throws Exception;
 	
 	public List<PubScheDeptVO> getPublicScheduleDept(String userId, String lang) throws Exception;
 	
@@ -44,7 +44,7 @@ public interface EzScheduleService {
 
 	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin) throws Exception;
 	
-	public List<ScheduleGroupListVO> getScheduleGroupList(String userId) throws Exception;
+	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId) throws Exception;
 
 	public List<ScheduleGroupListVO> getMyGroupList(String userId, int tenantId) throws Exception;
 	
@@ -65,6 +65,12 @@ public interface EzScheduleService {
 	public String getDeptMemberList(String deptId, String subDept, String lang, int tenantId) throws Exception;
 
 	public void insertScheduleGroup(String gUID, String id, String displayName, String displayName2, String groupName, String description, int tenantId) throws Exception;
+
+	public String scheduleGetLunarUse(String companyID, int tenantId) throws Exception;
+
+	public String scheduleGetRegi(String companyID, int tenantId) throws Exception;
+
+	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId) throws Exception;
 
 	
 }
