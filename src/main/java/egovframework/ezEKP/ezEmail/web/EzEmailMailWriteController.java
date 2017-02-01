@@ -725,8 +725,42 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
 			            bodyValue = sb.toString() + tmphtmlbody;
-		    			
-			            if (_cmd.equals("FORWARD")) {
+			            
+			            // 원본 메일 내용에 메일 서명 존재 시 변환 처리
+		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
+		                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
+		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
+		                }
+		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
+		                bodyValue = bodyValue.replaceAll("div id=\"MailSign\"", "div ");
+		                
+		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
+	
+		                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
+		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
+		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
+		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                }
+		                
+		                //임시보관함에 저장
+		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
+		        		draftsFolder.open(Folder.READ_WRITE);       
+		        		
+		        		long draftUID = 0;
+		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
+		        		if (uids != null && uids[0] != null) {
+		        			draftUID = uids[0].uid;
+		        		} 	        		
+		        		url = String.valueOf(draftUID);
+		        		
+		        		logger.debug("draftUID=" + draftUID);
+		        		
+		        		draftsFolder.close(true);
+		                
+		        		//첨부파일 정보 추출
+		        		if (_cmd.equals("FORWARD")) {
 							if (attachedFileList.size() > 0) {
 				                StringBuilder attachXmlList = new StringBuilder("<ROOT><NODES>");	
 				                
@@ -748,38 +782,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				                attach = attachXmlList.toString();				                
 							}											            	
 			            }
-			            
-		        		Folder draftsFolder = ia.getFolder(draftsFolderName);
-		        		draftsFolder.open(Folder.READ_WRITE);       
 		        		
-		        		long draftUID = 0;
-		        		// TODO: 에러 발생 시 처리
-		        		AppendUID[] uids = ((IMAPFolder)draftsFolder).appendUIDMessages(new Message[]{replyMessage});
-		        		if (uids != null && uids[0] != null) {
-		        			draftUID = uids[0].uid;
-		        		} 	        		
-		        		url = String.valueOf(draftUID);
-		        		
-		        		logger.debug("draftUID=" + draftUID);
-		        		
-		        		draftsFolder.close(true);
-		                
-		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
-		                	bodyValue = bodyValue.replaceAll("MailSignSent", "MailSignSent___send");
-		                	bodyValue = bodyValue.replaceAll("kaoni_sign1", "kaoni_sign1___send");
-		                	bodyValue = bodyValue.replaceAll("kaoni_sign2", "kaoni_sign2___send");
-		                	bodyValue = bodyValue.replaceAll("kaoni_sign3", "kaoni_sign3___send");
-		                }
-		                bodyValue = bodyValue.replaceAll("ORGMAIL_CONTENT", "ORGMAIL_CONTENT___send");
-		                bodyValue = bodyValue.replaceAll("div id=\"MailSign\"", "div ");
-		                
-		                bodyValue = bodyValue.replaceAll("id=msgbody", "");
-	
-		                if (cmdOwn.equals("REPLY") || cmdOwn.equals("REPLYALL") || cmdOwn.equals("FORWARD")) {
-		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
-		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
-		                	bodyValue = "<body free>" + bodyValue + "</body>";
-		                }
 		        	}
 		        	
 		        	//set importance
@@ -799,6 +802,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				orgFolder.close(true);
 				
 			} catch (MessagingException e) {
+				if (e.getMessage().indexOf("NO APPEND failed.") > -1) {
+					model.addAttribute("overQuota", true);
+				}
 				e.printStackTrace();
 			} finally {
 				if (ia != null) {
