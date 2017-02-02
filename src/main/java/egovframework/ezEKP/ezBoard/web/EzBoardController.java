@@ -193,11 +193,11 @@ public class EzBoardController extends EgovFileMngUtil{
 
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, tenantID);
 			for (BoardVO i :  leftBoardList) {
-				redirectBoardGroupID += i.getBoardGroupId()+",";
+				redirectBoardGroupID += i.getBoardGroupId() + ",";
 			}
 
 			if (redirectBoardGroupID.length() != 0)
-				redirectBoardGroupID = redirectBoardGroupID.substring(0, redirectBoardGroupID.length()-1);
+				redirectBoardGroupID = redirectBoardGroupID.substring(0, redirectBoardGroupID.length() - 1);
 		}
 		
 		if (request.getParameter("func") != null) {

@@ -68,7 +68,7 @@
 		            }
 		            else {
 		                if (RedirectBoardID != "") {
-		                    if (RedirectBoardGroupID != "" && g_ReadyState == "") {
+		                    if (RedirectBoardGroupID != "" && RedirectBoardGroupID != "null" && g_ReadyState == "") {
 		                        BoardRedirect();
 		                        return;
 		                    }

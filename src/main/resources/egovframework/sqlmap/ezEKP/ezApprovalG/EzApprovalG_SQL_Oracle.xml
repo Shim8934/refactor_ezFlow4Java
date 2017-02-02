@@ -1829,13 +1829,13 @@
 		<isEqual property="v_PMODE" compareValue="TMP">
 		<![CDATA[
 		    SELECT 
-		    		OWNERID || '@' || UTILS.CONVERT_TO_VARCHAR2(SN,20) DOCID  ,
+		    		OWNERID || '@' || SN DOCID  ,
                     'NULL' PROCESSORID  ,
                     'NULL' RECEIVEDDEPTID  
             FROM 
             		TBL_TMPAPRLINEINFO 
             WHERE  
-            		OWNERID || '@' || UTILS.CONVERT_TO_VARCHAR2(SN,20) = #v_PDOCID#
+            		OWNERID || '@' || SN = #v_PDOCID#
             AND 
             		APRMEMBERID = #v_PAPRUSERID#
             AND
@@ -5186,8 +5186,8 @@
 					   					 TBL_ENDAPRDOCINFO.DOCNO, 
 					   					 TBL_ENDAPRDOCINFO.HASATTACHYN,
 					   					 TBL_ENDAPRDOCINFO.HASOPINIONYN, 
-					   					 TBL_ENDAPRDOCINFO.STARTDATE, 
-					   					 TBL_ENDAPRDOCINFO.ENDDATE,
+					   					 TBL_ENDAPRDOCINFO.STARTDATE+(#offset# / (60 * 24)) AS STARTDATE, 
+					   					 TBL_ENDAPRDOCINFO.ENDDATE+(#offset# / (60 * 24)) AS ENDDATE,
 								   		 TBL_ENDAPRDOCINFO.WRITERID, 
 								   		 TBL_ENDAPRDOCINFO.WRITERNAME, 
 								   		 NVL(TBL_ENDAPRDOCINFO.WRITERNAME2, TBL_ENDAPRDOCINFO.WRITERNAME) AS WRITERNAME2, 
@@ -6971,9 +6971,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.returnContainerID" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	CASE WHEN ContainerID IS NULL THEN ' '
-		 		 ELSE ContainerID
-		 	END
+		 	ContainerID
 		 FROM ( 
 				 SELECT 
 				 	TBL_Container.ContainerID ContainerID
@@ -6995,9 +6993,7 @@
 	
 	<select id="EzApprovalG.returnContainerID2" parameterClass="Map" resultClass="String">
 		SELECT
-			CASE WHEN ContainerTypeID IS NULL THEN ' '
-				 ELSE ContainerTypeID
-			END
+			 ContainerTypeID
 		FROM (
 				 SELECT 
 				 	TBL_ContainerType.ContainerTypeID ContainerTypeID
@@ -9230,9 +9226,14 @@
 			</isNotEqual>
 		</isNotEqual>
 	</select>
-	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map">
-		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)}
-	</procedure>
+<!-- 	<procedure id="EzApprovalG.insertNotifyItem" parameterClass="Map"> -->
+<!-- 		{CALL EZCOMMON.EZSP_INSERTNOTIFYITEM(#v_PUSERID#, #v_PSENDER#, #v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#)} -->
+<!-- 	</procedure> -->
+	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
+	  INSERT INTO TBL_NOTIFICATION
+        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID)
+       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID# );
+	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.addNewVolume" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)} -->
@@ -9807,7 +9808,7 @@
 		INSERT INTO 
 			TBL_CABINETCLASS
      ( CabinetClassNo, ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, TaskName, TaskName2, Title, Title2, ProductionYear, RegSerialNo, RecTypeCode, OwnerName, OwnerName2, OwnerID, ExpirationYear, TerminateFlag, KeepingPeriod, KeepingMethod, KeepingPlace, DisplayRecFlag, DisplayEndDate, DisplayReason, SpecialCatalogFlag, OldCabinetFlag, ModifyFlag, NumOfRec, PageOfRec, NumOfElectronicDoc, ConfirmFlag, CreateDate, ConfirmYear, TransDelayFlag, ExTransYear, TransDelayReason, OwnerDeptID, OwnerTask, DelFlag, TENANT_ID )
-     ( SELECT #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+     ( SELECT #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || #v_CNT# ,
               #v_DDeptCode# ,
               #v_DDeptName# ,
               #v_DDeptName2# ,
@@ -9817,7 +9818,7 @@
               Title ,
               Title2 ,
               #v_YEAR# ,
-              REPLACE(utils.str($v_SN$  || ($v_RtnSN$-1), 5), ' ', '0') ,
+              #v_CNT# ,
               RecTypeCode ,
               #v_DeptMName# ,
               #v_DeptMName2# ,
@@ -9914,7 +9915,7 @@
               	TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
               	'0' ,
               	'0' ,
-              	$v_TENANTID$
+              	#v_TENANTID#
            FROM 
          	DUAL  )
 		</insert>
@@ -9960,7 +9961,7 @@
     		WHERE 
     			TRIM(TBL_CABINETCLASS.CabinetClassNo) IN ( 
     											   SELECT 
-    													#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') NewCabClsNo  
+    													#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT#  NewCabClsNo  
                                              	   FROM  (SELECT 
 											     			DISTINCT TBL_CABINETCLASS.CabinetClassNo ,
 											                     	 TBL_CABINETCLASS.ProcessDeptCode ,
@@ -10048,7 +10049,7 @@
         	( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID )
         	( SELECT 
         		 '000' ,
-                 #v_DDeptCode# || #v_DTaskCode# ||  #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# ||  #v_YEAR# ||  #v_CNT#   ,
                 (
              		SELECT 
                 		SC1 
@@ -10138,7 +10139,7 @@
         ( SerialNo, CabinetClassNo, SC1, SC2, SC3, TENANT_ID )
         ( SELECT 
         		 SerialNo ,
-                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT#   ,
                  SC1 ,
                  SC2 ,
                  SC3 ,
@@ -10309,7 +10310,7 @@
 				TBL_OLDCABINETEXTRAINFO
      		( CabinetClassNo, CreateOrganName, CreateOrganName2, ClassificationNo, TENANT_ID )
      		( SELECT 
-                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0')  ,
+                 #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT#   ,
               	 CreateOrganName ,
               	 CreateOrganName2 ,
               	 ClassificationNo ,
@@ -10384,8 +10385,8 @@
 				TBL_CABINET
 	     ( CabinetID, CabinetClassNo, VolumeNo, CreateDate, DelFlag, CabinetTransferFlag, TCabinetID, TDeptCode, TTaskCode, TProduceYear, TRegSerialNo, TVolumeNo, TransferDate, TCabinetName, TCabinetName2, TDeptName, TDeptName2, TTaskName, TTaskName2, CatalogTransferFlag, CatalogTransferYear, DocTransferFlag, DocTransferYear, ProdReportFlag, TENANT_ID )
 	     ( SELECT 
-	     		  #v_DDeptCode# || #v_DTaskCode# ||#v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') || VolumeNo ,
-	              #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+	     		  #v_DDeptCode# || #v_DTaskCode# ||#v_YEAR# ||  #v_CNT#  || VolumeNo ,
+	              #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT# ,
 	              VolumeNo ,
 	              TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS') ,
 	              '0' ,
@@ -10499,7 +10500,7 @@
 				TBL_CABINET.ProdReportFlag
           	FROM ( 
           			SELECT 
-          				#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') NCabClassNo  ,
+          				#v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT#  NCabClassNo  ,
                  		tt_tmpClassInfo.ProcessDeptCode ,
                  		tt_tmpClassInfo.TaskCode ,
 		                tt_tmpClassInfo.ProductionYear ,
@@ -10920,7 +10921,7 @@
 				TBL_CABINETHISTORY
      		( CabinetClassNo, Version, Title, RecTypeCode, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyDate, ModifyReason, ModifierName, ModifierName2, ModifierID, ModifyFlag, DelFlag, TENANT_ID )
      		( SELECT 
-     				  #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# || REPLACE(utils.str($v_SN$ || ($v_RtnSN$-1), 5), ' ', '0') ,
+     				  #v_DDeptCode# || #v_DTaskCode# || #v_YEAR# ||  #v_CNT#  ,
 		              TBL_CABINETHISTORY.Version ,
 		              TBL_CABINETHISTORY.Title ,
 		              TBL_CABINETHISTORY.RecTypeCode ,
@@ -12321,7 +12322,7 @@
              EXECUTEDATE ,
              RECEIPTMEMBERNAME ,
              RECEIPTMEMBERNAME2 ,
-             UTILS.CONVERT_TO_SMALLDATETIME(MODIFYDATE,p_style=>111) MODIFYDATE  ,
+             TO_DATE(MODIFYDATE) MODIFYDATE  ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -12417,7 +12418,7 @@
                  EXECUTEDATE ,
                  RECEIPTMEMBERNAME ,
                  RECEIPTMEMBERNAME2 ,
-                 UTILS.CONVERT_TO_CHAR(TBL_SEPERATEATTACH.CreateDate,8,p_style=>112) ,
+                 TO_CHAR(TBSEPERATEATTACH.CreateDate,'YYYYMMDD') ,
                  NULL ,
                  NULL ,
                  NULL ,
@@ -12455,7 +12456,7 @@
 		                 EXECUTEDATE ,
 		                 RECEIPTMEMBERNAME ,
 		                 RECEIPTMEMBERNAME2 ,
-		                 UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112) ,
+		                 TO_CHAR(#v_SYSDATE#,'YYYYMMDD') ,
 		                 #v_CHANGEREASON# ,
 		                 #v_USERID# ,
 		                 #v_USERNAME# ,

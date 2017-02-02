@@ -3700,7 +3700,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String cabList[] =cabIDList.split(",");
 					map.put("v_cabList",cabList[j]);
 					map.put("v_SN", j);
-					map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d", Integer.parseInt((j + Integer.toString(curSN-1)))));
+					map.put("v_CNT", String.format("%06d",Integer.parseInt(Integer.toString(curSN)+Integer.toString(j))));
+					map.put("v_CABINETCLASSNO", deptCode + taskCode + commonUtil.getTodayUTCTime("").substring(0,4) + String.format("%06d",Integer.parseInt(Integer.toString(curSN)+Integer.toString(j))));
 					ezApprovalGDAO.insertTbCabinetClass(map);
 					ezApprovalGDAO.trigerTbCabinet(map);
 					ezApprovalGDAO.trigerTbCabRoleInfo(map);
@@ -3738,7 +3739,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if(apprCabinetTransferList.size() > 0) {
 						rowID2.append(apprCabinetTransferList.get(0).getCabinetID().trim());
 						map.put("v_rowID2", rowID2.toString());
-						map.put("ProcessDeptCode", apprCabinetTransferList.get(0).getPublicityCode());
+						map.put("ProcessDeptCode", apprCabinetTransferList.get(0).getProcessDeptCode());
 						map.put("TaskCode", apprCabinetTransferList.get(0).getTaskCode());
 						map.put("ProductionYear", apprCabinetTransferList.get(0).getProductionYear());
 						map.put("RegSerialNo", apprCabinetTransferList.get(0).getRegSerialNo());
@@ -11661,21 +11662,36 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		String containerID = ezApprovalGDAO.returnContainerID(map);
-		String containerID2 = " ";
+		
 		if(containerID == null) {
+			containerID = "";
+		}
+		
+		String containerID2 = "";
+		
+		if(containerID.equals("")) {
 			 containerID2 = ezApprovalGDAO.returnContainerID2(map);
+		}
+		
+		if(containerID2 == null){
+			containerID2 = "";
 		}
 		map.put("v_CONTAINERID", containerID);
 		map.put("v_CONTAINERTYPEID", containerID2);
 		
 		String containerID3 = ezApprovalGDAO.returnContainerID3(map);
 		String containerType ="";
-		if(containerID2 != null){
+		
+		if(!containerID2.equals("")){
 			containerType = containerID3.split(":")[1];
 		}
-		if(containerID != null){
-		containerID3 = containerID3.split(":")[0];
+		
+		if(containerID3.equals(":")){
+			containerID3 = "";
+		}else{
+			containerID3 = containerID3.split(":")[0];
 		}
+			
 		if (containerID3.trim().equals("")) {
 			containerID3 = makeContainer(deptID, makeListField(containerType), companyID, tenantID);
 		}
@@ -12529,14 +12545,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 LOGGER.debug("getCode2Name ended.");
 				break;
 			}
-			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID);
+			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID);
 		}
 		LOGGER.debug("sendMsg ended");
 
 		return "TRUE";
 	}
 
-	public String insertNotifyItem(String userID, String notyStr, String subject, String type, String etcData) throws Exception{
+	public String insertNotifyItem(String userID, String notyStr, String subject, String type, String etcData, int tenantID) throws Exception{
 		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -12545,6 +12561,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSUBJECT", subject);
 		map.put("v_PTYPE", type);
 		map.put("v_PETCDATA", etcData);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		try {
 			ezApprovalGDAO.insertNotifyItem(map);
@@ -14156,7 +14174,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, orderOption1, orderOption2, commonUtil.getMultiData(lang), approvUser, companyID, tenantID);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, orderOption1, orderOption2, commonUtil.getMultiData(lang), approvUser, companyID, tenantID, offset);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
@@ -14254,7 +14272,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String getSearchDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, int querySize, int querySize2, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID) throws Exception{
+			String docState, int querySize, int querySize2, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID, String offset) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CONTID", containerID);
@@ -14318,6 +14336,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		map.put("v_LANGTYPE", langType);
 		map.put("v_APPROVUSER", approvUser.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getSearchDocList(map);
 		
@@ -16140,6 +16159,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_USERNAME", UserName);
 				map.put("v_USERNAME2", UserName2);
 				map.put("v_TENANTID", tenantID);
+				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				int newVersion = ezApprovalGDAO.newRecordVersion(map);
 				
 				if( newVersion < 2) {
