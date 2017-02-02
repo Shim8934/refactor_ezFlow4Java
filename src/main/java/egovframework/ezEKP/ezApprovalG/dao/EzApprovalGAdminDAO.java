@@ -146,15 +146,19 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public String setFormDataSelect(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdmin.setFormDataSelect", map);
 	}
+	
 	public void setFormDataInsert1(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.setFormDataInsert1", map);
 	}
+	
 	public void setFormDataUpdate(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.setFormDataUpdate", map);
 	}
+	
 	public void setFormDataInsert2(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.setFormDataInsert2", map);
 	}
+	
 	public void setFormDataDelete(Map<String, Object> map) throws Exception {
 		delete("EzApprovalGAdmin.setFormDataDelete", map);
 	}
