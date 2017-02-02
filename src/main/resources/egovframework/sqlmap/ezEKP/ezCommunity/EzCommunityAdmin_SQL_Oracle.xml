@@ -701,4 +701,18 @@
 				tenant_id = #tenantID#
 		]]>
 	</select>
+	
+	<select id="EzCommunityAdminDAO.getCClubName" 						parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT 
+				c_clubname$v_USERINFO_LANG$ C_CLUBNAME
+			FROM
+				TBL_C_CLUB
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
 </sqlMap>

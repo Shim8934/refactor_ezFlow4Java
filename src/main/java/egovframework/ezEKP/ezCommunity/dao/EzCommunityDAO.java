@@ -426,6 +426,10 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 		return (CommunityCClubUserVO) select("EzCommunityDAO.getCateDetailViewGet4", map);
 	}
 	
+	public CommunityClubVO getCClubName(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityAdminDAO.getCClubName", map);
+	}
+	
 	public String todayCopGet2SelectUserID(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.todayCopGet2SelectUserID", map);
 	}

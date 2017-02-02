@@ -67,6 +67,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -6995,32 +6996,46 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 
+	@Override
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {
-		/*logger.debug("okNoSetSendMail started.");
+		logger.debug("okNoSetSendMail started.");
 		
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("v_code", code);
-        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+        map.put("v_CODE", code);
+        map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
         map.put("tenantID", userInfo.getTenantId());
         
-        CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
+        CommunityClubVO cvo = ezCommunityDAO.getCClubName(map);
+        OrganUserVO uvo = ezOrganAdminService.getUserInfo(cID, userInfo.getPrimary(), userInfo.getTenantId());
+        logger.debug("C_ClubName=" + cvo.getC_ClubName() + ", email=" + uvo.getMail());
         
-        if (vo.getEmail() != null) {
-        	String subject = "[" + vo.getC_ClubName() + "] Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
-        	String bodyContent = "[" + vo.getC_ClubName() + "] " + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
-        
+        if (uvo.getMail() != null) {
+        	String subName = egovMessageSource.getMessage("ezCommunity.t1534", userInfo.getLocale());
+            String bodyName = egovMessageSource.getMessage("ezCommunity.t1536", userInfo.getLocale());
+            
+            if (flag.toUpperCase().equals("NO")) {
+            	subName = egovMessageSource.getMessage("ezCommunity.t1535", userInfo.getLocale());
+            	bodyName = egovMessageSource.getMessage("ezCommunity.t1537", userInfo.getLocale());
+            }
+        	
+        	String subject = "[" + cvo.getC_ClubName() + "] " + subName;
+        	
+        	String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">";
+        	bodyContent = bodyContent + "[" + cvo.getC_ClubName() + "] " + bodyName;
+        	bodyContent = bodyContent + "</DIV>";
+        	
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
         	
         	InternetAddress to = new InternetAddress();
-        	to.setPersonal(vo.getUserName(), "UTF-8");
-        	to.setAddress(vo.getEmail());
+        	to.setPersonal(uvo.getDisplayName(), "UTF-8");
+        	to.setAddress(uvo.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString());
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }
         
-        logger.debug("okNoSetSendMail ended.");*/
+        logger.debug("okNoSetSendMail ended.");
 	}
 	
 	

@@ -352,5 +352,6 @@ public interface EzCommunityService {
 
 	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 	
+	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception;
 		
 }

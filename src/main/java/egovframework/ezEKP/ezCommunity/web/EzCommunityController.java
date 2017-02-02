@@ -3744,8 +3744,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		try {
 			ezCommunityService.okNoSet(flag.toUpperCase(), code, cID, userInfo.getTenantId());
-//			Mail소스 만들다 말았음 추가해야함
-//			okNoSetSendMail(loginCookie, userInfo, flag.toUpperCase(), code, cID);
+			ezCommunityService.okNoSetSendMail(loginCookie, userInfo, flag.toUpperCase(), code, cID);
 			
 			result = "true";
 		} catch (Exception e) {
