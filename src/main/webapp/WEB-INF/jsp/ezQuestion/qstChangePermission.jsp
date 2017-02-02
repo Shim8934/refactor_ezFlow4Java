@@ -242,6 +242,9 @@
 	        	var szSMonth = tempS[1];
 	        	var szSDay = tempS[2];
 	        	m_PollStartDate = szSYear + szSMonth + szSDay
+	        	
+alert("작성한 날짜  : " + m_PostDate);
+alert("설문 시작 날짜 : "+m_PollStartDate);
 	        	if (m_PostDate > m_PollStartDate) {
 		            alert("<spring:message code='ezQuestion.t199' />");
 		            document.getElementById("idDatepicker").focus();
@@ -256,6 +259,7 @@
 		            alert("<spring:message code='ezQuestion.t432' />");
 		            return;
 	    	    }
+	        	L_SearchStartDt = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	        	if (form_check() == false) {
 	            	return;
 	        	} else {
