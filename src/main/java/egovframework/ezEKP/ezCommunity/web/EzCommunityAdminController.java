@@ -528,7 +528,7 @@ public class EzCommunityAdminController {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
 			recipientList = ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
-			ezCommunityAdminService.createCommunityAdmitSendMail(userInfo, recipientList, false);
+			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, false);
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
 			
@@ -538,7 +538,7 @@ public class EzCommunityAdminController {
 				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
 			}
 			
-			ezCommunityAdminService.createCommunityAdmitSendMail(userInfo, recipientList, false);
+			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, true);
 		} else {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", userInfo.getLocale());
 		}

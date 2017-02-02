@@ -43,5 +43,5 @@ public interface EzCommunityAdminService {
 
 	String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception;
 	
-	void createCommunityAdmitSendMail(LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
+	void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import egovframework.ezEKP.ezCommunity.dao.EzCommunityAdminDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -32,6 +34,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzEmailService ezEmailService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -417,18 +422,37 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public void createCommunityAdmitSendMail(LoginVO userInfo, List<HashMap<String, Object>> recipientList,
+	public void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList,
 			boolean isAdmit) throws Exception {
 		logger.debug("createCommunityAdmitSendMail started.");
 		logger.debug("isAdmit=" + isAdmit);
 		
 		if (recipientList != null) {
-			for (HashMap<String, Object> map : recipientList) {
-				logger.debug("recipient=" + map.get("USERNAME") + ", " + map.get("C_CLUBNAME") + ", " + map.get("EMAIL"));
+			Locale locale = userInfo.getLocale();
+			String pDivi = (isAdmit ? egovMessageSource.getMessage("ezCommunity.t46", locale) : egovMessageSource.getMessage("ezCommunity.t44", locale));
+			
+			InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+			
+			for (HashMap<String, Object> recipient : recipientList) {
+				logger.debug("recipient=" + (String)recipient.get("USERNAME") + ", " + (String)recipient.get("C_CLUBNAME") + ", " + (String)recipient.get("EMAIL"));
+				
+				InternetAddress to = new InternetAddress();
+				to.setPersonal((String)recipient.get("USERNAME"), "UTF-8");
+				to.setAddress((String)recipient.get("EMAIL"));
+				
+				String subject = egovMessageSource.getMessage("ezCommunity.t51", locale)
+						+ "[\"" + (String)recipient.get("C_CLUBNAME") + "\"] "
+						+ egovMessageSource.getMessage("ezCommunity.t52", locale) 
+						+ pDivi 
+						+ egovMessageSource.getMessage("ezCommunity.t54", locale);
+				
+				String content = subject;
+				
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			}
 		}
-		
-		//TODO
 		
 		logger.debug("createCommunityAdmitSendMail ended.");
 	}
