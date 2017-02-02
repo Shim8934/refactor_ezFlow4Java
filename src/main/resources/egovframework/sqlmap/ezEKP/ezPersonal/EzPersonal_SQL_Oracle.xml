@@ -147,7 +147,7 @@
        			( 	SELECT
        					COUNT(*)  
                		FROM
-               			EZCOMMON.TBPWDINFO 
+               			TBL_PWDINFO 
                 	WHERE
                 		USERID = #v_PUSERID#
                 	AND
@@ -158,7 +158,7 @@
 	<update id="EzPersonalDAO.setApprovalPwd_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZCOMMON.TBPWDINFO
+				TBL_PWDINFO
           	SET
           		FLAG = #v_PFLAG#,
               	PWD = #v_PPWD#,
@@ -173,7 +173,7 @@
 	<insert id="EzPersonalDAO.setApprovalPwd_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZCOMMON.TBPWDINFO
+				TBL_PWDINFO
           		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID )
           	VALUES
           		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID# )

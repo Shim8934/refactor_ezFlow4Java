@@ -707,7 +707,7 @@
         	FROM 
         		TBL_Board_BoardManage T1
         	JOIN 
-        		EZHRMASTER.TBLUSERMASTER T2   
+        		TBL_USERMASTER T2   
         	ON 
         		T1.TENANT_ID = T2.TENANT_ID
         	AND
@@ -743,7 +743,7 @@
         	FROM 
         		TBL_Board_BoardManage T1
         	JOIN 
-        		EZHRMASTER.TBLDEPTMASTER T3   
+        		TBL_DEPTMASTER T3   
         	ON 
         		T1.TENANT_ID = T3.TENANT_ID
         	AND

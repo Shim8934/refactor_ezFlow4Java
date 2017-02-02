@@ -1530,7 +1530,7 @@
         	FROM 
         		TBL_Board_ApprList A
             JOIN 
-            	EZHRMASTER.TBLUserMaster B   
+            	TBL_UserMaster B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -3920,7 +3920,7 @@
 			FROM 
 				TBL_Board_Item TBI
             INNER JOIN 
-            	EZHRMASTER.TBLUSERMASTER TUM
+            	TBL_USERMASTER TUM
 			ON 
 				TBI.TENANT_ID = TUM.TENANT_ID
 			AND
@@ -3943,7 +3943,7 @@
    			FROM 
    				TBL_BOARD_APPRLIST A 
    			INNER JOIN 
-   				EZHRMASTER.TBLUserMaster B
+   				TBL_UserMaster B
    			ON 
    				A.TENANT_ID = B.TENANT_ID
    			AND

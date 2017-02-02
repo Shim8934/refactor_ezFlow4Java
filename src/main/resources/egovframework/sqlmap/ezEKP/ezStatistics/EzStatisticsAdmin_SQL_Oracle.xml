@@ -17,7 +17,7 @@
          			ELSE 0 
          		END AS DTIME
          	FROM 
-         		EZAPPROVAL_$company$.TBFORMINFO A  
+         		TBL_FORMINFO A  
          	LEFT OUTER JOIN
          		( SELECT 
          				SUBSTR(REGDATE,0,7) AS REGDATE, 
@@ -26,7 +26,7 @@
          				SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
          				TENANT_ID
          		  FROM  
-         		  		EZSTATISTICS.TBDAILYFORMCOUNTLOG 
+         		  		TBL_DAILYFORMCOUNTLOG 
          		  WHERE 
          		  		TENANT_ID = #tenantID#
          		  AND
@@ -42,7 +42,7 @@
          	AND
          		A.FORMID = B.FORMID
          	INNER JOIN 
-         		EZAPPROVAL_$company$.TBFORMCONTAINER C 
+         		TBL_FORMCONTAINER C 
          	ON 
          		A.TENANT_ID = C.TENANT_ID
          	AND
@@ -75,7 +75,7 @@
                 	ELSE 0
                 END DTIME  
            	FROM 
-           		EZHRMASTER.TBLDEPTMASTER A
+           		TBL_DEPTMASTER A
             LEFT JOIN 
             	( SELECT 
             			SUBSTR(REGDATE, 0, 7) REGDATE  ,
@@ -84,7 +84,7 @@
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
                         TENANT_ID  
                   FROM 
-                  		EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  		TBL_DAILYDOCCOUNTLOG 
                   WHERE 
                   		TENANT_ID = #tenantID#
                   AND
@@ -127,7 +127,7 @@
                 	ELSE 0
                 END DTIME  
            	FROM 
-           		EZHRMASTER.TBLUSERMASTER A
+           		TBL_USERMASTER A
             JOIN 
             	( SELECT 
             			SUBSTR(REGDATE, 0, 7) REGDATE  ,
@@ -136,7 +136,7 @@
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
                         TENANT_ID  
                   FROM 
-                  		EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  		TBL_DAILYDOCCOUNTLOG 
                   WHERE
                   		TENANT_ID = #tenantID#
                   AND  
@@ -177,7 +177,7 @@
 				NVL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
 				NVL(RETURNCNT, 0) AS RETURNCNT
             FROM 
-            	EZAPPROVAL_$company$.TBFORMINFO A  
+            	TBL_FORMINFO A  
             LEFT OUTER JOIN
             	( SELECT 
             			SUBSTR(REGDATE,0,7) AS REGDATE, 
@@ -188,7 +188,7 @@
             			SUM(RETURNCNT) AS RETURNCNT,
             			TENANT_ID
             	  FROM 
-            	  		EZSTATISTICS.TBDAILYFORMCOUNTLOG
+            	  		TBL_DAILYFORMCOUNTLOG
             	  WHERE 
             	  		TENANT_ID = #tenantID#
             	  AND
@@ -204,7 +204,7 @@
             AND
             	A.FORMID = B.FORMID
             INNER JOIN 
-            	EZAPPROVAL_$company$.TBFORMCONTAINER C  
+            	TBL_FORMCONTAINER C  
             ON 
             	A.TENANT_ID = C.TENANT_ID
             AND
@@ -235,7 +235,7 @@
                 NVL(RETURNCNT, 0) RETURNCNT  ,
                 A.CN 
             FROM 
-            	EZHRMASTER.TBLUSERMASTER A
+            	TBL_USERMASTER A
             JOIN 
             	( SELECT 
             		SUBSTR(REGDATE, 0, 7) REGDATE  ,
@@ -246,7 +246,7 @@
                     SUM(RETURNCNT)  RETURNCNT,
                     TENANT_ID  
                   FROM 
-                  	EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  	TBL_DAILYDOCCOUNTLOG 
                   WHERE  
                   	TENANT_ID = #tenantID#
                   AND
@@ -287,7 +287,7 @@
                 NVL(RETURNCNT, 0) RETURNCNT  ,
                 A.CN  
            	FROM 
-           		EZHRMASTER.TBLDEPTMASTER A
+           		TBL_DEPTMASTER A
             LEFT JOIN 
             	( SELECT 
             			SUBSTR(REGDATE, 0, 7) REGDATE  ,
@@ -298,7 +298,7 @@
                         SUM(RETURNCNT)  RETURNCNT,
                         TENANT_ID  
                   FROM 
-                  		EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  		TBL_DAILYDOCCOUNTLOG 
                   WHERE 
                   		TENANT_ID = #tenantID#
                   AND
@@ -337,15 +337,15 @@
    				ELSE B.FORMNAME2 
    				END AS FORMINFO
    			FROM 
-   				EZSTATISTICS.TBDAILYFORMCOUNTLOG A 
+   				TBL_DAILYFORMCOUNTLOG A 
    			JOIN 
-   				EZAPPROVAL_$company$.TBFORMINFO B
+   				TBL_FORMINFO B
    			ON 
    				A.TENANT_ID = B.TENANT_ID
    			AND
    				A.FORMID = B.FORMID
    			JOIN 
-   				EZAPPROVAL_$company$.TBFORMCONTAINER C  
+   				TBL_FORMCONTAINER C  
    			ON 
    				A.TENANT_ID = C.TENANT_ID
    			AND
@@ -383,7 +383,7 @@
        				ELSE 0 
        			END AS DTIME
             FROM 
-            	EZAPPROVAL_$company$.TBFORMINFO A  
+            	TBL_FORMINFO A  
             LEFT OUTER JOIN
             	( SELECT 
             			FORMID, 
@@ -394,7 +394,7 @@
             			SUM(DRAFTENDCNT) AS DRAFTEND, SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
             			TENANT_ID
             	  FROM 
-            	  		EZSTATISTICS.TBDAILYFORMCOUNTLOG
+            	  		TBL_DAILYFORMCOUNTLOG
             	  WHERE 
             	  		TENANT_ID = #tenantID#
             	  AND
@@ -409,7 +409,7 @@
             AND
             	A.FORMID = B.FORMID
             INNER JOIN 
-            	EZAPPROVAL_$company$.TBFORMCONTAINER C  
+            	TBL_FORMCONTAINER C  
             ON 
             	A.TENANT_ID = C.TENANT_ID
             AND
@@ -442,7 +442,7 @@
                 	ELSE 0
                 END DTIME  
            	FROM 
-           		EZHRMASTER.TBLDEPTMASTER A
+           		TBL_DEPTMASTER A
             LEFT JOIN 
             	( SELECT 
             			DEPTID ,
@@ -454,7 +454,7 @@
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
                         TENANT_ID  
                   FROM 
-                  		EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  		TBL_DAILYDOCCOUNTLOG 
                   WHERE  
                   		TENANT_ID = #tenantID#
                   AND
@@ -496,7 +496,7 @@
                 	ELSE 0
                 END DTIME  
            	FROM 
-           		EZHRMASTER.TBLUSERMASTER A
+           		TBL_USERMASTER A
             JOIN 
             	( SELECT 
             			USERID ,
@@ -508,7 +508,7 @@
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
                         TENANT_ID  
                   FROM 
-                  		EZSTATISTICS.TBDAILYDOCCOUNTLOG 
+                  		TBL_DAILYDOCCOUNTLOG 
                   WHERE
                   		TENANT_ID = #tenantID#
                   AND  
@@ -543,9 +543,9 @@
              	SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
              	SUM(RETURNCNT)  RETURNCNT  
         	FROM 
-        		EZSTATISTICS.TBDAILYDOCCOUNTLOG B
+        		TBL_DAILYDOCCOUNTLOG B
             JOIN 
-            	EZHRMASTER.TBLDEPTMASTER A   
+            	TBL_DEPTMASTER A   
             ON 
             	B.TENANT_ID = A.TENANT_ID
             AND
