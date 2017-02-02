@@ -531,6 +531,28 @@
 				tenant_id = #tenantID#
 		]]>
 	</update>
+	<select id="EzCommunityAdminDAO.aspCommAdmitokSet1Select"			parameterClass="Map"		resultClass="HashMap">
+		<![CDATA[
+			SELECT
+				B.email EMAIL,
+				B.username$v_USERINFO_LANG$ USERNAME,
+				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME
+			FROM
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.userid)
+			AND
+				A.companyid = B.companyid
+			AND
+				A.tenant_id = B.tenant_id
+			WHERE
+				RTRIM(A.c_clubno) = #v_CODE#
+			AND
+				A.TENANT_ID = #tenantID#
+		]]>
+	</select>
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -630,12 +652,12 @@
 		]]>
 	</insert>
 	
-	<select id="EzCommunityAdminDAO.aspCommAdmitokSet2Select"			parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityAdminDAO.aspCommAdmitokSet2Select"			parameterClass="Map"		resultClass="HashMap">
 		<![CDATA[
 			SELECT
-				B.email,
-				B.username$v_USERINFO_LANG$,
-				A.c_clubname$v_USERINFO_LANG$
+				B.email EMAIL,
+				B.username$v_USERINFO_LANG$ USERNAME,
+				A.c_clubname$v_USERINFO_LANG$ C_CLUBNAME
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN

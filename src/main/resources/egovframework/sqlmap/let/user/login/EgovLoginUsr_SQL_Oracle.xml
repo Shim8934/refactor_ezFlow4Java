@@ -58,10 +58,10 @@
 		     	mail,
 		     	extensionattribute10 as jikchek,
                 tenant_id,
-                (SELECT 'top,Top,' || dept_cd_path FROM	ezHrmaster.TBLDEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
-                (SELECT property_value FROM ezHrmaster.TBLTENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary
+                (SELECT 'top,Top,' || dept_cd_path FROM	TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG	WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primary
 		  	FROM 
-		  		ezHrMaster.TBLUSERMASTER a
+		  		TBL_USERMASTER a
 		 	WHERE 
 		 		cn = #id# AND tenant_id = #tenantId#
 		]]>
@@ -76,7 +76,7 @@
 			SELECT 
 				cn
 		  	FROM 
-		  		ezHrMaster.TBLUSERMASTER
+		  		TBL_USERMASTER
 		  	WHERE
 		  		cn != 'masteradmin'	 	
 		  	AND
@@ -101,7 +101,7 @@
 	
 	<update id="loginDAO.updateUser" parameterClass="loginVO">
 		<![CDATA[
-			UPDATE ezHrMaster.TBLUSERMASTER
+			UPDATE TBL_USERMASTER
 			SET
 				ipaddress = #ip#,
 				lastlogin = to_date(#lastLogin#, 'YYYY-MM-DD HH24:MI:SS'),
@@ -113,7 +113,7 @@
 	
 	<update id="loginDAO.updatePassword" parameterClass="loginVO">
 		<![CDATA[
-			UPDATE ezHrMaster.TBLUSERMASTER
+			UPDATE TBL_USERMASTER
 			SET
 				password = #password#				
 			WHERE
@@ -126,7 +126,7 @@
             SELECT 
                 SERVER_NAME, TENANT_ID
             FROM 
-                ezHrMaster.TBLTENANT_SERVERNAME 
+                TBL_TENANT_SERVERNAME 
             WHERE  
                 SERVER_NAME = #serverName#
         ]]>

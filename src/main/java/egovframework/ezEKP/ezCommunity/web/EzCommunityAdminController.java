@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
@@ -521,23 +522,25 @@ public class EzCommunityAdminController {
 		String pDivi = request.getParameter("pDivi");
 		String comName = request.getParameter("name");
 		
-		//TODO 2016-06-27 Exchange YES 일땐 값 받아서 doAction 메소드 실행
+		List<HashMap<String, Object>> recipientList = null;
 		
 		if (pDivi.equals("AdmitCancel")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
-			ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+			recipientList = ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+			ezCommunityAdminService.createCommunityAdmitSendMail(userInfo, recipientList, false);
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
 			
 			if (config.getProperty("config.Use_ezKMS").toUpperCase().equals("YES")) {
-				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName, userInfo.getTenantId());
+				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName, userInfo.getTenantId());
 			} else {
-				ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
+				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
 			}
+			
+			ezCommunityAdminService.createCommunityAdmitSendMail(userInfo, recipientList, false);
 		} else {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t47", userInfo.getLocale());
-			
 		}
 		
 		model.addAttribute("diviTitle", diviTitle);

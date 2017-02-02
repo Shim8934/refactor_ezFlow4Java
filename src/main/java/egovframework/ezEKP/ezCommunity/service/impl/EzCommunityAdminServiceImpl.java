@@ -253,8 +253,10 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public void aspCommAdmitOkSet1(String code, String lang, int tenantID) throws Exception {
+	public List<HashMap<String, Object>> aspCommAdmitOkSet1(String code, String lang, int tenantID) throws Exception {
 		logger.debug("aspCommAdmitOkSet1 started.");
+		
+		List<HashMap<String, Object>> result = null;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -262,17 +264,19 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("tenantID", tenantID);
 		
 		ezCommunityAdminDAO.aspCommAdmitOkSet1Update(map);
+		result = ezCommunityAdminDAO.aspCommAdmitokSet2Select(map);
 		ezCommunityAdminDAO.aspCommAdmitOkSet1Delete(map);
 		
 		logger.debug("aspCommAdmitOkSet1 ended.");
+		return result;
 	}
 
 	@Override
-	public void aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception {
+	public List<HashMap<String, Object>> aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception {
 		logger.debug("aspCommAdmitOkSet2 started.");
 		logger.debug("useEzKMS=" + useEzKMS);
 		
-		String result = null;
+		List<HashMap<String, Object>> result = null;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
@@ -285,14 +289,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		if (useEzKMS.equals("YES")) {
 			ezCommunityAdminDAO.aspCommAdmitokSet2Insert1(map);
 			ezCommunityAdminDAO.aspCommAdmitokSet2Insert2(map);
-		} else {
-			map.put("v_USERINFO_LANG", lang);
-			
-			result = ezCommunityAdminDAO.aspCommAdmitokSet2Select(map);
-			logger.debug(result);
 		}
 		
+		map.put("v_USERINFO_LANG", lang);
+		result = ezCommunityAdminDAO.aspCommAdmitokSet2Select(map);
+		
 		logger.debug("aspCommAdmitOkSet2 ended.");
+		return result;
 	}
 
 	private void aspCommCloseAllDel(String code, int tenantID) throws Exception {
@@ -411,5 +414,22 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			return e.getMessage();
 		}
+	}
+
+	@Override
+	public void createCommunityAdmitSendMail(LoginVO userInfo, List<HashMap<String, Object>> recipientList,
+			boolean isAdmit) throws Exception {
+		logger.debug("createCommunityAdmitSendMail started.");
+		logger.debug("isAdmit=" + isAdmit);
+		
+		if (recipientList != null) {
+			for (HashMap<String, Object> map : recipientList) {
+				logger.debug("recipient=" + map.get("USERNAME") + ", " + map.get("C_CLUBNAME") + ", " + map.get("EMAIL"));
+			}
+		}
+		
+		//TODO
+		
+		logger.debug("createCommunityAdmitSendMail ended.");
 	}
 }
