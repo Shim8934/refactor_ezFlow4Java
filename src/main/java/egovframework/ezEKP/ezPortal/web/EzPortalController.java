@@ -809,138 +809,141 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/myPortal.do")
 	public void myPortal (HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
-		try {
-			userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("myPortal started");
 
-			String pageID = "";
-			String mode = "view";
-			String gubunFlag = "1";
-			String rootGubunFlag = "";
-			String resetMyParentPageID = "";
-			String pMoveURL = "";
-			String pUserThemeUID = "";
-			
-			if (req.getParameter("mode") != null &&  !(req.getParameter("mode")).equals("")) {
-				mode = req.getParameter("mode");
-			}
-			if (req.getParameter("gubunFlag") != null && !(req.getParameter("gubunFlag")).equals("")) {
-				gubunFlag = req.getParameter("gubunFlag");
-			}
-			if (req.getParameter("resetMyParentPageID") != null && !req.getParameter("resetMyParentPageID").equals("")) {
-				resetMyParentPageID = req.getParameter("resetMyParentPageID");
-			}
-			
-			// 권한이 있는 Root페이지 정보를 가져온다.
-			String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
-
-			Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
-
-			if (resetMyParentPageID == null || resetMyParentPageID.trim().equals("")) {
-				if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
-					pageID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pageID = "";
+		String mode = "view";
+		String gubunFlag = "1";
+		String rootGubunFlag = "";
+		String resetMyParentPageID = "";
+		String pMoveURL = "";
+		String pUserThemeUID = "";
+		
+		if (req.getParameter("mode") != null &&  !(req.getParameter("mode")).equals("")) {
+			mode = req.getParameter("mode");
+		}
+		if (req.getParameter("gubunFlag") != null && !(req.getParameter("gubunFlag")).equals("")) {
+			gubunFlag = req.getParameter("gubunFlag");
+		}
+		if (req.getParameter("resetMyParentPageID") != null && !req.getParameter("resetMyParentPageID").equals("")) {
+			resetMyParentPageID = req.getParameter("resetMyParentPageID");
+		}
+		
+		// 권한이 있는 Root페이지 정보를 가져온다.
+		String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
+		
+		Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
+		
+		if (resetMyParentPageID == null || resetMyParentPageID.trim().equals("")) {
+			if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+				pageID = xmlDom.getElementsByTagName("UID").item(0).getTextContent();
+				gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
+				rootGubunFlag = gubunFlag;
+				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
+			} else {
+				String portalPageXml = ezPortalService.searchMyPortalPage(gubunFlag, mode, userInfo, userInfo.getCompanyID());
+				
+				xmlDom = commonUtil.convertStringToDocument(portalPageXml);
+				if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
+					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+						if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
+							pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
+							gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(i).getTextContent();
+							rootGubunFlag = gubunFlag;
+							pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
+							break;
+						}
+					}
+				} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
+					pageID = xmlDom.getElementsByTagName("UID_").item(0).getTextContent();
 					gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 					rootGubunFlag = gubunFlag;
 					pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
-				} else {
-					String portalPageXml = ezPortalService.searchMyPortalPage(gubunFlag, mode, userInfo, userInfo.getCompanyID());
-
-					xmlDom = commonUtil.convertStringToDocument(portalPageXml);
-					if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
-						for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-							if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {
-								pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
-								gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(i).getTextContent();
-								rootGubunFlag = gubunFlag;
-								pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(i).getTextContent();
-								break;
-							}
-						}
-					} else if (xmlDom.getElementsByTagName("ROW").getLength() == 1) {
-						pageID = xmlDom.getElementsByTagName("UID_").item(0).getTextContent();
-						gubunFlag = xmlDom.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
-						rootGubunFlag = gubunFlag;
-						pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
-					}
 				}
-			} else {
-				//권한이 있는 페이지에 대하여 개인마이페이지
-				//String gubunFlag2 = "1c";
-				pageID = UUID.randomUUID().toString();								
-				//String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
-				pMoveURL = "/ezPortal/portalPage.do?mode=edit&pageID=" + pageID + "&parentPageID=" + resetMyParentPageID;
-				
-				resp.setCharacterEncoding("UTF-8");
-				resp.setContentType("text/html; charset=UTF-8");
-				resp.getWriter().write("<script>");
-				resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
-				resp.getWriter().write("window.onload = window_onload;");
-				resp.getWriter().write("</script>");
-				//resp.getWriter().flush();
 			}
+		} else {
+			//권한이 있는 페이지에 대하여 개인마이페이지
+			//String gubunFlag2 = "1c";
+			pageID = UUID.randomUUID().toString();								
+			//String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
+			pMoveURL = "/ezPortal/portalPage.do?mode=edit&pageID=" + pageID + "&parentPageID=" + resetMyParentPageID;
 			
-			if (pageID == null || pageID.equals("")) {
-				String commentHtml = "<!DOCTYPE html><HTML>" +
-                        "<HEAD>" +
-                        "<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
-                        "<style type='text/css'>" +
-                        "<!--" +
-                        ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
-                        ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
-                        ".warnintxt01 { position:relative ;padding-bottom:10px;}" +
-                        ".warningimg { position:absolute; top:0px; left:0px;}" +
-                        ".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
-                        ".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
-                        ".warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}" +
-                        ".warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}" +
-                        "-->" +
-                        "</style>" +
-                        "</HEAD>" +
-                        "<BODY>" +
-                        "<div class='warningbox01' style='margin-top:100px;'>" +
-                        "  <div class='warningbox02'>" +
-                        "    <div class='warnintxt01' >" +
-                        "    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
-                        "    <dl class='warningdl'>" +
-                        "    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
-                        "    <dd>" +
-                        "        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-						if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-							commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
-						}
-						commentHtml += "    </dd>" +
-						"    </dl>" +
-						"    </div>" +
-						"    </div>" +
-						"</div>" +
-						"</BODY>" +
-						"</HTML>";
-						resp.getWriter().write(commentHtml);
-							//resp.getWriter().flush();
-							//resp.getWriter().close();
-							
-			}
-			
-			if (mode != null && mode.equals("edit") && gubunFlag.equals(rootGubunFlag)) {
-				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t287", locale));
-				resp.getWriter().flush();
-			}
-			
-			if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
-				pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
-			} else {
-				String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
-				pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
-			}
-			
+			resp.setCharacterEncoding("UTF-8");
+			resp.setContentType("text/html; charset=UTF-8");
 			resp.getWriter().write("<script>");
 			resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
 			resp.getWriter().write("window.onload = window_onload;");
 			resp.getWriter().write("</script>");
 			//resp.getWriter().flush();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+		
+		if (pageID == null || pageID.equals("")) {
+			String commentHtml = "<!DOCTYPE html><HTML>" +
+					"<HEAD>" +
+					"<link href="+egovMessageSource.getMessage("ezPortal.i2", locale) + "\" rel=\"stylesheet\" type=\"text/css\">" +
+					"<style type='text/css'>" +
+					"<!--" +
+					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
+					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
+					".warnintxt01 { position:relative ;padding-bottom:10px;}" +
+					".warningimg { position:absolute; top:0px; left:0px;}" +
+					".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
+					".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
+					".warningdl dd { padding:0px 0px 0px 5px; margin:0px; height:50px; font-weight:bold; font-size:14px; color:#333333;text-align:left;}" +
+					".warnintxt02 { font-size:12px; color:#666666; line-height:18px; margin:10px 10px 10px 10px; padding:0px;}" +
+					"-->" +
+					"</style>" +
+					"</HEAD>" +
+					"<BODY>" +
+					"<div class='warningbox01' style='margin-top:100px;'>" +
+					"  <div class='warningbox02'>" +
+					"    <div class='warnintxt01' >" +
+					"    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
+					"    <dl class='warningdl'>" +
+					"    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
+					"    <dd>" +
+					"        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
+			logger.debug("@@@@@@@@@@@@@@rollInfo="+userInfo.getRollInfo());
+			if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+				commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
+			}
+			commentHtml += "    </dd>" +
+					"    </dl>" +
+					"    </div>" +
+					"    </div>" +
+					"</div>" +
+					"</BODY>" +
+					"</HTML>";
+			resp.getWriter().write(commentHtml);
+			//resp.getWriter().flush();
+			//resp.getWriter().close();
+			
+		}
+		
+		if (mode != null && mode.equals("edit") && gubunFlag.equals(rootGubunFlag)) {
+			resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t287", locale));
+			resp.getWriter().flush();
+		}
+		
+		if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
+			pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
+		} else {
+			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
+			pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
+		}
+		
+		resp.getWriter().write("<script>");
+		resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
+		resp.getWriter().write("window.onload = window_onload;");
+		resp.getWriter().write("</script>");
+		//resp.getWriter().flush();
+		
+
+		logger.debug("myPortal ended");
+			
+		
 	}
 	
 	

@@ -527,7 +527,7 @@
         	FROM
         		TBL_PS_EMPMONTH A
             JOIN
-            	EZHRMASTER.TBLUSERMASTER B
+            	TBL_USERMASTER B
             ON
             	A.CN = B.CN
             AND
@@ -660,7 +660,7 @@
 			SELECT
 				PASSWORD
 			FROM
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			WHERE
 				TENANT_ID = #tenantID#
 			AND

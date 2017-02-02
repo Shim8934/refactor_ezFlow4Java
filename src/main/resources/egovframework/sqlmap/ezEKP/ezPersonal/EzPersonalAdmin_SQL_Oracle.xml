@@ -395,7 +395,7 @@
         	FROM
         		TBL_PS_QUICKLINK Q
             JOIN
-            	EZHRMASTER.TBLUSERMASTER U
+            	TBL_USERMASTER U
             ON
             	Q.RegUserID = U.CN
             AND
@@ -641,7 +641,7 @@
 	                 	to_date('$v_pTerm$', 'YYYY-MM') ,
 	                 	TENANT_ID
           			FROM
-          				EZHRMASTER.TBLUSERMASTER
+          				TBL_USERMASTER
            			WHERE
            				CN = #v_pUserID#
                     AND
@@ -665,15 +665,15 @@
                  		to_date('$v_pTerm$', 'YYYY-MM') ,
                  		A.TENANT_ID
           			FROM
-          				EZHRMASTER.TBLADDJOBMASTER A
+          				TBL_ADDJOBMASTER A
                  	JOIN
-                 		EZHRMASTER.TBLUSERMASTER B
+                 		TBL_USERMASTER B
                  	ON
                  		A.CN = B.CN 
                     AND
                       A.TENANT_ID = B.TENANT_ID
                  	JOIN
-                 		EZHRMASTER.TBLDEPTMASTER C
+                 		TBL_DEPTMASTER C
                  	ON
                  		A.DEPTID = C.CN
                     AND
