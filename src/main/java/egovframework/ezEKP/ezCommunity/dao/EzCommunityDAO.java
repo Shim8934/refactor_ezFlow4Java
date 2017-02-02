@@ -57,6 +57,11 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<CommunityClubVO> adminNoticeMailOkGet2(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.adminNoticeMailOkGet2", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<CommunityCCategoryVO> getCategoryValueA(int tenantID) throws Exception {
 		return (List<CommunityCCategoryVO>) list("EzCommunityDAO.getCategoryValueA", tenantID);
 	}
@@ -396,7 +401,7 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public CommunityClubVO adminNoticeMailOkGet1(Map<String, Object> map) throws Exception {
 		return (CommunityClubVO) select("EzCommunityDAO.adminNoticeMailOkGet1", map);
 	}
-
+	
 	public CommunityClubVO joinOkGet3(Map<String, Object> map) throws Exception {
 		return (CommunityClubVO) select("EzCommunityDAO.joinOkGet3", map);
 	}

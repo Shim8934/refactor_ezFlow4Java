@@ -30,19 +30,29 @@
 				var titleStr	= document.mail.subject.value.trim();
 				var contentStr	= document.mail.memo.value.trim();
 				
-				if( titleStr=="" )
-				{
+				if( titleStr == "") {
 					alert("<spring:message code='ezCommunity.t554' />");
 					return;
 				}
 				
-				if( contentStr=="" )
-				{
+				if( contentStr == "") {
 					alert("<spring:message code='ezCommunity.t555' />");
 					return;
 				}
 				
-				mail.submit();
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommunity/adminNoticeMailOk.do",
+					data : {code : '${code}',
+							subject : titleStr, 
+							memo : contentStr
+						   },
+					success: function(result){
+						html = result;
+					}
+				});
 			}
 		</script>
 		

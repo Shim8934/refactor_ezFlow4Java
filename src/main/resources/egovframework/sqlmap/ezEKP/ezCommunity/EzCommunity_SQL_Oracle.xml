@@ -2735,6 +2735,30 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityDAO.adminNoticeMailOkGet2"			parameterClass="Map"		resultClass="CommunityClubVO">
+		<![CDATA[
+			SELECT
+				B.email,
+				B.username 
+			FROM
+				TBL_C_CLUBUSER A
+			JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				TRIM(A.c_id) = B.userid
+			AND
+				A.companyid = B.companyid
+			WHERE
+				TRIM(A.c_clubno) = #v_CODE#
+			AND
+				A.permit != 0
+			AND
+				A.tenant_id = #tenantID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.mainPageGet4"					parameterClass="String"	resultClass="CommunityCCategoryVO"> -->
 <!-- 		{CALL EZSP_MAIN_PAGE_GET4(#v_PC_CAT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->

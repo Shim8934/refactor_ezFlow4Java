@@ -4814,11 +4814,25 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("adminNoticeMailOkGet1 ended.");
-		
 		CommunityClubVO vo = ezCommunityDAO.adminNoticeMailOkGet1(map);
 		
+		logger.debug("adminNoticeMailOkGet1 ended.");
+		
 		return vo;
+	}
+	
+	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception {
+		logger.debug("adminNoticeMailOkGet2 started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("tenantID", tenantID);
+		
+		List<CommunityClubVO> list = ezCommunityDAO.adminNoticeMailOkGet2(map);
+		
+		logger.debug("adminNoticeMailOkGet2 ended.");
+		
+		return list;
 	}
 
 	@Override

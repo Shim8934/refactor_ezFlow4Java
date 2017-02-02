@@ -54,6 +54,8 @@ public interface EzCommunityService {
 	
 	public List<CommunityBoardItemVO> commHomeBoardItemList(String boardID, int tenantID) throws Exception;
 	
+	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception;
+	
 	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang, int tenantID) throws Exception;
@@ -240,6 +242,8 @@ public interface EzCommunityService {
 	
 	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception;
 	
+	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
+	
 	public int searchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 	
 	public int guestOneGet1(String sRadio, String keyword, String code, String lang, int tenantID) throws Exception;
@@ -347,6 +351,6 @@ public interface EzCommunityService {
 	public void adminLogoUploadIE9(String code, String type, String imageSrc, String logoPath, String fileName, String fileData, int tenantID) throws Exception;
 
 	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
-
-	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;	
+	
+		
 }

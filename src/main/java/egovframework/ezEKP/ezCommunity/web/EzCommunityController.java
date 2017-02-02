@@ -14,6 +14,7 @@ import java.util.Random;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,6 +56,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
@@ -93,6 +95,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Resource(name="EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
@@ -4388,6 +4393,50 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("adminNoticeMail ended.");
 		
 		return "ezCommunity/communityAdminNoticeMail";
+	}
+	
+	/*
+	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
+	 */
+	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do")
+	public void adminNoticeMailOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("adminNoticeMailOk started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String code = request.getParameter("code");
+		String subject = request.getParameter("subject");
+		String memo = request.getParameter("memo");
+		int tenantID = userInfo.getTenantId();
+		
+		CommunityClubVO clubVO = ezCommunityService.adminNoticeMailOkGet1(code, tenantID);
+		
+		if (clubVO.getC_SysopID() != null) {
+			List<CommunityClubVO> list = ezCommunityService.adminNoticeMailOkGet2(code, tenantID);
+			
+			InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	logger.debug("from = " + userInfo.getEmail());
+        	
+        	List<InternetAddress> to = new ArrayList<InternetAddress>();
+        	
+			for(CommunityClubVO vo : list) {
+				if (vo.getEmail() != null) {
+		        	InternetAddress to1 = new InternetAddress();
+		        	to1.setPersonal(vo.getDisplayName(), "UTF-8");
+		        	to1.setAddress(vo.getEmail());
+		        	
+		        	to.add(to1);
+		        	
+		        	logger.debug("to = " + vo.getEmail());
+		        }
+			}
+			
+			ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
+		}
+		
+		logger.debug("adminNoticeMailOk ended.");
 	}
 }
 
