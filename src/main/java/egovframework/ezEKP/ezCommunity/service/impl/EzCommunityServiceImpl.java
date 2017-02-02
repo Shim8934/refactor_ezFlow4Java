@@ -3258,7 +3258,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
 		
-		if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
 			iColSpan = 6;
 		}
 		
@@ -3476,7 +3476,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	String strPath = "";
         	
         	if (strMaxNum == 0){
-                if (code == "") {
+                if (code.equals("")) {
                     fileName = "0000000001.mht";
                 } else {
                     fileName = "0000000001" + "(" + code + ").mht";

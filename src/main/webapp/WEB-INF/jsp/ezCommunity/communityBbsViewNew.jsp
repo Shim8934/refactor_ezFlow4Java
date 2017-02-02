@@ -160,28 +160,28 @@
 		        var strReturn = "";
 
 		        switch (bName) {
-		            case "c_clubnotice":
+		            case "tbl_c_clubnotice":
 		                strReturn = "notice";
 		                break;
-		            case "c_clubboard":
+		            case "tbl_c_clubboard":
 		                strReturn = "board";
 		                break;
-		            case "c_clubboard1":
+		            case "tbl_c_clubboard1":
 		                strReturn = "board1";
 		                break;
-		            case "c_clubboard2":
+		            case "tbl_c_clubboard2":
 		                strReturn = "board";
 		                break;
-		            case "c_clubpds":
+		            case "tbl_c_clubpds":
 		                strReturn = "pds";
 		                break;
-		            case "c_clubpds1":
+		            case "tbl_c_clubpds1":
 		                strReturn = "pds1";
 		                break;
-		            case "c_notice":
+		            case "tbl_c_notice":
 		                strReturn = "mainnotice";
 		                break;
-		            case "c_board":
+		            case "tbl_c_board":
 		            default:
 		                strReturn = "mainboard";
 		                break;
