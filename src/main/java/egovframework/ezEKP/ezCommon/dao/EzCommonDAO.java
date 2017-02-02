@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommon.dao;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
@@ -33,10 +33,6 @@ public class EzCommonDAO extends EgovAbstractDAO{
     @Autowired
     private EzEmailUtil ezEmailUtil;
     
-	public BoardAttachVO getAttachInfo(Map<String, Object> map) throws Exception{
-		return (BoardAttachVO) select("EzCommonDAO.getAttachInfo", map);
-	}
-	
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception{
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
 	}
@@ -87,7 +83,12 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
     private String selectUserGetLangForLocal(String userID, int tenantID) throws Exception {
-        return (String) select("EzCommonDAO.selectUserGetLang", userID);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("userID", userID);
+    	map.put("tenantID", tenantID);
+    	
+        return (String) select("EzCommonDAO.selectUserGetLang", map);
     }
 	
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
@@ -140,7 +141,12 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
     private String selectUserGetTimeZoneForLocal(String userID, int tenantID) throws Exception{
-        return (String) select("EzCommonDAO.selectUserGetTimeZone", userID);
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("userID", userID);
+    	map.put("tenantID", tenantID);
+    	
+        return (String) select("EzCommonDAO.selectUserGetTimeZone", map);
     }
 	
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception{

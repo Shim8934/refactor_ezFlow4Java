@@ -8,16 +8,12 @@
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
 	
-<!-- 	<procedure id="EzCommonDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO"> -->
-<!-- 		{CALL ezCommon.EZSP_GETATTACHFILEINFO(#v_PTYPE#, #v_PID#, #v_PMODE#, #v_PATTACHFILESN#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
 			SELECT 
 				* 
 		    FROM 
-		    	TBPWDINFO 
+		    	TBL_PWDINFO 
 		    WHERE  
 		    	TENANT_ID = #tenantId#
 		    AND
@@ -25,28 +21,28 @@
 		]]>
 	</select>
 	
-<!-- 	<procedure id="EzCommonDAO.getContentInfo" parameterClass="Map" resultClass="String"> -->
-<!-- 		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	
-	<select id="EzCommonDAO.selectUserGetLang" parameterClass="String" resultClass="String">
+	<select id="EzCommonDAO.selectUserGetLang" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				lang
 			FROM 
-				EZCOMMON.TBLUSERLOCALINFO
+				TBL_USERLOCALINFO
 			WHERE
+				TENANT_ID = #tenantID#
+			AND
 				userID = #userID#
 		]]>
 	</select>
 	
-	<select id="EzCommonDAO.selectUserGetTimeZone" parameterClass="String" resultClass="String">
+	<select id="EzCommonDAO.selectUserGetTimeZone" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
 				timeZone
 			FROM 
-				EZCOMMON.TBLUSERLOCALINFO
+				TBL_USERLOCALINFO
 			WHERE
+				TENANT_ID = #tenantID#
+			AND
 				userID = #userID#
 		]]>
 	</select>
@@ -56,7 +52,7 @@
 			SELECT
 				tenant_id
 			FROM
-				EZHRMASTER.TBLTENANT_CONFIG
+				TBL_TENANT_CONFIG
 			WHERE
 				property_name = 'DomainName'
 			AND
@@ -70,7 +66,7 @@
 				tenant_id tenantId,
 				server_name serverName 
 			FROM 
-				EZHRMASTER.TBLTENANT_SERVERNAME
+				TBL_TENANT_SERVERNAME
 		]]>
 	</select>
 	
@@ -80,7 +76,7 @@
 				tenant_id tenantId,
 				tenant_name tenantName 
 			FROM 
-				EZHRMASTER.TBLTENANT
+				TBL_TENANT
 		]]>
 	</select>
 	
@@ -89,7 +85,7 @@
 			SELECT 
 				property_value
 			FROM 
-				EZHRMASTER.TBLTENANT_CONFIG
+				TBL_TENANT_CONFIG
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -103,7 +99,7 @@
 				property_name,
 				property_value
 			FROM
-				EZHRMASTER.TBLTENANT_CONFIG
+				TBL_TENANT_CONFIG
 			WHERE
 				tenant_id = #tenantID#
 		]]>
@@ -111,21 +107,23 @@
 	
 	<insert id="EzCommonDAO.insertTblUserLocalInfo" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO EZCOMMON.TBLUSERLOCALINFO (
-				USERID,TIMEZONE,LANG
+			INSERT INTO TBL_USERLOCALINFO (
+				USERID,   TIMEZONE,   LANG,   TENANT_ID
 			)
 			VALUES (
-				#userID#,#timeZone#,#lang#
+				#userID#, #timeZone#, #lang#, #v_TENANT_ID#
 			)
 		]]>
 	</insert>
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[
-			DELETE EZCOMMON.TBLUSERLOCALINFO
-			WHERE userID = #userID# 
+			DELETE TBL_USERLOCALINFO
+			WHERE
+				TENANT_ID = #v_TENANT_ID# 
+			AND
+				userID = #userID# 
 		]]>
 	</delete>
-	
 	
 </sqlMap>

@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -15,8 +14,6 @@ import egovframework.let.user.login.vo.TenantVO;
 
 public interface EzCommonService {
 
-	public String getContentInfo(String type, String itemID) throws Exception;
-	
 	public String startHtml2Mht(String strHTML, String realPath, Locale locale) throws Exception;
 	
 	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception;
@@ -38,8 +35,6 @@ public interface EzCommonService {
 	public List<TenantVO> getTenantList() throws Exception;
 	
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception;
-	
-	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception;
 	

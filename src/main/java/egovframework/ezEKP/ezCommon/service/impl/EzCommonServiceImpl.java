@@ -38,7 +38,6 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
-import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
@@ -75,25 +74,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCommonServiceImpl.class);
 	
-	@Override
-	public String getContentInfo(String type, String itemID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PTYPE", type);
-		map.put("v_PID", itemID);
-		return ezCommonDAO.getContentInfo(map);
-	}
-
-	@Override
-	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PTYPE", type);
-		map.put("v_PID", attID);
-		map.put("v_PMODE", mode);
-		map.put("v_PATTACHFILESN", sn);
-		map.put("v_PCOMPANYID", companyID);
-		return ezCommonDAO.getAttachInfo(map);
-	}
-
 	@Override
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return ezCommonDAO.getApprovPWD(userInfo);
@@ -784,9 +764,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	url = ezBoardService.getContentInfo(type, itemID, tenantID);
         } else if (type.equals("COMMUNITYNOTI") || type.equals("COMMUNITYCONTENT")) {
         	url = ezCommunityService.getContentInfo(type, itemID, tenantID);
-        } else {
-        	//나머지도 바꿔야함~
-        	url = getContentInfo(type, itemID);
         }
         
         String m_strMHT = "";
