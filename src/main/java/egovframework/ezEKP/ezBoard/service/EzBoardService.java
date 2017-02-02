@@ -236,4 +236,6 @@ public interface EzBoardService {
 
 	public String getContentInfo(String type, String docID, int tenantID) throws Exception;
 
+	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception;
+
 }

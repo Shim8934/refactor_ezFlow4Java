@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -36,8 +37,8 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		return (BoardAttachVO) select("EzCommonDAO.getAttachInfo", map);
 	}
 	
-	public ApprovPWDVO getApprovPWD(Map<String, Object> map) throws Exception{
-		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", map);
+	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception{
+		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
 	}
 	
 	public String getContentInfo(Map<String, Object> map) throws Exception{

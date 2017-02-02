@@ -2499,7 +2499,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public String getContentInfo(String type, String docID, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getContentInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2510,6 +2509,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getContentInfo ended");
 		
 		return ezBoardDAO.getContentInfo(map);
+	}
+
+	@Override
+	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception {
+		logger.debug("getAttachInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("attID", attID);
+		map.put("tenantID", tenantID);
+
+		logger.debug("getAttachInfo ended");
+		
+		return ezBoardDAO.getAttachInfo(map);
 	}
 	
 	

@@ -3258,7 +3258,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder strHTML = new StringBuilder();
 		int iColSpan = 5;
 		
-		if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
 			iColSpan = 6;
 		}
 		
@@ -3406,7 +3406,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         OutputStream os = null;
         PrintWriter pw = null;
 		
-        
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
         	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
@@ -3421,7 +3420,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			    		pw.print(MHTcontent);
 			    		pw.flush();
 			    		pw.close();
-			    		
 	                } catch (FileNotFoundException fnfe) {
 	    				logger.debug("fnfe: {}", fnfe);
 	    			} catch (Exception e) {
@@ -3476,7 +3474,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	String strPath = "";
         	
         	if (strMaxNum == 0){
-                if (code == "") {
+                if (code.equals("")) {
                     fileName = "0000000001.mht";
                 } else {
                     fileName = "0000000001" + "(" + code + ").mht";
@@ -6962,9 +6960,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         logger.debug("commOutOkSendMail ended.");
 	}
 	
-	
-
-	//이효진 추가 필요
 	@Override
 	public String getContentInfo(String type, String itemID, int tenantID) throws Exception {
 		logger.debug("getContentInfo started.");
@@ -6976,7 +6971,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getContentInfo ended.");
 		
-		return ezCommunityDAO.getContentInfo(map);
+		String result = ezCommunityDAO.getContentInfo(map);
+		
+		if (type.equals("COMMUNITYNOTI")) {
+			result = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + result;
+		}
+		
+		return result;
 	}
 
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {

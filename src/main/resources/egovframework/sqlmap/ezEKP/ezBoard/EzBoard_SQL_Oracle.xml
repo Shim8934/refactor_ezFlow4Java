@@ -2907,6 +2907,20 @@
 		</isEqual>
 	</select>
 	
+	<select id="EzBoardDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO">
+		<![CDATA[
+			SELECT 
+				FILEPATH, 
+				FILENAME 
+			FROM 
+				TBL_BOARD_ITEM_ATTACHMENTS 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				GUID = #attID#
+		]]>
+	</select>
+	
 	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_Item_Attachments ( 

@@ -1463,7 +1463,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("bbsList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String bName = "c_Board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
+		String bName = "tbl_c_board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
 		String titleName = "";
 		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
 		int comNoPerPage = 17;

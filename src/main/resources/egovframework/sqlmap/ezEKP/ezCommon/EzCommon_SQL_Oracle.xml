@@ -8,17 +8,26 @@
 	<typeAlias  alias="TenantServerNameVO" 			type="egovframework.let.user.login.vo.TenantServerNameVO"/>
 	<typeAlias  alias="TenantVO" 					type="egovframework.let.user.login.vo.TenantVO"/>
 	
-	<procedure id="EzCommonDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO">
-		{CALL ezCommon.EZSP_GETATTACHFILEINFO(#v_PTYPE#, #v_PID#, #v_PMODE#, #v_PATTACHFILESN#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommonDAO.getAttachInfo" parameterClass="Map" resultClass="BoardAttachVO"> -->
+<!-- 		{CALL ezCommon.EZSP_GETATTACHFILEINFO(#v_PTYPE#, #v_PID#, #v_PMODE#, #v_PATTACHFILESN#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
-	<procedure id="EzCommonDAO.getApprovPWD" parameterClass="Map" resultClass="ApprovPWDVO">
-		{CALL ezCommon.EZSP_GETAPPROVPWD(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
+		<![CDATA[
+			SELECT 
+				* 
+		    FROM 
+		    	TBPWDINFO 
+		    WHERE  
+		    	TENANT_ID = #tenantId#
+		    AND
+		    	USERID = #id#
+		]]>
+	</select>
 	
-	<procedure id="EzCommonDAO.getContentInfo" parameterClass="Map" resultClass="String">
-		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+<!-- 	<procedure id="EzCommonDAO.getContentInfo" parameterClass="Map" resultClass="String"> -->
+<!-- 		{CALL ezCommon.EZSP_GETCONTENTINFO(#v_PTYPE#, #v_PID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
 	
 	<select id="EzCommonDAO.selectUserGetLang" parameterClass="String" resultClass="String">
 		<![CDATA[
