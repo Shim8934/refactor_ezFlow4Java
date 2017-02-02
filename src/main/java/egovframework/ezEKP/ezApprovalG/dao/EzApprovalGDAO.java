@@ -881,6 +881,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String)select("EzApprovalG.spGetSerialNo", map);
 	}
 	
+	public String notifiCationSeq(Map<String, Object> map) throws Exception{
+		return (String)select("EzApprovalG.notifiCationSeq", map);
+	}
+	
 	public int getMaxTmpDocSN(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.getMaxTmpDocSN", map);
 	}
@@ -1535,5 +1539,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+
+
 
 }

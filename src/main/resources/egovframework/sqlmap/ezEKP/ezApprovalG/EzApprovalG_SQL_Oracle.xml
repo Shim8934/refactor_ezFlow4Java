@@ -5243,31 +5243,31 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10))
+							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= TO_DATE(SUBSTR(#v_STARTDATE2#,1,10))
+							   	 		   STARTDATE <= TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= TO_DATE(SUBSTR(#v_ENDDATE1#,1,10))
+							   	 	       ENDDATE >= TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 	 		ENDDATE <= TO_DATE(SUBSTR(#v_ENDDATE2#,1,10))
+							   	 	 		ENDDATE <= TO_DATE(SUBSTR(#v_ENDDATE2#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10))
+							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_PROCESSDATE2">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10))
+							   	 	 	   STARTDATE >= TO_DATE(SUBSTR(#v_STARTDATE1#,1,10),'YYYY-MM-DD HH24:MI:SS')
 							   	</isNotEmpty>
 							   	<isEmpty property="v_CONTID" >
 							   	 	 AND 
@@ -9231,10 +9231,16 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
-        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID)
-       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID# )
+        ( ItemSeq, USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID)
+       VALUES ( #v_itemSeq#, #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID# )
 	</insert>
 	
+	<select id="EzApprovalG.notifiCationSeq" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 	max(ItemSeq) 
+		 FROM 
+		 	TBL_NOTIFICATION
+	</select>
 <!-- 	<procedure id="EzApprovalG.addNewVolume" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)} -->
 <!-- 	</procedure> -->

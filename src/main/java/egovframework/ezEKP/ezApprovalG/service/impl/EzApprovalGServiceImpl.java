@@ -12592,7 +12592,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		try {
-			ezApprovalGDAO.insertNotifyItem(map);
+			String itemSeq = ezApprovalGDAO.notifiCationSeq(map);
+			if(itemSeq == null){
+				itemSeq = "0";
+				map.put("v_itemSeq", itemSeq);
+
+				ezApprovalGDAO.insertNotifyItem(map);
+			} else {
+				map.put("v_itemSeq", Integer.parseInt(itemSeq) +1);
+				ezApprovalGDAO.insertNotifyItem(map);
+			}
+			
 			
 			result = "OK";
 		} catch (Exception e) {
