@@ -41,7 +41,7 @@ public interface EzCommonService {
 	
 	public BoardAttachVO getAttachInfo(String type, String attID, String mode, int sn, String companyID)throws Exception;
 	
-	public ApprovPWDVO getApprovPWD(String userID) throws Exception;
+	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception;
 	
 	public void responseAttach(String pPhysicalFilePath, String pFileName, boolean pAttachment, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	

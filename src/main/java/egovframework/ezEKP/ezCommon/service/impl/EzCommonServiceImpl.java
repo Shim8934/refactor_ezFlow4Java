@@ -95,11 +95,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
-	public ApprovPWDVO getApprovPWD(String userID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PUSERID", userID);
-		
-		return ezCommonDAO.getApprovPWD(map);
+	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
+		return ezCommonDAO.getApprovPWD(userInfo);
 	}
 
 	@Override

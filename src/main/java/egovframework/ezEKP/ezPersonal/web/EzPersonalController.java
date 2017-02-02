@@ -185,7 +185,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String pwdType = "";
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
-		ApprovPWDVO approvPWDVO = ezCommonService.getApprovPWD(userInfo.getId());
+		ApprovPWDVO approvPWDVO = ezCommonService.getApprovPWD(userInfo);
 		
 		if (approvPWDVO != null) {
 			flag = approvPWDVO.getFlag();
