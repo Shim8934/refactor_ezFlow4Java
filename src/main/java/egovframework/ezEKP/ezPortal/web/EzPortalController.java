@@ -916,9 +916,11 @@ public class EzPortalController extends EgovFileMngUtil {
 					"</div>" +
 					"</BODY>" +
 					"</HTML>";
+			resp.setCharacterEncoding("UTF-8");
+			resp.setContentType("text/html; charset=UTF-8");
 			resp.getWriter().write(commentHtml);
 			//resp.getWriter().flush();
-			//resp.getWriter().close();
+			resp.getWriter().close();
 			
 		}
 		
@@ -931,13 +933,24 @@ public class EzPortalController extends EgovFileMngUtil {
 			pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 		} else {
 			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
-			pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
+			logger.debug("mainUrl="+mainUrl);
+			
+			//2017-02-02 mainUrl이 null이 아닐때만,
+			if (mainUrl != null && !mainUrl.equals("")) {
+				pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
+			}
+			
+			
+			logger.debug("pMoveURL="+pMoveURL);
+			
+			
 		}
 		
 		resp.getWriter().write("<script>");
 		resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
 		resp.getWriter().write("window.onload = window_onload;");
 		resp.getWriter().write("</script>");
+		
 		//resp.getWriter().flush();
 		
 

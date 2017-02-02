@@ -1278,8 +1278,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertCabinetHistory_CAB", map);
 	}
 	
-	public void insertStringSql(Map<String, Object> map2) throws Exception{
-		insert("EzApprovalG.insertStringSql", map2);
+	public void insertStringSql(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertStringSql", map);
 	}
 	
 	public void insertAprGetNewID(Map<String, Object> map) throws Exception{
