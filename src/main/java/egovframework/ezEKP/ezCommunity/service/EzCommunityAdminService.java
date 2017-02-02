@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,9 +37,11 @@ public interface EzCommunityAdminService {
 	
 	void commCloseAll(String code, Locale locale, int tenantID) throws Exception;
 
-	void aspCommAdmitOkSet1(String code, String lang, int tenantID) throws Exception;
+	List<HashMap<String, Object>> aspCommAdmitOkSet1(String code, String lang, int tenantID) throws Exception;
 
-	void aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception;
+	List<HashMap<String, Object>> aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception;
 
 	String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception;
+	
+	void createCommunityAdmitSendMail(LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
 }

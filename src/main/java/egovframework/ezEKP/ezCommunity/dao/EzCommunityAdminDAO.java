@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCommunity.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -85,6 +86,11 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 		update("EzCommunityAdminDAO.aspCommAdmitOkSet1Update", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> aspCommAdmitokSet1Select(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzCommunityAdminDAO.aspCommAdmitokSet1Select", map);
+	}
+	
 	public void aspCommAdmitOkSet1Delete(Map<String, Object> map) throws Exception {
 		delete("EzCommunityAdminDAO.aspCommAdmitOkSet1Delete", map);
 	}
@@ -92,14 +98,18 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 	public void aspCommAdmitokSet2Update(Map<String, Object> map) throws Exception {
 		update("EzCommunityAdminDAO.aspCommAdmitOkSet2Update", map);
 	}
+	
 	public void aspCommAdmitokSet2Insert1(Map<String, Object> map) throws Exception {
 		insert("EzCommunityAdminDAO.aspCommAdmitOkSet2Insert1", map);
 	}
+	
 	public void aspCommAdmitokSet2Insert2(Map<String, Object> map) throws Exception {
 		insert("EzCommunityAdminDAO.aspCommAdmitOkSet2Insert2", map);
 	}
-	public String aspCommAdmitokSet2Select(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityAdminDAO.aspCommAdmitokSet2Select", map);
+	
+	@SuppressWarnings("unchecked")
+	public List<HashMap<String, Object>> aspCommAdmitokSet2Select(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzCommunityAdminDAO.aspCommAdmitokSet2Select", map);
 	}
 	
 	public void admCommunityInfoEditOk(Map<String, Object> map) throws Exception {

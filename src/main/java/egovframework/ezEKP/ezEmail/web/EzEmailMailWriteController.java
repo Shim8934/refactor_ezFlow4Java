@@ -2691,16 +2691,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
 			                }
 			            } else {
-			            	
-			            	try {
-			            		// send message
-			            		Transport.send(message);
-			            	} catch (Exception e) {
-			            		e.printStackTrace();
-			            		
-			            		// 메일 발송 실패 시 재시도하기 위해 exception을 던진다.
-			            		throw new Exception("SENDFAIL: " + e.getMessage());
-			            	}
+			            	Transport.send(message);
 			            	
 			                // this deletion code block has been moved here because
 			                // it needs to be kept in Drafts if an error occurs during the above process.
@@ -2801,25 +2792,25 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        pResult += "<MESSAGEID><![CDATA[" + draftUID + "]]></MESSAGEID>";
 	        
 			} catch (Exception e) {
-				if (e.getMessage().indexOf("SENDFAIL:") == 0) {
-					//Transposrt.send에서 에러발생 시 retry한다.
+				e.printStackTrace();
+				
+				//over quota exception이 아니면 retry한다.
+				if (e.getMessage().indexOf("NO APPEND failed.") == -1) {
 					retryFlag = true;
 					--retryCount;
 					
 					if (retryCount > -1) {
 						logger.debug("Message send fail. Retry...");
+						
+						try {
+							Thread.sleep(1000);
+						} catch (Exception ex) {}
 					} else {
 						//더이상 retry를 하지 않으므로 리턴 메시지를 세팅한다.
 						pResult = e.getMessage();
 					}
-					
-					try {
-						Thread.sleep(1000);
-					} catch (Exception ex) {}
-					
 				} else {
 					pResult = e.getMessage();
-					e.printStackTrace();
 				}
 			} finally {
 				if (ia != null) {

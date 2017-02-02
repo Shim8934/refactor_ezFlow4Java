@@ -2912,7 +2912,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (!pMode.equals("copy")) {
 			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
-			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
+			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+//			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
 		} else {
 			item.setParentWriteDate(item.getWriteDate());
 		}
@@ -3406,7 +3407,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         OutputStream os = null;
         PrintWriter pw = null;
 		
-        
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
         	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
@@ -3421,7 +3421,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			    		pw.print(MHTcontent);
 			    		pw.flush();
 			    		pw.close();
-			    		
 	                } catch (FileNotFoundException fnfe) {
 	    				logger.debug("fnfe: {}", fnfe);
 	    			} catch (Exception e) {
@@ -6908,12 +6907,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String subject = "";
 			String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">";
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
-				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
-				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				subject = "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t1533", userInfo.getLocale());
 			} else {
-				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
-				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				subject = "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 			}
         	
         	bodyContent += "</DIV>";
@@ -6945,8 +6944,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
         
         if (vo.getEmail() != null) {
-        	String subject = "[" + vo.getC_ClubName() + "] Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
-        	String bodyContent = "[" + vo.getC_ClubName() + "] " + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        	String subject = "[" + vo.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
+        	String bodyContent = "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
         
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -6962,9 +6961,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         logger.debug("commOutOkSendMail ended.");
 	}
 	
-	
-
-	//이효진 추가 필요
 	@Override
 	public String getContentInfo(String type, String itemID, int tenantID) throws Exception {
 		logger.debug("getContentInfo started.");
@@ -6976,7 +6972,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		logger.debug("getContentInfo ended.");
 		
-		return ezCommunityDAO.getContentInfo(map);
+		String result = ezCommunityDAO.getContentInfo(map);
+		
+		if (type.equals("COMMUNITYNOTI")) {
+			result = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + result;
+		}
+		
+		return result;
 	}
 
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {

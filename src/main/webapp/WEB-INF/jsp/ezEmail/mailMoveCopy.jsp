@@ -122,7 +122,11 @@
             }
         }
         function getparentnode(currentnode) {
-            var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling;
+        	try{
+            var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling.id;
+            }catch(exception){
+            	var tmpnode = currentnode.parentNode.parentNode.parentNode.parentNode.previousSibling;	
+            }
             if (tmpnode == null) return null;
 
             var parentnode = tmpnode.lastChild;
