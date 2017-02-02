@@ -592,4 +592,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.getContentInfo", map);
 	}
 
+	public BoardAttachVO getAttachInfo(Map<String, Object> map) throws Exception {
+		return (BoardAttachVO) select("EzBoardDAO.getAttachInfo", map);
+	}
+
 }

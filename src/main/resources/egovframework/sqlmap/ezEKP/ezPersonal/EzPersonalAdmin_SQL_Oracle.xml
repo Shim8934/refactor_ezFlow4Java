@@ -469,9 +469,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_NOTICE
-     			( COMPANYID, TITLE, TITLE2, CONTENT, POSTDATE, TENANT_ID )
+     			( ITEMSEQ, COMPANYID, TITLE, TITLE2, CONTENT, POSTDATE, TENANT_ID )
      		VALUES
-     			( #companyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID# )
+     			( SEQ_TBL_PS_NOTICE_ITEMSEQ.NEXTVAL, #companyID#, #v_pTitle#, #v_pTitle2#, #v_pContent#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #tenantID# )
 		]]>
 	</insert>
 	
@@ -574,9 +574,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+        		( ITEMSEQ, COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
-        		( #v_pCompanyID#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+        		( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, #v_pCompanyID#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -584,9 +584,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+        		( ITEMSEQ, COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
         	VALUES
-        		( UPPER(#v_pCompanyID#), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+        		( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, UPPER(#v_pCompanyID#), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -594,9 +594,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
-     			( COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID )
+     			( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID )
    			VALUES 
-     			( #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# )
+     			( SEQ_TBL_PS_POPUP_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID# )
 		]]>
 	</insert>
 	

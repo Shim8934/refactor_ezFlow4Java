@@ -5830,13 +5830,14 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 첨부관련정보 표출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/getBoardAttachInfo.do")
-	public void getBoardAttachInfo(HttpServletRequest request, HttpServletResponse response) throws Exception{
-		String type = request.getParameter("type");
+	public void getBoardAttachInfo(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
 		String attID = request.getParameter("attID");
 		String fileName = "";
 		String filePath = "";
 		
-		BoardAttachVO result = ezCommonService.getAttachInfo(type, attID, "", 0, "");
+		BoardAttachVO result = ezBoardService.getAttachInfo(attID, userInfo.getTenantId());
 		
 		filePath = result.getFilePath();
 		fileName = result.getFileName();
