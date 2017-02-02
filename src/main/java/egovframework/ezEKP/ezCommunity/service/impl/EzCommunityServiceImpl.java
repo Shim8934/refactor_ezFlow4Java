@@ -6906,12 +6906,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String subject = "";
 			String bodyContent = "<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">";
 			if (clubVO.getC_ClubConfirmType().equals("3")) {
-				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
-				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				subject = "[" + clubVO.getC_ClubName() + "]Community " + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "]Community " + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1531", userInfo.getLocale());
 				bodyContent += "<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t1533", userInfo.getLocale());
 			} else {
-				subject = "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
-				bodyContent += "[" + clubVO.getC_ClubName() + "] Community" + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				subject = "[" + clubVO.getC_ClubName() + "]Community " + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
+				bodyContent += "[" + clubVO.getC_ClubName() + "]Community " + userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezCommunity.t1532", userInfo.getLocale());
 			}
         	
         	bodyContent += "</DIV>";
@@ -6943,8 +6943,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
         
         if (vo.getEmail() != null) {
-        	String subject = "[" + vo.getC_ClubName() + "] Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
-        	String bodyContent = "[" + vo.getC_ClubName() + "] " + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
+        	String subject = "[" + vo.getC_ClubName() + "]Community" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t722", userInfo.getLocale());
+        	String bodyContent = "[" + vo.getC_ClubName() + "]" + egovMessageSource.getMessage("ezCommunity.t720", userInfo.getLocale()) + userInfo.getDisplayName() + " " + egovMessageSource.getMessage("ezCommunity.t587", userInfo.getLocale()) + "< " + reason + " > " + egovMessageSource.getMessage("ezCommunity.t721", userInfo.getLocale());
         
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
