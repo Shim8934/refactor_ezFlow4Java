@@ -2051,12 +2051,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			        field.setAccessible(true);
 										
 					if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
-						if (fieldName.toUpperCase().equals("STARTDATE")) {
-							fieldValue = String.valueOf(commonUtil.getDateStringInUTC(String.valueOf(field.get(bodyVo)), offset, false));
-						} else {
-							fieldValue = String.valueOf(field.get(bodyVo));
-						}
-						
+						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
 				
