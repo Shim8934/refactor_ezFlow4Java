@@ -201,7 +201,7 @@
 			{CALL EZSP_DELTBL_RS_RESACLL(#v_P_RESID#, #v_P_COMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
-	<delete id="EzResourceAdminDAO.delTBL_RS_RESACLl" parameterClass="Map">
+	<delete id="EzResourceAdminDAO.delResAcll" parameterClass="Map">
 		<![CDATA[
 			DELETE
 				TBL_RS_RESACL
