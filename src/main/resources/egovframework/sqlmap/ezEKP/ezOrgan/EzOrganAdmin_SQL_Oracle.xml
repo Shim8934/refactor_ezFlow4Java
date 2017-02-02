@@ -698,7 +698,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				TBLADDJOB
+				TBL_ADDJOB
          	WHERE
          		USERID = #v_CN#
          	AND
@@ -709,7 +709,7 @@
 	<delete id="EzOrganAdminDAO.retireDBData_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				TBLADDJOB2
+				TBL_ADDJOB2
          	WHERE
          		USERID = #v_CN#
          	AND

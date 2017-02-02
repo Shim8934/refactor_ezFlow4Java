@@ -1097,7 +1097,7 @@
           	WHERE ( SELECT
           				 	COUNT(*)  
                    		FROM
-                   			EZHRASTER.TBLPROXYINFO 
+                   			TBL_PROXYINFO 
                   		WHERE
                   			USERID = #v_USERID#
                   		AND
@@ -1108,7 +1108,7 @@
 	<update id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				TBLPROXYINFO
+				TBL_PROXYINFO
             SET
             	PROXYUSERID = #v_PROXYUSERID#,
                 PROXYUSERNAME = #v_PROXYUSERNAME#,
@@ -1125,7 +1125,7 @@
 	<insert id="EzOrganDAO.setProxyUserInfo_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				TBLPROXYINFO
+				TBL_PROXYINFO
             	( USERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERDEPTID, STARTDATE, ENDDATE, TENANT_ID )
             VALUES
             	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
@@ -1139,7 +1139,7 @@
 	<delete id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				TBLPROXYINFO
+				TBL_PROXYINFO
         	WHERE
         		USERID = #v_USERID#
         	AND
