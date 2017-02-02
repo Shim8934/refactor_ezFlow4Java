@@ -1156,7 +1156,7 @@ pLangCode = commonUtil.convertLangCode(pLangCode);
 	public String delProxyUserInfo(String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
-		map.put("v_TENANT_ID", userID);
+		map.put("v_TENANT_ID", tenantID);
 		try {
 			ezOrganDAO.delProxyUserInfo(map);
 			
