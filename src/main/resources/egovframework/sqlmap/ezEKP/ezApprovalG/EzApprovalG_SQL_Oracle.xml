@@ -2402,7 +2402,7 @@
          									SELECT 
          										DEPARTMENT 
          									FROM 
-         										 EZHRMASTER.TBL_LUSERMASTER
+         										 TBL_USERMASTER
          									WHERE 
          										CN=#v_USERID#))
 		</isEqual>
@@ -7618,7 +7618,7 @@
 		 		SELECT 
 		 				COUNT(CN)  
 		         FROM 
-		         		EZHRMASTER.TBL_LUserMaster
+		         		TBL_UserMaster
 		       	 WHERE  
 		       	 		Department = #v_DEPTID#
 		         AND 
@@ -9232,7 +9232,7 @@
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
         ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID)
-       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID# );
+       VALUES ( #v_PUSERID#,  TO_DATE(#v_SYSDATE# ,'YYYY-MM-DD HH24:MI:SS'), #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID# )
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.addNewVolume" parameterClass="Map"> -->
@@ -11891,9 +11891,9 @@
 		{CALL TRANSACTIONSQL(#sqlString#)}
 	</procedure>
 	
-<!-- 	<insert id="EzApprovalG.insertStringSql" parameterClass="Map"> -->
-<!-- 		$sqlString$ -->
-<!-- 	</insert> -->
+	<insert id="EzApprovalG.insertStringSql" parameterClass="Map">
+		$sqlString$
+	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_MOVERECORD(#v_RECORDID#, #v_SEPATTNO#, #v_CABINETID# ,#v_FLAG#)} -->
@@ -12090,7 +12090,7 @@
 			SELECT 
 				flag 
       		FROM 
-      			EZCOMMON.TBPWDINFO
+      			TBL_PWDINFO
       		WHERE 
       			TENANT_ID = #v_TENANTID#
       		AND 
@@ -12103,7 +12103,7 @@
 			SELECT 
 				pwd 
       		FROM 
-      			EZCOMMON.TBPWDINFO
+      			TBL_PWDINFO
       		WHERE  
       			TENANT_ID = #v_TENANTID#
       		AND
@@ -12116,7 +12116,7 @@
 			SELECT 
 				pwdtype 
       		FROM 
-      			EZCOMMON.TBPWDINFO
+      			TBL_PWDINFO
       		WHERE  
       			TENANT_ID = #v_TENANTID#
       		AND
