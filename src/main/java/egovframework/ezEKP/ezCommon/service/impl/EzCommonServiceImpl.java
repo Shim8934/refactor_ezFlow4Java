@@ -770,10 +770,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
         
-        if (type.equals("COMMUNITYNOTI")) {
-			uploadModule = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator;
-        }
-        
         filePath = realPath + uploadModule;
         File file = new File(filePath);
         
@@ -796,11 +792,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         String m_strMHT = "";
         
         try {
-        	if (type.equals("COMMUNITYNOTI")) {
-        		m_strMHT = loadMHTFile(realPath + uploadModule + url);
-        	} else {
-        		m_strMHT = loadMHTFile(realPath + url);
-        	}
+    		m_strMHT = loadMHTFile(realPath + url);
 		} catch (Exception e) {
 			m_strMHT= "";
 		}
