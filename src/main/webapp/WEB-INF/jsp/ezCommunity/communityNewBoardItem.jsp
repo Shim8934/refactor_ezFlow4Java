@@ -109,7 +109,7 @@
 		    </c:if>
 			
 			window.onload = function () {
-alert(strEndDate);
+				alert(strEndDate);
 				<c:if test="${isCrossBrowser != true}">
 			        document.all.EzHTTPTrans.SetBigLang = "${userInfo.lang}" == "1" ? 1 : 0;
 			        document.all.EzHTTPTrans.UseDbCl = true;

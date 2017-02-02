@@ -200,7 +200,7 @@
 				<td style="height:20px;">
 					<div id="menu">
 						<ul>
-							<c:if test="${bName == 'c_board'}">
+							<c:if test="${bName == 'tbl_c_board'}">
 								<li id="btn_Reply"><span onclick="btn_Reply_Onclick()" ><spring:message code='ezCommunity.t207' /></span></li>
 							</c:if>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">

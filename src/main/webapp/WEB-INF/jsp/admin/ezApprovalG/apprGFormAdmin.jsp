@@ -267,7 +267,7 @@
 		        var xmlRtn = createXmlDom();
 		        $.ajax({
 		        	type : "POST",
-		        	url : "/admin/ezApproval/getFormContInfo.do",
+		        	url : "/admin/ezApprovalG/getFormContInfo.do",
 		        	async : false,
 		        	dataType : "json",
 		        	data : {id : ID, companyID : companyID},

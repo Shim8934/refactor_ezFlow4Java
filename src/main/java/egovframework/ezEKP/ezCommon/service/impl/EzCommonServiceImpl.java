@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
+import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -65,6 +66,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Autowired
+	private EzCommunityService ezCommunityService;
 	
     @Autowired
     private EzEmailUtil ezEmailUtil;
@@ -782,6 +786,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	url = request.getParameter("href");
         } else if (type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM")) {
         	url = ezBoardService.getContentInfo(type, itemID, tenantID);
+        } else if (type.equals("COMMUNITYNOTI") || type.equals("COMMUNITYCONTENT")) {
+        	url = ezCommunityService.getContentInfo(type, itemID, tenantID);
         } else {
         	//나머지도 바꿔야함~
         	url = getContentInfo(type, itemID);

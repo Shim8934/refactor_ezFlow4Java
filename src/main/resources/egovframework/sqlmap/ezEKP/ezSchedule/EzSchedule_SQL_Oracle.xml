@@ -8,7 +8,7 @@
 	<typeAlias  alias="AttendantListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttendantListVO"/>
 	<typeAlias  alias="AttachListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttachListVO"/>
 	<typeAlias  alias="PubScheHqVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheHqVO"/>
-	<typeAlias  alias="PubScheSecVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheSecVO"/>
+	<typeAlias  alias="ScheduleSecretaryVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO"/>
 	<typeAlias  alias="PubScheDeptVO" 		type="egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO"/>
 	<typeAlias  alias="PubScheCumulerVO" 	type="egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO"/>
 	<typeAlias  alias="UserLocalInfoVO" 	type="egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO"/>
@@ -118,9 +118,9 @@
 		<result property="hqName2"			column="HQNAME2"			columnIndex="3"/>
 	</resultMap>
 
-	<resultMap class="PubScheSecVO" id="pubScheSecVO">
-		<result property="secId"			column="USERID"				columnIndex="1"/>
-		<result property="secName"			column="USERNAME"			columnIndex="2"/>
+	<resultMap class="ScheduleSecretaryVO" id="scheduleSecretaryVO">
+		<result property="secId"			column="SECRETARYID"		columnIndex="1"/>
+		<result property="secName"			column="SECRETARYNAME"		columnIndex="2"/>
 	</resultMap>
 
 	<resultMap class="PubScheDeptVO" id="pubScheDeptVO">
@@ -182,7 +182,7 @@
              	endtime,
              	autodelete 
         	FROM 
-        		EZPIMS.TBLSCHEDULECONFIG 
+        		TBL_SCHEDULECONFIG 
        		WHERE  
        			userid = #userID#
        		AND
@@ -190,7 +190,7 @@
 		]]>
 	</select>
 	
-	<select id="EzScheduleDAO.getScheduleGroupList" resultMap="scheduleGroupListVO">
+	<select id="EzScheduleDAO.getScheduleGroupList" parameterClass="Map" resultMap="scheduleGroupListVO">
 		<![CDATA[
 			SELECT 
 				DISTINCT A.groupid as groupid,
@@ -198,11 +198,11 @@
 				'' as description,
               	'' as createdate
         	FROM 
-        		EZPIMS.TBLSCHEDULEGROUP A LEFT JOIN EZPIMS.TBLSCHEDULEGROUPMEMBER B ON A.GroupID = B.GroupID
+        		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GroupID = B.GroupID AND A.tenant_id = B.tenant_id
        		WHERE  
-       			creatorid = #userID#
-            OR 
-            	( memberid = #userID# AND status = 1 )
+       			(creatorid = #v_USERID# OR ( memberid = #v_USERID# AND status = 1 ))
+			AND
+				A.tenant_id = #v_TENANTID#       			
         	ORDER BY GroupName
 		]]>
 	</select>
@@ -239,7 +239,7 @@
 				location,
 				contentpath		
         	FROM 
-        		EZPIMS.TBLSCHEDULE
+        		TBL_SCHEDULE
        		WHERE  
        			ownerid IN ($v_PIDLIST$)
             AND 
@@ -265,7 +265,7 @@
               	description,
               	createdate
         	FROM 
-        		EZPIMS.TBLSCHEDULEGROUP 
+        		TBL_SCHEDULEGROUP 
         	WHERE  
         		creatorid = #userID#
        		AND
@@ -282,12 +282,12 @@
 	                  SELECT 
 	                  	memberid 
                       FROM 
-                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      	TBL_SCHEDULEGROUPMEMBER 
                       WHERE  
                       	groupid = #groupID#
                       AND
                       	tenant_id = #tenantID#	
-             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN
              WHERE
              	B.tenant_id = #tenantID#
 		]]>
@@ -310,12 +310,12 @@
 	                  SELECT 
 	                  	memberid 
                       FROM 
-                      	EZPIMS.TBLSCHEDULEGROUPMEMBER 
+                      	TBL_SCHEDULEGROUPMEMBER 
                       WHERE  
                       	groupid = #groupID#
                       AND
                       	tenant_id = #tenantID#	
-             )A JOIN EZHRMASTER.TBLUSERMASTER B ON A.MemberID = B.CN
+             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN
              WHERE
              	B.tenant_id = #tenantID#
 		]]>
@@ -332,7 +332,7 @@
              	'' as mail,
              	'' as info  
              FROM 
-             	EZPIMS.TBLSCHEDULEGROUPMEMBER
+             	TBL_SCHEDULEGROUPMEMBER
              WHERE
              	groupid = #groupID#
              AND
@@ -357,12 +357,12 @@
                 title2 ,
                 telephonenumber 
 			FROM 
-				TBLUSERMASTER@DBLK_EZHRMASTER
+				TBL_USERMASTER
             WHERE
             	<isEqual property="subDept" compareValue="Y">
             		department IN ( SELECT cn 
                                 FROM 
-                                	TBLDEPTMASTER@DBLK_EZHRMASTER
+                                	TBL_DEPTMASTER
                                 WHERE  
                                 	dept_cd_path LIKE '%'||#deptID#||'%' )
             	</isEqual>
@@ -372,9 +372,50 @@
 			ORDER BY description		
 	</select>
 	
+	<select id="EzScheduleDAO.scheduleGetLunarUse" parameterClass="map" resultClass="String">		
+		<![CDATA[			       	      
+			SELECT
+				LUNARUSE
+			FROM 
+				TBL_LUNARUSE
+			WHERE 
+				USECOMPANY = #companyID#
+			AND
+				TENANT_ID = #tenantID#			
+		]]>			
+	</select>
+	
+	<select id="EzScheduleDAO.scheduleGetRegi" parameterClass="map" resultClass="String">		
+		<![CDATA[			       	      
+			SELECT
+				PREVIOSLYREGIUSE
+			FROM 
+				TBL_PREVIOSLYREGI
+			WHERE 
+				USECOMPANY = #companyID#
+			AND
+				TENANT_ID = #tenantID#			
+		]]>			
+	</select>
+	
+	<select id="EzScheduleDAO.getSecretaryList" parameterClass="map" resultMap="scheduleSecretaryVO">		
+		<![CDATA[			       	      
+			SELECT 
+            	SECRETARYID ,
+              	SECRETARYNAME 
+        	FROM 
+        		TBL_SECRETARY 
+        	WHERE 
+        		USERID = #userID#
+        	AND
+        		TENANT_ID = #tenantID#	
+        	ORDER BY USERNAME							
+		]]>			
+	</select>
+	
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
-			INSERT INTO EZPIMS.TBLSCHEDULEGROUPMEMBER(
+			INSERT INTO TBL_SCHEDULEGROUPMEMBER(
 				groupid, 		memberid, 		membername, 		membername2, 		status, 	responsedate,					tenant_id
 			) VALUES (
 				#groupID#,		#memberID#,		#memberName#,		#memberName2#,		0,			SYS_EXTRACT_UTC(SYSTIMESTAMP),	#tenantID#
@@ -384,7 +425,7 @@
 	
 	<insert id="EzScheduleDAO.insertScheduleGroup" parameterClass="map">
 		<![CDATA[
-			INSERT INTO EZPIMS.TBLSCHEDULEGROUP(
+			INSERT INTO TBL_SCHEDULEGROUP(
 				groupid, 		groupname, 			creatorid, 		creatorname, 		creatorname2, 		description,		createdate,						tenant_id		
 			) VALUES (
 				#gUID#,			#groupName#,		#userID#,		#displayName#,		#displayName2#,		#description#,		SYS_EXTRACT_UTC(SYSTIMESTAMP),	#tenantID#
@@ -395,7 +436,7 @@
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
 		<![CDATA[
 			UPDATE 
-				EZPIMS.TBLSCHEDULEGROUPMEMBER
+				TBL_SCHEDULEGROUPMEMBER
 			SET
 				status = #status#,
 				responseDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)	
@@ -411,7 +452,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleGroup" parameterClass="map">
 		<![CDATA[
 			DELETE 
-				EZPIMS.TBLSCHEDULEGROUP
+				TBL_SCHEDULEGROUP
 	   		WHERE  
 	   			groupid = #groupID#
 	   		AND
@@ -422,7 +463,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			DELETE 
-				EZPIMS.TBLSCHEDULEGROUPMEMBER
+				TBL_SCHEDULEGROUPMEMBER
 	   		WHERE  
 	   			groupid = #groupID#
 	   		AND
@@ -433,7 +474,7 @@
 	<delete id="EzScheduleDAO.deleteScheduleMember" parameterClass="map">
 		<![CDATA[
 			DELETE 
-				EZPIMS.TBLSCHEDULEGROUPMEMBER
+				TBL_SCHEDULEGROUPMEMBER
 	   		WHERE  
 	   			groupid = #groupID#
 	   		AND
@@ -463,7 +504,7 @@
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzScheduleDAO.getPublicScheduleSec" parameterClass="Map" resultMap="pubScheSecVO" >
+	<procedure id="EzScheduleDAO.getPublicScheduleSec" parameterClass="Map" resultMap="scheduleSecretaryVO" >
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_SEC(#v_USERID#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	

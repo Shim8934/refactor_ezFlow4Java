@@ -67,7 +67,6 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -3301,7 +3300,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				strClubRecordNo = Integer.toString(cBoard.getC_No()).trim();
 			}
 			
-			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
 				if (cBoard.getRe_Level() > 0) {
 					strHTML.append("<font color=\"#A4A4A4\">" + strClubRecordNo + "</font>");
 				} else {
@@ -3315,7 +3314,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			strHTML.append("<td class=\"t2\" onclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "') style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
 			strHTML.append("<nobr>");
 			
-			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
 				if (cBoard.getRe_Level() > 0) {
 					 int wid = 10 * cBoard.getRe_Level();
 					 
@@ -3465,7 +3464,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         		newStep = 0;
         		newLevel = 0;
         	} else {
-        		if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+        		if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
         			bbsEditOkSet2(bName.toUpperCase(), myRef, myStep, code, userInfo.getTenantId());
         		}
         		
@@ -3483,14 +3482,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     fileName = "0000000001" + "(" + code + ").mht";
                 }
                 
-                strPath = commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
+                strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
             } else {
                 int iName = strMaxNum;
                 iName = iName + 1;
                 String strName = "000000000" + iName;
                 strName = strName.substring(strName.length() - 10, strName.length());
 
-                if (code.equals("")){
+                if (!code.equals("")){
                     strName = strName + "(" + code + ")";
                 }
                 
@@ -3559,7 +3558,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				}
 			}
 			
-			if (bName.equals("c_clubpds") || bName.equals("c_clubpds1")) {
+			if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
 				String attachList = "";
 				if (board.getCharFileName() != null) {
 					attachList = board.getCharFileName();
@@ -5970,28 +5969,28 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String strReturn = "";
 		
 		switch (bName){
-            case "c_clubnotice":
+            case "tbl_c_clubnotice":
                 strReturn = "notice";
                 break;
-            case "c_clubboard":
+            case "tbl_c_clubboard":
                 strReturn = "board";
                 break;
-            case "c_clubboard1":
+            case "tbl_c_clubboard1":
                 strReturn = "board1";
                 break;
-            case "c_clubboard2":
+            case "tbl_c_clubboard2":
                 strReturn = "board";
                 break;
-            case "c_clubpds":
+            case "tbl_c_clubpds":
                 strReturn = "pds";
                 break;
-            case "c_clubpds1":
+            case "tbl_c_clubpds1":
                 strReturn = "pds1";
                 break;
-            case "c_notice":
+            case "tbl_c_notice":
                 strReturn = "mainnotice";
                 break;
-            case "c_board":
+            case "tbl_c_board":
             default:
                 strReturn = "mainboard";
                 break;
@@ -6961,6 +6960,23 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         }
         
         logger.debug("commOutOkSendMail ended.");
+	}
+	
+	
+
+	//이효진 추가 필요
+	@Override
+	public String getContentInfo(String type, String itemID, int tenantID) throws Exception {
+		logger.debug("getContentInfo started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PTYPE", type);
+		map.put("v_PID", itemID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getContentInfo ended.");
+		
+		return ezCommunityDAO.getContentInfo(map);
 	}
 
 	public void okNoSetSendMail(String loginCookie, LoginVO userInfo, String flag, String code, String cID) throws Exception {

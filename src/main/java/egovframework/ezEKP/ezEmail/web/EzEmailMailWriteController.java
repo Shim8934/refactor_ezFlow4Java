@@ -3616,14 +3616,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             
             for (AddressVO addressInfo : addressInfoList) {
             	sb.append("<ROW>");
-            	sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
-            	sb.append("<ADDRESSID>" + addressInfo.getAddressId() + "</ADDRESSID>");
-            	sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
+            	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
+            	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : addressInfo.getsName()) + "</SNAME>");
             	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
-            	sb.append("<SEMAIL>" + addressInfo.getsEmail() + "</SEMAIL>");
-            	sb.append("<SCOMPANY>" + addressInfo.getsCompany() + "</SCOMPANY>");
-            	sb.append("<SDEPT>" + addressInfo.getsDept() + "</SDEPT>");
-            	sb.append("<STITLE>" + addressInfo.getsTitle() + "</STITLE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : addressInfo.getsEmail()) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : addressInfo.getsCompany()) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : addressInfo.getsDept()) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : addressInfo.getsTitle()) + "</STITLE>");
             	sb.append("</ROW>");
             }
             

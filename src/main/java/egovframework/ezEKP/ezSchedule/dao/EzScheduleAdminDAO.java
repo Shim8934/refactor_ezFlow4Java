@@ -24,5 +24,37 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		insert("EzScheduleAdminDAO.scheduleSaveShareDept", map);
 	}
 
+	public void scheduleDelHoliday(Map<String, Object> map) throws Exception {
+		delete("EzScheduleAdminDAO.scheduleDelHoliday", map);
+	}
+
+	public void scheduleChangeHolidayUse(Map<String, Object> map) throws Exception {
+		update("EzScheduleAdminDAO.scheduleChangeHolidayUse", map);
+	}
+
+	public void scheduleSaveHoliday(Map<String, Object> map) throws Exception {
+		insert("EzScheduleAdminDAO.scheduleSaveHoliday", map);
+	}
+
+	public void scheduleUpdateHoliday(Map<String, Object> map) throws Exception {
+		update("EzScheduleAdminDAO.scheduleUpdateHoliday", map);
+	}
+
+	public void scheduleInsertLunarUse(Map<String, Object> map) throws Exception {
+		insert("EzScheduleAdminDAO.scheduleInsertLunarUse", map);
+	}
+
+	public void scheduleUpdateLunarUse(Map<String, Object> map) throws Exception {
+		update("EzScheduleAdminDAO.scheduleUpdateLunarUse", map);
+	}
+
+	public void scheduleInsertRegi(Map<String, Object> map) throws Exception {
+		insert("EzScheduleAdminDAO.scheduleInsertRegi", map);		
+	}
+
+	public void scheduleUpdateRegi(Map<String, Object> map) throws Exception {
+		update("EzScheduleAdminDAO.scheduleUpdateRegi", map);		
+	}
+
 }
 

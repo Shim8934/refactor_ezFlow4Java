@@ -1565,7 +1565,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (cBoardGet1 != null) {
 			strTitle = cBoardGet1.getTitle().trim().replaceAll("&quot;", "'").replaceAll("&dquot;", "\"");
 			
-			if (!bName.equals("c_clubnotice") && !bName.equals("c_notice")) {
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
 				myStep = cBoardGet1.getStep();
 				myLevel = cBoardGet1.getRe_Level();
 				grsRef = cBoardGet1.getRef(); 
@@ -3766,7 +3766,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		int num = 0;
+		int num = 0, itemCnt = 0;
 		String cCatecAName = "", cCatecBName = "";
 		
 		Calendar calendar = Calendar.getInstance();
@@ -3782,15 +3782,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getTenantId());
 		
-		if (!club.getC_Cate_A().equals("0")){
-			cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
+		if (club != null) {
+			if (!club.getC_Cate_A().equals("0")){
+				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
+			}
+			
+			if (!club.getC_Cate_B().equals("0")){
+				cCatecBName = ezCommunityService.todayCopGet3(club.getC_Cate_B(), "B", userInfo.getTenantId());
+			}
+			
+			itemCnt = ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId());
 		}
-		
-		if (!club.getC_Cate_B().equals("0")){
-			cCatecBName = ezCommunityService.todayCopGet3(club.getC_Cate_B(), "B", userInfo.getTenantId());
-		}
-		
-		int itemCnt = ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()); 
 		
 		model.addAttribute("clubVO", club);
 		model.addAttribute("cCateAName", cCatecAName);

@@ -70,7 +70,7 @@
 	</resultMap>
 	
 	<!-- <procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String" remapResults="true">
-		{CALL EZHRMASTER.EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
@@ -83,7 +83,7 @@
           		EXISTS ( SELECT
           						CN 
                           	FROM
-                          		EZHRMASTER.TBLUSERMASTER 
+                          		TBL_USERMASTER 
                            	WHERE
                            		CN = #v_CN#
                            	AND
@@ -100,7 +100,7 @@
             WHERE ( SELECT
             			 	COUNT(*)  
                          FROM
-                         	EZHRMASTER.TBLPROXYINFO
+                         	TBL_PROXYINFO
                          WHERE
                          	PROXYUSERID = #v_CN#
                          AND
@@ -118,7 +118,7 @@
 				SELECT
         			REPLACE(EXTENSIONATTRIBUTE1, 'a=0;','a=1;')  as EXTENSIONATTRIBUTE1
 				FROM
-					EZHRMASTER.TBLUSERMASTER
+					TBL_USERMASTER
 				WHERE
 					CN = #v_CN#
 				AND
@@ -131,7 +131,7 @@
 				SELECT
 					$v_FIELD$
 				FROM
-					EZHRMASTER.TBLUSERMASTER
+					TBL_USERMASTER
 				WHERE
 					CN = #v_CN#
 				AND
@@ -145,7 +145,7 @@
 			SELECT
 				$v_FIELD$
 			FROM
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			WHERE
 				CN = #v_CN#
 			AND
@@ -158,7 +158,7 @@
 			SELECT
 				$v_FIELD$
 			FROM
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
 			WHERE
 				CN = #v_CN#
 			AND
@@ -167,11 +167,11 @@
 	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getSIPUriList" parameterClass="Map" resultClass="String">
-		{CALL EZHRMASTER.EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	 <!-- <procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
-		{CALL EZHRMASTER.EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> --> 
 	
 	 <select id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
@@ -193,7 +193,7 @@
                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                       		'user' TYPE  
                			FROM
-               				EZHRMASTER.TBLUSERMASTER 
+               				TBL_USERMASTER 
                			WHERE
                				CN = #v_CN#
                			AND
@@ -214,7 +214,7 @@
                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                       		'dept' TYPE  
                			FROM
-               				EZHRMASTER.TBLDEPTMASTER 
+               				TBL_DEPTMASTER 
               			WHERE
               				EXTENSIONATTRIBUTE1 = #v_CN#
               			AND
@@ -224,7 +224,7 @@
 	</select> 
 	
 	 <!-- <procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
-		{CALL EZHRMASTER.EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> --> 
 	
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
@@ -249,7 +249,7 @@
                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') 
                      		EXTENSIONATTRIBUTE15  
                			FROM
-               				EZHRMASTER.TBLDEPTMASTER 
+               				TBL_DEPTMASTER 
                			WHERE
                				EXTENSIONATTRIBUTE1 = #v_CN#
                			AND
@@ -260,7 +260,7 @@
 	</select> 
 	
 	 <!-- <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> --> 
 	
 	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
@@ -283,7 +283,7 @@
                        			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                        		FROM
-                       			EZHRMASTER.TBLUSERMASTER 
+                       			TBL_USERMASTER 
                        		WHERE
                        			DEPARTMENT = #v_CN#
                        		AND
@@ -303,9 +303,9 @@
                        				DISPLAYNAME  , SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
-                  				EZHRMASTER.TBLADDJOBMASTER B
+                  				TBL_ADDJOBMASTER B
                   			JOIN
-                  				EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                  				TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
@@ -333,7 +333,7 @@
                       	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                       	'dept' TYPE  
                     FROM
-                    	EZHRMASTER.TBLDEPTMASTER 
+                    	TBL_DEPTMASTER 
                    	WHERE
                    		EXTENSIONATTRIBUTE1 = #v_CN#
                    	AND
@@ -361,7 +361,7 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE  
                           		FROM
-                          			EZHRMASTER.TBLUSERMASTER 
+                          			TBL_USERMASTER 
                           		WHERE
                           			DEPARTMENT = #v_CN#
                           		AND
@@ -382,9 +382,9 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
                           		FROM
-                          			EZHRMASTER.TBLADDJOBMASTER B
+                          			TBL_ADDJOBMASTER B
                           		JOIN
-                          			EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                          			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                           		WHERE
                           			B.DEPTID = #v_CN#
                           		AND
@@ -405,7 +405,7 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                            			'dept' TYPE  
                           		FROM
-                          			EZHRMASTER.TBLDEPTMASTER 
+                          			TBL_DEPTMASTER 
                           		WHERE
                           			EXTENSIONATTRIBUTE1 = #v_CN#
                           		AND
@@ -420,7 +420,7 @@
 	</select> 
 	
 	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
@@ -448,7 +448,7 @@
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
-                               				EZHRMASTER.TBLUSERMASTER 
+                               				TBL_USERMASTER 
                                 		WHERE
                                 			DEPARTMENT = #v_CN#
                                 		AND
@@ -469,9 +469,9 @@
                                       		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
-                               				EZHRMASTER.TBLADDJOBMASTER B
+                               				TBL_ADDJOBMASTER B
                                			JOIN
-                               				EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                               				TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                               			WHERE
                               				B.DEPTID = #v_CN#
                               			AND
@@ -503,7 +503,7 @@
                         SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                         'DEPT' TYPE  
             	FROM
-            		EZHRMASTER.TBLDEPTMASTER 
+            		TBL_DEPTMASTER 
                 WHERE
                 	EXTENSIONATTRIBUTE1 = #v_CN#
                 AND
@@ -532,7 +532,7 @@
                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                            FROM
-                           		EZHRMASTER.TBLUSERMASTER 
+                           		TBL_USERMASTER 
                            WHERE
 	                           	DEPARTMENT = #v_CN#
 	                       AND
@@ -553,9 +553,9 @@
                                 	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                              FROM
-                             	EZHRMASTER.TBLADDJOBMASTER B
+                             	TBL_ADDJOBMASTER B
                              JOIN
-                             	EZHRMASTER.TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                             	TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                              WHERE
                              	B.DEPTID = #v_CN#
                              AND
@@ -576,7 +576,7 @@
                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
                                 'DEPT' TYPE  
                             FROM
-                            	EZHRMASTER.TBLDEPTMASTER 
+                            	TBL_DEPTMASTER 
                             WHERE
                             	EXTENSIONATTRIBUTE1 = #v_CN#
                             AND
@@ -591,7 +591,7 @@
 	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
-		{CALL EZHRMASTER.EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
@@ -602,7 +602,7 @@
         		( 	SELECT
         				CN 
                		FROM
-               			EZHRMASTER.TBLUSERMASTER 
+               			TBL_USERMASTER 
                		WHERE
                			DEPARTMENT = #v_CN#
                		AND
@@ -611,9 +611,9 @@
 		            SELECT
 		            	B.CN 
                		FROM
-               			EZHRMASTER.TBLADDJOBMASTER B
+               			TBL_ADDJOBMASTER B
                		JOIN
-               			TBLUSERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+               			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
@@ -621,8 +621,8 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
-		{CALL EZHRMASTER.EZSP_GETTBLDEPTMASTER(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<!-- <procedure id="EzOrganDAO.getTBL_DEPTMASTER" parameterClass="Map" resultClass="OrganDeptVO">
+		{CALL EZSP_GETTBL_DEPTMASTER(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
@@ -682,7 +682,7 @@
 	            'dept' TYPE ,
 	            TENANT_ID as tenantId
 	        FROM
-	        	EZHRMASTER.TBLDEPTMASTER 
+	        	TBL_DEPTMASTER 
 	       WHERE
 	       		CN = #v_CN#
 	       AND
@@ -690,8 +690,8 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
-		{CALL EZHRMASTER.EZSP_GETTBLUSERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	<!-- <procedure id="EzOrganDAO.getTBL_USERMASTER" parameterClass="Map" resultMap="userInfo">
+		{CALL EZSP_GETTBL_USERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
@@ -776,7 +776,7 @@
 	            SIPURI ,
 	            POSITIONCD
 	        FROM
-	        	EZHRMASTER.TBLUSERMASTER 
+	        	TBL_USERMASTER 
 	       WHERE
 	       		CN = #v_CN#
            AND
@@ -864,11 +864,11 @@
              SIPURI ,
              B.POSITIONCD
         	FROM
-        		EZHRMASTER.TBLADDJOBMASTER B
+        		TBL_ADDJOBMASTER B
             JOIN
-            	EZHRMASTER.TBLUSERMASTER A   ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
+            	TBL_USERMASTER A   ON B.CN = A.CN AND B.TENANT_ID = A.TENANT_ID
            	JOIN
-           		EZHRMASTER.TBLDEPTMASTER C   ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
+           		TBL_DEPTMASTER C   ON C.CN = B.DEPTID AND C.TENANT_ID = B.TENANT_ID
        		WHERE
        			B.CN = #v_CN#
             AND
@@ -879,7 +879,7 @@
 	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
-		{CALL EZHRMASTER.EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
@@ -980,7 +980,7 @@
                         		BIRTH ,
                         		BIRTHTYPE 
              FROM
-             	EZHRMASTER.TBLUSERMASTER 
+             	TBL_USERMASTER 
              WHERE
              	CN = LOWER(#v_CN#)
              AND
@@ -989,7 +989,7 @@
 	</select>
 	
 	<!-- <procedure id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
-		{CALL EZHRMASTER.EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
@@ -1016,9 +1016,9 @@
                 END
                 	DISPLAYNAME  
         	FROM
-        		EZHRMASTER.TBLADDJOBMASTER A
+        		TBL_ADDJOBMASTER A
         	JOIN
-        		EZHRMASTER.TBLDEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
+        		TBL_DEPTMASTER B   ON A.DEPTID = B.CN AND A.TENANT_ID = B.TENANT_ID
         	WHERE
         		A.CN = #v_PCN#
         	AND
@@ -1029,13 +1029,13 @@
 	</select>
 	
 	<!-- <procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
+		{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
 	</procedure> -->
 	
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLUSERMASTER
+				TBL_USERMASTER
 			SET
 				$v_PROPNAME$ = #v_PROPVALUE#
 			WHERE
@@ -1048,7 +1048,7 @@
 	<update id="EzOrganDAO.updateProperty_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLDEPTMASTER
+				TBL_DEPTMASTER
 			SET
 				$v_PROPNAME$ = #v_PROPVALUE# 
 			WHERE
@@ -1061,19 +1061,19 @@
 	<statement id="EzOrganDAO.updateProperty_U1" parameterClass="Map">
 		<![CDATA[
 			MERGE INTO
-				EZHRMASTER.TBLUSERMASTER 
+				TBL_USERMASTER 
    			USING (	SELECT
-   							TBLUSERMASTER.ROWID ROW_ID, TBLDEPTMASTER.DISPLAYNAME, TBLDEPTMASTER.DISPLAYNAME2
+   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2
           				FROM
-          					EZHRMASTER.TBLUSERMASTER 
+          					TBL_USERMASTER 
           				JOIN
-          					EZHRMASTER.TBLDEPTMASTER    ON TBLUSERMASTER.DEPARTMENT = TBLDEPTMASTER.CN  AND TBLUSERMASTER.TENANT_ID = TBLDEPTMASTER.TENANT_ID
+          					TBL_DEPTMASTER    ON TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN  AND TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
           				WHERE
-          					TBLDEPTMASTER.CN = #v_CN#
+          					TBL_DEPTMASTER.CN = #v_CN#
           				AND
-          					TBLDEPTMASTER.TENANT_ID = #v_TENANT_ID#	
+          					TBL_DEPTMASTER.TENANT_ID = #v_TENANT_ID#	
           				AND
-          					TBLDEPTMASTER	) src ON ( TBLUSERMASTER.ROWID = src.ROW_ID )
+          					TBL_DEPTMASTER	) src ON ( TBL_USERMASTER.ROWID = src.ROW_ID )
    			WHEN
    				MATCHED
    			THEN 
@@ -1085,7 +1085,7 @@
 	
 	<!-- <procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
 	
-		{CALL EZHRMASTER.EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
+		{CALL EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.setProxyUserInfo_S" parameterClass="Map" resultClass="String">
@@ -1108,7 +1108,7 @@
 	<update id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZHRMASTER.TBLPROXYINFO
+				TBLPROXYINFO
             SET
             	PROXYUSERID = #v_PROXYUSERID#,
                 PROXYUSERNAME = #v_PROXYUSERNAME#,
@@ -1125,7 +1125,7 @@
 	<insert id="EzOrganDAO.setProxyUserInfo_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZHRMASTER.TBLPROXYINFO
+				TBLPROXYINFO
             	( USERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERDEPTID, STARTDATE, ENDDATE, TENANT_ID )
             VALUES
             	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
@@ -1133,13 +1133,13 @@
 	</insert>
 	
 	<!-- <procedure id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
-		{CALL EZHRMASTER.EZSP_DELPROXYUSERINFO(#v_USERID#)}
+		{CALL EZSP_DELPROXYUSERINFO(#v_USERID#)}
 	</procedure> -->
 	
 	<delete id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZHRMASTER.TBLPROXYINFO
+				TBLPROXYINFO
         	WHERE
         		USERID = #v_USERID#
         	AND
@@ -1148,7 +1148,7 @@
 	</delete>
 	
 	<!-- <procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
-		{CALL EZHRMASTER.EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
@@ -1165,7 +1165,7 @@
              	DESCRIPTION2 ,
              	EXTENSIONATTRIBUTE2 
       		FROM
-      			EZHRMASTER.TBLUSERMASTER 
+      			TBL_USERMASTER 
       		WHERE
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
       		AND
@@ -1187,7 +1187,7 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER A $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -1197,7 +1197,7 @@
 	      		'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
-				ezHrmaster.TBLUSERMASTER B INNER JOIN ezHrmaster.TBLADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID $strSQL$
+				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID $strSQL$
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -1208,7 +1208,7 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					ezHrmaster.TBLDEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
 			</isEqual>	      				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
@@ -1218,7 +1218,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		ezHrmaster.TBLDEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
@@ -1240,7 +1240,7 @@
 			                '' as extensionAttribute15,
 			                'user' as type 
 			             FROM  
-			             	ezHrmaster.TBLUSERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+			             	TBL_USERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 			       
 			       UNION ALL
 			            
@@ -1250,9 +1250,9 @@
 			            '' as extensionAttribute15,
 			            'user' as type  
 			         FROM 
-			         	ezHrmaster.TBLUserMaster b   
+			         	TBL_USERMASTER b   
 			         INNER JOIN 
-			         	ezHrmaster.TBLADDJOBMASTER A  
+			         	TBL_ADDJOBMASTER A  
 			         ON  
 			         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
 	              	B where RNUM >= $startRow$ and RNUM < $endRow$
@@ -1266,7 +1266,7 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		ezHrmaster.TBLUSERMASTER A $strSQL$ $strSize$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A $strSQL$ $strSize$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -1276,9 +1276,9 @@
 	      		'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
-				ezHrmaster.TBLUSERMASTER B 
+				TBL_USERMASTER B 
 			INNER JOIN 
-				ezHrmaster.TBLADDJOBMASTER A 
+				TBL_ADDJOBMASTER A 
 			ON 
 				A.CN = B.CN $strSQL$ AND A.TENANT_ID = B.TENANT_ID
 				
@@ -1290,7 +1290,7 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					ezHrmaster.TBLDEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
 			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
@@ -1301,7 +1301,7 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		ezHrmaster.TBLDEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
 			]]>
 	      </isEqual>
 	</select>
@@ -1313,15 +1313,15 @@
 			SELECT 
 				CN 
 			FROM  
-				ezHrmaster.TBLUSERMASTER  A  $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+				TBL_USERMASTER  A  $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
             
             UNION ALL 
             
             SELECT 
             	A.CN  
             FROM 
-            	ezHrmaster.TBLUSERMASTER B   
-            INNER JOIN  ezHrmaster.TBLAddJobMaster A   
+            	TBL_USERMASTER B   
+            INNER JOIN  TBL_ADDJOBMASTER A   
             ON 
             	a.cn = b.cn $strSQL$ and a.tenant_id = b.tenant_id) A
 		]]>
@@ -1332,7 +1332,7 @@
 			SELECT 
 				COUNT(cn)
      		FROM 
-     			ezHrmaster.TBLDeptmaster 
+     			TBL_DEPTMASTER 
       		WHERE  
       			extensionattribute1 = #deptID#
       		AND
@@ -1345,7 +1345,7 @@
 			SELECT 
 				'top,Top,' || dept_cd_path 
 	      	FROM 
-	      		ezHrmaster.TBLDEPTMASTER 
+	      		TBL_DEPTMASTER 
 	      	WHERE  
 	      		cn = #deptID#
 	      	AND
@@ -1394,7 +1394,7 @@
 	            updatedt ,
 	            'dept' type  
 			FROM 
-				ezHrmaster.TBLDEPTMASTER 
+				TBL_DEPTMASTER 
 			WHERE  
 				cn = #userID#
 			AND
@@ -1407,7 +1407,7 @@
 			SELECT
 				password
 			FROM
-				ezHrmaster.TBLUSERMASTER
+				TBL_USERMASTER
 			WHERE
 				cn = #userID#
 			AND
@@ -1420,7 +1420,7 @@
 			SELECT
 				cn
 			FROM
-				ezHrmaster.TBLUSERMASTER
+				TBL_USERMASTER
 			WHERE
 				mail = #email#
 			AND
@@ -1433,7 +1433,7 @@
 			SELECT 
 				lastLogin 
 	      	FROM 
-	      		ezHrmaster.TBLUSERMASTER 
+	      		TBL_USERMASTER 
 	      	WHERE  
 	      		cn = #userID#
 	      	AND
@@ -1444,7 +1444,7 @@
 		SELECT 
 			CN , TENANT_ID tenantId
         FROM 
-        	ezHrmaster.TBLUserMaster 
+        	TBL_USERMASTER 
        	WHERE  
        		TENANT_ID = #TENANTID#
        	AND

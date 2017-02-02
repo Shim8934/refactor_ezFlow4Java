@@ -14,15 +14,15 @@ public interface EzResourceAdminService {
 	
 	public ResGetSubClsListVO getBrdInfo(int brdID, String companyID, int tenantID) throws Exception;
 	
-	public String getSubCntOfCls(String xmlStr) throws Exception;
+	public String getSubCntOfCls(String xmlStr, int tenantID) throws Exception;
 	
 	public String getSubClsList(String xmlStr, String langStr, int tenantID) throws Exception;
 	
 	public String getClsACLList(String xmlStr, int tenantID) throws Exception;
 	
-	public int getSubResCnt(String resID, String companyID) throws Exception;
+	public int getSubResCnt(String resID, String companyID, int tenantID) throws Exception;
 	
-	public int getSubClsCnt(String resID, String companyID) throws Exception; 
+	public int getSubClsCnt(String resID, String companyID, int tenantID) throws Exception; 
 	
 	public boolean addClsData(String xmlStr, int tenantID) throws Exception;
 	

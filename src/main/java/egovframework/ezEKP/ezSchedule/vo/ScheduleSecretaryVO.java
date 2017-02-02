@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
-public class PubScheSecVO {
+public class ScheduleSecretaryVO {
 	/** 비서 ID */
 	private String secId;
 	

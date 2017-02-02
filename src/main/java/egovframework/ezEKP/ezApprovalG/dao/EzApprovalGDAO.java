@@ -947,8 +947,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 
 	public int getCabinetListCount(Map<String, Object> map1) throws Exception{
-		select("EzApprovalG.getCabinetListCount", map1);
-		return (int)map1.get("v_pCount");
+		return (int)select("EzApprovalG.getCabinetListCount", map1);
 	}
 
 	public int getReceiptInfo_receivesNm(Map<String, Object> map)throws Exception{

@@ -1506,7 +1506,7 @@
                 </div>
                 <article class='utmenu'>
                     <ul>
-                        <c:if test="${not checkAdmin}">
+                        <c:if test="${checkAdmin}">
                             <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/admin/main.do", "", "")'><spring:message code='ezResource.t106' /></span></li>
                         </c:if>
                         <li ><span style='cursor:pointer' onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "null", "height=550px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")'><spring:message code='ezPersonal.t210' /></span></li>

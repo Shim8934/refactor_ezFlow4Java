@@ -348,5 +348,7 @@ public interface EzCommunityService {
 
 	public void joinOkSendMail(String loginCookie, LoginVO userInfo, CommunityClubVO clubVO) throws Exception;
 
+	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
+
 	
 }

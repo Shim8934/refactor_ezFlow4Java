@@ -316,7 +316,7 @@
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
-		{CALL EZRESOURCE.EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		{CALL EZSP_GETADMSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure> -->
 	
 	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
@@ -335,13 +335,13 @@
                    A.BRD_ACCESS brd_access ,
                    A.ATTACH_SIZE attach_size ,
                    ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                     FROM EZRESOURCE.TBL_RS_TBLBRD 
+                     FROM TBL_RS_BRD 
                       WHERE  BRD_UPPER = A.BRD_ID
                                AND Brd_Company = #v_P_CompanyID#
                                AND Brd_GB = N'1'
                                AND TENANT_ID = #tenantID# ) sub_clscnt ,
                    ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                     FROM EZRESOURCE.TBL_RS_TBLBRD 
+                     FROM TBL_RS_BRD 
                      WHERE  BRD_UPPER = A.BRD_ID
                             AND Brd_Company = #v_P_CompanyID#
                             AND Brd_GB = N'2'
@@ -349,7 +349,7 @@
                    N'0' Access_Lvl ,
 
                    A.APPROVEFLAG 
-				FROM EZRESOURCE.TBL_RS_TBLBRD A
+				FROM TBL_RS_BRD A
             	WHERE  BRD_ID = 1
 				AND Brd_Company = #v_P_CompanyID#
 				AND TENANT_ID = #tenantID# 
@@ -372,14 +372,14 @@
                       A.ATTACH_SIZE attach_size ,
 
                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                        FROM EZRESOURCE.TBL_RS_TBLBRD 
+                        FROM TBL_RS_BRD 
                         WHERE  BRD_UPPER = A.BRD_ID
                         AND Brd_Company = #v_P_CompanyID#
                         AND Brd_GB = N'1'
                         AND TENANT_ID = #tenantID# ) sub_clscnt ,
 
                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                        FROM EZRESOURCE.TBL_RS_TBLBRD 
+                        FROM TBL_RS_BRD 
                         WHERE  BRD_UPPER = A.BRD_ID
                         AND Brd_Company = #v_P_CompanyID#
                         AND Brd_GB = N'2' 
@@ -388,7 +388,7 @@
                       N'0' Access_Lvl ,
 
                       A.APPROVEFLAG 
-                 FROM EZRESOURCE.TBL_RS_TBLBRD A
+                 FROM TBL_RS_BRD A
                  WHERE  Brd_Upper = NVL(#v_P_ParentID#,0)
                  AND Brd_Company = #v_P_CompanyID#
                  AND TENANT_ID = #tenantID#
@@ -410,18 +410,18 @@
                       A.BRD_ACCESS brd_access ,
                       A.ATTACH_SIZE attach_size ,
                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                        FROM EZRESOURCE.TBL_RS_TBLBRD 
+                        FROM TBL_RS_BRD 
                          WHERE  BRD_UPPER = A.BRD_ID
                                   AND Brd_Company = #v_P_CompanyID#
                                   AND Brd_GB = N'1' ) sub_clscnt ,
                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                        FROM EZRESOURCE.TBL_RS_TBLBRD 
+                        FROM TBL_RS_BRD 
                          WHERE  BRD_UPPER = A.BRD_ID
                                   AND Brd_Company = #v_P_CompanyID#
                                   AND Brd_GB = N'2' ) sub_rescnt ,
                       N'0' Access_Lvl ,
                       A.APPROVEFLAG 
-                 FROM EZRESOURCE.TBL_RS_TBLBRD A
+                 FROM TBL_RS_BRD A
                 WHERE  Brd_Upper = NVL(#v_P_ParentID#,0)
                          AND Brd_Company = #v_P_CompanyID#
                          AND Brd_GB = N'1'
@@ -433,7 +433,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #v_P_USERID#, #v_PCOMID#, #v_PDEPTID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSUBCLSTREE(#v_P_ParentID#, #v_P_CompanyID#, #v_P_TreeType#, #v_P_USERID#, #v_PCOMID#, #v_PDEPTID#, #v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -465,14 +465,14 @@
                 A.ATTACH_SIZE ATTACH_SIZE ,
 
                 ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                  FROM EZRESOURCE.TBL_RS_TBLBRD 
+                  FROM TBL_RS_BRD 
                   WHERE  BRD_UPPER = A.BRD_ID
                             AND BRD_COMPANY = #v_P_COMPANYID#
                             AND BRD_GB = '1'
                             AND TENANT_ID = #tenantID# ) SUB_CLSCNT ,
 
                 ( SELECT NVL(COUNT(BRD_ID) , 0) 
-                  FROM EZRESOURCE.TBL_RS_TBLBRD 
+                  FROM TBL_RS_BRD 
                   WHERE  BRD_UPPER = A.BRD_ID
                             AND BRD_COMPANY = #v_P_COMPANYID#
                             AND BRD_GB = '2'
@@ -480,7 +480,7 @@
                 '0' ACCESS_LVL ,
 
                 A.APPROVEFLAG 
-           FROM EZRESOURCE.TBL_RS_TBLBRD A
+           FROM TBL_RS_BRD A
                   LEFT JOIN TBL_RS_RESACL B   ON A.BRD_ID = B.RESID AND A.TENANT_ID = B.TENANT_ID
           WHERE  A.BRD_ID = 1
                    AND A.BRD_COMPANY = #v_P_COMPANYID#
@@ -505,19 +505,19 @@
       						A.BRD_EXPLAIN AS BRD_EXPLAIN, 
       						A.BRD_ACCESS AS BRD_ACCESS,
       						A.ATTACH_SIZE AS ATTACH_SIZE,
-      						(SELECT NVL(COUNT(BRD_ID), 0) FROM EZRESOURCE.TBL_RS_TBLBRD  
+      						(SELECT NVL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
       						WHERE BRD_UPPER = A.BRD_ID
       						AND BRD_COMPANY = #v_P_COMPANYID#
       						AND BRD_GB = '1'
       						AND TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
-      						(SELECT NVL(COUNT(BRD_ID), 0) FROM EZRESOURCE.TBL_RS_TBLBRD  
+      						(SELECT NVL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
       						WHERE BRD_UPPER = A.BRD_ID
       						AND BRD_COMPANY = #v_P_COMPANYID#
       						AND BRD_GB = '2'
       						AND TENANT_ID = #tenantID#) AS SUB_RESCNT, 
       						'' AS ACCESS_LVL,		
       						A.APPROVEFLAG
-      				FROM EZRESOURCE.TBL_RS_TBLBRD A   LEFT JOIN TBL_RS_RESACL B
+      				FROM TBL_RS_BRD A   LEFT JOIN TBL_RS_RESACL B
       				ON A.BRD_ID = B.RESID AND A.TENANT_ID = B.TENANT_ID
       				WHERE A.BRD_UPPER	= #v_P_PARENTID#
       				AND A.BRD_COMPANY 	= #v_P_COMPANYID#
@@ -541,7 +541,7 @@
       						0 AS SUB_RESCNT, 
       						'' AS ACCESS_LVL,	
       						A.APPROVEFLAG
-      				FROM EZRESOURCE.TBL_RS_TBLBRD A   LEFT JOIN TBL_RS_RESACL B
+      				FROM TBL_RS_BRD A   LEFT JOIN TBL_RS_RESACL B
       				ON A.BRD_ID = B.RESID AND A.TENANT_ID = B.TENANT_ID
       				WHERE A.BRD_UPPER	= #v_P_PARENTID#
       				AND A.BRD_COMPANY 	= #v_P_COMPANYID#
@@ -555,7 +555,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getBrdMainList" parameterClass="Map" resultClass="ResGetItemListVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETBRDMAINLIST(#v_BRD_ID#, #v_COMPANY#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETBRDMAINLIST(#v_BRD_ID#, #v_COMPANY#, #v_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -575,7 +575,7 @@
 				BRD_NM,
 				APPROVEFLAG 
 			FROM
-				EZRESOURCE.TBL_RS_TBLBRD 
+				TBL_RS_BRD 
 			WHERE
 				BRD_UPPER = #v_BRD_ID#
 			AND
@@ -591,7 +591,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELIST(#v_POWNERID#, #v_PCOMPANYID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
+			{CALL EZSP_GETSCHEDULELIST(#v_POWNERID#, #v_PCOMPANYID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleList" parameterClass="Map" resultMap="resGetScheduleListVO">
@@ -624,9 +624,9 @@
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2  
            	FROM 
-           		EZRESOURCE.TBL_RS_SCHEDULE A
+           		TBL_RS_SCHEDULE A
 			JOIN
-				EZHRMASTER.TBLUSERMASTER B 
+				TBL_USERMASTER B 
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
@@ -657,7 +657,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELIST_MAIN(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSCHEDULELIST_MAIN(#v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleListMain" parameterClass="Map" resultMap="resGetScheduleListMainVO">
@@ -687,9 +687,9 @@
             	DEPTNM ,
             	SCH.COMPANYID 
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULE SCH
+				TBL_RS_SCHEDULE SCH
         	JOIN
-        		EZRESOURCE.TBL_RS_TBLBRD BRD
+        		TBL_RS_BRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID 
 			AND
@@ -715,7 +715,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#)}
+			{CALL EZSP_GETSCHEDULELISTREPETITI(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_PENDDATE#, #v_WRITERNAME#, #v_WRITERDEPT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleListRepetiti" parameterClass="Map" resultMap="resGetScheduleListRepetitionVO">
@@ -749,15 +749,15 @@
             	B.TITLE JOBTITLE  ,
             	B.TITLE2 JOBTITLE2  
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULE A
+				TBL_RS_SCHEDULE A
 			JOIN
-				EZHRMASTER.TBLUSERMASTER B   
+				TBL_USERMASTER B   
 			ON
 				A.writerID = B.CN
 			AND
 				A.TENANT_ID = B.TENANT_ID	
 			JOIN
-				EZRESOURCE.TBL_RS_SCHEDULERepetition C 
+				TBL_RS_SCHEDULERepetition C 
 			ON 
 				A.ownerID = C.ownerID
 			AND
@@ -790,7 +790,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleListRepetitim" parameterClass="Map" resultMap="resGetScheduleListMainVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTREPETITIM(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSCHEDULELISTREPETITIM(#v_PCOMPANYID#, #v_PSTARTDATE#, #v_POWNERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -821,9 +821,9 @@
              	DEPTNM ,
              	SCH.companyID 
         	FROM
-        		EZRESOURCE.TBL_RS_SCHEDULE SCH
+        		TBL_RS_SCHEDULE SCH
         	JOIN
-        		EZRESOURCE.TBL_RS_TBLBRD BRD
+        		TBL_RS_BRD BRD
 			ON
 				SCH.OWNERID = BRD.BRD_ID
 			AND
@@ -846,7 +846,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETREPDATETIMES(#v_pOwnerID#, #v_pCompanyID#, #v_pNum#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETREPDATETIMES(#v_pOwnerID#, #v_pCompanyID#, #v_pNum#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -855,7 +855,7 @@
 			SELECT
 				* 
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION 
+				TBL_RS_SCHEDULEREPETITION 
 			WHERE
 				COMPANYID = #v_pCompanyID#
 			AND
@@ -869,7 +869,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULELISTTERM(#v_PNUM#, #v_PCOMPANYID#, #v_POWNERID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
+			{CALL EZSP_GETSCHEDULELISTTERM(#v_PNUM#, #v_PCOMPANYID#, #v_POWNERID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
@@ -900,9 +900,9 @@
              	B.TITLE JOBTITLE  ,
              	B.TITLE2 JOBTITLE2  
         	FROM
-        		EZRESOURCE.TBL_RS_SCHEDULE A
+        		TBL_RS_SCHEDULE A
 			JOIN
-				EZHRMASTER.TBLUSERMASTER B  
+				TBL_USERMASTER B  
 			ON
 				A.WRITERID = B.CN
 			AND
@@ -931,7 +931,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETBRDLIST(#v_PTOPCNT#, #v_PBRDID#, #v_PCOMPANYID#, #v_POWNDEPTNM#, #v_POWNERNM#, #v_POWNERPOSITION#, #v_PBRDNM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETBRDLIST(#v_PTOPCNT#, #v_PBRDID#, #v_PCOMPANYID#, #v_POWNDEPTNM#, #v_POWNERNM#, #v_POWNERPOSITION#, #v_PBRDNM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getBrdList" parameterClass="Map" resultMap="resBrdListVO">
@@ -944,7 +944,7 @@
                 OWNERID,  $v_POWNERNM$  AS OWNERNM,  $v_POWNERPOSITION$   AS OWNERPOSITION, 
                 REPLY_MAIL_FG, RESLOCATION 
 			FROM
-				EZRESOURCE.TBL_RS_TBLBRD  
+				TBL_RS_BRD  
 			WHERE
 				BRD_UPPER = #v_PBRDID#
 			AND
@@ -960,7 +960,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETBRDCNT(#v_PBRDID#, #v_PCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+			{CALL EZSP_GETBRDCNT(#v_PBRDID#, #v_PCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
@@ -968,7 +968,7 @@
 			SELECT
 				COUNT(BRD_ID)	cnt 
 			FROM
-				EZRESOURCE.TBL_RS_TBLBRD 
+				TBL_RS_BRD 
 			WHERE  
 				BRD_UPPER = #v_PBRDID#
             AND
@@ -982,7 +982,7 @@
 	
 <!-- 	<procedure id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETBRD(#v_pBrdID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETBRD(#v_pBrdID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getBrd" parameterClass="Map" resultMap="resBrdVO">
@@ -1006,7 +1006,7 @@
              	NVL(APPROVEFLAG, '0') APPROVEFLAG  ,
              	BRD_ACCESS 
         	FROM
-        		EZRESOURCE.TBL_RS_TBLBRD 
+        		TBL_RS_BRD 
 			WHERE
 				BRD_ID = #v_pBrdID#
        		AND
@@ -1020,13 +1020,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.delResData" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_DELRESDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
+			{CALL EZSP_DELRESDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
 		]]>
 	</procedure> -->
 	<delete id="EzResourceDAO.delResData" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_TBLBRD
+				TBL_RS_BRD
 			WHERE
 				BRD_ID = #v_P_Brd_ID#
 			AND
@@ -1039,14 +1039,14 @@
 	<update id="EzResourceDAO.delResData_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_TBLBRD
+				TBL_RS_BRD
     		SET
     			BRD_STEP = BRD_STEP - 1
 			WHERE
 				BRD_UPPER = ( SELECT
 										Brd_Upper 
                          			FROM
-                         				EZRESOURCE.TBL_RS_TBLBRD 
+                         				TBL_RS_BRD 
                          			WHERE
                          				BRD_ID = #v_P_Brd_ID#
                          			AND
@@ -1055,7 +1055,7 @@
     			BRD_STEP > ( SELECT
 										BRD_STEP 
 								  FROM
-								  	    EZRESOURCE.TBL_RS_TBLBRD 
+								  	    TBL_RS_BRD 
                      			  WHERE
                      			  		BRD_ID = #v_P_Brd_ID#
 								  AND
@@ -1068,7 +1068,7 @@
 	<delete id="EzResourceDAO.delResData1" parameterClass="Map">
 		<![CDATA[
 			DELETE 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -1081,7 +1081,7 @@
 	<delete id="EzResourceDAO.delResData2" parameterClass="Map">
 		<![CDATA[
 			 DELETE
-			 	EZRESOURCE.TBL_RS_SCHEDULEFILE
+			 	TBL_RS_SCHEDULEFILE
    			WHERE
    				OWNERID = #v_P_Brd_ID#
    			AND
@@ -1094,7 +1094,7 @@
 	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION
+				TBL_RS_SCHEDULEREPETITION
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
    			AND 
@@ -1106,14 +1106,14 @@
 	
 	<!-- <procedure id="EzResourceDAO.modifyResData" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_MODIFYRESDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
+			{CALL EZSP_MODIFYRESDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
 			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
 		]]>
 	</procedure> -->
 	<update id="EzResourceDAO.modifyResData" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_TBLBRD
+				TBL_RS_BRD
       		SET 
       			OWNDEPTID = RTRIM(#v_P_ODeptID#),
           		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
@@ -1140,7 +1140,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.addResData" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_ADDRESDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
+			{CALL EZSP_ADDRESDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, 
 			#v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_P_Approve#, #v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#)}
 		]]>
 	</procedure> -->
@@ -1150,7 +1150,7 @@
 			SELECT 
 				(NVL(MAX(BRD_ID) , 0) + 1)
    			FROM
-   				EZRESOURCE.TBL_RS_TBLBRD 
+   				TBL_RS_BRD 
 		]]>
 	</select>
 	
@@ -1159,7 +1159,7 @@
 			SELECT
 				(BRD_LEVEL + 1)
     		FROM 
-    			EZRESOURCE.TBL_RS_TBLBRD 
+    			TBL_RS_BRD 
     		WHERE  
     			BRD_ID = #v_P_ClassGB#
     		AND 
@@ -1174,7 +1174,7 @@
 			SELECT
 				(NVL(MAX(Brd_Step) , 0) + 1)
     		FROM
-    			EZRESOURCE.TBL_RS_TBLBRD 
+    			TBL_RS_BRD 
     		WHERE
     			BRD_UPPER = #v_P_ClassGB#
     		AND
@@ -1187,7 +1187,7 @@
 	<insert id="EzResourceDAO.addResData" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZRESOURCE.TBL_RS_TBLBRD ( BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
+				TBL_RS_BRD ( BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
       											, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
       											, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID )
         	VALUES ( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
@@ -1200,13 +1200,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.updateSchedule" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_UPDATESCHEDULE(#v_PNUM#, #v_POWNERID#, #v_PCOMPANYID#, #v_PAPPROVE#)}
+			{CALL EZSP_UPDATESCHEDULE(#v_PNUM#, #v_POWNERID#, #v_PCOMPANYID#, #v_PAPPROVE#)}
 		]]>
 	</procedure> -->
 	<update id="EzResourceDAO.updateSchedule" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
       		SET
       			APPROVEFLAG = #v_PAPPROVE#
     		WHERE  
@@ -1222,13 +1222,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
+			{CALL EZSP_UPDATESCHEDULEDATETIME(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #v_pStartDate#, #v_pEndDate#)}
 		]]>
 	</procedure> -->
 	<update id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
       		SET 
       			STARTDATE = TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'),
           		ENDDATE = TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
@@ -1245,14 +1245,14 @@
 	
 	<!-- <procedure id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_UPDATESCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#, 
+			{CALL EZSP_UPDATESCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#, 
 			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
 		]]>
 	</procedure> -->
 	<update id="EzResourceDAO.updateScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION
+				TBL_RS_SCHEDULEREPETITION
       		SET 
       			STARTDATETIME = TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'),
           		ENDDATETIME = TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
@@ -1277,7 +1277,7 @@
 	
 <!-- 	<procedure id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULE(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSCHEDULE(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
@@ -1285,7 +1285,7 @@
 			SELECT 
 				* 
       		FROM
-      			EZRESOURCE.TBL_RS_SCHEDULE 
+      			TBL_RS_SCHEDULE 
       		WHERE  
       			COMPANYID = #v_pCompanyID#
       		AND 
@@ -1299,7 +1299,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_INSERTSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#,
+			{CALL EZSP_INSERTSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pStartDateTime#, #v_pEndDateTime#, #v_pReWay#, #v_pReDay#, #v_pReNum#,
 			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
 		]]>
 	</procedure> -->
@@ -1307,7 +1307,7 @@
 		SELECT
 			(NVL(MAX(num) , 1))
    		FROM
-   			EZRESOURCE.TBL_RS_SCHEDULE 
+   			TBL_RS_SCHEDULE 
    		WHERE
    			COMPANYID = #v_pCompanyID# AND OWNERID = #v_pOwnerID#
 	</select>
@@ -1315,7 +1315,7 @@
 	<insert id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
+				TBL_RS_SCHEDULEREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
      		VALUES
      			( #v_Num#, #v_pOwnerID#, TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
      			, #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#
@@ -1325,7 +1325,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULEINFO(#v_pNum#, #v_pEntryID#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSCHEDULEINFO(#v_pNum#, #v_pEntryID#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
@@ -1333,7 +1333,7 @@
 			SELECT
 				* 
         	FROM
-        		EZRESOURCE.TBL_RS_SCHEDULE 
+        		TBL_RS_SCHEDULE 
        		WHERE  
        			COMPANYID = #v_pCompanyID#
 			AND
@@ -1349,13 +1349,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.deleteRepetition" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_DELETEREPETITION(#v_pOwnerID#, #v_pNum#)}
+			{CALL EZSP_DELETEREPETITION(#v_pOwnerID#, #v_pNum#)}
 		]]>
 	</procedure> -->
 	<delete id="EzResourceDAO.deleteRepetition" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION 
+				TBL_RS_SCHEDULEREPETITION 
    			WHERE
    				OWNERID = #v_pOwnerID#
    			AND
@@ -1367,7 +1367,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_SELECT_FORMID(#v_pRESID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_SELECT_FORMID(#v_pRESID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.selectFormID" parameterClass="Map" resultMap="resSelectFormIDVO">
@@ -1375,7 +1375,7 @@
 			SELECT
 				RESID , BRDNM , FORMTEXT 
         	FROM
-        		EZRESOURCE.TBL_RS_SCHEDULEFORM 
+        		TBL_RS_SCHEDULEFORM 
        		WHERE
        			RESID = #v_pRESID#
        		AND
@@ -1383,18 +1383,18 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzResourceDAO.getAclTBL_RS_TBLBRD" parameterClass="Map" 	resultClass="String">
+	<!-- <procedure id="EzResourceDAO.getAclTBL_RS_BRD" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETACLTBL_RS_TBLBRD(#v_PCOMPANYID#, #v_PBRDID#, #iv_PUSERID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETACLTBL_RS_BRD(#v_PCOMPANYID#, #v_PBRDID#, #iv_PUSERID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> --> 
 	
-	<select id="EzResourceDAO.getAclTBL_RS_TBLBRD_S1" parameterClass="Map" 	resultClass="String">
+	<select id="EzResourceDAO.getAclTblBrd_S1" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
 			SELECT 
 				OWNERID
 			FROM
-				EZRESOURCE.TBL_RS_TBLBRD 
+				TBL_RS_BRD 
 			WHERE
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
@@ -1406,12 +1406,12 @@
 		]]>	
 	</select>
 	
-	<select id="EzResourceDAO.getAclTBL_RS_TBLBRD_S2" parameterClass="Map" 	resultClass="String">
+	<select id="EzResourceDAO.getAclTblBrd_S2" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
 			SELECT
 				BRD_UPPER
             FROM
-            	EZRESOURCE.TBL_RS_TBLBRD 
+            	TBL_RS_BRD 
             WHERE  
             	BRD_COMPANY = #v_PCOMPANYID#
             AND 
@@ -1421,12 +1421,12 @@
 		]]>	
 	</select>
 	
-		<select id="EzResourceDAO.getAclTBL_RS_TBLBRD_S3" parameterClass="Map" 	resultClass="String">
+		<select id="EzResourceDAO.getAclTblBrd_S3" parameterClass="Map" 	resultClass="String">
 		<![CDATA[
 			SELECT
 				ACCESS_LVL
             FROM 
-            	EZRESOURCE.TBL_RS_RESACL 
+            	TBL_RS_RESACL 
             WHERE  
             	COMPANYID = #v_PCOMPANYID#
             AND 
@@ -1440,7 +1440,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETBRDAPPROVEFLAG(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETBRDAPPROVEFLAG(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
@@ -1448,7 +1448,7 @@
 			SELECT
 				NVL(APPROVEFLAG, '0') APPROVEFLAG  
         	FROM
-        		EZRESOURCE.TBL_RS_TBLBRD 
+        		TBL_RS_BRD 
        		WHERE  
        			BRD_ID = #v_PBRDID#
 			AND
@@ -1462,7 +1462,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.insertForm" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_INSERT_FORM(#v_RESID#, #v_BRDNM#, #v_FORMTEXT#)}
+			{CALL EZSP_INSERT_FORM(#v_RESID#, #v_BRDNM#, #v_FORMTEXT#)}
 		]]>
 	</procedure> -->
 	
@@ -1471,7 +1471,7 @@
 			SELECT
 				COUNT(*)
     		FROM
-    			EZRESOURCE.TBL_RS_SCHEDULEFORM 
+    			TBL_RS_SCHEDULEFORM 
     		WHERE  
     			RESID = #v_RESID#
 			AND
@@ -1482,7 +1482,7 @@
 	<insert id="EzResourceDAO.insertForm_I" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO 
-				EZRESOURCE.TBL_RS_SCHEDULEFORM
+				TBL_RS_SCHEDULEFORM
             	( RESID, BRDNM, FORMTEXT, TENANT_ID )
             VALUES
             	( #v_RESID#, #v_BRDNM3#, #v_FORMTEXT#, #tenantID# )
@@ -1492,7 +1492,7 @@
 	<update id="EzResourceDAO.insertForm_U" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZRESOURCE.TBL_RS_SCHEDULEFORM
+				TBL_RS_SCHEDULEFORM
 			SET
 				BRDNM = #v_BRDNM#,
 				FORMTEXT = #v_FORMTEXT#
@@ -1505,13 +1505,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.delFormID" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_DEL_FORMID(#v_DELCODE#)}
+			{CALL EZSP_DEL_FORMID(#v_DELCODE#)}
 		]]>
 	</procedure> -->
 	<delete id="EzResourceDAO.delFormID" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULEFORM
+				TBL_RS_SCHEDULEFORM
    			WHERE 
    				RESID = #v_DELCODE#
    			AND
@@ -1521,7 +1521,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.delResSch" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_DELRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_sDate#, #v_P_eDate#, #v_P_insType#)}
+			{CALL EZSP_DELRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_sDate#, #v_P_eDate#, #v_P_insType#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.delResSch_S1" parameterClass="Map" resultClass="String">
@@ -1534,7 +1534,7 @@
 	         	EXISTS ( SELECT
 	         					 * 
 	                        FROM
-	                        	EZRESOURCE.TBL_RS_SCHEDULE 
+	                        	TBL_RS_SCHEDULE 
 	                        WHERE  
 	                        	COMPANYID = #v_P_companyID#
 	                        AND 
@@ -1550,7 +1550,7 @@
 	<update id="EzResourceDAO.delResSch_U" parameterClass="Map" >
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
 			SET
 				REFLAG = u'4'
 			WHERE
@@ -1569,7 +1569,7 @@
 			SELECT
 				NVL(MAX(num) , 0) + 1 
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULE 
+				TBL_RS_SCHEDULE 
 			WHERE  
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1582,7 +1582,7 @@
 	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
 				( num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, companyID, characterID, attachFlag )
 					( SELECT
 						#v_MaxNum# ,
@@ -1608,7 +1608,7 @@
 	                    CHARACTERID ,
 	                    ATTACHFLAG 
 	                 FROM 
-	                 	EZRESOURCE.TBL_RS_SCHEDULE 
+	                 	TBL_RS_SCHEDULE 
 					 WHERE
 					 	COMPANYID = #v_P_companyID#
 					AND
@@ -1625,7 +1625,7 @@
 	<delete id="EzResourceDAO.delResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND
@@ -1640,7 +1640,7 @@
 	<delete id="EzResourceDAO.delResSch_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION
+				TBL_RS_SCHEDULEREPETITION
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND 
@@ -1655,7 +1655,7 @@
 	<delete id="EzResourceDAO.delResSch_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
             WHERE 
             	COMPANYID = #v_P_companyID#
             AND
@@ -1669,7 +1669,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.modifyResSch" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_MODIFYRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#
+			{CALL EZSP_MODIFYRESSCH(#v_P_ownerID#, #v_P_num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#
 			, #v_P_startDate#, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#,
 			#v_P_attachFlag#, #v_P_typeVal#, #v_P_Approve#)}
 		]]>
@@ -1679,7 +1679,7 @@
 			SELECT
 				OWNERNM
           	FROM
-          		EZRESOURCE.TBL_RS_SCHEDULE 
+          		TBL_RS_SCHEDULE 
           	WHERE
           		COMPANYID = #v_P_companyID#
           	AND
@@ -1696,7 +1696,7 @@
 			SELECT 
 				DEPTNM
           	FROM
-          		EZRESOURCE.TBL_RS_SCHEDULE 
+          		TBL_RS_SCHEDULE 
           	WHERE
           		COMPANYID = #v_P_companyID#
           	AND
@@ -1711,7 +1711,7 @@
 	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
 		<![CDATA[
 			DELETE 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
           	WHERE 
           		( COMPANYID = #v_P_companyID#
 				AND
@@ -1735,7 +1735,7 @@
 	<insert id="EzResourceDAO.modifyResSch_I1" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
             ( num, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID
             , ownerNM, deptNM, ApproveFlag, TENANT_ID )
             VALUES
@@ -1747,7 +1747,7 @@
 	<update id="EzResourceDAO.modifyResSch_U1" parameterClass="Map">
 		<![CDATA[
 			UPDATE
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
             SET 
             	TITLE = #v_P_title#,
 				LOCATION = #v_P_location#,
@@ -1780,7 +1780,7 @@
 			SELECT 
 				(NVL(MAX(num) , 0) + 1)
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULE 
+				TBL_RS_SCHEDULE 
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1788,7 +1788,7 @@
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
 				( num, pnum, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID, TENANT_ID )
 			VALUES
 				( #maxNum#, #v_P_pnum#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#, #v_P_endDate#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, 3, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, #tenantID# )
@@ -1798,7 +1798,7 @@
 	<delete id="EzResourceDAO.modifyResSch_D2" parameterClass="Map">
 		<![CDATA[
 			DELETE
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
             AND 
@@ -1815,7 +1815,7 @@
 	<update id="EzResourceDAO.modifyResSch_U2" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
 			SET
 				TITLE = RTRIM(#v_P_title#),
 				LOCATION = RTRIM(#v_P_location#),
@@ -1846,7 +1846,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.addRessch" parameterClass="Map" >
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_ADDRESSCH2(#v_P_ownerID#, #v_P_num#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#
+			{CALL EZSP_ADDRESSCH2(#v_P_ownerID#, #v_P_num#, #v_P_companyID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, #v_P_startDate#
 			, #v_P_endDate#, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_characterID#, #v_P_attachFlag#,
 			#v_P_deptNM#, #v_P_ownerNM#, #iv_P_Approve#, #v_P_ScheduleID#)}
 		]]>
@@ -1856,7 +1856,7 @@
 		SELECT
 			APPROVEFLAG 
      	FROM
-     		EZRESOURCE.TBL_RS_TBLBRD 
+     		TBL_RS_BRD 
     	WHERE
     		BRD_ID = #v_P_ownerID#
     	AND
@@ -1868,7 +1868,7 @@
 			SELECT
 				(NVL(MAX(num) , 0) + 1) 
 		    FROM
-		    	EZRESOURCE.TBL_RS_SCHEDULE 
+		    	TBL_RS_SCHEDULE 
     		WHERE  
     			COMPANYID = #v_P_companyID#
              AND 
@@ -1879,7 +1879,7 @@
 			
 		<![CDATA[
 			INSERT INTO
-				EZRESOURCE.TBL_RS_SCHEDULE
+				TBL_RS_SCHEDULE
      			( OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
      			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
@@ -1892,13 +1892,13 @@
 	
 	<!-- <procedure id="EzResourceDAO.getSubCntOfCls" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSUBCNTOFCLS(#v_P_ResID#, #v_P_CompanyID#, #v_SubResCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_SubClsCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSUBCNTOFCLS(#v_P_ResID#, #v_P_CompanyID#, #v_SubResCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_SubClsCnt,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
 	<!-- <procedure id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETSCHEDULEREPETITION(#v_pNum#, #v_pOwnerID#, #v_pCompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
@@ -1906,7 +1906,7 @@
 			SELECT
 				*  
       		FROM
-      			EZRESOURCE.TBL_RS_SCHEDULEREPETITION 
+      			TBL_RS_SCHEDULEREPETITION 
        		WHERE
        			COMPANYID = #v_pCompanyID#
        		AND
@@ -1920,7 +1920,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETREPRESOURCE(#v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETREPRESOURCE(#v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
@@ -1951,7 +1951,7 @@
              	PUBLICFLAG ,
              	APPROVEFLAG 
 			FROM
-				EZRESOURCE.TBL_RS_SCHEDULE 
+				TBL_RS_SCHEDULE 
        		WHERE
        			CompanyID = #v_p_companyID#
 			AND
@@ -1975,7 +1975,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_GETREPRESOURCEREPEAT(#v_rec_frequency#, #v_rec_selType#, #v_rec_endRecurType#, #v_rec_startDateTime#, #v_rec_endDateTime#, #v_rec_interval#, #v_rec_daysOfWeek#, #v_rec_instances#, #v_rec_byPosition#, #v_rec_daysOfMonth#, #v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_GETREPRESOURCEREPEAT(#v_rec_frequency#, #v_rec_selType#, #v_rec_endRecurType#, #v_rec_startDateTime#, #v_rec_endDateTime#, #v_rec_interval#, #v_rec_daysOfWeek#, #v_rec_instances#, #v_rec_byPosition#, #v_rec_daysOfMonth#, #v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	<select id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
@@ -2001,9 +2001,9 @@
              	B.title ,
              	B.writeDay 
         	FROM
-        		EZRESOURCE.TBL_RS_SCHEDULE B
+        		TBL_RS_SCHEDULE B
 			JOIN
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION C
+				TBL_RS_SCHEDULEREPETITION C
 			ON
 				B.ownerID = C.ownerID
 			AND
@@ -2031,7 +2031,7 @@
 	
 	<!-- <procedure id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
 		<![CDATA[
-			{CALL EZRESOURCE.EZSP_CHKDELETEDREPRESOURCE(#v_p_ownerID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL EZSP_CHKDELETEDREPRESOURCE(#v_p_ownerID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
 	
@@ -2063,9 +2063,9 @@
 	            B.publicFlag ,
 	            B.ApproveFlag 
 	        FROM
-	        	EZRESOURCE.TBL_RS_SCHEDULE B
+	        	TBL_RS_SCHEDULE B
 			JOIN
-				EZRESOURCE.TBL_RS_SCHEDULEREPETITION C 
+				TBL_RS_SCHEDULEREPETITION C 
 			ON
 				B.ownerID = C.ownerID
 			AND
@@ -2091,13 +2091,15 @@
 			SELECT
 				member_id, access_lvl 
       		FROM
-      			EZRESOURCE.TBL_RS_RESACL 
+      			TBL_RS_RESACL 
       		WHERE
       			companyid	=	#companyID#
       		AND
       			resid	=	#resID#
 			AND
-				member_id	=	#memberID#      			
+				member_id	=	#memberID#
+            AND
+                TENANT_ID = #tenantID#      			
 		]]>
 	</select>
 </sqlMap>

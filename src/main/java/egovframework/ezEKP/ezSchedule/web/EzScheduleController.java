@@ -40,6 +40,9 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.lib.EzScheduleInfo;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
@@ -48,11 +51,11 @@ import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheSecVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -88,18 +91,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
 	
-	@Resource(name="EzResourceService")
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="EzScheduleInfo")
 	private EzScheduleInfo ezScheduleInfo;
 	
-	@Resource(name="loginService")
-	private LoginService loginService;
-
-	@Resource(name="crypto") 
-	private EgovFileScrty egovFileScrty;
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
 	
+	@Resource(name="EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+		
 	@Autowired
 	private EgovMessageSource msg;
 	
@@ -177,10 +177,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetHoliday(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String cID = request.getParameter("COMPANYID");
 		
-		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID());
+		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String returnXML = "";
 		
@@ -240,7 +240,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 		}*/		
 		
-		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId());
+		List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userInfo.getId(), userInfo.getTenantId());
 		
 		for(int i = 0; i < gList.size(); i++){
 			if(i == 0){
@@ -297,7 +297,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 
 		List<PubScheHqVO> pubScheHqVO = ezScheduleService.getPublicScheduleHq(loginVO.getId());
-		List<PubScheSecVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang());
+		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang());
 		List<PubScheDeptVO> pubScheDeptVO = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getLang());
 		List<PubScheCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getLang());
 
@@ -383,7 +383,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             endTime		= 1020 / 60;
         }
 
-        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
+        List<ScheduleGroupListVO> groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
 		groupXml = commonUtil.getQueryResult(groupList);	// 일정 그룹 목록
         groupXmlTemp = groupXml.replace("\"", "&quot;");
         otherId = request.getParameter("otherid");
@@ -746,7 +746,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			utcStartTime = commonUtil.getDateStringInUTC(startDate + " 00:00:00", loginVO.getOffset(), true);
 			utcEndTime = commonUtil.getDateStringInUTC(endDate + " 23:59:59", loginVO.getOffset(), true);
 			
-			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId());
+			List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
 			
 			for(int i = 0; i < gList.size(); i++){
 				if(i == 0){
@@ -876,6 +876,66 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("deptID", loginVO.getDeptID());
 		
 		return "/ezSchedule/scheduleSelectShareDept";
+	}
+	
+	/**
+	 * 공통 > 음력날짜 사용여부 데이터
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGetLunarUse.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String scheduleGetLunarUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String cID = request.getParameter("COMPANYID");
+		
+		String result = ezScheduleService.scheduleGetLunarUse(cID, loginSimpleVO.getTenantId());
+		
+		return result;
+	}
+	
+	/**
+	 * 공통 > 이전날짜 등록관리 데이터
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleGetRegi.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String scheduleGetRegi(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		String cID = request.getParameter("COMPANYID");
+		
+		String result = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
+		
+		return result;
+	}
+	
+	/**
+	 * 환경설정 메인
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")	
+	public String scheduleConfigMain() throws Exception {		
+		return "/ezSchedule/scheduleConfigMain";
+	}
+	
+	/**
+	 * 환경설정
+	 */
+	@RequestMapping(value="/ezSchedule/scheduleConfig.do")	
+	public String scheduleConfig(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, ScheduleConfigVO scheduleConfigVO, OrganUserVO organUserVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String userID = loginSimpleVO.getId();
+		int tenantID = loginSimpleVO.getTenantId();
+		
+		scheduleConfigVO = ezScheduleService.getScheduleConfig(userID, tenantID);
+		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(userID, tenantID);
+		
+		for (int i=0; i < sList.size(); i++) {
+			ScheduleSecretaryVO vo = sList.get(i);
+			
+			organUserVO = ezOrganAdminService.getUserInfo(vo.getSecId(), "1", tenantID);
+		}
+		
+		model.addAttribute("scheduleConfigVO", scheduleConfigVO);
+		
+		return "/ezSchedule/scheduleConfig";
 	}
 	
 	/**
@@ -1155,7 +1215,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             }
             // scheduleId == null
             else {
-                groupList = ezScheduleService.getScheduleGroupList(loginVO.getId());
+                groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
             }
             
 			String cDate = "";
