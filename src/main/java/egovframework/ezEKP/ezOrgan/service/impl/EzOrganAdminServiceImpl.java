@@ -248,9 +248,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("type="+type);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganAdminDao.moveDBData(map);
         } else {
+            ezOrganAdminDao.moveDBDataForJMocha(map);
+            
         	if (type.toLowerCase().equals("group")) {
         		logger.debug("moveDBData Start");
         		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
@@ -505,12 +507,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_CLASS", pClass);
 		
-		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		 if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			 ezOrganAdminDao.deleteDBData(map);
 	     } else {
 	    	 if (pClass.toLowerCase().equals("group")) {
 	    		 ezOrganAdminDao.deleteDBData(map);
 	    	 } else {
+	    	     ezOrganAdminDao.deleteDBDataForJMocha(map);
+	    	     
 	    		 ezOrganAdminDao.deleteDBData_D1(map);
 	    		 ezOrganAdminDao.deleteDBData_D2(map);
 	    		 ezOrganAdminDao.deleteDBData_D3(map);
