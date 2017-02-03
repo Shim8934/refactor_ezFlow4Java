@@ -193,7 +193,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							resp.setCharacterEncoding("UTF-8");
 							resp.setContentType("text/html; charset=UTF-8");
 							resp.getWriter().write(commentHtml);
-							//resp.getWriter().flush();
+							/*resp.getWriter().flush();*/
 				}
 			}
 		}
@@ -812,6 +812,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("myPortal started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		logger.debug("@@@@@@@@@@@@@@@@@@@myPortal"+userInfo.getCompanyID());
 		
 		String pageID = "";
 		String mode = "view";
@@ -833,6 +834,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		// 권한이 있는 Root페이지 정보를 가져온다.
 		String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
+		logger.debug("pUserPageList="+pUserPageList);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(pUserPageList);
 		
