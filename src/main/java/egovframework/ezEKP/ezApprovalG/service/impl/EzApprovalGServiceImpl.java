@@ -13247,7 +13247,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String saveAudioVisualExtraInfo(String recID, String sepAttSN, String summary, String recType, int tenantID) throws Exception{
-		return "INSERT INTO TBL_AUDIO_VISUALRECEXTRAINFO (RecordID, SeperateAttachNo, " +
+		return "INSERT INTO TBL_AUDIO_VISUALRECEXINFO (RecordID, SeperateAttachNo, " +
                 "Summary, RecordType, TENANT_ID) VALUES ('" + makeRightField(recID) + "', '" +
                 makeRightField(sepAttSN) + "', N'" + makeRightField(summary) + "', N'" +
                 makeRightField(recType) + "',"+ tenantID +");\n";
@@ -15100,13 +15100,77 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	   }
 	   return rtnVal;		   
 	   }
-   public String getPublicCodeString(String pCode, String companyID, String lang) throws Exception{
+   
+   public String getPublicCodeString(String pCode, String companyID, String lang, int tenantID) throws Exception{
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("pCode", pCode);
 			map.put("companyID", companyID);
 			map.put("lang", lang);
-			String rtnVal =ezApprovalGDAO.getPublicCodeString(map);
-			return rtnVal;
+			
+			String rtn = null;
+			String codeName = null;
+			if(pCode.substring(0,1).equals("1")) {
+				rtn = getCode2Name("A50", "1", companyID, lang, tenantID);
+			} else if(pCode.substring(0,1).equals("2")) {
+				rtn = getCode2Name("A50", "2", companyID, lang, tenantID);
+			} else if(pCode.substring(0,1).equals("3")) {
+				rtn = getCode2Name("A50", "3", companyID, lang, tenantID);
+			}
+			
+			if(pCode.substring(0,1) == "2") {
+				rtn = rtn + "(";
+				
+				if(pCode.substring(1,2).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "1");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(2,3).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "2");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(3,4).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "3");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(4,5).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "4");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(5,6).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "5");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(6,7).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "6");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(7,8).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "7");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				} if(pCode.substring(8,9).equals("Y")) {
+					map.put("v_CodeType", "006");
+					map.put("v_Code", "8");
+					codeName = ezApprovalGDAO.getCabCodeList(map);
+					rtn = rtn + codeName + "u','";
+				}
+				
+				rtn = rtn + "u')'";
+				rtn.replace("u',)'", ")");
+			}
+			
+			if(rtn == null) {
+				rtn = pCode;
+			}
+			
+			return rtn;
    } 
 	public String convertDate(String date) {
 		if (date.trim().equals("")) {
@@ -15737,7 +15801,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "</CABCLASSID>");
 		resultXML.append("<CABTITLE>" + makeListField(docXML.getElementsByTagName("CABTITLE").item(0).getTextContent()) + "</CABTITLE>");
 		resultXML.append("<SPECIALRECCODE>" + getSpecialRecString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()), companyID, lang, tenantID) + "</SPECIALRECCODE>");
-		resultXML.append("<PUBLICCODE>" + getPublicCodeString((docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()), companyID, lang) + "</PUBLICCODE>");
+		resultXML.append("<PUBLICCODE>" + getPublicCodeString((docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()), companyID, lang, tenantID) + "</PUBLICCODE>");
 		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
 		resultXML.append("<CONFIRMFLAG>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent()) + "</CONFIRMFLAG>");
 		resultXML.append("<CATATRANSFLAG>" + makeListField(docXML.getElementsByTagName("CATALOGTRANSFERFLAG").item(0).getTextContent()) + "</CATATRANSFLAG>");
@@ -16296,7 +16360,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder pSQL = new StringBuilder("");
 		try
 		{
-            pSQL.append("BEGIN DECLARE CNT Number := 0; BEGIN utils.incrementTrancount; BEGIN " + strSQL + " EXCEPTION WHEN OTHERS THEN CNT := SQLCODE; END; IF CNT <> 0 THEN BEGIN ROLLBACK; utils.resetTrancount; END; ELSE BEGIN utils.commit_transaction; END; END IF; CNT :=0; END; END;");
+            pSQL.append("BEGIN DECLARE CNT Number := 0; BEGIN  BEGIN " + strSQL + " EXCEPTION WHEN OTHERS THEN CNT := SQLCODE; END; IF CNT <> 0 THEN BEGIN ROLLBACK;  END; ELSE BEGIN COMMIT; END; END IF; CNT :=0; END; END;");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("sqlString",pSQL.toString());
 			map.put("companyID", companyID);
@@ -17903,7 +17967,12 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
              strSQL.append("', DocNo = N'" + makeRightField(makeListField(signXML.getElementsByTagName("DOCNO").item(0).getTextContent())));
              strSQL.append("', HasAttachYN = '" + makeRightField(makeListField(signXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent())));
              strSQL.append("', HasOpinionYN = 'N");
-             strSQL.append("', StartDate = getDateTime('" + docID + "', '1', '0'), EndDate = getDateTime('" + docID + "', '1', '1') ");
+             
+             String startDate = ezApprovalGDAO.getStartDateTime(map);
+             String endDate = ezApprovalGDAO.getEndDateTime(map);
+             
+             
+             strSQL.append("', StartDate = TO_Date('" + startDate.substring(0, startDate.length()-2) + "', 'YYYY-MM-DD HH24:MI:SS'), EndDate = TO_DATE('" + endDate.substring(0, endDate.length()-2) + "', 'YYYY-MM-DD HH24:MI:SS')");
              strSQL.append(", WriterID = '" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent())));
              strSQL.append("', WriterName = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent())));
              strSQL.append("', WriterName2 = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())));

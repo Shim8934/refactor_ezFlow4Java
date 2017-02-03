@@ -745,10 +745,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.doSusinHesongSentDeptID", map);
 	}
 	
-	public String getPublicCodeString(Map<String, Object> map)throws Exception{
-		return (String)select("EzApprovalG.getPublicCodeString", map);
-	}
-	
 	public String getSearchList(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getSearchList", map);
 	}
@@ -811,6 +807,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public String selectGongRamDocID(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.selectGongRamDocID", map);
+	}
+	
+	public String getCabCodeList(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getCabCodeList", map);
+	}
+	
+	public String getStartDateTime(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getStartDateTime", map);
+	}
+	
+	public String getEndDateTime(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getEndDateTime", map);
 	}
 	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
@@ -1539,7 +1547,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
-
-
-
 }
