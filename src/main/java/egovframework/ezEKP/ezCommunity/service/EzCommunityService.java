@@ -38,7 +38,7 @@ public interface EzCommunityService {
 
 	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID) throws Exception;
 	
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID) throws Exception;
+	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 
 	public List<CommunityCPollResponseVO> pollETCTableGet(String questionID, int tenantID) throws Exception;
 	

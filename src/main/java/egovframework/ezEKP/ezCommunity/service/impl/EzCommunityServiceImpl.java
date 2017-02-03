@@ -3614,7 +3614,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
-	        	sb.append("<WRITEDAY>" + item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
+	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay(), userInfo.getOffset(), false).substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
 	        	
 	        	if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getWriteDay().substring(0, 10)) >= 0 ) {
 	        		sb.append("<NEW>" + "NEW" + "</NEW>");
@@ -3668,13 +3668,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID) throws Exception {
+	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
 		logger.debug("getReaderList started.");
 		logger.debug("pBoardID : " + pBoardID + ", pItemID : " + pItemID + ", tenantID : " + tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
 		map.put("tenantID", tenantID);
+		map.put("offset", offset);
 		
 		List<CommunityBoardItemReadVO> list = ezCommunityDAO.getReaderList(map);
 		
