@@ -771,7 +771,7 @@ public class CommonUtil {
 	}
 	
 	public String makeListField(String orgStr) {
-		if (orgStr == null || orgStr.equals("NULL")) {
+		if (orgStr == null || orgStr.equals("NULL") || orgStr.equals("null")) {
 			return "";
 		} else {
 			return orgStr;
