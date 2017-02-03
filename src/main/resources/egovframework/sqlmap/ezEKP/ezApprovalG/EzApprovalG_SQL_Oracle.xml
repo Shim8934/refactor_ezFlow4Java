@@ -1007,7 +1007,7 @@
            AND
            		 TBL_RECORD.TENANT_ID = TBSEPATT.TENANT_ID
            LEFT JOIN 
-           		 TBL_AUDIO_VISUALRECEXTRAINFO TBAV   
+           		 TBL_AUDIO_VISUALRECEXINFO TBAV   
            ON 
            		 TBSEPATT.RecordID = TBAV.RecordID
            AND 
@@ -1070,7 +1070,7 @@
            AND
            		TBL_RECORD.TENANT_ID = TBSEPATT.TENANT_ID
            LEFT JOIN 
-           		TBL_AUDIO_VISUALRECEXTRAINFO TBAV   
+           		TBL_AUDIO_VISUALRECEXINFO TBAV   
            ON 
            		TBSEPATT.RecordID = TBAV.RecordID
            AND 
@@ -12271,10 +12271,54 @@
         ]]>
 	</select>
 	
-	<select id ="EzApprovalG.getPublicCodeString" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT GetPublicityCodeConvert (#pCode#, #lang#) FROM DUAL
-	     ]]> 
+	<select id ="EzApprovalG.getCabCodeList" parameterClass="Map" resultClass="String">
+		<isEqual property="lang" compareValue="1">
+			SELECT 
+				Name 
+        	FROM 
+        		TBl_CABINETCODELIST 
+       		WHERE  
+       			CodeType = #v_CodeType#
+            AND 
+            	Code = #v_Code#
+            AND
+            	TENANT_ID = #v_TENANTID#
+		</isEqual>
+		
+		<isNotEqual property="lang" compareValue="1">
+			SELECT 
+				Name2 
+        	FROM 
+        		TBl_CABINETCODELIST 
+       		WHERE  
+       			CodeType = #v_CodeType#
+            AND 
+            	Code = #v_Code#
+             AND
+            	TENANT_ID = #v_TENANTID#
+		</isNotEqual>
+	</select>
+	
+	<select id ="EzApprovalG.getStartDateTime" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 	StartDate 
+         FROM 
+         	TBL_ENDAPRDOCINFO 
+         WHERE  
+         	DocID = #v_DOCID#
+         AND
+         	TENANT_ID = #v_TENANTID#
+	</select>
+	
+	<select id ="EzApprovalG.getEndDateTime" parameterClass="Map" resultClass="String">
+		 SELECT 
+		 	EndDate 
+         FROM 
+         	TBL_ENDAPRDOCINFO 
+         WHERE  
+         	DocID = #v_DOCID#
+         AND
+         	TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	사용하지 않는 SQL문 같음(호출하는 부분이 없음) -->

@@ -70,7 +70,7 @@
         	
         	function close_onclick() {
             	if (g_aChanged == true || g_bChanged == true)
-                	if (confirm("<spring:message code='ezQuestion.t185' />")) {
+                	if (confirm("<spring:message code='ezQuestion.t12' />")) {
                     	SetRange();
                     	return;
                 	}
