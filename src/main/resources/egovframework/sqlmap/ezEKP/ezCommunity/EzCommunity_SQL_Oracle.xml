@@ -1783,6 +1783,12 @@
 					TBL_C_CLUB.c_cate_a = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_C_CLUB.c_sysopid) = TBL_USERMASTER.cn
+				AND
+					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					c_cate_a = #code#
 				AND
@@ -1811,6 +1817,12 @@
 					TBL_C_CLUB.c_cate_b = TBL_C_CATEGORY.c_code
 				AND
 					TBL_C_CLUB.tenant_id = TBL_C_CATEGORY.tenant_id
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_C_CLUB.c_sysopid) = TBL_USERMASTER.cn
+				AND
+					TBL_C_CLUB.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					c_cate_b = #code#
 				AND
