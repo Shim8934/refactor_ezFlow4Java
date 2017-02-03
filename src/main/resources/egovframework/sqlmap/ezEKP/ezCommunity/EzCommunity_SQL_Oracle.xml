@@ -3881,7 +3881,7 @@
 			WHERE
 				RTRIM(c_id) = #v_UID#
 			AND
-				RTRIM(c_clubno) = #v_CID#
+				c_clubno = #v_CID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -4213,7 +4213,7 @@
 			FROM
 				TBL_C_CLUB
 			WHERE
-				RTRIM(c_clubno) = #v_CID#
+				c_clubno = #v_CID#
 			AND
 				tenant_id = #tenantID#
 		]]>
