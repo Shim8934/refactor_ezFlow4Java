@@ -3482,6 +3482,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     fileName = "0000000001" + "(" + code + ").mht";
                 }
                 
+                dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator +fileName;
             } else {
                 int iName = strMaxNum;
@@ -3494,7 +3495,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 }
                 
                 fileName = strName + ".mht";
-                dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator ;
+                dirPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
                 strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + fileName;
             }
 
