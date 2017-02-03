@@ -9350,8 +9350,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
 		if (result == null) {
-			ezApprovalGDAO.insertSerialNo(map);
 			map.put("v_CurSN", "1");
+			ezApprovalGDAO.insertSerialNo(map);
+			result = "1";
 		}
 		
 		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
@@ -11526,8 +11527,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String result = ezApprovalGDAO.spGetSerialNo(map);
 		map.put("v_CurSN", result);
 		if (result == null) {
-			ezApprovalGDAO.insertSerialNo(map);
 			map.put("v_CurSN", "1");
+			ezApprovalGDAO.insertSerialNo(map);
+			result = "1";
 		}
 		
 		int rollBackFlag =  ezApprovalGDAO.rollBackFlag(map);
