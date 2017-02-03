@@ -207,11 +207,11 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public void insertTblUserLocalInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            insertTblUserLocalInfoForJMocha(map);
-        } else {
-            insertTblUserLocalInfoForLocal(map);
-        }               
+	    insertTblUserLocalInfoForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            insertTblUserLocalInfoForLocal(map);               
+	    }
 	}
 
     private void deleteUserLocalInfoForJMocha(Map<String, Object> map) throws Exception {
@@ -255,11 +255,11 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public void deleteUserLocalInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            deleteUserLocalInfoForJMocha(map);
-        } else {
-            deleteUserLocalInfoForLocal(map);
-        }               
+	    deleteUserLocalInfoForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            deleteUserLocalInfoForLocal(map);               
+	    }
 	}
 
 	private int getTenantIdByDomainNameForJMocha(Map<String, Object> map) throws Exception{
