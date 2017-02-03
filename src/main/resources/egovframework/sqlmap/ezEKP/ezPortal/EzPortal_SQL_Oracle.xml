@@ -689,7 +689,7 @@
 					WHERE
 						UID_ = A.UID_
 					AND
-						TENANT_ID = #tenantID#	))
+						TENANT_ID = $tenantID$	))
                     AND
                     	A.UID_ = B.ParentUID
                     AND

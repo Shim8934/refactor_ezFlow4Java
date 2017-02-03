@@ -796,8 +796,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
    					+"FROM TBL_PORTALPAGE_GENERAL A "
    					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
    					+"WHERE (NOT EXISTS(SELECT UID_ FROM TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
-   					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
+   					+"AND A.DISPLAYNAME LIKE '% "+pDisplayName+"%'";
 		
+		logger.debug("pDisplayName="+pDisplayName);
 		if (pUseFlag != null && !pUseFlag.equals("")) {
 			strSQL += " AND A.USEFLAG='"+pUseFlag+"'";
 		}
@@ -817,6 +818,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		strSQL += " ORDER BY A.DISPLAYNAME ASC";
 		
 		map.put("strSQL", strSQL);
+		logger.debug("strSQL="+strSQL);
 		List<PortalSearchPortalPage2VO> list = ezPortalAdminDAO.searchPortalPage2(map);
 		
 		StringBuilder sb = new StringBuilder();
