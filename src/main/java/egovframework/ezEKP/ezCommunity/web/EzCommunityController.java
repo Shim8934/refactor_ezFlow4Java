@@ -1593,8 +1593,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			response.encodeRedirectURL("/error.do");
 		}
 		
-		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191");
-		String nextTitle = egovMessageSource.getMessage("ezCommunity.t193");
+		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
+		String nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
 		
 		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsViewNewGet2(bName, userInfo.getTenantId());
 		
