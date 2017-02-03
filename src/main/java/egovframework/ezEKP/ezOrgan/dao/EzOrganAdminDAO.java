@@ -964,12 +964,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         insert("EzOrganAdminDAO.insertDBData_company", map);
     }
 	
-	public void insertDBData_company(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            insertDBData_companyForJMocha(map);
-        } else {
+	public void insertDBData_company(Map<String, Object> map) throws Exception {        
+        insertDBData_companyForJMocha(map);
+
+        if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
             insertDBData_companyForLocal(map);
-        }               
+        }
 	}
 
     private void insertDBData_deptForJMocha(Map<String, Object> map) throws Exception {
@@ -1043,11 +1043,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void insertDBData_dept(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            insertDBData_deptForJMocha(map);
-        } else {
-            insertDBData_deptForLocal(map);
-        }               
+	    insertDBData_deptForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            insertDBData_deptForLocal(map);               
+	    }
 	}
 
     private void insertDBData_userForJMocha(Map<String, Object> map) throws Exception {
@@ -1141,11 +1141,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void insertDBData_user(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            insertDBData_userForJMocha(map);
-        } else {
-            insertDBData_userForLocal(map);
-        }       
+	    insertDBData_userForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            insertDBData_userForLocal(map);       
+	    }
 	}
 	
     private void updateDBData_deptForJMocha(OrganDeptVO vo) throws Exception {
@@ -1199,12 +1199,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateDeptMaster", map);
     }
 	
-	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            updateDBData_deptForJMocha(vo);
-        } else {
-            updateDBData_deptForLocal(vo);
-        }       
+	public void updateDBData_dept(OrganDeptVO vo) throws Exception {        
+	    updateDBData_deptForJMocha(vo);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            updateDBData_deptForLocal(vo);       
+	    }
 	}
 
     private void updateDBData_userForJMocha(OrganUserVO vo) throws Exception {
@@ -1330,11 +1330,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void updateDBData_user(OrganUserVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            updateDBData_userForJMocha(vo);
-        } else {
-            updateDBData_userForLocal(vo);
-        }       
+	    updateDBData_userForJMocha(vo);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) { 	    
+            updateDBData_userForLocal(vo);       
+	    }
 	}
 	
     private void updatePropertyForJMocha(Map<String, Object> map) throws Exception{
@@ -1431,14 +1431,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void restoreRetireEntry(Map<String, Object> map) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            restoreRetireEntryForJMocha(map);
-        } else {
-            restoreRetireEntryForLocal(map);
-        }       
+	    restoreRetireEntryForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            restoreRetireEntryForLocal(map);       
+	    }
 	}
 
-    private void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
+    public void deleteDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String cn = (String)map.get("v_CN");
         String targetClass = (String)map.get("v_CLASS");
@@ -1494,14 +1494,14 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void deleteDBData(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            deleteDBDataForJMocha(map);
-        } else {
-            deleteDBDataForLocal(map);
-        }       
+	    deleteDBDataForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            deleteDBDataForLocal(map);       
+	    }
 	}
 
-    private void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
+    public void moveDBDataForJMocha(Map<String, Object> map) throws Exception {
         int tenantId = (Integer)map.get("v_TENANT_ID");        
         String parentCn = (String)map.get("v_PARENTCN");
         String cn = (String)map.get("v_CN");
@@ -1559,12 +1559,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         delete("EzOrganAdminDAO.moveDBData", map);
     }
 	
-	public void moveDBData(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            moveDBDataForJMocha(map);
-        } else {
-            moveDBDataForLocal(map);
-        }       
+	public void moveDBData(Map<String, Object> map) throws Exception {	    
+	    moveDBDataForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            moveDBDataForLocal(map);       
+	    }
 	}
 
     private void retireDBDataForJMocha(Map<String, Object> map) throws Exception {
@@ -1604,11 +1604,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void retireDBData(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-            retireDBDataForJMocha(map);
-        } else {
-            retireDBDataForLocal(map);
-        }       
+	    retireDBDataForJMocha(map);
+
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
+            retireDBDataForLocal(map);       
+	    }
 	}
 
     private void setAddJobForJMocha(Map<String, Object> map) throws Exception {

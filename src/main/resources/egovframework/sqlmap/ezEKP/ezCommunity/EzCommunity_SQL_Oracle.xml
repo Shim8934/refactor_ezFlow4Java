@@ -1224,7 +1224,7 @@
 					usercompanyname2,
 					usertitle,
 					usertitle2,
-					readdate
+					readdate+(#offset# /(60*24)) AS readdate
 				FROM
 					TBL_COMM_ITEM_READ 
 				WHERE

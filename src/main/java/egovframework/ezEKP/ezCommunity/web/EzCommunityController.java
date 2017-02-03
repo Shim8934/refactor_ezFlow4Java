@@ -1326,8 +1326,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
+		String offset = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
-		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId());
+		List<CommunityBoardItemReadVO> readList = ezCommunityService.getReaderList(pBoardID, pItemID, userInfo.getTenantId(), offset);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("readList", readList);
@@ -1592,8 +1593,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 			response.encodeRedirectURL("/error.do");
 		}
 		
-		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191");
-		String nextTitle = egovMessageSource.getMessage("ezCommunity.t193");
+		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
+		String nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
 		
 		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsViewNewGet2(bName, userInfo.getTenantId());
 		

@@ -193,7 +193,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							resp.setCharacterEncoding("UTF-8");
 							resp.setContentType("text/html; charset=UTF-8");
 							resp.getWriter().write(commentHtml);
-							resp.getWriter().flush();
+							//resp.getWriter().flush();
 				}
 			}
 		}
