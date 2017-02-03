@@ -815,7 +815,7 @@
             AND
             	A.UID_ = B.UID_
             AND
-            	(B.AccessID = #v_pACCESSIDLIST# AND $v_pSTRRIGHT$  )
+            	(B.AccessID = '$v_pACCESSIDLIST$' AND $v_pSTRRIGHT$  )
             AND
             	A.TENANT_ID = #tenantID#	
 		]]>

@@ -793,32 +793,31 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	public String getAccessList(LoginVO userInfo) {
-		try {
-			String pDeptPathCode = userInfo.getDeptPathCode();
-			String ret = "";
-			String pIDUser = "";
-			String pIDTop = "";
-			String pIDCompany = "";
-			String pIDDept = "";
-			//부서가 있으면 부서를 먼저 체크하도록 배열 변경
-			if (pDeptPathCode.split(",").length == 4) {
-				pIDUser = pDeptPathCode.split("\\,")[0].trim();
-				pIDTop = pDeptPathCode.split("\\,")[1].trim();
-				pIDCompany = pDeptPathCode.split("\\,")[2].trim();
-				pIDDept = pDeptPathCode.split("\\,")[3].trim();
-				pDeptPathCode = pIDUser + "," + pIDTop + "," + pIDDept + "," + pIDCompany;
-			}
-			
-			if (pDeptPathCode.toLowerCase().indexOf(",everyone") == -1) {
-				ret = pDeptPathCode + ",everyone";
-			} else {
-				ret = pDeptPathCode;
-			}
-			return ret;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ",";
+		
+		String pDeptPathCode = userInfo.getDeptPathCode();
+		logger.debug("pDeptPathCode="+pDeptPathCode);
+		String ret = "";
+		String pIDUser = "";
+		String pIDTop = "";
+		String pIDCompany = "";
+		String pIDDept = "";
+		//부서가 있으면 부서를 먼저 체크하도록 배열 변경
+		if (pDeptPathCode.split("\\,").length == 4) {
+			pIDUser = pDeptPathCode.split("\\,")[0].trim();
+			pIDTop = pDeptPathCode.split("\\,")[1].trim();
+			//pIDCompany = pDeptPathCode.split("\\,")[2].trim();
+			pIDCompany = userInfo.getCompanyID();
+			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@pIDComapny="+pIDCompany);
+			pIDDept = pDeptPathCode.split("\\,")[3].trim();
+			pDeptPathCode = pIDUser + "," + pIDTop + "," + pIDDept + "," + pIDCompany;
 		}
+		
+		if (pDeptPathCode.toLowerCase().indexOf(",everyone") == -1) {
+			ret = pDeptPathCode + ",everyone";
+		} else {
+			ret = pDeptPathCode;
+		}
+		return ret;
 	}
 	
 	public String getDefaultTopMenu() {
@@ -1224,6 +1223,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception {
+		logger.debug("searchMyPortalPage started");
+		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@userInfoCompany="+userInfo.getCompanyID());
+		
 		List<PortalTBLPortalPageGeneralVO> result = new ArrayList<PortalTBLPortalPageGeneralVO>();
 		String strRight = "";
 		if (pMode.equals("view")) {
@@ -1234,6 +1236,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		boolean bExist = false;
 		String pAccessIDList = getAccessList(userInfo);
+		logger.debug("@@@@@@@@@@@@@@pAccessIDList="+pAccessIDList);
 		
 		for (int i=0; i<pAccessIDList.split(",").length; i++) {
 			result = searchMyPortalPage2(pAccessIDList.split(",")[i].trim(), pGubunFlag, strRight, pCompanyID, userInfo.getTenantId());
@@ -1253,31 +1256,34 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (checkViewRightBln(result.get(i).getuID().trim(), pAccessIDList,userInfo.getTenantId()) == true) {
 					sb.append("<ROW>");
 					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-                    sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
-                    sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-                    sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-                    sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                    sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-                    sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                    sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
-                    sb.append("</ROW>");
+					sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+					sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
+					sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
+					sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
+					sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
+					sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
+					sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+					sb.append("</ROW>");
 				}
 			} else {
 				if (checkEditRightBln(result.get(i).getuID().trim(), pAccessIDList, userInfo.getTenantId()) == true) {
 					sb.append("<ROW>");
 					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-                    sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
-                    sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-                    sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-                    sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                    sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-                    sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                    sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
-                    sb.append("</ROW>");
+					sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+					sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
+					sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
+					sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
+					sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
+					sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
+					sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+					sb.append("</ROW>");
 				}
 			}
 		}
 		sb.append("</DATA>");
+		
+
+		logger.debug("searchMyPortalPage ended");
 		
 		return sb.toString();
 	}
