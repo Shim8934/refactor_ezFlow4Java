@@ -1098,6 +1098,8 @@ function event_SaveonClick() {
         	}
         	
         	g_saveHttp = null;
+        	MailStatus = "NO";
+        	isAutoSave = false;
         }
         
     }
