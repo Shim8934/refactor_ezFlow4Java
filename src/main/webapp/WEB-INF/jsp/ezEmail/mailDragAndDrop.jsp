@@ -104,7 +104,8 @@
 		        filesize += tempfilesize;
 		        bigfilesize += tempbigfilesize;
 		
-		        fileupload();
+		        checkMailStatusAndFileUpload();
+		        
 		        if (CrossYN()) {
 		        	if (navigator.userAgent.search('Trident') != -1) { //IE 11
 		        		document.getElementById("file").type = "text";
@@ -119,6 +120,18 @@
 		            document.getElementById("file").type = "file";
 		        }
 		    }
+		    
+		    function checkMailStatusAndFileUpload() {
+		        console.log("MailStatus=" + window.parent.MailStatus);
+		        
+		        // 자동 저장 중이면 저장이 완료된 후 파일 첨부를 수행한다.
+                if (window.parent.MailStatus == "NO") {             
+                    fileupload();
+                } else {
+                    setTimeout(checkMailStatusAndFileUpload, 1000);
+                }		        
+		    }
+		    
 		    function uploadProgress(evt) {
 		        if (evt.lengthComputable) {
 		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);

@@ -775,13 +775,29 @@ function CheckNeedsApproval(pURL) {
 }
 
 var g_saveHttp = null;
+
+function checkMailStatusAndSave(savemode) {
+    console.log("savemode=" + savemode + ",MailStatus=" + MailStatus);
+    
+    // 자동 저장 중이면 저장이 완료될 때까지 대기한 후 발송을 수행한다.    
+    if (MailStatus == "NO") {                     
+        MailStatus = "SEND";
+        Save_onClick_Complete.savemode = savemode;
+        Save_onClick_Complete(true);
+    } else {
+        setTimeout(function() {
+            checkMailStatusAndSave(savemode);
+        }, 1000);
+    }               
+}
+
 function Save_onClick(savemode) {
-    if (savemode == "tempsave" && MailStatus == "SEND")
+    // 이미 저장 혹은 발송 중이면 저장 작업을(자동 저장) 수행하지 않고 그냥 반환한다.
+    if (savemode == "tempsave" && MailStatus == "SEND") {
         return;
-    MailStatus = "SEND";
-    Save_onClick_Complete.savemode = savemode;
-    //NameCertify_onClick(Save_onClick_Complete);
-    Save_onClick_Complete(true);
+    }
+    
+    checkMailStatusAndSave(savemode);
 }
 
 function Save_onClick_Complete(ReturnValue) {
