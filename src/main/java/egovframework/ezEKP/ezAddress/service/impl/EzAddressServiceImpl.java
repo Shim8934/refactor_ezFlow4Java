@@ -135,7 +135,6 @@ public class EzAddressServiceImpl implements EzAddressService {
 			filterName = pFilter.substring(0, splitIndex);
 			filterValue = pFilter.substring(splitIndex + 1);
 		} else {
-			//TODO: 잘못 넘어오는 pFilter가 있으면 수정해줘야함.
 			logger.error("Invalid pFilter parameter. pFilter=" + pFilter);
 			filterName = "NONE";
 			filterValue = "";
