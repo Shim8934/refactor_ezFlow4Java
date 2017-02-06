@@ -571,7 +571,9 @@ function getAprLine(tr) {
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
     	pMode = "END";
     } else if (pListTypeValue == "21") {
-    	pFlag = "TMP";
+//    	pFlag = "TMP";
+//      닷넷에서는 2가지 값만 보내서 controller 에서 노드(0),노드(1) 로 빼서 사용해서  mode로 통일
+    	pMode = "TMP";
     } else {
     	pMode = "APR";
     }

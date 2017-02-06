@@ -113,13 +113,13 @@
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
 		                    self.resizeTo(765, (768 + addheight));
 		                else
-		                    self.resizeTo(765, (795 + addheight));
+		                    self.resizeTo(765, (820 + addheight));
 		            }
 		            else {
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
 		                    self.resizeTo(765, (690 + addheight));
 		                else
-		                    self.resizeTo(775, (715 + addheight));
+		                    self.resizeTo(775, (740 + addheight));
 		            }
 		
 		            var Div = document.createElement("DIV");

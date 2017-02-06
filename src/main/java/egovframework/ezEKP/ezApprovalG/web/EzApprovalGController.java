@@ -970,11 +970,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	/**
 	 * 전자결재G 현재날짜(시분초까지) 표출 Method
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
-	public String getFullDate(){
-		String fullDate = EgovDateUtil.getTodayTime();
+	public String getFullDate() throws Exception{
+		String fullDate = commonUtil.getTodayUTCTime("");
 		fullDate = fullDate.substring(0, 16).replace("-", "."); 
 		
 		return fullDate;
@@ -982,11 +983,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	/**
 	 * 전자결재G 현재날짜 표출 Method
+	 * @throws Exception 
 	 */
 	@RequestMapping(value = "/ezApprovalG/getDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
-	public String getDate(){
-		String fullDate = EgovDateUtil.getTodayTime();
+	public String getDate() throws Exception{
+		String fullDate = commonUtil.getTodayUTCTime("");
 		fullDate = fullDate.substring(0, 10).replace("-", ".");
 		
 		return fullDate;
@@ -1549,7 +1551,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String fileAttachFormatSN = "00000" + attachSN;
-		System.out.println(fileAttachFormatSN.length());
 		fileAttachFormatSN = fileAttachFormatSN.substring(fileAttachFormatSN.length() - 4);
 		
 		String fileSpec = upd + docID + fileAttachFormatSN + fileName;
@@ -5334,5 +5335,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		int result = ezApprovalGService.getWebPartListCount(pFlag, userInfo.getId(), userInfo.getDeptID(), "", "COUNT", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		return "<DATA><RESULT>"+result+"</RESULT></DATA>";
+	}
+	
+	/**
+	 * 전자결재G 강제회수
+	 */	
+	@RequestMapping(value = "/ezApprovalG/doCancelForce.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String doCancelForce(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("docID").item(0).getTextContent();
+		String userID = doc.getElementsByTagName("userID").item(0).getTextContent();
+		String result = ezApprovalGService.doCancelForce(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if(result == "OK") {
+			result = "<RESULT>TRUE</RESULT>";
+		} else {
+			result = "<RESULT>FALSE</RESULT>";
+		}
+		
+		return result;
 	}
 }

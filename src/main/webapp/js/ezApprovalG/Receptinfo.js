@@ -211,9 +211,9 @@ function RequestData2(pNodeID, pTreeID) {
     var treeNode = new TreeNode();
     treeNode.LoadFromID(pNodeID);
 
-    var strQuery = "<DATA><DEPTID>" + treeNode.GetNodeData("CN") + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;DisplayName</PROP></DATA>";
+    var strQuery = "<DATA><DEPTID>" + treeNode.GetNodeData("CN") + "</DEPTID><PROP>extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName;displayName2</PROP></DATA>";
 
-    xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(strQuery);
 
 

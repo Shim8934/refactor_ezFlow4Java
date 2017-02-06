@@ -174,7 +174,9 @@
 			    if (pMode == "new") {
 			        btn_PostDate_Clear();
 			    } else {
-			        if (pReservedItem != "true") $("#Sdatepicker").datepicker('setDate', "");
+			        if (pReservedItem != "true") {
+			        	$("#Sdatepicker").datepicker('setDate', "");
+			        }
 
 			        if(pMode != "boardContent" && pMode != "boardAttach")
 			        {
@@ -191,11 +193,11 @@
 			    				
 			    				for (var i = 0; i < colType.length;i++){
 			            			if(colType[i] == "radio") {
-			            				SetRadioVal(tableCol[i], ConvMakeXMLString(tableCol[i]));
+			            				SetRadioVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
 			            			} else if(colType[i] == "text") {
-			            				document.getElementById(tableCol[i]).value = ConvMakeXMLString(tableCol[i]);
+			            				document.getElementById(tableCol[i]).value = getExtensionValue(ConvMakeXMLString(tableCol[i]));
 			            			} else if(colType[i] == "check") {
-			            				SetCheckVal(tableCol[i], ConvMakeXMLString(tableCol[i]));
+			            				SetCheckVal(tableCol[i], getExtensionValue(ConvMakeXMLString(tableCol[i])));
 			            			}
 			    				}
 			            	}
@@ -204,7 +206,9 @@
 			        }
 			    }
 			        
-			    if (ExpireDays == -1 || ExpireItem == "YES") document.getElementById('Makedate').style.display = "none";
+			    if (ExpireDays == -1 || ExpireItem == "YES") {
+			    	document.getElementById('Makedate').style.display = "none";
+			    }
 			    if (pMode == "modify" || pMode == "temp") {
 			        document.getElementById("txtTitle").value = ConvMakeXMLString("${strTitle}");
 				    document.getElementById("txtAbstract").value = ConvMakeXMLString("${boardListVO.ABSTRACT}");
@@ -1619,7 +1623,12 @@
 	
 	                var img = document.createElement("IMG");
 	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
-	                img.width = 108;
+		                img.width = 108;
+	                
+	                if (navigator.userAgent.indexOf("Chrome") != -1) {
+		                img.width = 103;
+	                }
+	                
 	                img.height = 30;
 	                img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
 	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
@@ -1730,7 +1739,10 @@
 	            var RadioBtns = document.getElementsByName(pObjectName);
 	            var i;
 	            for (i = 0; i < RadioBtns.length; i++) {
-	                if (RadioBtns[i].value == p_strVal) { RadioBtns[i].checked = true; break; }
+	                if (RadioBtns[i].value == p_strVal) { 
+	                	RadioBtns[i].checked = true; 
+	                	break; 
+	                }
 	            }
 	        }
 	
@@ -1768,6 +1780,24 @@
 	                    }
 	                }
 	            }
+	        }
+	        
+	        function getExtensionValue(tableCol) {
+	        	var retValue = "";
+	        	
+	        	if (tableCol == "extensionAttribute6") {
+	        		retValue = "${boardListVO.extensionAttribute6}"; 
+				} else if (tableCol == "extensionAttribute7") {
+					retValue = "${boardListVO.extensionAttribute7}";
+				} else if (tableCol == "extensionAttribute8") {
+					retValue = "${boardListVO.extensionAttribute8}";
+				} else if (tableCol == "extensionAttribute9") {
+					retValue = "${boardListVO.extensionAttribute9}";
+				} else if (tableCol == "extensionAttribute10") {
+					retValue = "${boardListVO.extensionAttribute10}";
+				}
+	        	
+	        	return retValue;
 	        }
 	    </script>
 	    <c:if test="${!isCrossBrowser}">

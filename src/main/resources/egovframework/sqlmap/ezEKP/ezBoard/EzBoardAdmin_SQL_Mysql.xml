@@ -1170,7 +1170,7 @@
 	       AND 
 	       		accessid = #userDeptPath# 
 	       AND 
-	       		rownum <= 1 
+	       		LIMIT 1
 		]]>
 	</select>	
 	

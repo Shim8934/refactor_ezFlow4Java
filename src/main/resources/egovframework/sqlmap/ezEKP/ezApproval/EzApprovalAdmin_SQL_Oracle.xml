@@ -21,7 +21,7 @@
 			SELECT 
 				NAME$lang$ AS NAME 
 			FROM 
-				TBCODELIST  
+				EZFLOWYJ.TBCODELIST  
 			WHERE 
 				tenant_id = #tenantID#
 			AND
@@ -39,7 +39,7 @@
 				CODE, 
 				NAME1 AS NAME 
 			FROM 
-				TBCODEDOCTYPE  
+				EZFLOWYJ.TBCODEDOCTYPE  
 			WHERE
 				TENANT_ID = #tenantID#
 			AND 
@@ -58,9 +58,9 @@
              	tbContainerType.ContainerTypeName ,
              	tbContainerType.ContainerTypeName2 
         	FROM 
-        		tbContainer 
+        		EZFLOWYJ.tbContainer 
             JOIN 
-            	tbContainerType
+            	EZFLOWYJ.tbContainerType
             ON 
             	tbContainer.tenant_id = tbContainerType.tenant_id
             AND
@@ -82,7 +82,7 @@
 				containerTypeName$primary$,
 				containerTypeID
 			FROM
-				tbcontainertype
+				EZFLOWYJ.tbcontainertype
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -95,9 +95,9 @@
 			SELECT 
 				COUNT(tbContainer.ContainerID) 
 		    FROM 
-		    	tbContainer 
+		    	EZFLOWYJ.tbContainer 
 		    JOIN 
-		    	tbContainerType 
+		    	EZFLOWYJ.tbContainerType 
 		    ON 
 		    	tbContainer.tenant_id = tbContainerType.tenant_id
 		    AND
@@ -120,7 +120,7 @@
 				WIDTH, 
 				COLNAME 
 			FROM 
-				TBLISTOPTION  
+				EZFLOWYJ.TBLISTOPTION  
 			WHERE 
 				TENANT_ID = #tenantID#
 			AND
@@ -144,9 +144,9 @@
    				CDS.NAME1 AS DOCUMENTSTATENAME,
    				CDS.CODE AS DOCUMENTCODE
    			FROM 
-   				TBCODEDOCSTATE CDS 
+   				EZFLOWYJ.TBCODEDOCSTATE CDS 
    			LEFT JOIN 
-   				TBCONTAINERTODOCSTATE CTDS  
+   				EZFLOWYJ.TBCONTAINERTODOCSTATE CTDS  
    			ON  
    				CTDS.TENANT_ID = CDS.TENANT_ID
    			AND
@@ -177,7 +177,7 @@
 			SELECT 
 				USEDEPID 
         	FROM 
-        		tbContainerUseDep 
+        		EZFLOWYJ.tbContainerUseDep 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -196,7 +196,7 @@
              	CONTNAME ,
              	SUBQUERY 
         	FROM 
-        		TBSPECIALCONTAINERINFO 
+        		EZFLOWYJ.TBSPECIALCONTAINERINFO 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -214,7 +214,7 @@
 			SELECT
 				containertypename$lang$ as containerTypeName
 			FROM
-				TBCONTAINERTYPE
+				EZFLOWYJ.TBCONTAINERTYPE
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -230,7 +230,7 @@
 				CODE2, 
 				NAME$lang$ AS NAME 
 			FROM 
-				TBCODELIST 
+				EZFLOWYJ.TBCODELIST 
 			WHERE 
 				TENANT_ID = #tenantID#
 			AND
@@ -253,7 +253,7 @@
         		CONTNAME ,
         		SUBQUERY 
    			FROM 
-   				TBSPECIALCONTAINERINFO 
+   				EZFLOWYJ.TBSPECIALCONTAINERINFO 
   			WHERE
   				TENANT_ID = #tenantID#
   			AND
@@ -272,7 +272,7 @@
 			SELECT
 				CONCAT(CONCAT(FORMID,';'), FORMNAME$lang$) AS FORMIDNAME 
 			FROM 
-				TBFORMINFO  
+				EZFLOWYJ.TBFORMINFO  
 			WHERE 
 			  	$subQuery$
 		]]>
@@ -289,7 +289,7 @@
                 	FORMCONTPARENTS ,
                 	FORMCONTDESCRIPTION 
            		FROM 
-           			TBFormContainer 
+           			EZFLOWYJ.TBFormContainer 
           		WHERE
           			TENANT_ID = #tenantID#
           		AND
@@ -308,9 +308,9 @@
                     fc.FormContParents ,
                     fc.FormContdescription 
            		FROM 
-           			TBFormContainer fc
+           			EZFLOWYJ.TBFormContainer fc
                 LEFT JOIN 
-                	TBFormContUserGroup fcug   
+                	EZFLOWYJ.TBFormContUserGroup fcug   
                 ON
                 	fc.tenant_id = fcug.tenant_id
                 AND
@@ -337,7 +337,7 @@
 				SELECT 
 					COUNT(FORMCONTID)
            		FROM 
-           			TBFormContainer 
+           			EZFLOWYJ.TBFormContainer 
           		WHERE  
           			TENANT_ID = #tenantID#
           		AND
@@ -351,9 +351,9 @@
 				SELECT 
 					DISTINCT COUNT(fc.FormContID)
            		FROM 
-           			TBFormContainer fc 
+           			EZFLOWYJ.TBFormContainer fc 
                 LEFT JOIN 
-                	TBFormContUserGroup fcug    
+                	EZFLOWYJ.TBFormContUserGroup fcug    
                 ON 
                 	fc.tenant_id = fcug.tenant_id
                 AND
@@ -385,7 +385,7 @@
 					formName,
 					formName2 
            		FROM 
-           			TBFormInfo 
+           			EZFLOWYJ.TBFormInfo 
           		WHERE  
           			TENANT_ID = #tenantID#
           		AND
@@ -417,7 +417,7 @@
 						formName,
 						formName2 
 	           		FROM 
-	           			TBFormInfo 
+	           			EZFLOWYJ.TBFormInfo 
 	          		WHERE  
 	          			TENANT_ID = #tenantID#
 	          		AND
@@ -450,7 +450,7 @@
 						formName,
 						formName2 
 	           		FROM 
-	           			TBFormInfo 
+	           			EZFLOWYJ.TBFormInfo 
 	          		WHERE  
 	          			TENANT_ID = #tenantID#
 	          		AND
@@ -485,7 +485,7 @@
 					ELSE extensionattribute6
 				END userSecurityCode
 			FROM
-				EZHRMASTER.TBLUSERMASTER
+				TBLUSERMASTER
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -498,7 +498,7 @@
 			SELECT
 				isuse
 			FROM
-				TBCODELIST
+				EZFLOWYJ.TBCODELIST
 			WHERE
 				tenant_id = #tenantID#
 			AND
@@ -515,21 +515,21 @@
 			SELECT 
 				COUNT(DISTINCT A.DOCID)
    			FROM 
-   				TBENDAPRDOCINFO A  
+   				EZFLOWYJ.TBENDAPRDOCINFO A  
    			LEFT OUTER JOIN 
-   				TBENDAPRLINEINFO  
+   				EZFLOWYJ.TBENDAPRLINEINFO  
    			ON 
    				A.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID
    			AND
    				A.DOCID = TBENDAPRLINEINFO.DOCID 
        		LEFT OUTER JOIN 
-       			TBEXPENDAPRLINE  
+       			EZFLOWYJ.TBEXPENDAPRLINE  
        		ON 
        			A.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID
        		AND
        			A.DOCID = TBEXPENDAPRLINE.DOCID    
    			INNER JOIN 
-   				TBEXPENDAPRDOCINFO  
+   				EZFLOWYJ.TBEXPENDAPRDOCINFO  
    			ON 
    				A.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID
    			AND
@@ -561,7 +561,7 @@
 																								ELSE 'N'
 																							END getIsLineInfo
 																						 FROM 
-																						 	TBENDAPRLINEINFO 
+																						 	EZFLOWYJ.TBENDAPRLINEINFO 
        																					 WHERE  
        																					 	tenant_id = #tenantID#
        																					 AND
@@ -601,7 +601,7 @@
      		FROM ( SELECT 
      					ProcessYN 
      			   FROM 
-     			   		TBENDRECEIPTPOINTINFO 
+     			   		EZFLOWYJ.TBENDRECEIPTPOINTINFO 
     			   WHERE
     			   		tenant_id = #tenantID#
     			   AND	
@@ -635,7 +635,7 @@
    				  AND 
    				  		ROWNUM <= #querySizeSub#) A 
    				  INNER JOIN 
-   				  		TBCODEDOCTYPE B  
+   				  		EZFLOWYJ.TBCODEDOCTYPE B  
    				  ON 
    				  		A.TENANT_ID = B.TENANT_ID
    				  AND
@@ -643,7 +643,7 @@
    				  AND
    				  		A.DOCTYPE = B.CODE 
    				  INNER JOIN 
-   				  		TBCODEDOCSTATE C  
+   				  		EZFLOWYJ.TBCODEDOCSTATE C  
    				  ON	
    				  		A.TENANT_ID = C.TENANT_ID
    				  AND
@@ -651,7 +651,7 @@
    				  AND 
    				  		A.DOCSTATE = C.CODE
    				  INNER JOIN 
-   				  		TBCODEAPRSTATE D  
+   				  		EZFLOWYJ.TBCODEAPRSTATE D  
    				  ON 
    				  		A.TENANT_ID = D.TENANT_ID
    				  AND
@@ -674,7 +674,7 @@
 					deptname$lang$ as deptname,
 					addcompanyid 
               	FROM 
-              		TBADMINRECEIPTGROUP_SUB 
+              		EZFLOWYJ.TBADMINRECEIPTGROUP_SUB 
              	WHERE  
              		tenant_id = #tenantID#
              	AND	
@@ -692,9 +692,9 @@
 						DISTINCT M.MAINID ,
                         M.MAINNAME 
                  	FROM 
-                 		TBADMINRECEIPTGROUP_MAIN M 
+                 		EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN M 
                     JOIN 
-                    	TBADMINRECEIPTGROUP_SUB S 
+                    	EZFLOWYJ.TBADMINRECEIPTGROUP_SUB S 
                     ON 
                     	M.tenant_id = S.tenant_id
                     AND
@@ -715,7 +715,7 @@
 						mainid,
 						mainname
                  	FROM 
-                 		TBADMINRECEIPTGROUP_MAIN
+                 		EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
                  	WHERE
                  		tenant_id = #tenantID#
                  	AND
@@ -736,7 +736,7 @@
 			groupname2,
 			etc
    		FROM 
-   			TBDOCNUM_GROUP 
+   			EZFLOWYJ.TBDOCNUM_GROUP 
   		WHERE  
   			TENANT_ID = #tenantID#
   		AND
@@ -755,7 +755,7 @@
 			SELECT 
 				COUNT(*) 
            	FROM 
-           		TBDOCNUM_GROUP 
+           		EZFLOWYJ.TBDOCNUM_GROUP 
           	WHERE  
           		TENANT_ID = #tenantID#
           	AND
@@ -778,7 +778,7 @@
 				itemsecurity,
 				itempublic 
         	FROM 
-        		TBDOCNUM_ITEM 
+        		EZFLOWYJ.TBDOCNUM_ITEM 
        		WHERE
        			TENANT_ID = #tenantID#
        		AND
@@ -795,7 +795,7 @@
 			SELECT 
 				NAME$lang$ AS NAME 
 			FROM 
-				TBCODELIST  
+				EZFLOWYJ.TBCODELIST  
 			WHERE 
 				TENANT_ID = #tenantID#
 			AND
@@ -816,7 +816,7 @@
 					ELSE LPAD(MAX(itemcode) + 1, 3, '0')
 				END maxContID
 			FROM
-				TBDOCNUM_ITEM
+				EZFLOWYJ.TBDOCNUM_ITEM
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -836,7 +836,7 @@
             REGUSERID, 
             REGUSERNAME$lang$ AS REGUSERNAME 
         FROM 
-        	TBSEALINFO  
+        	EZFLOWYJ.TBSEALINFO  
         WHERE
         	TENANT_ID = #tenantID#
         AND
@@ -860,9 +860,9 @@
    				C.NAME1 AS APRTYPENAME, 
    				COUNT(APRMEMBERID) AS APRCOUNT 
    			FROM 
-   				TBENDAPRLINEINFO E      
+   				EZFLOWYJ.TBENDAPRLINEINFO E      
    			INNER JOIN 
-   				TBCODEAPRTYPE C  
+   				EZFLOWYJ.TBCODEAPRTYPE C  
    			ON 
    				E.TENANT_ID = C.TENANT_ID
    			AND
@@ -905,7 +905,7 @@
 					SENTDEPTNAME$multiLang$ AS SENTDEPTNAME, 
 					COUNT(SENTDEPTID) AS APRCOUNT      
       			FROM 
-      				TBENDRECEIPTPROCESSINFO  
+      				EZFLOWYJ.EZFLOWYJ.TBENDRECEIPTPROCESSINFO  
       			WHERE 
       				TENANT_ID = #tenantID#
       			AND
@@ -931,7 +931,7 @@
 						RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME,     
          				COUNT(RECEIVEDDEPTID) AS APRCOUNT 
          			FROM 
-         				TBENDRECEIPTPROCESSINFO     
+         				EZFLOWYJ.TBENDRECEIPTPROCESSINFO     
          			WHERE 
          				TENANT_ID = #tenantID#
          			AND
@@ -958,7 +958,7 @@
          				RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME, 
          				COUNT(SENTDEPTID) AS APRCOUNT 
          			FROM 
-         				TBENDRECEIPTPROCESSINFO  
+         				EZFLOWYJ.TBENDRECEIPTPROCESSINFO  
          			WHERE 
          				TENANT_ID = #tenantID#
          			AND
@@ -988,7 +988,7 @@
 				code,
 				NAME1 as NAME
 			FROM
-				TBCODEAPRTYPE
+				EZFLOWYJ.TBCODEAPRTYPE
 			WHERE
 				tenant_id = #tenantId#
 			AND
@@ -1015,7 +1015,7 @@
              	condvaluedeptid,
              	doctype 
         	FROM 
-        		TBFORM_AUTORULE 
+        		EZFLOWYJ.TBFORM_AUTORULE 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -1051,7 +1051,7 @@
              	ISPROPOSERYN,
              	ISBRIEFUSERYN
             FROM 
-            	TBFORM_AUTORULELINE 
+            	EZFLOWYJ.TBFORM_AUTORULELINE 
 	        WHERE  
 	        	TENANT_ID = #tenantID#
 	        AND
@@ -1069,9 +1069,9 @@
 			SELECT 
 				REFORMFUCTIONFILELOCATION 
 			FROM 
-				TBFormInfo A 
+				EZFLOWYJ.TBFormInfo A 
 			INNER JOIN 
-				TBAUTODOCNUM_ITEM B
+				EZFLOWYJ.TBAUTODOCNUM_ITEM B
 			ON
 				A.tenant_id = B.tenant_id
 			AND
@@ -1093,7 +1093,7 @@
 				DEPTID,
              	UserID 
         	FROM 
-        		TBFormRecv 
+        		EZFLOWYJ.TBFormRecv 
        		WHERE  
        			TENANT_ID = #tenantID#
        		AND
@@ -1113,7 +1113,7 @@
 				ID, 
 				NAME 
 			FROM 
-				TBFORMPROPERTY
+				EZFLOWYJ.TBFORMPROPERTY
 			WHERE 
 				TENANT_ID = #tenantID#
 			AND
@@ -1134,7 +1134,7 @@
 				DESCRIPTION, 
 				UPPERNODE 
 			FROM 
-				TBFORMCONNINFO
+				EZFLOWYJ.TBFORMCONNINFO
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
@@ -1165,9 +1165,9 @@
              	ITEMNAME2 ,
              	USEFLAG 
         	FROM 
-        		TBFormInfo A
+        		EZFLOWYJ.TBFormInfo A
             JOIN 
-            	TBAUTODOCNUM_ITEM B   
+            	EZFLOWYJ.TBAUTODOCNUM_ITEM B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
@@ -1193,7 +1193,7 @@
 						ELSE MAX(CONTAINERTYPEID)
 					END maxID
 			    FROM 
-			    	tbContainerType
+			    	EZFLOWYJ.TBContainerType
 			    WHERE
 			    	tenant_id = #tenantID#
 			    AND
@@ -1201,7 +1201,7 @@
 			]]>
 		</selectKey>
 		<![CDATA[
-			INSERT INTO tbContainerType ( 
+			INSERT INTO EZFLOWYJ.TBContainerType ( 
 				CONTAINERTYPEID, CONTAINERTYPENAME, CONTAINERTYPENAME2, COMPANYID, 		TENANT_ID 
 			)
         	VALUES ( 
@@ -1228,7 +1228,7 @@
 						ELSE LPAD(MAX(CONTAINERID) + 1, 10, '0')
 					END maxContID
 				FROM
-					TBCONTAINER
+					EZFLOWYJ.TBCONTAINER
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
@@ -1236,7 +1236,7 @@
 			]]>
 		</selectKey>
 		
-		INSERT INTO TBCONTAINER (
+		INSERT INTO EZFLOWYJ.TBCONTAINER (
 			ContainerID, ContainerTypeID, ContainerOwnDepID, companyid,   tenant_id
 		)
 		VALUES (
@@ -1263,7 +1263,7 @@
 						ELSE MAX(SN) + 1
 					END SN
         		FROM 
-        			TBSPECIALCONTAINERINFO 
+        			EZFLOWYJ.TBSPECIALCONTAINERINFO 
        			WHERE
        				TENANT_ID = #tenantID#
        			AND
@@ -1276,7 +1276,7 @@
 		</selectKey>
 		
 		<![CDATA[
-			INSERT INTO TBSPECIALCONTAINERINFO (
+			INSERT INTO EZFLOWYJ.TBSPECIALCONTAINERINFO (
 				DeptID,   ContType,   SN, 	contName, 	subquery, 	companyid, 	 tenant_id
 			)
 			VALUES (
@@ -1287,7 +1287,7 @@
 	
 	<insert id="EzApprovalAdminDAO.insertReceiveGroupInfo" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			INSERT INTO TBADMINRECEIPTGROUP_MAIN ( 
+			INSERT INTO EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN ( 
 				MAINNAME,	 COMPANYID,   TENANT_ID 
 			)
      		VALUES ( 
@@ -1298,7 +1298,7 @@
 	
 	<insert id="EzApprovalAdminDAO.insertReceiveGroupItemInfo" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			INSERT INTO TBADMINRECEIPTGROUP_SUB (
+			INSERT INTO EZFLOWYJ.TBADMINRECEIPTGROUP_SUB (
 				MAINID,    DEPTID, 	 DEPTNAME, 	 DEPTNAME2,   ADDCOMPANYID,   COMPANYID,   TENANT_ID
 			)
      		VALUES (
@@ -1317,7 +1317,7 @@
 						ELSE MAX(groupid) + 1
 					END groupid 
      			FROM 
-     				TBDOCNUM_GROUP
+     				EZFLOWYJ.TBDOCNUM_GROUP
      			WHERE
      				tenant_id = #tenantID#
      			AND
@@ -1325,7 +1325,7 @@
 			]]>
 		</selectKey>
 		
-		INSERT INTO TBDOCNUM_GROUP ( 
+		INSERT INTO EZFLOWYJ.TBDOCNUM_GROUP ( 
 			GROUPID,   G_LEVEL,   G_UPPERID, 	  GROUPNAME,   GROUPNAME2,   ETC,  COMPANYID,   TENANT_ID 
 		)
      	VALUES ( 
@@ -1335,7 +1335,7 @@
 	
 	<insert id="EzApprovalAdminDAO.insertItemCodeItem" parameterClass="ApprDocItemVO">
 		<![CDATA[
-			INSERT INTO TBDOCNUM_ITEM ( 
+			INSERT INTO EZFLOWYJ.TBDOCNUM_ITEM ( 
 				GROUPID,   ITEMCODE,   ITEMNAME,   ITEMNAME2,   ITEMLIMIT,   ITEMSECURITY,   ITEMPUBLIC,   COMPANYID,   TENANT_ID 
 			)
      		VALUES ( 
@@ -1354,7 +1354,7 @@
 						ELSE MAX(SEALNUM) + 1
 					END sealNum
 				FROM
-					TBSEALINFO
+					EZFLOWYJ.TBSEALINFO
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
@@ -1362,7 +1362,7 @@
 			]]>
 		</selectKey>
 		<![CDATA[
-			INSERT INTO TBSEALINFO ( 
+			INSERT INTO EZFLOWYJ.TBSEALINFO ( 
 				SEALNUM,   SEALNAME,   SEALPATH,   SEALWIDTH,   SEALHEIGHT,   REGDATE,   								   REGUSERID,   REGUSERNAME,   REGUSERNAME2,   COMPANYID,   TENANT_ID 
 			)
       		VALUES ( 
@@ -1380,13 +1380,13 @@
 					ELSE MAX(FORMCONTID) + 1
 				END id
 			FROM
-				TBFORMCONTAINER
+				EZFLOWYJ.TBFORMCONTAINER
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
 				COMPANYID = #companyID#
 		</selectKey>
-		INSERT INTO TBFORMCONTAINER (
+		INSERT INTO EZFLOWYJ.TBFORMCONTAINER (
 			FormContID, FormContName,   FormContName2,   FormContOwnDepID, FormContParents,   FormContdescription,   companyID,   tenant_id
 		) 
 		VALUES (
@@ -1411,14 +1411,14 @@
 					ELSE TO_CHAR(MAX(FORMID) + 1)
 				END id
 			FROM
-				TBFORMINFO
+				EZFLOWYJ.TBFORMINFO
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
 				COMPANYID = #companyID#
 		</selectKey>
 		
-		INSERT INTO TBFormInfo ( 
+		INSERT INTO EZFLOWYJ.TBFormInfo ( 
 			FORMCONTID,   FORMID, FORMNAME,   FORMNAME2,   FORMDOCTYPE, FORMDESCRIPTION,   FORMFILELOCATION, 					FORMVERSION, FormConnXML, TENANT_ID,  COMPANYID 
 		)
         VALUES ( 
@@ -1436,7 +1436,7 @@
        			EXISTS ( SELECT 
        						FORMID 
                       	 FROM 
-                      	 	TBAUTODOCNUM_ITEM 
+                      	 	EZFLOWYJ.TBAUTODOCNUM_ITEM 
                        	 WHERE  
                        	 	TENANT_ID = #tenantID#
                        	 AND
@@ -1446,7 +1446,7 @@
 		</selectKey>
 		
 		<isEqual property="id" compareValue="OK">
-			UPDATE TBAUTODOCNUM_ITEM
+			UPDATE EZFLOWYJ.TBAUTODOCNUM_ITEM
          	SET 
          		KEEPPERIOD = #keepPeriod#,
              	KEEPPERIODCODE = #keepPeriodCode#,
@@ -1465,7 +1465,7 @@
 		</isEqual>
 		
 		<isNotEqual property="id" compareValue="OK">
-			INSERT INTO TBAUTODOCNUM_ITEM (
+			INSERT INTO EZFLOWYJ.TBAUTODOCNUM_ITEM (
 				FORMID,   KEEPPERIOD,   SECURITYLEVEL,   ISPUBLIC,   ITEMCODE, 	   ITEMNAME, 	 ITEMNAME2, 	USEFLAG,   KEEPPERIODCODE,   TENANT_ID,  COMPANYID
 			)
         	VALUES ( 
@@ -1478,7 +1478,7 @@
 		INSERT ALL
 			<iterate>
 				<![CDATA[
-					INTO TBFORM_AUTORULE ( 
+					INTO EZFLOWYJ.TBFORM_AUTORULE ( 
 						FORMID,   AUTORULESN,   AUTORULEGUID,   CHECKFIELDTYPE,   CHECKFIELD,   OPERATORTYPE,  OPERATOR,   CONDTYPE,   CONDVALUE,   CONDVALUEDEPTID,   DOCTYPE,   TENANT_ID,  COMPANYID 
 					)
 					VALUES (
@@ -1493,7 +1493,7 @@
 		INSERT ALL
 			<iterate>
 				<![CDATA[
-					INTO TBFORM_AUTORULELINE ( 
+					INTO EZFLOWYJ.TBFORM_AUTORULELINE ( 
 						FORMID,   AUTORULEGUID,   APRMEMBERSN,   APRTYPE,   APRSTATE,   APRMEMBERID,   APRMEMBERISDEPTYN,   APRMEMBERNAME,   APRMEMBERNAME2,   APRMEMBERJOBTITLE,   APRMEMBERJOBTITLE2,   APRMEMBERDEPTID,   APRMEMBERDEPTNAME,   APRMEMBERDEPTNAME2,   APRMEMBERLDAPPATH,   RECEIVEDDATE,  PROCESSDATE,   REASONDONOTAPPROV,   ISPROPOSERYN,   ISBRIEFUSERYN,   TENANT_ID,  COMPANYID 
 		        	)
 		        	VALUES (
@@ -1508,7 +1508,7 @@
 		INSERT ALL
 			<iterate>
 				<![CDATA[
-					INTO TBFORMRECV (
+					INTO EZFLOWYJ.TBFORMRECV (
 						FORMID,   DEPTID,   DEPTSN,   USERID,   TENANT_ID,  COMPANYID
 					)
 					VALUES (
@@ -1525,7 +1525,7 @@
 				SELECT
 					MAX(FORMORDER) + 1
 				FROM
-					TBFORMINFO
+					EZFLOWYJ.TBFORMINFO
 				WHERE
 					TENANT_ID = #tenantID#
 				AND
@@ -1536,7 +1536,7 @@
 		</selectKey>
 		
 		<![CDATA[
-			UPDATE TBFORMINFO 
+			UPDATE EZFLOWYJ.TBFORMINFO 
 			SET 
 				FORMCONTID = #selContID#, 
 				FORMORDER = #formOrder# 
@@ -1553,7 +1553,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBCONTAINER 
+			UPDATE EZFLOWYJ.TBCONTAINER 
 			SET 
 				ContainerTypeID = #contType#,
 				ContainerOwnDepID = #contOwnDeptID#
@@ -1568,7 +1568,7 @@
 	
 	<update id="EzApprovalAdminDAO.changeSpecialContSN1" parameterClass="ApprContInfoVO">
 		<![CDATA[
-			UPDATE TBSPECIALCONTAINERINFO
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
       		SET 
       			SN = '0'
     		WHERE  
@@ -1586,7 +1586,7 @@
 	
 	<update id="EzApprovalAdminDAO.changeSpecialContSN2" parameterClass="ApprContInfoVO">
 		<![CDATA[
-			UPDATE TBSPECIALCONTAINERINFO
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
       		SET 
       			SN = #sn#
     		WHERE
@@ -1604,7 +1604,7 @@
 	
 	<update id="EzApprovalAdminDAO.changeSpecialContSN3" parameterClass="ApprContInfoVO">
 		<![CDATA[
-			UPDATE TBSPECIALCONTAINERINFO
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
          	SET 
          		SN = #sn2#
        		WHERE
@@ -1622,14 +1622,14 @@
 	
 	<update id="EzApprovalAdminDAO.moveAllDocList1" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBEXPENDAPRDOCINFO 
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
 			SET 
 				OrgContID = #sourceContID#
 			WHERE 
 				TBEXPENDAPRDOCINFO.DocID IN ( SELECT 
 												DocID 
 											  From 
-											  	TBENDAPRDOCINFO A 
+											  	EZFLOWYJ.TBENDAPRDOCINFO A 
 											  WHERE
 											  	A.tenant_id = #tenantID#
 											  AND
@@ -1641,7 +1641,7 @@
 	
 	<update id="EzApprovalAdminDAO.moveAllDocList2" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBENDAPRDOCINFO 
+			UPDATE EZFLOWYJ.TBENDAPRDOCINFO 
 			SET 
 				ContainerID = #targetContID#
 			WHERE 
@@ -1655,7 +1655,7 @@
 	
 	<update id="EzApprovalAdminDAO.moveDocList1" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBENDAPRDOCINFO 
+			UPDATE EZFLOWYJ.TBENDAPRDOCINFO 
 			SET 
 				ContainerID = #targetContID#
 			WHERE
@@ -1671,7 +1671,7 @@
 	
 	<update id="EzApprovalAdminDAO.moveDocList2" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBEXPENDAPRDOCINFO 
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
 			SET 
 				OrgContID = #sourceContID#
 			WHERE
@@ -1684,14 +1684,14 @@
 	</update>
 	
 	<update id="EzApprovalAdminDAO.deleteAllDocList" parameterClass="Map">
-		UPDATE TBEXPENDAPRDOCINFO 
+		UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
 		SET 
 			DelFlag = 'Y'
 		WHERE
 			TBEXPENDAPRDOCINFO.DocID IN ( SELECT
 											docid
 										  FROM
-										  	TBENDAPRDOCINFO
+										  	EZFLOWYJ.TBENDAPRDOCINFO
 										  WHERE
 										  	tenant_id = #tenantID#
 										  AND
@@ -1716,7 +1716,7 @@
 	
 	<update id="EzApprovalAdminDAO.deleteDocList" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBEXPENDAPRDOCINFO
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO
 			SET
 				delflag = 'Y'
 			WHERE
@@ -1730,7 +1730,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateGroupMainInfo" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			UPDATE TBADMINRECEIPTGROUP_MAIN
+			UPDATE EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
       		SET 
       			MAINNAME = #groupName#
     		WHERE  
@@ -1744,7 +1744,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateItemCodeGroup" parameterClass="ApprDocGroupVO">
 		<![CDATA[
-			UPDATE TBDOCNUM_GROUP
+			UPDATE EZFLOWYJ.TBDOCNUM_GROUP
       		SET 
       			GROUPNAME = #groupName#,
           		GROUPNAME2 = #groupName2#
@@ -1759,7 +1759,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateItemCodeItem" parameterClass="ApprDocItemVO">
 		<![CDATA[
-			UPDATE TBDOCNUM_ITEM
+			UPDATE EZFLOWYJ.TBDOCNUM_ITEM
       		SET 
       			ITEMNAME = #itemName#,
           		ITEMNAME2 = #itemName2#,
@@ -1779,7 +1779,7 @@
 	
 	<update id="EzApprovalAdminDAO.deleteSealInfo" parameterClass="ApprSealInfoVO">
 		<![CDATA[
-			UPDATE TBSEALINFO
+			UPDATE EZFLOWYJ.TBSEALINFO
          	SET 
          		DELDATE = TO_DATE(#delDate#, 'YYYY-MM-DD HH24:MI:SS')
        		WHERE
@@ -1793,7 +1793,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateFormVersion" parameterClass="ApprFormInfoVO">
 		<![CDATA[
-			UPDATE TBFORMINFO
+			UPDATE EZFLOWYJ.TBFORMINFO
 			SET 
 				FORMVERSION = FORMVERSION + 1
 			WHERE
@@ -1807,7 +1807,7 @@
 	
 	<update id="EzApprovalAdminDAO.updateFormData" parameterClass="ApprFormInfoVO">
 		<![CDATA[
-			UPDATE TBFormInfo
+			UPDATE EZFLOWYJ.TBFormInfo
 	        SET 
 	        	FORMCONTID = #formContID#,
              	FORMNAME = #formName#,
@@ -1827,7 +1827,7 @@
 	
 	<update id="EzApprovalAdmin.setFormOrder" parameterClass="ApprFormContVO">
 		<![CDATA[
-			UPDATE TBFormInfo
+			UPDATE EZFLOWYJ.TBFormInfo
 			SET 
 				FormOrder = #formOrder# + 1
             WHERE
@@ -1843,7 +1843,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM TBCONTAINERTODOCSTATE
+			DELETE FROM EZFLOWYJ.TBCONTAINERTODOCSTATE
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -1855,7 +1855,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteContainerType" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM tbContainerType
+			DELETE FROM EZFLOWYJ.TBContainerType
       		WHERE
       			TENANT_ID = #tenantID#
       		AND
@@ -1867,7 +1867,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteContainerToDocStateInfo" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM TBContainerToDocState 
+			DELETE FROM EZFLOWYJ.TBContainerToDocState 
 			WHERE 
 				tenant_id = #tenantID#
 			AND
@@ -1879,7 +1879,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteContainerUseDept" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM tbContainerUseDep 
+			DELETE FROM EZFLOWYJ.TBContainerUseDep 
 			WHERE 
 				TENANT_ID = #tenantID#
       		AND
@@ -1891,7 +1891,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteContainer" parameterClass="Map">
 		<![CDATA[
-			DELETE FROM tbContainer
+			DELETE FROM EZFLOWYJ.TBContainer
 	        WHERE  
 	        	TENANT_ID = #tenantID#
       		AND
@@ -1903,7 +1903,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteSpecialContInfo" parameterClass="ApprContInfoVO">
 		<![CDATA[
-			DELETE FROM TBSPECIALCONTAINERINFO 
+			DELETE FROM EZFLOWYJ.TBSPECIALCONTAINERINFO 
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -1919,7 +1919,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteGroupMainInfo" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			DELETE TBADMINRECEIPTGROUP_MAIN
+			DELETE EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
     		WHERE
     			TENANT_ID = #tenantID#
     		AND
@@ -1931,7 +1931,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteGroupSubItemInfo" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			DELETE TBADMINRECEIPTGROUP_SUB
+			DELETE EZFLOWYJ.TBADMINRECEIPTGROUP_SUB
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -1943,7 +1943,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteItemCodeGroup" parameterClass="ApprDocGroupVO">
 		<![CDATA[
-			DELETE TBDOCNUM_GROUP
+			DELETE EZFLOWYJ.TBDOCNUM_GROUP
 		    WHERE  
 		    	TENANT_ID = #tenantID#
 		    AND
@@ -1955,7 +1955,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteItemCodeItem" parameterClass="ApprDocItemVO">
 		<![CDATA[
-			DELETE TBDOCNUM_ITEM
+			DELETE EZFLOWYJ.TBDOCNUM_ITEM
     		WHERE  
     			TENANT_ID = #tenantID#
     		AND
@@ -1969,7 +1969,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteFormContUserGroup" parameterClass="Map">
 		<![CDATA[
-			DELETE TBFormContUserGroup
+			DELETE EZFLOWYJ.TBFormContUserGroup
 		    WHERE  
 		    	TENANT_ID = #tenantID#
 		    AND
@@ -1981,7 +1981,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteFormContainer" parameterClass="Map">
 		<![CDATA[
-			DELETE TBFormContainer
+			DELETE EZFLOWYJ.TBFormContainer
 	        WHERE  
 		    	TENANT_ID = #tenantID#
 		    AND
@@ -1993,7 +1993,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteAutoRule" parameterClass="ApprAutoRuleVO">
 		<![CDATA[
-			DELETE TBFORM_AUTORULE
+			DELETE EZFLOWYJ.TBFORM_AUTORULE
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -2005,7 +2005,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteAutoRuleLine" parameterClass="ApprAutoRuleVO">
 		<![CDATA[
-			DELETE TBFORM_AUTORULELINE
+			DELETE EZFLOWYJ.TBFORM_AUTORULELINE
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -2017,7 +2017,7 @@
 	
 	<delete id="EzApprovalAdminDAO.deleteFormRecv" parameterClass="ApprReceiveGroupVO">
 		<![CDATA[
-			DELETE TBFORMRECV
+			DELETE EZFLOWYJ.TBFORMRECV
 			WHERE 
 				TENANT_ID = #tenantID#
 			AND
@@ -2029,7 +2029,7 @@
 	
 	<delete id="EzApprovalAdmin.deleteForm" parameterClass="ApprFormInfoVO">
 		<![CDATA[
-			DELETE TBFormInfo
+			DELETE EZFLOWYJ.TBFormInfo
 		    WHERE
 		    	TENANT_ID = #tenantID#
 		    AND
@@ -2041,7 +2041,7 @@
 	
 	<delete id="EzApprovalAdmin.deleteFavoriteForm" parameterClass="ApprFormInfoVO">
 		<![CDATA[
-			DELETE TBFavoriteFormInfo
+			DELETE EZFLOWYJ.TBFavoriteFormInfo
 		    WHERE
 		    	TENANT_ID = #tenantID#
 		    AND

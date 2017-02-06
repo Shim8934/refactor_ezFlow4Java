@@ -893,6 +893,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String)select("EzApprovalG.notifiCationSeq", map);
 	}
 	
+	public String transferCabinetSn(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.transferCabinetSn", map);
+	}
+	
 	public int getMaxTmpDocSN(Map<String, Object> map) throws Exception{
 		return (int)select("EzApprovalG.getMaxTmpDocSN", map);
 	}
@@ -1032,10 +1036,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int transferCabinet(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.transferCabinet", map);
-	}
-	
-	public int transferCabinetSn(Map<String, Object> map) throws Exception{
-		return (int) select("EzApprovalG.transferCabinetSn", map);
 	}
 	
 	public int transferCabinetType2(Map<String, Object> map) throws Exception{
@@ -1278,11 +1278,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertStrSql1", map);
 	}
 	
-	public void insertCabinetHistory(Map<String, Object> map) {
+	public void insertCabinetHistory(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertCabinetHistory", map);
 	}
 	
-	public void insertCabinetHistory2(Map<String, Object> map) {
+	public void insertCabinetHistory2(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertCabinetHistory2", map);
 	}
 	
@@ -1308,6 +1308,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateHistoryForLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.updateHistoryForLine", map);
+	}
+	
+	public void insertFormRecvTB(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertFormRecvTB", map);
+	}
+	
+	public void insertApprLine(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertApprLine", map);
+	}
+	
+	public void insertExApprLine(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertExApprLine", map);
+	}
+	
+	public void insertOptionInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertOptionInfo", map);
+	}
+	
+	public void insertAprAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertAprAttachInfo", map);
 	}
 	
 	public void setJijung(Map<String, Object> map) throws Exception{
@@ -1439,6 +1459,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		
 	}
 	
+	public void updateAprDocOptionInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateAprDocOptionInfo", map);
+	}
+	
+	public void updateAprDocAttachInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateAprDocAttachInfo", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -1521,6 +1549,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteTbSpecialCatalogInfo_Cab(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTbSpecialCatalogInfo_Cab", map);
+	}
+	
+	public void deleteFormRecvTB(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteFormRecvTB", map);
+	}
+	
+	public void deleteExApprLine(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteExApprLine", map);
+	}
+	
+	public void deleteApprLineInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteApprLineInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
