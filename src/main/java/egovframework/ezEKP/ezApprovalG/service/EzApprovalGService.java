@@ -377,4 +377,6 @@ public interface EzApprovalGService {
 	
 	public int getWebPartListCount(String listType, String userID, String deptID, String userIDS, String deptIDS, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 
+	public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
+
 }

@@ -755,10 +755,10 @@
 		        var xmlpara = createXmlDom();
 		        var objNode;
 		        createNodeInsert(xmlpara, objNode, "ASSIGN");
-		        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
-		        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
+		        createNodeAndInsertText(xmlpara, objNode, "docID", pDocID);
+		        createNodeAndInsertText(xmlpara, objNode, "userID", pUserID);
 		
-		        xmlhttp.open("POST", "aspx/doCancelForce.aspx", false);
+		        xmlhttp.open("POST", "/ezApprovalG/doCancelForce.do", false);
 		        xmlhttp.send(xmlpara);
 		
 		        var RtnVal = getNodeText(xmlhttp.responseXML.documentElement);
