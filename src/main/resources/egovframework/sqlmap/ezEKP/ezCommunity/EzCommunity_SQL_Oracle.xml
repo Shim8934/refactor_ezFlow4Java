@@ -1477,7 +1477,7 @@
 			AND
 				TBL_C_CLUB.tenant_id = TBL_C_MEMBERINFO.tenant_id
 			WHERE
-				TRIM(TBL_C_CLUB.c_clubno) = #v_code#
+				RTRIM(TBL_C_CLUB.c_clubno) = #v_code#
 			AND
 				TBL_C_CLUB.tenant_id = #tenantID#
 		]]>
@@ -3893,7 +3893,7 @@
 			WHERE
 				RTRIM(c_id) = #v_UID#
 			AND
-				c_clubno = #v_CID#
+				RTRIM(c_clubno) = #v_CID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -4225,7 +4225,7 @@
 			FROM
 				TBL_C_CLUB
 			WHERE
-				c_clubno = #v_CID#
+				RTRIM(c_clubno) = #v_CID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -4247,7 +4247,7 @@
 	        AND
 	        	TBL_COMM_BOARDINFO.tenant_id = TBL_COMM_ITEM.tenant_id
 	        WHERE
-	        	TRIM(c_clubno) = #c_ClubNo#
+	        	RTRIM(c_clubno) = #c_ClubNo#
 	        AND
 	        	TBL_COMM_BOARDINFO.tenant_id = #tenantID#
 		]]>    
