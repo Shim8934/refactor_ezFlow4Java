@@ -59,7 +59,13 @@ public class EzEmailController {
         boolean checkAdmin = auth == null ? false : true;
         
         model.addAttribute("checkAdmin", checkAdmin);
-        model.addAttribute("lang", auth.getLang());
+        
+        if (checkAdmin) {
+            model.addAttribute("lang", auth.getLang());
+        } else {
+            LoginVO userInfo = commonUtil.userInfo(loginCookie);
+            model.addAttribute("lang", userInfo.getLang());
+        }
         
         return "ezEmail/mailAloneTop";
     }
