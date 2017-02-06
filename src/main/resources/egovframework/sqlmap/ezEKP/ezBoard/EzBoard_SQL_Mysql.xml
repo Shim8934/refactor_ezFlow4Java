@@ -596,17 +596,19 @@
                                AND 
                                		itemid = A.itemid
                                AND 
-                               		ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5 ) ) )
+                               		ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
             AND 
             	A.StartDate < #nowDate#
             AND 
-            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)
+            	A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
             AND 
             	A.EndDate > #nowDate#
             AND 
             	( A.APPRFLAG = 'Y'
                   OR A.APPRFLAG IS NULL )
 		]]>
+<!-- 		테스트해보고 안되면 이걸로 대체 -->
+<!--             	A.StartDate > DATE_SUB(DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'), INTERVAL 5 DAY) -->
 	</select>
 	
 	<select id="EzBoardDAO.getPersonalCount" parameterClass="userInfo" resultClass="BoardConfigVO">
@@ -686,38 +688,34 @@
 	
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM (
-					SELECT  
-						UserID, 
-						UserName$lang$ AS UserName, 
-						UserDeptName$lang$ AS UserDeptName, 
-						UserCompanyName$lang$ AS UserCompanyName, 
-						UserTitle$lang$ AS UserTitle, 
-						ReadDate 
-				   	FROM 
-				   		TBL_Board_Item_Read 
-				   	WHERE 
-				   		tenant_id = #tenantID#
-				   	AND
-				   		BoardID = #boardID# 
-				   	AND 
-				   		ItemID =  #itemID#  
-				   	AND
-				   		UserID NOT IN ( SELECT 
-				   							WRITERID 
-				   						FROM 
-				   							TBL_BOARD_ITEM 
-				   						WHERE 
-				   							TENANT_ID = #tenantID#
-				   						AND
-				   							ITEMID = #itemID# )
-				   	ORDER BY 
-				   		ReadDate DESC
-			)
-			WHERE
-		   		ROWNUM <= 50 
+			SELECT  
+				UserID, 
+				UserName$lang$ AS UserName, 
+				UserDeptName$lang$ AS UserDeptName, 
+				UserCompanyName$lang$ AS UserCompanyName, 
+				UserTitle$lang$ AS UserTitle, 
+				ReadDate 
+		   	FROM 
+		   		TBL_Board_Item_Read 
+		   	WHERE 
+		   		tenant_id = #tenantID#
+		   	AND
+		   		BoardID = #boardID# 
+		   	AND 
+		   		ItemID =  #itemID#  
+		   	AND
+		   		UserID NOT IN ( SELECT 
+		   							WRITERID 
+		   						FROM 
+		   							TBL_BOARD_ITEM 
+		   						WHERE 
+		   							TENANT_ID = #tenantID#
+		   						AND
+		   							ITEMID = #itemID# )
+		   	ORDER BY 
+		   		ReadDate DESC
+		   	LIMIT
+		   		50
 		]]>
 	</select>
 	
@@ -780,408 +778,464 @@
 	<select id="EzBoardDAO.getAdjacentItems3" parameterClass="Map" resultClass="BoardListVO">
 		<isNotEmpty property="v_PREVIOUSITEMID">
 			<![CDATA[
-				SELECT 
+				SELECT
 					ITEMID,
-					TITLE  
-                FROM 
-                	( SELECT 
-                		ITEMID,
-                		TITLE 
-                      FROM 
-                      	TBL_Board_Item 
-                      WHERE  
-                      	TENANT_ID = #v_TENANTID#
-                      AND
-                      	BOARDID = #v_PBOARDID#
-                      AND 
-                      	PARENTWRITEDATE <= #v_PPARENTWRITEDATE#
-                      AND 
-                      	ITEMID <> #v_PITEMID#
-                      AND 
-                      	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
-                      AND 
-                      	STARTDATE <= #nowDate#
-                      AND 
-                      	ENDDATE > #nowDate#
-                      AND 
-                      	ITEMID <>  #v_PREVIOUSITEMID# 
-                      ORDER BY 
-                      	PARENTWRITEDATE DESC,
-                        UPPERITEMIDTREE ASC,
-                        STARTDATE DESC )
-                WHERE ROWNUM <= 1
+              		TITLE
+              	FROM
+              		TBL_Board_Item 
+                WHERE  
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	BOARDID = #v_PBOARDID#
+                AND 
+                	PARENTWRITEDATE <= #v_PPARENTWRITEDATE#
+                AND 
+                	ITEMID <> #v_PITEMID#
+                AND 
+                	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                AND 
+                	STARTDATE <= #nowDate#
+                AND 
+                	ENDDATE > #nowDate#
+                AND 
+                	ITEMID <>  #v_PREVIOUSITEMID# 
+                ORDER BY 
+                	PARENTWRITEDATE DESC,
+                  	UPPERITEMIDTREE ASC,
+                  	STARTDATE DESC
+                LIMIT
+                	1
+                
 			]]>
 		</isNotEmpty>
 		<isEmpty property="v_PREVIOUSITEMID">
 			<![CDATA[
-				SELECT 
-					ITEMID,
-					TITLE  
-                FROM 
-                	( SELECT 
-                		ITEMID,
-                		TITLE 
-                      FROM 
-                      	TBL_Board_Item 
-                      WHERE  
-                      	TENANT_ID = #v_TENANTID#
-                      AND
-                      	BOARDID = #v_PBOARDID#
-                      AND 
-                      	PARENTWRITEDATE <= #v_PPARENTWRITEDATE#
-                      AND 
-                      	ITEMID <> #v_PITEMID#
-                      AND 
-                      	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
-                      AND 
-                      	STARTDATE <= #nowDate#
-                      AND 
-                      	ENDDATE > #nowDate#
-                      ORDER BY 
-                      	PARENTWRITEDATE DESC,
-                        UPPERITEMIDTREE ASC,
-                        STARTDATE DESC )
-                WHERE ROWNUM <= 1
+            	  SELECT 
+            		ITEMID,
+            		TITLE 
+                  FROM 
+                  	TBL_Board_Item 
+                  WHERE  
+                  	TENANT_ID = #v_TENANTID#
+                  AND
+                  	BOARDID = #v_PBOARDID#
+                  AND 
+                  	PARENTWRITEDATE <= #v_PPARENTWRITEDATE#
+                  AND 
+                  	ITEMID <> #v_PITEMID#
+                  AND 
+                  	UPPERITEMIDTREE NOT LIKE CONCAT(#v_PUPPERITEMIDTREE#, '%')
+                  AND 
+                  	STARTDATE <= #nowDate#
+                  AND 
+                  	ENDDATE > #nowDate#
+                  ORDER BY 
+                  	PARENTWRITEDATE DESC,
+                    UPPERITEMIDTREE ASC,
+                    STARTDATE DESC
+                  LIMIT
+                  	1
 			]]>
 		</isEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getNewItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-      				A.BOARDID,
-      				B.BOARDNAME AS BOARDNAME,		
-      				A.ITEMID,						
-      				A.WRITERID,						
-      				A.WRITERNAME,					
-      				A.WRITERDEPTNAME,			
-      				A.WRITERCOMPANYNAME,	
-      				A.WRITEDATE,					
-      				A.STARTDATE,					
-      				A.PARENTWRITEDATE,		
-      				A.IMPORTANCE,					
-      				A.TITLE,						
-      				A.ATTACHMENTS,			 
-      				A.READCOUNT,				
-      				A.ITEMLEVEL,				
-      				A.ABSTRACT,					
-      				B.BOARDNAME2 AS BOARDNAME2,		
-      				A.WRITERNAME2,					
-      				A.WRITERDEPTNAME2,			
-      				A.WRITERCOMPANYNAME2,		
-      				(SELECT 
+			  SELECT
+     				A.BOARDID,
+     				B.BOARDNAME AS BOARDNAME,		
+     				A.ITEMID,						
+     				A.WRITERID,						
+     				A.WRITERNAME,					
+     				A.WRITERDEPTNAME,			
+     				A.WRITERCOMPANYNAME,	
+     				A.WRITEDATE,					
+     				A.STARTDATE,					
+     				A.PARENTWRITEDATE,		
+     				A.IMPORTANCE,					
+     				A.TITLE,						
+     				A.ATTACHMENTS,			 
+     				A.READCOUNT,				
+     				A.ITEMLEVEL,				
+     				A.ABSTRACT,					
+     				B.BOARDNAME2 AS BOARDNAME2,		
+     				A.WRITERNAME2,					
+     				A.WRITERDEPTNAME2,			
+     				A.WRITERCOMPANYNAME2,		
+     				(SELECT 
 	                	COUNT(*)  
-     				FROM 
-     					TBL_Board_OneLineReply 
-    				WHERE  
-    					TENANT_ID = A.TENANT_ID
-    				AND
-    					ITEMID = A.ItemID) ONELINECNT,
-      				A.UPPERITEMIDTREE,
-      				A.DocNo,
-      				'' AS NOTICE,
-      				P.GUBUN,
-      				A.MAINCONTENT
-      			  FROM 
-      			  	TBL_BOARD_ITEM A 
-      			  INNER JOIN 
-      					( SELECT 
-      						BOARDID, 
-      						BOARDNAME, 
-      						BOARDNAME2,
-      						TENANT_ID 
-      					  FROM 
-      					  	TBL_BOARD_MYBOARDS 
-      					  WHERE   
-      					  	TENANT_ID = #v_TENANTID#
-      					  AND
-      					  	USERID = #v_PUSERID# ) B 
-      			  ON 
-      			  	A.TENANT_ID = B.TENANT_ID
-      			  AND
-      			  	A.BOARDID = B.BOARDID                
-      			  INNER JOIN 
-      			  	TBL_BOARD_BOARDINFO P  
-      			  ON 
-      			  	A.TENANT_ID = P.TENANT_ID
-      			  AND
-      			  	A.BOARDID = P.BOARDID
-      			  AND 
-      			  	A.TENANT_ID = #tenantID#
-      			  AND
-      			  	(A.APPRFLAG = 'Y' 
-      			     OR A.APPRFLAG IS NULL)
-      			  AND 
-      			  	A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5) 
-      			  AND 
-      			  	A.STARTDATE <= #nowDate#
-      			  AND 
-      			  	A.ENDDATE > #nowDate#					
-      			  AND 
-      			  	(NOT EXISTS
-      							(SELECT 
-      								USERID 
-      							 FROM 
-      							 	TBL_BOARD_ITEM_READ S 
-      							 WHERE 
-      							 	S.TENANT_ID = A.TENANT_ID
-      							 AND
-      							 	S.BOARDID = A.BOARDID 
-      							 AND 
-      							 	S.ITEMID = A.ITEMID 
-      							 AND 
-      							 	S.TENANT_ID = #v_TENANTID#
-      							 AND
-      							 	S.USERID = #v_PUSERID# 
-      							 AND 
-      							 	S.READDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5)))) T1 
-      		WHERE 
-      			RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+	    			 FROM 
+	    					TBL_Board_OneLineReply 
+	   				 WHERE  
+	   					TENANT_ID = A.TENANT_ID
+	   				 AND
+	   					ITEMID = A.ItemID) ONELINECNT,
+     				A.UPPERITEMIDTREE,
+     				A.DocNo,
+     				'' AS NOTICE,
+     				P.GUBUN,
+     				A.MAINCONTENT
+     			  FROM 
+     			  	TBL_BOARD_ITEM A 
+     			  INNER JOIN 
+     					( SELECT 
+     						BOARDID, 
+     						BOARDNAME, 
+     						BOARDNAME2,
+     						TENANT_ID 
+     					  FROM 
+     					  	TBL_BOARD_MYBOARDS 
+     					  WHERE   
+     					  	TENANT_ID = #v_TENANTID#
+     					  AND
+     					  	USERID = #v_PUSERID# ) B 
+     			  ON 
+     			  	A.TENANT_ID = B.TENANT_ID
+     			  AND
+     			  	A.BOARDID = B.BOARDID                
+     			  INNER JOIN 
+     			  	TBL_BOARD_BOARDINFO P  
+     			  ON 
+     			  	A.TENANT_ID = P.TENANT_ID
+     			  AND
+     			  	A.BOARDID = P.BOARDID
+     			  AND 
+     			  	A.TENANT_ID = #tenantID#
+     			  AND
+     			  	(A.APPRFLAG = 'Y' 
+     			     OR A.APPRFLAG IS NULL)
+     			  AND 
+     			  	A.STARTDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY) 
+     			  AND 
+     			  	A.STARTDATE <= #nowDate#
+     			  AND 
+     			  	A.ENDDATE > #nowDate#					
+     			  AND 
+     			  	(NOT EXISTS
+     							(SELECT 
+     								USERID 
+     							 FROM 
+     							 	TBL_BOARD_ITEM_READ S 
+     							 WHERE 
+     							 	S.TENANT_ID = A.TENANT_ID
+     							 AND
+     							 	S.BOARDID = A.BOARDID 
+     							 AND 
+     							 	S.ITEMID = A.ITEMID 
+     							 AND 
+     							 	S.TENANT_ID = #v_TENANTID#
+     							 AND
+     							 	S.USERID = #v_PUSERID# 
+     							 AND 
+     							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
+     			  ORDER BY 
+     					$iv_PORDERBYSUB$ ) T1 
+     			  LIMIT
+     					#v_PSTARTROW# - 1, #v_PENDROW#
 		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-	   				A.BOARDID,
-	   				A.ITEMID,
-	   				A.WRITERID,
-	   				A.WRITERNAME,
-	   				A.WRITERDEPTNAME,
-	   				A.WRITERCOMPANYNAME,
-	   				A.STARTDATE,
-	   				A.WRITEDATE,
-	   				A.PARENTWRITEDATE,
-	   				A.IMPORTANCE,
-	   				A.TITLE,
-	   				A.READCOUNT,
-	   				A.ATTACHMENTS,
-	   				A.ITEMLEVEL,
-	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-	   				A.EXTENSIONATTRIBUTE5,
-	   				A.WRITERNAME2,
-	   				A.WRITERDEPTNAME2,
-	   				A.WRITERCOMPANYNAME2,
-	   				(SELECT 
-	                	COUNT(*)  
-     				FROM 
-     					TBL_Board_OneLineReply 
-    				WHERE  
-    					TENANT_ID = A.TENANT_ID
-    				AND
-    					ITEMID = A.ItemID) ONELINECNT,
-	   				A.UPPERITEMIDTREE,
-	   				A.DOCNO,
-	   			    '' AS NOTICE,
-	   				A.MAINCONTENT,
-	   				A.EXTENSIONATTRIBUTE6,
-	   				A.EXTENSIONATTRIBUTE7,
-	   				A.EXTENSIONATTRIBUTE8,
-	   				A.EXTENSIONATTRIBUTE9,
-	   				A.EXTENSIONATTRIBUTE10 
-   				  FROM 
-   				  	TBL_BOARD_ITEM A 
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID 
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ
-   					  WHERE 
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND
-   					  	USERID = #v_PUSERID# 
-   					  AND 
-   					  	BOARDID = #v_PBOARDID#
-   					  GROUP BY 
-   					  	ITEMID, TENANT_ID ) D 
-   				  ON 
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND
-   				  	A.ITEMID = D.ITEMID
-   				  WHERE
-   				  	A.TENANT_ID = #v_TENANTID#
-   				  AND 
-   				  	BOARDID = #v_PBOARDID#
-		]]>
-				  <isNotEmpty property="tempString" prepend="AND">
-				  	A.APPRFLAG = 'Y'
-				  </isNotEmpty>
-				  <isEqual property="type" compareValue="1">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate# ) T1 
-					]]>
-				  </isEqual>
-				  <isEqual property="type" compareValue="2">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate#
-					  	AND 
-					  		READFLAG = '0' ) T1 
-					]]>
-				  </isEqual>
-				  <isEqual property="type" compareValue="3">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE < #nowDate# ) T1 
-					]]>
-				  </isEqual>
+			  SELECT 
+   				A.BOARDID,
+   				A.ITEMID,
+   				A.WRITERID,
+   				A.WRITERNAME,
+   				A.WRITERDEPTNAME,
+   				A.WRITERCOMPANYNAME,
+   				A.STARTDATE,
+   				A.WRITEDATE,
+   				A.PARENTWRITEDATE,
+   				A.IMPORTANCE,
+   				A.TITLE,
+   				A.READCOUNT,
+   				A.ATTACHMENTS,
+   				A.ITEMLEVEL,
+   				A.ABSTRACT,
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+   				A.EXTENSIONATTRIBUTE5,
+   				A.WRITERNAME2,
+   				A.WRITERDEPTNAME2,
+   				A.WRITERCOMPANYNAME2,
+   				(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				TBL_Board_OneLineReply
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
+   				A.UPPERITEMIDTREE,
+   				A.DOCNO,
+   			    '' AS NOTICE,
+   				A.MAINCONTENT,
+   				A.EXTENSIONATTRIBUTE6,
+   				A.EXTENSIONATTRIBUTE7,
+   				A.EXTENSIONATTRIBUTE8,
+   				A.EXTENSIONATTRIBUTE9,
+   				A.EXTENSIONATTRIBUTE10 
+			  FROM 
+			  	TBL_BOARD_ITEM A 
+			  LEFT OUTER JOIN 
+			  	( SELECT 
+			  		COUNT(USERID) AS TOTALCOUNT, 
+			  		ITEMID,
+			  		TENANT_ID 
+				  FROM 
+				  	TBL_BOARD_ITEM_READ
 				  WHERE 
-					RNUM BETWEEN #startRow# AND #endRow#
+				  	TENANT_ID = #v_TENANTID#
+				  AND
+				  	USERID = #v_PUSERID# 
+				  AND 
+				  	BOARDID = #v_PBOARDID#
+				  GROUP BY 
+				  	ITEMID, TENANT_ID ) D 
+			  ON 
+			  	A.TENANT_ID = D.TENANT_ID
+			  AND
+			  	A.ITEMID = D.ITEMID
+			  WHERE
+			  	A.TENANT_ID = #v_TENANTID#
+			  AND 
+			  	BOARDID = #v_PBOARDID#
+	]]>
+			  <isNotEmpty property="tempString" prepend="AND">
+			  	A.APPRFLAG = 'Y'
+			  </isNotEmpty>
+			  <isEqual property="type" compareValue="1">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate#
+				]]>
+			  </isEqual>
+			  <isEqual property="type" compareValue="2">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate#
+				  	AND 
+				  		READFLAG = '0' 
+				]]>
+			  </isEqual>
+			  <isEqual property="type" compareValue="3">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE < #nowDate# 
+				]]>
+			  </isEqual>
+			  ORDER BY
+			  	$iv_PORDERBYSUB$
+			  LIMIT
+			  	#startRow# - 1, #endRow#
 	</select>
 	
 	<select id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM
-				( SELECT
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-   					A.BOARDID,
-   					A.ITEMID,
-   					A.WRITERID,
-   					A.WRITERNAME,
-   					A.WRITERDEPTNAME,
-   					A.WRITERCOMPANYNAME,
-   					A.STARTDATE,
-	   				A.WRITEDATE,
-	   				A.PARENTWRITEDATE,
-	   				A.IMPORTANCE,
-	   				A.TITLE,
-	   				A.READCOUNT,
-	   				A.ATTACHMENTS,
-	   				A.ITEMLEVEL,
-	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
-	   				A.EXTENSIONATTRIBUTE5,
-	   				A.WRITERNAME2,
-	   				A.WRITERDEPTNAME2,
-	   				A.WRITERCOMPANYNAME2,
-	   				( SELECT 
-	   					COUNT(*)
-					  FROM 
-					  	TBL_Board_OneLineReply
-					  WHERE  
-					  	TENANT_ID = A.TENANT_ID
-					  AND
-					  	ITEMID = A.ITEMID ) as ONELINECNT,
-	   				A.UPPERITEMIDTREE,
-	   				A.DOCNO,
-	   			    '' AS NOTICE,
-	   				A.EXTENSIONATTRIBUTE6,
-	   				A.EXTENSIONATTRIBUTE7,
-	   				A.EXTENSIONATTRIBUTE8,
-	   				A.EXTENSIONATTRIBUTE9,
-	   				A.EXTENSIONATTRIBUTE10 
-   				FROM 
-   					TBL_BOARD_ITEM A 
-   				LEFT OUTER JOIN 
-   					( SELECT 
-   						COUNT(USERID) AS TOTALCOUNT, 
-   						ITEMID ,
-   						TENANT_ID
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ 
-   					  WHERE
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND 
-   					  	USERID = #v_PUSERID# 
-   					  AND 
-   					  	BOARDID = #v_PBOARDID#
-   					  GROUP BY 
-   					  	ITEMID, TENANT_ID) D 
-   				ON 
-   					A.TENANT_ID = D.TENANT_ID
-   				AND
-   					A.ITEMID = D.ITEMID
-   				WHERE
-   					A.TENANT_ID = #v_TENANTID#
-   				AND 
-   					BOARDID = #v_PBOARDID#
+			  SELECT
+				A.BOARDID,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				A.STARTDATE,
+  				A.WRITEDATE,
+  				A.PARENTWRITEDATE,
+  				A.IMPORTANCE,
+  				A.TITLE,
+  				A.READCOUNT,
+  				A.ATTACHMENTS,
+  				A.ITEMLEVEL,
+  				A.ABSTRACT,
+  				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+  				A.EXTENSIONATTRIBUTE5,
+  				A.WRITERNAME2,
+  				A.WRITERDEPTNAME2,
+  				A.WRITERCOMPANYNAME2,
+  				( SELECT 
+  					COUNT(*)
+			  FROM 
+			  	TBL_Board_OneLineReply
+			  WHERE  
+			  	TENANT_ID = A.TENANT_ID
+			  AND
+			  	ITEMID = A.ITEMID ) as ONELINECNT,
+  				A.UPPERITEMIDTREE,
+  				A.DOCNO,
+  			    '' AS NOTICE,
+  				A.EXTENSIONATTRIBUTE6,
+  				A.EXTENSIONATTRIBUTE7,
+  				A.EXTENSIONATTRIBUTE8,
+  				A.EXTENSIONATTRIBUTE9,
+  				A.EXTENSIONATTRIBUTE10 
+ 				FROM 
+ 					TBL_BOARD_ITEM A 
+ 				LEFT OUTER JOIN 
+ 					( SELECT 
+ 						COUNT(USERID) AS TOTALCOUNT, 
+ 						ITEMID ,
+ 						TENANT_ID
+ 					  FROM 
+ 					  	TBL_BOARD_ITEM_READ 
+ 					  WHERE
+ 					  	TENANT_ID = #v_TENANTID#
+ 					  AND 
+ 					  	USERID = #v_PUSERID# 
+ 					  AND 
+ 					  	BOARDID = #v_PBOARDID#
+ 					  GROUP BY 
+ 					  	ITEMID, TENANT_ID) D 
+ 				ON 
+ 					A.TENANT_ID = D.TENANT_ID
+ 				AND
+ 					A.ITEMID = D.ITEMID
+ 				WHERE
+ 					A.TENANT_ID = #v_TENANTID#
+ 				AND 
+ 					BOARDID = #v_PBOARDID#
 		]]>
-				<isEqual property="adminType" compareValue="false" prepend="AND">
-					TOPWRITERID = #v_PUSERID#
-				</isEqual>
-				<isEqual property="type" compareValue="1">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate# ) T1 
-					]]>
-				  </isEqual>
-				  <isEqual property="type" compareValue="2">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate#
-					  	AND 
-					  		READFLAG = '0' ) T1 
-					]]>
-				  </isEqual>
-				  <isEqual property="type" compareValue="3">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE < #nowDate# ) T1 
-					]]>
-				  </isEqual>
-				  WHERE 
-					RNUM BETWEEN #startRow# AND #endRow#
+			<isEqual property="adminType" compareValue="false" prepend="AND">
+				TOPWRITERID = #v_PUSERID#
+			</isEqual>
+			<isEqual property="type" compareValue="1">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate# 
+				]]>
+		  	</isEqual>
+		  	<isEqual property="type" compareValue="2">
+		  		<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate#
+				  	AND 
+				  		READFLAG = '0' 
+				]]>
+		  	</isEqual>
+		  	<isEqual property="type" compareValue="3">
+		  		<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE < #nowDate#  
+				]]>
+		  	</isEqual>
+		  ORDER BY 
+		  	$iv_PORDERBYSUB$
+		  LIMIT
+	  		#startRow# - 1, #endRow#
 	</select>
 
 	<select id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
-		SELECT 
-			* 
-        FROM 
-        	( SELECT 
-        		<isNotEmpty property="v_TEMP">
-	        		ROW_NUMBER() OVER ( ORDER BY A.ParentWriteDate, A.WriteDate DESC  ) ROWNUM_  ,
-        		</isNotEmpty>
-        		<isEmpty property="v_TEMP">
-	        		ROW_NUMBER() OVER ( ORDER BY A.NotiNo ASC, A.ParentWriteDate DESC, A.WriteDate DESC  ) ROWNUM_  ,
-        		</isEmpty>
-        		<![CDATA[
-	              	A.BoardID ,
-	                A.ItemID ,
-	                A.WriterID ,
-	                A.WriterName ,
-	                A.WriterDeptName ,
-	                A.WriterCompanyName ,
-	                A.StartDate ,
-	                A.WriteDate ,
-	                A.ParentWriteDate ,
-	                A.Importance ,
-	                A.Title ,
-	                A.ReadCount ,
-	                A.Attachments ,
-	                A.ItemLevel ,
-	                A.Abstract ,
-	                '0' READFLAG  ,
-	                A.extensionAttribute5 ,
-	                A.WriterName2 ,
-	                A.WriterDeptName2 ,
-	                A.WriterCompanyName2 ,
-	                (SELECT 
+        <![CDATA[
+        	  SELECT 
+              	A.BoardID ,
+                A.ItemID ,
+                A.WriterID ,
+                A.WriterName ,
+                A.WriterDeptName ,
+                A.WriterCompanyName ,
+                A.StartDate ,
+                A.WriteDate ,
+                A.ParentWriteDate ,
+                A.Importance ,
+                A.Title ,
+                A.ReadCount ,
+                A.Attachments ,
+                A.ItemLevel ,
+                A.Abstract ,
+                '0' READFLAG  ,
+                A.extensionAttribute5 ,
+                A.WriterName2 ,
+                A.WriterDeptName2 ,
+                A.WriterCompanyName2 ,
+                (SELECT 
+                	COUNT(*)  
+    				FROM 
+    					TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT  ,
+                A.UpperItemIDTree ,
+                A.DocNo ,
+                A.extensionAttribute2 NOTICE  ,
+                A.NotiNo ,
+                A.MainContent ,
+                A.extensionAttribute6 ,
+                A.extensionAttribute7 ,
+                A.extensionAttribute8 ,
+                A.extensionAttribute9 ,
+                A.extensionAttribute10 
+              FROM 
+              	TBL_Board_Item A
+              WHERE  
+              	TENANT_ID = #v_TENANTID#
+              AND
+              	BOARDID = #v_PBOARDID#
+              AND 
+              	STARTDATE <= #nowDate#
+              AND 
+              	ENDDATE > #nowDate#
+              AND 
+              	extensionAttribute1 = '0'
+              AND 
+             	extensionAttribute2 = '1'
+       		]]>
+             <isNotEmpty property="v_TEMP" >
+              AND 
+              	APPRFLAG = 'Y' 
+             </isNotEmpty>
+            <isNotEmpty property="v_TEMP">
+        		ORDER BY 
+        			A.ParentWriteDate, 
+        			A.WriteDate DESC
+       		</isNotEmpty>
+       		<isEmpty property="v_TEMP">
+        		ORDER BY 
+        			A.NotiNo ASC, 
+        			A.ParentWriteDate DESC, 
+        			A.WriteDate DESC
+       		</isEmpty>
+       		LIMIT
+       			#v_START# - 1, #v_END#
+	</select>
+	
+	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
+		<isEqual property="v_TYPE" compareValue="Y">
+			<![CDATA[
+				  SELECT 
+                    A.BoardID ,
+                    A.ItemID ,
+                    A.WriterID ,
+                    A.WriterName ,
+                    A.WriterDeptName ,
+                    A.WriterCompanyName ,
+                    A.StartDate ,
+                    A.WriteDate ,
+                    A.ParentWriteDate ,
+                    A.Importance ,
+                    A.Title ,
+                    A.ReadCount ,
+                    A.Attachments ,
+                    A.ItemLevel ,
+                    A.Abstract ,
+                    '0' READFLAG  ,
+                    A.extensionAttribute5 ,
+                    A.WriterName2 ,
+                    A.WriterDeptName2 ,
+                    A.WriterCompanyName2 ,
+                    (SELECT 
 	                	COUNT(*)  
      				FROM 
      					TBL_Board_OneLineReply 
@@ -1189,103 +1243,36 @@
     					TENANT_ID = A.TENANT_ID
     				AND
     					ITEMID = A.ItemID) ONELINECNT  ,
-	                A.UpperItemIDTree ,
-	                A.DocNo ,
-	                A.extensionAttribute2 NOTICE  ,
-	                A.NotiNo ,
-	                A.MainContent ,
-	                A.extensionAttribute6 ,
-	                A.extensionAttribute7 ,
-	                A.extensionAttribute8 ,
-	                A.extensionAttribute9 ,
-	                A.extensionAttribute10 
-	              FROM 
-	              	TBL_Board_Item A
-	              WHERE  
-	              	TENANT_ID = #v_TENANTID#
-	              AND
-	              	BOARDID = #v_PBOARDID#
-	              AND 
-	              	STARTDATE <= #nowDate#
-	              AND 
-	              	ENDDATE > #nowDate#
-	              AND 
-	              	extensionAttribute1 = '0'
-	              AND 
-	             	extensionAttribute2 = '1'
-        		]]>
-              <isNotEmpty property="v_TEMP" >
-	              AND 
-	              	APPRFLAG = 'Y' 
-              </isNotEmpty>
-              ) T1
-        WHERE  
-        	ROWNUM_ BETWEEN #v_START# AND #v_END#
-	</select>
-	
-	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
-		<isEqual property="v_TYPE" compareValue="Y">
-			<![CDATA[
-				SELECT 
-					* 
-				FROM
-					( SELECT 
-						ROW_NUMBER() OVER ( ORDER BY A.ParentWriteDate, A.WriteDate DESC  ) ROWNUM_  ,
-	                    A.BoardID ,
-	                    A.ItemID ,
-	                    A.WriterID ,
-	                    A.WriterName ,
-	                    A.WriterDeptName ,
-	                    A.WriterCompanyName ,
-	                    A.StartDate ,
-	                    A.WriteDate ,
-	                    A.ParentWriteDate ,
-	                    A.Importance ,
-	                    A.Title ,
-	                    A.ReadCount ,
-	                    A.Attachments ,
-	                    A.ItemLevel ,
-	                    A.Abstract ,
-	                    '0' READFLAG  ,
-	                    A.extensionAttribute5 ,
-	                    A.WriterName2 ,
-	                    A.WriterDeptName2 ,
-	                    A.WriterCompanyName2 ,
-	                    (SELECT 
-		                	COUNT(*)  
-	     				FROM 
-	     					TBL_Board_OneLineReply 
-	    				WHERE  
-	    					TENANT_ID = A.TENANT_ID
-	    				AND
-	    					ITEMID = A.ItemID) ONELINECNT  ,
-	                    A.UpperItemIDTree ,
-	                    A.DocNo ,
-	                    A.extensionAttribute2 NOTICE  ,
-	                    B.BoardName BoardName  ,
-	                    A.APPRFLAG APPRFLAG  
-	            	 FROM 
-	            	 	TBL_Board_Item A
-	            	 JOIN 
-	            	 	TBL_Board_BoardInfo B   
-	            	 ON 
-	            	 	A.TENANT_ID = B.TENANT_ID
-	            	 AND
-	            	 	A.BoardID = B.BoardID
-	                 WHERE
-	                 	A.TENANT_ID = #v_TENANTID#
-	                 AND  
-	                 	WRITERID = #v_PUSERID#
-	                 AND 
-	                 	STARTDATE <= #nowDate#
-	                 AND 
-	                 	ENDDATE > #nowDate#
-	                 AND 
-	                 	extensionAttribute1 = '0'
-	                 AND 
-	                 	extensionAttribute2 = '1' ) T1
-	            WHERE
-	            	ROWNUM_ BETWEEN #v_START# AND #v_END#
+                    A.UpperItemIDTree ,
+                    A.DocNo ,
+                    A.extensionAttribute2 NOTICE  ,
+                    B.BoardName BoardName  ,
+                    A.APPRFLAG APPRFLAG  
+            	 FROM 
+            	 	TBL_Board_Item A
+            	 JOIN 
+            	 	TBL_Board_BoardInfo B   
+            	 ON 
+            	 	A.TENANT_ID = B.TENANT_ID
+            	 AND
+            	 	A.BoardID = B.BoardID
+                 WHERE
+                 	A.TENANT_ID = #v_TENANTID#
+                 AND  
+                 	WRITERID = #v_PUSERID#
+                 AND 
+                 	STARTDATE <= #nowDate#
+                 AND 
+                 	ENDDATE > #nowDate#
+                 AND 
+                 	extensionAttribute1 = '0'
+                 AND 
+                 	extensionAttribute2 = '1'
+                 ORDER BY 
+                 	A.ParentWriteDate, 
+                 	A.WriteDate DESC 
+                 LIMIT
+                 	#v_START# -1, #v_END#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_TYPE" compareValue="Y">
@@ -1353,92 +1340,159 @@
 	
 	<select id="EzBoardDAO.getMyBoardListItem" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-	   				A.BOARDID,
-	   				A.ITEMID,
-	   				A.WRITERID,
-	   				A.WRITERNAME,
-	   				A.WRITERDEPTNAME,
-	   				A.WRITERCOMPANYNAME,
-	   				A.STARTDATE,
-	   				A.WRITEDATE,
-	   				A.PARENTWRITEDATE,
-	   				A.IMPORTANCE,
-	   				A.TITLE,
-	   				A.READCOUNT,
-	   				A.ATTACHMENTS,
-	   				A.ITEMLEVEL,
-	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-	   				A.EXTENSIONATTRIBUTE5,
-	   				A.WRITERNAME2,
-	   				A.WRITERDEPTNAME2,
-	   				A.WRITERCOMPANYNAME2,
-	   				(SELECT 
-	                	COUNT(*)  
-     				FROM 
-     					TBL_Board_OneLineReply 
-    				WHERE  
-    					TENANT_ID = A.TENANT_ID
-    				AND
-    					ITEMID = A.ItemID) ONELINECNT  ,
-	   				A.UPPERITEMIDTREE,
-	   				A.DOCNO,
-	   				B.BOARDNAME  AS BOARDNAME,
-	   				B.GUBUN  AS GUBUN,
-	   			    '' AS NOTICE,
-	   				A.APPRFLAG AS APPRFLAG
-	   			  FROM 
-	   			  	TBL_BOARD_ITEM A  
-	   			  INNER JOIN 
-	   			  	TBL_BOARD_BOARDINFO B
-   				  ON 
-   				  	A.TENANT_ID = B.TENANT_ID
-   				  AND
-   				  	A.BoardID = B.BoardID
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID 
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ
-   					  WHERE 
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND
-   					  	USERID = #v_PUSERID#
-   					  GROUP BY 
-   					  	ITEMID, 
-   					  	TENANT_ID ) D 
-   				  ON 
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND
-   				  	A.ITEMID = D.ITEMID
-   				  WHERE
-   				  	A.TENANT_ID = #v_TENANTID#
-   				  AND 
-   				  	WRITERID = #v_PUSERID# 
-   				  AND 
-   				  	STARTDATE <= #nowDate# 
-   				  AND 
-   				  	ENDDATE > #nowDate# ) T1 
-   			WHERE 
-   				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+			  SELECT 
+   				A.BOARDID,
+   				A.ITEMID,
+   				A.WRITERID,
+   				A.WRITERNAME,
+   				A.WRITERDEPTNAME,
+   				A.WRITERCOMPANYNAME,
+   				A.STARTDATE,
+   				A.WRITEDATE,
+   				A.PARENTWRITEDATE,
+   				A.IMPORTANCE,
+   				A.TITLE,
+   				A.READCOUNT,
+   				A.ATTACHMENTS,
+   				A.ITEMLEVEL,
+   				A.ABSTRACT,
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+   				A.EXTENSIONATTRIBUTE5,
+   				A.WRITERNAME2,
+   				A.WRITERDEPTNAME2,
+   				A.WRITERCOMPANYNAME2,
+   				(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT  ,
+   				A.UPPERITEMIDTREE,
+   				A.DOCNO,
+   				B.BOARDNAME  AS BOARDNAME,
+   				B.GUBUN  AS GUBUN,
+   			    '' AS NOTICE,
+   				A.APPRFLAG AS APPRFLAG
+   			  FROM 
+   			  	TBL_BOARD_ITEM A  
+   			  INNER JOIN 
+   			  	TBL_BOARD_BOARDINFO B
+  				  ON 
+  				  	A.TENANT_ID = B.TENANT_ID
+  				  AND
+  				  	A.BoardID = B.BoardID
+  				  LEFT OUTER JOIN 
+  				  	( SELECT 
+  				  		COUNT(USERID) AS TOTALCOUNT, 
+  				  		ITEMID,
+  				  		TENANT_ID 
+  					  FROM 
+  					  	TBL_BOARD_ITEM_READ
+  					  WHERE 
+  					  	TENANT_ID = #v_TENANTID#
+  					  AND
+  					  	USERID = #v_PUSERID#
+  					  GROUP BY 
+  					  	ITEMID, 
+  					  	TENANT_ID ) D 
+  				  ON 
+  				  	A.TENANT_ID = D.TENANT_ID
+  				  AND
+  				  	A.ITEMID = D.ITEMID
+  				  WHERE
+  				  	A.TENANT_ID = #v_TENANTID#
+  				  AND 
+  				  	WRITERID = #v_PUSERID# 
+  				  AND 
+  				  	STARTDATE <= #nowDate# 
+  				  AND 
+  				  	ENDDATE > #nowDate# 
+   				  ORDER BY 
+   				  	$iv_PORDERBYSUB$
+   				  LIMIT
+   				  	#v_PSTARTROW# - 1, #v_PENDROW#
 		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getMyBoardListItemTemp" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
-					A.BOARDID,
+			  SELECT
+				A.BOARDID,
+   				A.ITEMID,
+   				A.WRITERID,
+   				A.WRITERNAME,
+   				A.WRITERDEPTNAME,
+   				A.WRITERCOMPANYNAME,
+   				A.STARTDATE,
+   				A.WRITEDATE,
+   				A.PARENTWRITEDATE,
+   				A.IMPORTANCE,
+   				A.TITLE,
+   				A.READCOUNT,
+   				A.ATTACHMENTS,
+   				A.ITEMLEVEL,
+   				A.ABSTRACT,
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+   				A.EXTENSIONATTRIBUTE5,
+   				A.WRITERNAME2,
+   				A.WRITERDEPTNAME2,
+   				A.WRITERCOMPANYNAME2,
+   				(SELECT 
+                	COUNT(*)  
+   				FROM 
+   					TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT  ,
+   				A.UPPERITEMIDTREE,
+   				A.DOCNO,
+   				B.BOARDNAME  AS BOARDNAME,
+   				B.GUBUN  AS GUBUN,
+   			    '' AS NOTICE
+  				  FROM 
+  				  	TBL_BOARD_ITEM_TEMP A  
+  				  INNER JOIN 
+  				  	TBL_BOARD_BOARDINFO B
+  				  ON 
+  				  	A.TENANT_ID = B.TENANT_ID
+  				  AND
+  				  	A.BoardID = B.BoardID
+  				  LEFT OUTER JOIN 
+  				  	( SELECT 
+  				  		COUNT(USERID) AS TOTALCOUNT, 
+  				  		ITEMID,
+  				  		TENANT_ID 
+  					  FROM 
+  					  	TBL_BOARD_ITEM_READ
+  					  WHERE 
+  					  	TENANT_ID = #v_TENANTID#
+  					  AND
+  					  	USERID = #v_PUSERID#
+  					  GROUP BY 
+  					  	ITEMID, 
+  					  	TENANT_ID ) D 
+  				  ON 
+  				  	A.TENANT_ID = D.TENANT_ID
+  				  AND
+  				  	A.ITEMID = D.ITEMID
+  				  WHERE
+  				  	A.TENANT_ID = #v_TENANTID#
+  				  AND  
+  				  	WRITERID = #v_PUSERID#
+  				  ORDER BY 
+  				  	$iv_PORDERBYSUB$
+  				  LIMIT
+  				  	#v_PSTARTROW# - 1, #v_PENDROW#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap">
+		<![CDATA[
+		        SELECT 
+	   				A.BOARDID,
 	   				A.ITEMID,
 	   				A.WRITERID,
 	   				A.WRITERNAME,
@@ -1471,122 +1525,50 @@
 	   				B.BOARDNAME  AS BOARDNAME,
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE
-   				  FROM 
-   				  	TBL_BOARD_ITEM_TEMP A  
-   				  INNER JOIN 
-   				  	TBL_BOARD_BOARDINFO B
-   				  ON 
-   				  	A.TENANT_ID = B.TENANT_ID
-   				  AND
-   				  	A.BoardID = B.BoardID
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID 
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ
-   					  WHERE 
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND
-   					  	USERID = #v_PUSERID#
-   					  GROUP BY 
-   					  	ITEMID, 
-   					  	TENANT_ID ) D 
-   				  ON 
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND
-   				  	A.ITEMID = D.ITEMID
-   				  WHERE
-   				  	A.TENANT_ID = #v_TENANTID#
-   				  AND  
-   				  	WRITERID = #v_PUSERID# ) T1 
-   			WHERE 
-   				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
-		]]>
-	</select>
-	
-	<select id="EzBoardDAO.getApprBoardListItem" parameterClass="Map" resultClass="HashMap">
-		<![CDATA[
-			SELECT 
-				* 
-			FROM ( SELECT 
-						Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-		   				A.BOARDID,
-		   				A.ITEMID,
-		   				A.WRITERID,
-		   				A.WRITERNAME,
-		   				A.WRITERDEPTNAME,
-		   				A.WRITERCOMPANYNAME,
-		   				A.STARTDATE,
-		   				A.WRITEDATE,
-		   				A.PARENTWRITEDATE,
-		   				A.IMPORTANCE,
-		   				A.TITLE,
-		   				A.READCOUNT,
-		   				A.ATTACHMENTS,
-		   				A.ITEMLEVEL,
-		   				A.ABSTRACT,
-		   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
-		   				A.EXTENSIONATTRIBUTE5,
-		   				A.WRITERNAME2,
-		   				A.WRITERDEPTNAME2,
-		   				A.WRITERCOMPANYNAME2,
-		   				(SELECT 
-		                	COUNT(*)  
-	     				FROM 
-	     					TBL_Board_OneLineReply 
-	    				WHERE  
-	    					TENANT_ID = A.TENANT_ID
-	    				AND
-	    					ITEMID = A.ItemID) ONELINECNT  ,
-		   				A.UPPERITEMIDTREE,
-		   				A.DOCNO,
-		   				B.BOARDNAME  AS BOARDNAME,
-		   				B.GUBUN  AS GUBUN,
-		   			    '' AS NOTICE
-   				   FROM 
-   				   		TBL_BOARD_ITEM A 
-   				   INNER JOIN 
-   				   		TBL_BOARD_BOARDINFO B
-   				   ON 
-   				   		A.TENANT_ID = B.TENANT_ID
-   				   AND
-   				   		A.BoardID = B.BoardID
-   				   LEFT OUTER JOIN 
-   				   		( SELECT 
-   				   			COUNT(USERID) AS TOTALCOUNT, 
-   				   			ITEMID,
-   				   			TENANT_ID 
-   						  FROM 
-   						  	TBL_BOARD_ITEM_READ 
-   						  WHERE 
-   						  	TENANT_ID = #v_TENANTID#
-   						  AND
-   						  	USERID = #v_PUSERID#
-   						  GROUP BY 
-   						  	ITEMID, 
-   						  	TENANT_ID ) D 
-   				   ON 
-   				   		A.TENANT_ID = D.TENANT_ID
-   				   AND
-   				   		A.ITEMID = D.ITEMID
-   				   INNER JOIN 
-   				   		TBL_BOARD_APPRLIST APPR
-   				   ON 
-   				   		A.BOARDID = APPR.BOARDID
-   				   WHERE
-   				   		A.TENANT_ID = #v_TENANTID#
-   				   AND 
-   				   		STARTDATE <= #nowDate#
-   				   AND 
-   				   		ENDDATE > #nowDate# 
-   				   AND 
-   				   		A.APPRFLAG = 'N' 
-   				   AND 
-   				   		APPR.APPRUSERID = #v_PUSERID# ) T1 
-   			WHERE 
-   				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+  				   FROM 
+  				   		TBL_BOARD_ITEM A 
+  				   INNER JOIN 
+  				   		TBL_BOARD_BOARDINFO B
+  				   ON 
+  				   		A.TENANT_ID = B.TENANT_ID
+  				   AND
+  				   		A.BoardID = B.BoardID
+  				   LEFT OUTER JOIN 
+  				   		( SELECT 
+  				   			COUNT(USERID) AS TOTALCOUNT, 
+  				   			ITEMID,
+  				   			TENANT_ID 
+  						  FROM 
+  						  	TBL_BOARD_ITEM_READ 
+  						  WHERE 
+  						  	TENANT_ID = #v_TENANTID#
+  						  AND
+  						  	USERID = #v_PUSERID#
+  						  GROUP BY 
+  						  	ITEMID, 
+  						  	TENANT_ID ) D 
+  				   ON 
+  				   		A.TENANT_ID = D.TENANT_ID
+  				   AND
+  				   		A.ITEMID = D.ITEMID
+  				   INNER JOIN 
+  				   		TBL_BOARD_APPRLIST APPR
+  				   ON 
+  				   		A.BOARDID = APPR.BOARDID
+  				   WHERE
+  				   		A.TENANT_ID = #v_TENANTID#
+  				   AND 
+  				   		STARTDATE <= #nowDate#
+  				   AND 
+  				   		ENDDATE > #nowDate# 
+  				   AND 
+  				   		A.APPRFLAG = 'N' 
+  				   AND 
+  				   		APPR.APPRUSERID = #v_PUSERID# 
+  				   ORDER BY 
+  				   		$iv_PORDERBYSUB$
+   				   LIMIT
+   				   		#v_PSTARTROW# - 1, #v_PENDROW#
 		]]>
 	</select>
 	
@@ -1616,168 +1598,164 @@
 	
 	<select id="EzBoardDAO.getThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-					A.BOARDID,
-	   				A.ITEMID,
-	   				A.WRITERID,
-	   				A.WRITERNAME,
-	   				A.WRITERDEPTNAME,
-	   				A.WRITERCOMPANYNAME,
-	   				A.WRITEDATE,
-	   				A.TITLE,
-	   				A.READCOUNT,
-	   				A.WRITERNAME2,
-	   				A.WRITERDEPTNAME2,
-	   				A.WRITERCOMPANYNAME2,
-	   				(SELECT 
-	                	COUNT(*)  
-     				FROM 
-     					TBL_Board_OneLineReply 
-    				WHERE  
-    					TENANT_ID = A.TENANT_ID
-    				AND
-    					ITEMID = A.ItemID) ONELINECNT  ,
-	   				A.DOCNO,
-	   				A.MAINCONTENT,
-	   				B.FILEPATH,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
-   				  FROM 
-   				  	TBL_BOARD_ITEM A 
-   				  INNER JOIN 
-   				  	TBL_Photo_ImageItem B
-   				  ON 
-   				  	A.TENANT_ID = B.TENANT_ID
-   				  AND
-   				  	A.ItemID = B.ItemID
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID
-   				  	  FROM 
-   				  	  	TBL_BOARD_ITEM_READ
-   				  	  WHERE 
-   				  	  	TENANT_ID = #v_TENANTID#
-   				  	  AND
-   				  	  	USERID = #v_PUSERID# 
-   				  	  AND 
-   				  	  	BOARDID = #v_PBOARDID#
-   				  	  GROUP BY 
-   				  	  	ITEMID, 
-   				  	  	TENANT_ID) D 
-   				  ON
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND 
-   				  	A.ITEMID = D.ITEMID
-   				WHERE 
-   					A.TENANT_ID = #v_TENANTID#
+			  SELECT
+				A.BOARDID,
+   				A.ITEMID,
+   				A.WRITERID,
+   				A.WRITERNAME,
+   				A.WRITERDEPTNAME,
+   				A.WRITERCOMPANYNAME,
+   				A.WRITEDATE,
+   				A.TITLE,
+   				A.READCOUNT,
+   				A.WRITERNAME2,
+   				A.WRITERDEPTNAME2,
+   				A.WRITERCOMPANYNAME2,
+   				(SELECT 
+                	COUNT(*)  
+   				FROM 
+   					TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
    				AND
-   					A.BOARDID = #v_PBOARDID#
-   				AND 
-   					B.MAIN_FLAG = 'Y' 
+   					ITEMID = A.ItemID) ONELINECNT  ,
+   				A.DOCNO,
+   				A.MAINCONTENT,
+   				B.FILEPATH,
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+  				  FROM 
+  				  	TBL_BOARD_ITEM A 
+  				  INNER JOIN 
+  				  	TBL_Photo_ImageItem B
+  				  ON 
+  				  	A.TENANT_ID = B.TENANT_ID
+  				  AND
+  				  	A.ItemID = B.ItemID
+  				  LEFT OUTER JOIN 
+  				  	( SELECT 
+  				  		COUNT(USERID) AS TOTALCOUNT, 
+  				  		ITEMID,
+  				  		TENANT_ID
+  				  	  FROM 
+  				  	  	TBL_BOARD_ITEM_READ
+  				  	  WHERE 
+  				  	  	TENANT_ID = #v_TENANTID#
+  				  	  AND
+  				  	  	USERID = #v_PUSERID# 
+  				  	  AND 
+  				  	  	BOARDID = #v_PBOARDID#
+  				  	  GROUP BY 
+  				  	  	ITEMID, 
+  				  	  	TENANT_ID) D 
+  				  ON
+  				  	A.TENANT_ID = D.TENANT_ID
+  				  AND 
+  				  	A.ITEMID = D.ITEMID
+  				WHERE 
+  					A.TENANT_ID = #v_TENANTID#
+  				AND
+  					A.BOARDID = #v_PBOARDID#
+  				AND 
+  					B.MAIN_FLAG = 'Y' 
 		]]>
-				<isNotEmpty property="tempString" prepend="AND">
-					A.APPRFLAG = 'Y'
-				</isNotEmpty>
-				<isEqual property="type" compareValue="1">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate# ) T1 
-					]]>
-				  </isEqual>
-				  <isEqual property="type" compareValue="2">
-				  	<![CDATA[
-					  	AND 
-					  		STARTDATE <= #nowDate# 
-					  	AND 
-					  		ENDDATE > #nowDate#
-					  	AND 
-					  		READFLAG = '0' ) T1 
-					]]>
-				  </isEqual>
-				  WHERE 
-					RNUM BETWEEN #startRow# AND #endRow#
+			<isNotEmpty property="tempString" prepend="AND">
+				A.APPRFLAG = 'Y'
+			</isNotEmpty>
+			<isEqual property="type" compareValue="1">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate# 
+				]]>
+			  </isEqual>
+			  <isEqual property="type" compareValue="2">
+			  	<![CDATA[
+				  	AND 
+				  		STARTDATE <= #nowDate# 
+				  	AND 
+				  		ENDDATE > #nowDate#
+				  	AND 
+				  		READFLAG = '0'
+				]]>
+			  </isEqual>
+			ORDER BY 
+				$iv_PORDERBYSUB$
+			LIMIT
+				#startRow# - 1, #endRow#
 	</select>
 	
 	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-	   				A.BOARDID,
-	   				A.ITEMID,
-	   				A.WRITERID,
-	   				A.WRITERNAME,
-	   				A.WRITERDEPTNAME,
-	   				A.WRITERCOMPANYNAME,
-	   				A.WRITEDATE,
-	   				A.TITLE,
-	   				A.READCOUNT,
-	   				A.WRITERNAME2,
-	   				A.WRITERDEPTNAME2,
-	   				A.WRITERCOMPANYNAME2,
-	   				(SELECT 
-	                	COUNT(*)  
-	   				FROM 
-	   					TBL_Board_OneLineReply 
-	   				WHERE  
-	   					TENANT_ID = A.TENANT_ID
-	   				AND
-	   					ITEMID = A.ItemID) ONELINECNT,
-	   				A.DOCNO,
-	   				A.MAINCONTENT,
-	   				B.FILEPATH,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
-	   			  FROM 
-	   			  	TBL_BOARD_ITEM A 
-	   			  INNER JOIN 
-	   			  	TBL_Photo_ImageItem B
-	   			  ON 
-	   			  	A.TENANT_ID = B.TENANT_ID
-	   			  AND
-	   			  	A.ItemID = B.ItemID
-	    		  LEFT OUTER JOIN 
-	    		  	( SELECT 
-	    		  		COUNT(USERID) AS TOTALCOUNT, 
-	    		  		ITEMID,
-	    		  		TENANT_ID 
-	   				  FROM 
-	   				  	TBL_BOARD_ITEM_READ
-	   				  WHERE 
-	   				  	TENANT_ID = #v_TENANTID#
-	   				  AND
-	   				  	USERID = #v_PUSERID# 
-	   				  AND 
-	   				  	BOARDID = #v_PBOARDID#
-	   				  GROUP BY 
-	   				  	ITEMID, 
-	   				  	TENANT_ID) D 
-	   			  ON 
-	   			  	A.TENANT_ID = D.TENANT_ID
-	   			  AND
-	   			  	A.ITEMID = D.ITEMID
-	   			  WHERE  
-	   			  	A.TENANT_ID = #v_TENANTID#
-	   			  AND
-	   			  	$v_PWHEREBOARD$ 
-	   			  AND 
-	   			  	B.MAIN_FLAG = 'Y'
-	   			  AND 
-	   			  	STARTDATE <= #nowDate#  
-	   			  AND 
-	   			  	ENDDATE > #nowDate#
-	   			  $v_TEMP$   
-	   		      $v_PSUBQUERY$ ) T1
-	   		WHERE 
-	   			RNUM BETWEEN  #v_PSTARTROW#  AND   #v_PENDROW#
+			  SELECT
+   				A.BOARDID,
+   				A.ITEMID,
+   				A.WRITERID,
+   				A.WRITERNAME,
+   				A.WRITERDEPTNAME,
+   				A.WRITERCOMPANYNAME,
+   				A.WRITEDATE,
+   				A.TITLE,
+   				A.READCOUNT,
+   				A.WRITERNAME2,
+   				A.WRITERDEPTNAME2,
+   				A.WRITERCOMPANYNAME2,
+   				(SELECT 
+                	COUNT(*)  
+   				FROM 
+   					TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
+   				A.DOCNO,
+   				A.MAINCONTENT,
+   				B.FILEPATH,
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+   			  FROM 
+   			  	TBL_BOARD_ITEM A 
+   			  INNER JOIN 
+   			  	TBL_Photo_ImageItem B
+   			  ON 
+   			  	A.TENANT_ID = B.TENANT_ID
+   			  AND
+   			  	A.ItemID = B.ItemID
+    		  LEFT OUTER JOIN 
+    		  	( SELECT 
+    		  		COUNT(USERID) AS TOTALCOUNT, 
+    		  		ITEMID,
+    		  		TENANT_ID 
+   				  FROM 
+   				  	TBL_BOARD_ITEM_READ
+   				  WHERE 
+   				  	TENANT_ID = #v_TENANTID#
+   				  AND
+   				  	USERID = #v_PUSERID# 
+   				  AND 
+   				  	BOARDID = #v_PBOARDID#
+   				  GROUP BY 
+   				  	ITEMID, 
+   				  	TENANT_ID) D 
+   			  ON 
+   			  	A.TENANT_ID = D.TENANT_ID
+   			  AND
+   			  	A.ITEMID = D.ITEMID
+   			  WHERE  
+   			  	A.TENANT_ID = #v_TENANTID#
+   			  AND
+   			  	$v_PWHEREBOARD$ 
+   			  AND 
+   			  	B.MAIN_FLAG = 'Y'
+   			  AND 
+   			  	STARTDATE <= #nowDate#  
+   			  AND 
+   			  	ENDDATE > #nowDate#   
+		   	  $v_TEMP$
+   		      $v_PSUBQUERY$
+   		      ORDER BY 
+   		      	$iv_PORDERBYSUB$
+	   		  LIMIT
+	   		  	#v_PSTARTROW# - 1, #v_PENDROW#   
 		]]>
 	</select>
 	
@@ -1838,239 +1816,233 @@
 	
 	<select id="EzBoardDAO.getSearchBoardItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM
-				( SELECT 
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
-   					A.BOARDID,
-   					A.ITEMID,
-   					A.WRITERID,
-   					A.WRITERNAME,
-   					A.WRITERDEPTNAME,
-   					A.WRITERCOMPANYNAME,
-   					A.STARTDATE,
-   					A.WRITEDATE,
-   					A.PARENTWRITEDATE,
-   					A.IMPORTANCE,
-   					A.TITLE,
-   					A.READCOUNT,
-   					A.ATTACHMENTS,
-   					A.ITEMLEVEL,
-   					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
-   					A.EXTENSIONATTRIBUTE5,
-   					A.WRITERNAME2,
-   					A.WRITERDEPTNAME2,
-   					A.WRITERCOMPANYNAME2,
-   					(SELECT 
-	                	COUNT(*)  
-	    			FROM 
-	    				TBL_Board_OneLineReply 
-	   				WHERE  
-	   					TENANT_ID = A.TENANT_ID
-	   				AND
-	   					ITEMID = A.ItemID) ONELINECNT,
-   					A.UPPERITEMIDTREE,
-   					A.DOCNO,
-   			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-   					I.BOARDNAME2
-   				  FROM 
-   				  	TBL_BOARD_ITEM A 
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID 
-   				  	  FROM 
-   				  	  	TBL_BOARD_ITEM_READ  
-   					  WHERE 
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND
-   					  	USERID = #v_PUSERID# 
-   					  GROUP BY 
-   					  	ITEMID,
-   					  	TENANT_ID ) D 
-   				  ON 
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND
-   				  	A.ITEMID = D.ITEMID
-   				  INNER JOIN 
-   				  	TBL_BOARD_BOARDINFO I  
-   				  ON 
-   				  	A.TENANT_ID = I.TENANT_ID
-   				  AND
-   				  	A.BOARDID = I.BOARDID 					
-   				  WHERE 
-   				  	$v_PWHEREBOARD$
-   				  AND
-   				  	A.TENANT_ID = #v_TENANTID#
-   				  AND 
-   				  	STARTDATE <= #nowDate# 
-   				  AND 
-   				  	ENDDATE > #nowDate# 
-   				  $v_PSUBQUERY$ ) T1 
-   			WHERE 
-   				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+			  SELECT 
+  					A.BOARDID,
+  					A.ITEMID,
+  					A.WRITERID,
+  					A.WRITERNAME,
+  					A.WRITERDEPTNAME,
+  					A.WRITERCOMPANYNAME,
+  					A.STARTDATE,
+  					A.WRITEDATE,
+  					A.PARENTWRITEDATE,
+  					A.IMPORTANCE,
+  					A.TITLE,
+  					A.READCOUNT,
+  					A.ATTACHMENTS,
+  					A.ITEMLEVEL,
+  					A.ABSTRACT,
+  					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+  					A.EXTENSIONATTRIBUTE5,
+  					A.WRITERNAME2,
+  					A.WRITERDEPTNAME2,
+  					A.WRITERCOMPANYNAME2,
+  					(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
+  					A.UPPERITEMIDTREE,
+  					A.DOCNO,
+  			    	'' AS NOTICE,
+  			    	I.BOARDNAME,
+  					I.BOARDNAME2
+				  FROM 
+				  	TBL_BOARD_ITEM A 
+				  LEFT OUTER JOIN 
+				  	( SELECT 
+				  		COUNT(USERID) AS TOTALCOUNT, 
+				  		ITEMID,
+				  		TENANT_ID 
+				  	  FROM 
+				  	  	TBL_BOARD_ITEM_READ  
+					  WHERE 
+					  	TENANT_ID = #v_TENANTID#
+					  AND
+					  	USERID = #v_PUSERID# 
+					  GROUP BY 
+					  	ITEMID,
+					  	TENANT_ID ) D 
+				  ON 
+				  	A.TENANT_ID = D.TENANT_ID
+				  AND
+				  	A.ITEMID = D.ITEMID
+				  INNER JOIN 
+				  	TBL_BOARD_BOARDINFO I  
+				  ON 
+				  	A.TENANT_ID = I.TENANT_ID
+				  AND
+				  	A.BOARDID = I.BOARDID 					
+				  WHERE 
+				  	$v_PWHEREBOARD$
+				  AND
+				  	A.TENANT_ID = #v_TENANTID#
+				  AND 
+				  	STARTDATE <= #nowDate# 
+				  AND 
+				  	ENDDATE > #nowDate# 
+				  $v_PSUBQUERY$ 
+ 				  ORDER BY 
+ 				  	$iv_PORDERBYSUB$
+ 				  LIMIT
+ 				  	#v_PSTARTROW# - 1, #v_PENDROW#
 		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemList" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					Row_Number()  OVER (ORDER BY $iv_PORDERBYSUB$ ) AS RNUM,
-   					A.BOARDID,
-   					A.ITEMID,
-   					A.WRITERID,
-   					A.WRITERNAME,
-   					A.WRITERDEPTNAME,
-   					A.WRITERCOMPANYNAME,
-   					A.STARTDATE,
-   					A.WRITEDATE,
-   					A.PARENTWRITEDATE,
-   					A.IMPORTANCE,
-   					A.TITLE,
-   					A.READCOUNT,
-   					A.ATTACHMENTS,
-   					A.ITEMLEVEL,
-   					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
-   					A.EXTENSIONATTRIBUTE5,
-   					A.WRITERNAME2,
-   					A.WRITERDEPTNAME2,
-   					A.WRITERCOMPANYNAME2,
-   					(SELECT 
-	                	COUNT(*)  
-	    			FROM 
-	    				TBL_Board_OneLineReply 
-	   				WHERE  
-	   					TENANT_ID = A.TENANT_ID
-	   				AND
-	   					ITEMID = A.ItemID) ONELINECNT,
-   					A.UPPERITEMIDTREE,
-   					A.DOCNO,
-   			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-	   				I.BOARDNAME2,
-   					I.GUBUN AS GUBUN
-   		     	  FROM 
-   		     	  	TBL_BOARD_ITEM A 
-   				  LEFT OUTER JOIN 
-   				  	( SELECT 
-   				  		COUNT(USERID) AS TOTALCOUNT, 
-   				  		ITEMID,
-   				  		TENANT_ID
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ 
-   					  WHERE 
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND
-   					  	USERID = #v_PUSERID#
-   					  GROUP BY 
-   					  	ITEMID,
-   					  	TENANT_ID) D 
-   				  ON 
-   				  	A.TENANT_ID = D.TENANT_ID
-   				  AND
-   				  	A.ITEMID = D.ITEMID
-   				  INNER JOIN 
-   				  	TBL_BOARD_BOARDINFO I  
-   				  ON 
-   				  	A.TENANT_ID = I.TENANT_ID
-   				  AND
-   				  	A.BOARDID = I.BOARDID 					
-   				  WHERE 
-   				  	A.TENANT_ID = #v_TENANTID#
-   				  AND
-   				  	A.WRITERID = #v_PUSERID#
-   				  AND 
-   				  	STARTDATE <= #nowDate#
-   				  AND 
-   				  	ENDDATE > #nowDate# 
-   				  $v_PSUBQUERY$ ) T1 
-   			WHERE 
-   				RNUM BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+			  SELECT 
+  					A.BOARDID,
+  					A.ITEMID,
+  					A.WRITERID,
+  					A.WRITERNAME,
+  					A.WRITERDEPTNAME,
+  					A.WRITERCOMPANYNAME,
+  					A.STARTDATE,
+  					A.WRITEDATE,
+  					A.PARENTWRITEDATE,
+  					A.IMPORTANCE,
+  					A.TITLE,
+  					A.READCOUNT,
+  					A.ATTACHMENTS,
+  					A.ITEMLEVEL,
+  					A.ABSTRACT,
+  					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+  					A.EXTENSIONATTRIBUTE5,
+  					A.WRITERNAME2,
+  					A.WRITERDEPTNAME2,
+  					A.WRITERCOMPANYNAME2,
+  					(SELECT 
+                	COUNT(*)  
+    			FROM 
+    				TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) ONELINECNT,
+  					A.UPPERITEMIDTREE,
+  					A.DOCNO,
+  			    	'' AS NOTICE,
+  			    	I.BOARDNAME,
+   					I.BOARDNAME2,
+  					I.GUBUN AS GUBUN
+  		     	FROM 
+  		     	  	TBL_BOARD_ITEM A 
+  				LEFT OUTER JOIN 
+  				  	( SELECT 
+  				  		COUNT(USERID) AS TOTALCOUNT, 
+  				  		ITEMID,
+  				  		TENANT_ID
+  					  FROM 
+  					  	TBL_BOARD_ITEM_READ 
+  					  WHERE 
+  					  	TENANT_ID = #v_TENANTID#
+  					  AND
+  					  	USERID = #v_PUSERID#
+  					  GROUP BY 
+  					  	ITEMID,
+  					  	TENANT_ID) D 
+  				ON 
+  				  	A.TENANT_ID = D.TENANT_ID
+  				AND
+  				  	A.ITEMID = D.ITEMID
+  				INNER JOIN 
+  				  	TBL_BOARD_BOARDINFO I  
+  				ON 
+  				  	A.TENANT_ID = I.TENANT_ID
+  				AND
+  				  	A.BOARDID = I.BOARDID 					
+  				WHERE 
+  				  	A.TENANT_ID = #v_TENANTID#
+  				AND
+  				  	A.WRITERID = #v_PUSERID#
+  				AND 
+  				  	STARTDATE <= #nowDate#
+  				AND 
+  				  	ENDDATE > #nowDate# 
+  				$v_PSUBQUERY$ 
+  				ORDER BY 
+  				 	$iv_PORDERBYSUB$
+  				LIMIT
+  				  	#v_PSTARTROW# - 1, #v_PENDROW# 
 		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemListTemp" parameterClass="Map" resultClass="HashMap">
 		<![CDATA[
-			SELECT 
-				* 
-			FROM 
-				( SELECT 
-					Row_Number() OVER (ORDER BY $iv_PORDERBYSUB$ ) AS ROWNUM_,
-   					A.BOARDID,
-   					A.ITEMID,
-   					A.WRITERID,
-   					A.WRITERNAME,
-   					A.WRITERDEPTNAME,
-   					A.WRITERCOMPANYNAME,
-   					A.STARTDATE,
-   					A.WRITEDATE,
-   					A.PARENTWRITEDATE,
-   					A.IMPORTANCE,
-   					A.TITLE,
-   					A.READCOUNT,
-   					A.ATTACHMENTS,
-   					A.ITEMLEVEL,
-   					A.ABSTRACT,
-   					CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
-   					A.EXTENSIONATTRIBUTE5,
-   					A.WRITERNAME2,
-   					A.WRITERDEPTNAME2,
-   					A.WRITERCOMPANYNAME2,
-   					(SELECT 
-	                	COUNT(*)  
-	    			FROM 
-	    				TBL_Board_OneLineReply 
-	   				WHERE  
-	   					TENANT_ID = A.TENANT_ID
-	   				AND
-	   					ITEMID = A.ItemID) ONELINECNT,
-   					A.UPPERITEMIDTREE,
-   					A.DOCNO,
-   			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-   					I.BOARDNAME2,
-   					I.GUBUN AS GUBUN
-   				FROM 
-   					TBL_BOARD_ITEM_TEMP A 
-   				LEFT OUTER JOIN 
-   					( SELECT 
-   						COUNT(USERID) AS TOTALCOUNT, 
-   						ITEMID,
-   						TENANT_ID
-   					  FROM 
-   					  	TBL_BOARD_ITEM_READ 
-   					  WHERE
-   					  	TENANT_ID = #v_TENANTID#
-   					  AND 
-   					  	USERID = #v_PUSERID# 
-   					  GROUP BY 
-   					  	ITEMID,
-   					  	TENANT_ID) D 
-   				ON 
-   					A.TENANT_ID = D.TENANT_ID
+			  SELECT 
+				A.BOARDID,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				A.STARTDATE,
+				A.WRITEDATE,
+				A.PARENTWRITEDATE,
+				A.IMPORTANCE,
+				A.TITLE,
+				A.READCOUNT,
+				A.ATTACHMENTS,
+				A.ITEMLEVEL,
+				A.ABSTRACT,
+				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+				A.EXTENSIONATTRIBUTE5,
+				A.WRITERNAME2,
+				A.WRITERDEPTNAME2,
+				A.WRITERCOMPANYNAME2,
+				(SELECT 
+             		COUNT(*)  
+    			FROM 
+    				TBL_Board_OneLineReply 
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
    				AND
-   					A.ITEMID = D.ITEMID
-   				INNER JOIN 
-   					TBL_BOARD_BOARDINFO I 
-   				ON
-   					A.TENANT_ID = I.TENANT_ID
-   				AND 
-   					A.BOARDID = I.BOARDID 
-   				AND
-   					A.TENANT_ID = #v_TENANTID#
-   				AND 
-   					A.WRITERID = #v_PUSERID# 
-   				$v_PSUBQUERY$ ) T1 
-   			WHERE 
-   				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
+   					ITEMID = A.ItemID) ONELINECNT,
+  					A.UPPERITEMIDTREE,
+  					A.DOCNO,
+  			    	'' AS NOTICE,
+  			    	I.BOARDNAME,
+  					I.BOARDNAME2,
+  					I.GUBUN AS GUBUN
+  				FROM 
+  					TBL_BOARD_ITEM_TEMP A 
+  				LEFT OUTER JOIN 
+  					( SELECT 
+  						COUNT(USERID) AS TOTALCOUNT, 
+  						ITEMID,
+  						TENANT_ID
+  					  FROM 
+  					  	TBL_BOARD_ITEM_READ 
+  					  WHERE
+  					  	TENANT_ID = #v_TENANTID#
+  					  AND 
+  					  	USERID = #v_PUSERID# 
+  					  GROUP BY 
+  					  	ITEMID,
+  					  	TENANT_ID) D 
+  				ON 
+  					A.TENANT_ID = D.TENANT_ID
+  				AND
+  					A.ITEMID = D.ITEMID
+  				INNER JOIN 
+  					TBL_BOARD_BOARDINFO I 
+  				ON
+  					A.TENANT_ID = I.TENANT_ID
+  				AND 
+  					A.BOARDID = I.BOARDID 
+  				AND
+  					A.TENANT_ID = #v_TENANTID#
+  				AND 
+  					A.WRITERID = #v_PUSERID# 
+  				$v_PSUBQUERY$ 
+   				ORDER BY 
+   					$iv_PORDERBYSUB$
+   				LIMIT
+   					#v_PSTARTROW# - 1, #v_PENDROW#
 		]]>
 	</select>
 	
@@ -2260,11 +2232,11 @@
                                AND 
                                		itemid = A.itemid
                                AND 
-                               		ReadDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5 ) ) )
+                               		ReadDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY) ) )
             AND 
             	A.StartDate < #nowDate#
             AND 
-            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5 )
+            	A.StartDate > DATE_SUB(#nowDate#, INTERVAL 5 DAY)
             AND 
             	A.EndDate > #nowDate#
             AND 
@@ -3312,7 +3284,7 @@
 				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
 			)
         	VALUES ( 
-        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANTID# 
+        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
         	)
 		]]>
 	</insert>
@@ -3368,20 +3340,6 @@
        	AND
        		ItemID = #v_ITEMID#
 	</select>
-	
-<!-- 	<update id="EzBoardDAO.setMainImageID2" parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			UPDATE TBL_Photo_ImageItem -->
-<!--         	SET  -->
-<!--         		main_Flag = 'Y' -->
-<!--         	WHERE   -->
-<!--         		TENANT_ID = #v_TENANTID# -->
-<!--         	AND -->
-<!--         		ImageID = #v_IMAGEID# -->
-<!--         	AND  -->
-<!--         		ItemID = #v_ITEMID# -->
-<!-- 		]]> -->
-<!-- 	</update> -->
 	
 	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
 		<![CDATA[
@@ -4115,10 +4073,10 @@
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   									  content, 		password, 	  tenant_id
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   content, 		password, 	  tenant_id
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, #nowDate#,	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
         	)
 		]]>
 	</insert>

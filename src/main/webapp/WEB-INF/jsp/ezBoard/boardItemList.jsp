@@ -608,7 +608,7 @@
 		            return;
 		        }
 		        var feature = GetOpenWindowfeature(765, 820);
-		        
+
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		    }
 		
@@ -780,6 +780,7 @@
 		            return false;
 		        }
 		        xmlhttp = null;
+		        
 		        return true;
 		    }
 		    function DeleteItem() {
