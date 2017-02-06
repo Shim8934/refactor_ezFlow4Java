@@ -2377,6 +2377,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/boardPortlet.do")
 	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		logger.debug("boardPortlet started");
+
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -2396,12 +2399,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
-
+		logger.debug("xmlDom="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
+		
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
-
+			
 			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
-				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLETTYPE").item(0).getTextContent(), userInfo.getTenantId()));
+				logger.debug("uID="+uID);
+				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent(), userInfo.getTenantId()));
 				
 				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
 					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
@@ -2438,6 +2443,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 		resp.getWriter().write("<body onload='window_onload()'></body>");
-	
+		logger.debug("boardPortlet ended");
 	}	
 }

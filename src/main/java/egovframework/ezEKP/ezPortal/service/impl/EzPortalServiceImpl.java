@@ -682,7 +682,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
-		return ezPortalDAO.getTBLPortletBoard(pUID);
+		return ezPortalDAO.getTBLPortletBoard(map);
 	}
 	
 	@Override

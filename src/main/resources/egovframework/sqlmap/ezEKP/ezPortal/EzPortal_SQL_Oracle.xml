@@ -2704,7 +2704,7 @@
 	<select id="EzPortalDAO.getTBLPortletBoard" parameterClass="Map" resultMap="portalTBLPortletBoardVO">
 		<![CDATA[
 			SELECT
-				*
+				UID_, CREATORID, USERTYPE, BOARDID, ITEMCOUNT, ITEMFIELDS
       		FROM
       			TBL_PORTLET_BOARD
       		WHERE
