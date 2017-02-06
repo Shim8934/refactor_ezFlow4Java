@@ -316,8 +316,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    		 ezOrganAdminDao.retireDBData_I(map);
 	    	 } 
 	    	 ezOrganAdminDao.retireDBData(map);
-	    	 ezOrganAdminDao.retireDBData_D1(map);
-	    	 ezOrganAdminDao.retireDBData_D2(map);
 	    	 ezOrganAdminDao.retireDBData_D3(map);
 	    	 ezOrganAdminDao.retireDBData_U1(map);
 	    	 ezOrganAdminDao.retireDBData_U2(map);
@@ -516,8 +514,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	     ezOrganAdminDao.deleteDBDataForJMocha(map);
 	    	     
 	    		 ezOrganAdminDao.deleteDBData_D1(map);
-	    		 ezOrganAdminDao.deleteDBData_D2(map);
-	    		 ezOrganAdminDao.deleteDBData_D3(map);
 	    		 ezOrganAdminDao.deleteDBData_D4(map);
 	    		 ezOrganAdminDao.deleteDBData_U(map);
 	    		 ezOrganAdminDao.deleteDBData_D5(map);
