@@ -610,21 +610,11 @@
 	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
 	            document.getElementById("loadingLayer").style.left = (document.documentElement.clientWidth / 2) - 100 + "px";
 
-	            setTimeout("CheckReadState()", 500);
-	        }
-	        function CheckReadState() {
-	            var pURL = "/ezAddress/excelExport.do";
-	            xmlHTTP.open("POST", pURL, false);
-	            xmlHTTP.onreadystatechange = event_CrossExport;
-	            xmlHTTP.send();
+	            setTimeout("event_CrossExport()", 500);
 	        }
 	        function event_CrossExport() {
-	            if (xmlHTTP.readyState == 4 && xmlHTTP != null) {
-	                if (xmlHTTP.status == 200) {
-	                    document.getElementById("Div1").style.display = "none";
-	                    document.getElementById("loadingLayer").style.display = "none";
-					}
-	            }
+	        	document.getElementById("Div1").style.display = "none";
+            	document.getElementById("loadingLayer").style.display = "none";
 	        }
 	        function crossImport() {
 	        	if (deptAdmin != "Y" && pFolderType == "D") {
