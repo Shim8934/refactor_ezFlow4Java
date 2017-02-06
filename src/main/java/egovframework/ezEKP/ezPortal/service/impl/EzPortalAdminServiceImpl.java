@@ -1704,6 +1704,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	public String savePositionSettings (String pXML, String pPageID, int tenantID) {
+		logger.debug("savePositionSettings started");
+		
+		logger.debug("pXML="+pXML);
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		String uID = xmlDom.getElementsByTagName("UID_").item(0).getTextContent().trim();
 		String align = xmlDom.getElementsByTagName("ALIGN").item(0).getTextContent().trim();
@@ -1774,7 +1777,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("tenantID", tenantID);
 		
 		ezPortalAdminDAO.savePositionSettings(map);
-		
+
+		logger.debug("savePositionSettings ended");
 		return "OK";
 	}
 	

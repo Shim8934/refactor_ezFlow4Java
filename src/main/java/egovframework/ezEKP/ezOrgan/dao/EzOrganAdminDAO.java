@@ -1862,14 +1862,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		insert("EzOrganAdminDAO.retireDBData_I", map);
 	}
 	
-	public void retireDBData_D1(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.retireDBData_D1", map);
-    }
-	
-	public void retireDBData_D2(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.retireDBData_D2", map);
-    }
-	
 	public void retireDBData_D3(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.retireDBData_D3", map);
     }
@@ -1885,15 +1877,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteDBData_D1(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D1", map);
     }
-	
-	public void deleteDBData_D2(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteDBData_D2", map);
-    }
-	
-	public void deleteDBData_D3(Map<String, Object> map) throws Exception {
-        delete("EzOrganAdminDAO.deleteDBData_D3", map);
-    }
-	
+			
 	public void deleteDBData_D4(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D4", map);
     }
