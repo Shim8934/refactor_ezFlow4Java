@@ -263,30 +263,42 @@
 		        xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
 		            
 		        xmlHTTP.send(xmlDom);
+		        
 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-		            if (addressid == "") {
-		                alert("<spring:message code='ezAddress.t226' />");
+		            if (xmlHTTP.status != 200) {
+		            	alert("<spring:message code='ezAddress.t181' />");
+		            }
+		            else if (xmlHTTP.responseText == "PRE") {
+		            	alert("<spring:message code='ezAddress.t225' />");
+		            }
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+		            	alert("<spring:message code='ezAddress.t1' />");
 		            }
 		            else {
-		                alert("<spring:message code='ezAddress.t334' />");
+		            	if (addressid == "") {
+			                alert("<spring:message code='ezAddress.t226' />");
+			            }
+			            else {
+			                alert("<spring:message code='ezAddress.t334' />");
+			            }
 		            }
 		        }
 		        else {
-		            if (addressid == "") {
+		        	if (addressid == "") {
 		                alert("<spring:message code='ezAddress.t335' />");
 		            }
 		            else {
 		                alert("<spring:message code='ezAddress.t336' />");
 		            }
-		
+		            
 		            try {
 		                window.opener.Get_AddressList();
 		            }
-		
 		            catch (e) { }
 		
 		            window.close();
 		        }
+		        
 		    }
 		    function Get_SameAddressCnt() {
 		        var xmlHTTP = createXMLHttpRequest();
