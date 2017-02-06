@@ -45,7 +45,7 @@
 			        alert("<spring:message code='ezCommunity.t1049' />");
 			    	return;
 				}
-
+			    
 				if (CheckIfAnonyBoard(pDestBoardID) == "1") {
 					alert("<spring:message code='ezCommunity.t1050' />");
 					return;
@@ -56,7 +56,7 @@
 			   	for (i = 0; i < ItemIDList.split(";").length - 1; i++) {
 			    	destItemIDList += "{" + GetGUID().toUpperCase() + "};";
 			   	}
-
+			   	
 			   	$.ajax({
 			   		type : "POST",
 			   		async : false,
@@ -97,15 +97,16 @@
 					data : { boardID	:	pBoardID, 
 						   },
 					success: function(result){
-						boardInfo = result["boardInfo"];
-						access = boardInfo["access_"];
+						if (typeof(result["boardInfo"]) != "undefined") {
+							boardInfo = result["boardInfo"];
+							access = boardInfo["access_"];
+						}
 					},
 					error: function(e) {
 						alert("error");
 					}
 				});
 				
-				console.log(access);
 				if(access != "-1") {
 					return true;
 				} else {

@@ -535,12 +535,12 @@
     				alert("<spring:message code='ezCommunity.t430' />");
     				return;
     			}
-
+    			
     			if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
-
+    			
     			var arrList = new Array();
     			var strItemList = "";
     			var i=0;

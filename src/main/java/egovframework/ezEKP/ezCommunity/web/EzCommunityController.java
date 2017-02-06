@@ -1392,6 +1392,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			String pBoardID = request.getParameter("boardID");
 			String userDeptPath = userInfo.getDeptPathCode();
 			
+			logger.debug("pBoardID = " + pBoardID);
+			logger.debug("userDeptPath = " + userDeptPath);
+			
 			for(String pAccessID : userDeptPath.split(",")) {
 				boardInfo = ezCommunityService.brdGetACL(pBoardID, pAccessID, userInfo.getTenantId());
 				
