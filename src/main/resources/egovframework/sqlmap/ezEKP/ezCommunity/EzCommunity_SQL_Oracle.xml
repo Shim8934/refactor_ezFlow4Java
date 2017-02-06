@@ -3064,22 +3064,6 @@
 		</isEqual>
 	</select>
 	
-<!-- 	<procedure id="EzCommunityDAO.ezCommunityBaseGet2"			parameterClass="Map"		resultClass="String"> -->
-<!-- 		{CALL EZSP_EZCOMMUNITYBASE_GET2(#v_STRUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	<select id="EzCommunityDAO.ezCommunityBaseGet2"			parameterClass="Map"		resultClass="String">
-		<![CDATA[
-			SELECT
-				userid 
-        	FROM
-        		TBL_ASPADMIN 
-			WHERE
-				userid = #v_STRUSERID#
-			AND
-				tenant_id = #tenantID#
-		]]>
-	</select>
-	
 <!-- 	<procedure id="EzCommunityDAO.bbsEditGet1"					parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP_BBS_EDIT_GET1(#v_BNAME#, #v_NO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -4251,20 +4235,6 @@
 	        AND
 	        	TBL_COMM_BOARDINFO.tenant_id = #tenantID#
 		]]>    
-	</select>
-
-<!-- 	<procedure id="EzCommunityDAO.goAdminOkGet1"											resultClass="String"> -->
-<!-- 		{CALL EZSP_GOADMIN_OK_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	<select id="EzCommunityDAO.goAdminOkGet1"					parameterClass="Integer"		resultClass="String">
-		<![CDATA[
-			SELECT
-				userid
-			FROM
-				TBL_ASPADMIN
-			WHERE
-				tenant_id = #tenantID#
-		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->

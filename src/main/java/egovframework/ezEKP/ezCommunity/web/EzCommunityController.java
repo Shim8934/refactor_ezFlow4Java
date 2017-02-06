@@ -357,11 +357,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder resultXML = new StringBuilder();
 		
-		String aspXML = ezCommunityService.goAdminOkGet1(data, userInfo);
 		String masterXML = ezCommunityService.goAdminOkGet2(data, userInfo);
 		
 		resultXML.append("<COMMUNITY>");
-		resultXML.append(aspXML.toString());
+		resultXML.append("<ASP></ASP>");
 		resultXML.append("<SITE><VALUE></VALUE></SITE>");
 		resultXML.append(masterXML);
 		resultXML.append("</COMMUNITY>");
@@ -1546,7 +1545,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int myStep = 0, myLevel = 0, grsRef = 0, readNo = 0, grsNo = 0;	
 		String previousItemID = "", nextItemID = "";
 		String strWriteDate = "";
-		int nowBlock = 0;
+		int nowBlock = 0, adminCheck = 0;
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -1567,7 +1566,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pagec = request.getParameter("pagec");
 		}
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
+		if (userInfo.getRollInfo().indexOf("c=1") >= 0) {
+			adminCheck = 1;
+		}
+		
 		String fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
 		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no, userInfo.getTenantId());
 		
@@ -1785,13 +1787,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = "";
+		int adminCheck = 0;
 		
 		String itemNo = request.getParameter("itemNo");
 		String goToPage = request.getParameter("goToPage");
 		String bName = request.getParameter("bName");
 
+		if (userInfo.getRollInfo().indexOf("c=1") >= 0) {
+			adminCheck = 1;
+		}
 		
-		int adminCheck = ezCommunityService.bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
 		CommunityCBoardVO board = ezCommunityService.bbsDelOkGet(bName, itemNo, code, userInfo.getTenantId());
 		
 //		if (board.getId().trim().equals(userInfo.getId()) || adminCheck == 1 || userInfo.getRollInfo().indexOf("t=1") > -1 || userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {

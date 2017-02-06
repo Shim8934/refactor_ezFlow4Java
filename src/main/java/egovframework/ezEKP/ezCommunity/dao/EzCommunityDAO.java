@@ -92,11 +92,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> goAdminOkGet1(int tenantID) throws Exception {
-		return (List<String>) list("EzCommunityDAO.goAdminOkGet1", tenantID);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<CommunityCBoardVO> bbsListGet2(Map<String, Object> map) throws Exception {
 		return (List<CommunityCBoardVO>) list("EzCommunityDAO.bbsListGet2", map);
 	}
@@ -448,10 +443,6 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public String getBoardTreeGet1(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommunityDAO.getBoardTreeGet1", map);
-	}
-	
-	public String ezCommunityBaseGet2(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.ezCommunityBaseGet2", map);
 	}
 
 	public String bbsEditGet1(Map<String, Object> map) throws Exception {

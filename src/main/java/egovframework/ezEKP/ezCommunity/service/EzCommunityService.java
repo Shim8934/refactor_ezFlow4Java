@@ -112,8 +112,6 @@ public interface EzCommunityService {
 	
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item, int tenantID) throws Exception;
 	
-	public String goAdminOkGet1(String pClubID, LoginVO userInfo) throws Exception;
-	
 	public String goAdminOkGet2(String pClubID, LoginVO userInfo) throws Exception;
 	
 	public String commHomeInfo(LoginVO userInfo, String code, HttpServletRequest request) throws Exception;
@@ -275,8 +273,6 @@ public interface EzCommunityService {
 	public int adminMemberListOkGetE(String code, String cID, int tenantID) throws Exception;	
 
 	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception;
-
-	public int bbsAdminCheck(String userID, String rollInfo, int tenantID) throws Exception;
 	
 	public int getReservedItemListCount(String id, int tenantID) throws Exception;
 	

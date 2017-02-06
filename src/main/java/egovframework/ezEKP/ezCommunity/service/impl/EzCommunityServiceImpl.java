@@ -477,28 +477,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}	
 	
 	@Override
-	public String goAdminOkGet1(String pClubID, LoginVO userInfo) throws Exception {
-		logger.debug("goAdminOkGet1 started.");
-		
-		StringBuilder aspXML = new StringBuilder();
-		
-		//TODO 2016-04-26 이효진  사용하지 않는 Table을 참조해서 Null반환
-		List<String> userIDList = ezCommunityDAO.goAdminOkGet1(userInfo.getTenantId());
-		aspXML.append("<ASP>");
-		
-		for (String userID : userIDList) {
-			aspXML.append("<VALUE>");
-			aspXML.append(userID.trim());
-			aspXML.append("</VALUE>");
-		}
-		aspXML.append("</ASP>");
-		
-		logger.debug("goAdminOkGet1 ended.");
-		
-		return aspXML.toString();
-	}
-	
-	@Override
 	public String goAdminOkGet2(String pClubID, LoginVO userInfo) throws Exception {
 		logger.debug("goAdminOkGet2 started.");
 		
@@ -2107,29 +2085,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int bbsAdminCheck(String userID, String rollInfo, int tenantID) throws Exception {
-		logger.debug("bbsAdminCheck started");
-		int adminCheck = 0;
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_STRUSERID", userID);
-		map.put("tenantID", tenantID);
-		
-		String strAdminID = ezCommunityDAO.ezCommunityBaseGet2(map);
-		
-		logger.debug("strAdminID : " + strAdminID);
-		
-		if (strAdminID != null || rollInfo.indexOf("c=1") >= 0) {
-			adminCheck = 1;
-		}
-		
-		logger.debug("adminCheck : " + adminCheck);
-		logger.debug("bbsAdminCheck ended");
-		
-		return adminCheck;
-	}
-
-	@Override
 	public String bbsEditGet1(String bName, String no, int tenantID) throws Exception {
 		logger.debug("bbsEditGet1 started.");
 		logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
@@ -3375,7 +3330,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String bbsEditOk(LoginVO userInfo, HttpServletRequest request) throws Exception {
 		logger.debug("bbsEditOk started.");
 		
-		int myRef = 0, myStep = 0, myLevel = 0;
+		int myRef = 0, myStep = 0, myLevel = 0, adminCheck = 0;
 		String mode = request.getParameter("mode");
 		String code = request.getParameter("code");
 		String bName = request.getParameter("bName");
@@ -3411,7 +3366,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (mode.equals("edit")) {
         	CommunityCBoardVO cBoard = bbsEditOkGet1(bName, no, code, userInfo.getTenantId());
-        	int adminCheck = bbsAdminCheck(userInfo.getId(), userInfo.getRollInfo(), userInfo.getTenantId());
+        	
+        	if (userInfo.getRollInfo().indexOf("c=1") >= 0) {
+    			adminCheck = 1;
+    		}
 
         	if (cBoard != null) {
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
@@ -4165,12 +4123,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (!strSysopID.equals(id)){
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_STRUSERID", id);
-			
-			String strAdminID = ezCommunityDAO.ezCommunityBaseGet2(map);
-			
-			if (strAdminID == null && rollInfo.indexOf("c=1") < 0 ) {
+			if (rollInfo.indexOf("c=1") < 0 ) {
 				if (strIsIN.equals("1") && strCompanyID.equals(companyID)) {
 					sysopCheck = 1;
 				} 
