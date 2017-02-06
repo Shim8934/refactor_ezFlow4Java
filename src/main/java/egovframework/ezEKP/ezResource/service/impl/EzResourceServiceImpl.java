@@ -4379,6 +4379,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@SuppressWarnings("deprecation")
 	public List<ResMakeDupResultVO> chkDupReway70 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
+		//반복예약 반복주기 매년 날짜
+		
 		int recLoop = 0;
 		
 		//int recMondayOffset = 1-datePartLeftShift(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
@@ -4480,6 +4482,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@SuppressWarnings("deprecation")
 	public List<ResMakeDupResultVO> chkDupReway71 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
+		//반복예약 반복주기 매년, 요일
 		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		
