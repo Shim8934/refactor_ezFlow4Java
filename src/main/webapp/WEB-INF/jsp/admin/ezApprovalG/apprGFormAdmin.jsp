@@ -355,7 +355,7 @@
 		            window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();
-		            InitFormCont();
+// 		            InitFormCont();
 		        } else {
 		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
 		        }
