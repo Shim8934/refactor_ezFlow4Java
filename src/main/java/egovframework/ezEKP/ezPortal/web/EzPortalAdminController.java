@@ -629,6 +629,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID(), userInfo.getTenantId());
+		logger.debug("recordCnt="+recordCnt);
 		totalPage = (recordCnt - 1) / listPageSize + 1; // 총 페이지수
 		
 		int pStartRow = 0;
