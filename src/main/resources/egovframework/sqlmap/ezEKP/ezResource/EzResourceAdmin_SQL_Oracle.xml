@@ -106,7 +106,7 @@
      		VALUES
      			( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#), RTRIM(#v_P_OwnerCall#)
      				, RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#, '1', RTRIM(#v_Brd_Level#)
-     				, RTRIM(#v_Brd_Step#), RTRIM(TO_CHAR(SYSDATE,'YYYYMMDD')), 20, 'A00', '', RTRIM(#v_P_AccessNoty#), 365, 0, '', RTRIM(#v_P_Brd_NM2#), #tenantID# )
+     				, RTRIM(#v_Brd_Step#), RTRIM(TO_CHAR(SYSDATE,'YYYYMMDD')), 20, 'A00', '', RTRIM(#v_P_AccessNoty#), 365, 0, 0, RTRIM(#v_P_Brd_NM2#), #tenantID# )
 		]]>
 	</insert>
 	
