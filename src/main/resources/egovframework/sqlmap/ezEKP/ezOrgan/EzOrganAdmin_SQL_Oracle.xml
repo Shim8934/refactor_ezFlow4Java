@@ -785,7 +785,7 @@
                	  AND  
                	  	DEPTLEVEL = 1
                	  OR 
-               	  	CN = 'Top' ) A
+               	  	CN = 'top' ) A
            	ORDER BY 
         		A.CN
 		]]>
