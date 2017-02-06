@@ -8,6 +8,7 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.xpath.XPath;
@@ -33,8 +34,13 @@ import org.w3c.dom.NodeList;
 import antlr.MakeGrammar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.web.EzPortalController;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -42,6 +48,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.service.LoginService;
@@ -91,6 +98,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	@Resource(name="EzOrganService")
 	private EzOrganService ezOrganService;
 	
+	@Resource(name="EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
@@ -2221,5 +2230,125 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		model.addAttribute("accMessage", accMessage);
 		return "/ezResource/resNonResList";
+	}
+	
+	/**
+	 * 자원관리 승인 후 알림 발송 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/sendMail.do")
+	public void sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+		logger.debug("sendMail started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		String ownerID = xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent();
+		String title = xmlDom.getElementsByTagName("TITLE").item(0).getTextContent();
+		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
+		
+		logger.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
+		
+		ResBrdVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
+        
+        StringBuilder bodyContent = new StringBuilder();
+
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        
+        if (userInfo.getLang().equals("1")) {
+        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+        } else {
+        	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+        }
+        
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.getBrdNm()); 
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
+        bodyContent.append("</DIV>");
+        
+        String subject = "[" + egovMessageSource.getMessage("ezResource.t171") + resInfo.getBrdNm() + "] " + title;
+        
+        
+    	InternetAddress from = new InternetAddress();
+    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+    	from.setAddress(userInfo.getEmail());
+    	
+    	String emailAddress = xmlDom.getElementsByTagName("MAILADDRESS").item(0).getTextContent().trim(); 
+    	String accessName = xmlDom.getElementsByTagName("OWNERNM").item(0).getTextContent(); 
+    	
+    	if (accessName.indexOf("(") > -1) {
+    		accessName = accessName.split("(")[0];
+    	}
+    	
+    	InternetAddress to = new InternetAddress();
+    	to.setPersonal(accessName, "UTF-8");
+    	to.setAddress(emailAddress);
+        	
+        
+        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        
+        logger.debug("sendMail ended");
+	}
+	
+	/**
+	 * 자원관리 승인 후 알림 발송 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/sendMailToUser.do")
+	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+		logger.debug("sendMailToUser started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		String resID = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
+		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
+		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+		
+		logger.debug("resID=" + resID + ",num=" + num + ",approve=" + approve);
+		
+        ResGetSendMailToUserVO resInfo =  ezResourceService.getSendMailToUser(resID, Integer.parseInt(num), userInfo.getTenantId());
+		
+        StringBuilder bodyContent = new StringBuilder();
+
+        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+        
+        if (approve.equals("1")) {
+        	bodyContent.append(resInfo.getOwnerNm() + "님의 자원예약 신청이 승인되었습니다.");
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;승인된자원 : " + resInfo.getBrd_Nm());
+        } else {
+        	bodyContent.append(resInfo.getOwnerNm() + "님의 자원예약 신청이 승인취소되었습니다.");
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;취소된자원 : " + resInfo.getBrd_Nm());
+        }
+        
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;예약기간 :" + commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" + commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
+        bodyContent.append("</DIV>");
+        
+        String subject = "";
+        if (approve.equals("1")) {
+        	subject = "[자원승인 :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        } else {
+        	subject = "[자원승인취소 :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        }
+        
+    	InternetAddress from = new InternetAddress();
+    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+    	from.setAddress(userInfo.getEmail());
+    	
+    	String emailAddress = resInfo.getMail(); 
+    	String accessName = resInfo.getOwnerNm(); 
+    	
+    	if (accessName.indexOf("(") > -1) {
+    		accessName = accessName.split("(")[0];
+    	}
+    	
+    	InternetAddress to = new InternetAddress();
+    	to.setPersonal(accessName, "UTF-8");
+    	to.setAddress(emailAddress);
+        	
+        
+        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        
+        logger.debug("sendMailToUser ended");
 	}
 }

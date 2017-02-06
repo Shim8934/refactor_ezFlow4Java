@@ -44,6 +44,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
 import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
@@ -738,6 +739,23 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_p_ownerID", ownerID);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.chkDeletedRepResource(map);
+	}
+	
+	@Override
+	public ResBrdVO getResourceAdminInfo(String brdID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_BRD_ID", brdID);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getResourceAdminInfo(map);
+	}
+	
+	@Override
+	public ResGetSendMailToUserVO getSendMailToUser(String resID, int num, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("resID", resID);
+		map.put("num", num);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getSendMailToUser(map);
 	}
 
 	@SuppressWarnings("deprecation")

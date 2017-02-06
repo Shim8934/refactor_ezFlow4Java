@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezResource.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
@@ -17,6 +18,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
@@ -58,6 +60,10 @@ public interface EzResourceService {
 	public ResSelectFormIDVO selectFormID(String resID, int tenantID) throws Exception;
 	
 	public ResGetRepResourceVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception;
+	
+	public ResBrdVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
+	
+	public ResGetSendMailToUserVO getSendMailToUser(String resID, int num, int tenantID) throws Exception;
 	
 	public int getBrdCnt(int brdID, String companyID, int tenantID) throws Exception;
 

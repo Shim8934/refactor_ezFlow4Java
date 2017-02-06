@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
+import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -111,6 +112,14 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public ResGetRepResourceVO chkDeletedRepResource(Map<String, Object> map) {
 		return (ResGetRepResourceVO) select("EzResourceDAO.chkDeletedRepResource", map);
+	}
+	
+	public ResBrdVO getResourceAdminInfo(Map<String, Object> map) {
+		return (ResBrdVO) select("EzResourceDAO.getResourceAdminInfo", map);
+	}
+	
+	public ResGetSendMailToUserVO getSendMailToUser(Map<String, Object> map) {
+		return (ResGetSendMailToUserVO) select("EzResourceDAO.getSendMailToUser", map);
 	}
 	
 	public String getAclTblBrd(Map<String, Object> map) {

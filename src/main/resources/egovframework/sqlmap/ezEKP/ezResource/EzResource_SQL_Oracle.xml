@@ -17,6 +17,7 @@
 	<typeAlias  alias="ResGetScheduleListRepetitionVO" 			type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO"/>
 	<typeAlias  alias="ResGetRepResourceVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
 	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
+    <typeAlias  alias="ResGetSendMailToUserVO"         type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -2102,5 +2103,54 @@
                 TENANT_ID = #tenantID#      			
 		]]>
 	</select>
+  
+    <select id="EzResourceDAO.getResourceAdminInfo" parameterClass="Map" resultMap="resBrdVO">
+        <![CDATA[
+	       SELECT
+               BRD_NM ,
+               OWNERID ,
+               OWNERNM ,
+               HR.MAIL MAILADDRESS  
+            FROM
+               TBLBRD RES
+            JOIN
+                TBL_USERMASTER HR
+            ON
+                RES.OwnerID = HR.CN
+            AND
+                RES.TENANT_ID = HR.TENANT_ID    
+            WHERE
+                BRD_ID = #v_BRD_ID#
+            AND
+                RES.TENANT_ID = #tenantID#    
+		]]>
+    </select>
+    
+    <select id="EzResourceDAO.getSendMailToUser" parameterClass="Map" resultClass="ResGetSendMailToUserVO">
+        <![CDATA[
+            SELECT
+              S.WRITERID, S.OWNERNM, S.DEPTNM, S.TITLE, S.STARTDATE, S.ENDDATE, T.BRD_NM, HR.MAIL
+            FROM
+              TBL_RS_SCHEDULE S
+            INNER JOIN
+              TBL_RS_BRD T
+            ON
+              S.OWNERID = T.BRD_ID
+            AND
+              S.TENANT_ID = T.TENANT_ID       
+            INNER JOIN
+              TBL_USERMASTER HR
+            ON
+              S.WRITERID = HR.CN
+            AND
+              S.TENANT_ID = HR.TENANT_ID      
+            WHERE
+              S.OWNERID = #resID#
+            AND
+              S.NUM = #num#
+            AND
+              S.TENANT_ID = #tenantID#      
+		]]>
+    </select>
 </sqlMap>
 
