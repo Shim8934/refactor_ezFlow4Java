@@ -1850,7 +1850,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 		} else {
 			String portalPageXml = ezPortalService.searchMyPortalPage("1", "view", userInfo, userInfo.getCompanyID());
-			
+			xmlDom = commonUtil.convertStringToDocument(portalPageXml);
 			if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
 				for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
 					if (xmlDom.getElementsByTagName("DEFAULTPAGE").item(i).getTextContent().equals("Y")) {

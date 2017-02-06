@@ -163,29 +163,7 @@
             	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-	
-	<delete id="EzOrganAdminDAO.deleteDBData_D2" parameterClass="Map">
-		<![CDATA[
-			DELETE
-				TBL_ADDJOB
-            WHERE
-            	USERID = #v_CN#
-            AND
-            	TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</delete>
-	
-	<delete id="EzOrganAdminDAO.deleteDBData_D3" parameterClass="Map">
-		<![CDATA[
-			DELETE
-				TBL_ADDJOB2
-            WHERE
-            	USERID = #v_CN#
-            AND
-            	TENANT_ID = #v_TENANT_ID#		
-		]]>
-	</delete>
-	
+			
 	<delete id="EzOrganAdminDAO.deleteDBData_D4" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -694,29 +672,7 @@
          		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-	
-	<delete id="EzOrganAdminDAO.retireDBData_D1" parameterClass="Map">
-		<![CDATA[
-			DELETE
-				TBL_ADDJOB
-         	WHERE
-         		USERID = #v_CN#
-         	AND
-         		TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</delete>
-	
-	<delete id="EzOrganAdminDAO.retireDBData_D2" parameterClass="Map">
-		<![CDATA[
-			DELETE
-				TBL_ADDJOB2
-         	WHERE
-         		USERID = #v_CN#
-         	AND
-         		TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</delete>
-	
+			
 	<delete id="EzOrganAdminDAO.retireDBData_D3" parameterClass="Map">
 		<![CDATA[
 			DELETE
