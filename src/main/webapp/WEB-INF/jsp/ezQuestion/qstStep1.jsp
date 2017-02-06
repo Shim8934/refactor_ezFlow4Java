@@ -353,7 +353,7 @@
 </script>
 <style type = "text/css">
 	html #mainmenu li span, #mainmenu li span.off{
-	padding-top:4px;
+	padding-top:5px;
 }
 </style>
 </HEAD>
@@ -361,8 +361,8 @@
 <form id="frmCreate" method="post" action="/ezQuestion/qstStep2.do" name="frmCreate"> 
         <h1><spring:message code="ezQuestion.t436" /></h1>
         <div id="mainmenu">
-            <ul>
-                <li><span onclick="menuQst_List()" style="cursor:pointer;"><spring:message code="ezQuestion.t130" /></span></li>
+            <ul class="on">
+                <li class="off"><span onclick="menuQst_List()" style="cursor:pointer;"><spring:message code="ezQuestion.t130"/></span></li>
             </ul>
         </div>
         <script type="text/javascript">
