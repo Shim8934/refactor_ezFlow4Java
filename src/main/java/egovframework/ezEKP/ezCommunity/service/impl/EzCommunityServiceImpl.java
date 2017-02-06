@@ -3220,11 +3220,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String checkOneLineOwner(String pReplyID, String id, int tenantID) throws Exception {
 		logger.debug("checkOneLineOwner started.");
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_REPLYID", pReplyID);
 		map.put("v_USERINFO_USERID", id);
-		
+		map.put("tenantID",tenantID);
+
 		int result = ezCommunityDAO.checkOneLineOwner(map);
 		
 		logger.debug("checkOneLineOwner ended.");
