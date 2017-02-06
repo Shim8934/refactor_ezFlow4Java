@@ -225,8 +225,8 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalTBLPortletImageVO) select("EzPortalDAO.getTBLPortletImage", map);
 	}
 	
-	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID) {
-		return (PortalTBLPortletBoardVO) select("EzPortalDAO.getTBLPortletBoard", pUID);
+	public PortalTBLPortletBoardVO getTBLPortletBoard (Map<String, Object> map) {
+		return (PortalTBLPortletBoardVO) select("EzPortalDAO.getTBLPortletBoard", map);
 	}
 	
 	public PortalImagePortletVO imagePortlet (Map<String, Object> map) {
