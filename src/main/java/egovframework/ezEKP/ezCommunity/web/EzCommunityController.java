@@ -415,7 +415,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = request.getParameter("userLevel");
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
 		
 		String strVisit = ezCommunityService.commHomeGet1(userInfo.getId(), code, userInfo.getTenantId());
 		
@@ -546,7 +548,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("boarditemList started.");
 		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(boardID, userInfo.getId(), userInfo.getTenantId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
@@ -611,7 +616,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		// 20100119 보안처리 관련 추가작업(권한체크)
-        ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
+        if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
+        	return "cmm/error/accessDenied";
+        }
         
         int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
         int pEndRow = pPage * boardInfo.getSs_SearchBoard_MaxRows();
@@ -786,7 +793,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pDocID = request.getParameter("docID");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, hasAttach, model);
@@ -1070,7 +1080,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pReservedItem = request.getParameter("pReservedItem");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
@@ -1843,7 +1856,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
 		
 		int keywordCount = ezCommunityService.guestOneGet1(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
@@ -1949,7 +1964,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String userLevel = request.getParameter("userLevel");
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code, userInfo.getTenantId());
 		
 		if (userLevel == null) {
@@ -2012,7 +2030,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pEndDate = EgovDateUtil.getToday("-");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
 		
 		model.addAttribute("code", code);
 		model.addAttribute("expireDays", expireDays);
@@ -2113,7 +2133,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
 		
 		model.addAttribute("code", code);
@@ -2257,7 +2280,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			block = request.getParameter("block");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		int keywordCount = ezCommunityService.commViewMemberGet2(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
 		
 		int comNoPerPage = 10;
@@ -3950,8 +3976,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String code = request.getParameter("code");
 		
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo);
+		
 		
 		CommunityClubVO club = ezCommunityService.boardItemListPhotoGet1(userInfo.getId(), boardID, userInfo.getTenantId());
 		
@@ -4037,7 +4067,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
 		
 		if (!url.equals("")) {
 			startDateTime = EgovDateUtil.getToday("-");
@@ -4193,7 +4225,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			showAdjacent = request.getParameter("showAdjacent");
 		}
 		
-		ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo);
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
 		if (!boardInfo.getRead_FG().equals("true")) {

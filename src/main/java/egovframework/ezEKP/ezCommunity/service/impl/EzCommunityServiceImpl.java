@@ -2268,7 +2268,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception {
 		logger.debug("communityConnCHK started.");
 		logger.debug("rollInfo = " + rollInfo);
 		String rtnValue = "";
@@ -2288,13 +2288,15 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			result = true;
 		}
 		
-		if (result != true) {
-			response.setCharacterEncoding("UTF-8");
-			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", userInfo.getLocale()));
-			response.getWriter().flush();
-		}
+//		if (result != true) {
+//			response.setCharacterEncoding("UTF-8");
+//			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", userInfo.getLocale()));
+//			response.getWriter().flush();
+//		}
 		
 		logger.debug("communityConnCHK ended.");
+		
+		return result;
 	}
 
 	private String getClubCHK(String id, String clubID, String boardID, int tenantID) throws Exception{
@@ -4134,6 +4136,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sysopCheck = 1;
 		}
 		
+		logger.debug("sysopCheck = " + sysopCheck);
 		return sysopCheck;
 	}
 
@@ -6474,8 +6477,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
 		map.put("v_BOARDID", pNewSubID);
-		map.put("v_B_BOARD_NAME1", bBoardName1);
-		map.put("v_B_BOARD_NAME2", bBoardName2);
+		map.put("v_B_BOARD_NAME1", bNotiName1);
+		map.put("v_B_BOARD_NAME2", bNotiName2);
 		map.put("v_PARENTBOARDID", pNewID);
 		map.put("v_ATTACHSIZELIMIT", comatt);
 		map.put("v_BOARDNO", boardNo);

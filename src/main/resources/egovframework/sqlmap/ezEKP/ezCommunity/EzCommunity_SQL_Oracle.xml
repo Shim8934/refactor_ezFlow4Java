@@ -2517,7 +2517,7 @@
         	FROM
         		TBL_C_CLUB
         	WHERE
-        		RTRIM(c_clubno) = #v_CODE#
+        		RTRIM(c_clubno) = #v_code#
         	AND
         		tenant_id = #tenantID#
 		]]>
