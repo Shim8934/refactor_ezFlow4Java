@@ -2314,21 +2314,21 @@ public class EzResourceController extends EgovFileMngUtil {
         bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (approve.equals("1")) {
-        	bodyContent.append(resInfo.getOwnerNm() + "님의 자원예약 신청이 승인되었습니다.");
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;승인된자원 : " + resInfo.getBrd_Nm());
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009"));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008")+" : " + resInfo.getBrd_Nm());
         } else {
-        	bodyContent.append(resInfo.getOwnerNm() + "님의 자원예약 신청이 승인취소되었습니다.");
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;취소된자원 : " + resInfo.getBrd_Nm());
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900010"));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900007")+" : " + resInfo.getBrd_Nm());
         }
         
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;예약기간 :" + commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" + commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004")+" : " + commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" + commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
         bodyContent.append("</DIV>");
         
         String subject = "";
         if (approve.equals("1")) {
-        	subject = "[자원승인 :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900010")+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         } else {
-        	subject = "[자원승인취소 :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011")+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         }
         
     	InternetAddress from = new InternetAddress();

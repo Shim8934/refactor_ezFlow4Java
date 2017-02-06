@@ -3201,7 +3201,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			 isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult, offset);
 		 }
 		
-		 logger.debug("isDup="+isDup);
+		logger.debug("isDup="+isDup);
 		logger.debug("getRepResource End");
 		return isDup;
 		}
@@ -3533,7 +3533,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (!destDr.getReWay().equals("")) {
 			destParam.setRecReWay(Integer.parseInt(destDr.getReWay()));
 		}
-		if (!destDr.getReNum().equals("")) {
+		if (destDr.getReNum() != null && !destDr.getReNum().equals("")) {
 			destParam.setRecReNum(Integer.parseInt(destDr.getReNum()));
 		}
 		if (!destDr.getReDay().equals("")) {
@@ -4417,18 +4417,23 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		//종료일지정
 		if (recParam.getRecEndFlag() == 2) {
-			String dsStartDateTimeLoop = "";
+			String dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
 			
-			String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-			String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
-			Date day1 = date.parse(compare1);
-			Date day2 = date.parse(compare2);
-			int compare = day1.compareTo(day2);
+			
+			int compare = 0;
 			while (compare <= 0) {
 				//구하고
 				String dsStartDateTime = getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""), recParam.getRecReDay());
 				String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getSeconds());
 				dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
+				dsStartDateTimeLoop = dsStartDateTime;
+				
+				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
+				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")); 
+				Date day1 = date.parse(EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""));
+				Date day2 = date.parse(EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""));
+				compare = day1.compareTo(day2);
+				
 				//비교한 다음
 				String compare3 = EgovDateUtil.convertDate(dsStartDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
@@ -4449,7 +4454,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				
 				if (date.parse(dsStartDateTime).getYear()+1900 == date1.parse(recParam.getRecStartDateTime()).getYear()+1900) {
-					if (date.parse(dsStartDateTime).getMonth()+1 < date.parse(recParam.getRecStartDateTime()).getMonth()+1) {
+					if (date.parse(dsStartDateTime).getMonth()+1 < date1.parse(recParam.getRecStartDateTime()).getMonth()+1) {
 						dsStartDateTime = EgovDateUtil.addMonth(dsStartDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
 					}
 				}
@@ -4457,7 +4462,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					dsEndDateTime = EgovDateUtil.addYear(dsEndDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
 				}
 				if (date.parse(dsEndDateTime).getYear()+1900 == date1.parse(recParam.getRecEndDateTime()).getYear()+1900) {
-					if (date.parse(dsEndDateTime).getMonth()+1 < date.parse(recParam.getRecEndDateTime()).getMonth()+1) {
+					if (date.parse(dsEndDateTime).getMonth()+1 < date1.parse(recParam.getRecEndDateTime()).getMonth()+1) {
 						dsEndDateTime = EgovDateUtil.addMonth(dsEndDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
 					}
 				}
