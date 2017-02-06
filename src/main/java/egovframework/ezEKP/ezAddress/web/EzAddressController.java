@@ -386,10 +386,11 @@ public class EzAddressController{
 			textEmail = addressInfo.getsEmail();
 		}
 		
-		//TODO : GetRootAddressList() (필요한 경우)
-//		if (folderId.equals("")) {
-//			GetRootAddressList();
-//		}
+		if (folderId == null || folderId.equals("")) {
+			rootAddressSelection = "<option id='P' value='0' ownerid='" + userInfo.getId() + "'>" + egovMessageSource.getMessage("ezAddress.t145", userInfo.getLocale()) + "</option>"
+					+ "<option id='D' value='0' ownerid='" + userInfo.getDeptID() +  "'>" + egovMessageSource.getMessage("ezAddress.t146", userInfo.getLocale()) + "</option>"
+					+ "<option id='C' value='0' ownerid='" + userInfo.getCompanyID() + "'>" + egovMessageSource.getMessage("ezAddress.t147", userInfo.getLocale()) + "</option>";
+		}
 		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);

@@ -436,14 +436,14 @@ function func_addaddr_Complete(ret) {
             alert(strLang133 + e.description);
             return;
         }
-        if (xmlHTTP.responseText == "PRE") {
-            alert(strLang134);
-            return;
-
-        }
+        
         if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
             if (xmlHTTP.status != 200) {
             	alert(strLang133 + xmlHTTP.statusText);
+            }
+            else if (xmlHTTP.responseText == "PRE") {
+                alert(strLang134);
+                return;
             }
             else if (xmlHTTP.responseText == "NO_AUTHORITY") {
             	alert(strLang355);
@@ -452,8 +452,9 @@ function func_addaddr_Complete(ret) {
             	alert(strLang135);
             }
         }
-        else
-            alert(strLang136);
+        else {
+        	alert(strLang136);
+        }
 
         xmlHTTP = null;
     } catch (e) { }

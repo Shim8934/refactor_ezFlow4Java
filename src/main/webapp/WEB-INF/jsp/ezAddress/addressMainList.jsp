@@ -89,7 +89,7 @@
 	            var conWidth = 600;
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
-	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURI(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
+	            window.open("/ezAddress/addressWrite.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
 	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 500px, width = 600px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function new_group() {
@@ -431,15 +431,6 @@
 	            if (!check_length(document.getElementById("qmobile").value, 20, "<spring:message code='ezAddress.t223' />")) return;
 	            if (!check_length(document.getElementById("qemail").value, 250, "<spring:message code='ezAddress.t224' />")) return;
 	
-	            if (document.getElementById("qemail").value != "") {
-	                var AddressCnt = Get_SameAddressCnt();
-	
-	                if (parseInt(AddressCnt) > 0) {
-	                    alert("<spring:message code='ezAddress.t225' />");
-	                    return;
-	                }
-	            }
-	
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlDom = createXmlDom();
 	
@@ -478,11 +469,29 @@
 	            xmlHTTP.open("POST", "/ezAddress/addressSave.do", false);
 	            
 	            xmlHTTP.send(xmlDom);
-	
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-	                alert("<spring:message code='ezAddress.t226' />");
-	            else
-	                window.location.href = window.location.href;
+				
+	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+	            	if (xmlHTTP.status != 200) {
+	            		alert("<spring:message code='ezAddress.t226' />");
+	            		return;
+	            	}
+	            	else if (xmlHTTP.responseText == "PRE") {
+	            		alert("<spring:message code='ezAddress.t225' />");
+	            		return;
+	            	}
+	            	else if (xmlHTTP.responseText == "NO_AUTHORITY") {
+	            		alert("<spring:message code='ezAddress.t1' />");
+	            		window.location.href = window.location.href;
+	            	}
+	            	else {
+	            		alert("<spring:message code='ezAddress.t226' />");
+	            		return;
+	            	}
+	            }
+	            else {
+	            	window.location.href = window.location.href;
+	            }
+	            
 	        }
 	        function check_length(chkstr, maxlength, fieldname) {
 	            var length = 0;

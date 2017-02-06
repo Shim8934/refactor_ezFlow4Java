@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
-<html>
+<html style="width:100%;">
 	<head>
 		<title><spring:message code="ezQuestion.t270" /></title>		
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -538,7 +538,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="mainbody" style="width:100%;">
 		<h1><spring:message code="ezQuestion.t300" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
@@ -555,15 +555,15 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>		 
 		<form method="post">
-			<table id="QstList" class="mainlist" width="100%"> 
+			<table id="QstList" class="mainlist" style="width:100%"> 
 			    <tr> 
-					<th width="30" align="center"> <spring:message code="ezQuestion.t306" /></th> 
-					<th width="60%"><spring:message code="ezQuestion.t307" /></th> 
-					<th width="60"><spring:message code="ezQuestion.t308" /></th> 
-					<th width="80"><spring:message code="ezQuestion.t309" /></th> 
-					<th width="60"><spring:message code="ezQuestion.t310" /></th> 
-					<th width="90"><spring:message code="ezQuestion.t265" /></th> 
-					<th width="65"><spring:message code="ezQuestion.t311" /></th> 
+					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
+					<th width="1030px"><spring:message code="ezQuestion.t307" /></th> 
+					<th width="60px"><spring:message code="ezQuestion.t308" /></th> 
+					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 
+					<th width="60px"><spring:message code="ezQuestion.t310" /></th> 
+					<th width="90px"><spring:message code="ezQuestion.t265" /></th> 
+					<th width="65px"><spring:message code="ezQuestion.t311" /></th> 
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.itemNo}" class="white"> 
