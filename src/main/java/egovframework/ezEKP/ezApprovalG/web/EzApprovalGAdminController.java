@@ -100,6 +100,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("formAdmin started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		String multiData = commonUtil.getMultiData(userInfo.getLang());
 		String editor = ""; //config에는 CK등록되어있고 ""일때 폼프로세서적용 
@@ -567,9 +572,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
 	public String formSelect(@CookieValue ("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.aprCheckAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo == null) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -655,27 +660,27 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
 	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO user = commonUtil.aprUserInfo(loginCookie);		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		String serverName = user.getServerName();
+		String serverName = userInfo.getServerName();
 				
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
 		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO vo = list.get(i);			
 			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(j, vo);
 			}
 		}
 		
-		model.addAttribute("companyID", user.getCompanyID());
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
 		
@@ -1089,6 +1094,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String apprGTaskCodeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -1144,6 +1153,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String tCheck = request.getParameter("tCheck");
 		String title = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		if (tCheck.equals("ins")) {
 			title = egovMessageSource.getMessage("ezApprovalG.t734", userInfo.getLocale());
@@ -1442,6 +1455,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
 		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
@@ -1494,6 +1511,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/manageSeal.do")
 	public String manageSeal (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1661,6 +1682,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String manageDeptSeal(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -1775,9 +1800,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSendInfo.do")
 	public String manageSendInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo == null) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -1873,9 +1898,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping("/admin/ezApprovalG/statistics.do")
 	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo == null) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 
@@ -2019,9 +2044,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
 	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo == null) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -2160,13 +2185,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forDoc.do")
 	public String forDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
-		LoginVO userInfo  = commonUtil.aprCheckAdmin(loginCookie);
+		logger.debug("forDoc started.");
 		
-		String useEditor = config.getProperty("config.EDITOR");
+		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
 		
-		if (userInfo == null) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
+		
+		String useEditor = config.getProperty("config.EDITOR");
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -2182,6 +2209,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", resultList);
+		
+		logger.debug("forDoc ended.");
 		
 		return "admin/ezApprovalG/apprGForDoc";
 	}

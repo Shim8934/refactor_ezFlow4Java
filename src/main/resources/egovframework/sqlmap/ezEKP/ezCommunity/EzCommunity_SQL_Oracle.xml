@@ -318,22 +318,22 @@
 		</isNotEqual>
 		
 		
-		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
 			<![CDATA[
 				ORDER BY
 					no DESC
 			]]>
 		</isEqual>
 		
-		<isEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="tbl_c_notice">
 			<![CDATA[
 				ORDER BY
    					no DESC
    			]]>
 		</isEqual>
 		
-		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
+			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
 				<![CDATA[
 					ORDER BY
 		   				ref DESC,
@@ -3002,7 +3002,7 @@
 <!-- 		{CALL EZSP_EZCOMMUNITYBASE_GET4(#v_STRBOARDNAME#, #v_STRCLUBNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.ezCommunityBaseGet4"				parameterClass="Map"		resultClass="String">
-		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBNOTICE">
+		<isEqual property="v_STRBOARDNAME" compareValue="tbl_c_clubnotice">
 			<![CDATA[
 				SELECT
 					c_clubnoticetitle ONEVALUE  
@@ -3014,7 +3014,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD">
+		<isEqual property="v_STRBOARDNAME" compareValue="tbl_c_clubboard">
 			<![CDATA[
 				SELECT
 					c_clubboardtitle ONEVALUE  
@@ -3026,7 +3026,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD1">
+		<isEqual property="v_STRBOARDNAME" compareValue="tbl_c_clubboard1">
 			<![CDATA[
 				SELECT
 					c_clubboard1title ONEVALUE  
@@ -3038,7 +3038,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBBOARD2">
+		<isEqual property="v_STRBOARDNAME" compareValue="tbl_c_clubboard2">
 			<![CDATA[
 				SELECT
 					c_clubboard2title ONEVALUE  
@@ -3050,7 +3050,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isEqual property="v_STRBOARDNAME" compareValue="TBL_C_CLUBPDS">
+		<isEqual property="v_STRBOARDNAME" compareValue="tbl_c_clubpds">
 			<![CDATA[
 				SELECT
 					c_clubpdstitle ONEVALUE  
@@ -4547,10 +4547,10 @@
 				content = #v_TEXTCONTENT#
 		]]>
 		
-		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBPDS">
+		<isEqual property="v_BNAME" compareValue="tbl_c_clubpds">
 			, charfilename = #v_ATTACHLIST#
 		</isEqual>
-		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBPDS1">
+		<isEqual property="v_BNAME" compareValue="tbl_c_clubpds1">
 			, charfilename = #v_ATTACHLIST#
 		</isEqual>
 		
@@ -4619,27 +4619,18 @@
 				title,
 		]]>
 		
-		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
 			ref,
 			step,
 			re_level,
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
+			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
 				ref,
 				step,
 				re_level,
 			</isNotEqual>
 		</isEqual>
-		
-		<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
-			charfilename,
-		</isEqual>
-		<isNotEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
-			<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS1">
-				charfilename,
-			</isEqual>
-		</isNotEqual>
 		
 		<![CDATA[
 			$v_MAXIDFIELDNAME$,
@@ -4658,27 +4649,18 @@
 				#v_TITLE#
 		]]>
 		
-		<isNotEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
+		<isNotEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
 			,#v_MYREF#,
 			#v_NEWSTEP#,
 			#v_NEWLEVEL#
 		</isNotEqual>
-		<isEqual property="v_BNAME" compareValue="TBL_C_CLUBNOTICE">
-			<isNotEqual property="v_BNAME" compareValue="TBL_C_NOTICE">
+		<isEqual property="v_BNAME" compareValue="tbl_c_clubnotice">
+			<isNotEqual property="v_BNAME" compareValue="tbl_c_notice">
 				,#v_MYREF#,
 				#v_NEWSTEP#,
 				#v_NEWLEVEL#
 			</isNotEqual>
 		</isEqual>
-		
-		<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
-			,#v_ATTACHLIST#
-		</isEqual>
-		<isNotEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS">
-			<isEqual property="v_BNAME" compareValue="TBL_D_C_CLUBPDS1">
-			,#v_ATTACHLIST#
-		</isEqual>
-		</isNotEqual>
 		
 		<![CDATA[
 			,#v_NUMBER#,
@@ -6618,8 +6600,12 @@
         	INTO
         		TBL_COMM_ITEM_ATTACHMENTS
        		VALUES
-       			(SEQ_TBL_COMM_ITEM_ATTACHMENTS.nextval,
-       			#itemID#, SYS_GUID(), #filePath#, #fileSize#, #fileName#, #tenantID#)
+       			(#itemID#,
+       			SYS_GUID(),
+       			#filePath#,
+       			#fileSize#,
+       			#fileName#,
+       			#tenantID#)
 		]]>
 	</insert>
 	

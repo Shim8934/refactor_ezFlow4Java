@@ -66,7 +66,7 @@
 
                     	if (funCode == "1") {
 	                        GoTopNavigate("<spring:message code='ezCommunity.t863' />");
-		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_Notice&type=notice&userLevel=" + UserLevel;
+		                    window.parent.frames.right.document.location.href = "/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice&userLevel=" + UserLevel;
 		                    document.getElementById('Map510').click();
 		                }else if (funCode == "2") {
 		                    GoTopNavigate("<spring:message code='ezCommunity.t74' />");
@@ -403,7 +403,7 @@
 	                        window.top.frames("top").document.Script.change_menu(idx, navigation_info);
 	                        break;
 	                    case "<spring:message code = 'ezCommunity.t73' />":
-                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_Notice&type=notice", "right");
+                            window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_notice&type=notice", "right");
                             break;
                         case "<spring:message code = 'ezCommunity.t74' />":
                             window.open("/ezCommunity/board/bbsList.do?bName=tbl_c_Board&type=board", "right");
@@ -538,7 +538,7 @@
                 var url = "";
                 switch (idx) {
                     case 1:
-                        url = "/ezCommunity/Board/bbsList.do?bName=tbl_c_Notice&type=notice";
+                        url = "/ezCommunity/Board/bbsList.do?bName=tbl_c_notice&type=notice";
                         break;
 
                     case 2:
