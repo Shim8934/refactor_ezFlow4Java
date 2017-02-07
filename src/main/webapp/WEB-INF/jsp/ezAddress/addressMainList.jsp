@@ -347,68 +347,74 @@
 	                alert("<spring:message code='ezAddress.t212' />");
 	            }
 	            else {
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-	                    	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
-                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-                            		alert("<spring:message code='ezAddress.t211' />");
-                                    return;
-                            	}
-                            	else if (pFolderType == "D" && deptAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
-                            		alert("<spring:message code='ezAddress.t211' />");
-                                    return;
-                            	}
-                            }
-	                    }
-	                }
-	                var DeleteItemID = "";
-	                var xmlHTTP = createXMLHttpRequest();
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    /* if (AddressObj.getAttribute("_foldertype") == "P" || (AddressObj.getAttribute("_foldertype") == null && pFolderType == "P")) {
-	                        if (DeleteItemID == "")
-	                            DeleteItemID = decodeURIComponent(AddressObj.getAttribute("_addressid"));
-	                        else
-	                            DeleteItemID = DeleteItemID + "," + decodeURIComponent(AddressObj.getAttribute("_addressid"));
-	                    } */
-	                }
-	                /* var xmlDom = createXmlDom();
-	                var objNode;
-	                createNodeInsert(xmlDom, objNode, "DATA");
-	                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
-	                createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", "P");
-	                createNodeAndInsertText(xmlDom, objNode, "DELETELIST", DeleteItemID);
-	                xmlHTTP.open("POST", "RemoteEWS/address_deleteItems.aspx", false);
-	                xmlHTTP.send(xmlDom); */
-	
-	                var xmlDom = createXmlDom();
-	                var objNode;
-	                createNodeInsert(xmlDom, objNode, "DATA");
-	                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
-	                    var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                    /* if (AddressObj.getAttribute("_foldertype") != "P" || (AddressObj.getAttribute("_foldertype") == null && pFolderType != "P")) {
-	                        createNodeAndInsertText(xmlDom, objNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
-	                    } */
-	                    createNodeAndInsertText(xmlDom, objNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
-	                }
-	                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
-	                createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", pFolderType);
-	                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
-	                xmlHTTP.send(xmlDom);
-	
-	                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-	                    alert("<spring:message code='ezAddress.t214' />");
-	                 else {
-	                     alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
-	                     pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
-	                     if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize)
-	                         pCurrentPage--;
-	                     if (searchFlag)
-	                         Get_SearchAddressList();
-	                     else
-	                         Get_AddressList();
-	                 }
+	            	if (confirm(listContentArry.length + "<spring:message code='ezAddress.t213' />")) {
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+		                    	if (typeof (AddressObj.getAttribute("_addressid")) != "undefined") {
+	                            	if (pFolderType == "C" && compAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t211' />");
+	                                    return;
+	                            	}
+	                            	else if (pFolderType == "D" && deptAdmin != "Y" && AddressObj.getAttribute("_ModifierID") != "${userInfo.id}" && AddressObj.getAttribute("_CreatorID") != "${userInfo.id}") {
+	                            		alert("<spring:message code='ezAddress.t211' />");
+	                                    return;
+	                            	}
+	                            }
+		                    }
+		                }
+		                var DeleteItemID = "";
+		                var xmlHTTP = createXMLHttpRequest();
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    /* if (AddressObj.getAttribute("_foldertype") == "P" || (AddressObj.getAttribute("_foldertype") == null && pFolderType == "P")) {
+		                        if (DeleteItemID == "")
+		                            DeleteItemID = decodeURIComponent(AddressObj.getAttribute("_addressid"));
+		                        else
+		                            DeleteItemID = DeleteItemID + "," + decodeURIComponent(AddressObj.getAttribute("_addressid"));
+		                    } */
+		                }
+		                /* var xmlDom = createXmlDom();
+		                var objNode;
+		                createNodeInsert(xmlDom, objNode, "DATA");
+		                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
+		                createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", "P");
+		                createNodeAndInsertText(xmlDom, objNode, "DELETELIST", DeleteItemID);
+		                xmlHTTP.open("POST", "RemoteEWS/address_deleteItems.aspx", false);
+		                xmlHTTP.send(xmlDom); */
+		
+		                var xmlDom = createXmlDom();
+		                var objNode;
+		                createNodeInsert(xmlDom, objNode, "DATA");
+		                for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
+		                    var AddressObj = document.getElementById(listContentArry[Cnt]);
+		                    /* if (AddressObj.getAttribute("_foldertype") != "P" || (AddressObj.getAttribute("_foldertype") == null && pFolderType != "P")) {
+		                        createNodeAndInsertText(xmlDom, objNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
+		                    } */
+		                    createNodeAndInsertText(xmlDom, objNode, "ID", decodeURIComponent(AddressObj.getAttribute("_addressid")));
+		                }
+		                createNodeAndInsertText(xmlDom, objNode, "FOLDERID", pFolderID);
+		                createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", pFolderType);
+		                xmlHTTP.open("POST", "/ezAddress/addressDelete.do", false);
+		                xmlHTTP.send(xmlDom);
+		
+		                if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+			                alert("<spring:message code='ezAddress.t214' />");
+		                }
+						else {
+		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
+		                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize) {
+		                    	pCurrentPage--;
+		                    }
+		                    if (searchFlag) {
+		                    	Get_SearchAddressList();
+		                    }
+		                    else {
+		                    	Get_AddressList();
+		                	}
+		            	}
+	            	}
 	            }
 	        }
 	        function quick_add() {

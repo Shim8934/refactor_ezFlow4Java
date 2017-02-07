@@ -1517,7 +1517,7 @@ public class EzAddressController{
 			String searchGubun = xmldom.getElementsByTagName("SEARCHGUBUN").item(0).getTextContent();
 			String folderType = xmldom.getElementsByTagName("FOLDERTYPE").item(0).getTextContent();
 			
-			String orderBy = "SNAME:0";
+			String orderBy = "S_NAME:0";
 			
 			List<AddressVO> addressList = null;
 			int totalCount = 0;
