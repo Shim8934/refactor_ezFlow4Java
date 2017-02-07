@@ -111,9 +111,11 @@
             		var _listview = new ListView();
             		_listview.LoadFromID("DListView");
             		var arrRows = _listview.GetDataRows();
+alert(arrRows);
             		for (count2 = 0; count2 < arrRows.length; count2++) {
+alert(arrRows[count2].getAttribute("CN"));
                 		if (nodeIdx.GetNodeData("CN") == arrRows[count2].getAttribute("CN")) {
-                    		alert("<spring:message code='ezQuestion.t18' />");
+                    		alert("<spring:message code='ezQuestion.t18'/>");
                     		return;
                 		}
             		}
@@ -181,8 +183,8 @@
 			            _listview.LoadFromID("MListView");
 			            var arrRows = _listview.GetDataRows();
                 		for (count2 = 0; count2 < arrRows.length; count2++) {
-                    		if (selRow.getAttribute("DATA2") == arrRows[count2].getAttribute("CN")) {
-                        		alert("<spring:message code='ezQuestion.t18' />");
+                    		 if (selRow.getAttribute("DATA2") == arrRows[count2].getAttribute("DATA2")) { 
+                        		alert("<spring:message code='ezQuestion.t18'/>");
                     		return;
                 		}
             		}

@@ -350,6 +350,7 @@
 	{
 	    return document.getElementById("RangeXMLStr").value;
 	}
+	
 </script>
 <style type = "text/css">
 	html #mainmenu li span, #mainmenu li span.off{
@@ -374,8 +375,8 @@
             <tr>    <!------------설문조사 기간 ----------------> 
                 <th><spring:message code="ezQuestion.t216" /></th> 
                 <td>
-                   <input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~
-                  <input type="text" id="Edatepicker" style="width:80px;text-align:center">
+                   <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+                  <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
                 </td> 
             </tr> 
             <tr>        <!----------설문 공개기간 -----------------> 
@@ -446,7 +447,7 @@
             </tr> 
             <tr> 
                 <th><spring:message code="ezQuestion.t257" /></th> 
-                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%" rows="10" cols=""></textarea> </td> 
+                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols="" maxlength="127"></textarea> </td> 
             </tr>
         </table> 
         <div class="btnposition">

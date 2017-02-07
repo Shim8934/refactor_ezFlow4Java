@@ -224,6 +224,11 @@
     				return;
     			}
     			
+    			if (CheckIfHasReplies()) {
+    		        alert("<spring:message code='ezCommunity.t425' />");
+                    return;
+                }
+    			
     		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     		        if (gubun == "2") {
     		            var pItemInfo = strListInfo.split(";")[0];
@@ -245,36 +250,11 @@
     		            return;
     		        }
     		    } else {
-    		    	if (gubun == "2") {
-    		    		if (gubun == "2") {
-        		            var pItemInfo = strListInfo.split(";")[0];
-        		            var pItemID = pItemInfo.split(",")[0];
 
-        		            if (pItemID != "") {
-       		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
-       		                    
-       		                    try {
-       		                    	OpenWin.focus();
-       		                    	
-       		                    } catch (e) {
-       		                    	
-       		                    }
-        		            }
-    		    		}
-    		    	}
-    		    }
-    		    
-    		    if (CheckIfHasReplies()) {
-    		        alert("<spring:message code='ezCommunity.t425' />");
-                    return;
-                }
-    		    
-    		    if(gubun != "2"){
-    		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
-    		        if (ret) {
-    		        	DeleteItem();
-    		        }
+   	    		        var ret = confirm("<spring:message code='ezCommunity.t426' />");
+   	    		        if (ret) {
+   	    		        	DeleteItem();
+   	    		        }
     		    }
     		}
     		

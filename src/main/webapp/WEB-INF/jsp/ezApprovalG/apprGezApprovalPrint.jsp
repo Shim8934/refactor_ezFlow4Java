@@ -6,6 +6,8 @@
 	    <title><spring:message code='ezApprovalG.pjj03'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <meta http-equiv="X-UA-Compatible" content="IE=9">
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    
 	    <script type="text/javascript">
 	
 	        var myVar;
@@ -24,9 +26,9 @@
 	            if (!CrossYN() && NoneActiveX == "NO") {
 	                preview_print();
 	            }
-	            else
+	            else{
 	                window.print();
-	
+	            }
 	            clearInterval(myVar);
 	        }
 	

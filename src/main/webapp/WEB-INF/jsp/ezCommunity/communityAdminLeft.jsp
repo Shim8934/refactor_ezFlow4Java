@@ -60,11 +60,6 @@
 					colorflg=true;
 				}
 			}
-
-			function openalert() {
-				alert("<spring:message code = 'ezCommunity.t486' />");
-				return;	
-			}
 			
 			function TreeCtrl_onNodeExpanded(pNodeID, pTreeID) {
 				var xmlRtn = createXmlDom();
@@ -265,10 +260,10 @@
 						break;
 						
 					case 4:
-						if ("${club.c_ClubConfirmType == '3'}") {
+						if ("${club.c_ClubConfirmType}" == '3') {
 							url = "/ezCommunity/adminMemPermit.do?code=${code}";
 						} else {
-							openalert();								
+							alert("<spring:message code = 'ezCommunity.t486' />");								
 							return false;
 						}
 						break;
