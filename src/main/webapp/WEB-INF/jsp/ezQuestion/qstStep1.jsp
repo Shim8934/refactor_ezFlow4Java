@@ -374,8 +374,8 @@
             <tr>    <!------------설문조사 기간 ----------------> 
                 <th><spring:message code="ezQuestion.t216" /></th> 
                 <td>
-                   <input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~
-                  <input type="text" id="Edatepicker" style="width:80px;text-align:center">
+                   <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+                  <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
                 </td> 
             </tr> 
             <tr>        <!----------설문 공개기간 -----------------> 
