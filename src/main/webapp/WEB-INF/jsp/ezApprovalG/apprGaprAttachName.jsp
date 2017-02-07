@@ -45,10 +45,12 @@
 		            txtPageNum.focus();
 		            return;
 		        }
+
 		        if (p_DisplayName == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t291'/>";
 		            OpenAlertUI(pAlertContent);
 		            txtDisplayName.focus();
+		            return;
 		        }
 		        ret[0] = "OK";
 		        ret[1] = p_AprDeptTempletName;
@@ -107,23 +109,14 @@
 		        txtPageNum.focus();
 		    }
 		    var ezapralert_cross_dialogArguments = new Array();
-		    function OpenAlertUI(pAlertContent, CompleteFunction) {
+		    function OpenAlertUI(pAlertContent) {
 		        var parameter = pAlertContent;
 		        var url = "/ezApprovalG/ezAprAlert.do";
-		
-		        if (CrossYN()) {
-		            ezapralert_cross_dialogArguments[0] = parameter;
-		            if (CompleteFunction != undefined)
-		                ezapralert_cross_dialogArguments[1] = CompleteFunction;
-		            else
-		                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-		            DivPopUpShow(330, 205, url);
-		        }
-		        else {
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(330, 205);
-		            var RtnVal = window.showModalDialog(url, parameter, feature);
-		        }
+		        
+	            ezapralert_cross_dialogArguments[0] = parameter;
+                ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+                
+	            DivPopUpShow(315, 205, url);
 		    }
 		
 		    function OpenAlertUI_Complete() {
@@ -150,6 +143,11 @@
 		
 		<div class="btnposition"> 
 		<a class="imgbtn" id="btn_SaveAprDeptTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
+		</div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>

@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -559,14 +560,16 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 전자결재 서명 이미지 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do")
-	public void getSignImage(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void getSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
 		String type = request.getParameter("type");
 		String fileName = request.getParameter("fileName");
 		
 		if (type.equals("APPROVALSIGN")) {
 			//2016-04-15 장진혁과장 -- Approval Attach 구현 필요
 		} else {			
-			String filePath = config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
+			String filePath = commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + fileName.split("_")[0] + commonUtil.separator + fileName;
 			
 			if (fileName != null && !fileName.equals("")) {
 				ezCommonService.responseAttach(filePath, "", true, request, response);
@@ -991,9 +994,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			} else if (mode.equals("TEMP")) {
 				serverPath = tempPath;
 			} else if (mode.equals("GLOGO")) {
-				serverPath = realPath + config.getProperty("upload_approvalG.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			} else {
-				serverPath = realPath + config.getProperty("upload_approval.SIGNIMGS") + commonUtil.separator + userID + commonUtil.separator;
+				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			}
 			
 			File file = new File(serverPath);

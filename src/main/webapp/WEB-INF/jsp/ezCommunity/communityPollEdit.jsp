@@ -63,7 +63,7 @@
 		        //$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 			
-			if ("${userInfo.lang == '1'}") {
+			if ("${userInfo.lang}" == '1') {
 				$(function () {
 			        $.datepicker.regional['ko'] = {
 			            closeText: '닫기',

@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -9868,13 +9869,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			curAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			beforeAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
 			
-			strSQL.append("UPDATE TBL_APRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
+			Map<String, Object> updateAprLineInfo1 = new HashMap<String, Object>();
+			updateAprLineInfo1.put("aprState", aprState);
+			updateAprLineInfo1.put("nowDate", commonUtil.getTodayUTCTime(""));
+			updateAprLineInfo1.put("docID", docID);
+			updateAprLineInfo1.put("userID", userID);
+			updateAprLineInfo1.put("curAprMemberSN", curAprMemberSN);
+			updateAprLineInfo1.put("beforeAprMemberSN", beforeAprMemberSN);
+			updateAprLineInfo1.put("tenantID", userInfo.getTenantId());
 			
-			if (beforeAprMemberSN.equals("1")) {
-				strSQL.append(", ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
-			}
-			
-			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "'" + " AND TENANT_ID='"+ userInfo.getTenantId() +"' ;\n");
+			ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
 		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
@@ -11901,7 +11905,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						if (rtnVal) {
 							try{
-							strSQL.append("INSERT INTO ezEKP2017.TBL_APRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
+							strSQL.append("INSERT INTO TBL_APRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
                             strSQL.append("DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, ");
                             strSQL.append("EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ");
                             strSQL.append("isPublic, TENANT_ID) (SELECT '" + newID + "', FormID, '" + orgDocID + "', DocType, '" + docState);
@@ -12694,11 +12698,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		LOGGER.debug("updateDocInfo started");
 		String docID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
 		String tempValue = "";
+		String rtnVal = "";
 		
+		Map<String, Object> map = new HashMap<String, Object>();
 		tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
 		
 		if (!tempValue.equals("")) {
-			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("companyID", companyID);
 			map.put("v_DOCID", docID);
 			map.put("v_TENANTID", tenantID);
@@ -12707,16 +12713,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateDocInfoDocTitle(map);
 		}
 		
-		strSQL.append("UPDATE TBL_APRDOCINFO SET ");
 		
 		tempValue = docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim();
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" FormID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_FORMID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", FormID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_FORMID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG", firstFlag);
 			}
 		}
 		
@@ -12724,10 +12731,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" OrgDocID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ORGDOCID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG2", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", OrgDocID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ORGDOCID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG2", firstFlag);
 			}
 		}
 		
@@ -12735,10 +12744,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" DocType = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCTYPE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG3", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", DocType = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCTYPE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG3", firstFlag);
 			}
 		}
 		
@@ -12746,10 +12757,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" DocState = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCSTATE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG4", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", DocState = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCSTATE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG4", firstFlag);
 			}
 		}
 		
@@ -12757,10 +12770,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" FunctionType = '" + makeRightField(tempValue) + "' ");
+				map.put("v_FUNCTIONTYPE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG5", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", FunctionType = '" + makeRightField(tempValue) + "' ");
+				map.put("v_FUNCTIONTYPE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG5", firstFlag);
 			}
 		}
 		
@@ -12768,10 +12783,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" Href = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HREF", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG6", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", Href = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HREF", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG6", firstFlag);
 			}
 		}
 		
@@ -12779,10 +12796,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" DocTitle = '" + makeRightField(tempValue.trim()) + "' ");
+				map.put("v_DOCTITLE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG7", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", DocTitle = '" + makeRightField(tempValue.trim()) + "' ");
+				map.put("v_DOCTITLE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG7", firstFlag);
 			}
 		}
 		
@@ -12790,10 +12809,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" DocNo = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCNO", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG8", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", DocNo = '" + makeRightField(tempValue) + "' ");
+				map.put("v_DOCNO", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG8", firstFlag);
 			}
 		}
 		
@@ -12801,10 +12822,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" HasAttachYN = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HASATTACHYN", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG9", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", HasAttachYN = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HASATTACHYN", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG9", firstFlag);
 			}
 		}
 		
@@ -12812,10 +12835,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" HasOpinionYN = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HASOPINIONYN", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG10", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", HasOpinionYN = '" + makeRightField(tempValue) + "' ");
+				map.put("v_HASOPINIONYN", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG10", firstFlag);
 			}
 		}
 		
@@ -12823,10 +12848,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (tempValue.equals("DRAFT")) {
 			if (firstFlag) {
-				strSQL.append(" StartDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
+				map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
+				map.put("v_FIRSTFLAG11", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", StartDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
+				map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
+				map.put("v_FIRSTFLAG11", firstFlag);
 			}
 		}
 		
@@ -12834,10 +12861,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (tempValue.equals("DRAFT")) {
 			if (firstFlag) {
-				strSQL.append(" EndDate = NULL ");
+				map.put("v_ENDDATE", "NULL");
+				map.put("v_FIRSTFLAG12", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", EndDate = NULL ");
+				map.put("v_ENDDATE", "NULL");
+				map.put("v_FIRSTFLAG12", firstFlag);
 			}
 		}
 		
@@ -12845,10 +12874,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" WriterID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG13", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", WriterID = '" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG13", firstFlag);
 			}
 		}
 		
@@ -12856,10 +12887,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" WriterName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG14", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", WriterName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG14", firstFlag);
 			}
 		}
 
@@ -12868,10 +12901,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					strSQL.append(" WriterName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG15", firstFlag);
 					firstFlag = false;
 				} else {
-					strSQL.append(", WriterName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG15", firstFlag);
 				}
 			}
 		}
@@ -12880,10 +12915,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" WriterJobTitle = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERJOBTITLE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG16", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", WriterJobTitle = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERJOBTITLE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG16", firstFlag);
 			}
 		}
 		
@@ -12892,10 +12929,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					strSQL.append(" WriterJobTitle2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERJOBTITLE2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG17", firstFlag);
 					firstFlag = false;
 				} else {
-					strSQL.append(", WriterJobTitle2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERJOBTITLE2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG17", firstFlag);
 				}
 			}
 		}
@@ -12904,10 +12943,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" WriterDeptID = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERDEPTID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG18", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", WriterDeptID = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERDEPTID", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG18", firstFlag);
 			}
 		}
 		
@@ -12915,10 +12956,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" WriterDeptName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERDEPTNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG19", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", WriterDeptName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_WRITERDEPTNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG19", firstFlag);
 			}
 		}
 		
@@ -12927,10 +12970,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					strSQL.append(" WriterDeptName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERDEPTNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG20", firstFlag);
 					firstFlag = false;
 				} else {
-					strSQL.append(", WriterDeptName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_WRITERDEPTNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG20", firstFlag);
 				}
 			}
 		}
@@ -12939,31 +12984,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				strSQL.append(" isPublic = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ISPUBLIC", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG21", firstFlag);
 				firstFlag = false;
 			} else {
-				strSQL.append(", isPublic = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ISPUBLIC", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG21", firstFlag);
 			}
 		}
 		
-		strSQL.append(" WHERE DocID = '" + docID + "'" + " AND TENANT_ID = '" + tenantID +"';\n");
-		
-		if (firstFlag) {
-			strSQL.delete(0, strSQL.length());
+		try {
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", tenantID);
+			ezApprovalGDAO.updateAprDocInfo(map);
+			
+			rtnVal = "TRUE";
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return rtnVal = "FALSE";
 		}
 		
 		firstFlag = true;
 		
-		subSQL.append("UPDATE TBL_EXPAPRDOCINFO SET ");
 
 		tempValue = docXML.getElementsByTagName("SECURITY").item(0).getTextContent().trim();
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" Securitycode = '" + makeRightField(tempValue) + "' ");
+				map.put("v_SECURITYCODE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", Securitycode = '" + makeRightField(tempValue) + "' ");
+				map.put("v_SECURITYCODE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG", firstFlag);
 			}
 		}
 		
@@ -12971,10 +13024,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" StoragePeriod = '" + makeRightField(tempValue) + "' ");
+				map.put("v_STORAGEPERIOD", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG2", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", StoragePeriod = '" + makeRightField(tempValue) + "' ");
+				map.put("v_STORAGEPERIOD", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG2", firstFlag);
 			}
 		}
 		
@@ -12982,10 +13037,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" ItemCode = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ITEMCODE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG3", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", ItemCode = '" + makeRightField(tempValue) + "' ");
+				map.put("v_ITEMCODE", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG3", firstFlag);
 			}
 		}
 		
@@ -12993,10 +13050,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" ItemName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_ITEMNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG4", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", ItemName = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_ITEMNAME", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG4", firstFlag);
 			}
 		}
 		
@@ -13005,10 +13064,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" ItemName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_ITEMNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG5", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", ItemName2 = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_ITEMNAME2", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG5", firstFlag);
 				}
 			}
 		}
@@ -13017,10 +13078,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" UrgentApproval = '" + makeRightField(tempValue) + "' ");
+				map.put("v_URGENTAPPROVAL", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG6", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", UrgentApproval = '" + makeRightField(tempValue) + "' ");
+				map.put("v_URGENTAPPROVAL", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG6", firstFlag);
 			}
 		}
 		
@@ -13028,10 +13091,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
-				subSQL.append(" KeyWord = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_KEYWORD", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG7", firstFlag);
 				firstFlag = false;
 			} else {
-				subSQL.append(", KeyWord = N'" + makeRightField(tempValue) + "' ");
+				map.put("v_KEYWORD", makeRightField(tempValue));
+				map.put("v_FIRSTFLAG7", firstFlag);
 			}
 		}
 
@@ -13040,10 +13105,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" SpecialRecordCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_SPECIALRECORDCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG8", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", SpecialRecordCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_SPECIALRECORDCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG8", firstFlag);
 				}
 			}
 		}
@@ -13053,10 +13120,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" PublicityCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_PUBLICITYCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG9", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", PublicityCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_PUBLICITYCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG9", firstFlag);
 				}
 			}
 		}
@@ -13066,10 +13135,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" LimitRange = '" + makeRightField(tempValue) + "' ");
+					map.put("v_LIMITRANGE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG10", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", LimitRange = '" + makeRightField(tempValue) + "' ");
+					map.put("v_LIMITRANGE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG10", firstFlag);
 				}
 			}
 		}
@@ -13079,10 +13150,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" PageNum = '" + makeRightField(tempValue) + "' ");
+					map.put("v_PAGENUM", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG11", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", PageNum = '" + makeRightField(tempValue) + "' ");
+					map.put("v_PAGENUM", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG11", firstFlag);
 				}
 			}
 		}
@@ -13092,10 +13165,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" CabinetID = '" + makeRightField(tempValue) + "' ");
+					map.put("v_CABINETID", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG12", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", CabinetID = '" + makeRightField(tempValue) + "' ");
+					map.put("v_CABINETID", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG12", firstFlag);
 				}
 			}
 		}
@@ -13105,10 +13180,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" TaskCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_TASKCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG13", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", TaskCode = '" + makeRightField(tempValue) + "' ");
+					map.put("v_TASKCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG13", firstFlag);
 				}
 			}
 		}
@@ -13118,10 +13195,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" DocNumCode = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_DOCNUMCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG14", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", DocNumCode = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_DOCNUMCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG14", firstFlag);
 				}
 			}
 		}
@@ -13131,10 +13210,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" OrgDocNumCode = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_ORGDOCNUMCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG15", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", OrgDocNumCode = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_ORGDOCNUMCODE", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG15", firstFlag);
 				}
 			}
 		}
@@ -13144,10 +13225,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" SeperateAttachXML = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SEPERATEATTACHXML", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG16", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", SeperateAttachXML = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SEPERATEATTACHXML", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG16", firstFlag);
 				}
 			}
 		}
@@ -13157,10 +13240,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" Summary = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SUMMARY", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG17", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", Summary = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SUMMARY", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG17", firstFlag);
 				}
 			}
 		}
@@ -13170,36 +13255,28 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (!tempValue.equals("")) {
 				if (firstFlag) {
-					subSQL.append(" SecurityApproval = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SECURITYAPPROVAL", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG18", firstFlag);
 					firstFlag = false;
 				} else {
-					subSQL.append(", SecurityApproval = N'" + makeRightField(tempValue) + "' ");
+					map.put("v_SECURITYAPPROVAL", makeRightField(tempValue));
+					map.put("v_FIRSTFLAG18", firstFlag);
 				}
 			}
 		}
 		
-		subSQL.append(" WHERE DocID = '" + docID + "' " + " AND TENANT_ID = '" + tenantID +"';\n");
-		
-		if (firstFlag) {
-			subSQL.delete(0, subSQL.length());
-		}
-		
-		strSQL.append(subSQL.toString());
-		String rtnVal = "";
 		
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-			map.put("companyID", companyID);
-			LOGGER.debug("updateDocInfo sqlString" + strSQL.toString());
-
-			ezApprovalGDAO.transactionSQL(map);
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", tenantID);
+			ezApprovalGDAO.updateExpAprDocInfo(map);
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
-			rtnVal = "FALSE";
+			return rtnVal = "FALSE";
 		}
+		
 		if (rtnVal.equals("TRUE")) {
 			if (docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim().equals("DRAFT")) {
 				strSQL.append("\n" + insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID) + "\n");

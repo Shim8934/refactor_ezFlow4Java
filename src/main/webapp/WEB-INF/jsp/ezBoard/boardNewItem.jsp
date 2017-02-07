@@ -2235,11 +2235,12 @@
 	    Tab1_NewTabIni("tab1");
 	</script>
 	<script type="text/javascript">
-	    if ("${boardInfo.guBun}" == "2")
+	    if ("${boardInfo.guBun}" == "2") {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-	    else if("${docID}" != "")
+	    } else if("${docID}" != "") {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-	    else
+	    } else {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+	    }
 	</script>
 </html>

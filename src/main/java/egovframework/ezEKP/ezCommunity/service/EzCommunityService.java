@@ -88,7 +88,7 @@ public interface EzCommunityService {
 	
 	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id, int tenantID) throws Exception;
 	
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID) throws Exception;
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
 	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id, int tenantID) throws Exception;
 	
@@ -110,7 +110,7 @@ public interface EzCommunityService {
 	
 	public CommunityCCategoryVO mainPageCategory(String c_Code, String cat, int tenantID) throws Exception;
 	
-	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item, int tenantID) throws Exception;
+	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO item, int tenantID, String offset) throws Exception;
 	
 	public String goAdminOkGet2(String pClubID, LoginVO userInfo) throws Exception;
 	

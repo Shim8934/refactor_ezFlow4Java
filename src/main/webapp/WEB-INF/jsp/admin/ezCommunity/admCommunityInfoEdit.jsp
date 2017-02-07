@@ -188,7 +188,7 @@
 				</tr>
 				<tr>
 					<th>Community <spring:message code = 'ezCommunity.t18' /></th>
-					<td><textarea name="c_clubdesc" style="Width:100%; Height:120px; font: 9pt <spring:message code = 'ezCommunity.t19' />" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td><textarea name="c_clubdesc" style="Width:320px; Height:120px; font: 9pt <spring:message code = 'ezCommunity.t19' />" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 

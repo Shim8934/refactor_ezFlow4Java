@@ -107,8 +107,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (PortalUseThemeCheckVO)select("EzPortalAdminDAO.useThemeCheck", map);
 	}
 	
-	public PortalPortletGeneralVO getPortletProperties_S2 (String pUID) {
-		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties_S2", pUID);
+	public PortalPortletGeneralVO getPortletProperties_S2 (Map<String, Object> map) {
+		return (PortalPortletGeneralVO)select("EzPortalAdminDAO.getPortletProperties_S2", map);
 	}
 	
 	public PortalMenuItemItemsImageVO logoEdit (Map<String, Object> map) {
@@ -151,8 +151,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (String)select("EzPortalAdminDAO.removeSubMenuItem_S", map);
 	}
 	
-	public String getPortletProperties_S1 (String pUID) {
-		return (String)select("EzPortalAdminDAO.getPortletProperties_S1", pUID);
+	public String getPortletProperties_S1 (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.getPortletProperties_S1", map);
 	}
 	
 	public String setThemeInfo_S (Map<String, Object> map) {

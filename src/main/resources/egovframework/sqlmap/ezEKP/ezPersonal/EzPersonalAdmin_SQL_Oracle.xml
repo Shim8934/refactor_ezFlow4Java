@@ -865,7 +865,7 @@
 			DELETE
 				 TBL_PS_QUICKLINK_ACL
 			WHERE
-				QUICKLINKID = #quickLinkID#
+				QUICKLINKID = #v_QUICKLINKID#
 			AND
 				TENANT_ID = #tenantID#	
 		]]>

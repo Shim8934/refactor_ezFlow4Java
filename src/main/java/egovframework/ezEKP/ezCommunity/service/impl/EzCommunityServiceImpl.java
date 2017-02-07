@@ -693,7 +693,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                 }
 			} else {
-				item = getItemXML(pBoardID, pItemID, userInfo.getTenantId());
+				item = getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 				
                 if (pMode.equals("reply")) {
                 	item.setItemLevel(item.getItemLevel()+1);
@@ -701,7 +701,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 	item.setTitle(item.getTitle());
                 } else if (pMode.equals("modify")) {
                 	//이효진 사용하는곳 없음
-                	/*if (item.getEndDate().substring(0, 4).equals("9999")) {
+                	if (item.getEndDate().substring(0, 4).equals("9999")) {
                         if (expireDays.equals("-1")) {
                         	item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                         } else {
@@ -709,7 +709,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                         }
                     } else {
                     	item.setEndDate(item.getEndDate().substring(0, 4));
-                    }*/
+                    }
                 	
                 	if (boardInfo.getGubun() != null) {
 	                	if (boardInfo.getGubun().equals("2")) {
@@ -845,7 +845,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
-			Map<String, String> map = getAdjacentItems(pItemID, pBoardID, item.getUpperItemIDTree(), item.getParentWriteDate(), userInfo.getTenantId());
+			Map<String, String> map = getAdjacentItems(pItemID, pBoardID, item.getUpperItemIDTree(), commonUtil.getDateStringInUTC(item.getParentWriteDate(), userInfo.getOffset(), true), userInfo.getTenantId());
 			
             previousItemID = map.get("previousItemID");
             previousTitle = map.get("previousTitle");
@@ -2802,15 +2802,21 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID) throws Exception {
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
 		logger.debug("getItemXML started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
 		map.put("tenantID", tenantID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		
 		CommunityBoardItemVO vo = ezCommunityDAO.getItemXML(map);
+		
+		vo.setWriteDate(vo.getWriteDate().substring(0, 19));
+		vo.setParentWriteDate(vo.getParentWriteDate().substring(0, 19));
+		vo.setStartDate(vo.getStartDate().substring(0, 19));
+		vo.setEndDate(vo.getEndDate().substring(0, 19));
 		
 		logger.debug("getItemXML ended.");
 		
@@ -2871,8 +2877,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (!pMode.equals("copy")) {
 			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
-			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
-//			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
+//			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
 		} else {
 			item.setParentWriteDate(item.getWriteDate());
 		}
@@ -5377,7 +5383,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO pItem, int tenantID) throws Exception {
+	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO pItem, int tenantID, String offset) throws Exception {
 		logger.debug("getAdjacentItemsPhoto started.");
 		
 		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
@@ -5387,7 +5393,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (previousItemID.equals("")) {
 			map = new HashMap<String, Object>();
 			map.put("v_PBOARDID", boardID);
-			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
+			map.put("v_PPARENTWRITEDATE", commonUtil.getDateStringInUTC(pItem.getParentWriteDate(), offset, true));
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
@@ -5404,7 +5410,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (nextItemID.equals("")) {
 			map = new HashMap<String, Object>();
 			map.put("v_PBOARDID", boardID);
-			map.put("v_PPARENTWRITEDATE", pItem.getParentWriteDate());
+			map.put("v_PPARENTWRITEDATE", commonUtil.getDateStringInUTC(pItem.getParentWriteDate(), offset, true));
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			

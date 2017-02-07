@@ -546,7 +546,7 @@
 <!-- 		{CALL EZSP_GETNEWITEMLISTXML(#v_PENDROW#, #v_PUSERID#, #v_PSORTBY#, #v_pNow#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityDAO.getNewItemListXML"				parameterClass="Map"		resultClass="CommunityBoardItemVO">
-		<isEqual property="v_pSortBy" compareValue="">
+		<isEmpty property="v_pSortBy">
 			<![CDATA[
 				SELECT
 					*
@@ -623,9 +623,9 @@
 				WHERE
 					ROWNUM <= #v_pEndRow#
 			]]>
-		</isEqual>
+		</isEmpty>
 		
-		<isNotEqual property="v_pSortBy" compareValue="">
+		<isNotEmpty property="v_pSortBy">
 			<![CDATA[
 				SELECT 
 					A.boardid AS BOARDID,
@@ -694,7 +694,7 @@
 				ORDER BY
 					#v_pSortBy#
 			]]>
-		</isNotEqual>
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityDAO.boardItemListGet2"			parameterClass="Map"		resultClass="CommunityBoardListVO"> -->
@@ -737,7 +737,9 @@
 						itemid
 					) D
 				ON
-					A.itemid = D.ITEMID
+					A.itemid = D.itemid
+				AND
+					A.tenant_id = D.tenant_id
   				WHERE 
 					boardid = #v_PBOARDID#
 				AND
@@ -962,13 +964,13 @@
 				writerdeptname2,
 				writercompanyname,
 				writercompanyname2,
-				writedate,
-				parentwritedate,
+				TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+				TO_DATE(parentwritedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS parentwritedate,
 				importance,
 				title,
 				contentlocation,
-				startdate,
-				enddate,
+				TO_DATE(startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+				TO_DATE(enddate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS enddate,
 				abstract,
 				attachments,
 				upperitemidtree,

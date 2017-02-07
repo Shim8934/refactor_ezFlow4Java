@@ -378,12 +378,16 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalPortletGeneralVO getPortletProperties(String pUID) throws Exception {
+	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID) throws Exception {
 		
-		String temp = ezPortalAdminDAO.getPortletProperties_S1(pUID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pUID", pUID);
+		map.put("tenantID", tenantID);
+		
+		String temp = ezPortalAdminDAO.getPortletProperties_S1(map);
 		
 		if (temp != null && temp.equals("1")) {
-			return ezPortalAdminDAO.getPortletProperties_S2(pUID);
+			return ezPortalAdminDAO.getPortletProperties_S2(map);
 		} else {
 			PortalPortletGeneralVO portletGeneral = new PortalPortletGeneralVO();
 			portletGeneral.setWidth(0);
@@ -985,7 +989,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 					portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 					
-					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID);
+					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
 					portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
@@ -1084,7 +1088,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
@@ -1292,7 +1296,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
 						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();

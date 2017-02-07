@@ -100,7 +100,7 @@
 	        }
 			
 			function back() {
-	            if ("${flag == '1'}"){
+	            if ("${flag}" == '1'){
 	                window.open("/ezCommunity/mainPage.do", "right");
 	            }else{
 	                history.back(-1);

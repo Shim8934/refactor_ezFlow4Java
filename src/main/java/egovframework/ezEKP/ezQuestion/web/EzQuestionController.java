@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -609,6 +610,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
+		//publicDate, 공개기간을 구하기위해 endDate에 시간을 1초 더해주는부분 추가
+		SimpleDateFormat publicDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(publicDate.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)));
+		cal.add(Calendar.SECOND, 1);
+		
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("pollStartDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false));
 		model.addAttribute("pollEndDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
@@ -616,6 +623,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", commonUtil.convertDocumentToString(doc));
 		model.addAttribute("receve", receve);
+		model.addAttribute("publicDate", publicDate.format(cal.getTime()));
+		
+		
+		
+		
 		
 		return "/ezQuestion/qstResponse";
 	}
@@ -1434,12 +1446,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pFilePath = "";
 		String type = "";
 		String mode = "";
+		
 		if(req.getParameter("QstType") != null)
 			type = String.valueOf(req.getParameter("QstType"));
 		if(req.getParameter("mode") != null)
 			mode = String.valueOf(req.getParameter("mode"));
+		
 		String pFileName = "";
 		MultipartFile file = req.getFile("cmuds");
+		
 		if(file != null) {
 			pFileName = req.getFile("cmuds").getOriginalFilename();
 			pFileName = pFileName.replace("+", "%2b");
@@ -1450,6 +1465,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			//String qDirPath = commonUtil.getRealPath(req);
 			String qDirPath = commonUtil.getRealPath(req) + pDirPath;
 			File temp = new File(qDirPath);
+			
 			if(!temp.exists()) {
 				temp.mkdirs();
 			}
@@ -3943,7 +3959,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					break;
 					
         		case 4:
-        			strTagData = "<input type=\"checkbox\" onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
+        			strTagData = "<input type=\"checkbox\" onchange=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
                     strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
                     iValueNode = doc.createTextNode(strTagData);
                     strTagData = "";

@@ -1454,17 +1454,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateCabinetClass2", map);
 	}
 	
-	public void updateStringSql(Map<String, Object> map) throws Exception{
-		// TODO Auto-generated method stub
-		
-	}
-	
 	public void updateAprDocOptionInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateAprDocOptionInfo", map);
 	}
 	
 	public void updateAprDocAttachInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateAprDocAttachInfo", map);
+	}
+	
+	public void updateAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateAprDocInfo", map);
+	}
+	
+	public void updateExpAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateExpAprDocInfo", map);
 	}
 	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
@@ -1586,5 +1589,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
+	}
+
+	public void updateAprLineInfo1(Map<String, Object> updateAprLineInfo1) throws Exception {
+		update("EzApprovalG.updateAprLineInfo1", updateAprLineInfo1);
 	}
 }
