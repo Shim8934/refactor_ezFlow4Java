@@ -1298,13 +1298,13 @@
 		    }
 		
 		    window.onresize = function () {
-		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
-		        var reheight = document.documentElement.offsetHeight - parseInt(height);
-		        if (reheight < 0) {
-		            reheight = 0;
-		        }
+// 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
+// 		        var reheight = document.documentElement.offsetHeight - parseInt(height);
+// 		        if (reheight < 0) {
+// 		            reheight = 0;
+// 		        }
 		
-		        document.getElementById('div_AprLine').style.height = reheight + "px";
+// 		        document.getElementById('div_AprLine').style.height = reheight + "px";
 		    };
 		
 		    function ShowMailProgress() {

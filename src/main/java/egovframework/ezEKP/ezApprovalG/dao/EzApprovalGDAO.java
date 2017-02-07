@@ -1590,4 +1590,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+
+	public void updateAprLineInfo1(Map<String, Object> updateAprLineInfo1) throws Exception {
+		update("EzApprovalG.updateAprLineInfo1", updateAprLineInfo1);
+	}
 }

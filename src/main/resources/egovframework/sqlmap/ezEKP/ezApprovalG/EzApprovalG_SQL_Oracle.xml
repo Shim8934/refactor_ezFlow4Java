@@ -14172,4 +14172,22 @@
 			TENANT_ID = #v_TENANTID#
 		
    </update>
+   
+   <update id="EzApprovalG.updateAprLineInfo1" parameterClass="Map">
+   		UPDATE TBL_APRLINEINFO 
+   		SET 
+   			AprState = #aprState#, 
+   			ProcessDate = TO_DATE(#nowDate#,'YYYY-MM-DD HH24:MI:SS')
+			<isEqual property="beforeAprMemberSN" compareValue="1">
+				, ReceivedDate = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			</isEqual>
+		WHERE
+			TENANT_ID= #tenantID# 
+		AND
+			DocID = #docID# 
+		AND 
+			AprMemberID = #userID# 
+		AND 
+			AprMemberSN = #curAprMemberSN#
+   </update>
 </sqlMap>

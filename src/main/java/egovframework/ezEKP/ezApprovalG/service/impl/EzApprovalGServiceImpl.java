@@ -9869,13 +9869,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			curAprType = makeListField(docXML.getElementsByTagName("APRTYPE").item(0).getTextContent());
 			beforeAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
 			
-			strSQL.append("UPDATE TBL_APRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
+			Map<String, Object> updateAprLineInfo1 = new HashMap<String, Object>();
+			updateAprLineInfo1.put("aprState", aprState);
+			updateAprLineInfo1.put("nowDate", commonUtil.getTodayUTCTime(""));
+			updateAprLineInfo1.put("docID", docID);
+			updateAprLineInfo1.put("userID", userID);
+			updateAprLineInfo1.put("curAprMemberSN", curAprMemberSN);
+			updateAprLineInfo1.put("beforeAprMemberSN", beforeAprMemberSN);
+			updateAprLineInfo1.put("tenantID", userInfo.getTenantId());
 			
-			if (beforeAprMemberSN.equals("1")) {
-				strSQL.append(", ReceivedDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') ");
-			}
-			
-			strSQL.append(" WHERE DocID = '" + docID + "' AND AprMemberID = '" + userID + "' AND AprMemberSN = '" + curAprMemberSN + "'" + " AND TENANT_ID='"+ userInfo.getTenantId() +"' ;\n");
+			ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
 		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
