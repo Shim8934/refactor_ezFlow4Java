@@ -138,21 +138,26 @@
 		      		<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>      
 		      		<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="main.t14" /></span></li>
 		      		<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
-		      		<li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li>
+		      		<%-- 전자결재 --%>
+		      		<%-- <li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li> --%>
 		      		<c:if test="${use_approvalG == 'YES'}">
+		      		<%-- 전자결재 공공 --%>
 		      			<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t26" /></span></li>
 		      		</c:if>	
-		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>          
-		      		<li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li>
-		      		<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
+		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
+		      		<%-- 시스템 --%>          
+		      		<%-- <li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li> --%>
+		      		<%-- 통계 --%>
+		      		<%-- <li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li> --%>
 		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>		      		
 		      		<c:if test="${use_ezKMS == 'YES'}">
 		      			<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>
 		      		</c:if>
 		      		<c:if test="${use_ezDMS == 'YES'}">
 		      			<li><span id="menu15" onClick="menu_change(920, event);"><spring:message code="main.t52" /></span></li>
-		      		</c:if>		      		
-		      		<li><span id="menu20" onClick="menu_change(920, event);"><spring:message code="main.t10010" /></span></li>
+		      		</c:if>
+		      		<%-- 로깅 --%>		      		
+		      		<%-- <li><span id="menu20" onClick="menu_change(920, event);"><spring:message code="main.t10010" /></span></li> --%>
 		      		<c:if test="${use_mobileMgmt == 'YES'}">
 		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li>
 		      		</c:if>		      		
