@@ -1085,11 +1085,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 
-		item.setWriteDate(commonUtil.getDateStringInUTC(item.getWriteDate(), userInfo.getOffset(), false));
+//		item.setWriteDate(commonUtil.getDateStringInUTC(item.getWriteDate(), userInfo.getOffset(), false));
 		
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("boardID", pBoardID);
@@ -4072,8 +4072,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!url.equals("")) {
-			startDateTime = EgovDateUtil.getToday("-");
-			endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd");
+			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
+			endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
 			expireDays = "-1";
 		} else {
 			boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
@@ -4085,7 +4085,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			expireDays = boardInfo.getExpireDays();
 			
 			if (!mode.equals("new")) {
-				item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
+				item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
 				
 				if (userInfo.getLang().equals("2")) {
 					item.setWriterName(item.getWriterName2());
@@ -4101,24 +4101,24 @@ public class EzCommunityController extends EgovFileMngUtil{
 				}				
 			}
 			
-			startDateTime = EgovDateUtil.getToday("-");
+			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);
 			
 			//만료일을 설정하는 부분
 			if (mode.equals("modify")) { // 수정인 경우
 				if (item.getEndDate().substring(0, 4).equals("9999")) { //영구게시인 경우
 					if (expireDays.equals("-1")) { // 게시판 설정이 영구게시인 경우 만료일 컨트롤 값을 30일 뒤로 자동세팅
-						endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd");
+						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd");
 					} else { // 게시판 설정이 영구게시가 아니면 설정된 만료일 만큼 뒤로 세팅
-						endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd");
+						endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 					}
 				} else { // 수정 전에 설정되었던 만료일로 세팅함
 					endDateTime = item.getEndDate().split(" ")[0];
 				}
 			} else { //새 게시나 답변인 경우
 				if (expireDays.equals("-1")) {
-					endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), 30, "yyyy-MM-dd"); 
+					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), 30, "yyyy-MM-dd"); 
 				} else {
-					endDateTime = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(expireDays), "yyyy-MM-dd");
+					endDateTime = EgovDateUtil.addDay(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), Integer.parseInt(expireDays), "yyyy-MM-dd");
 				}
 			}
 		}
@@ -4236,19 +4236,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 			response.getWriter().flush();
 		}
 		
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
 		ezCommunityService.setAsRead(userInfo, boardID, itemID);
 		
 		if (item == null) {
 			return response.encodeRedirectURL("/error.do");
 		}
 		
-		if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getParentWriteDate().substring(0, 10)) > 0) {
+		if (EgovDateUtil.getDaysDiff(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("YYYY-MM-DD"), userInfo.getOffset(), false), item.getParentWriteDate().substring(0, 10)) > 0) {
 			pReservedItem = "true";
 		}
 		
 		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
-			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false));
+//			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false));
+			item.setWriteDate(item.getParentWriteDate());
 		}
 		
 		if (item.getEndDate().substring(0, 4).equals("9999")) {
@@ -4256,7 +4257,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (adjacentItemsEnableFlag.equals("1") && showAdjacent.equals("1")) {
-			Map<String, String> map = ezCommunityService.getAdjacentItemsPhoto(boardID, item, userInfo.getTenantId());
+			Map<String, String> map = ezCommunityService.getAdjacentItemsPhoto(boardID, item, userInfo.getTenantId(), userInfo.getOffset());
 			
             previousItemID = map.get("previousItemID");
             previousTitle = map.get("previousTitle");
@@ -4333,10 +4334,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
-			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), userInfo.getOffset(), false));
+//			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), userInfo.getOffset(), false));
+			item.setWriteDate(item.getParentWriteDate());
 		}
 		
 		if (item.getEndDate().substring(0, 4).equals("9999")) {
@@ -4378,8 +4380,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("<NODES>");
 		
 		try {
-			CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId());
-			itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
+			CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+//			itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
 			
 			if (itemVO != null) {
 				sb.append("<NODE>");
