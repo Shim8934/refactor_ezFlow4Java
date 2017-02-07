@@ -7,8 +7,18 @@ function OpenInformationUI(pInformationContent, FunctionName)
 		ezapropinion_cross_dialogArguments[0] = parameter;
 		ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
 		ezapropinion_cross_dialogArguments[2] = FunctionName;
+		
+		var popUpW = 325;
+		var popUpH = 200;
+		
+	    if (MACSAFARIYN())
+	        popUpH = popUpH + 50;
 	    
-	    var result = GetOpenWindow(url + "?type=open", "ezAPROPINION", 325, 200, "NO");
+	    var left = (screen.width / 2) - (popUpW / 2);
+	    var top = (screen.height / 2) - (popUpH / 2);
+	    
+	    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + "px ,top=" + top + "px, status = no, toolbar=no, menubar=no,location=yes";
+	    var result = window.open(url, "ezAPROPINION", feature);
 	}
 	else {
 	    var feature = "status:no;dialogWidth:330px;dialogHeight:207px;help:no;scroll:no;edge:sunken";
