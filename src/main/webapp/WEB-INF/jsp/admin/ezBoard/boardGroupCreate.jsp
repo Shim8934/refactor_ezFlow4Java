@@ -49,6 +49,7 @@
 					data : { boardGroupID : newID, boardGroupName : encodeURIComponent(name1), boardGroupName2 : encodeURIComponent(name2) },
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t121'/>");	
+						window.location.reload(true);
 						window.parent.frames[0].location.reload();
 					}  
 				});				

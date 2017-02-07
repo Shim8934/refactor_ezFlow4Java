@@ -13903,7 +13903,7 @@
 		</isNotEqual>
 		</isNotEmpty>
 		
-		<isNotEmpty property="v_HASOPINIONYN">
+		<isNotEmpty property="v_STARTDATE">
 		<isEqual property="v_FIRSTFLAG11" compareValue="true">
 			StartDate = TO_DATE(#v_STARTDATE#,'YYYY-MM-DD HH24:MI:SS')
 		</isEqual>

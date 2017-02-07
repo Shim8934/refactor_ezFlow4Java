@@ -913,7 +913,7 @@
       			  AND
       			  	A.BOARDID = P.BOARDID
       			  AND 
-      			  	A.TENANT_ID = #tenantID#
+      			  	A.TENANT_ID = #v_TENANTID#
       			  AND
       			  	(A.APPRFLAG = 'Y' 
       			     OR A.APPRFLAG IS NULL)
