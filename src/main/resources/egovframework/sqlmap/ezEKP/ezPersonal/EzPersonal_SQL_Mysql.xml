@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezPersonal">
+	<typeAlias  alias="PersonalSliderImageVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
+	<typeAlias  alias="PersonalLightPollVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
+	<typeAlias  alias="PersonalApprovMailVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
+	<typeAlias  alias="PersonalGetEmpOfMonthVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalGetPopUpListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
+	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
+	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
+	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
+	
+	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
+		<isEqual property="v_MODE" compareValue="ADMIN">
+			<isEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			TBL_PS_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+             		AND
+             			TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isEmpty>
+			<isNotEmpty property="v_SLIDERID">
+				<![CDATA[
+					SELECT
+						SLIDERID ,
+                   		SLIDERNAME ,
+                   		SLIDERNAME2 ,
+                   		IMAGEPATH ,
+                   		REGUSERID ,
+                   		REGDATE ,
+                   		SN ,
+                   		ISUSE 
+              		FROM
+              			TBL_PS_SLIDERIMAGE 
+             		WHERE
+             			COMPANYID = #v_COMPANYID#
+                    AND
+                    	SLIDERID = #v_SLIDERID#
+                    AND
+                    	TENANT_ID = #tenantID#	
+              		ORDER BY
+              			SN
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="ADMIN">
+			<![CDATA[
+				SELECT
+					SLIDERID ,
+                	SLIDERNAME ,
+                	SLIDERNAME2 ,
+                	IMAGEPATH ,
+                	REGUSERID ,
+                	REGDATE ,
+                	SN ,
+                	ISUSE 
+           		FROM
+           			TBL_PS_SLIDERIMAGE 
+          		WHERE
+          			COMPANYID = #v_COMPANYID#
+                AND
+                	ISUSE = 1
+                AND
+                	TENANT_ID = #tenantID#	
+           		ORDER BY
+           			SN
+			]]>
+		</isNotEqual>
+	</select>
+		
+ 	<select id="EzPersonalDAO.getApprovNotiConfig_S1" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       			 		COUNT(*)  
+               		FROM
+               			TBL_PS_APPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID# ) > 0
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S2" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				ALERT ,
+                COMPLETE ,
+                BANSONG ,
+                CALLBACK ,
+                HESONG ,
+                SAVEMAILFLAG 
+           	FROM
+				TBL_PS_APPROVNOTIMAILCONF 
+          	WHERE
+          		UserID = #v_PUSERID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getApprovNotiConfig_S3" parameterClass="Map" resultClass="PersonalApprovMailVO">
+		<![CDATA[
+			SELECT
+				'1' ALERT  ,
+                '1' COMPLETE  ,
+                '1' BANSONG  ,
+                '1' CALLBACK  ,
+                '1' HESONG  ,
+                'Y' SAVEMAILFLAG  
+		]]>
+	</select> 
+	
+	<select id="EzPersonalDAO.setApprovalPwd_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			TBL_PWDINFO 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) <> 0
+		]]>
+	</select>
+	
+	<update id="EzPersonalDAO.setApprovalPwd_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PWDINFO
+          	SET
+          		FLAG = #v_PFLAG#,
+              	PWD = #v_PPWD#,
+              	PWDTYPE = #v_PPWDTYPE#
+        	WHERE
+        		USERID = #v_PUSERID#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>	
+	
+	<insert id="EzPersonalDAO.setApprovalPwd_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PWDINFO
+          		( USERID, FLAG, PWD, PWDTYPE, TENANT_ID )
+          	VALUES
+          		( #v_PUSERID#, #v_PFLAG#, #v_PPWD#, #v_PPWDTYPE#, #tenantID# )
+		]]>
+	</insert>
+		
+	<select id="EzPersonalDAO.setApprovNotiMail_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			( 	SELECT
+       					COUNT(*)  
+               		FROM
+               			TBL_PS_APPROVNOTIMAILCONF 
+                	WHERE
+                		USERID = #v_PUSERID#
+                	AND
+                		TENANT_ID = #tenantID#	 ) = 0
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.setApprovNotiMail_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_APPROVNOTIMAILCONF
+        		( USERID, ALERT, COMPLETE, BANSONG, CALLBACK, HESONG, SAVEMAILFLAG, TENANT_ID )
+        	VALUES
+        		( #v_PUSERID#, #v_PALERT#, #v_PCOMPLETE#, #v_PBANSONG#, #v_PCALLBACK#, #v_PHESONG#, #v_PSAVEMAILFLAG#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPersonalDAO.setApprovNotiMail_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_APPROVNOTIMAILCONF
+         	SET
+         		ALERT = #v_PALERT#,
+             	COMPLETE = #v_PCOMPLETE#,
+             	BANSONG = #v_PBANSONG#,
+             	CALLBACK = #v_PCALLBACK#,
+             	HESONG = #v_PHESONG#,
+             	SAVEMAILFLAG = #v_PSAVEMAILFLAG#
+       		WHERE
+       			USERID = #v_PUSERID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<select id="EzPersonalDAO.insertResult_S" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+					1
+        		FROM
+        			DUAL
+       			WHERE
+       				NOT EXISTS ( 	SELECT
+       										ITEMSEQ 
+                          				FROM
+                          					TBL_PS_LIGHTPOLLRESULT 
+                           				WHERE
+                           					USERID = #v_pUserID#
+                                    	AND
+                                    		ITEMSEQ = #v_pItemSeq#
+                                    	AND
+                                    		TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPersonalDAO.insertResult" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PS_LIGHTPOLLRESULT
+       			( ITEMSEQ, USERID, RESULT, TENANT_ID )
+       		VALUES
+       			( #v_pItemSeq#, #v_pUserID#, #v_pResult#, #tenantID# )
+		]]>
+	</insert>
+	
+	<select id="EzPersonalDAO.getPollCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			TBL_PS_LIGHTPOLL 
+          		WHERE
+          			COMPANYID = #v_pCompanyID#
+          		AND
+          			TENANT_ID = #tenantID#	
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					COUNT(ITEMSEQ)
+           		FROM
+           			TBL_PS_LIGHTPOLL 
+          		WHERE
+          			( COMPANYID = #v_pCompanyID#
+                OR
+                	COMPANYID = 'Top' )
+                AND
+                	TENANT_ID = #tenantID#	
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalDAO.getPollListUser" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<isEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+       			SELECT
+       				ITEMSEQ ,
+                    POLLTITLE ,
+                    POLLTITLE2 ,
+                    STARTDATE ,
+                    IFNULL(EndDate, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+       			FROM
+       				TBL_PS_LIGHTPOLL 
+      			WHERE
+      				( COMPANYID = #v_pCompanyID#
+               	OR
+               		COMPANYID = 'Top' )
+               	AND
+               		TENANT_ID = #tenantID#
+       			ORDER BY
+       				ITEMSEQ DESC 
+           		LIMIT 
+           			#v_pCount#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_pStart" compareValue="0">
+			<![CDATA[
+       			SELECT
+       				ITEMSEQ ,
+                    POLLTITLE ,
+                    POLLTITLE2 ,
+                    STARTDATE ,
+                    ENDDATE 
+       			FROM
+   				    ( 	SELECT
+            				ITEMSEQ ,
+                          	POLLTITLE ,
+                          	POLLTITLE2 ,
+                          	STARTDATE ,
+                          	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+          				FROM
+          					TBL_PS_LIGHTPOLL 
+           				WHERE
+           					(	COMPANYID = #v_pCompanyID#
+                    		OR
+                    			COMPANYID = 'Top' )
+                    		AND
+                    			TENANT_ID = #tenantID#	
+            			ORDER BY
+            				ITEMSEQ ASC
+            			LIMIT
+            				 #v_pTotal# - #v_pStart# ) temp
+       			ORDER BY
+       				 ITEMSEQ DESC
+       			LIMIT
+       				#v_pCount#
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+       		SELECT
+       			 A.ITEMSEQ ,
+                 STARTDATE ,
+                 POLLSELECTIONCOUNT ,
+                 POLLTITLE ,
+                 POLLTITLE2 ,
+                 ANSWER1 ,
+                 ANSWER2 ,
+                 ANSWER3 ,
+                 ANSWER4 ,
+                 ANSWER5 ,
+                 ANSWER6 ,
+                 ANSWER7 ,
+                 ANSWER8 ,
+                 ANSWER9 ,
+                 ANSWER10 ,
+                 IFNULL(B.RESULT, 0) Result  
+       		FROM
+       			TBL_PS_LIGHTPOLL A
+           	LEFT JOIN
+           		TBL_PS_LIGHTPOLLRESULT B
+           	ON
+           		A.TENANT_ID = B.TENANT_ID
+           	AND
+           		A.ITEMSEQ = B.ITEMSEQ
+           	AND
+           		USERID = #v_pUserID#
+   			WHERE
+   				(COMPANYID = #v_pCompanyID#
+            		OR
+            	COMPANYID = 'Top' )
+            AND
+            	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            AND
+            	ENDDATE IS NULL
+            AND
+               	A.TENANT_ID = #tenantID#	
+       		ORDER BY
+       			A.ITEMSEQ DESC
+       		LIMIT
+       			1
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getWebPartGroup" parameterClass="Map"  resultClass="PersonalGetWebPartGroupVO">
+		<isEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					ID ,
+             		NAME 
+        		FROM
+        			TBL_PS_WEBPARTGROUP 
+       			WHERE
+       				TENANT_ID = #tenantID#
+       			AND
+       				COMPANYID = #v_pCompanyID#
+			]]>
+		</isEqual>
+		
+		<isNotEqual property="v_pMode" compareValue="A">
+			<![CDATA[
+				SELECT
+					ID ,
+                	NAME 
+           		FROM
+           			TBL_PS_WEBPARTGROUP 
+          		WHERE
+          			TENANT_ID = #tenantID#
+       			AND
+          			COMPANYID = #v_pCompanyID#
+                OR
+                	COMPANYID = 'Top'
+			]]>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzPersonalDAO.getUserWebPart_S1" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+			FROM
+				DUAL
+    		WHERE
+    			NOT EXISTS (	SELECT
+    									ITEMSEQ
+    							 	FROM
+    							 		TBL_PS_USERWEBPART
+    							 	WHERE
+    							 		USERID = #v_PUserID#
+    							 	AND
+    							 		TENANT_ID = #tenantID#	)
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getUserWebPart_S2" parameterClass="Map"  resultClass="PersonalGetWebPartVO">
+		<![CDATA[
+			SELECT
+				NAME, 
+				URL, 
+				DEFAULTPOSITION AS POSITION, 
+				DEFAULTPRIORITY, 
+				ID
+			FROM
+				TBL_PS_WEBPARTITEM A
+			JOIN
+				TBL_PS_WEBPARTITEMACL B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.ID = B.ItemID
+			WHERE
+				A.TENANT_ID = #tenantID#
+			AND
+				(COMPANYID='S907000'  OR COMPANYID='Top')
+			AND
+				DEFAULTUSE=1 
+			AND
+				ACCESSID IN ('gisa1','top','Top','S907000','RAB1')
+			ORDER BY
+				DEFAULTPOSITION, DEFAULTPRIORITY
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getUserWebPart_S3" parameterClass="Map"  resultClass="PersonalGetWebPartVO">
+		<![CDATA[
+			SELECT
+				B.NAME, 
+				B.URL, 
+				A.ITEMPOSITION AS POSITION, 
+				A.ITEMSEQ,  
+				B.ID 
+			FROM
+				TBL_PS_USERWEBPART A 
+			JOIN
+				TBL_PS_WEBPARTITEM B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.ITEMID = B.ID
+			JOIN
+				TBL_PS_WEBPARTITEMACL C
+			ON
+				C.TENANT_ID = B.TENANT_ID
+			AND
+				C.ITEMID=B.ID
+			WHERE
+				A.TENANT_ID = #tenantID#
+			AND
+				A.USERID='gisa1'
+			AND
+				C.ACCESSID IN ('gisa1','top','Top','S907000','RAB1')
+			ORDER BY
+				A.ITEMPOSITION, A.ITEMSEQ
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getEmpOfMonth" parameterClass="Map"  resultClass="PersonalGetEmpOfMonthVO">
+		<![CDATA[
+			SELECT
+				A.DISPLAYNAME ,
+             	A.DISPLAYNAME2 ,
+             	A.TITLE ,
+             	A.TITLE2 ,
+             	A.DESCRIPTION ,
+             	A.DESCRIPTION2 ,
+             	B.EXTENSIONATTRIBUTE2 FilePath  ,
+             	A.CN 
+        	FROM
+        		TBL_PS_EMPMONTH A
+            JOIN
+            	TBL_USERMASTER B
+            ON
+            	A.CN = B.CN
+            AND
+                A.TENANT_ID = B.TENANT_ID  
+       		WHERE
+       			TERM = #v_PTERM#
+       		AND
+       			A.TENANT_ID = #tenantID#	
+        	ORDER BY
+        		TERM DESC
+		]]>
+	</select>	
+	
+	<select id="EzPersonalDAO.getPopUpListUser" parameterClass="Map"  resultClass="PersonalGetPopUpListUserVO">
+		<![CDATA[
+			SELECT
+				ITEMSEQ ,
+             	WIDTH ,
+             	HEIGHT ,
+             	POSITION 
+        	FROM
+        		TBL_PS_POPUP 
+       		WHERE
+       			( 	COMPANYID = 'Top'
+                OR
+                	COMPANYID = #v_pCompanyID# )
+            AND
+            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            AND
+            	ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getQuickLinkMenu" parameterClass="Map"  resultClass="PersonalGetQuickLinkMenuVO">
+		<![CDATA[
+			SELECT
+				A.QUICKLINKID QuickLinkID  ,
+             	QUICKLINKNAME ,
+             	QUICKLINKNAME2 ,
+             	QUICKLINKNAME3 ,
+             	QUICKLINKNAME4 ,
+             	LINKTYPE ,
+             	LINKTYPEURL ,
+             	URL ,
+             	REGUSERID ,
+             	VIEW_FLAG ,
+             	SIZE_ 
+        	FROM
+        		TBL_PS_QUICKLINK A
+            JOIN
+            	TBL_PS_QUICKLINK_ACL B
+            ON
+            	A.QUICKLINKID = B.QUICKLINKID
+       		WHERE
+       			ACCESSID = #v_ACCESSID#
+       		AND
+       			A.TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getPollResultOrderResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				RESULT ,
+             	COUNT(RESULT)  COUNT  
+        	FROM
+        		TBL_PS_LIGHTPOLLRESULT 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+        	GROUP BY
+        		RESULT
+        	ORDER BY
+        		COUNT DESC,
+                RESULT ASC
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getPollInfo" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				ITEMSEQ ,
+             	STARTDATE ,
+             	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  ,
+             	POLLSELECTIONCOUNT ,
+             	POLLTITLE ,
+	            POLLTITLE2 ,
+	            ANSWER1 ,
+	            ANSWER2 ,
+	            ANSWER3 ,
+	            ANSWER4 ,
+	            ANSWER5 ,
+	            ANSWER6 ,
+	            ANSWER7 ,
+	            ANSWER8 ,
+	            ANSWER9 ,
+	            ANSWER10 
+        	FROM
+        		TBL_PS_LIGHTPOLL 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>		
+	
+	<select id="EzPersonalDAO.getPollResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
+		<![CDATA[
+			SELECT
+				RESULT ,
+             	COUNT(RESULT)  COUNT  
+        	FROM
+        		TBL_PS_LIGHTPOLLRESULT 
+       		WHERE
+       			ITEMSEQ = #v_pItemSeq#
+       		AND
+       			TENANT_ID = #tenantID#	
+        	GROUP BY
+        		RESULT
+        	ORDER BY
+        		RESULT
+		]]>
+	</select>
+	
+	<select id="EzPersonalDAO.getPassword" parameterClass="String" resultClass="String">
+		<![CDATA[
+			SELECT
+				PASSWORD
+			FROM
+				TBL_USERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN = #cn#
+		]]>
+	</select>
+</sqlMap>
+
