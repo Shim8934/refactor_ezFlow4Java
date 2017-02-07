@@ -350,6 +350,7 @@
 	{
 	    return document.getElementById("RangeXMLStr").value;
 	}
+	
 </script>
 <style type = "text/css">
 	html #mainmenu li span, #mainmenu li span.off{
@@ -446,7 +447,7 @@
             </tr> 
             <tr> 
                 <th><spring:message code="ezQuestion.t257" /></th> 
-                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols=""></textarea> </td> 
+                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols="" maxlength="127"></textarea> </td> 
             </tr>
         </table> 
         <div class="btnposition">
