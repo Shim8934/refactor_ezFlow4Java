@@ -2503,7 +2503,7 @@
 	            if (tempfolderid != folderid)
 	                page = "1";
 	            xmlDom = call_page_address_get_list_mailCall(folderid, ownerid, foldertype,
-	                "ADDRESSID,STYPE,SNAME,SCOMPANY,SCOMPANYPHONE,SEMAIL", "NOT SEMAIL=''", page, "20", searchgubun, "<spring:message code='ezEmail.t585' />");
+	                "ADDRESSID,STYPE,SNAME,SCOMPANY,SCOMPANYPHONE,SEMAIL", "NOT SEMAIL=''", page, "25", searchgubun, "<spring:message code='ezEmail.t585' />");
 	            tempfolderid = folderid;
 	
 	            if (navigator.userAgent.indexOf('Firefox') != -1) {
