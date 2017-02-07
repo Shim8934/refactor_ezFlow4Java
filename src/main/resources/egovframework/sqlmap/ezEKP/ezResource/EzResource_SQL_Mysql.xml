@@ -335,13 +335,13 @@
                    A.BRD_EXPLAIN brd_explain ,
                    A.BRD_ACCESS brd_access ,
                    A.ATTACH_SIZE attach_size ,
-                   ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                      FROM TBL_RS_BRD 
                       WHERE  BRD_UPPER = A.BRD_ID
                                AND Brd_Company = #v_P_CompanyID#
                                AND Brd_GB = N'1'
                                AND TENANT_ID = #tenantID# ) sub_clscnt ,
-                   ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                      FROM TBL_RS_BRD 
                      WHERE  BRD_UPPER = A.BRD_ID
                             AND Brd_Company = #v_P_CompanyID#
@@ -372,14 +372,14 @@
                       A.BRD_ACCESS brd_access ,
                       A.ATTACH_SIZE attach_size ,
 
-                      ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                         FROM TBL_RS_BRD 
                         WHERE  BRD_UPPER = A.BRD_ID
                         AND Brd_Company = #v_P_CompanyID#
                         AND Brd_GB = N'1'
                         AND TENANT_ID = #tenantID# ) sub_clscnt ,
 
-                      ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                         FROM TBL_RS_BRD 
                         WHERE  BRD_UPPER = A.BRD_ID
                         AND Brd_Company = #v_P_CompanyID#
@@ -390,7 +390,7 @@
 
                       A.APPROVEFLAG 
                  FROM TBL_RS_BRD A
-                 WHERE  Brd_Upper = NVL(#v_P_ParentID#,0)
+                 WHERE  Brd_Upper = IFNULL(#v_P_ParentID#,0)
                  AND Brd_Company = #v_P_CompanyID#
                  AND TENANT_ID = #tenantID#
                  ORDER BY Brd_Step 
@@ -410,12 +410,12 @@
                       A.BRD_EXPLAIN brd_explain ,
                       A.BRD_ACCESS brd_access ,
                       A.ATTACH_SIZE attach_size ,
-                      ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                         FROM TBL_RS_BRD 
                          WHERE  BRD_UPPER = A.BRD_ID
                                   AND Brd_Company = #v_P_CompanyID#
                                   AND Brd_GB = N'1' ) sub_clscnt ,
-                      ( SELECT NVL(COUNT(BRD_ID) , 0) 
+                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
                         FROM TBL_RS_BRD 
                          WHERE  BRD_UPPER = A.BRD_ID
                                   AND Brd_Company = #v_P_CompanyID#
@@ -423,7 +423,7 @@
                       N'0' Access_Lvl ,
                       A.APPROVEFLAG 
                  FROM TBL_RS_BRD A
-                WHERE  Brd_Upper = NVL(#v_P_ParentID#,0)
+                WHERE  Brd_Upper = IFNULL(#v_P_ParentID#,0)
                          AND Brd_Company = #v_P_CompanyID#
                          AND Brd_GB = N'1'
                  ORDER BY Brd_Step 
@@ -441,7 +441,7 @@
 	<select id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
 			<![CDATA[
-				 SELECT
+				  SELECT
                     A.BRD_ID BRD_ID ,  
                     A.BRD_NM BRD_NM ,
                     A.BRD_NM2 BRD_NM2 ,
@@ -455,7 +455,7 @@
                     A.BRD_ACCESS BRD_ACCESS ,
                     A.ATTACH_SIZE ATTACH_SIZE ,
                    ( SELECT
-                        NVL(COUNT(BRD_ID) , 0) 
+                        IFNULL(COUNT(BRD_ID) , 0) 
                      FROM
                         TBL_RS_BRD 
                      WHERE
@@ -467,7 +467,7 @@
                      AND
                         TENANT_ID = #tenantID# ) SUB_CLSCNT ,
                      ( SELECT
-                          NVL(COUNT(BRD_ID) , 0) 
+                          IFNULL(COUNT(BRD_ID) , 0) 
                        FROM
                           TBL_RS_BRD 
                        WHERE
@@ -510,12 +510,12 @@
       						A.BRD_EXPLAIN AS BRD_EXPLAIN, 
       						A.BRD_ACCESS AS BRD_ACCESS,
       						A.ATTACH_SIZE AS ATTACH_SIZE,
-      						(SELECT NVL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
+      						(SELECT IFNULL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
       						WHERE BRD_UPPER = A.BRD_ID
       						AND BRD_COMPANY = #v_P_COMPANYID#
       						AND BRD_GB = '1'
       						AND TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
-      						(SELECT NVL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
+      						(SELECT IFNULL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
       						WHERE BRD_UPPER = A.BRD_ID
       						AND BRD_COMPANY = #v_P_COMPANYID#
       						AND BRD_GB = '2'
@@ -1006,9 +1006,9 @@
              	OWNERPOSITION ,
              	OWNERPOSITION2 ,
              	OWNERCALL ,
-             	NVL(RESLOCATION, ' ') RESLOCATION  ,
+             	IFNULL(RESLOCATION, ' ') RESLOCATION  ,
              	SUBSTR(MAKEDATE, 0, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, -2, 2) MAKEDATE  ,
-             	NVL(APPROVEFLAG, '0') APPROVEFLAG  ,
+             	IFNULL(APPROVEFLAG, '0') APPROVEFLAG  ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
@@ -1153,7 +1153,7 @@
 	<select id="EzResourceDAO.addResData_S1" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				(NVL(MAX(BRD_ID) , 0) + 1)
+				(IFNULL(MAX(BRD_ID) , 0) + 1)
    			FROM
    				TBL_RS_BRD 
 		]]>
@@ -1177,7 +1177,7 @@
 	<select id="EzResourceDAO.addResData_S3" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				(NVL(MAX(Brd_Step) , 0) + 1)
+				(IFNULL(MAX(Brd_Step) , 0) + 1)
     		FROM
     			TBL_RS_BRD 
     		WHERE
@@ -1310,7 +1310,7 @@
 	</procedure> -->
 	<select id="EzResourceDAO.insertScheduleRepetition_S" parameterClass="Map" resultClass="Integer">
 		SELECT
-			(NVL(MAX(num) , 1))
+			(IFNULL(MAX(num) , 1))
    		FROM
    			TBL_RS_SCHEDULE 
    		WHERE
@@ -1451,7 +1451,7 @@
 	<select id="EzResourceDAO.getBrdApproveFlag" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				NVL(APPROVEFLAG, '0') APPROVEFLAG  
+				IFNULL(APPROVEFLAG, '0') APPROVEFLAG  
         	FROM
         		TBL_RS_BRD 
        		WHERE  
@@ -1572,7 +1572,7 @@
 	<select id="EzResourceDAO.delResSch_S2" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(num) , 0) + 1 
+				IFNULL(MAX(num) , 0) + 1 
 			FROM
 				TBL_RS_SCHEDULE 
 			WHERE  
@@ -1783,7 +1783,7 @@
 	<insert id="EzResourceDAO.modifyResSch_I2" parameterClass="Map">
 		<selectKey keyProperty="maxNum" resultClass="Integer">
 			SELECT 
-				(NVL(MAX(num) , 0) + 1)
+				(IFNULL(MAX(num) , 0) + 1)
 			FROM
 				TBL_RS_SCHEDULE 
 			WHERE
@@ -1871,7 +1871,7 @@
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
 		<selectKey keyProperty="v_Num" resultClass="Integer">
 			SELECT
-				(NVL(MAX(num) , 0) + 1) 
+				(IFNULL(MAX(num) , 0) + 1) 
 		    FROM
 		    	TBL_RS_SCHEDULE 
     		WHERE  
@@ -1890,8 +1890,8 @@
      		VALUES
      			( RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
      			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
-     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), NVL(#v_P_reFlag#,' '), NVL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
-     			, RTRIM(#v_P_entryList#), NVL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID# )
+     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
+     			, RTRIM(#v_P_entryList#), IFNULL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID# )
 		]]>
 	</insert>
 	
