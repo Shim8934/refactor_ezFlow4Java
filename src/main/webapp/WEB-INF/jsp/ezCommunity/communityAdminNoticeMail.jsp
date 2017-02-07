@@ -42,7 +42,7 @@
 				
 				$.ajax({
 					type : "POST",
-					dataType : "text",
+					dataType : "json",
 					async : false,
 					url : "/ezCommunity/adminNoticeMailOk.do",
 					data : {code : '${code}',
@@ -50,7 +50,10 @@
 							memo : contentStr
 						   },
 					success: function(result){
-						html = result;
+						if (result["result"] == "OK") {
+							alert("<spring:message code='ezCommunity.t559' />");
+							mail.reset();
+						}
 					}
 				});
 			}
