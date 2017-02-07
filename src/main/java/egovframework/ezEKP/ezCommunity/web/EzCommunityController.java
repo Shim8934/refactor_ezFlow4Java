@@ -18,7 +18,6 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -2026,8 +2025,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				pSelRes2 = request.getParameter("selRes2");
 			}
 		} else {
-			pStartDate = EgovDateUtil.getToday("-");
-			pEndDate = EgovDateUtil.getToday("-");
+			pStartDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+			pEndDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
@@ -4180,7 +4179,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         		
         		if (i > 0) {
         			mode = "New";
-        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(EgovDateUtil.getTodayTime());
+        			xmlDom.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
         		}
         		
         		ret = ezCommunityService.newItem(xmlDom, mode, commonUtil.getRealPath(request), userInfo);
