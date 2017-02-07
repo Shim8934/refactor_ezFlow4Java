@@ -517,44 +517,46 @@
 		<isNotEmpty property="v_PSORTBY">
 			<![CDATA[
 				SELECT 
-					A.ITEMID,
-	      			A.STARTDATE,
-	      			A.ENDDATE,
-	      			A.TITLE,
-	      			A.ATTACHMENTS,
-	      			A.IMPORTANCE,
-	      			B.BOARDID,
-	      			B.BOARDNAME,
-	      			B.BOARDNAME2,
-	      			A.ABSTRACT,
-	      			A.DocNo
-	      		FROM 
-	      			TBL_BOARD_ITEM A 
-	      		INNER JOIN 
-	      			( SELECT 
-	      				BOARDID, 
-	      				BOARDNAME, 
-	      				BOARDNAME2,
-	      				TENANT_ID
-	      			  FROM 
-	      			  	TBL_BOARD_BOARDINFO 
-	      			  WHERE 
-	      			  	TENANT_ID = #v_TENANTID# ) B 
-	      		ON 
-	      			A.TENANT_ID = B.TENANT_ID
-	      		AND
-	      			A.BOARDID = B.BOARDID
-	      		WHERE
-	      			A.TENANT_ID = #v_TENANTID#
-	      		AND 
-	      			A.WRITERID = #v_PUSERID# 
-	      		AND 
-	      			A.STARTDATE > #nowDate# 
-	      		AND 
-	      			ROWNUM <=  #v_PENDROW#
-	      		ORDER BY 
-	      			#v_PSORTBY#
-			]]>
+					* 
+           		FROM ( SELECT 
+           					A.ItemID ,
+                         	A.StartDate ,
+                         	A.EndDate ,
+                         	A.Title ,
+                         	A.Attachments ,
+                         	A.Importance ,
+                         	B.BOARDID ,
+                         	B.BOARDNAME ,
+                         	B.BOARDNAME2 ,
+                         	A.Abstract ,
+                         	A.DocNo 
+           			   FROM 
+           			   		TBL_Board_Item A
+                  	   JOIN 
+                  	   		( SELECT 
+                  	   			BOARDID ,
+                                BOARDNAME ,
+                                BOARDNAME2,
+                                TENANT_ID 
+                         	  FROM 
+                         	  	TBL_Board_BoardInfo
+                         	  WHERE
+                         	  	TENANT_ID = #v_TENANTID#  ) B   
+                       ON 
+                       		A.tenant_id = B.tenant_id
+                       AND
+                       		A.BoardID = B.BOARDID
+		          	   WHERE
+		          	   		A.tenant_id = #v_TENANTID#
+		          	   AND  
+		          			A.WriterID = #v_PUSERID#
+		               AND 
+		                	A.StartDate > #nowDate#
+		           	   ORDER BY 
+		           			$v_PSORTBY$ )
+           		WHERE 
+           			ROWNUM <= #v_PENDROW#
+			]]>		
 		</isNotEmpty>
 	</select>
 	

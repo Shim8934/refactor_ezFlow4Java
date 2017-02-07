@@ -4,10 +4,6 @@
 <sqlMap namespace="ezPersonal">
 	<typeAlias  alias="PersonalSliderImageVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
 	<typeAlias  alias="PersonalLightPollVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
-	<!-- 	<typeAlias  alias="PersonalGetSliderListVO" 						type="egovframework.ezEKP.ezPersonal.vo.PersonalGetSliderListVO"/> -->
-	<!-- 	<typeAlias  alias="PersonalGetPollListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollListUserVO"/> -->
-	<!-- 	<typeAlias  alias="PersonalGetCurrentPollVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetCurrentPollVO"/> -->
-	<!-- 	<typeAlias  alias="PersonalGetPollResultOrderResultVO" 	type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPollResultOrderResultVO"/> -->
 	<typeAlias  alias="PersonalApprovMailVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
 	<typeAlias  alias="PersonalGetEmpOfMonthVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
 	<typeAlias  alias="PersonalGetPopUpListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
@@ -335,7 +331,7 @@
                   				FROM
                   					TBL_PS_LIGHTPOLL 
                    				WHERE
-                   					( (	COMPANYID = #v_pCompanyID#
+                   					(	COMPANYID = #v_pCompanyID#
                             		OR
                             			COMPANYID = 'Top' )
                             		AND
