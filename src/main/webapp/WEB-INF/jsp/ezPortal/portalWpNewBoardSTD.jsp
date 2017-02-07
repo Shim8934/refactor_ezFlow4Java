@@ -25,19 +25,6 @@
     			            <dd id='content' class='txt'>${pDocContent}></dd>
             			</dl>
             			<ul class="listtype_txt">
-                			<asp:repeater id="BoardListRepeater_NewBoardSTD" runat="server">  
-                				<ItemTemplate>
-                    				<%-- <li onclick="openDoc_section4_Type('<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA10")[0].InnerText %>', 
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA1")[0].InnerText %>')" >
-                        				<span class='txt'><%# pBoard_ID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}" ? 
-                                          	((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[3].InnerText : 
-                                          	((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[2].InnerText %></span> 
-                        				<span class='date'><%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[6].InnerText %></span>
-                        				<span class='name'><%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[5].InnerText %></span>
-                    				</li> --%>
-                				</ItemTemplate>
-            				</asp:repeater>
             			</ul>
             		<%} else {%>
             			<div class='nodata_portlet '>
@@ -269,10 +256,10 @@
 		            if (pType == "3" || pType == "4") {
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            } else {
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                if (CrossYN()) {
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                } else {
-		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + oBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                }
 		            }
 		        }
@@ -287,9 +274,9 @@
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            else {
 		                if (CrossYN())
-		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		                else
-		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 
