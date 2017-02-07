@@ -320,7 +320,7 @@
 		    			<spring:message code="ezQuestion.t322" />
 		    		</c:when>
 		    		<c:otherwise>
-		    			<c:out value="${pollEndDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
+		    			<c:out value="${publicDate}"/> <spring:message code="ezQuestion.t323" /><c:out value="${qstUserPollItemVO.postTerm}"/> <spring:message code="ezQuestion.t324" />
 		    		</c:otherwise>
 		    	</c:choose>
 			</td>

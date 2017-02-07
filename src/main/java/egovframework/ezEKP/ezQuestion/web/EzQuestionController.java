@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -609,6 +610,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
+		//publicDate, 공개기간을 구하기위해 endDate에 시간을 1초 더해주는부분 추가
+		SimpleDateFormat publicDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(publicDate.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)));
+		cal.add(Calendar.SECOND, 1);
+		
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("pollStartDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false));
 		model.addAttribute("pollEndDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
@@ -616,6 +623,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", commonUtil.convertDocumentToString(doc));
 		model.addAttribute("receve", receve);
+		model.addAttribute("publicDate", publicDate.format(cal.getTime()));
+		
+		
+		
+		
 		
 		return "/ezQuestion/qstResponse";
 	}
