@@ -13808,4 +13808,376 @@
    		AND 
    			TENANT_ID= #v_TENANTID#
    </update>
+   
+   <update id="EzApprovalG.updateAprDocInfo" parameterClass="map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET
+   		<isNotEmpty property="v_FORMID">
+		<isEqual property="v_FIRSTFLAG" compareValue="true">
+			FormID = #v_FORMID#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG" compareValue="true">
+			,FormID = #v_FORMID#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ORGDOCID">
+		<isEqual property="v_FIRSTFLAG2" compareValue="true">
+			OrgDocID = #v_ORGDOCID#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG2" compareValue="true">
+			,OrgDocID = #v_ORGDOCID#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_DOCTYPE">
+		<isEqual property="v_FIRSTFLAG3" compareValue="true">
+			DocType = #v_DOCTYPE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG3" compareValue="true">
+			,DocType = #v_DOCTYPE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_DOCSTATE">
+		<isEqual property="v_FIRSTFLAG4" compareValue="true">
+			DocState = #v_DOCSTATE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG4" compareValue="true">
+			,DocState = #v_DOCSTATE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_FUNCTIONTYPE">
+		<isEqual property="v_FIRSTFLAG5" compareValue="true">
+			FunctionType = #v_FUNCTIONTYPE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG5" compareValue="true">
+			,FunctionType = #v_FUNCTIONTYPE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_HREF">
+		<isEqual property="v_FIRSTFLAG6" compareValue="true">
+			Href = #v_HREF#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG6" compareValue="true">
+			,Href = #v_HREF#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_DOCTITLE">
+		<isEqual property="v_FIRSTFLAG7" compareValue="true">
+			DocTitle = #v_DOCTITLE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG7" compareValue="true">
+			,DocTitle = #v_DOCTITLE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_DOCNO">
+		<isEqual property="v_FIRSTFLAG8" compareValue="true">
+			DocNo = #v_DOCNO#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG8" compareValue="true">
+			,DocNo = #v_DOCNO#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_HASATTACHYN">
+		<isEqual property="v_FIRSTFLAG9" compareValue="true">
+			HasAttachYN = #v_HASATTACHYN#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG9" compareValue="true">
+			,HasAttachYN = #v_HASATTACHYN#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_HASOPINIONYN">
+		<isEqual property="v_FIRSTFLAG10" compareValue="true">
+			HasOpinionYN = #v_HASOPINIONYN#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG10" compareValue="true">
+			,HasOpinionYN = #v_HASOPINIONYN#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_STARTDATE">
+		<isEqual property="v_FIRSTFLAG11" compareValue="true">
+			StartDate = TO_DATE(#v_STARTDATE#,'YYYY-MM-DD HH24:MI:SS')
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG11" compareValue="true">
+			,StartDate = TO_DATE(#v_STARTDATE#,'YYYY-MM-DD HH24:MI:SS')
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ENDDATE">
+		<isEqual property="v_FIRSTFLAG12" compareValue="true">
+			EndDate = $v_ENDDATE$
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG12" compareValue="true">
+			,EndDate = $v_ENDDATE$
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERID">
+		<isEqual property="v_FIRSTFLAG13" compareValue="true">
+			WriterID = #v_WRITERID#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG13" compareValue="true">
+			,WriterID = #v_WRITERID#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERNAME">
+		<isEqual property="v_FIRSTFLAG14" compareValue="true">
+			WriterName = #v_WRITERNAME#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG14" compareValue="true">
+			,WriterName = #v_WRITERNAME#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERNAME2">
+		<isEqual property="v_FIRSTFLAG15" compareValue="true">
+			WriterName2 = #v_WRITERNAME2#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG15" compareValue="true">
+			,WriterName2 = #v_WRITERNAME2#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERJOBTITLE">
+		<isEqual property="v_FIRSTFLAG16" compareValue="true">
+			WriterJobTitle = #v_WRITERJOBTITLE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG16" compareValue="true">
+			,WriterJobTitle = #v_WRITERJOBTITLE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERJOBTITLE2">
+		<isEqual property="v_FIRSTFLAG17" compareValue="true">
+			WriterJobTitle2 = #v_WRITERJOBTITLE2#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG17" compareValue="true">
+			,WriterJobTitle2 = #v_WRITERJOBTITLE2#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERDEPTID">
+		<isEqual property="v_FIRSTFLAG18" compareValue="true">
+			WriterDeptID = #v_WRITERDEPTID#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG18" compareValue="true">
+			,WriterDeptID = #v_WRITERDEPTID#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERDEPTNAME">
+		<isEqual property="v_FIRSTFLAG19" compareValue="true">
+			WriterDeptName = #v_WRITERDEPTNAME#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG19" compareValue="true">
+			,WriterDeptName = #v_WRITERDEPTNAME#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_WRITERDEPTNAME2">
+		<isEqual property="v_FIRSTFLAG20" compareValue="true">
+			WriterDeptName2 = #v_WRITERDEPTNAME2#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG20" compareValue="true">
+			,WriterDeptName2 = #v_WRITERDEPTNAME2#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ISPUBLIC">
+		<isEqual property="v_FIRSTFLAG21" compareValue="true">
+			isPublic = #v_ISPUBLIC#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG21" compareValue="true">
+			,isPublic = #v_ISPUBLIC#
+		</isNotEqual>
+		</isNotEmpty>
+	 WHERE 
+	 	DocID = #v_DOCID#
+	 AND 
+	 	TENANT_ID = #v_TENANTID#
+   </update>
+   
+   <update id="EzApprovalG.updateExpAprDocInfo" parameterClass="map">
+		UPDATE 
+			TBL_EXPAPRDOCINFO 
+		SET
+		
+		<isNotEmpty property="v_SECURITYCODE">
+		<isEqual property="v_FIRSTFLAG" compareValue="true">
+			Securitycode = #v_SECURITYCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG" compareValue="true">
+			,Securitycode = #v_SECURITYCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_STORAGEPERIOD">
+		<isEqual property="v_FIRSTFLAG2" compareValue="true">
+			StoragePeriod = #v_STORAGEPERIOD#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG2" compareValue="true">
+			,StoragePeriod = #v_STORAGEPERIOD#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ITEMCODE">
+		<isEqual property="v_FIRSTFLAG3" compareValue="true">
+			ItemCode = #v_ITEMCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG3" compareValue="true">
+			,ItemCode = #v_ITEMCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ITEMNAME">
+		<isEqual property="v_FIRSTFLAG4" compareValue="true">
+			 ItemName = #v_ITEMNAME#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG4" compareValue="true">
+			, ItemName = #v_ITEMNAME#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ITEMNAME2">
+		<isEqual property="v_FIRSTFLAG5" compareValue="true">
+			 ItemName2 = #v_ITEMNAME2#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG5" compareValue="true">
+			, ItemName2 = #v_ITEMNAME2#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_URGENTAPPROVAL">
+		<isEqual property="v_FIRSTFLAG6" compareValue="true">
+			 UrgentApproval = #v_URGENTAPPROVAL#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG6" compareValue="true">
+			, UrgentApproval = #v_URGENTAPPROVAL#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_KEYWORD">
+		<isEqual property="v_FIRSTFLAG7" compareValue="true">
+			 KeyWord = #v_KEYWORD#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG7" compareValue="true">
+			, KeyWord = #v_KEYWORD#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_SPECIALRECORDCODE">
+		<isEqual property="v_FIRSTFLAG8" compareValue="true">
+			 SPECIALRECORDCODE = #v_SPECIALRECORDCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG8" compareValue="true">
+			, SPECIALRECORDCODE = #v_SPECIALRECORDCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_PUBLICITYCODE">
+		<isEqual property="v_FIRSTFLAG9" compareValue="true">
+			 PublicityCode = #v_PUBLICITYCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG9" compareValue="true">
+			, PublicityCode = #v_PUBLICITYCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_LIMITRANGE">
+		<isEqual property="v_FIRSTFLAG10" compareValue="true">
+			 LimitRange = #v_LIMITRANGE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG9" compareValue="true">
+			, LimitRange = #v_LIMITRANGE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_PAGENUM">
+		<isEqual property="v_FIRSTFLAG11" compareValue="true">
+			 PageNum = #v_PAGENUM#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG11" compareValue="true">
+			, PageNum = #v_PAGENUM#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_CABINETID">
+		<isEqual property="v_FIRSTFLAG12" compareValue="true">
+			 CabinetID = #v_CABINETID#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG12" compareValue="true">
+			, CabinetID = #v_CABINETID#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_TASKCODE">
+		<isEqual property="v_FIRSTFLAG13" compareValue="true">
+			 TaskCode = #v_TASKCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG13" compareValue="true">
+			, TaskCode = #v_TASKCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_DOCNUMCODE">
+		<isEqual property="v_FIRSTFLAG14" compareValue="true">
+			 DocNumCode = #v_DOCNUMCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG14" compareValue="true">
+			, DocNumCode = #v_DOCNUMCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_ORGDOCNUMCODE">
+		<isEqual property="v_FIRSTFLAG15" compareValue="true">
+			 OrgDocNumCode = #v_ORGDOCNUMCODE#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG15" compareValue="true">
+			, OrgDocNumCode = #v_ORGDOCNUMCODE#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_SEPERATEATTACHXML">
+		<isEqual property="v_FIRSTFLAG16" compareValue="true">
+			 SeperateAttachXML = #v_SEPERATEATTACHXML#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG16" compareValue="true">
+			, SeperateAttachXML = #v_SEPERATEATTACHXML#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_SUMMARY">
+		<isEqual property="v_FIRSTFLAG17" compareValue="true">
+			 Summary = #v_SUMMARY#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG17" compareValue="true">
+			, Summary = #v_SUMMARY#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_SECURITYAPPROVAL">
+		<isEqual property="v_FIRSTFLAG18" compareValue="true">
+			 SecurityApproval = #v_SECURITYAPPROVAL#
+		</isEqual>
+		<isNotEqual property="v_FIRSTFLAG18" compareValue="true">
+			, SecurityApproval = #v_SECURITYAPPROVAL#
+		</isNotEqual>
+		</isNotEmpty>
+		
+		WHERE 
+			DocID = #v_DOCID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+		
+   </update>
 </sqlMap>
