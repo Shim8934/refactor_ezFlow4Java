@@ -59,7 +59,7 @@
 		    var gubun = "<c:out value='${boardInfo.gubun}' />";
 		    var ListInfo = "";
 		    
-		    if ("${userInfo.lang == '1'}") {
+		    if ("${userInfo.lang}" == '1') {
 		    	pBoardName = "<c:out value='${boardInfo.boardName}' />";
 		    } else {
 		    	pBoardName = "<c:out value='${boardInfo.boardName2}' />";
@@ -180,7 +180,7 @@
 			    $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 			    $("#Edatepicker").datepicker('setDate', NowDate2);
 			    
-			    if("${userInfo.lang == '1'}"){
+			    if("${userInfo.lang}" == '1'){
 					$.datepicker.regional['ko'] = {
 		            	closeText: '닫기',
 		            	prevText: '이전달',

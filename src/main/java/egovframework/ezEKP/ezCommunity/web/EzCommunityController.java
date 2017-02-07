@@ -4442,7 +4442,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	 * 커뮤니티 관리메뉴 전체메일보내기 화면 조회
 	 */
 	@RequestMapping(value = "/ezCommunity/adminNoticeMailOk.do")
-	public void adminNoticeMailOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String adminNoticeMailOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("adminNoticeMailOk started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -4477,9 +4477,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
+			
+			model.addAttribute("result", "OK");
 		}
 		
 		logger.debug("adminNoticeMailOk ended.");
+		
+		return "json";
 	}
 }
 

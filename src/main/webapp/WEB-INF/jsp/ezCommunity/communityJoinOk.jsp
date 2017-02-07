@@ -128,7 +128,7 @@
 									}catch(e){}
 								}
 								window.onload = function(){
-								    if("${userInfo.lang != '3'}"){
+								    if("${userInfo.lang}" != '3'){
 								        document.getElementById("pMessageContent").innerHTML = "<c:out value = '${userInfo.displayName1}' />" + "<spring:message code = 'ezCommunity.t1087' />" + "<br /> (" + "<c:out value = '${clubVO.c_ClubName}' />" + ")Community" + "<spring:message code = 'ezCommunity.t1088' />" + "<br />" + "<spring:message code = 'ezCommunity.t1089' />";
 								    }
 								    else{
