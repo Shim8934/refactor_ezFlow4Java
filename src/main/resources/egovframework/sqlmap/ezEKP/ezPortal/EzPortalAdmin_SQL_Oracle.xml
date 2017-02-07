@@ -1944,7 +1944,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.getPortletProperties_S1" parameterClass="String" resultClass="String">
+	<select id="EzPortalAdminDAO.getPortletProperties_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				1
@@ -1956,11 +1956,13 @@
                       		FROM
                       			TBL_PORTLET_GENERAL 
                        		WHERE
-                       			UID_ = #v_pUID# )
+                       			UID_ = #v_pUID#
+                            AND
+                                TENANT_ID = #tenantID# )
 		]]>
 	</select>
 	
-	<select id="EzPortalAdminDAO.getPortletProperties_S2" parameterClass="String" resultClass="PortalPortletGeneralVO">
+	<select id="EzPortalAdminDAO.getPortletProperties_S2" parameterClass="Map" resultClass="PortalPortletGeneralVO">
 		<![CDATA[
 			SELECT
 				* 
@@ -1968,6 +1970,8 @@
         		TBL_PORTLET_GENERAL 
        		WHERE
        			UID_ = #v_pUID#
+            AND
+                TENANT_ID = #tenantID#
 		]]>
 	</select>
 	

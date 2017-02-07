@@ -609,15 +609,14 @@
 		<![CDATA[
 			SELECT 
 				BRD_ID ,
-            CASE
-				#v_LANG#
-			WHEN
-				 '1' 
-			THEN
-				BRD_NM
-			ELSE
-				BRD_NM2
-			END
+                CASE #v_LANG#
+			       WHEN
+				      '1' 
+			       THEN
+				      BRD_NM
+			       ELSE
+				      BRD_NM2
+			       END
 				BRD_NM,
 				APPROVEFLAG 
 			FROM
@@ -676,9 +675,9 @@
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
-				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+				STR_STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
@@ -741,9 +740,9 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			WHERE
-				STARTDATE <= TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_STR_TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
         	AND
-        		TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+        		STR_STR_TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
         	AND
         		COMPANYID = #v_pCompanyID#
         	AND 
@@ -811,7 +810,7 @@
 			AND
 				A.TENANT_ID = C.TENANT_ID	
 			WHERE
-				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
 			AND
@@ -819,7 +818,7 @@
 			AND
 				REFLAG = '1'
 			AND
-				(to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR to_date(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME)
+				(STR_STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR STR_STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME)
 			AND
 				( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%'
 			OR
@@ -875,7 +874,7 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
         	WHERE
-        		STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+        		STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND
@@ -960,9 +959,9 @@
 			AND
 				PNUM = #v_PNUM#
 			AND 
-				STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				To_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+				STR_STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
 			AND
 				( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
 			AND
@@ -1276,8 +1275,8 @@
 			UPDATE
 				TBL_RS_SCHEDULE
       		SET 
-      			STARTDATE = TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'),
-          		ENDDATE = TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+      			STARTDATE = STR_STR_TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'),
+          		ENDDATE = STR_STR_TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
     		WHERE
     			COMPANYID = #v_pCompanyID#
      		AND 
@@ -1300,8 +1299,8 @@
 			UPDATE
 				TBL_RS_SCHEDULEREPETITION
       		SET 
-      			STARTDATETIME = TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'),
-          		ENDDATETIME = TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
+      			STARTDATETIME = STR_STR_TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'),
+          		ENDDATETIME = STR_STR_TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
           		REWAY = #v_pReWay#,
           		REDAY = #v_pReDay#,
           		RENUM = #v_pReNum#,
@@ -1363,7 +1362,7 @@
 			INSERT INTO 
 				TBL_RS_SCHEDULEREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
      		VALUES
-     			( #v_Num#, #v_pOwnerID#, TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
+     			( #v_Num#, #v_pOwnerID#, STR_STR_TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), STR_STR_TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
      			, #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#
      			, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#, #tenantID# )
 		]]>
@@ -1640,8 +1639,8 @@
 	                    TITLE ,
 	                    LOCATION ,
 	                    TIMEDISPLAY ,
-	                    TO_DATE(#v_P_sDate# || SUBSTR(STARTDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS') ,
-	                    TO_DATE(#v_P_eDate# || SUBSTR(ENDDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS'),
+	                    STR_TO_DATE(#v_P_sDate# || SUBSTR(STARTDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS') ,
+	                    STR_TO_DATE(#v_P_eDate# || SUBSTR(ENDDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS'),
 	                    ALERTTIME ,
 	                    CONTENT ,
 	                    IMPORTANCE ,
@@ -1785,7 +1784,7 @@
             ( num, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID
             , ownerNM, deptNM, ApproveFlag, TENANT_ID )
             VALUES
-            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
+            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), STR_TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
             #v_tmpOwnerNm#, #v_tmpDeptNm#, #v_P_Approve#, #tenantID# )
 		]]>
 	</insert>
@@ -1798,8 +1797,8 @@
             	TITLE = #v_P_title#,
 				LOCATION = #v_P_location#,
                 TIMEDISPLAY = #v_P_timeDisplay#,
-                STARTDATE = TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'),
-                ENDDATE = TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                STARTDATE = STR_TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = STR_TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'),
                 ALERTTIME = #v_P_alertTime#,
                 CONTENT = #v_P_content#,
                 IMPORTANCE = #v_P_importance#,
@@ -1866,15 +1865,15 @@
 				TITLE = RTRIM(#v_P_title#),
 				LOCATION = RTRIM(#v_P_location#),
                 TIMEDISPLAY = RTRIM(#v_P_timeDisplay#),
-                STARTDATE = TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'),
-                ENDDATE = TO_DATE(RTRIM(#v_P_endDate#), 'YYYY-MM-DD HH24:MI:SS'),
+                STARTDATE = STR_TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = STR_TO_DATE(RTRIM(#v_P_endDate#), 'YYYY-MM-DD HH24:MI:SS'),
                 ALERTTIME = RTRIM(#v_P_alertTime#),
                 CONTENT = #v_P_content#,
                 IMPORTANCE = RTRIM(#v_P_importance#),
                 REFLAG = RTRIM(#v_P_reFlag#),
                 GRESFLAG = RTRIM(#v_P_gresFlag#),
                 ALLDAY = RTRIM(#v_P_allDay#),
-                WRITEDAY = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                WRITEDAY = STR_TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
                 ENTRYLIST = RTRIM(#v_P_entryList#),
                 ATTACHFLAG = RTRIM(#v_P_attachFlag#),
                 CHARACTERID = RTRIM(#v_P_characterID#),
@@ -1930,8 +1929,8 @@
      			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
      			( RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
-     			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
-     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
+     			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), STR_TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), STR_TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
+     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), STR_TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
      			, RTRIM(#v_P_entryList#), IFNULL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID# )
 		]]>
 	</insert>

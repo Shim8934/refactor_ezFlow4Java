@@ -1003,7 +1003,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID);
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId());
 		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID, userInfo.getTenantId());
 		
 		if (prop.getFrameType() !=null && prop.getFrameType().equals("")) {
@@ -1368,7 +1368,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID);
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId());
 		
 		String displayName = prop.getDisplayName();
 		String url = prop.getUrl();

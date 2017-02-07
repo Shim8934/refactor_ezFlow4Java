@@ -768,7 +768,6 @@
 				
 		</isEqual>
 		
-		<!--Ң߈ȑٮܭ -->
 		<isEqual property="v_PLISTTYPE" compareValue="2">
 		    <![CDATA[
 		    SELECT * 		
@@ -776,7 +775,7 @@
 						 SELECT 
 						 	A.*  
 						 FROM 
-							VAPRDOINGDOCLIST A  
+							VAPRWILLDOCLIST A  
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
 						 AND 
@@ -808,7 +807,6 @@
 	  		</isGreaterThan>
 		</isEqual>
 		
-		<!-- ѡg¸Ƞٮܭ -->
 		<isEqual property="v_PLISTTYPE" compareValue="3">
 		    <![CDATA[
 		     SELECT * 		
@@ -870,7 +868,6 @@
 	  		</isGreaterThan>
 		</isEqual>
 		
-		<!-- ڝݛٮܭ -->
 		<isEqual property="v_PLISTTYPE" compareValue="4">
 			<![CDATA[
 			   SELECT * 		

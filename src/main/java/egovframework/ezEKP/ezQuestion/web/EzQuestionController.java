@@ -1446,12 +1446,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pFilePath = "";
 		String type = "";
 		String mode = "";
+		
 		if(req.getParameter("QstType") != null)
 			type = String.valueOf(req.getParameter("QstType"));
 		if(req.getParameter("mode") != null)
 			mode = String.valueOf(req.getParameter("mode"));
+		
 		String pFileName = "";
 		MultipartFile file = req.getFile("cmuds");
+		
 		if(file != null) {
 			pFileName = req.getFile("cmuds").getOriginalFilename();
 			pFileName = pFileName.replace("+", "%2b");
@@ -1462,6 +1465,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			//String qDirPath = commonUtil.getRealPath(req);
 			String qDirPath = commonUtil.getRealPath(req) + pDirPath;
 			File temp = new File(qDirPath);
+			
 			if(!temp.exists()) {
 				temp.mkdirs();
 			}
