@@ -557,7 +557,6 @@
 						keyword,
 						formname,
 						NVL(formname2,FORMNAME) AS FORMNAME2,
-						TBL_APRDOCINFO.companyid,
 						itemcode,
 						itemname,
 						NVL(itemname2, ITEMNAME) AS ITEMNAME2,
