@@ -3955,7 +3955,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					break;
 					
         		case 4:
-        			strTagData = "<input type=\"checkbox\" onclick=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
+        			strTagData = "<input type=\"checkbox\" onchange=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
                     strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
                     iValueNode = doc.createTextNode(strTagData);
                     strTagData = "";

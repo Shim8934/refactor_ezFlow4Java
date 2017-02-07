@@ -20,7 +20,10 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
 		        tableXML();
+		        
+		    	
 		    }
 		    
 		    function MM_reloadPage(init){
@@ -231,23 +234,22 @@
 			}
 	
 			function seqResponse(flag, objChk, objQuesNo){
-			    try{
-			        var txtAnswer = eval(objQuesNo);
-			        var ChkAnswer = eval(objChk);
-			        if(ChkAnswer[flag].checked){
-			            txtAnswer.value = txtAnswer.value + ChkAnswer[flag].value + ";";
-			        }else{
-			            var currTxt = txtAnswer.value;
-			            var currValue = ChkAnswer[flag].value + ";";
-			            var rv = currTxt.indexOf(currValue);
-	
-			            if(rv != -1){
-			                var strReplace = currTxt.replace(currValue, "");
-			                txtAnswer.value = strReplace;
-			            }
-			        }
-			    }catch (e){
-			    }
+		        var txtAnswer = eval(objQuesNo);
+		        var ChkAnswer = eval(objChk);
+		        
+		        if(ChkAnswer[flag].checked){
+		            txtAnswer.value = txtAnswer.value + ChkAnswer[flag].value + ";";
+		        }else{
+		            var currTxt = txtAnswer.value;
+		            var currValue = ChkAnswer[flag].value + ";";
+		            var rv = currTxt.indexOf(currValue);
+
+		            if(rv != -1){
+		                var strReplace = currTxt.replace(currValue, "");
+		                txtAnswer.value = strReplace;
+		            }
+		        }
+			    
 			}
 			
 			function file_open(pType, pBrdID, pItemNo, pQstNo, pAnsNo, pAttID){
