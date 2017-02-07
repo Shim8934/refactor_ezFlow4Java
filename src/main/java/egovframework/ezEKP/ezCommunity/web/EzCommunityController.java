@@ -1170,7 +1170,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pBoardID = request.getParameter("boardID");
 		String pItemID = request.getParameter("itemID");
 		
-		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(commonUtil.getMultiData(userInfo.getLang()), pBoardID, pItemID, userInfo.getTenantId());
+		List<CommunityOneLineReplyVO> oneLineReplyList = ezCommunityService.readOneLineReply(commonUtil.getMultiData(userInfo.getLang()), pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
 		
 		model.addAttribute("oneLineReplyList", oneLineReplyList);
 		
@@ -1584,7 +1584,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		String fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
-		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no, userInfo.getTenantId());
+		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no, userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (cBoardGet1 != null) {
 			strTitle = cBoardGet1.getTitle().trim().replaceAll("&quot;", "'").replaceAll("&dquot;", "\"");
@@ -1898,7 +1898,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
 		String no = request.getParameter("no");
-
+		
 		boolean bIsMyContent = false;
 		
 		item.setId(userInfo.getId());

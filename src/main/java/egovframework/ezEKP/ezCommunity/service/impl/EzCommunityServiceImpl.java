@@ -2102,13 +2102,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID) throws Exception {
+	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID, String offset) throws Exception {
 		logger.debug("bbsViewNewGet1 started.");
 		logger.debug("bName : " + bName + ", no : " + no + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
 		map.put("v_NO", no);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.bbsViewNewUpdate(map);
@@ -3088,13 +3089,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID) throws Exception {
+	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
 		logger.debug("readOneLineReply started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_userInfo_lang", lang);
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("tenantID", tenantID);
 		
 		List<CommunityOneLineReplyVO> list = ezCommunityDAO.readOneLineReply(map);

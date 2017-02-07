@@ -36,7 +36,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
-	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID) throws Exception;
+	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 
@@ -56,7 +56,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception;
 	
-	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID) throws Exception;
+	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID, String offset) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang, int tenantID) throws Exception;
 	
