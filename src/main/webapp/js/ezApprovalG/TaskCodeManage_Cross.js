@@ -135,7 +135,7 @@ function btnViewTaskHistoryInfo_onclick() {
         taskhistoryinfo_cross_dialogArguments[0] = para;
         taskhistoryinfo_cross_dialogArguments[1] = btnViewTaskHistoryInfo_onclick_Complete;
 
-        var ViewTaskInfo_Cross = window.open("/admin/ezApprovalG/taskHistoryInfo.do", "TaskHistoryInfo", GetOpenWindowfeature(860, 326));
+        var ViewTaskInfo_Cross = window.open("/admin/ezApprovalG/taskHistoryInfo.do", "TaskHistoryInfo", GetOpenWindowfeature(840, 326));
         try { ViewTaskInfo_Cross.focus(); } catch (e) {
         }
     }
