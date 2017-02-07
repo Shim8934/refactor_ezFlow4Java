@@ -201,17 +201,17 @@
 			var g_progresswin;
 			function btn_AttachAdd_onclick() 
 			{
-			    if(document.form.file1.value != "")
-			    {        
+			    if(document.form.file1.value != "") {        
 			        document.getElementById("btn_AttachDel").disabled = false;
 			        document.getElementById("attachsn").value = pAttachSN;            
 			        document.getElementById("maxsize").value = pBoardFileSize * 1024 * 1024; 
 			        var frm = document.getElementById('form');
 			        frm.submit();
-			    }
-			    else
-			    {
-			        alert("<spring:message code='ezApprovalG.pjj01'/>");
+			        
+			        document.form.file1.value = "";
+			    } else {
+			    	return;
+// 			        alert("<spring:message code='ezApprovalG.pjj01'/>");
 			    }
 			}
 			
@@ -656,19 +656,17 @@
 		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezApprovalG/upload.do" target="ifrm" >
 		    <div class="btnposition">       
-		        <a class="file-btn" style="vertical-align:top">
-		          <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px;">
-		          <span for="file" id="btn_AttachAdd"><spring:message code='ezApprovalG.t268'/></span>
-		        </a>
+		        <input id="file1" name="file1" type="file" onchange="btn_AttachAdd_onclick()" style="margin-left:100px; display: none;">
+		        <a class="imgbtn"><span for="file" id="btn_AttachAdd" onClick="return attach_Add()"><spring:message code='ezApprovalG.t268'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a>
 		        <a class="imgbtn"><span id="btn_AttachSaveSure" onClick="return btn_AttachSaveSure_onclick()"><spring:message code='ezApprovalG.t20'/></span></a>
 		        <a class="imgbtn"><span id="AttachCancel" onClick="return AttachCancel_onclick()"><spring:message code='ezApprovalG.t119'/></span></a>
 		    </div>
-		
-		<input type="hidden" name="compid" id="compid" />
-		<input type="hidden" name="docid" id="docid" />
-		<input type="hidden" name="attachsn" id="attachsn" />
-		<input type="hidden" name="maxsize" id="maxsize" />
+		    
+			<input type="hidden" name="compid" id="compid" />
+			<input type="hidden" name="docid" id="docid" />
+			<input type="hidden" name="attachsn" id="attachsn" />
+			<input type="hidden" name="maxsize" id="maxsize" />
 		</form>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">

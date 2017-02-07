@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezStatisticsAdmin">
+	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
+	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE, 
+				B.FORMID,	
+				A.FORMNAME AS FORMINFO,
+         		CASE  
+         			WHEN DRAFTENDCNT > 0 
+         			THEN ROUND(DTIME / DRAFTENDCNT, 2)
+         			ELSE 0 
+         		END AS DTIME
+         	FROM 
+         		TBL_FORMINFO A  
+         	LEFT OUTER JOIN
+         		( SELECT 
+         				SUBSTR(REGDATE,0,7) AS REGDATE, 
+         				FORMID, 
+         				SUM(DRAFTENDCNT) AS DRAFTENDCNT, 
+         				SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
+         				TENANT_ID
+         		  FROM  
+         		  		TBL_DAILYFORMCOUNTLOG 
+         		  WHERE 
+         		  		TENANT_ID = #tenantID#
+         		  AND
+         		  		REGDATE >=  #startDate# 
+         		  AND 
+         		  		REGDATE < #endDate#
+         		  GROUP BY 
+         		  		SUBSTR(REGDATE,0,7), 
+         		  		FORMID,
+         		  		TENANT_ID ) B  
+         	ON 
+         		A.TENANT_ID = B.TENANT_ID
+         	AND
+         		A.FORMID = B.FORMID
+         	INNER JOIN 
+         		TBL_FORMCONTAINER C 
+         	ON 
+         		A.TENANT_ID = C.TENANT_ID
+         	AND
+         		A.FORMCONTID = C.FORMCONTID
+         	WHERE
+         		A.TENANT_ID = #tenantID#
+         	AND 
+         		REGDATE IS NOT NULL 
+         	AND 
+         		DTIME != 0 
+         	AND 
+         		B.FORMID = #searchID#
+         	ORDER BY 
+         		B.FORMID, 
+         		REGDATE, 
+         		DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.CN ,
+                A.DISPLAYNAME , 
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                CASE 
+                    WHEN DRAFTENDCNT > 0 
+                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            			DEPTID ,
+                        SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID  
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE 
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE < #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		DEPTID,
+                  		TENANT_ID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+          		B.DEPTID = #searchID#
+            AND 
+            	DTIME != '0'
+            AND 
+            	REGDATE IS NOT NULL
+           	ORDER BY 
+           		A.CN,
+                REGDATE,
+                DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getTimeList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.CN ,
+                A.DISPLAYNAME ,
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                CASE
+                	WHEN DRAFTENDCNT > 0 
+                    THEN ROUND(DTIME / DRAFTENDCNT, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                        USERID ,
+                        SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID  
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE
+                  		TENANT_ID = #tenantID#
+                  AND  
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE < #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		USERID,
+                  		TENANT_ID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.USERID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+          		B.USERID = #searchID#
+            AND 
+            	B.DTIME != 0
+            AND 
+            	REGDATE IS NOT NULL
+           	ORDER BY 
+           		A.CN,
+                REGDATE,
+                DTIME DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+				B.FORMID, 
+				A.FORMNAME AS FORMINFO,   
+				IFNULL(DRAFTCNT, 0) AS DRAFTCNT, 
+				IFNULL(DRAFTINGCNT, 0) AS DRAFTINGCNT, 
+				IFNULL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
+				IFNULL(RETURNCNT, 0) AS RETURNCNT
+            FROM 
+            	TBL_FORMINFO A  
+            LEFT OUTER JOIN
+            	( SELECT 
+            			SUBSTR(REGDATE,0,7) AS REGDATE, 
+            			FORMID, 
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
+            			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
+            			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
+            			SUM(RETURNCNT) AS RETURNCNT,
+            			TENANT_ID
+            	  FROM 
+            	  		TBL_DAILYFORMCOUNTLOG
+            	  WHERE 
+            	  		TENANT_ID = #tenantID#
+            	  AND
+            	  		REGDATE >= #startDate# 
+            	  AND 
+            	  		REGDATE < #endDate#
+            	  GROUP BY 
+            	  		SUBSTR(REGDATE,0,7), 
+            	  		FORMID,
+            	  		TENANT_ID ) B  
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.FORMID = B.FORMID
+            INNER JOIN 
+            	TBL_FORMCONTAINER C  
+            ON 
+            	A.TENANT_ID = C.TENANT_ID
+            AND
+            	A.FORMCONTID = C.FORMCONTID
+            WHERE
+            	A.TENANT_ID = #tenantID#
+            AND
+            	REGDATE IS NOT NULL 
+            AND 
+            	B.FORMID = #searchID# 
+            AND 
+            	(DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0)
+            ORDER BY 
+            	FORMID, 
+            	REGDATE, 
+            	DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.DISPLAYNAME ,
+                IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
+                IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                IFNULL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN 
+            FROM 
+            	TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            		SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                    USERID ,
+                    SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                    SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                    SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                    SUM(RETURNCNT)  RETURNCNT,
+                    TENANT_ID  
+                  FROM 
+                  	TBL_DAILYDOCCOUNTLOG 
+                  WHERE  
+                  	TENANT_ID = #tenantID#
+                  AND
+                  	REGDATE >= #startDate#
+                  AND 
+                  	REGDATE < #endDate#
+                  GROUP BY 
+                  	SUBSTR(REGDATE, 0, 7),
+                  	USERID,
+                  	TENANT_ID ) B   
+             ON 
+             	B.TENANT_ID = A.TENANT_ID
+             AND
+             	B.USERID = A.CN
+             AND 
+             	REGDATE IS NOT NULL
+             WHERE  
+             	A.TENANT_ID = #tenantID#
+             AND
+             	B.USERID = #searchID#
+             AND 
+             	( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+             ORDER BY 
+             	USERID,
+             	REGDATE,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getCountList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				REGDATE ,
+                A.DISPLAYNAME ,
+                IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
+                IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                IFNULL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+                        DEPTID ,
+                        SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT,
+                        TENANT_ID  
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE 
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE < #endDate#
+                  GROUP BY 
+                  		SUBSTR(REGDATE, 0, 7),
+                  		DEPTID,
+                  		TENANT_ID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+          		REGDATE IS NOT NULL
+            AND 
+            	A.CN = #searchID#
+            AND 
+            	( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+           	ORDER BY 
+           		CN,
+                REGDATE,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getFormInfo" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT
+				A.FORMID, 
+   				CASE  
+   				WHEN #lang# = 1 THEN B.FORMNAME
+   				ELSE B.FORMNAME2 
+   				END AS FORMINFO
+   			FROM 
+   				TBL_DAILYFORMCOUNTLOG A 
+   			JOIN 
+   				TBL_FORMINFO B
+   			ON 
+   				A.TENANT_ID = B.TENANT_ID
+   			AND
+   				A.FORMID = B.FORMID
+   			JOIN 
+   				TBL_FORMCONTAINER C  
+   			ON 
+   				A.TENANT_ID = C.TENANT_ID
+   			AND
+   				A.FORMCONTID = C.FORMCONTID
+   			WHERE  
+   				A.TENANT_ID = #tenantID#
+   			AND
+   				REGDATE >= #startDate#
+   			AND 
+   				REGDATE < #endDate# 
+   			$searchList$ 
+   			GROUP BY 
+   				A.FORMID, 
+   				B.FORMNAME, 
+   				B.FORMNAME2
+   			ORDER BY 
+   				B.FORMNAME, 
+   				B.FORMNAME2
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				B.FORMID, 
+				A.FORMNAME AS FORMINFO,   
+				IFNULL(DRAFTCNT, 0) AS DRAFTCNT, 
+				IFNULL(DRAFTINGCNT, 0) AS DRAFTINGCNT, 
+				IFNULL(DRAFTENDCNT, 0) AS DRAFTENDCNT, 
+				IFNULL(RETURNCNT, 0) AS RETURNCNT,
+            	IFNULL(DRAFTEND, 0) AS DRAFTEND,
+       			CASE  
+       				WHEN DRAFTEND > 0 
+       				THEN ROUND( DTIME / DRAFTEND,2)
+       				ELSE 0 
+       			END AS DTIME
+            FROM 
+            	TBL_FORMINFO A  
+            LEFT OUTER JOIN
+            	( SELECT 
+            			FORMID, 
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
+            			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
+            			SUM(DRAFTENDCNT + SUSINENDCNT) AS DRAFTENDCNT, 
+            			SUM(RETURNCNT) AS RETURNCNT,
+            			SUM(DRAFTENDCNT) AS DRAFTEND, SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
+            			TENANT_ID
+            	  FROM 
+            	  		TBL_DAILYFORMCOUNTLOG
+            	  WHERE 
+            	  		TENANT_ID = #tenantID#
+            	  AND
+            	  		REGDATE >= #startDate# 
+            	  AND 
+            	  		REGDATE < #endDate#
+            	  GROUP BY 
+            	  		FORMID,
+            	  		TENANT_ID ) B  
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.FORMID = B.FORMID
+            INNER JOIN 
+            	TBL_FORMCONTAINER C  
+            ON 
+            	A.TENANT_ID = C.TENANT_ID
+            AND
+            	A.FORMCONTID = C.FORMCONTID
+            WHERE 
+            	A.TENANT_ID = #tenantID#
+           	AND
+            	(DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0)
+            AND 
+            	A.FORMID = #searchID#
+            ORDER BY 
+            	FORMID, 
+            	DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_D" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				A.DISPLAYNAME ,
+                IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
+                IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                IFNULL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN ,
+                IFNULL(DRAFTEND, 0) DRAFTEND  ,
+                CASE 
+                    WHEN DRAFTEND > 0 
+                    THEN ROUND(DTIME / DRAFTEND, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_DEPTMASTER A
+            LEFT JOIN 
+            	( SELECT 
+            			DEPTID ,
+            			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT  ,
+                        SUM(DRAFTENDCNT)  DRAFTEND  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID  
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE  
+                  		TENANT_ID = #tenantID#
+                  AND
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE < #endDate#
+                  GROUP BY 
+                  		DEPTID,
+                  		TENANT_ID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+           	AND
+            	B.DEPTID = A.CN
+          	WHERE
+          		A.TENANT_ID = #tenantID#
+          	AND  
+          		( DRAFTCNT != 0 OR DRAFTINGCNT != 0 OR DRAFTENDCNT != 0 OR RETURNCNT != 0 )
+            AND 
+            	B.DEPTID = #searchID#
+            ORDER BY 
+            	CN,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getSearchList_U" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+            SELECT 
+            	A.DISPLAYNAME ,
+                IFNULL(DRAFTCNT, 0) DRAFTCNT  ,
+                IFNULL(DRAFTINGCNT, 0) DRAFTINGCNT  ,
+                IFNULL(DRAFTENDCNT, 0) DRAFTENDCNT  ,
+                IFNULL(RETURNCNT, 0) RETURNCNT  ,
+                A.CN ,
+                IFNULL(DRAFTEND, 0) DRAFTEND  ,
+                CASE 
+                    WHEN DRAFTEND > 0 
+                    THEN ROUND(DTIME / DRAFTEND, 2)
+                	ELSE 0
+                END DTIME  
+           	FROM 
+           		TBL_USERMASTER A
+            JOIN 
+            	( SELECT 
+            			USERID ,
+                        SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+                        SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+                        SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+                        SUM(RETURNCNT)  RETURNCNT  ,
+                        SUM(DRAFTENDCNT)  DRAFTEND  ,
+                        SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
+                        TENANT_ID  
+                  FROM 
+                  		TBL_DAILYDOCCOUNTLOG 
+                  WHERE
+                  		TENANT_ID = #tenantID#
+                  AND  
+                  		REGDATE >= #startDate#
+                  AND 
+                  		REGDATE < #endDate#
+                  GROUP BY 
+                  		USERID,
+                  		TENANT_ID ) B   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.USERID = A.CN
+            WHERE
+            	A.TENANT_ID = #tenantID#
+            AND 
+            	( DRAFTCNT != '0' OR DRAFTINGCNT != '0' OR DRAFTENDCNT != '0' OR RETURNCNT != '0' )
+            AND 
+            	B.USERID = #searchID#
+            ORDER BY 
+            	USERID,
+                DRAFTCNT DESC
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getMainList" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
+		<![CDATA[
+			SELECT 
+				SUBSTR(REGDATE, 0, 7) REGDATE  ,
+             	SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
+             	SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
+             	SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
+             	SUM(RETURNCNT)  RETURNCNT  
+        	FROM 
+        		TBL_DAILYDOCCOUNTLOG B
+            JOIN 
+            	TBL_DEPTMASTER A   
+            ON 
+            	B.TENANT_ID = A.TENANT_ID
+            AND
+            	B.DeptID = A.CN
+       		WHERE  
+       			REGDATE >= #startDate#
+            AND 
+            	REGDATE < #endDate#
+            AND 
+            	A.EXTENSIONATTRIBUTE2 = #company#
+        	GROUP BY 
+        		SUBSTR(REGDATE, 0, 7)
+		]]>
+	</select>
+</sqlMap>
