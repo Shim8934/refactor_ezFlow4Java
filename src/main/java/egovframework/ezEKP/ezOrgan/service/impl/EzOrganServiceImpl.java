@@ -416,7 +416,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
                         for(String subinfo : sublist){
                             String[] subinfolist = subinfo.split(":");
-                            if (subinfolist[0].equals(pDeptID)){                                
+                            if (subinfolist[0].equals(pDeptID) && subinfolist.length > 1) {                                
                                 cellvalue = subinfolist[1];
                                 break;
                             }
