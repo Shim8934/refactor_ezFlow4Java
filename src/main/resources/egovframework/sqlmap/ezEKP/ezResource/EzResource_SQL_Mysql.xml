@@ -498,62 +498,103 @@
 		</isEmpty>
 		<isNotEmpty property="v_P_ParentID">
 			<![CDATA[
-				SELECT 	DISTINCT(BRD_ID) ,
-      						A.BRD_NM AS BRD_NM, 
-      						A.BRD_NM2 AS BRD_NM2,
-      						A.BRD_LEVEL AS BRD_LEVEL,
-      						A.BRD_STEP AS BRD_STEP,
-      						A.BRD_POSTTERM AS BRD_POSTTERM,
-      						A.BRD_UPPER AS BRD_UPPER,
-      						A.BRD_GB AS BRD_GB,
-      						A.BRD_URL AS BRD_URL,
-      						A.BRD_EXPLAIN AS BRD_EXPLAIN, 
-      						A.BRD_ACCESS AS BRD_ACCESS,
-      						A.ATTACH_SIZE AS ATTACH_SIZE,
-      						(SELECT IFNULL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
-      						WHERE BRD_UPPER = A.BRD_ID
-      						AND BRD_COMPANY = #v_P_COMPANYID#
-      						AND BRD_GB = '1'
-      						AND TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
-      						(SELECT IFNULL(COUNT(BRD_ID), 0) FROM TBL_RS_BRD  
-      						WHERE BRD_UPPER = A.BRD_ID
-      						AND BRD_COMPANY = #v_P_COMPANYID#
-      						AND BRD_GB = '2'
-      						AND TENANT_ID = #tenantID#) AS SUB_RESCNT, 
-      						'' AS ACCESS_LVL,		
-      						A.APPROVEFLAG
-      				FROM TBL_RS_BRD A   LEFT JOIN TBL_RS_RESACL B
-      				ON A.BRD_ID = B.RESID AND A.TENANT_ID = B.TENANT_ID
-      				WHERE A.BRD_UPPER	= #v_P_PARENTID#
-      				AND A.BRD_COMPANY 	= #v_P_COMPANYID#
-      				AND A.BRD_GB 		= '1'
-      				AND (MEMBER_ID = #v_PCOMID# OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
-      				AND TENANT_ID = #tenantID#
-      				UNION
-      				SELECT 	DISTINCT(BRD_ID) ,
-      						A.BRD_NM AS BRD_NM, 
-      						A.BRD_NM2 AS BRD_NM2,
-      						A.BRD_LEVEL AS BRD_LEVEL,
-      						A.BRD_STEP AS BRD_STEP, 
-      						A.BRD_POSTTERM AS BRD_POSTTERM,
-      						A.BRD_UPPER AS BRD_UPPER,
-      						A.BRD_GB AS BRD_GB, 
-      						A.BRD_URL AS BRD_URL,
-      						A.BRD_EXPLAIN AS BRD_EXPLAIN,
-      						A.BRD_ACCESS AS BRD_ACCESS, 
-      						A.ATTACH_SIZE AS ATTACH_SIZE,
-      						0 AS SUB_CLSCNT, 
-      						0 AS SUB_RESCNT, 
-      						'' AS ACCESS_LVL,	
-      						A.APPROVEFLAG
-      				FROM TBL_RS_BRD A   LEFT JOIN TBL_RS_RESACL B
-      				ON A.BRD_ID = B.RESID AND A.TENANT_ID = B.TENANT_ID
-      				WHERE A.BRD_UPPER	= #v_P_PARENTID#
-      				AND A.BRD_COMPANY 	= #v_P_COMPANYID#
-      				AND A.BRD_GB 		= '2'
-      				AND (MEMBER_ID = #v_PCOMID#	OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
-      				AND TENANT_ID = #tenantID#
-      				ORDER BY BRD_GB, BRD_STEP
+				SELECT
+         	        DISTINCT(BRD_ID) ,
+      				A.BRD_NM AS BRD_NM, 
+      				A.BRD_NM2 AS BRD_NM2,
+      				A.BRD_LEVEL AS BRD_LEVEL,
+      				A.BRD_STEP AS BRD_STEP,
+      				A.BRD_POSTTERM AS BRD_POSTTERM,
+      				A.BRD_UPPER AS BRD_UPPER,
+      				A.BRD_GB AS BRD_GB,
+      				A.BRD_URL AS BRD_URL,
+      				A.BRD_EXPLAIN AS BRD_EXPLAIN, 
+      				A.BRD_ACCESS AS BRD_ACCESS,
+      				A.ATTACH_SIZE AS ATTACH_SIZE,
+      				(SELECT
+                         IFNULL(COUNT(BRD_ID), 0)
+                     FROM
+                         TBL_RS_BRD  
+      				 WHERE
+                         BRD_UPPER = A.BRD_ID
+      				 AND
+                         BRD_COMPANY = #v_P_COMPANYID#
+      				 AND
+                         BRD_GB = '1'
+      				 AND
+                         TENANT_ID = #tenantID#) AS SUB_CLSCNT, 
+      				 (SELECT
+                        IFNULL(COUNT(BRD_ID), 0)
+                      FROM
+                        TBL_RS_BRD  
+      				  WHERE
+                         BRD_UPPER = A.BRD_ID
+      				  AND
+                         BRD_COMPANY = #v_P_COMPANYID#
+      				  AND
+                         BRD_GB = '2'
+      				  AND
+                         TENANT_ID = #tenantID#) AS SUB_RESCNT, 
+      				  '' AS ACCESS_LVL,		
+      				  A.APPROVEFLAG
+      			FROM
+                  TBL_RS_BRD A
+                LEFT JOIN
+                  TBL_RS_RESACL B
+      			ON
+                   A.BRD_ID = B.RESID
+                AND
+                   A.TENANT_ID = B.TENANT_ID
+      			WHERE
+                   A.BRD_UPPER	= #v_P_PARENTID#
+      			AND
+                   A.BRD_COMPANY 	= #v_P_COMPANYID#
+      			AND
+                   A.BRD_GB 		= '1'
+      			AND
+                   (MEMBER_ID = #v_PCOMID# OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
+      			AND
+                   TENANT_ID = #tenantID#
+                   
+      		UNION
+          
+      			SELECT
+             	    DISTINCT(BRD_ID) ,
+      				A.BRD_NM AS BRD_NM, 
+      				A.BRD_NM2 AS BRD_NM2,
+					A.BRD_LEVEL AS BRD_LEVEL,
+					A.BRD_STEP AS BRD_STEP, 
+					A.BRD_POSTTERM AS BRD_POSTTERM,
+					A.BRD_UPPER AS BRD_UPPER,
+					A.BRD_GB AS BRD_GB, 
+					A.BRD_URL AS BRD_URL,
+					A.BRD_EXPLAIN AS BRD_EXPLAIN,
+					A.BRD_ACCESS AS BRD_ACCESS, 
+					A.ATTACH_SIZE AS ATTACH_SIZE,
+					0 AS SUB_CLSCNT, 
+					0 AS SUB_RESCNT, 
+					'' AS ACCESS_LVL,	
+					A.APPROVEFLAG
+      			FROM
+                    TBL_RS_BRD A
+                LEFT JOIN
+                    TBL_RS_RESACL B
+      			ON
+                    A.BRD_ID = B.RESID
+                AND
+                    A.TENANT_ID = B.TENANT_ID
+      			WHERE
+                    A.BRD_UPPER	= #v_P_PARENTID#
+      			AND
+                    A.BRD_COMPANY 	= #v_P_COMPANYID#
+      			AND
+                    A.BRD_GB 		= '2'
+      			AND
+                    (MEMBER_ID = #v_PCOMID#	OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
+      			AND
+                    TENANT_ID = #tenantID#
+      			ORDER BY
+                    BRD_GB, BRD_STEP
 			]]>
 		</isNotEmpty>
 	</select>
