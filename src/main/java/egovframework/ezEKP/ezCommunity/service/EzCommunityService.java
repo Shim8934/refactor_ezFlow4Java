@@ -36,7 +36,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityCBoardVO> getLeftBoardList(int tenantID) throws Exception;
 
-	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID) throws Exception;
+	public List<CommunityOneLineReplyVO> readOneLineReply(String lang, String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 	
 	public List<CommunityBoardItemReadVO> getReaderList(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
 
@@ -56,7 +56,7 @@ public interface EzCommunityService {
 	
 	public List<CommunityClubVO> adminNoticeMailOkGet2(String code, int tenantID) throws Exception;
 	
-	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID) throws Exception;
+	public CommunityCBoardVO bbsViewNewGet1(String bName, String no, int tenantID, String offset) throws Exception;
 	
 	public CommunityCBoardVO bbsEditNew(String bName, String no, String lang, int tenantID) throws Exception;
 	
@@ -308,7 +308,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender, int tenantID) throws Exception;
 
-	public void communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception;
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 

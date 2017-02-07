@@ -355,11 +355,11 @@
 				ref,
 				charfilename,
 				readnum,
-				writeday,
+				TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writeday,
 				username,
 				username2,
 				id,
-				no 
+				no
 			FROM
 				$v_BNAME$
 			WHERE
@@ -1192,7 +1192,7 @@
 				username$v_userInfo_lang$,
 				userid,
 				content,
-				writedate
+				writedate+(#offset#/(60*24)) AS writedate
 			FROM
 				TBL_COMM_ONELINEREPLY
 			WHERE
@@ -2517,7 +2517,7 @@
         	FROM
         		TBL_C_CLUB
         	WHERE
-        		RTRIM(c_clubno) = #v_CODE#
+        		RTRIM(c_clubno) = #v_code#
         	AND
         		tenant_id = #tenantID#
 		]]>
