@@ -57,6 +57,7 @@
 		    var pSortBy = "<c:out value='${pSortBy}' />";
 		    var xmlhttp = createXMLHttpRequest();
 		    var gubun = "<c:out value='${boardInfo.gubun}' />";
+		    var ListInfo = "";
 		    
 		    if ("${userInfo.lang == '1'}") {
 		    	pBoardName = "<c:out value='${boardInfo.boardName}' />";
@@ -299,9 +300,7 @@
 		    }
 			
 			function checkBox_checkAll() {
-				var i=0;
-    			
-    			for(i=0;i<$("input[name='chk']").length;i++) {
+    			for(i=0; i<$("input[name='chk']").length; i++) {
     				if($("input[name='chk']")[i].type == 'checkbox') {
     					if($("input[name='checkbox']")[0].checked) {
     					$("input[name='chk']")[i].checked = true;
@@ -312,6 +311,7 @@
     					}				
     				}
     			}
+    			
     			//보드아이디가 안나옴
 			    /* for (var i = 1; i < document.frmOutbox.length; i++) {
 			        if (document.frmOutbox[i].type == 'checkbox') {
@@ -346,6 +346,11 @@
     				alert("<spring:message code='ezCommunity.t901' />");
     				return;
     			}
+    			
+    			if (CheckIfHasReplies()) {
+    		        alert("<spring:message code='ezCommunity.t425' />");
+                    return;
+                }
     			
     		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     		        if (gubun == "2") {
@@ -387,11 +392,6 @@
     		    		}
     		    	}
     		    }
-    		    
-    		    if (CheckIfHasReplies()) {
-    		        alert("<spring:message code='ezCommunity.t425' />");
-                    return;
-                }
     		    
     		    if(gubun != "2"){
     		        var ret = confirm("<spring:message code='ezCommunity.t426' />");

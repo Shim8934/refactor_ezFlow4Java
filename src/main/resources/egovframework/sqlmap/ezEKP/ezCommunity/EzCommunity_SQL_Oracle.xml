@@ -1858,7 +1858,7 @@
 					c_membercnt,
 					description,
 					description2,
-					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno ) ROWNUM_
+					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate ) ROWNUM_
 				FROM
 					TBL_C_CLUB
 				JOIN
@@ -1901,7 +1901,7 @@
 						c_membercnt,
 						description,
 						description2,
-						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate  ) ROWNUM_
 					FROM
 						TBL_C_CLUB 
 					JOIN
@@ -1950,7 +1950,7 @@
 						c_clubconfirmtype,
 						description,
 						description2,
-						ROW_NUMBER() OVER (ORDER BY T1.c_clubno) AS ROWNUM_
+						ROW_NUMBER() OVER (ORDER BY T1.c_regdate) AS ROWNUM_
 					FROM
 						TBL_C_CLUB T1
 					JOIN
@@ -1985,7 +1985,7 @@
 						displayname2,
 						description,
 						description2,
-						ROW_NUMBER() OVER (ORDER BY T1.c_clubno) AS ROWNUM_
+						ROW_NUMBER() OVER (ORDER BY T1.c_regdate) AS ROWNUM_
 					FROM
 						TBL_C_CLUB T1
 					JOIN
@@ -2669,10 +2669,16 @@
 					c_clubconfirmtype
                 FROM
                 	TBL_C_CLUB
+                JOIN
+					TBL_USERMASTER T2
+				ON
+					RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				AND
+					TBL_C_CLUB.tenant_id = T2.tenant_id
                 WHERE
                 	c_adminconfirm = 'Y'
                 AND
-                	tenant_id = #tenantID#
+                	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
                 	c_membercnt DESC
                 )
@@ -2700,14 +2706,20 @@
 					c_clubconfirmtype
                 FROM
                 	TBL_C_CLUB
+                JOIN
+					TBL_USERMASTER T2
+				ON
+					RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				AND
+					TBL_C_CLUB.tenant_id = T2.tenant_id
                 WHERE
                 	(c_regdate >=  (TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -30))
                 AND
                 	c_adminconfirm = 'Y'
                 AND
-                	tenant_id = #tenantID#
+                	TBL_C_CLUB.tenant_id = #tenantID#
                 ORDER BY
-                	c_clubno DESC)
+                	c_regdate DESC)
 			WHERE
 				ROWNUM <=3
 		]]>
@@ -2816,7 +2828,7 @@
 			FROM
 				(SELECT
 					c_sysopid,
-					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC ) ROWNUM_
+					ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate DESC ) ROWNUM_
 				FROM
 					TBL_C_CLUB
 				WHERE
@@ -2877,7 +2889,7 @@
 						c_clubconfirmtype,
 						displayname,
 						displayname2,
-						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate DESC  ) ROWNUM_
 					FROM
 						TBL_C_CLUB
 					JOIN
@@ -2913,7 +2925,7 @@
 						c_clubconfirmtype,
 						' ' displayname,
 						' ' displayname2,
-						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_clubno DESC  ) ROWNUM_
+						ROW_NUMBER() OVER ( ORDER BY TBL_C_CLUB.c_regdate DESC  ) ROWNUM_
 					FROM
 						TBL_C_CLUB
 					WHERE
