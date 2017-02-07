@@ -5477,12 +5477,11 @@
 										WHERE 
 											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
 									</isEmpty>
-									<isEqual property="v_CONTID" compareValue=" " >
+									<isEmpty property="v_CONTID" >
 										WHERE 
 											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
-									</isEqual>
+									</isEmpty>
 									<isNotEmpty property="v_CONTID">
-									<isNotEqual property="v_CONTID" compareValue=" " >
 									<isEqual property="v_CONTID" compareValue="ADMIN">
 										WHERE 
 											  CONTAINERID IS NOT NULL
@@ -5490,7 +5489,6 @@
 									<isNotEqual property="v_CONTID" compareValue="ADMIN">
 									 	WHERE 	
 									 		  CONTAINERID IN (#v_CONTID#)
-									</isNotEqual>
 									</isNotEqual>
 									</isNotEmpty>
 									    AND 
@@ -5502,13 +5500,11 @@
 										]]>
 									</isNotEqual>
 									<isEqual property="v_PUBFLAG" compareValue="Y">
-									<isNotEqual property="v_CONTID" compareValue=" ">
 									<isNotEmpty property="v_CONTID">
 										<![CDATA[
 										AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
 								      	]]>
 									</isNotEmpty>
-									</isNotEqual>
 									</isEqual>
 									<isNotEmpty property="v_SUBQUERY">
 										AND 
@@ -8448,12 +8444,12 @@
    		 ]]>  
    		</isNotEmpty>
    		
-   		<isEqual property="v_CONTID" compareValue=" "> 
+   		<isEmpty property="v_CONTID"> 
    		<![CDATA[
      	AND   
       		TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#    
     		 ]]>  
-   		</isEqual>
+   		</isEmpty>
    		
    		<isEqual property="v_CONTID" compareValue="ADMIN">
    		<![CDATA[
@@ -8480,7 +8476,7 @@
    		</isNotEqual>
    		
    		<isEqual property="v_PUBFLAG" compareValue="Y">
-   		<isNotEqual property="v_CONTID" compareValue=" "> 
+   		<isNotEmpty property="v_CONTID" > 
    		<isNotEqual property="v_APRFLAG" compareValue="INMYAPPRSEARCH">
    		<isNotEqual property="v_CONTID" compareValue="ADMIN">
    		<![CDATA[
@@ -8491,7 +8487,7 @@
        	]]>  
       	</isNotEqual>
       	</isNotEqual>
-   		</isNotEqual>
+   		</isNotEmpty>
    		</isEqual>
    		
    		<isNotEmpty property="v_SUBQUERY"> 
@@ -8537,12 +8533,11 @@
 			WHERE 
 				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
 		</isEmpty>
-		<isEqual property="v_CONTID" compareValue=" " >
+		<isEmpty property="v_CONTID" >
 			WHERE 
 				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
-		</isEqual>
+		</isEmpty>
 		<isNotEmpty property="v_CONTID">
-		<isNotEqual property="v_CONTID" compareValue=" " >
 		<isEqual property="v_CONTID" compareValue="ADMIN">
 			WHERE 
 				  CONTAINERID IS NOT NULL
@@ -8550,7 +8545,6 @@
 		<isNotEqual property="v_CONTID" compareValue="ADMIN">
 		 	WHERE 	
 		 		  CONTAINERID IN (#v_CONTID#)
-		</isNotEqual>
 		</isNotEqual>
 		</isNotEmpty>
 		AND 
@@ -8562,13 +8556,11 @@
 		]]>
 		</isNotEqual>
 		<isEqual property="v_PUBFLAG" compareValue="Y">
-		<isNotEqual property="v_CONTID" compareValue=" ">
 		<isNotEmpty property="v_CONTID">
 		<![CDATA[
 		AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
       	]]>
 		</isNotEmpty>
-		</isNotEqual>
 		</isEqual>
 		<isNotEmpty property="v_SUBQUERY">
 		AND 
