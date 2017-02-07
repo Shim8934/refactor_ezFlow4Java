@@ -224,6 +224,11 @@
     				return;
     			}
     			
+    			if (CheckIfHasReplies()) {
+    		        alert("<spring:message code='ezCommunity.t425' />");
+                    return;
+                }
+    			
     		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     		        if (gubun == "2") {
     		            var pItemInfo = strListInfo.split(";")[0];
@@ -264,11 +269,6 @@
     		    		}
     		    	}
     		    }
-    		    
-    		    if (CheckIfHasReplies()) {
-    		        alert("<spring:message code='ezCommunity.t425' />");
-                    return;
-                }
     		    
     		    if(gubun != "2"){
     		        var ret = confirm("<spring:message code='ezCommunity.t426' />");

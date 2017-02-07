@@ -424,27 +424,25 @@
 	
 	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
 		<![CDATA[
-			SELECT 
-				* 
-        	FROM 
-        		( SELECT 
-        			ROW_NUMBER() OVER ( ORDER BY WriteDate ASC  ) rnum  ,
-                    COUNT(*) OVER ( ) imagecount  ,
-                    ImageID ,
-                    FilePath ,
-                    FileContent ,
-                    main_Flag FLAG  ,
-                    ImageName 
-               	  FROM 
-               	  	TBL_Photo_ImageItem 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-                  	ItemID = #v_pItemID#
-                  AND 
-                  	BoardID = #v_pBoardID# ) T1
-       		WHERE  
-       			rnum BETWEEN #v_pStartRow# AND #v_pEndRow#
+    		  SELECT 
+                COUNT(*) imagecount  ,
+                ImageID ,
+                FilePath ,
+                FileContent ,
+                main_Flag FLAG  ,
+                ImageName 
+           	  FROM 
+           	  	TBL_Photo_ImageItem 
+              WHERE  
+              	TENANT_ID = #v_TENANTID#
+              AND
+              	ItemID = #v_pItemID#
+              AND 
+              	BoardID = #v_pBoardID#
+              ORDER BY 
+              	WriteDate ASC
+              LIMIT
+              	#v_pStartRow# - 1, #v_pEndRow#
 		]]>
 	</select>
 	
@@ -472,9 +470,7 @@
 	<select id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
 		<isEmpty property="v_PSORTBY">
 			<![CDATA[
-				SELECT 
-					* 
-           		FROM ( SELECT 
+           			   SELECT 
            					A.ItemID ,
                          	A.StartDate ,
                          	A.EndDate ,
@@ -509,9 +505,9 @@
 		               AND 
 		                	A.StartDate > #nowDate#
 		           	   ORDER BY 
-		           			A.ParentWriteDate ASC )
-           		WHERE 
-           			ROWNUM <= #v_PENDROW#
+		           			A.ParentWriteDate ASC 
+           			   LIMIT
+           			   		#v_PENDROW#
 			]]>
 		</isEmpty>
 		<isNotEmpty property="v_PSORTBY">
@@ -550,10 +546,10 @@
 	      			A.WRITERID = #v_PUSERID# 
 	      		AND 
 	      			A.STARTDATE > #nowDate# 
-	      		AND 
-	      			ROWNUM <=  #v_PENDROW#
 	      		ORDER BY 
 	      			#v_PSORTBY#
+	      		LIMIT
+	      			#v_PENDROW#
 			]]>
 		</isNotEmpty>
 	</select>
@@ -3695,91 +3691,81 @@
 	
 	<select id="EzBoardDAO.getAdjacentItems2" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
-			SELECT 
-				*  
-	        FROM 
-	        	(SELECT 
-	        		itemid ,
-	                title 
-	        	 FROM 
-	        	 	TBL_BOARD_ITEM 
-	        	 WHERE  
-	        	 	tenant_id = #v_TENANTID#
-	        	 AND
-	        	 	boardid = #v_PBOARDID#
-	             AND 
-	             	parentwritedate >= #v_PPARENTWRITEDATE#
-	             AND 
-	             	startdate <= #nowDate#
-	             AND 
-	             	enddate > #nowDate#
-	        	 ORDER BY 
-	        	 	parentwritedate ASC,
-	                upperitemidtree ,
-	                startdate ASC 
-	             )
-	        WHERE 
-	        	ROWNUM <= 20
+        	 SELECT 
+        		itemid ,
+                title 
+        	 FROM 
+        	 	TBL_BOARD_ITEM 
+        	 WHERE  
+        	 	tenant_id = #v_TENANTID#
+        	 AND
+        	 	boardid = #v_PBOARDID#
+             AND 
+             	parentwritedate >= #v_PPARENTWRITEDATE#
+             AND 
+             	startdate <= #nowDate#
+             AND 
+             	enddate > #nowDate#
+        	 ORDER BY 
+        	 	parentwritedate ASC,
+                upperitemidtree ,
+                startdate ASC
+             LIMIT
+             	20 
        	]]>
 	</select>
 	
 	<select id="EzBoardDAO.getAdjacentItems2Photo" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
-			SELECT 
-				* 
-	        FROM 
-	        	(SELECT 
-	        		itemid ,title 
-	             FROM 
-	             	TBL_BOARD_ITEM 
-	        	 WHERE  
-	        	 	tenant_id = #v_TENANTID#
-	        	 AND
-	        	 	boardid = #v_PBOARDID#
-	             AND 
-	             	parentwritedate >= #v_PPARENTWRITEDATE#
-	             AND 
-	             	startdate <= #nowDate#
-	             AND 
-	             	enddate > #nowDate#
-	             ORDER BY 
-	             	parentwritedate DESC,
-	             	startdate DESC,
-	             	docno DESC,
-	             	upperitemidtree 
-	            )
-	        WHERE 
-	        	ROWNUM <= 20
+        	 SELECT 
+        		itemid,
+        		title 
+             FROM 
+             	TBL_BOARD_ITEM 
+        	 WHERE  
+        	 	tenant_id = #v_TENANTID#
+        	 AND
+        	 	boardid = #v_PBOARDID#
+             AND 
+             	parentwritedate >= #v_PPARENTWRITEDATE#
+             AND 
+             	startdate <= #nowDate#
+             AND 
+             	enddate > #nowDate#
+             ORDER BY 
+             	parentwritedate DESC,
+             	startdate DESC,
+             	docno DESC,
+             	upperitemidtree
+             LIMIT
+             	20 
        	]]>
 	</select>
 	
 	<select id="EzBoardDAO.getAdjacentItems3Photo" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
-			SELECT 
-				*
-        	FROM (SELECT 
-        			 itemid ,
-                     title 
-        		  FROM 
-        		  	 TBL_BOARD_ITEM 
-       			  WHERE
-       			  	 tenant_id = #v_TENANTID#
-       			  AND  
-       			  	 boardid = #v_PBOARDID#
-                  AND 
-                  	 parentwritedate <= #v_PPARENTWRITEDATE#
-                  AND 
-                  	 startdate <= #nowDate#
-                  AND 
-                  	 enddate > #nowDate#
-        		  ORDER BY 
-        		  	 parentwritedate DESC,
-                  	 startdate DESC,
-                  	 docno DESC,
-                  	 upperitemidtree 
-                  )
-        	WHERE 
-        		ROWNUM <= 20
+    		  SELECT 
+    			 itemid ,
+                 title 
+    		  FROM 
+    		  	 TBL_BOARD_ITEM 
+   			  WHERE
+   			  	 tenant_id = #v_TENANTID#
+   			  AND  
+   			  	 boardid = #v_PBOARDID#
+              AND 
+              	 parentwritedate <= #v_PPARENTWRITEDATE#
+              AND 
+              	 startdate <= #nowDate#
+              AND 
+              	 enddate > #nowDate#
+    		  ORDER BY 
+    		  	 parentwritedate DESC,
+              	 startdate DESC,
+              	 docno DESC,
+              	 upperitemidtree
+              LIMIT
+              	 20 
        	]]>
 	</select>
 	
