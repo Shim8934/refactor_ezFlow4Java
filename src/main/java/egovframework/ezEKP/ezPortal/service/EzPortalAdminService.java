@@ -32,7 +32,7 @@ public interface EzPortalAdminService {
 	
 	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID, int tenantID) throws Exception;
 	
-	public PortalPortletGeneralVO getPortletProperties (String pUID) throws Exception;
+	public PortalPortletGeneralVO getPortletProperties (String pUID, int tenantID) throws Exception;
 	
 	public String useThemeInfo(String pUID, int tenantID) throws Exception;
 	
