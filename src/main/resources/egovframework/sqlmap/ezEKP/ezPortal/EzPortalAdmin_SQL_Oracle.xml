@@ -1944,7 +1944,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.getPortletProperties_S1" parameterClass="String" resultClass="String">
+	<select id="EzPortalAdminDAO.getPortletProperties_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				1
