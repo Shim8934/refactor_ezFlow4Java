@@ -2441,11 +2441,12 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		String userDeptPath = userInfo.getDeptPathCode() + ",EVERYONE";
 		
+		CommunityBoardPropertyVO boardInfoTemp = null;
+		
 		for (int i=0; i<userDeptPath.split(",").length; i++) {
-			CommunityBoardPropertyVO boardInfoTemp = brdGetACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
+			boardInfoTemp = brdGetACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp != null) {
-				boardInfo = boardInfoTemp;
 				break;
 			}
 		}
