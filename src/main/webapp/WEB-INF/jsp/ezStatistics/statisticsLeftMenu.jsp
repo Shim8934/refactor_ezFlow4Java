@@ -21,7 +21,8 @@
     window.onload = function()
     {
         <c:if test="${IsJMochaStandAlone != 'YES'}">
-        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
+//        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
+        parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";        
         </c:if>
         <c:if test="${IsJMochaStandAlone == 'YES'}">
         parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
@@ -130,6 +131,7 @@
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
 		    <div class="left_admin" title="<spring:message code='ezStatistics.t124' />"><spring:message code='ezStatistics.t124' /></div>
+      <!--
             <c:if test="${IsJMochaStandAlone != 'YES'}">
             <h2><span id="PERSONAL" style="display:inline-block;width:100%;" onClick="goPage(16)" ><spring:message code='ezStatistics.t1049' /></span></h2>
             <ul>
@@ -138,6 +140,7 @@
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
             </ul>
             </c:if>
+            -->
 		    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t2' /></span></h2>
 		    <ul>
 			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span></li>
@@ -160,11 +163,13 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(13)"><spring:message code='ezStatistics.t1040' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(14)"><spring:message code='ezStatistics.t1041' /></span></li>
 		    </ul>
+      <!--
             <h2><span id="Span2" style="display:inline-block;width:100%;" onClick="menu_change('WEBLOG')" ><spring:message code='ezStatistics.t2004' /></span></h2>
             <ul>
                 <li><span style="display: inline-block; width: 100%;" onclick="menu_change('WEBLOG')"><spring:message code='ezStatistics.t2004' /></span></li>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(21)"><spring:message code='ezStatistics.t2005' /></span></li>
             </ul>
+            -->
             </c:if>
 	    </div>
         <script type="text/javascript">

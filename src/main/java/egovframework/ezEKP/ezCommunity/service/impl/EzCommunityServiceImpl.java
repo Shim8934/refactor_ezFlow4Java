@@ -1336,7 +1336,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			logger.debug("pollDeleteGet3 ended. sysopID=" + sysopID);
 			
-			if (strRegUser.equals(userInfo.getId()) && sysopID.equals(userInfo.getId())) {
+			if (strRegUser.equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
 				logger.debug("pollDeleteGet2 started.");
 				
 				List<CommunityCPollQuestionVO> questionList = ezCommunityDAO.pollDeleteGet2(map);
