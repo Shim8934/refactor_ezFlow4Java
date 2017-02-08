@@ -1015,7 +1015,7 @@
 				  	AND 
 				  		ENDDATE > #nowDate#
 				  	AND 
-				  		READFLAG = '0' 
+				  		D.TOTALCOUNT IS NULL 
 				]]>
 			  </isEqual>
 			  <isEqual property="type" compareValue="3">
