@@ -748,11 +748,27 @@
 					startdate < #v_pNow#
 				AND
 					enddate > #v_pNow#
+		]]>
+		
+		<isEmpty property="v_PSORTBY">
+			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
 					TO_CHAR(A.upperitemidtree) DESC,
 					A.startdate ASC
 				)
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="v_PSORTBY">
+			<![CDATA[
+				ORDER BY
+					$v_PSORTBY$
+				)
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
 			WHERE
 				ROWNUM <= #v_PENDROW#
 		]]>
