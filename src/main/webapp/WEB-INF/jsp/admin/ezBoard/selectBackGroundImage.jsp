@@ -37,6 +37,7 @@
 			
 			function btn_AttachAdd_onclick() {
 		        var extension = document.getElementById("file1").value.split('.');
+
 		        var check = false;
 		        check = compareExtension(check, extension[1]);		         
 		        
@@ -120,7 +121,7 @@
 			<tr>
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
-					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px" onchange="btn_AttachAdd_onclick()" multiple="false" />
+					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px" onchange="btn_AttachAdd_onclick()" />
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>
 					<input type="hidden" name="saveFileName" id="saveFileName" />
 					<input type="hidden" name="guid" />
