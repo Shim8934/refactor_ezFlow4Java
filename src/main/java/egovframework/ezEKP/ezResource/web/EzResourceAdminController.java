@@ -85,7 +85,13 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/resourceMain.do")
-	public String resourceMain(Model model) throws Exception {
+	public String resourceMain(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String crossPage = "/admin/ezResource/gwBoardListManagelistLeft.do";
 		model.addAttribute("crossPage", crossPage);
 		return "admin/ezResource/resMain";
@@ -96,7 +102,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistLeft.do")
 	public String gwBoardListManagelistLeft(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String selectNo = "";
 		String adminYN = "";
 		
@@ -118,7 +129,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 센터화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistCenter.do")
-	public String gwBoardListManagelistCenter(Model model) throws Exception {
+	public String gwBoardListManagelistCenter(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		return "admin/ezResource/resGwBoardListManageListCenter";
 	}
@@ -130,7 +146,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("callManagerDepthNode Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String selectFlag = "";
 		StringBuilder strXML = new StringBuilder();
 		Document xmlRet = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -246,7 +267,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListRegComBoard.do")
 	public String gwBoardListRegComBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String brdID = "";
 		String companyID = "";
 		ResGetSubClsListVO getBrdInfo = new ResGetSubClsListVO();
@@ -286,7 +312,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdMod.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdMod(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		boolean returnValue = ezResourceAdminService.modifyClsData(xmlStr, userInfo.getTenantId());
 		return String.valueOf(returnValue);
@@ -297,7 +327,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListRegSubBoard.do")
 	public String gwBoardListRegSubBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String brdID = "";
 		String brdNm = "";
 		String brdLevel = "";
@@ -307,30 +342,27 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String langPrimary = "";
 		String langSecondary = "";
 		
-		try {
-			langPrimary = config.getProperty("config.lang_Primary1");
-			langSecondary = config.getProperty("config.lang_Secondary1");
-				
-			if (req.getParameter("brdID") != null) {
-				brdID = req.getParameter("brdID");
-			}
-			if (req.getParameter("brdNm") != null) {
-				brdNm = req.getParameter("brdNm");
-			}
-			if (req.getParameter("brdLevel") != null) {
-				brdLevel = req.getParameter("brdLevel");
-			}
-			if (req.getParameter("brdStep") != null) {
-				brdStep = req.getParameter("brdStep");
-			}
-			if (req.getParameter("brdGroup") != null) {
-				brdGroup = req.getParameter("brdGroup");
-			}
-			if (req.getParameter("selCompanyID") != null) {
-				selCompanyID = req.getParameter("selCompanyID");
-			}
-		} catch (Exception e) {
+		
+		langPrimary = config.getProperty("config.lang_Primary1");
+		langSecondary = config.getProperty("config.lang_Secondary1");
 			
+		if (req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
+		}
+		if (req.getParameter("brdNm") != null) {
+			brdNm = req.getParameter("brdNm");
+		}
+		if (req.getParameter("brdLevel") != null) {
+			brdLevel = req.getParameter("brdLevel");
+		}
+		if (req.getParameter("brdStep") != null) {
+			brdStep = req.getParameter("brdStep");
+		}
+		if (req.getParameter("brdGroup") != null) {
+			brdGroup = req.getParameter("brdGroup");
+		}
+		if (req.getParameter("selCompanyID") != null) {
+			selCompanyID = req.getParameter("selCompanyID");
 		}
 
 		model.addAttribute("userInfo", userInfo);
@@ -343,6 +375,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		model.addAttribute("adminFg", "YES");
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
+		
 		return "admin/ezResource/resGwBoardListRegSubBoard";
 	}
 	
@@ -352,7 +385,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdNew.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdNew(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlStr) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		boolean returnValue = ezResourceAdminService.addClsData(xmlStr, userInfo.getTenantId());
 		return String.valueOf(returnValue);
@@ -363,7 +400,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardRightMain.do")
 	public String gwBoardPostRegRightMain(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String brdID = "";
 		String brdNm = "";
@@ -423,6 +464,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		model.addAttribute("strOptions", strOptions);
 		model.addAttribute("optAdmLvl", optAdmLvl);
 		model.addAttribute("optUserLvl", optUserLvl);
+		
 		return "admin/ezResource/resGwBoardPostRegBoardRightMain";
 	}
 	
@@ -431,7 +473,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do")
 	public String gwBoardPostRegRight(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String useOCS = config.getProperty("config.USE_OCS");
 		model.addAttribute("useOCS", useOCS);
 		return "admin/ezResource/popup/resGwBoardPostRegBoardRight";
@@ -442,7 +489,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardOrder.do")
 	public String gwBoardPostRegBoardOrder(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale,HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		StringBuilder tempStr = new StringBuilder();
 		String pWrnMsg = "";
 		String strRtnXML = "";
@@ -460,67 +512,64 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String companyID = "";
 		int intSubClsCnt = 0;
 		
-		try {
-			brdID = req.getParameter("brdID");
-			upNm = req.getParameter("brdNm");
-			upLevel = req.getParameter("brdLevel");
-			upStep = req.getParameter("brdStep");
-			upCount = req.getParameter("brdCount");
-			companyID = req.getParameter("selCompanyID");
-			
-			tempStr.append("<PARA_DATA>");
-			tempStr.append("<NODE>"+brdID+"</NODE>");
-			tempStr.append("<NODE>"+companyID+"</NODE>");
-			tempStr.append("</PARA_DATA>");
-			
-			strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
+	
+		brdID = req.getParameter("brdID");
+		upNm = req.getParameter("brdNm");
+		upLevel = req.getParameter("brdLevel");
+		upStep = req.getParameter("brdStep");
+		upCount = req.getParameter("brdCount");
+		companyID = req.getParameter("selCompanyID");
+		
+		tempStr.append("<PARA_DATA>");
+		tempStr.append("<NODE>"+brdID+"</NODE>");
+		tempStr.append("<NODE>"+companyID+"</NODE>");
+		tempStr.append("</PARA_DATA>");
+		
+		strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
 
-			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
-			
-			String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
-			
-			intSubClsCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBCLSCNT").item(0).getTextContent());
-			
-			if (strErrChk.equals("True")) {
-				if (intSubClsCnt <= 1) {
-					pWrnMsg = egovMessageSource.getMessage("ezResource.t103", locale);
-				} else {
-					StringBuilder tempStr2 = new StringBuilder();
-					tempStr2.append("<PARA_DATA>");
-					tempStr2.append("<NODE>"+brdID+"</NODE>");
-					tempStr2.append("<NODE>"+companyID+"</NODE>");
-					tempStr2.append("</PARA_DATA>");
-					
-					strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getLang(), userInfo.getTenantId());
-					
-					Document objXML2 = commonUtil.convertStringToDocument(strRtnXML);
-					
-					for (int i=0; i<objXML2.getDocumentElement().getChildNodes().getLength(); i++) {
-						strBrdStep = objXML2.getElementsByTagName("BRDSTEP").item(i).getTextContent();
-						strBrdCount = objXML2.getElementsByTagName("BRDCOUNT").item(i).getTextContent();
-						strBrdID = objXML2.getElementsByTagName("BRDID").item(i).getTextContent();
-						strBrdNm = objXML2.getElementsByTagName("BRDNM").item(i).getTextContent();
-						
-						if (intSubClsCnt == i) {
-							strTmp = "Selected";
-						} else {
-							strTmp = "";
-						}
-						
-						pSubBrdLst = pSubBrdLst + "<OPTION STEP= " + strBrdStep;
-						pSubBrdLst = pSubBrdLst + "  COUNT= " + strBrdCount;
-	                    pSubBrdLst = pSubBrdLst + "  VALUE= " + strBrdID + " " + strTmp + ">";
-	                    pSubBrdLst = pSubBrdLst + strBrdNm + "</option>";
-					}
-				}
+		Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
+		
+		String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
+		
+		intSubClsCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBCLSCNT").item(0).getTextContent());
+		
+		if (strErrChk.equals("True")) {
+			if (intSubClsCnt <= 1) {
+				pWrnMsg = egovMessageSource.getMessage("ezResource.t103", locale);
 			} else {
-				resp.setCharacterEncoding("utf-8");
-				resp.getWriter().write(egovMessageSource.getMessage("ezResource.t73", locale));
+				StringBuilder tempStr2 = new StringBuilder();
+				tempStr2.append("<PARA_DATA>");
+				tempStr2.append("<NODE>"+brdID+"</NODE>");
+				tempStr2.append("<NODE>"+companyID+"</NODE>");
+				tempStr2.append("</PARA_DATA>");
+				
+				strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getLang(), userInfo.getTenantId());
+				
+				Document objXML2 = commonUtil.convertStringToDocument(strRtnXML);
+				
+				for (int i=0; i<objXML2.getDocumentElement().getChildNodes().getLength(); i++) {
+					strBrdStep = objXML2.getElementsByTagName("BRDSTEP").item(i).getTextContent();
+					strBrdCount = objXML2.getElementsByTagName("BRDCOUNT").item(i).getTextContent();
+					strBrdID = objXML2.getElementsByTagName("BRDID").item(i).getTextContent();
+					strBrdNm = objXML2.getElementsByTagName("BRDNM").item(i).getTextContent();
+					
+					if (intSubClsCnt == i) {
+						strTmp = "Selected";
+					} else {
+						strTmp = "";
+					}
+					
+					pSubBrdLst = pSubBrdLst + "<OPTION STEP= " + strBrdStep;
+					pSubBrdLst = pSubBrdLst + "  COUNT= " + strBrdCount;
+                    pSubBrdLst = pSubBrdLst + "  VALUE= " + strBrdID + " " + strTmp + ">";
+                    pSubBrdLst = pSubBrdLst + strBrdNm + "</option>";
+				}
 			}
-		} catch (Exception e) {
-			 e.printStackTrace();
+		} else {
+			resp.setCharacterEncoding("utf-8");
+			resp.getWriter().write(egovMessageSource.getMessage("ezResource.t73", locale));
 		}
-
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("upLevel", upLevel);
@@ -541,13 +590,18 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdStep.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdStep(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String currID = req.getParameter("currID");
 		String next = req.getParameter("nextID");
 		String companyID = req.getParameter("companyID");
 		
 		boolean result = ezResourceAdminService.blnChgClsOrder(currID, next, companyID, userInfo.getTenantId());
+		
 		return String.valueOf(result);
 	}
 	
@@ -556,7 +610,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardMove.do")
 	public String gwBoardPostBoardMove(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale, HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String brdID = req.getParameter("brdID").trim();
 		String brdNm = req.getParameter("brdNm").trim();
@@ -608,7 +666,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/organ.do")
 	public String organ(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", req.getServerName());
@@ -621,7 +683,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdMove.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdMove(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String brdID = req.getParameter("srcID");
 		String targetID = req.getParameter("targetID");
@@ -636,53 +702,56 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardDel.do")
 	public String gwBoardPostBoardDel(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model,Locale locale,HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String brdID = "";
 		String upNm = "";
 		String companyID = "";
 		StringBuilder tempStr = new StringBuilder();
 		String pWrnMsg = "";
 		boolean blnChkDelBtn = false;
-		try {
-			brdID = req.getParameter("brdID");
-			upNm = req.getParameter("brdNm");
-			companyID = req.getParameter("selCompanyID");
+		
+		brdID = req.getParameter("brdID");
+		upNm = req.getParameter("brdNm");
+		companyID = req.getParameter("selCompanyID");
+		
+		blnChkDelBtn = false;
+		if (!brdID.equals("1")) {
+			tempStr.append("<PARA_DATA>");
+			tempStr.append("<DATA>"+brdID+"</DATA>");
+			tempStr.append("<DATA>"+companyID+"</DATA>");
+			tempStr.append("</PARA_DATA>");
 			
-			blnChkDelBtn = false;
-			if (!brdID.equals("1")) {
-				tempStr.append("<PARA_DATA>");
-				tempStr.append("<DATA>"+brdID+"</DATA>");
-				tempStr.append("<DATA>"+companyID+"</DATA>");
-				tempStr.append("</PARA_DATA>");
-				
-				String strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
-				Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
-				
-				String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
-				int intSubResCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBRESCNT").item(0).getTextContent());
-				int intSubClsCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBCLSCNT").item(0).getTextContent());
-				
-				if (strErrChk.equals("True")) {
-					if (intSubResCnt > 0 || intSubClsCnt > 0) {
-						pWrnMsg = egovMessageSource.getMessage("ezResource.t66", locale)+ " <b>'" + intSubClsCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t67", locale);
-						pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t68", locale) + " <b>'" + 
-										 intSubResCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t69", locale) + 
-										 egovMessageSource.getMessage("ezResource.t9900005", locale) + " <br><br>";
-						pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t70", locale);
-					} else {
-						pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b>'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";
-						blnChkDelBtn = true;
-					}
+			String strRtnXML = ezResourceAdminService.getSubCntOfCls(tempStr.toString(), userInfo.getTenantId());
+			Document xmlRet = commonUtil.convertStringToDocument(strRtnXML);
+			
+			String strErrChk = xmlRet.getElementsByTagName("ERRCHK").item(0).getTextContent();
+			int intSubResCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBRESCNT").item(0).getTextContent());
+			int intSubClsCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBCLSCNT").item(0).getTextContent());
+			
+			if (strErrChk.equals("True")) {
+				if (intSubResCnt > 0 || intSubClsCnt > 0) {
+					pWrnMsg = egovMessageSource.getMessage("ezResource.t66", locale)+ " <b>'" + intSubClsCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t67", locale);
+					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t68", locale) + " <b>'" + 
+									 intSubResCnt + "'</b> " + egovMessageSource.getMessage("ezResource.t69", locale) + 
+									 egovMessageSource.getMessage("ezResource.t9900005", locale) + " <br><br>";
+					pWrnMsg = pWrnMsg + egovMessageSource.getMessage("ezResource.t70", locale);
 				} else {
-					resp.setCharacterEncoding("utf-8");
-					resp.getWriter().write(egovMessageSource.getMessage("ezResource.t73", locale));
+					pWrnMsg = egovMessageSource.getMessage("ezResource.t71", locale) + " <b>'" + upNm + "'</b> " + egovMessageSource.getMessage("ezResource.t72", locale) + " <BR>";
+					blnChkDelBtn = true;
 				}
 			} else {
-				pWrnMsg = egovMessageSource.getMessage("ezResource.t74", locale);
+				resp.setCharacterEncoding("utf-8");
+				resp.getWriter().write(egovMessageSource.getMessage("ezResource.t73", locale));
 			}
-		} catch (Exception e) {
-			e.printStackTrace(); 
+		} else {
+			pWrnMsg = egovMessageSource.getMessage("ezResource.t74", locale);
 		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("upNm", upNm);
@@ -699,7 +768,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdDel.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdDel(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		boolean result = ezResourceAdminService.delClsData(xmlStr, userInfo.getTenantId());
 		return String.valueOf(result);
@@ -711,13 +784,14 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/callBrdMng.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callBrdMng(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			boolean result = ezResourceAdminService.saveACLLst(xmlStr, userInfo.getTenantId());
-			return String.valueOf(result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
 		}
+		
+		boolean result = ezResourceAdminService.saveACLLst(xmlStr, userInfo.getTenantId());
+		
+		return String.valueOf(result);
 	}
 }

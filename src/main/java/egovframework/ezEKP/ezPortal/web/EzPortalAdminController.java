@@ -120,6 +120,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		return "/admin/ezPortal/portalMain";
 	}
 	
@@ -130,6 +134,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	public String leftTop(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		return "/admin/ezPortal/portalLeftTop";
 	}
 	
@@ -139,7 +147,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/themeList.do")
 	public String themeList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
-	
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
 		String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
 		model.addAttribute("result", result);
@@ -401,6 +413,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String strXML = ezPortalService.searchTopMenu("", "", 1, 100, "", userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("strXML="+strXML);
 		String result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName(), userInfo.getTenantId());
@@ -594,6 +610,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		logger.debug("portalPageList started");
 		
 		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String pSearchString = "";
 		String portalGubun = "";
 		int recordCnt = 0;
@@ -718,6 +739,8 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/portalSavePortalPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String portalSavePortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("portalSavePortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String callPageID = "";
@@ -739,6 +762,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		String ret = ezPortalAdminService.savePortalPage(callPageID, pageID, parentPageID, xmlStr, userInfo.getCompanyID(), type, userInfo.getTenantId());
+		logger.debug("ret="+ret);
+		
+		logger.debug("portalSavePortalPage ended");
 		return ret;
 	}
 	
@@ -865,6 +891,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/portletList.do")
 	public String portletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		String portalPageGubun = "";
 		String pSearchString = "";
@@ -1407,6 +1437,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/logoList.do")
 	public String logoList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String pageID = "";
 		String layoutList = "";
 		String logoAreaExist = "NO";  // layout에 로고영역이 존재하는지 여부
@@ -1751,7 +1786,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/utilMenuAreaEdit.do")
 	public String utilMenuAreaEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
-
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String pageID = "";
 		String layoutList = "";
 		String utilAreaExist = "NO";
@@ -2092,7 +2131,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/mainMenuAreaEdit.do")
 	public String mainMenuAreaEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
-
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String pageID = "";
 		String layoutList = "";
 		String mainAreaExist = "NO";
@@ -2193,7 +2236,11 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/subMenuItemsEdit.do")
 	public String subMenuItemsEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.checkAdmin(loginCookie);
-
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String pageID = "";
 		String parentUID = "";
 		String layoutList = "";
@@ -2660,5 +2707,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		    }
 		}
     }
+    
+    
 	
 }
