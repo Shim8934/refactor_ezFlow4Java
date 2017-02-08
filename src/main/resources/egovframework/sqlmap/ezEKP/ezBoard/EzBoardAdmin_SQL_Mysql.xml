@@ -557,7 +557,7 @@
 				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
 			)
            	VALUES ( 
-           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1') IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1') END, ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
            	)
 		]]>
 	</insert>

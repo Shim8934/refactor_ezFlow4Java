@@ -1242,7 +1242,7 @@ function tr_select(pRowID, pTableID, callbackFunc) {
             oSourceTr.setAttribute("selected", "true");
             oSourceTr.childNodes[0].childNodes[0].checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id.split(",")[0] + ";";
+            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.
