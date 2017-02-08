@@ -728,16 +728,37 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID, int tenantID) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
+	public String copyBoardAcl(Document doc, int tenantID) throws Exception {
+		logger.debug("copyBoardAcl started");
 		
-		map.put("v_pBoardID", boardID);
-		map.put("v_PDEFAULTBOARDID", defaultBoardID);
-		map.put("v_PPARENTBOARDID", parentBoardID);
-		map.put("v_TENANTID", tenantID);
+		String rtnValue = "";
 		
-		ezBoardAdminDAO.deleteBoardManage(map);
-		ezBoardAdminDAO.copyBoardAcl(map);
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_TENANTID", tenantID);
+			
+			for (int i = 0; i < doc.getElementsByTagName("BOARDID").getLength(); i++) {
+				String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent();
+				String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(0).getTextContent();
+				String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent();
+				
+				map.put("v_pBoardID", boardID);
+				map.put("v_PDEFAULTBOARDID", defaultBoardID);
+				map.put("v_PPARENTBOARDID", parentBoardID);
+				
+				ezBoardAdminDAO.deleteBoardManage(map);
+				ezBoardAdminDAO.copyBoardAcl(map);
+			}
+			
+			rtnValue = "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnValue = "ERROR";
+		}
+
+		logger.debug("copyBoardAcl ended");
+		
+		return rtnValue;
 	}
 
 	@Override
