@@ -76,7 +76,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMain.do")
-	public String boardMain() throws Exception {
+	public String boardMain(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("boardMain started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		logger.debug("boardMain ended");
+		
 		return "admin/ezBoard/boardMain";
 	}
 	
