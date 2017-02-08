@@ -356,13 +356,13 @@
 		function CopyPortlet(pPortletID, pSourcePageID, pDestPageID)
 		{
 		    var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "admin/remote/CopyPortlet.aspx?uid=" + pPortletID + "&sourcepageid=" + pSourcePageID + "&destpageid=" + pDestPageID, false);
+			xmlhttp.open("POST", "/admin/ezPortal/copyPortlet.do?uID=" + pPortletID + "&sourcePageID=" + pSourcePageID + "&destPageID=" + pDestPageID, false);
 			xmlhttp.send();
 			xmlhttp = null;
 		}
 		
-		function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2)
-		{
+		function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2) {
+alert("savesub Start");
 			var pUserID = g_UserID;
 			var pUserName = g_UserName;
 
@@ -407,7 +407,7 @@
 					{
 						// 해당 tr내의 td
 						var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
-
+						
 						try {
 							if (tdsub_item.id == "") continue;
 						} catch(e) { continue; }
@@ -437,6 +437,7 @@
 						}
 						// td안에 테이블이 존재하는 경우
 						else {
+alert("td안에 테이블이 존재하는 경우");
 							strXML += "<ROW>";
 							strXML += "<TYPE>1</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
@@ -452,7 +453,9 @@
 							
 							// 하위테이블의 정보를 저장
 							savesub(tdsub_item.children.item(0), tdsub_item.getAttribute("uid"), "top", tdsub_item.getAttribute("uid"), "");
+alert("tdsub_item.uid="+tdsub_item.uid);
 							prevPageID = tdsub_item.uid;
+							//prevPageID = tdsub_item.getAttribute("uid");
 						}
 					}
 					prevPageID = "";
@@ -470,6 +473,7 @@
 		}
 
 		function save() {
+alert("save Start");
 			if (document.getElementById("txtDisplayName").value == "") {
 				alert("<spring:message code='ezPortal.t289' />");
 				document.getElementById("txtDisplayName").focus();
@@ -518,6 +522,7 @@
 		}
 
 		function AttachEvents(pObject, pPageID) {
+alert("AttachEvents Start");
 			var prevpageid = "";
 			var count = 0;
 			for (var i=0; i<pObject.getElementsByTagName("td").length; i++)
@@ -528,8 +533,10 @@
 				{
 			        if (prevpageid != pObject.getElementsByTagName("td").item(i).pageuid) count++;
 			        //2016-11-04
-			        //prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");	
+			        //prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");
+
 			        prevpageid = GetAttribute(pObject.getElementsByTagName("td").item(i), "pageuid");
+alert("prevpageid="+prevpageid);
 					// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
 			        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined")
 					{
@@ -1418,6 +1425,7 @@
 			strHTML += "</table></td></tr></table>";
 			
 			if (CrossYN()) {
+alert("!!");
 				var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 				newrow.style.width = "100%";
 				newrow.style.height = "100";
@@ -1427,6 +1435,7 @@
 				newrow.innerHTML = strInnerHTML;
 				
 				document.getElementById(subGetId).focus();
+alert(document.getElementById(subGetId));
 				AttachEvents(document.getElementById(subGetId))
 			} else {
 				var newrow = eval(selectedCell).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
