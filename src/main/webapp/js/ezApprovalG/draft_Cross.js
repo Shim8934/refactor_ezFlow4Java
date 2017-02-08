@@ -705,7 +705,6 @@ function SendDraftMappingSign(ret) {
         psigncell = "sign" + sn;
         pseumyungcell = "jikwe" + sn;
         pseumyungdatecell = "seumyungdate" + sn;
-
          
         var RtnVal = getGyulJeDate();
         var CurrentDate = RtnVal.split(".");
@@ -725,8 +724,14 @@ function SendDraftMappingSign(ret) {
 
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
-            field.textContent = field.textContent + PositionText;
+            setNodeText(field , getNodeText(field) + PositionText);
         }
+
+        var field = message.GetListItem(fields, pseumyungdatecell);
+        if (field) {
+            setNodeText(field , s);
+        }
+
         if (CurAprType == strAprType16)  
         {
             var field = message.GetListItem(fields, psigncell);
@@ -782,11 +787,17 @@ function SendDraftMappingSign(ret) {
         }
         else {
             var field = message.GetListItem(fields, psigncell);
+
             if (field) {
                 if (ret != "NAME") {
                     strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'>";
+                    
+                    if (message.GetListItem(fields, pseumyungdatecell)) {
+                        OpinionText = "";
+                    }
+                    
                     if (CurAprType == strAprType4)
                         OpinionText = strLangAprType4 + OpinionText;
 
@@ -803,10 +814,14 @@ function SendDraftMappingSign(ret) {
                     message.DocumentBodySetAttribute(psigncell, ret);
                     signCnt = signCnt + 1;
                     SingFlag = true;
-                }
-                else {
+                } else {
                     if (field) {
                         strimg = "<P style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</P>";
+                        
+                        if (message.GetListItem(fields, pseumyungdatecell)) {
+                            OpinionText = "";
+                        }
+                        
                         if (CurAprType == strAprType4)
                             OpinionText = strLangAprType4 + OpinionText;
                         field.innerHTML = OpinionText + strimg;
@@ -2081,7 +2096,7 @@ function setDocNumFormat(pPrefix) {
     var fieldValue = message.DocumentBodyGetAttribute("orgdocnum", 0);
 
     Arr_Header = fieldValue.split("@");
-
+    
     for (i = 1; i < Arr_Header.length; i++) {
         Header = Arr_Header[i].substr(0, 2);
         Tail = Arr_Header[i].substr(2);

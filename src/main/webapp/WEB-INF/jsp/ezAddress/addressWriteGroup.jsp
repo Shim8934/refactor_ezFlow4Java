@@ -95,7 +95,7 @@
 	            if (tempfolderid != folderid)
 	                page = "1";
 	            xmlDom = call_page_address_get_list_mailCall(folderid, ownerid, foldertype,
-	                "ADDRESSID,STYPE,SNAME,SCOMPANY,SEMAIL", "NOT SEMAIL=''", page, "20", searchgubun, "<spring:message code='ezAddress.t34' />");
+	                "ADDRESSID,STYPE,SNAME,SCOMPANY,SEMAIL", "NOT SEMAIL=''", page, "25", searchgubun, "<spring:message code='ezAddress.t34' />");
 	
 	            tempfolderid = folderid;
 	

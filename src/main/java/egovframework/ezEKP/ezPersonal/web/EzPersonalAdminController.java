@@ -757,8 +757,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String title = "";
 		
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
-
+		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
+		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+		
 		
 		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
 			title = vo.getTitle2();
