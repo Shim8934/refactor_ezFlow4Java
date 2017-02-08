@@ -1140,8 +1140,8 @@
 			FROM
 				(SELECT
 					A.itemid,
-					A.startdate,
-					A.enddate,
+					TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+					TO_DATE(A.enddate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS enddate,
 					A.title,
 					A.attachments,
 					A.importance,

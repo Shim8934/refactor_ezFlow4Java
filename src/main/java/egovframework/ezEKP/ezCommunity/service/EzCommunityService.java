@@ -178,7 +178,7 @@ public interface EzCommunityService {
 	
 	public String getItemAttachmentXML(String itemID, int tenantID) throws Exception;
 	
-	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID) throws Exception;
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID, String offset) throws Exception;
 
 	public String checkReplyPassword(String pItemID, String pReplyID, int tenantID) throws Exception;
 
