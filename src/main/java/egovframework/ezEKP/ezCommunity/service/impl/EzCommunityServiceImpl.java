@@ -5826,10 +5826,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("pRootBoardID : " + pRootBoardID + ", id : " + id + ", deptID : " + deptID + ", companyID : " + companyID + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PBOARDID", pRootBoardID);
-		map.put("v_PUSERID", id);
-		map.put("v_PDEPTID", deptID);
-		map.put("v_PCOMPANYID", companyID);
+		map.put("v_pBoardID", pRootBoardID);
+		map.put("v_pUserID", id);
+		map.put("v_pDeptID", deptID);
+		map.put("v_pCompanyID", companyID);
 		map.put("v_tenantID", tenantID);
 		
 		int result = ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
