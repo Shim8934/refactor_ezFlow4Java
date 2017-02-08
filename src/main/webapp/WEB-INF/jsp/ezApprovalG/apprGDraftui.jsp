@@ -700,6 +700,7 @@
 		                return;
 		            }
 		        }
+		        
 		        var rtnval;
 		        if (LastSignSN == 1 || DraftLastFlag)
 		            rtnval = getDocNumber(arr_userinfo[4], "");
@@ -720,8 +721,9 @@
 		                return;
 		            }
 		        }
+
 		        rtnSignInfo = SendDraftMappingSign(ret);
-		
+
 		        saveDraftInfo();
 		    }
 		
@@ -1047,7 +1049,7 @@
 		            if (flag == false) {
 		                flag = true;
 		                IsSkipDrafter = "FALSE";
-		                DeptSymbol = arr_userinfo[5];
+		                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
 		                if (pFormHref != "") {
