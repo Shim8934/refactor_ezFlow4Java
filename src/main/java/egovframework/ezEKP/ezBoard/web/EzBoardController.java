@@ -568,7 +568,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String deptPath = userInfo.getDeptPathCode();
-	    String deptPathOrgan="";
+	    String deptPathOrgan = "";
 	    for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 	        if (ch == 0) {
 	        	deptPathOrgan += deptPath.split(",")[ch].trim();
@@ -577,9 +577,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	        }
 	    }
 	    
-	    String userDeptPath = deptPathOrgan+",everyone";
+	    String userDeptPath = deptPathOrgan + ",everyone";
 	    
-		for (int i=0; i<userDeptPath.split(",").length; i++)
+		for (int i = 0; i < userDeptPath.split(",").length; i++)
 		{
 			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			if (boardInfoTemp == null) {
