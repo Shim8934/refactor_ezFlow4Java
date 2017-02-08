@@ -730,6 +730,9 @@ public class EzAddressController{
         	}
         }
         
+        addressInfo.setCreateDate(commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false));
+        addressInfo.setModifyDate(commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false));
+        
         model.addAttribute("pFolderType", pFolderType);
         model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("userInfo", userInfo);
