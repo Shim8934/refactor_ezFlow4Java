@@ -769,7 +769,6 @@ public class EzPortalController extends EgovFileMngUtil {
 	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
 	            }
 	            
-	            logger.debug("왜널?"+userInfo.getTenantId());
 	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
 	            portalPageCategoryXML = "<DATA>";
 	            for (PortalTBLPortalPageCategoryVO result : list) {

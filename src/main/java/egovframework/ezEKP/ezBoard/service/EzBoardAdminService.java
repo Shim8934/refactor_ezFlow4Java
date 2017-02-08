@@ -92,8 +92,6 @@ public interface EzBoardAdminService {
 
 	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, int tenantID) throws Exception;
 
-	public void copyBoardAcl(String boardID, String defaultBoardID,	String parentBoardID, int tenantID) throws Exception;
-
 	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode, int tenantID) throws Exception;
 
 	public void apprProperty_info(String boardID, String mode, int tenantID) throws Exception;
@@ -101,6 +99,8 @@ public interface EzBoardAdminService {
 	public void setBoardForm(String boardID, String formLocation, int tenantID) throws Exception;
 
 	public void getBoardTree_Set_D(String pStrLang, String query, int tenantID) throws Exception;
+
+	public String copyBoardAcl(Document doc, int tenantID) throws Exception;
 	
 
 }

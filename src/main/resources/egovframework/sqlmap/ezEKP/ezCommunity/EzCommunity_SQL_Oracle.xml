@@ -748,11 +748,27 @@
 					startdate < #v_pNow#
 				AND
 					enddate > #v_pNow#
+		]]>
+		
+		<isEmpty property="v_PSORTBY">
+			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
 					TO_CHAR(A.upperitemidtree) DESC,
 					A.startdate ASC
 				)
+			]]>
+		</isEmpty>
+		
+		<isNotEmpty property="v_PSORTBY">
+			<![CDATA[
+				ORDER BY
+					$v_PSORTBY$
+				)
+			]]>
+		</isNotEmpty>
+		
+		<![CDATA[
 			WHERE
 				ROWNUM <= #v_PENDROW#
 		]]>
@@ -6345,7 +6361,7 @@
 <!-- 	<procedure id="EzCommunityDAO.deleteBoard"> -->
 <!-- 		{CALL EZSP_DELETEBOARD()} -->
 <!-- 	</procedure> -->
-	<delete id="EzCommunityDAO.deleteBoard"					parameterClass="Integer">
+	<delete id="EzCommunityDAO.deleteBoard"						parameterClass="Integer">
 		<![CDATA[
 			DELETE
 			FROM
@@ -6358,7 +6374,15 @@
 	<select id="EzCommunityDAO.brdGetACL"						parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT 
-				*
+				access_,
+				boardadmin_fg,
+				listview_fg,
+				read_fg,
+				write_fg,
+				reply_fg,
+				delete_fg,
+				inherit_fg,
+				postnotice
 			FROM 
 	        	TBL_COMM_BOARDMANAGE
 			WHERE  

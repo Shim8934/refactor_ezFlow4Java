@@ -76,7 +76,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 * 게시판관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMain.do")
-	public String boardMain() throws Exception {
+	public String boardMain(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("boardMain started");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		logger.debug("boardMain ended");
+		
 		return "admin/ezBoard/boardMain";
 	}
 	
@@ -1044,26 +1054,13 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/copyBoardAcl.do", produces="text/html;charset=utf-8")
 	@ResponseBody
-	public String copyBoardAcl(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	public String copyBoardAcl(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String rtnValue = "";
 		
-		try {
-			Document doc = commonUtil.convertStringToDocument(data);
-			
-			for (int i=0; i < doc.getElementsByTagName("BOARDID").getLength(); i++) {
-				String boardID = doc.getElementsByTagName("BOARDID").item(i).getTextContent();
-				String defaultBoardID = doc.getElementsByTagName("DEFAULTBOARDID").item(i).getTextContent();
-				String parentBoardID = doc.getElementsByTagName("PARENTBOARDID").item(i).getTextContent();
-				
-				ezBoardAdminService.copyBoardAcl(boardID, defaultBoardID, parentBoardID, userInfo.getTenantId());
-			}
-			
-			rtnValue = "OK";
-		} catch (Exception e) {
-			rtnValue = "ERROR";
-			logger.error("EzBoardAdmin :: copyBoardAcl :: " + e.getMessage());
-		}
+		Document doc = commonUtil.convertStringToDocument(data);
+		
+		rtnValue = ezBoardAdminService.copyBoardAcl(doc, userInfo.getTenantId());
 		
 		return rtnValue;
 	}

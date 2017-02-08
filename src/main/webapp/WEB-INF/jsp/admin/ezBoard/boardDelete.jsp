@@ -28,6 +28,7 @@
 	    					
 	    					if (SelectedBoardID == BoardGroupID) {
 		    			        window.parent.frames[0].location.reload();
+		    			        window.location.reload(true);
 	    					} else {
 		    			    	var pDiv, pId, pValue;
 		    			        var h2 = window.parent.frames[0].document.getElementsByTagName("h2");
