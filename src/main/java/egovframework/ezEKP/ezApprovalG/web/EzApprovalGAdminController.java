@@ -810,12 +810,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/apprGUpdateContDoctype.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String apprUpdateContDoctype(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("apprGUpdateContDoctype started. data = " + data);
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);		
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
 		String result = ezApprovalGAdminService.updateContainerToDocStateInfo(doc, companyID, userInfo.getTenantId());
-
+		
+		logger.debug("apprGUpdateContDoctype ended. result = " + result);
+		
 		return result;
 	}
 	

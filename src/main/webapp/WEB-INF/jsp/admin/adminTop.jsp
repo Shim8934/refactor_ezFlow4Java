@@ -148,7 +148,7 @@
 		      		<%-- 시스템 --%>          
 		      		<%-- <li><span id="menu18" onClick="menu_change(690, event)"><spring:message code="main.t10011" /></span></li> --%>
 		      		<%-- 통계 --%>
-		      		<%-- <li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li> --%>
+		      		<li><span id="menu09" onClick="menu_change(690, event)"><spring:message code="main.t27" /></span></li>
 		      		<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>		      		
 		      		<c:if test="${use_ezKMS == 'YES'}">
 		      			<li><span id="menu14" onClick="menu_change(920, event);"><spring:message code="main.t19" /></span></li>

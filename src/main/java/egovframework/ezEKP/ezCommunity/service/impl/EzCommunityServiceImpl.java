@@ -4290,10 +4290,18 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_BOARDNO", boardNo);
 		map.put("tenantID", tenantID);
 		
+		logger.debug("createBoardGroupInsert1 started.");
 		ezCommunityDAO.createBoardGroupInsert1(map);
+		logger.debug("createBoardGroupInsert1 ended.");		
+		logger.debug("createBoardGroupInsert2 started.");
 		ezCommunityDAO.createBoardGroupInsert2(map);
+		logger.debug("createBoardGroupInsert2 ended.");
+		logger.debug("createBoardGroupInsert3 started.");
 		ezCommunityDAO.createBoardGroupInsert3(map);
+		logger.debug("createBoardGroupInsert3 ended.");
+		logger.debug("truncateCommTreeCache started.");
 		ezCommunityDAO.truncateCommTreeCache(tenantID);
+		logger.debug("truncateCommTreeCache ended.");
 		
 		logger.debug("createBoardGroup ended.");
 	}
@@ -5830,7 +5838,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pUserID", id);
 		map.put("v_pDeptID", deptID);
 		map.put("v_pCompanyID", companyID);
-		map.put("v_tenantID", tenantID);
+		map.put("tenantID", tenantID);
 		
 		int result = ezCommunityDAO.brdCheckIfBoardGroupAdmin(map);
 		

@@ -726,7 +726,8 @@
 				LEFT OUTER JOIN
 					(SELECT 
 						NVL(COUNT(userid), 0) AS TOTALCOUNT,
-						itemid 
+						itemid,
+						tenant_id
 					FROM 
 						TBL_COMM_ITEM_READ  
 					WHERE
@@ -734,7 +735,8 @@
 					AND
 						boardid = #v_PBOARDID# 
 					GROUP BY
-						itemid
+						itemid,
+						tenant_id
 					) D
 				ON
 					A.itemid = D.itemid
