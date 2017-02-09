@@ -302,8 +302,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
 		String useEditor = config.getProperty("config.EDITOR");
-		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
-		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor + ",userInfoApprovalG=" + userInfoApprovalG);
+		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
 		
 		String sendFrom = "";
 		if (request.getParameter("sendfrom") != null) { 
@@ -474,7 +473,6 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("tid", loginInfo.getTenantId());
 		model.addAttribute("unread", unread);
 		model.addAttribute("charsetCheck", charsetCheck);
-		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
 		model.addAttribute("reSendFlag", reSendFlag);
 		model.addAttribute("userTimeset", userTimeset);
 		model.addAttribute("fileUploadType", fileUploadType);
