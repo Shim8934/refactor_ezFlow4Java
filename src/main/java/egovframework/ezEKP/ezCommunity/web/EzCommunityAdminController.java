@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
@@ -48,6 +49,9 @@ public class EzCommunityAdminController {
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="EzCommunityAdminService")
 	private EzCommunityAdminService ezCommunityAdminService;
@@ -98,7 +102,7 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/bbsList.do")
 	public String bbsList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("config.EDITOR", userInfo.getTenantId());
 		String code = "", keyword = "", sRadio = "", titleName = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 17;
 		
@@ -531,12 +535,7 @@ public class EzCommunityAdminController {
 			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, false);
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
-			
-			if (config.getProperty("config.Use_ezKMS").toUpperCase().equals("YES")) {
-				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName, userInfo.getTenantId());
-			} else {
-				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
-			}
+			recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
 			
 			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, true);
 		} else {

@@ -41,6 +41,7 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -93,6 +94,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Resource(name="EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EgovFileScrty egovFileScrty;
@@ -740,7 +744,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
 		}
 		
-		String userExtension = config.getProperty("config.USE_FileExtension").toString();
+		String userExtension = ezCommonService.getTenantConfig("config.USE_FileExtension", userInfo.getTenantId());
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
