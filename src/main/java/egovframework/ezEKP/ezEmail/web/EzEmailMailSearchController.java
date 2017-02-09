@@ -97,7 +97,7 @@ public class EzEmailMailSearchController {
 		
 		String serverName = userInfo.getServerName();
 		String userLang = userInfo.getLang();
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);

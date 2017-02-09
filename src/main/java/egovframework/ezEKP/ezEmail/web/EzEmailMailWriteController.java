@@ -237,7 +237,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
 		
 		String sendFrom = "";

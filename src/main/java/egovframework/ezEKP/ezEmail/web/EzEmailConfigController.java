@@ -120,6 +120,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 	public String mailConfig(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailConfig started.");
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String userEditor = "";
 		String userIE11Browser = "";
 		String noneActiveX = "YES";
@@ -130,7 +132,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			userIE11Browser = "CK";
 		}
 
-		userEditor = config.getProperty("config.EDITOR");
+		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		blockedSenders = config.getProperty("config.BlockedSenders");
 
 		model.addAttribute("userEditor", userEditor);

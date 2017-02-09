@@ -98,16 +98,18 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/mailReservation.do")
 	public String mailReservation(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailReservation started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String draftUrl = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		
 		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
         	useIE11Browser = "CK";
         }
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		List<MailReservationVO> list = ezEmailService.getMailReserved(userInfo.getTenantId(), userInfo.getId());
 		
@@ -120,7 +122,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("list", list);
-
+		
+		logger.debug("mailReservation ended.");
 		return "ezEmail/mailReservation";
 	}
 
@@ -301,7 +304,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
 		
 		String sendFrom = "";

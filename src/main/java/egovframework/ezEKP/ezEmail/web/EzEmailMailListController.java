@@ -111,7 +111,7 @@ public class EzEmailMailListController {
 		String folderName = egovMessageSource.getMessage("ezEmail.t644", locale);
 		String folderType = "";
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = config.getProperty("config.USE_OCS");
 		boolean isSentItems = false;
 		

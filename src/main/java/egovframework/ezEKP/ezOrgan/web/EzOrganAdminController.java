@@ -1138,7 +1138,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}
 		
 		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
-		String use_editor = config.getProperty("config.EDITOR");
+		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
@@ -1367,7 +1367,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		}
 		
 		String strLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
-		String use_editor = config.getProperty("config.EDITOR");
+		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = config.getProperty("config.IE11EDITOR");
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
