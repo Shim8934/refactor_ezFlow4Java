@@ -279,23 +279,19 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String langPrimary = "";
 		String langSecondary = "";
 		
-		try {
-			langPrimary = config.getProperty("config.lang_Primary1");
-			langSecondary = config.getProperty("config.lang_Secondary1");
-				
-			if (req.getParameter("brdID") != null) {
-				brdID = req.getParameter("brdID");
-			}
-			if (req.getParameter("selCompanyID") != null) {
-				companyID = req.getParameter("selCompanyID");
-			}
-				
-			getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID, userInfo.getTenantId());
-				
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+			
+		if (req.getParameter("brdID") != null) {
+			brdID = req.getParameter("brdID");
 		}
-
+		if (req.getParameter("selCompanyID") != null) {
+			companyID = req.getParameter("selCompanyID");
+		}
+			
+		getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID, userInfo.getTenantId());
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("getBrdInfo", getBrdInfo);
 		model.addAttribute("brdID", brdID);
@@ -342,9 +338,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String langPrimary = "";
 		String langSecondary = "";
 		
-		
-		langPrimary = config.getProperty("config.lang_Primary1");
-		langSecondary = config.getProperty("config.lang_Secondary1");
+		langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 			
 		if (req.getParameter("brdID") != null) {
 			brdID = req.getParameter("brdID");
