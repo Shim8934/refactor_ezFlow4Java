@@ -603,7 +603,7 @@ public class EzApprovalGarchiveController {
 		}
     	
     	String searchList ="extensionAttribute4::" + userInfo.getCompanyID().trim();
-    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang(), tenantID);
+    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getPrimary(), tenantID);
     	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
     	
     	if(xmlResult.getElementsByTagName("DATA2").getLength() > 0){
