@@ -139,11 +139,50 @@
 		]]>
 	</update>
 	
-	<procedure id="EzPortalAdminDAO.setUseLang" parameterClass="Map" >
+	<!-- <procedure id="EzPortalAdminDAO.setUseLang" parameterClass="Map" >
 		<![CDATA[
 			{CALL EZSP_SETUSELANG(#v_pUID#, #v_pCOMPANYID#, #v_pLANGSTR#)}
 		]]>
-	</procedure>
+	</procedure> -->
+  
+    <update id="EzPortalAdminDAO.setUseLang" parameterClass="Map">
+        <![CDATA[
+	         UPDATE
+                TBL_TOPMENU_GENERAL
+		]]>
+        <isEqual property="v_pLANGSTR" compareValue="1">
+            <![CDATA[
+	             SET
+                    LANG = '1'
+		    ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="2">
+            <![CDATA[
+               SET
+                    LANG = '2'
+            ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="3">
+            <![CDATA[
+               SET
+                    LANG = '3'
+            ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="4">
+            <![CDATA[
+               SET
+                    LANG = '4'
+            ]]>
+        </isEqual>
+        <![CDATA[
+	         WHERE
+                UID_ = #v_pUID#
+             AND
+                CompanyID = #v_pCOMPANYID#
+             AND
+                TENANT_ID = #tenantID#   
+		]]>
+    </update>
 	
 	<!-- <procedure id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map" >
 		<![CDATA[
@@ -2207,12 +2246,14 @@
 		]]>
 	</select>
 	
-	<select id="EzPortalAdminDAO.selectSkinGeneral" resultClass="PortalTBLSkinGeneralVO">
+	<select id="EzPortalAdminDAO.selectSkinGeneral" parameterClass="Map" resultClass="PortalTBLSkinGeneralVO">
 		<![CDATA[
 			SELECT
 				*
 			FROM
 				TBL_SKIN_GENERAL
+            AND
+                TENANT_ID = #tenantID#        
 		]]>
 	</select>
 	

@@ -39,8 +39,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() {
-		return (List<PortalTBLSkinGeneralVO>)list("EzPortalAdminDAO.selectSkinGeneral");
+	public List<PortalTBLSkinGeneralVO> selectSkinGeneral(Map<String, Object> map) {
+		return (List<PortalTBLSkinGeneralVO>)list("EzPortalAdminDAO.selectSkinGeneral", map);
 	}
 	
 	@SuppressWarnings("unchecked")
