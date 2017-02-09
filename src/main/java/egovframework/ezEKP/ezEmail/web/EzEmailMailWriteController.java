@@ -275,7 +275,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
  		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
  		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
- 		
  		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
  		
  		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {
@@ -285,8 +284,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  	 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
  	 		}
  		}
- 		
- 		
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
  		
         //set mail sign
@@ -355,6 +352,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	includeContent = request.getParameter("include");
 		}
         
+        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userAccount = loginInfo.getId() + "@" + domainName;
+        
+		// make mail top level folders
+        IMAPAccess ia = null;
+        try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale);
+			ia.makeTopLevelFolders();
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}
         
         // in case of new
         if (_url.equals("") && _cmd.equals("NEW")) {
@@ -409,12 +421,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 			logger.debug("folderPath=" + folderPath + ",url=" + url);
         	
-			IMAPAccess ia = null;
 			try {
-				String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
-				String userEmail = loginInfo.getId() + "@" + domainName;
 				ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-						userEmail, password, egovMessageSource, locale);
+						userAccount, password, egovMessageSource, locale);
 				
 	    		Folder orgFolder = ia.getFolder(folderPath);
 	    		orgFolder.open(Folder.READ_ONLY);       
@@ -480,7 +489,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        	else if (folderPath.equals(sentFolderName) && _cmd.equals("RESEND") && !msgto.equals("")) {
 		        		//임시보관함에 메시지 임시저장
 		        		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-		        				userEmail, password);
+		        				userAccount, password);
 		        		MimeMessage resendMessage = sa.createMimeMessage();
 		        		
 		        		resendMessage.setFlag(Flags.Flag.SEEN, true);
