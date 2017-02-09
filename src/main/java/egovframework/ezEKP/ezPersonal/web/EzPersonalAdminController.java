@@ -94,10 +94,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String usePortal = ezCommonService.getTenantConfig("Use_portal", userInfo.getTenantId());
-		String useKMS = config.getProperty("config.Use_ezKMS");
 		
 		model.addAttribute("usePortal", usePortal);
-		model.addAttribute("useKMS", useKMS);
 		
 		return "admin/ezPersonal/personalLeft";
 	}
