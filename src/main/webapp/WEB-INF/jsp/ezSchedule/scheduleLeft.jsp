@@ -186,123 +186,7 @@
 	                document.getElementById("pims3").style.display = "block";
 	            }
 	        }
-	        var xmlHttpAddressTree;
-	        function get_Address_FullTree() {
-	            xmlHttpAddressTree = createXMLHttpRequest();
-	            xmlHttpAddressTree.open("POST", "/myoffice/ezAddress/remote/address_get_fulltree.aspx", true);
-	            xmlHttpAddressTree.onreadystatechange = get_Address_FullTree_Complete;
-	            xmlHttpAddressTree.send();
-	        }
-	        function get_Address_FullTree_Complete() {
-	            if (xmlHttpAddressTree != null && xmlHttpAddressTree.readyState == 4) {
-	                if (xmlHttpAddressTree.status >= 200 && xmlHttpAddressTree.status < 300) {
-	                    var IDNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("FOLDERID");
-	                    var ChangeKeyNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("CHANGEKEY");
-	                    var OwnerNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("OWNERID");
-	                    var TypeNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("FOLDERTYPE");
-	                    var NameNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("FOLDERNAME");
-	                    var ChildNodes = xmlHttpAddressTree.responseXML.getElementsByTagName("CHILDCOUNT");
-	                    xmlHTTP = null;
-
-	                    var childXML = "<tree><nodes>";
-
-	                    for (var i = 0; i < NameNodes.length; i++) {
-	                        var strFolderName = NameNodes[i].firstChild.nodeValue;
-
-	                        childXML += "<node imgidx='1' caption=\"";
-
-	                        if (strFolderName == "1") {
-	                            childXML += ('<spring:message code='ezSchedule.t1014'/>' + "\" ");
-	                        }
-	                        else if (strFolderName == "2") {
-	                            childXML += ('<spring:message code='ezSchedule.t1015'/>' + "\" ");
-	                        }
-	                        else {
-	                            childXML += ('<spring:message code='ezSchedule.t1016'/>' + "\" ");
-	                        }
-
-	                        childXML += ("OWNERID=\"" + MakeRightField(OwnerNodes[i].firstChild.nodeValue) + "\" ");
-	                        childXML += ("TYPE=\"" + MakeRightField(TypeNodes[i].firstChild.nodeValue) + "\" ");
-	                        childXML += ("FOLDERID=\"" + MakeRightField(IDNodes[i].firstChild.nodeValue) + "\" ");
-	                        childXML += ("CHANGEKEY=\"" + MakeRightField(ChangeKeyNodes[i].firstChild.nodeValue) + "\" ");
-
-	                        if (ChildNodes[i].firstChild.nodeValue != "0")
-	                            childXML += "hassub='1' ";
-
-	                        childXML += "/>";
-	                    }
-
-	                    childXML += "</nodes></tree>";
-	                    LoadTreeComplete(childXML);
-	                }
-	            }
-
-	        }
-	        function LoadTreeComplete(childXML) {
-	            AddressTreeView.source(childXML);
-	            AddressTreeView.update();
-	            //AddressTreeView.toggle(1);//로딩이슈
-
-	            if (AddressTreeView.selectedIndex() == -1) {
-	                AddressTreeView.select(1);
-	            }
-	        }
-		    var AddressTreeView = null;
-		    function LoadAddressTree() {
-		        if (AddressTreeView == null) {
-		            AddressTreeView = new TreeView('AddressTreeView', 'AddressTreeView');
-
-		            AddressTreeView.attachEvent('requestdata', requestdata);
-		            AddressTreeView.attachEvent('nodeselect', selectnode);
-		            AddressTreeView.attachEvent('nodedblclick', function () { AddressTreeView.toggle(AddressTreeView.selectedIndex()) });
-		        }
-
-		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/myoffice/common/organtree_config2.xml", false);
-		        xmlHTTP.send();
-
-		        var treeconfig;
-		        if (navigator.userAgent.indexOf('MSIE') == -1) {
-		            treeconfig = new DOMParser().parseFromString(xmlHTTP.responseText, "text/xml");
-		        }
-		        else {
-		            treeconfig = new ActiveXObject("Microsoft.XMLDOM");
-		            treeconfig.async = false;
-		            treeconfig.loadXML(xmlHTTP.responseText);
-		        }
-
-		        AddressTreeView.config(treeconfig);
-		        get_Address_FullTree();
-		    }
-		
-		    function requestdata(event) {
-		        if (!event) {
-		            event = window.event;
-		        }
-
-		        var nodeIdx = event.nodeIdx;
-
-		        if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
-		            nodeIdx = arguments[0].nodeIdx;
-		        }
-
-		        var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "FOLDERID"), AddressTreeView.getvalue(nodeIdx, "OWNERID"), AddressTreeView.getvalue(nodeIdx, "TYPE"))
-		        AddressTreeView.putchildxml(nodeIdx, childxml);
-		    }
-		
-		    function selectnode() {
-		        var nodeIdx = AddressTreeView.selectedIndex();
-		        var url = "/myoffice/ezAddress/address_list_Cross.aspx?folderid=" + encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "FOLDERID")) + "&ownerid=" + escape(AddressTreeView.getvalue(nodeIdx, "OWNERID")) + "&type=" + escape(AddressTreeView.getvalue(nodeIdx, "TYPE"));
-
-		        window.open(url, "right");
-		    }
-
-		    function address_foldermanage() {
-		        var ret;
-		        ret = showModalDialog("/myoffice/ezAddress/address_foldermanage_Cross.aspx", null, "dialogHeight:380px; dialogWidth:320px; status:no; help:no; scroll:no; edge:sunken");
-		        if (ret == 1) LoadAddressTree();
-		    }
-		
+	        
 		    function Function_Flag(v_data, subfolder) {
 		        skinChange(v_data);
 
@@ -318,10 +202,6 @@
 		                window.open("/ezSchedule/scheduleMain.do?funCode=3", "right");
 		                break;
 
-		            case 4:		// Adress
-		                LoadAddressTree();
-		                break;
-
 		            case 5:		// schedule group management 
 		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
 		                break;
@@ -334,11 +214,6 @@
 		                window.open("/myoffice/ezTask/task_search_Cross.aspx", "right");
 		                break;
 
-		            case 8:		// Search Contacts
-		                //LoadAddressTree();
-		                window.open("/myoffice/ezAddress/address_search_Cross.aspx", "right");
-		                break;
-
 		            case 10:	// Search public search
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
@@ -346,59 +221,7 @@
 		                window.open("/ezSchedule/scheduleConfigMain.do", "right");
 		                break;
 		        }
-		    }
-
-		    function Open_Schedule(idx) {
-		        try {
-		            if (idx == 3)
-		                window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-					    "<a href='/myoffice/ezSchedule/schedule_Public_search_Cross.aspx' target='right' class='n'><spring:message code='ezSchedule.t1021'/></a>");
-		            else if (idx == 2)
-		                window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-					    "<a href='/myoffice/ezSchedule/schedule_search_Cross.aspx' target='right' class='n'><spring:message code='ezSchedule.t1018'/></a>");
-		            elseg
-		            window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-	                "<a href='/myoffice/main/index_myoffice.asp?funcode=2' target='main' class='n'><spring:message code='ezSchedule.t1010'/></a>");
-		        } catch (e) { }
-		    }
-
-	        function Open_Task(idx) {
-	            try {
-	                if (idx != 2)
-	                    window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-	                    "<a href='/myoffice/main/index_myoffice.asp?funcode=3' target='main' class='n'><spring:message code='ezSchedule.t1011'/></a>");
-	                else
-	                    window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-	                    "<a href='/myoffice/ezTask/task_search.asp' target='right' class='n'><spring:message code='ezSchedule.t1019'/></a>");
-	            } catch (e) { }
-	        }
-
-	        function Open_Address(idx) {
-	            try {
-	                if (idx != 2)
-	                    window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-	                    "<a href='/myoffice/main/index_myoffice.asp?funcode=4' target='main' class='n'><spring:message code='ezSchedule.t1017'/></a> > <a href='/myoffice/main/index_myoffice.aspx?funcode=4' target='main' class='n'><spring:message code='ezSchedule.t1022'/></a>");
-	                else
-	                    window.top.frames("top").document.Script.change_menu(2, "<a href='/myoffice/main/index_myoffice.asp?funcode=1' target='main' class='n'><spring:message code='ezSchedule.t1013'/></a> > " +
-	                    "<a href='/myoffice/main/index_myoffice.asp?funcode=4' target='main' class='n'><spring:message code='ezSchedule.t1017'/></a> > <a href='/myoffice/ezAddress/address_search_Cross.aspx' target='right' class='n'><spring:message code='ezSchedule.t1020'/></a>");
-	            } catch (e) { }
-	        }
-
-	        function newSchedule_onclick() {
-	            var feature = GetOpenPosition(560, 540);
-	            window.open("/myoffice/ezSchedule/Schedule_Add.aspx?cmd=add&from=schedule2", "", "width=560, height=540, status = no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-	        }
-		
-	        function newTask_onclick() {
-	            var feature = GetOpenPosition(560, 540);
-	            window.open("/myoffice/ezTask/task_write.aspx", "", "width=560, height=540, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	        }
-		
-	        function OpenGroupManage() {
-	            var feature = GetOpenPosition(430, 350);
-	            window.open("/myoffice/ezSchedule/schedule_manage_group_Cross.aspx", "",
-	                "height = 350px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-	        }
+		    }		   
 		
 	        function WebPartToggle(obj) {
 	            if (obj.listNum && currentListNum != obj.listNum + 1) {
@@ -418,11 +241,7 @@
 	            currentListNum = obj.listNum + 1;
 
 	            setMenu(level2El.item(obj.listNum));
-	        }
-		
-	        function Function_SchList() {
-	            window.open("/myoffice/ezSchedule/schedule_main_Cross.aspx?idtype=M&CODEKEY=" + schlist.value, "right");
-	        }
+	        }		       
 
 	        function MonthMiniDbClick(obj) {
 	            if (_funCode == 2)
@@ -433,8 +252,7 @@
 	
 	</head>
 
-	<body class="leftbody">
-	    
+	<body class="leftbody">	    
         <div class="left_pims" title="PIMS"></div>
         <div id="CalendarMini" style=" margin:10px;"></div>
 	        
@@ -443,19 +261,18 @@
 		    <div class="left_pims2" title="<spring:message code='ezSchedule.t1017'/>" id='pims2' style="display:none"></div>
 		    <div class="left_pims3" title="<spring:message code='ezSchedule.t1011'/>" id='pims3' style="display:none"></div>
 			<div class="gray_line"></div>	
-		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>
-		    
+		    <h2><span id='Schedule' onClick="Function_Flag(2)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1010'/></span></h2>		    
 		    <ul>
 			    <li evt="0"><span id='Schedule_Main' onClick="Function_Flag(2)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1010'/></span></li>
 	            <li evt="0"><span id='Schedule_Group' onClick="Function_Flag(5)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t252'/></span></li>
 			    <li evt="0"><span id='Schedule_Search' onClick="Function_Flag(6)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1018'/></span></li>
 			    <li evt="0"><span id='Schedule_Public_Search' onClick="Function_Flag(10)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1021'/></span></li>
 		    </ul> 
-		    <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
+		    <%-- <h2><span id='Task' onClick="Function_Flag(3)" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1011'/></span></h2>
 		    <ul>
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
-		    </ul>		   
+		    </ul> --%>
 	        <h3><span  onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
 		</div>		
 	    <script type="text/javascript">

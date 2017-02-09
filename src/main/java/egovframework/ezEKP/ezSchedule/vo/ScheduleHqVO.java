@@ -1,6 +1,6 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
-public class PubScheHqVO {
+public class ScheduleHqVO {
 	/** Head quarter ID */
 	private String hqId;
 	

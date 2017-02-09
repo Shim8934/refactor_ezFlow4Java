@@ -1,11 +1,11 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
-public class PubScheDeptVO {
+public class ScheduleCumulerVO {
 	/** 부서 ID */
 	private String deptId;
 	
-	/** 부서명 */
-	private String deptName;
+	/** 겸직부서명  */
+	private String titleName;
 
 	/**
 	 * @return the deptId
@@ -22,16 +22,16 @@ public class PubScheDeptVO {
 	}
 
 	/**
-	 * @return the deptName
+	 * @return the titleName
 	 */
-	public String getDeptName() {
-		return deptName;
+	public String getTitleName() {
+		return titleName;
 	}
 
 	/**
-	 * @param deptName the deptName to set
+	 * @param titleName the titleName to set
 	 */
-	public void setDeptName(String deptName) {
-		this.deptName = deptName;
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
 	}
 }
