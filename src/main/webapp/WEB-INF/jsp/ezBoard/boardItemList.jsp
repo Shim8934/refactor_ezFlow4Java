@@ -446,11 +446,11 @@
 		    }
 		    function chk_onselect(obj) {
 		        if (obj.checked) {
-		            strListInfo += obj.id.split(",")[0] + ";";
+		            strListInfo += obj.id;
 		        } else {
-		            strListInfo = ReplaceText(strListInfo, obj.id.split(",")[0] + ";", "");
+		            strListInfo = ReplaceText(strListInfo, obj.id, "");
 		        }
-		        
+
 		        listEventCheckbox = true;
 		    }
 		    var BlockSize = 10;

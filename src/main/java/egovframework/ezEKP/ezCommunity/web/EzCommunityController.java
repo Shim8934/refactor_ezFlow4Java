@@ -1278,7 +1278,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		int pStartRow =  (pPage - 1) * boardInfo.getSs_Board_MaxRows() + 1;
 		int pEndRow = pPage * boardInfo.getSs_Board_MaxRows();
 
-		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang(), userInfo.getTenantId());
+		String strXML = ezCommunityService.getReservedItemListXML(userInfo.getId(), pStartRow, pEndRow, pSortBy, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 		int totalCount = ezCommunityService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
 		
 		if (totalCount > 0) {

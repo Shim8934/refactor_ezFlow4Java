@@ -3029,7 +3029,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID) throws Exception {
+	public String getReservedItemListXML(String id, int pStartRow, int pEndRow, String pSortBy, String lang, int tenantID, String offset) throws Exception {
 		logger.debug("getReservedItemListXML started.");
 		
 		StringBuilder sb = new StringBuilder();
@@ -3041,6 +3041,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_pSortBy", pSortBy);
 		map.put("tenantID", tenantID);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		
 		
 		List<CommunityBoardListVO> list = ezCommunityDAO.getReservedItemListXML(map);
 
@@ -3065,8 +3067,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				}
 				
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
-				sb.append("<StartDate>" + boardList.getStartDate() + "</StartDate>");
-				sb.append("<EndDate>" + boardList.getEndDate() + "</EndDate>");
+				sb.append("<StartDate>" + boardList.getStartDate().substring(0, 19) + "</StartDate>");
+				sb.append("<EndDate>" + boardList.getEndDate().substring(0, 19) + "</EndDate>");
 				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
 				sb.append("</NODE>");
 			}

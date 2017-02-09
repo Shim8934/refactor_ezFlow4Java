@@ -1032,9 +1032,9 @@
 					  	AND 
 					  		STARTDATE <= #nowDate# 
 					  	AND 
-					  		ENDDATE > #nowDate#
-					  	AND 
-					  		READFLAG = '0' ) T1 
+					  		ENDDATE > #nowDate# 
+					  	AND
+					  		D.TOTALCOUNT IS NULL ) T1 
 					]]>
 				  </isEqual>
 				  <isEqual property="type" compareValue="3">
