@@ -27,11 +27,6 @@
 	            Tab1_SelectID = "1tab1";
 	            ChangeTab(document.getElementById("1tab1"));
 	            window_resize();
-	
-	            // 수신거부 : web.config 설정에 따라 출력
-	            var DenyType = "${blockedSenders}";
-	            if (DenyType == "YES")
-	                document.getElementById("1tab9").style.display = "";
 	        }
 	        window.onresize = window_resize;
 	        function window_resize() {
@@ -151,7 +146,6 @@
 	                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
 	                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
 	                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
-		                <%--<p id = "MailEnv_sub9"><span divname="MailEnv_div9" id="1tab9" style="display:none;"><%=RM.GetString("t270")%></span></p>--%>
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>

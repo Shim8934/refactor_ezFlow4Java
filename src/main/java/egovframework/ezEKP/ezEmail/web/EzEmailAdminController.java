@@ -366,7 +366,7 @@ public class EzEmailAdminController {
 				logger.debug("pCn=" + pCn + ", pClass=" + pClass);
 				
 				if(pClass.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					if (dept != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");

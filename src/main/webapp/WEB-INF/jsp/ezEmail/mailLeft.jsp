@@ -21,7 +21,6 @@
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
 	        var funcCode = "${funCode}";
-	        var g_szMailFolderURL = "http://${mailServerAddress}/exchange/${userinfo.EmailID}"; //추후 수정
 	        var g_firstOpen = true;
 	        var lang = "${userinfo.lang}";
 	        var pNoneActiveX = "${noneActiveX}";

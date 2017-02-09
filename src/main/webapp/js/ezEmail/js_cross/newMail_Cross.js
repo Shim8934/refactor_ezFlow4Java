@@ -705,7 +705,13 @@ function Send_onClick_Complete(ReturnValue) {
                     return;
                 }
             }
-            if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuser && iseachMail == "true") {
+            
+            var individualmailuserNum = 5;
+            try {
+            	individualmailuserNum = Number(individualmailuser);
+            } catch (e) {}
+            
+            if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
                 if (confirm(strLang182)) {
                     iseachMail = "false";
                 }

@@ -161,7 +161,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String isDelete = "BMOVE";
 		boolean isSentItems = false;
 		String pIsCCFg = "Y";
-		String useEzKMS = config.getProperty("config.Use_ezKMS") == null ? "" : config.getProperty("config.Use_ezKMS");
 		IMAPAccess ia = null;
 		
 		try {
@@ -431,7 +430,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isSentItems", isSentItems);
 		model.addAttribute("pnFlag", pnFlag);
 		model.addAttribute("pIsCCFg", pIsCCFg);
-		model.addAttribute("useEzKMS", useEzKMS);
 		model.addAttribute("jMochaStandAlone", config.getProperty("config.IsJMochaStandAlone"));
 		
 		logger.debug("readMail ended.");

@@ -76,11 +76,11 @@ public class EzApprovalGarchiveController {
 		String buJaeInfo = "";
 		String susinAdmin = "";
     	// OCS 사용 여부
-	    String useOcs = config.getProperty("config.USE_OCS");
+	    String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 	    String userEmail = userInfo.getEmail();
-	    String use_Editor = config.getProperty("config.EDITOR"); 
-	    String use_IE11Browser = config.getProperty("config.IE11EDITOR");
-	    String openYear = config.getProperty("config.Site_OpenYear");
+	    String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+	    String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
+	    String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 	    String nonActiveX = "YES";
 	    
         if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && use_IE11Browser.equals("CK")) {
@@ -192,8 +192,8 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/regRecord.do"  ,produces="text/xml;charset=utf-8")
 	public String regRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request ,Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String useEditor=config.getProperty("config.EDITOR");
-		String useIE11Browser=config.getProperty("config.IE11EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useIE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
 	     if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && useIE11Browser.equals("CK")) {
 	    	 useIE11Browser ="CK";
 	     }
@@ -603,7 +603,7 @@ public class EzApprovalGarchiveController {
 		}
     	
     	String searchList ="extensionAttribute4::" + userInfo.getCompanyID().trim();
-    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getLang(), tenantID);
+    	String strRetXml = ezOrganService.getSearchList(searchList, "" , "" , "group" , 100 , userInfo.getPrimary(), tenantID);
     	Document xmlResult = commonUtil.convertStringToDocument(strRetXml); 
     	
     	if(xmlResult.getElementsByTagName("DATA2").getLength() > 0){

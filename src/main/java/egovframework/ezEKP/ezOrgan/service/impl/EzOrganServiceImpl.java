@@ -471,10 +471,8 @@ public class EzOrganServiceImpl implements EzOrganService {
     }	
 
 	@Override
-	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, int tenantID) throws Exception {
+	public String getSearchList(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, int tenantID) throws Exception {
 		logger.debug("getSearchList started");
-		
-pLangCode = commonUtil.convertLangCode(pLangCode);	
 		
         String[] searchParemeta = null;
         String[] searchList;
@@ -592,13 +590,13 @@ pLangCode = commonUtil.convertLangCode(pLangCode);
 				if(organVO.getType().equals("user")){
 					map1.put("v_CN", organVO.getCn());
 	        		map1.put("v_DEPTCD", organVO.getDisplayName());
-	        		map1.put("v_LANGDATA", pLangCode);
+	        		map1.put("v_LANGDATA", primary);
 	        		map1.put("v_TENANT_ID", tenantID);
 	        		
 	        		result = ezOrganDAO.getTBLUserMaster(map1);	        		
 	        	}else{
 	        		map1.put("v_CN", organVO.getCn());
-					map1.put("v_LANGDATA", pLangCode);
+					map1.put("v_LANGDATA", primary);
 					map1.put("v_TENANT_ID", tenantID);
 					
 					result = ezOrganDAO.getTBLDeptMaster(map1);	        		

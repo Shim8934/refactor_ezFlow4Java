@@ -7836,6 +7836,8 @@
 		   	 									AND
 		   												TENANT_ID =#v_TENANTID# )
 		   		 						WHERE  Code = '4')
+		   	AND 
+		   				TENANT_ID = #v_TENANTID#
 	</select>
 	
 	<insert id="EzApprovalG.insertSerialNo" parameterClass="Map" >
@@ -14187,4 +14189,310 @@
 		AND 
 			AprMemberSN = #curAprMemberSN#
    </update>
+   
+   <delete id="EzApprovalG.deleteLastDeptLine" parameterClass="Map">
+   		DELETE FROM 
+   			TBL_LASTDEPTLINE 
+   		WHERE 
+   			UserID = #v_USERID#
+		AND 
+			FormID = #v_FORMID#
+		AND 
+			TENANT_ID= #v_TENANTID#
+   </delete>
+   
+   <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
+   	    INSERT INTO 
+   	    	TBL_LASTDEPTLINE 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID 
+   	    (SELECT 
+   	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID
+		 FROM 
+		 	TBL_RECEIPTPOINTINFO 
+		 WHERE 
+		 	DOCID = #v_DOCID#
+		 AND 
+		 	TENANT_ID= #v_TENANTID#)
+   </insert>
+   
+   <delete id="EzApprovalG.deleteLastAprLine" parameterClass="Map">
+   		DELETE FROM 
+   			TBL_LASTAPRLINE 
+   		WHERE
+   		 	UserID = #v_USERID#
+        AND 
+        	FormID = #v_FORMID#
+        AND 
+        	TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <insert id="EzApprovalG.insertLastAprLine" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_LASTAPRLINE 
+   		(     UserID,      FormID,    AprMemberSN, AprType, AprState, AprMemberID,   AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
+   		(SELECT 
+   			#v_USERID# , #v_FORMID#, AprMemberSN, AprType,    '001',    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,     NULL,          NULL,    ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRLINEINFO 
+   		 WHERE 
+   		 	DOCID = #v_DOCID#
+   		 AND 
+   		 	TENANT_ID= #v_TENANTID#)
+   </insert>
+   
+   <update id="EzApprovalG.updateAprLineInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE#,
+		    ReceivedDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
+		WHERE 
+			DocID = #v_DOCID#
+		AND 
+			AprMemberSN = #v_APRMEMBERSN#
+		AND 
+			TENANT_ID= #v_TENANTID#
+   </update>
+   
+    <update id="EzApprovalG.updateAprLineInfo2" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE#,
+			ReceivedDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'),
+			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
+		WHERE 
+			DocID = #v_DOCID#
+		AND 
+			AprMemberSN = #v_APRMEMBERSN#
+		AND 
+			TENANT_ID= #v_TENANTID#
+   </update>
+   
+   <update id="EzApprovalG.updateAprLineInfo3" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_STAASSUNGIN#, 
+   		    ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'),
+			ReasonDoNotApprov = #v_REASONDONOTAPPROV#
+		WHERE 
+			DocID = #v_DOCID#
+		AND 
+			AprMemberSN = #v_APRMEMBERSN#
+		AND 
+			TENANT_ID= #v_TENANTID#
+   </update>
+   
+   <insert  id="EzApprovalG.insertCamjoAPrDocInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRDOCINFO 
+   		(   DocID,    FormID,  OrgDocID, DocType,   DocState,    FunctionType,  Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN,     StartDate,                               EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_APRSTATE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS') , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRDOCINFO 
+   		 WHERE 
+   		 	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoExAPrDocInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_EXPAPRDOCINFO 
+		(	 DocID,    SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+        (SELECT 
+        	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+         FROM 
+         	TBL_EXPAPRDOCINFO 
+		 WHERE 
+		 	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoAprAttachInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRATTACHINFO 
+   		(      DocID,  AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
+   		 FROM 
+            TBL_APRATTACHINFO 
+         WHERE 
+         	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoAprDocAttachInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRDOCATTACHINFO 
+   		(	DocID,     AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRDOCATTACHINFO 
+   		 WHERE 
+   		 	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoAprOpinionInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APROPINIONINFO 
+   		(	DocID,     UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
+   		 FROM 
+   		 	TBL_APROPINIONINFO 
+		 WHERE 
+		 	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoAprReceiptProcessInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		(	ReceiveSN, DocID,  SentDeptID,     SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,     AprState,   ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+   		(SELECT 
+   				1,   #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,     #v_DEPTNAME2#,  #v_DOCSTATE#, #v_STAASDOJAK#, NULL,        'N',        '',            '',             '',            '',            '',                '',                 DocID, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRDOCINFO 
+		 WHERE 
+		 	DocID = #v_DOCID# 
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoAprLineInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRLINEINFO 
+   		(DocID, AprMemberSN, AprType,   AprState,    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,      ReceivedDate,                      ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
+   		VALUES
+   		(#v_NEWID#, 1,      #v_APRTYPE#, #v_APRSTATE#, #v_USERID#,        'N',        #v_USERNAME#,  #v_USERNAME2# , #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,     #v_DEPTNAME2#,     #v_PCOMPANYID# , TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), NULL,         '',               'N',         'N', #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertCamjoExAprLine" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPAPRLINE 
+   		(docid, aprmemberSN, orguserid,   proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID) 
+   		VALUES 
+   		(#v_NEWID#, 1,           #v_USERID#,   '',           '',              '',                '',             '',                '',                '',                  '',  #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertSignInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SIGNINFO 
+   		(DocID, AprSN, SignType, SignName, Content, TENANT_ID)
+        VALUES 
+        (#v_DOCID#, #v_MAXAPRSN#, #v_SIGNTYPE#, #v_SIGNNAME#, #v_CONTENT#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptAssistAprDocInfo" parameterClass="Map">
+        INSERT INTO 
+        	TBL_APRDOCINFO 
+        (      DocID, FormID, OrgDocID,   DocType,    DocState,     FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
+        (SELECT 
+        	#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL# , DocTitle, DocNo, HasAttachYN,     'N',         NULL,     NULL,   WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID 
+         FROM 
+         	TBL_APRDOCINFO 
+         WHERE 
+         	DocID = #v_DOCID# 
+         AND
+         	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptAssistExAprDocInfo" parameterClass="Map">
+         INSERT INTO 
+         	TBL_EXPAPRDOCINFO 
+         (   DocID,     SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+         (SELECT 
+         	#v_NEWID#, SecurityCode, storagePeriod,   KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+          FROM 
+          	TBL_EXPAPRDOCINFO 
+          WHERE 
+          	DocID = #v_DOCID# 
+          AND
+         	TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptAssistAprAttachInfo" parameterClass="Map">
+        INSERT INTO 
+        	TBL_APRATTACHINFO 
+        (    DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID) 
+        (SELECT 
+        	#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
+         FROM 
+         	TBL_APRATTACHINFO 
+         WHERE 
+          	DocID = #v_DOCID# 
+      	 AND
+     		TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptAssistAprDocAttachInfo" parameterClass="Map">
+         INSERT INTO 
+         	TBL_APRDOCATTACHINFO 
+         (    DocID,    AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) 
+         (SELECT 
+         	#v_NEWID#, AttachSN,  AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
+          FROM 
+          	TBL_APRDOCATTACHINFO 
+          WHERE 
+          	DocID = #v_DOCID# 
+      	  AND
+     		TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptAssistAprReceiptProcessInfo" parameterClass="Map">
+        INSERT INTO 
+        	TBL_APRRECEIPTPROCESSINFO 
+        ( ReceiveSN, DocID,   SentDeptID,    SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,       AprState,     ProcessDate,                             ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+        (SELECT  
+        	1,     #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,       #v_DEPTNAME2#, #v_DOCSTATE#, #v_STAASDOJAK#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',     '',              '',         '',              '',              '',                '',                DocID, TENANT_ID \
+         FROM 
+         	TBL_APRDOCINFO
+         WHERE 
+            DocID = #v_DOCID# 
+      	  AND
+     		TENANT_ID = #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertRecord" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_RECORD
+   		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
+   		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID) 
+   		VALUES 
+   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, TO_DATE(#v_EXECUTEDATE#,'YYYY-MM-DD HH24:MI:SS'),  
+   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SEPERATEATTACH 
+   		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID) 
+   		Values 
+   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), '0',             '0',                 '0',    #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertRegRecRoleInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_RECROLEINFO  
+   		( RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID )
+   		Values
+        (#v_RECID#, #v_SEPATTSN# ,   'All_User' , 1 ,   '모든 이용자' , 'All User' ,#v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_AUDIO_VISUALRECEXINFO 
+   		(RecordID, SeperateAttachNo, Summary, RecordType, TENANT_ID) 
+   		VALUES 
+   		(#v_RECID#, #v_SEPATTSN#, #v_SUMMARY#, #v_RECTYPE#, #v_TENANTID#)
+   </insert>
 </sqlMap>

@@ -37,6 +37,7 @@ import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -69,6 +70,9 @@ public class EzAddressController{
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;  
+	
+	@Resource(name = "EzCommonService")
+    private EzCommonService ezCommonService;
 	
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
@@ -201,11 +205,11 @@ public class EzAddressController{
 		
 		String compAdmin = "";
 		String deptAdmin = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
         	useIE11Browser = "CK";
         }
 		
@@ -545,13 +549,13 @@ public class EzAddressController{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		String compAdmin = "";
 		String deptAdmin = "";
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
         	useIE11Browser = "CK";
         }
 		
@@ -700,11 +704,11 @@ public class EzAddressController{
 		String pAddressId = request.getParameter("addressid") == null ? "" : request.getParameter("addressid");
 		String compAdmin = "";
 		String deptAdmin = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
         	useIE11Browser = "CK";
         }
 		
@@ -1278,12 +1282,12 @@ public class EzAddressController{
 		String filter = "";
 		String bAdmin = "";
 		String cAdmin = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		String pListType = "";
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
         	useIE11Browser = "CK";
         }
 		
