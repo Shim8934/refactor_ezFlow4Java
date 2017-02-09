@@ -3610,7 +3610,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("/'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
 				
 				break;
 			case "delete" :
@@ -3630,7 +3630,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					
 					if (item != null) {
 						bIsMyContent = true;
-						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>"), userInfo.getId(), userInfo.getTenantId());
+						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>").replaceAll("/'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
 					}
 				}
 				
