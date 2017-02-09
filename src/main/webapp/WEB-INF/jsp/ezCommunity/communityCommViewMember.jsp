@@ -81,13 +81,13 @@
 			    var strSearch = "";
 			    
 			    if (document.getElementById("s_radio").value == "id") {
-				    strSearch = "sRadio=id&keyword=" + make_searchstring(document.getElementById("keyword").value);
+				    strSearch = "sRadio=id&keyword=" + document.getElementById("keyword").value;
 			    } else {
-				    strSearch = "sRadio=name&keyword=" + make_searchstring(document.getElementById("keyword").value);
+				    strSearch = "sRadio=name&keyword=" + document.getElementById("keyword").value;
 			    }
 			    
-				strSearch = strSearch + "&key=" + make_searchstring(document.getElementById("keyword").value) + "&code=${code}";
-				window.location.href = "/ezCommunity/commViewMember.do?" + encodeURI(strSearch);
+				strSearch = strSearch + "&key=" + document.getElementById("keyword").value + "&code=${code}";
+				window.location.href = "/ezCommunity/commViewMember.do?" + encodeURIComponent(strSearch);
 			}
 			
 	        var BlockSize = 10;
@@ -212,13 +212,13 @@
 	        }
 	        
 	        function movePage(newPage) {	
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURI("${sRadio}")
-					+"&code="+encodeURI("${code}")
-					+"&keyword="+make_searchstring("${keyword}")
-					+"&block="+encodeURI("${nowBlock}");
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
+					+"&code="+encodeURIComponent("${code}")
+					+"&keyword="+encodeURIComponent("${keyword}")
+					+"&block="+encodeURIComponent("${nowBlock}");
 				
 	            if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-					document.location.href = href + "&goToPage=" + encodeURI(parseInt(newPage));
+					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(newPage));
 				}
 			}
 	        
@@ -227,29 +227,29 @@
 			} */
 
 			function goToPage(page) {
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURI("${sRadio}")
-					+"&code="+encodeURI("${code}")
-					+"&keyword="+make_searchstring("${keyword}")
-					+"&block="+encodeURI("${nowBlock}");
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
+					+"&code="+encodeURIComponent("${code}")
+					+"&keyword="+encodeURIComponent("${keyword}")
+					+"&block="+encodeURIComponent("${nowBlock}");
 					
 				if (page == "front") {
 					if (parseInt("${curPage}") - 1 < 1) {
 						return;
 					}
 					
-					document.location.href = href + "&goToPage=" + encodeURI(parseInt("${curPage}") - 1);
+					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt("${curPage}") - 1);
 				} else if (page == "next") {
 					if (parseInt("${curPage}") + 1 > parseInt("${totalPage}")) {
 						return;
 					}
 					
-					document.location.href = href + "&goToPage=" + encodeURI(parseInt("${curpage}") + 1);
+					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt("${curpage}") + 1);
 				} else if (page == "page") {
 					if (event.keyCode == 13) {
 						var goPage = document.all.txt_PageInputNum.value;
 						
 						if(parseInt(goPage) > 0 && parseInt(goPage) <= parseInt("${totalPage}")) {
-							document.location.href = href + "&goToPage=" + encodeURI(parseInt(goPage));
+							document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(goPage));
 						}
 					}
 				}

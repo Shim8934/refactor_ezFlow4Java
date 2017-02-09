@@ -7,15 +7,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Insert title here</title>
 		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
-		
 		<script type="text/javascript">
 			window.location.href="/ezCommunity/adminOuterList.do?code=<c:out value = '${code}' />";
 		</script>

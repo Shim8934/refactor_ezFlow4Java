@@ -7,15 +7,6 @@
 		<title>admin_logo_ok</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
-		
 		<script language=javascript>
 			alert("<spring:message code = 'ezCommunity.t503' />");
 		    document.location.href = "/ezCommunity/adminLogo.do?code=<c:out value = '${code}' />";

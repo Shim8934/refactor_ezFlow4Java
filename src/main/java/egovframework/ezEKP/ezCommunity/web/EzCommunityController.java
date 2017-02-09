@@ -555,6 +555,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardListVO boardList = ezCommunityService.boardItemListGet1(boardID, userInfo.getId(), userInfo.getTenantId());
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
 		
+		if (!boardInfo.getListView_FG().equals("true")) {
+			return "cmm/error/accessDenied";
+		}
+		
 		if (boardList == null) {
 			userLevel = "0";
 		} else {
@@ -775,7 +779,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
 		String hasAttach = "NO";
 		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		String userInfoApprovalG = config.getProperty("config.UserInfo_ApprovalG");
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -802,7 +805,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		model.addAttribute("editor", config.getProperty("config.EDITOR"));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
-		model.addAttribute("userInfoApprovalG", userInfoApprovalG);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pReservedItem", pReservedItem);
@@ -2413,6 +2415,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.adminLeftGet(code, userInfo.getTenantId());
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		String boardGroupAdmin_FG = ezCommunityService.checkIfBoardGroupAdmin(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
@@ -2433,7 +2439,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("num", num);
 		model.addAttribute("clickBoard", clickBoard);
 		model.addAttribute("boardID", boardID);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("flag", flag);
 		model.addAttribute("club", club);
 		model.addAttribute("xmlret", retXML);
@@ -2459,6 +2464,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		if (club != null) {
@@ -2476,7 +2485,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
 		model.addAttribute("pPermitCount", pPermitCount);
@@ -2501,10 +2509,13 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		
 		return "ezCommunity/communityAdminBasicOk";
 	}
@@ -2522,6 +2533,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityClubVO clubVO = ezCommunityService.adminLogoGet(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
 		String copType = ezCommunityService.commHomeGet4(code, userInfo.getTenantId());
 		
@@ -2532,7 +2547,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("clubVO", clubVO);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
@@ -2606,9 +2620,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		ezCommunityService.adminLogoOk(request, userInfo.getTenantId());
 		
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		
 		return "ezCommunity/communityAdminLogoOk";
@@ -2625,7 +2642,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		model.addAttribute("sysopCheck", sysopCheck);
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		model.addAttribute("code", code);
 		
 		return "ezCommunity/communityAdminLogoOk";
@@ -2642,6 +2662,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		String listHeader = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t1168", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
 		String listHeader2 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2015", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
 		String listHeader3 = "<HEADERS><HEADER><NAME>" + egovMessageSource.getMessage("ezCommunity.t2016", userInfo.getLocale()) + "</NAME><WIDTH>70</WIDTH></HEADER></HEADERS>";
@@ -2655,7 +2679,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		returnVal3 = "<LISTVIEWDATA>" + listHeader3 + "<ROWS>" + returnVal3 + "</ROWS></LISTVIEWDATA>";
 		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("returnVal", returnVal);
 		model.addAttribute("returnVal2", returnVal2);
 		model.addAttribute("returnVal3", returnVal3);
@@ -2728,6 +2751,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		CommunityBoardPropertyVO boardProp = ezCommunityService.getBoardProperty(boardID, userInfo.getTenantId());
 		
@@ -2751,7 +2778,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("useMultiData", useMultiData);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
@@ -3154,12 +3180,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		int postCount = ezCommunityService.adminOuterListGet1(code, userInfo.getTenantId());
 		
 		String idSpanValue = ezCommunityService.adminOuterList(userInfo, code);
 
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
 		
@@ -3179,9 +3208,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code, userInfo.getTenantId());
 		
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		
 		return "ezCommunity/communityAdminOuterOkNo";
@@ -3211,13 +3243,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ser = ser.replace("'", "''");		
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		int postCount = ezCommunityService.adminMemberListGet1(code, userInfo.getTenantId());
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId());
 		String idSpanValue = ezCommunityService.adminMemberList(userInfo, code, flag, ser, strSysopID, mode);
 		
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("idSpanValue", idSpanValue);
@@ -3245,6 +3281,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String companyID = request.getParameter("companyID");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, config.getProperty("config.primary"), userInfo.getTenantId());
 		
 		Document xmldom = commonUtil.convertStringToDocument(infoXML);
@@ -3292,7 +3333,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("cID", cID);
 		model.addAttribute("cNM", cNM);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("memberInfo", memberInfo);
 		model.addAttribute("memberInfoVO", memberInfoVO);
 		model.addAttribute("userInfo", userInfo);
@@ -3318,9 +3358,12 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		ezCommunityService.adminMemberListOkGoSe(mode.toUpperCase(), code, cID, cNm, userInfo.getTenantId());
 		
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		model.addAttribute("mode", mode);
 		model.addAttribute("userName", userName);
@@ -3340,6 +3383,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), club.getC_SysopID().trim(), userInfo.getTenantId());
 		
@@ -3357,7 +3404,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 				
 		model.addAttribute("code", code);
 		model.addAttribute("sysopName", sysopName);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("club", club);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strCategoryPrint", strCategoryPrint);
@@ -3748,11 +3794,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		int postCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());		
 		String idSpanValue = ezCommunityService.adminMemPermit(userInfo, code);
 		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("postCount", postCount);
 		model.addAttribute("idSpanValue", idSpanValue);
 		return "ezCommunity/communityAdminMemPermit";
@@ -4429,10 +4479,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = request.getParameter("code");
+		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
+		if (sysopCheck != 1) {
+			return "cmm/error/accessDenied";
+		}
+		
 		model.addAttribute("code", code);
-		model.addAttribute("sysopCheck", sysopCheck);
 		
 		logger.debug("adminNoticeMail ended.");
 		

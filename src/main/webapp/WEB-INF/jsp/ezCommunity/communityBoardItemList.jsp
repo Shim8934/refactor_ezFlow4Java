@@ -659,11 +659,6 @@
         
 	</head>
 	<body class = "cmhome_body">
-		<c:if test="${boardInfo.listView_FG != 'true' }">
-			<div style="margin-top:100px;text-align:center"><spring:message code='ezCommunity.t909' /></div>
-			
-		</c:if>
-		
 		<h1 class="type1_h1">${boardInfo.boardName}<span id="mailBoxInfo"></span></h1>
 		
 		<div id="mainmenu">

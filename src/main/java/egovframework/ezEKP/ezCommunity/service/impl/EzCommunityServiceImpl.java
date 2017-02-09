@@ -2480,7 +2480,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardAdmin_FG() == null || boardInfo.getBoardAdmin_FG().equals("")) {
+		} else if (boardInfoTemp.getBoardAdmin_FG() == null || boardInfoTemp.getBoardAdmin_FG().equals("")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("false");
@@ -2489,13 +2489,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setReply_FG("false");
 			boardInfo.setDelete_FG("false");
 		} else {
-			boardInfo.setAccess_FG(Integer.toString(boardInfo.getAccess_()));
-			boardInfo.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG().toLowerCase());
-			boardInfo.setListView_FG(boardInfo.getListView_FG().toLowerCase());
-			boardInfo.setRead_FG(boardInfo.getRead_FG().toLowerCase());
-			boardInfo.setWrite_FG(boardInfo.getWrite_FG().toLowerCase());
-			boardInfo.setReply_FG(boardInfo.getReply_FG().toLowerCase());
-			boardInfo.setDelete_FG(boardInfo.getDelete_FG().toLowerCase());
+			boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
+			boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
+			boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
+			boardInfo.setRead_FG(boardInfoTemp.getRead_FG().toLowerCase());
+			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG().toLowerCase());
+			boardInfo.setReply_FG(boardInfoTemp.getReply_FG().toLowerCase());
+			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG().toLowerCase());
 		}
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());

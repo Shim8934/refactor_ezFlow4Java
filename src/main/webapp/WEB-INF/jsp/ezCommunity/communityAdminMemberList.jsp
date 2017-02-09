@@ -9,15 +9,6 @@
 		<link rel="stylesheet" href="<spring:message code='ezCommunity.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
-		
 		<script type="text/javascript">
 			function MM_swapImgRestore() { 
 				var i,x,a=document.MM_sr;

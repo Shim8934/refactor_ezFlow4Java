@@ -10,15 +10,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
-		
 		<c:choose>
 			<c:when test="${userMode == '1' }">
 				<script type="text/javascript">

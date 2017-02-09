@@ -8,15 +8,6 @@
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
 
 		<script type="text/javascript">
 			alert("<spring:message code = 'ezCommunity.t462' />");
