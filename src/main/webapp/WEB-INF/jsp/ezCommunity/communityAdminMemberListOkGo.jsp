@@ -10,46 +10,31 @@
 	<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
 	
 	<c:choose>
-		<c:when test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
+		<c:when test="${mode == 'master' }">
+			<script type="text/javascript">
+			 	window.onload = function () { 
+			 		//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+						//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
+					alert("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
+					window.parent.parent.close();
+					try{
+						// 20060720 준호수정
+						// 왼쪽 관리 메뉴 reload 에러 수정
+						window.parent.parent.opener.location.reload();
+					}catch(e){}	
+			 	}
+			</script>
 		</c:when>
 		
 		<c:otherwise>
-			<c:choose>
-				<c:when test="${mode == 'master' }">
-					<script type="text/javascript">
-					 	window.onload = function () { 
-					 		//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
- 							//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
-							alert("<spring:message code = 'ezCommunity.t540' />" + "${userName}"+")"+"<spring:message code = 'ezCommunity.t541' />");
-							window.parent.parent.close();
-							try{
-								// 20060720 준호수정
-								// 왼쪽 관리 메뉴 reload 에러 수정
-								window.parent.parent.opener.location.reload();
-							}catch(e){}	
-					 	}
-					</script>
-				</c:when>
-				
-				<c:otherwise>
-					<script type="text/javascript">
-						//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
-						//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
-						alert("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
-						window.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
-					</script>
-				</c:otherwise>
-			</c:choose>
+			<script type="text/javascript">
+				//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
+				//OpenAlertUI("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
+				alert("<spring:message code = 'ezCommunity.t540' />${userName}"+")"+"<spring:message code = 'ezCommunity.t543' />");
+				window.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}";
+			</script>
 		</c:otherwise>
-		
 	</c:choose>
-	
 		
 	</head>
 	<body>

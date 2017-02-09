@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
@@ -48,6 +49,9 @@ public class EzCommunityAdminController {
 	
 	@Autowired
 	private Properties globals;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Resource(name="EzCommunityAdminService")
 	private EzCommunityAdminService ezCommunityAdminService;
@@ -98,7 +102,7 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/bbsList.do")
 	public String bbsList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("config.EDITOR", userInfo.getTenantId());
 		String code = "", keyword = "", sRadio = "", titleName = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 17;
 		
@@ -127,7 +131,7 @@ public class EzCommunityAdminController {
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 		
-		int keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -136,7 +140,7 @@ public class EzCommunityAdminController {
 		
 		curPage = Math.min(curPage,  totalPage);
 		
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
 		String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);
@@ -174,7 +178,7 @@ public class EzCommunityAdminController {
 			query = request.getParameter("query").replace("'",  "''");
 		}
 		
-		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang()), select, query, userInfo.getTenantId());
+		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), select, query, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -184,14 +188,14 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(commonUtil.getMultiData(userInfo.getLang()), iQueryCount, select , query, userInfo.getTenantId());
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), iQueryCount, select , query, userInfo.getTenantId());
 
 		for(CommunityClubVO club : clubList) {
 			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", keywordCount);
@@ -209,7 +213,7 @@ public class EzCommunityAdminController {
 		
 		String code = request.getParameter("code");
 		
-		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang()), code, userInfo.getTenantId());
+		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
@@ -237,7 +241,7 @@ public class EzCommunityAdminController {
 		String cCateB = request.getParameter("cCateB");
 		String cCateC = request.getParameter("cCateC");
 		
-		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang()), cCateA, cCateB, cCateC, clubName, code, userInfo.getTenantId());
+		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), cCateA, cCateB, cCateC, clubName, code, userInfo.getTenantId());
 		
 		logger.debug("admCommunityInfoEditOk ended.");
 		
@@ -281,7 +285,7 @@ public class EzCommunityAdminController {
 
             switch (s.substring(0, 1)) {
                 case "1":
-                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang());
+                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
                     
                     if (v == "1") {
                         sc1 = 2;
@@ -324,7 +328,7 @@ public class EzCommunityAdminController {
         int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, tenantID);
         int totalPage = keywordCount / comNoPerPage;
 		
-        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2, tenantID);
+        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), sort1, sort2, tenantID);
         
         if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
         	totalPage = totalPage + 1;
@@ -334,7 +338,7 @@ public class EzCommunityAdminController {
         String idSpanValue = ezCommunityAdminService.communityCloseCom(clubList, curPage, comNoPerPage, userInfo);
         
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		model.addAttribute("keyword", keyword);
@@ -368,7 +372,7 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
 		
 		CommunityClubVO clubVO = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
-		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang()), clubVO.getC_SysopID().trim(), tenantID);
+		CommunityMemberInfoVO memberVO = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), tenantID), clubVO.getC_SysopID().trim(), tenantID);
 		
 		String strCategory = ezCommunityService.categoryPrint(clubVO.getC_Cate_A().trim(), clubVO.getC_Cate_B().trim(), clubVO.getC_Cate_C().trim(), userInfo);
 		
@@ -446,7 +450,7 @@ public class EzCommunityAdminController {
 
             switch (s.substring(0, 1)) {
                 case "1":
-                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang());
+                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), tenantID);
                     
                     if (v == "1") {
                         sc1 = 2;
@@ -481,7 +485,7 @@ public class EzCommunityAdminController {
 		int keywordCount = ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio, tenantID);
 		int totalPage = keywordCount / comNoPerPage;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang()), sort1, sort2, tenantID);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), tenantID), sort1, sort2, tenantID);
 		
 		if (totalPage * comNoPerPage != keywordCount && (keywordCount % comNoPerPage) != 0) {
 			totalPage = totalPage + 1;
@@ -492,7 +496,7 @@ public class EzCommunityAdminController {
 		String idSpanValue = ezCommunityAdminService.admitCom(clubList, curPage, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), tenantID));
         model.addAttribute("sysopCheck", sysopCheck);
 		model.addAttribute("code", code);
 		model.addAttribute("keyword", keyword);
@@ -527,16 +531,11 @@ public class EzCommunityAdminController {
 		if (pDivi.equals("AdmitCancel")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t43", userInfo.getLocale());
 			
-			recipientList = ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+			recipientList = ezCommunityAdminService.aspCommAdmitOkSet1(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, false);
 		} else if (pDivi.equals("AdmitOK")) {
 			diviTitle = egovMessageSource.getMessage("ezCommunity.t45", userInfo.getLocale());
-			
-			if (config.getProperty("config.Use_ezKMS").toUpperCase().equals("YES")) {
-				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "YES", comName, userInfo.getTenantId());
-			} else {
-				recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang()), "", "", userInfo.getTenantId());
-			}
+			recipientList = ezCommunityAdminService.aspCommAdmitOkSet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "", "", userInfo.getTenantId());
 			
 			ezCommunityAdminService.createCommunityAdmitSendMail(loginCookie, userInfo, recipientList, true);
 		} else {

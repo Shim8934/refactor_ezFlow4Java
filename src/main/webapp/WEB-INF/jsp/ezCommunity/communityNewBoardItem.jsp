@@ -744,56 +744,6 @@
 				}
 			}
 						
-			function InsertDocInfo() {
-			    var ret = "";		
-			    
-			    while (ret == "") {
-			        ret = SelectBoard();
-			
-			        while (ret == "") {
-			            if (confirm("<spring:message code='ezCommunity.t1156'/>")) {
-			            	return -1;
-			        	}
-			        
-			        ret = SelectBoard();
-			    	}
-				}
-
-			    pBoardID = ret;
-			    GetBoardInfo();
-			    InitializeSettings();
-				
-			    if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-			        var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/common/downloadattach.aspx?filepath=" + escape(pUrl) + "&filename=test.mht";
-			        document.getElementById('docContent').src = "/myoffice/CKEditor/MHTtoHTML_Content.aspx?href=" + fullPath;
-			        
-			        if (gubun == "3") {
-			            document.getElementById('docContent').style.height = "220px";
-			        }
-			        
-			        document.getElementById("docTR").style.display = "";
-			    }
-			    
-			    var xmlHTTP = createXMLHttpRequest();
-			    var xmlpara = createXmlDom();
-			    var xmlstring = "<DocID>" + pDocID + "</DocID>";
-			    xmlpara = loadXMLString(xmlstring);
-			    
-			    if ("${userInfoApprovalG}" == "NO") {
-			    	xmlHTTP.open("POST", "/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
-			    } else {
-			    	xmlHTTP.open("POST", "/myoffice/ezApprovalG/formContainer/aspx/aprattachMail.aspx", false);
-			    }
-				
-			    xmlHTTP.send(xmlpara);
-			    
-			    if (xmlHTTP.status == 200) {
-			        var xmldom = createXmlDom();
-			        xmldom = loadXMLString(xmlHTTP.responseText);
-			        document.getElementById("txtTitle").value = "<spring:message code='ezCommunity.t1160'/>" + getNodeText(GetElementsByTagName(xmldom, "DOCTITLE")[0]);
-			    }
-			}
-						
 			function GetBoardInfo() {
 			    var xmlhttp_boardinfo = createXMLHttpRequest();
 			    xmlhttp_boardinfo.open("POST", "aspx/GetBoardInfo.aspx?BoardID=" + pBoardID, false);
@@ -873,10 +823,6 @@
 	                    } else {
 	                        if (pDocID == "") {
 	                            if (InsertMailInfo() == -1) {
-	                            	window.close();
-	                            }
-	                        } else {
-	                            if (InsertDocInfo() == -1) {
 	                            	window.close();
 	                            }
 	                        }

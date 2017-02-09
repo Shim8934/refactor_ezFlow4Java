@@ -35,6 +35,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -64,6 +65,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EzApprovalGService ezApprovalGService;
@@ -106,7 +110,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
-		String multiData = commonUtil.getMultiData(userInfo.getLang());
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String editor = ""; //config에는 CK등록되어있고 ""일때 폼프로세서적용 
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -200,12 +204,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 양식등록(MHT) 양식함추가 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
-	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
 		String tCheck = request.getParameter("tCheck");
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary= config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary= ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
 		
 		if (tCheck.equals("fContIns")) {
@@ -265,7 +269,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("fContID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang()), companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
 		
 		return result;
 	}
@@ -327,9 +331,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String formProcSpelling = config.getProperty("config.FormProcSpelling"); 
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String formProcSpelling = ezCommonService.getTenantConfig("config.FormProcSpelling", userInfo.getTenantId()); 
+		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -367,9 +371,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String formProcSpelling = config.getProperty("config.FormProcSpelling"); 
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String formProcSpelling = ezCommonService.getTenantConfig("config.FormProcSpelling", userInfo.getTenantId()); 
+		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -713,8 +717,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMContType.do")
 	public String apprMContType(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -2197,7 +2201,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("config.EDITOR", userInfo.getTenantId());
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();

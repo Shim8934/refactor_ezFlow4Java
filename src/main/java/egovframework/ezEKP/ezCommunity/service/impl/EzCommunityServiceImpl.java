@@ -41,6 +41,7 @@ import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
@@ -93,6 +94,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Resource(name="EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
 	
 	@Autowired
 	private EgovFileScrty egovFileScrty;
@@ -282,7 +286,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			cCateC = "0";
 		}
 		
-		clubVO = commMakeOkGet1(clubName, cCateA, cCateB, cCateC, commonUtil.getMultiData(userInfo.getLang()), tenantID);
+		clubVO = commMakeOkGet1(clubName, cCateA, cCateB, cCateC, commonUtil.getMultiData(userInfo.getLang(), tenantID), tenantID);
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
@@ -740,7 +744,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
 		}
 		
-		String userExtension = config.getProperty("config.USE_FileExtension").toString();
+		String userExtension = ezCommonService.getTenantConfig("config.USE_FileExtension", userInfo.getTenantId());
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
@@ -1515,7 +1519,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		StringBuilder strHTML = new StringBuilder();
-		String name = pollResGet4(commonUtil.getMultiData(userInfo.getLang()), managerVO.getPollRegUser(), tenantID);
+		String name = pollResGet4(commonUtil.getMultiData(userInfo.getLang(), tenantID), managerVO.getPollRegUser(), tenantID);
 		
 		strHTML.append("<table class=\"mainlist\"  style=\"width:100%;\" ><tr>");
 		
@@ -1623,7 +1627,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		StringBuilder sb = new StringBuilder();
 		
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, commonUtil.getMultiData(userInfo.getLang()), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
 		
 		int iOutputCount = 1;
 		
@@ -1636,7 +1640,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				break;
 			}
 			
-			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 			
 			if (userInfo.getLang().equals("2")) {
 				memberInfo.setUserName(memberInfo.getUserName2());
@@ -1651,7 +1655,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())) + "</td>");
+			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId())) + "</td>");
 			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
 			sb.append("<td style=\"width:150\">");
@@ -1786,7 +1790,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard1(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "ALL", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "ALL", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1803,7 +1807,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard2(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "LEFT", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList2 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "LEFT", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList2) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1820,7 +1824,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminHomeBoard3(LoginVO userInfo, String code) throws Exception {
 		StringBuilder listData = new StringBuilder();
 		
-		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang()), "RIGHT", userInfo.getTenantId());
+		List<CommunityBoardInfoVO> boardInfoList3 = getBoardList(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), "RIGHT", userInfo.getTenantId());
 		
 		for (CommunityBoardInfoVO boardInfo : boardInfoList3) {
 			listData.append("<ROW><CELL><VALUE>");
@@ -1837,7 +1841,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminOuterList(LoginVO userInfo, String code) throws Exception {
 		logger.debug("adminOuterList started.");
 		
-		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+		List<CommunityCOutApplicationVO> list = adminOuterListGet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
@@ -1871,7 +1875,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String adminMemberList(LoginVO userInfo, String code, String flag, String ser, String strSysopID, String mode) throws Exception {
 		logger.debug("adminMemberList started.");
 		
-		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), commonUtil.getMultiData(userInfo.getLang()), ser, userInfo.getTenantId());
+		List<CommunityCClubUserVO> list = adminMemberListGet3(code, flag.toUpperCase(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), ser, userInfo.getTenantId());
 		
 		int iCount = 1;
 		StringBuilder sb = new StringBuilder();
@@ -1961,7 +1965,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder rtnVal = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
 		rtnVal.append("<DATA>");
@@ -2480,7 +2484,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setWrite_FG("true");
 			boardInfo.setReply_FG("true");
 			boardInfo.setDelete_FG("true");
-		} else if (boardInfo.getBoardAdmin_FG() == null || boardInfo.getBoardAdmin_FG().equals("")) {
+		} else if (boardInfoTemp.getBoardAdmin_FG() == null || boardInfoTemp.getBoardAdmin_FG().equals("")) {
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
 			boardInfo.setListView_FG("false");
@@ -2489,13 +2493,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setReply_FG("false");
 			boardInfo.setDelete_FG("false");
 		} else {
-			boardInfo.setAccess_FG(Integer.toString(boardInfo.getAccess_()));
-			boardInfo.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG().toLowerCase());
-			boardInfo.setListView_FG(boardInfo.getListView_FG().toLowerCase());
-			boardInfo.setRead_FG(boardInfo.getRead_FG().toLowerCase());
-			boardInfo.setWrite_FG(boardInfo.getWrite_FG().toLowerCase());
-			boardInfo.setReply_FG(boardInfo.getReply_FG().toLowerCase());
-			boardInfo.setDelete_FG(boardInfo.getDelete_FG().toLowerCase());
+			boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
+			boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
+			boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
+			boardInfo.setRead_FG(boardInfoTemp.getRead_FG().toLowerCase());
+			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG().toLowerCase());
+			boardInfo.setReply_FG(boardInfoTemp.getReply_FG().toLowerCase());
+			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG().toLowerCase());
 		}
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -2613,7 +2617,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int count = 0;
 		
 		String id = userInfo.getId();
-		String strLang = commonUtil.getMultiData(userInfo.getLang());
+		String strLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String offset = userInfo.getOffset();
 		int tenantID = userInfo.getTenantId();
 		
@@ -3036,7 +3040,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pEndRow", pEndRow);
-		map.put("v_strLang", commonUtil.getMultiData(lang));
+		map.put("v_strLang", commonUtil.getMultiData(lang, tenantID));
 		map.put("v_pUserID", id);
 		map.put("v_pSortBy", pSortBy);
 		map.put("tenantID", tenantID);
@@ -3303,7 +3307,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
 			
-			if (commonUtil.getMultiData(userInfo.getLang()).equals("")) {
+			if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
 			} else {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
@@ -3561,7 +3565,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception {
 		logger.debug("guestOne started.");
 		
-		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+		List<CommunityCClubGuestVO> list = guestOneGet2(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
         StringBuilder sb = new StringBuilder();
         int i = 0;
@@ -3615,7 +3619,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				break;
 			case "delete" :
 				for (String no : cNo){
-					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -3626,7 +3630,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				break;
 			case "edit" :
 				for (String no : cNo){
-					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang()), no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -4474,7 +4478,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		StringBuilder sb = new StringBuilder();
 		String id = userInfo.getId();
-		String lang = commonUtil.getMultiData(userInfo.getLang());
+		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String offset = userInfo.getOffset();
 		int tenantID = userInfo.getTenantId();
 		int count = 0;
@@ -5012,7 +5016,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
@@ -5334,7 +5338,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int count = 0;
 		
 		String id = userInfo.getId();
-		String lang = commonUtil.getMultiData(userInfo.getLang());
+		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String offset = userInfo.getOffset();
 		int tenantID = userInfo.getTenantId();
 		
@@ -6062,7 +6066,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang));
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(lang, userInfo.getTenantId()));
 		map.put("v_PUSERID", id);
 		map.put("v_PBOARDID", pBoardID);
 		map.put("v_PSORTBY", pSortBy);
@@ -6891,7 +6895,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map2 = new HashMap<String, Object>();
 		map2.put("clubMasterID", clubMasterID);
-		map2.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+		map2.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map2.put("tenantID", tenantID);
 		
 		LoginVO vo = ezCommunityDAO.joinOkSendMailGet2(map2);
@@ -6931,7 +6935,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_code", code);
-        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang()));
+        map.put("v_userInfo_lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
         map.put("tenantID", userInfo.getTenantId());
         
         CommunityClubVO vo = ezCommunityDAO.commOutOkGet2(map);
@@ -6980,7 +6984,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("v_CODE", code);
-        map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+        map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
         map.put("tenantID", userInfo.getTenantId());
         
         CommunityClubVO cvo = ezCommunityDAO.getCClubName(map);

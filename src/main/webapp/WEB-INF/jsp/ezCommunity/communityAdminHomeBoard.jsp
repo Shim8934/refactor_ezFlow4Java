@@ -15,15 +15,6 @@
 		<script type="text/javascript" src="/js/ezCommunity/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
-		<c:if test="${sysopCheck != '1' }">
-			<spring:message code = 'ezCommunity.t447' />
-			<%
-				if (true) {
-					return;
-				}
-			 %>
-		</c:if>
-		
 		<script type="text/javascript">
 			var code = "<c:out value = '${code}' />";
 			var xmldom = "";
