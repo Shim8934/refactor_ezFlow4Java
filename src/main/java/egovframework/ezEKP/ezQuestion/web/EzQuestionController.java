@@ -118,7 +118,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
-	//TODO 2016-05-02 이효진 formatter 부분 EgovDateUtil 로 변경해야함
 	/**
 	 * 전자설문 설문리스트 메인 화면 호출 함수
 	 */
@@ -157,8 +156,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setBrdID(Integer.parseInt(brdID));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
-		qstListVO.setPostDate(postDate);
-		qstListVO.setPollEndDate(pollEndDate);
+		qstListVO.setPostDate(commonUtil.getDateStringInUTC(postDate, loginVO.getOffset(), true));
+		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, loginVO.getOffset(), true));
 		qstListVO.setLang(lang);
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
@@ -170,13 +169,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		                "&pollEndDate=" + qstListVO.getPollEndDate() +
 		                "&currPage=" + qstListVO.getCurrPage();
 		
-		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, loginVO.getTenantId(), loginVO.getOffset()));
+		qstListVO.setTotalCnt(ezQuestionService.getQstListCnt(qstListVO, loginVO.getTenantId()));
 		
 		if(qstListVO.getTotalPage()==0){
 			qstListVO.setTotalPage((qstListVO.getTotalCnt()+qstListVO.getPageSize()-1)/qstListVO.getPageSize());
 		}
 		
-		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, loginVO.getTenantId(), loginVO.getOffset());		
+		List<QstListVO> list = ezQuestionService.getQstList(qstListVO, loginVO.getTenantId());		
 		StringBuilder strbuilder;
 		
 		for(QstListVO qst : list){
@@ -197,7 +196,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int compareStart, compareEnd;
 		
 		for(QstListVO qst : list){
-			startDate=formatter.parse(qst.getPostDate());
+			startDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPostDate(), loginVO.getOffset(), false));
 			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), loginVO.getOffset(), false));
 			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
@@ -205,11 +204,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 			logger.debug("startDate="+String.valueOf(startDate));
 			logger.debug("endDate="+String.valueOf(endDate));
 			if(compareStart <= 0 && compareEnd >= 0){
-				strbuilder.append("[진행중] ");
+				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", loginVO.getLocale()));
 				strbuilder.append(qst.getTitle()); 
 				qst.setTitle(strbuilder.toString());
 			}else{
-				strbuilder.append("[완료] ");
+				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t563", loginVO.getLocale()));
 				strbuilder.append(qst.getTitle());
 				qst.setTitle(strbuilder.toString());
 			}				
@@ -398,7 +397,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
-		if(loginVO.getRollInfo().toUpperCase().indexOf("C=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("K=1") > -1 || loginVO.getRollInfo().toUpperCase().indexOf("I=1") > -1){ 
+		if(loginVO.getRollInfo().indexOf("c=1") > -1 || loginVO.getRollInfo().indexOf("k=1") > -1 || loginVO.getRollInfo().indexOf("i=1") > -1){ 
 			adminYN = "Y";
 		}
 		
@@ -948,7 +947,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("pCompanyID",pCompanyID);
 		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
 		model.addAttribute("userLang",userLang);
-		return "/ezQuestion/qstRangeSelect/rangeSelect";
+		return "/ezQuestion/qstRangeSelect";
 	}
 	
 	/**

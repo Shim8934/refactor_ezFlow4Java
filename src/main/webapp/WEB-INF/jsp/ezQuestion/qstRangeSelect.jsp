@@ -111,14 +111,14 @@
             		var _listview = new ListView();
             		_listview.LoadFromID("DListView");
             		var arrRows = _listview.GetDataRows();
-alert(arrRows);
+            		
             		for (count2 = 0; count2 < arrRows.length; count2++) {
-alert(arrRows[count2].getAttribute("CN"));
                 		if (nodeIdx.GetNodeData("CN") == arrRows[count2].getAttribute("CN")) {
                     		alert("<spring:message code='ezQuestion.t18'/>");
                     		return;
                 		}
             		}
+            		
             		pparsingXML2 = "";
             		pparsingXML = "";
             		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
