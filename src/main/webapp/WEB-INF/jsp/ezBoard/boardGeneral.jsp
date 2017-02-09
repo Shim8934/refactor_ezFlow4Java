@@ -6,7 +6,6 @@
 	<head>
 		<title>Insert title here</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=9" />
     	<link rel="stylesheet" href="/css/default_kr.css" type="text/css"/>
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

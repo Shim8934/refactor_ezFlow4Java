@@ -419,7 +419,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 		// TODO Auto-generated method stub
 		logger.debug("getWebPartList started");
 
-		String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+		String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String userIDs = "'" + userInfo.getId() + "'";
 		String proxyOption = "";
 		String resultXML = "";
@@ -572,7 +572,7 @@ public class EzApprovalServiceImpl implements EzApprovalService{
 	private String getProxyUser(String userID, String lang, String offset, int tenantID) throws Exception {
 		logger.debug("getProxyUser started");
 
-		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayName", "displayName;extensionAttribute5", "user", 5, commonUtil.getPrimaryData(lang), tenantID);
+		String rtnXML = ezOrganService.getSearchList("LEFT_extensionAttribute5::" + userID + ":", "displayName", "displayName;extensionAttribute5", "user", 5, commonUtil.getPrimaryData(lang, tenantID), tenantID);
 		Document xmlDom = commonUtil.convertStringToDocument(rtnXML);
 		
 		int nodeLength = xmlDom.getElementsByTagName("DATA2").getLength();

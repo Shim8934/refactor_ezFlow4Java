@@ -116,9 +116,14 @@
 		        var Save_unloadSave = false;
 		        function Window_onunload() {
 		            if (window_onunload_Event && !Save_unloadSave) {
-		                var divStyle, ifrmStyle;
-		                var listCount = document.getElementById("listcount").value;
+		                var divStyle, ifrmStyle, listCount;
 		
+		                if (document.getElementById("listcount") != null){
+			            	listCount = document.getElementById("listcount").value;
+			            } else {
+			            	listCount = 20;
+			            }
+		                
 		                if (pPreviewShow_HOW == "W") {
 		                    divStyle = parseInt(document.getElementById("divList").style.height);
 		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
