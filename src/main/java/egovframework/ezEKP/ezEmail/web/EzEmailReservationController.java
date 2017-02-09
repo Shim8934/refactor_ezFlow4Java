@@ -107,7 +107,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		String useIE11Browser = "";
 		String noneActiveX = "YES";
 		
-		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((request.getHeader("User-Agent").indexOf("rv:11") > 0 || request.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
         	useIE11Browser = "CK";
         }
 		
@@ -347,11 +347,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
   				+ ",postType=" + postType);
   		
-		//TODO: 개별발신
-		int individualMailUser = 0;
-		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
-			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
-		}
+  		//TODO: 개별발신
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {

@@ -312,11 +312,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
         //TODO: 개별발신
-		int individualMailUser = 0;
-		if (config.getProperty("config.INDIVIDUALMAILUSER") != null && !config.getProperty("config.INDIVIDUALMAILUSER").trim().equals("")) {
-			individualMailUser = Integer.parseInt(config.getProperty("config.INDIVIDUALMAILUSER"));
-		}
-		
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
 		
 		String cmdOwn = "";
 		if (request.getParameter("cmd") != null) {
@@ -999,9 +995,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			isBigYN = request.getParameter("isbigyn");
 		}
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String useExtension = "";
-		if (config.getProperty("config.USE_FileExtension") != null) {
-			useExtension = config.getProperty("config.USE_FileExtension");
+		if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
+			useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		}
 		
 		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
@@ -1042,7 +1040,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		strXML = "<ROOT><NODES>";
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		
@@ -1200,7 +1197,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	public String mailInterUploadCopy(
 			@CookieValue("loginCookie") String loginCookie, 
 			@RequestBody String bodyData,
-			HttpServletRequest request) {
+			HttpServletRequest request) throws Exception {
 		logger.debug("mailInterUploadCopy started.");
 		
 		logger.debug("bodyData=" + bodyData);
@@ -1224,7 +1221,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String pTempFileUploadPath = uploadMailRootPath + commonUtil.separator + "tempFileUpload";
 		String pTempListPath = uploadMailRootPath + commonUtil.separator + "templist";
 		
-		String useExtension = config.getProperty("config.USE_FileExtension");
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		
 		int fileCnt = doc.getElementsByTagName("ROW").getLength();
 		String[] fileName = new String[fileCnt];
@@ -1486,13 +1483,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             String useExtension = "";
             long fileSize = 0;
             
-            if (config.getProperty("config.USE_FileExtension") != null) {
-                useExtension = config.getProperty("config.USE_FileExtension");
+            LoginVO userInfo = commonUtil.userInfo(loginCookie);
+            
+            if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
+                useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
             }
             
             String realPath = commonUtil.getRealPath(request);
-            
-            LoginVO userInfo = commonUtil.userInfo(loginCookie);
             String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
             pDirPath = realPath + pDirPath;
             
@@ -3171,10 +3168,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-        int tenantID = userInfo.getTenantId();        
-        
-        logger.debug("tenantID=" + tenantID);       
-		
 		String pOrganSearchList = "";
 		String pOrganCellList = "displayname";
 		String pOrganPropList = "company;description;title;mail;extensionAttribute3";
@@ -3239,7 +3232,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
         
-        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, tenantID);
+        String organXML = getOrganSearch(pOrganSearchList, pOrganCellList, pOrganPropList, pOrganListType, userInfo);
         String dlXML = getOrganDLSearch(pDLSearchList, userInfo);
         String addressXML = getAddressSearch(pAddressFilter, userInfo);
         return String.format("<RESULT><ORGAN>%s</ORGAN><DL>%s</DL><ADDRESS>%s</ADDRESS></RESULT>", organXML, dlXML, addressXML);
@@ -3429,7 +3422,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				logger.debug("pCn=" + pCn + ", isUser=" + isUser);
 				
 				if(isUser.equals("group")) {
-					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, config.getProperty("config.primary"), userInfo.getTenantId());
+					OrganDeptVO dept = ezOrganService.getDeptInfo(pCn, userInfo.getPrimary(), userInfo.getTenantId());
 					
 					Map<String, String> map = new HashMap<String, String>();
 					map.put("displayName", dept.getDisplayName());
@@ -3517,10 +3510,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	/**
 	 * 사원 Organ 정보 호출 함수
 	 */
-	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, int tenantID) {
+	private String getOrganSearch(String pSearchList, String pCellList, String pPropList, String pListType, LoginVO userInfo) {
 		String pResult = "";
         try {
-            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, config.getProperty("config.primary"), tenantID);
+            pResult = ezOrganService.getSearchList(pSearchList, pCellList, pPropList, pListType, 100, userInfo.getPrimary(), userInfo.getTenantId());
         } catch (Exception e) {
         	e.printStackTrace();
             pResult = "EXCEPTION";

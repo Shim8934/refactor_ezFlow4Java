@@ -125,23 +125,19 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String userEditor = "";
 		String userIE11Browser = "";
 		String noneActiveX = "YES";
-		String blockedSenders = "";
 
 		if ((request.getHeader("User-Agent").contains("rv:11") || request.getHeader("User-Agent").contains("Trident/7.0"))
-				&& config.getProperty("config.IE11EDITOR").equals("CK")) {
+				&& ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			userIE11Browser = "CK";
 		}
 
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		blockedSenders = config.getProperty("config.BlockedSenders");
 
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("userIE11Browser", userIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("blockedSenders", blockedSenders);
 		
 		logger.debug("mailConfig ended.");
-		
 		return "ezEmail/mailConfig";
 	}
 
