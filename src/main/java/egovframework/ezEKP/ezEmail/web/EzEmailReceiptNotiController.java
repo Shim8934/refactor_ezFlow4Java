@@ -298,8 +298,6 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		logger.debug("mailCancelSend started.");
 		logger.debug("bodyData=" + bodyData);
 		
-		String localServerName = config.getProperty("config.COMPUTERNAME");
-		
 		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
 		String password  = userInfo.get(1);
 		
@@ -411,7 +409,7 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
 			}
 			
-			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, localServerName, innerAddresses);
+			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, innerAddresses);
 			
 			folder.close(true);
 			
