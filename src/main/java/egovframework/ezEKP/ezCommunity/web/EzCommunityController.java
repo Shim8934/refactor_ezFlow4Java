@@ -415,7 +415,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		String strVisit = ezCommunityService.commHomeGet1(userInfo.getId(), code, userInfo.getTenantId());
@@ -548,7 +548,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("code : " + code + ", boardID : " + boardID + ", boardName : " + boardName);
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
@@ -556,7 +556,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.boardItemList(userInfo, model, request, response, boardInfo, boardList);
 		
 		if (!boardInfo.getListView_FG().equals("true")) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		if (boardList == null) {
@@ -620,7 +620,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		// 20100119 보안처리 관련 추가작업(권한체크)
         if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
-        	return "cmm/error/accessDenied";
+        	return "cmm/error/egovError";
         }
         
         int pStartRow = (pPage - 1) * boardInfo.getSs_SearchBoard_MaxRows() + 1;
@@ -796,7 +796,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
@@ -1065,7 +1065,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String oneLineReplyFlag = ezCommonService.getTenantConfig("ONELINE_REPLY_ENABLE", userInfo.getTenantId());
         String adjacentItemsEnableFlag = ezCommonService.getTenantConfig("ADJACENT_ITEMS_ENABLE", userInfo.getTenantId());
-        String useKMS = config.getProperty("config.Use_ezKMS");
         String publicModulus = egovFileScrty.getPbm();
         String publicExponent = "10001";
         
@@ -1082,7 +1081,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
@@ -1100,7 +1099,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
-		model.addAttribute("useKMS", useKMS);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("boardInfo", boardInfo);
@@ -1858,7 +1856,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		int keywordCount = ezCommunityService.guestOneGet1(sRadio, keyword, code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
@@ -1966,7 +1964,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String userLevel = request.getParameter("userLevel");
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		userLevel = ezCommunityService.pollMainGet1(userInfo.getId(), code, userInfo.getTenantId());
@@ -2032,7 +2030,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		model.addAttribute("code", code);
@@ -2135,7 +2133,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		ezCommunityService.pollRes(userInfo, model, pollManagerID, pollState, response);
@@ -2282,7 +2280,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		int keywordCount = ezCommunityService.commViewMemberGet2(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
@@ -4026,7 +4024,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
@@ -4117,7 +4115,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 20100119 보안처리 관련 추가작업(권한체크)
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 1, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		if (!url.equals("")) {
@@ -4275,7 +4273,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", boardID, userInfo.getRollInfo(), 0, response, userInfo)) {
-			return "cmm/error/accessDenied";
+			return "cmm/error/egovError";
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);

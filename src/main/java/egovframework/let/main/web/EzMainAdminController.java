@@ -36,18 +36,14 @@ public class EzMainAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie); 
 		
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
-		String use_ezKMS = config.getProperty("config.Use_ezKMS");
 		String use_ezDMS = config.getProperty("config.Use_ezDMS");
 		String use_portal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
-		String use_mobileMgmt = config.getProperty("config.Use_MobileMgmt");
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 
 		model.addAttribute("use_approvalG", use_approvalG);
-		model.addAttribute("use_ezKMS", use_ezKMS);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
-		model.addAttribute("use_mobileMgmt", use_mobileMgmt);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		return "admin/adminTop";

@@ -533,7 +533,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			lang = req.getParameter("lang");
 		}
 		
-		ezPortalAdminService.setUseLang(uID, userInfo.getCompanyID(), lang);
+		ezPortalAdminService.setUseLang(uID, userInfo.getCompanyID(), lang, userInfo.getTenantId());
 		
 		return "OK";
 	}
@@ -559,7 +559,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String skinFontColor = "";
 		String skinFontOverColor = "";
 		
-		List<PortalTBLSkinGeneralVO> list = ezPortalAdminService.selectSkinGeneral(); 
+		List<PortalTBLSkinGeneralVO> list = ezPortalAdminService.selectSkinGeneral(userInfo.getTenantId()); 
 		
 		for (int i=0; i<list.size(); i++) {
 			if (list.get(i).getSkinBgFlag() != null && !list.get(i).getSkinBgFlag().equals("")) {

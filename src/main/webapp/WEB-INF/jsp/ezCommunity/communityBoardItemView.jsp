@@ -883,11 +883,6 @@
 									</c:choose>
 								</c:otherwise>
 	                    	</c:choose>
-	                    	
-	                    	<c:if test="${useKMS == 'YES' }">
-	                    		<li id='btn_KMS'><span onclick='ToKMS()'>KMS <spring:message code='ezCommunity.t958'/></span></li>
-	                    	</c:if>
-
 	                    </ul>
 	                </div>
 	                <div id="close">

@@ -158,9 +158,9 @@
 		      		</c:if>
 		      		<%-- 로깅 --%>		      		
 		      		<%-- <li><span id="menu20" onClick="menu_change(920, event);"><spring:message code="main.t10010" /></span></li> --%>
-		      		<c:if test="${use_mobileMgmt == 'YES'}">
-		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li>
-		      		</c:if>		      		
+<%-- 		      		<c:if test="${use_mobileMgmt == 'YES'}"> --%>
+<%-- 		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li> --%>
+<%-- 		      		</c:if>		      		 --%>
                     </c:if>
 		    	</ul>
 		  	</div>		  	
