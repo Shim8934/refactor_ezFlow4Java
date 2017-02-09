@@ -43,7 +43,6 @@
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
-
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
@@ -357,13 +356,13 @@
 		    var clickFlag = false;
 		    
 		    function TopBoard_onclick(obj, ID) {
+		    	//leftcount refresh 때문에 주석중 사이드 이펙트 검사필수
+// 		        if (tempID == ID)
+// 		            clickFlag = true;
+// 		        else
+// 		            clickFlag = false;
 
-		        if (tempID == ID)
-		            clickFlag = true;
-		        else
-		            clickFlag = false;
-		
-		        if (!clickFlag) {    
+// 		        if (!clickFlag) {    
 		            var rootBoardID = ID;
 		            var num = obj.split("TreeCtrl");
 		            document.getElementById(obj + "obj").innerHTML = "";
@@ -375,8 +374,9 @@
 		            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
 		            treeView.DataBind(obj + "obj");
 		            tempID = ID;
-		        }
+// 		        }
 		    }
+		    
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
 		    	var xmlhttp3 = createXMLHttpRequest();
 		        xmlhttp3.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);

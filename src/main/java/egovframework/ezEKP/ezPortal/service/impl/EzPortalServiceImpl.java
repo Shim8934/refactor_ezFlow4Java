@@ -1802,6 +1802,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getRenderedPortalPageHTML (String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo, String pTheme, String pTableViewOption, int tenantID) throws Exception {
+		logger.debug("getRenderedPortalPageHTML started");
+
 		if (pTheme != null && !pTheme.trim().equals("")) {
 			userInfo.setTheme(pTheme);
 		}
@@ -1815,121 +1817,130 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				return "<table width=100% height=100% border=0><tr><td align=center>페이지를 볼 권한이 없습니다.</td></tr></table>";
 			}
 			String cacheValue = checkCacheValue(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId());
-
+			
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
 		}
-	
+		
 		StringBuilder sb = new StringBuilder();
-        String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
-
-        String RootParentUID = getTopParentPageIDStr(pPortalPageID, tenantID);
-
-        String boarderValue = "0";
-        int i= 0;
-        if (pPortalPageID.equals(RootParentUID)) {
-        	userInfo.setRootPage(true);
-        }
-        if (pMode.equals("edit")) {
-        	boarderValue = "1";
-        }
-
-        StringBuilder dsb = new StringBuilder();
-        dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-        dsb.append("<tr id='main_row'>\n");
-        dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-        dsb.append("<TBODY>");
-        if (pMode.equals("edit")) {
-        	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-        }
-        dsb.append("</TBODY></table></td>");
-        dsb.append("</tr></table>");
-        
-        String defaultValue = dsb.toString();
-
-        PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
-
-        if (result == null) {
-        	return defaultValue;
-        }
-        
-        pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
-        pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
-        pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
-        pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
-
-        if (pMode.equals("edit")) {
-        	sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
-            if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
-            else sb.append("width=100% ");
-            if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
-            else sb.append("height=100% ");
-            sb.append("style='table-layout:fixed;'>\n");
-            sb.append("<tr id='main_row'>\n");
-        } else {
-        	if (userInfo.getTheme().equals("BASIC")) {
-        		sb.append("<div id='Center'>");
-        	}
-        }
-        	for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
-        		if (pMode.equals("edit")) {
-        			String columnWidth = "*";
-        			if (i == Integer.parseInt(pageColumnLength) - 1) {
-        				sb.append("<TD id=td0 vAlign=top");
-        				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
-        					if (pageColumnSplit.split("\\;")[i] != null && !pageColumnSplit.split("\\;")[i].equals("") && !pageColumnSplit.split("\\;")[i].equals("*")) {
-        						columnWidth = pageColumnSplit.split("\\;")[i] + "px";
-        						if (columnWidth.equals("9999px")) {
-        							sb.append(">\n");
-        						} else {
-        							sb.append(" style='width:" + columnWidth + "'>\n");
-        						}
-        					} else {
-        						sb.append(">\n");
-        					}
-        				} else {
-        					sb.append(">\n");
-        				}
-        			} else {
-        				sb.append("<td id='td" + String.valueOf(i + 1) + "' valign=top");
-        				if (!pageColumnSplit.equals("")) {
-        					if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
-        						columnWidth = pageColumnSplit.split(";")[i] + "px";
-        						if (columnWidth.equals("9999px")) {
-        							sb.append(">\n");
-        						} else {
-        							sb.append(" style='width:" + columnWidth + "'>\n");
-        						}
-        					}
-        				} else {
-        					sb.append(">\n");
-        				}
-        			} 
-        			sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-                    sb.append("<TBODY>\n");
-                    if (columnWidth.equals("9999px")) {
-                    	columnWidth = "*";
-                    }
-                    if (pMode.equals("edit")) {
-                    	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
-                    }
-                    sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
-                    sb.append("</tbody>\n</table>\n</td>\n");
-        		} else {
-        			sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
-        		}
-        	}
-        	
-        	if (pMode.equals("edit")) {
-        		sb.append("</tr>\n</table>\n");
-        	} else {
-        		sb.append("</div>");
-        	}
-        	
-    		if (pMode.equals("view")) {
-        		updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
-        	}
+		String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
+		
+		String RootParentUID = getTopParentPageIDStr(pPortalPageID, tenantID);
+		
+		String boarderValue = "0";
+		int i= 0;
+		if (pPortalPageID.equals(RootParentUID)) {
+			userInfo.setRootPage(true);
+		}
+		if (pMode.equals("edit")) {
+			boarderValue = "1";
+		}
+		
+		StringBuilder dsb = new StringBuilder();
+		dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+		dsb.append("<tr id='main_row'>\n");
+		dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+		dsb.append("<TBODY>");
+		if (pMode.equals("edit")) {
+			dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+		}
+		dsb.append("</TBODY></table></td>");
+		dsb.append("</tr></table>");
+		
+		String defaultValue = dsb.toString();
+		
+		PortalGetRenderedTopMenuInsertVO result = getRenderedPortalPageHtml(pPortalPageID, userInfo.getTenantId());
+		
+		if (result == null) {
+			logger.debug("return defaultValue");
+			return defaultValue;
+		}
+		
+		pageWidth = getPortalConfigItem("Width",RootParentUID, userInfo.getTenantId());
+		pageHeight = getPortalConfigItem("Height",RootParentUID, userInfo.getTenantId());
+		pageColumnLength = getPortalConfigItem("ColumnLength",RootParentUID, userInfo.getTenantId());
+		pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
+		
+		logger.debug("pageWidth="+pageWidth + " , pageHeight=" + pageHeight + " , pageColumnLength= " + pageColumnLength + " , pageColumnSplit=" + pageColumnSplit);
+		
+		if (pMode.equals("edit")) {
+			sb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+			if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
+			else sb.append("width=100% ");
+			if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
+			else sb.append("height=100% ");
+			sb.append("style='table-layout:fixed;'>\n");
+			sb.append("<tr id='main_row'>\n");
+		} else {
+			if (userInfo.getTheme().equals("BASIC")) {
+				sb.append("<div id='Center'>");
+			}
+		}
+		for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
+			if (pMode.equals("edit")) {
+				String columnWidth = "*";
+				if (i == Integer.parseInt(pageColumnLength) - 1) {
+					sb.append("<TD id=td0 vAlign=top");
+					if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
+						if (pageColumnSplit.split("\\;")[i] != null && !pageColumnSplit.split("\\;")[i].equals("") && !pageColumnSplit.split("\\;")[i].equals("*")) {
+							columnWidth = pageColumnSplit.split("\\;")[i] + "px";
+							if (columnWidth.equals("9999px")) {
+								sb.append(">\n");
+							} else {
+								sb.append(" style='width:" + columnWidth + "'>\n");
+							}
+						} else {
+							sb.append(">\n");
+						}
+					} else {
+						sb.append(">\n");
+					}
+				} else {
+					sb.append("<td id='td" + String.valueOf(i + 1) + "' valign=top");
+					if (!pageColumnSplit.equals("")) {
+						if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
+							columnWidth = pageColumnSplit.split(";")[i] + "px";
+							if (columnWidth.equals("9999px")) {
+								sb.append(">\n");
+							} else {
+								sb.append(" style='width:" + columnWidth + "'>\n");
+							}
+						}
+					} else {
+						sb.append(">\n");
+					}
+				} 
+				sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+				sb.append("<TBODY>\n");
+				
+				if (columnWidth.equals("9999px")) {
+					columnWidth = "*";
+				}
+				
+				if (pMode.equals("edit")) {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+				}
+				
+				sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
+				sb.append("</tbody>\n</table>\n</td>\n");
+			} else {
+				sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
+			}
+		}
+		
+		if (pMode.equals("edit")) {
+			sb.append("</tr>\n</table>\n");
+		} else {
+			sb.append("</div>");
+		}
+		
+		if (pMode.equals("view")) {
+			updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
+		}
+		
+		logger.debug("sb="+sb.toString());
+		logger.debug("getRenderedPortalPageHTML ended");
 			
 		return sb.toString();
 	}
@@ -2460,7 +2471,7 @@ StringBuilder strData = new StringBuilder();
 		int val = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang()));
+		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);

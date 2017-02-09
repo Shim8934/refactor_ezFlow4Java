@@ -720,11 +720,13 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
+					logger.debug("new_inherit");
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 					logger.debug("strHTML="+strHTML);
 				} else {
+					logger.debug("no new_inherit");
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
@@ -1066,7 +1068,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
@@ -1083,7 +1085,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//String userOffset = userInfo.getOs().split("\\|")[1];
 		String userOffset = "+09:00";
 		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			useIE11Browser = "CK";
 		}
 		
@@ -1987,165 +1989,160 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pThemeSelectObject = "";
 		String gubunFlag = "";
 		String portalPageCategoryXML = "";
-		try {
-			
-			langPrimary = config.getProperty("config.lang_Primary"+ userInfo.getLang());
-			langSecondary = config.getProperty("config.lang_Secondary1" + userInfo.getLang());
-			mode = "edit";
-			
-			// 페이지 ID
-			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-				pageID = req.getParameter("pageID");
-			} else {
-				pageID = UUID.randomUUID().toString();
-			}
-			
-			// 부모 페이지 ID
-			if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
-				parentPageID = req.getParameter("parentPageID");
-			} else {
-				if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
-					parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId()); 
-				} else {
-					parentPageID = "top";
-				}
-			}
-			
-			// 마이포탈페이지 ID
-			if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
-				myPortalPageID = req.getParameter("myPortalPageID");
-			}
-			
-			if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
-				mode = req.getParameter("mode");
-			}
-			
-			if (mode.equals("edit")) {
-				// 상속된경우
-				if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("") && req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
-					if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("pageID").trim().toLowerCase().equals("top")) {
-						editMode = "new_inherit";
-					}
-				}
-			}
-			
-			// 미리보기
-			if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
-				viewMode = req.getParameter("viewMode");
-			}
-			
-			// 스킨폴더 정의
-			Cookie[] cookies = req.getCookies();
-			String skinCookieValue = "";
-			if (cookies != null) {
-				for (int i=0; i<cookies.length; i++) {
-					if (cookies[i].getName().equals("skinNum")) {
-						skinCookieValue = cookies[i].getValue();
-					}
-				}
-			}
-			
-			if (skinCookieValue == null || skinCookieValue.equals("")) {
-				Cookie skinCookie = new Cookie("skinNum", "1");
-				resp.addCookie(skinCookie);
-			}
-			
-			skinType = skinCookieValue;
-			if (skinType == null || skinType.equals("")) {
-				skinType = "1";
-			}
-			skinType = "skin_" + skinType;
-			
-			// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
-			if (viewMode.equals("preview")) {
-				ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
-			}
-			
-			// 부문홈에서 호출한 경우 부문홈ID
-			if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
-				pClassID = req.getParameter("pClassID");
-				
-				pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
-			}
-			
-			// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
-			if (pClassID != null && !pClassID.trim().equals("")) {
-				userInfo.setId(pClassID);
-				userInfo.setDisplayName1(pClassName);
-			}
-			
-			// 새로만들기
-			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("") ? "D" : ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
-			if (mode.trim().equals("new")) {
-				strHTML = ezPortalService.getDefaultPortalPage();
-			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
-				if (editMode.equals("new_inherit")) {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
-				} else {
-					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
-					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
-					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
-					baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
-				}
-			}
-			
-			if (width == null || (width).equals("") || (width).equals("-1") || (width).equals("0")) {
-				width = "100%";
-			}
-					
-			if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
-				height = "100%";
-			}
-					
-			if (!mode.equals("view")) {
-				displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
-				displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
-	            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
-	            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
-	                    
-	            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
-	            if (editMode.equals("new_inherit")) {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
-	            } else {
-	            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
-	            }
-	                    
-	            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
-	            portalPageCategoryXML = "<DATA>";
-	            for (PortalTBLPortalPageCategoryVO result : list) {
-	            	portalPageCategoryXML += commonUtil.getQueryResult(result);
-	            }
-	            portalPageCategoryXML += "</DATA>";
-	            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
-	            
-			}
-	
-			model.addAttribute("strHTML", strHTML);
-			model.addAttribute("userInfo", userInfo);
-			model.addAttribute("editMode", editMode);
-			model.addAttribute("pThemeSelectObject", pThemeSelectObject);
-			model.addAttribute("displayName", displayName);
-			model.addAttribute("displayName2", displayName2);
-			model.addAttribute("mode", mode);
-			model.addAttribute("parentPageID", parentPageID);
-			model.addAttribute("pageID", pageID);
-			model.addAttribute("baseType", baseType);
-			model.addAttribute("langPrimary", langPrimary);
-			model.addAttribute("langSecondary", langSecondary);
-			model.addAttribute("pSelectThemeUID", pSelectThemeUID);
-			model.addAttribute("gubunFlag", gubunFlag);
-			model.addAttribute("myPortalPageID", myPortalPageID);
-			model.addAttribute("tableViewOption", tableViewOption);
-			model.addAttribute("pClassID", pClassID);
-			model.addAttribute("pClassName", pClassName);
-			
-			return "/ezPortal/portalMyPortalPage";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+
+		langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		langSecondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		mode = "edit";
+		
+		// 페이지 ID
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
+			pageID = req.getParameter("pageID");
+		} else {
+			pageID = UUID.randomUUID().toString();
 		}
+		
+		// 부모 페이지 ID
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		} else {
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
+				parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId()); 
+			} else {
+				parentPageID = "top";
+			}
+		}
+		
+		// 마이포탈페이지 ID
+		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
+			myPortalPageID = req.getParameter("myPortalPageID");
+		}
+		
+		if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		if (mode.equals("edit")) {
+			// 상속된경우
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("") && req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
+				if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("pageID").trim().toLowerCase().equals("top")) {
+					editMode = "new_inherit";
+				}
+			}
+		}
+		
+		// 미리보기
+		if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
+			viewMode = req.getParameter("viewMode");
+		}
+		
+		// 스킨폴더 정의
+		Cookie[] cookies = req.getCookies();
+		String skinCookieValue = "";
+		if (cookies != null) {
+			for (int i=0; i<cookies.length; i++) {
+				if (cookies[i].getName().equals("skinNum")) {
+					skinCookieValue = cookies[i].getValue();
+				}
+			}
+		}
+		
+		if (skinCookieValue == null || skinCookieValue.equals("")) {
+			Cookie skinCookie = new Cookie("skinNum", "1");
+			resp.addCookie(skinCookie);
+		}
+		
+		skinType = skinCookieValue;
+		if (skinType == null || skinType.equals("")) {
+			skinType = "1";
+		}
+		skinType = "skin_" + skinType;
+		
+		// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
+		if (viewMode.equals("preview")) {
+			ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
+		}
+		
+		// 부문홈에서 호출한 경우 부문홈ID
+		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
+			pClassID = req.getParameter("pClassID");
+			
+			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+		}
+		
+		// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
+		if (pClassID != null && !pClassID.trim().equals("")) {
+			userInfo.setId(pClassID);
+			userInfo.setDisplayName1(pClassName);
+		}
+		
+		// 새로만들기
+		tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("") ? "D" : ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
+		if (mode.trim().equals("new")) {
+			strHTML = ezPortalService.getDefaultPortalPage();
+		} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
+			if (editMode.equals("new_inherit")) {
+				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+			} else {
+				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
+			}
+		}
+		
+		if (width == null || (width).equals("") || (width).equals("-1") || (width).equals("0")) {
+			width = "100%";
+		}
+				
+		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
+			height = "100%";
+		}
+				
+		if (!mode.equals("view")) {
+			displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
+			displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
+            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
+            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
+                    
+            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
+            if (editMode.equals("new_inherit")) {
+            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
+            } else {
+            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
+            }
+                    
+            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
+            portalPageCategoryXML = "<DATA>";
+            for (PortalTBLPortalPageCategoryVO result : list) {
+            	portalPageCategoryXML += commonUtil.getQueryResult(result);
+            }
+            portalPageCategoryXML += "</DATA>";
+            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
+            
+		}
+
+		model.addAttribute("strHTML", strHTML);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("editMode", editMode);
+		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("mode", mode);
+		model.addAttribute("parentPageID", parentPageID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("baseType", baseType);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("pSelectThemeUID", pSelectThemeUID);
+		model.addAttribute("gubunFlag", gubunFlag);
+		model.addAttribute("myPortalPageID", myPortalPageID);
+		model.addAttribute("tableViewOption", tableViewOption);
+		model.addAttribute("pClassID", pClassID);
+		model.addAttribute("pClassName", pClassName);
+		
+		return "/ezPortal/portalMyPortalPage";
 	}
 	
 	/**

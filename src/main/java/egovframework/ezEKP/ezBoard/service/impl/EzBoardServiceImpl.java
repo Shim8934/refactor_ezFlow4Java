@@ -1747,7 +1747,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String orderOption1 = "";
 		String orderOption2 = "";
 		
-		String strMultiData = commonUtil.getMultiData(strLang);
+		String strMultiData = commonUtil.getMultiData(strLang, tenantID);
 		
 		List<BoardListHeaderVO> list = getListHeader(ezBoardVO);
 		
@@ -2102,7 +2102,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
 		map.put("itemTreeID", itemTreeID.substring(0, 38));
-		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 		
 		logger.debug("getReplyNoticeMail ended");
@@ -2116,7 +2116,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("boardID", boardID);
-		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 
 		logger.debug("getSendApprMailList ended");
