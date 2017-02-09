@@ -118,7 +118,7 @@ public interface EzBoardService {
 
 	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception;
 	
-	public String setBoardConfig(String userID, String listCount, String preView, int tenantID) throws Exception;
+	public String setBoardConfig(String userID, int listCount, String preView, int tenantID) throws Exception;
 	
 	public String apprItem(String userID, String itemList, String pMod, int tenantID) throws Exception;
 	

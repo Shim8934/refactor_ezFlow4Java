@@ -1465,7 +1465,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String setBoardConfig(String userID, String listCount, String preView, int tenantID) throws Exception {
+	public String setBoardConfig(String userID, int listCount, String preView, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_LISTCOUNT", listCount);
@@ -1483,6 +1483,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			return "OK";
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			return "NO";
 		}
 	}

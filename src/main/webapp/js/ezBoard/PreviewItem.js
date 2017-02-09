@@ -163,7 +163,7 @@ function PreviewRayerChange_photo(pGubun) {
             pGubun = "H";
         }
         if (pGubun == "NONE")
-            SetConfig = false;
+            SetConfig = true;
 
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "default";
@@ -833,9 +833,9 @@ function Window_resize_photo() {
         }
     } catch (e) { }
 }
-
+var lCount;
 function ListCount(pCount) {
-    perCnt = pCount;
+    lCount = pCount;
     selobj = null;
     MailOptionHidden();
     Set_BoardConfig();
@@ -851,7 +851,7 @@ function Set_BoardConfig()
 		async : true,
 		url : "/ezBoard/setBoardConfig.do",
 		data : { pUserID   : SSUserID, 
-				 pListCount: perCnt, 
+				 pListCount: lCount, 
 				 pPreView  : pPreviewShow_HOW 
 				},
 		success: function(result){

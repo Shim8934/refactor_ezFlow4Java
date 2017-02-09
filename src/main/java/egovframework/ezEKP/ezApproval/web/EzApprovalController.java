@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezApproval.web;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -128,7 +127,7 @@ public class EzApprovalController {
 		apprContInfoVO.setUseDeptID(userInfo.getDeptID());
 		apprContInfoVO.setOwnFlag("2");
 		apprContInfoVO.setTenantID(userInfo.getTenantId());
-		apprContInfoVO.setLang(commonUtil.getMultiData(userInfo.getLang()));
+		apprContInfoVO.setLang(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		List<ApprContInfoVO> apprContInfoVOs = ezApprovalService.getUseContInfo(apprContInfoVO);
 		List<ApprDocInfoVO> apprDocInfoVOs = ezApprovalService.getCodeContainer(userInfo);
