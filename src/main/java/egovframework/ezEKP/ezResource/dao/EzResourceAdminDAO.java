@@ -140,9 +140,6 @@ public class EzResourceAdminDAO extends EgovAbstractDAO {
 		delete("EzResourceAdminDAO.delClsData_D2", map);
 	}
 	
-	public void delClsData_D3(Map<String, Object> map) {
-		delete("EzResourceAdminDAO.delClsData_D3", map);
-	}
 	
 	public void delClsData_D4(Map<String, Object> map) {
 		delete("EzResourceAdminDAO.delClsData_D4", map);

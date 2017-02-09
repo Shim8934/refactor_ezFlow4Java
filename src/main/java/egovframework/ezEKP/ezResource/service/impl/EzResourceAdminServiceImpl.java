@@ -229,7 +229,6 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		ezResourceAdminDAO.delClsData_D1(map);
 		ezResourceAdminDAO.delClsData_U1(map);
 		ezResourceAdminDAO.delClsData_D2(map);
-		ezResourceAdminDAO.delClsData_D3(map);
 		ezResourceAdminDAO.delClsData_D4(map);
 		ezResourceAdminDAO.delClsData_D5(map);
 		//ezResourceAdminDAO.delClsData(map);

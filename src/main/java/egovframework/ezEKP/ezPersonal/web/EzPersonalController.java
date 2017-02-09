@@ -419,7 +419,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			signPath = "APPROVALGSIGN";
 		}
 		
-		signImageSize = config.getProperty("config.SignImageSizeLimit");
+		signImageSize = ezCommonService.getTenantConfig("SignImageSizeLimit", userInfo.getTenantId());
 		
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signPath", signPath);

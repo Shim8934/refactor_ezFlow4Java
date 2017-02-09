@@ -802,7 +802,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -1052,7 +1052,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = "A." + headerList.get(i).getColName() + " ";
                     orderOption2 = "A." + headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -1297,7 +1297,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -1522,7 +1522,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	public String getThumbList(BoardVO boardVO, LoginVO userInfo, String type) throws Exception{
     	String orderOption1 = "";
-        String orderOption2 = "";
         String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
         
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
@@ -1532,7 +1531,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                 	if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
                 		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
                 	} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -1565,7 +1564,6 @@ public class EzBoardController extends EgovFileMngUtil{
         boardListVO.setStartRow(1);
         boardListVO.setEndRow(0);
         boardListVO.setOrderBySub(orderOption1);
-        boardListVO.setOrderByMain(orderOption2);
         boardListVO.setUserID(userInfo.getId());
         
         BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
@@ -1739,7 +1737,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -1883,7 +1881,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                 	if (headerList.get(i).getColName().indexOf("WRITEDATE") > -1) {
                 		orderOption1 = headerList.get(i).getColName().replace("WRITEDATE", "A.WRITEDATE") + " ";
                 	} else if (headerList.get(i).getColName().indexOf("WRITERNAME") > -1) {
@@ -2024,7 +2022,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -2157,7 +2155,7 @@ public class EzBoardController extends EgovFileMngUtil{
         int hlength = headerList.size();
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {                            
+                if (boardVO.getOrderOption().equals("")) {                            
                     if (headerList.get(i).getName().indexOf("BOARDNAME") > -1) {
                     	orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " ";
                     } else {
@@ -2285,7 +2283,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         for (i = 0; i < hlength; i++) {
             if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
-                if (boardVO.getOrderCell().equals("")) {
+                if (boardVO.getOrderOption().equals("")) {
                     orderOption1 = headerList.get(i).getColName() + " ";
                     orderOption2 = headerList.get(i).getColName() + " DESC ";
                 } else {
@@ -2725,7 +2723,8 @@ public class EzBoardController extends EgovFileMngUtil{
         	return "main/warning";
         }
         BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-        String useEzKMS = ezCommonService.getTenantConfig("Use_ezKMS", userInfo.getTenantId());
+        //KMS 안써서 픽스
+        String useEzKMS = "NO";
         
         if (!boardInfo.getRead_FG().equals("true")) {
         	return "main/warning";
@@ -5777,8 +5776,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = request.getParameter("pUserID");
 		String listCount = request.getParameter("pListCount");
 		String preView = request.getParameter("pPreView");
+		int tempCount = 10;
 		
-		String result = ezBoardService.setBoardConfig(userID, listCount, preView, userInfo.getTenantId());
+		if (listCount != null) {
+			tempCount = Integer.parseInt(listCount);
+		}
+		
+		String result = ezBoardService.setBoardConfig(userID, tempCount, preView, userInfo.getTenantId());
 		
 		return result;
 	}

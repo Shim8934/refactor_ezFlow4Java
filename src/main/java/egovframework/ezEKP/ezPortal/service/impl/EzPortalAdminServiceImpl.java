@@ -147,17 +147,20 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public void setUseLang(String uID, String companyID, String langStr) throws Exception {
+	public void setUseLang(String uID, String companyID, String langStr, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", uID);
 		map.put("v_pCOMPANYID", companyID);
 		map.put("v_pLANGSTR", langStr);
+		map.put("tenantID", tenantID);
 		ezPortalAdminDAO.setUseLang(map);
 	}
 	
 	@Override
-	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() throws Exception {
-		return ezPortalAdminDAO.selectSkinGeneral();
+	public List<PortalTBLSkinGeneralVO> selectSkinGeneral(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		return ezPortalAdminDAO.selectSkinGeneral(map);
 	}
 
 	@Override

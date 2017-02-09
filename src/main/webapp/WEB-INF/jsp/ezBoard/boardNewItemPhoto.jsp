@@ -24,7 +24,6 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <script type="text/javascript">
-	
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
 	        var pBoardID = "${boardID}";

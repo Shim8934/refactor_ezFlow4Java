@@ -536,10 +536,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 서명등록 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/configSignImage.do")	
-	public String configSignImage(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String configSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String userID = request.getParameter("id");
 		String userInfo_approvalG = config.getProperty("config.UserInfo_ApprovalG");
-		String signImageSize = config.getProperty("config.SignImageSizeLimit");
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSizeLimit", userInfo.getTenantId());
 		String sign = "APPROVALSIGN";
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;

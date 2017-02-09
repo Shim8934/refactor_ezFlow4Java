@@ -14,7 +14,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO;
 
 public interface EzPortalAdminService {
-	public List<PortalTBLSkinGeneralVO> selectSkinGeneral() throws Exception;
+	public List<PortalTBLSkinGeneralVO> selectSkinGeneral(int tenantID) throws Exception;
 	
 	public List<PortalTBLPortalPageCategoryVO> getPortletCategory(int tenantID) throws Exception;
 	
@@ -100,7 +100,7 @@ public interface EzPortalAdminService {
 	
 	public void topOutOfSetUsePage (String uID, String companyID, int tenantID) throws Exception;
 	
-	public void setUseLang (String uID, String companyID, String langStr) throws Exception;
+	public void setUseLang (String uID, String companyID, String langStr, int tenantID) throws Exception;
 	
 	public void portalSaveSkin (String uID, String skinName, String skinBgFlag, String skinBgColor, String skinBgImage, String skinFontColor, String skinFontOverColor, int tenantID) throws Exception;
 	

@@ -132,7 +132,7 @@ public class EzApprovalAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		String multiDataNum = commonUtil.getMultiData(userInfo.getLang());
+		String multiDataNum = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String useReform = ezCommonService.getTenantConfig("Usereform", userInfo.getTenantId());
 		String docType = ezApprovalAdminService.getDocType("", userInfo);
 		StringBuilder companySel = new StringBuilder();

@@ -192,7 +192,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		StringBuilder rtnXML = new StringBuilder();
 		
 		userInfo.setCompanyID(companyID);
-		userInfo.setPrimary(commonUtil.getMultiData(userInfo.getLang()));
+		userInfo.setPrimary(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContTypeInfo(userInfo);
 		
@@ -217,7 +217,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				rtnXML.append(commonUtil.cleanValue(apprContInfoVOs.get(k).getContainerTypeID()));
 				rtnXML.append("</ID" + k + ">");
 				rtnXML.append("<NAME" + k + ">");
-				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName(), "displayName" + commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId())));
+				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(apprContInfoVOs.get(k).getContainerTypeName(), "displayName" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId())));
 				rtnXML.append("</NAME" + k + ">");
 			}
 			rtnXML.append("</PARAMETER>");
@@ -324,7 +324,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			
 			resultXML.append("<CELL>");
 			
-			if (commonUtil.getPrimaryData(lang).equals("1")) {
+			if (commonUtil.getPrimaryData(lang, tenantID).equals("1")) {
 				resultXML.append("<VALUE>" + commonUtil.makeListField(apprContInfoVOs.get(k).getContainerTypeName()) + "</VALUE>");
 			} else {
 				resultXML.append("<VALUE>" + commonUtil.makeListField(apprContInfoVOs.get(k).getContainerTypeName2()) + "</VALUE>");
@@ -423,7 +423,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				rtnXML.append(commonUtil.cleanValue(userDeptIDs.get(k)));
 				rtnXML.append("</ID" + k + ">");
 				rtnXML.append("<NAME" + k + ">");
-				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(userDeptIDs.get(k), "displayName" + commonUtil.getMultiData(lang), tenantID)));
+				rtnXML.append(commonUtil.cleanValue(ezOrganService.getPropertyValue(userDeptIDs.get(k), "displayName" + commonUtil.getMultiData(lang, tenantID), tenantID)));
 				rtnXML.append("</NAME" + k + ">");
 			}
 		} else {
@@ -579,7 +579,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			String contType = apprContInfoVOs.get(k).getContType();
 			
 			if (Integer.parseInt(contType) >= 100) {
-				map.put("lang", commonUtil.getMultiData(lang));
+				map.put("lang", commonUtil.getMultiData(lang, tenantID));
 				map.put("contType", contType);
 				
 				String contTypeName = ezApprovalAdminDAO.getSpecialContInfoContTypeName(map);
@@ -637,7 +637,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		userInfo.setCompanyID(companyID);
 		userInfo.setTenantId(tenantID);
-		userInfo.setPrimary(commonUtil.getMultiData(lang));
+		userInfo.setPrimary(commonUtil.getMultiData(lang, tenantID));
 		
 		List<ApprContInfoVO> apprContInfoVOs = ezApprovalAdminDAO.getContTypeInfo(userInfo);
 		
@@ -690,7 +690,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			if (subQuery != null && subQuery.length() > 0) {
 				Map<String, Object> map = new HashMap<String, Object>();
 				
-				map.put("lang", commonUtil.getMultiData(lang));
+				map.put("lang", commonUtil.getMultiData(lang, tenantID));
 				map.put("subQuery", subQuery);
 				map.put("companyID", companyID);
 				map.put("tenantID", tenantID);
@@ -721,7 +721,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("id", id);
-		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("deptID", deptID);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -758,7 +758,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				if (apprFormContVOs.get(k).getFormContOwnDepID().equals("ALL")) {
 					rtnXML.append("<DATA6>ALL</DATA6>");
 				} else {
-					rtnXML.append("<DATA6>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(apprFormContVOs.get(k).getFormContOwnDepID(), "displayName" + commonUtil.getMultiData(lang), tenantID)) + "</DATA6>");
+					rtnXML.append("<DATA6>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(apprFormContVOs.get(k).getFormContOwnDepID(), "displayName" + commonUtil.getMultiData(lang, tenantID), tenantID)) + "</DATA6>");
 				}
 				
 				rtnXML.append("<DATA7>" + commonUtil.cleanValue(apprFormContVOs.get(k).getFormContName2()) + "</DATA7>");
@@ -842,7 +842,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				fieldName = headerList.get(h).getColName().toUpperCase();
 				
 				if (fieldName.equals("FORMNAME")) {
-					fieldName = fieldName + commonUtil.getMultiData(apprFormInfoVO.getLang());
+					fieldName = fieldName + commonUtil.getMultiData(apprFormInfoVO.getLang(), apprFormInfoVO.getTenantID());
 				}
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
@@ -1175,7 +1175,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				fieldName = headerList.get(h).getColName().toUpperCase();
 				
 				if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
-					fieldName = fieldName + commonUtil.getMultiData(userInfo.getLang());
+					fieldName = fieldName + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 				}
 				
 				if (fieldName.equals("DOCSTATENAME") && docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent().equals(config.getProperty("apprCode.staDTExcuteDoc"))) {
@@ -1460,7 +1460,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("groupID", groupID);
-		map.put("lang", commonUtil.getMultiData(lang));
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("mode", mode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -1632,7 +1632,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		if (apprDocGroupVOs != null) {
 			for (int k = 0; k < apprDocGroupVOs.size(); k++) {
-				if (commonUtil.getPrimaryData(apprDocGroupVO.getLang()).equals("1")) {
+				if (commonUtil.getPrimaryData(apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()).equals("1")) {
 					rtnXML.append("<NODE>");
 					rtnXML.append("<EXPANDED>FALSE</EXPANDED>");
 					rtnXML.append("<ISLEAF>" + getItemCodeGroupLeaf(apprDocGroupVOs.get(k).getGroupID(), apprDocGroupVO) + "</ISLEAF>");
@@ -1784,7 +1784,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			resultXML.append("<DATA3>" + apprDocItemVOs.get(k).getItemSecurity() + "</DATA3>");
 			resultXML.append("<DATA4>" + apprDocItemVOs.get(k).getItemPublic() + "</DATA4>");
 			
-			if (commonUtil.getPrimaryData(apprDocGroupVO.getLang()).equals("1")) {
+			if (commonUtil.getPrimaryData(apprDocGroupVO.getLang(), apprDocGroupVO.getTenantID()).equals("1")) {
 				resultXML.append("<DATA5>" + apprDocItemVOs.get(k).getItemName2() + "</DATA5>");
 				resultXML.append("</CELL>");
 				resultXML.append("<CELL>");
@@ -1951,7 +1951,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		StringBuilder resultXML = new StringBuilder();
 		
-		apprSealInfoVO.setLang(commonUtil.getMultiData(apprSealInfoVO.getLang()));
+		apprSealInfoVO.setLang(commonUtil.getMultiData(apprSealInfoVO.getLang(), apprSealInfoVO.getTenantID()));
 
 		List<ApprSealInfoVO> apprSealInfoVOs = ezApprovalAdminDAO.getSealList(apprSealInfoVO);
 		
@@ -2047,7 +2047,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		apprExcelOutVO.setToDate(commonUtil.getDateStringInUTC(toDate, offset, true));
 		apprExcelOutVO.setFromDate(commonUtil.getDateStringInUTC(fromDate, offset, true));
-		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
+		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang(), apprExcelOutVO.getTenantID()));
 		
 		List<ApprLineInfoVO> apprLineInfoVOs = ezApprovalAdminDAO.getUserDocCount(apprExcelOutVO);
 		
@@ -2140,7 +2140,7 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 		
 		apprExcelOutVO.setToDate(commonUtil.getDateStringInUTC(toDate, offset, true));
 		apprExcelOutVO.setFromDate(commonUtil.getDateStringInUTC(fromDate, offset, true));
-		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang()));
+		apprExcelOutVO.setMultiLang(commonUtil.getMultiData(apprExcelOutVO.getLang(), apprExcelOutVO.getTenantID()));
 		
 		List<ApprReceiptInfoVO> apprReceiptInfoVOs = ezApprovalAdminDAO.getDeptTranSendDocCount(apprExcelOutVO);
 
@@ -2426,11 +2426,11 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 				resultXML.append("<CELL>");
 				
 				if (h == 0) {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</VALUE>");
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang(), apprFormInfoVO.getTenantID()), apprFormInfoVO.getTenantID())) + "</VALUE>");
 					resultXML.append("<DATA1>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTID").item(k).getTextContent()) + "</DATA1>");
 					resultXML.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("USERID").item(k).getTextContent()) + "</DATA2>");
 				} else {
-					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("USERID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang()), apprFormInfoVO.getTenantID())) + "</VALUE>");
+					resultXML.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(docXML.getElementsByTagName("USERID").item(k).getTextContent(), "displayName" + commonUtil.getMultiData(apprFormInfoVO.getLang(), apprFormInfoVO.getTenantID()), apprFormInfoVO.getTenantID())) + "</VALUE>");
 				}
 				
 				resultXML.append("</CELL>");

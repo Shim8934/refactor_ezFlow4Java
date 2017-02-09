@@ -160,7 +160,7 @@
 		            
 		            if (document.getElementById("listcount") != null){
 		            	listCount = document.getElementById("listcount").value;
-		            }else{
+		            } else {
 		            	listCount = 20;
 		            }
 		            

@@ -502,6 +502,8 @@
                               		 	TENANT_ID = #tenantID#	 ) )
 			AND
 				A.UID_ = B.UID_
+            AND
+                A.TENANT_ID = B.TENANT_ID
 			AND
 				A.UseFlag = 'Y'
 			AND
@@ -533,6 +535,8 @@
                               			TENANT_ID = #tenantID#	 ) )
             AND
             	A.UID_ = B.UID_
+            AND
+                A.TENANT_ID = B.TENANT_ID  
 			AND
 				A.UseFlag = 'Y'
 			AND
