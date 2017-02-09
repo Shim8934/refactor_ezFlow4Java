@@ -463,7 +463,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponse.do")
-	public String qstResponse(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model, HttpServletRequest request, QstVO qstVO) throws Exception{
+	public String qstResponse(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, ModelMap model, HttpServletRequest request, QstVO qstVO) throws Exception{
 		String receve = "brdID=" + request.getParameter("brdID") +
 		                "&title=" + request.getParameter("title") +
 		                "&responseRange=" + request.getParameter("responseRange") +
@@ -480,7 +480,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		int responseCnt = 0;
 	
 		/**UserPermission*/
-		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
@@ -552,7 +551,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333", locale) + (iQueCount) + ":" + commonUtil.cleanValue(question.getQuesContent()) + getAttachList(loginCookie,Integer.toString(question.getQuestionNo()), "0", question.getBrdID(), question.getItemNo())));
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333", loginVO.getLocale()) + (iQueCount) + ":" + commonUtil.cleanValue(question.getQuesContent()) + getAttachList(loginCookie,Integer.toString(question.getQuestionNo()), "0", question.getBrdID(), question.getItemNo())));
 				brdID.appendChild(doc.createTextNode(Integer.toString(question.getBrdID())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
 				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
@@ -624,10 +623,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("receve", receve);
 		model.addAttribute("publicDate", publicDate.format(cal.getTime()));
 		
-		
-		
-		
-		
 		return "/ezQuestion/qstResponse";
 	}
 	
@@ -636,7 +631,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings("unused")
 	@RequestMapping(value="/ezQuestion/qstResponseOk.do")
-	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response, QstResponseVO qstResponseVO) throws Exception{        
+	public void qstResponseOk(@CookieValue("loginCookie") String loginCookie, QstUserPermissionVO qstUserPermissionVO, HttpServletRequest request, HttpServletResponse response, QstResponseVO qstResponseVO) throws Exception{        
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String brdID = "5", itemNo = "", responseUserIp = "", vPermission = "", vResponseRange = "", receve = "";
 		String userID = "", userName = "", email = "", deptID = "", depart = "", position = "", jikGub = "", gender = "1", age = "29";
@@ -652,7 +647,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		responseUserIp = request.getRemoteAddr();
 		receve = request.getParameter("receve").replace("&amp;", "&");
 		
-		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
 		qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
 		
@@ -696,7 +690,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		if (userID.equals("")){
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360",locale) + "');\n");
+			response.getWriter().write("	alert('" + egovMessageSource.getMessage("ezQuestion.t360", loginVO.getLocale()) + "');\n");
 			response.getWriter().write("	history.back();\n");
 			response.getWriter().write("</script>\n");
 			response.getWriter().flush();
@@ -912,7 +906,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 설문대상 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstRangeSelect.do")
-	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) throws Exception {
+	public String qstRangeSelect(@CookieValue("loginCookie") String loginCookie, QstRangeSelectVO qstRangeSelectVO, HttpServletRequest req, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
 		String itemID = "";
@@ -932,7 +926,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		serverName = req.getServerName();
 		String userLang = userInfo.getLang();
 		
-		QstRangeSelectVO qstRangeSelectVO = new QstRangeSelectVO();
 		qstRangeSelectVO.setBrdID(brdID);
 		qstRangeSelectVO.setItemID(itemID);
 		qstRangeSelectVO.setStrGenderACL0(strGenderACL0);
