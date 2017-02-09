@@ -1117,12 +1117,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 	        	
 	    		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()));
 	    		
-	    		if (sentFolder.exists()) {
-	    			sentFolder.open(Folder.READ_WRITE);
-	    			sentFolder.appendMessages(new Message[]{message});
-	    			sentFolder.close(true);
-	    			logger.debug("Mail is successfully saved in sent folder.");
+	    		if (!sentFolder.exists()) {
+	    			sentFolder.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+					logger.debug(egovMessageSource.getMessage("ezEmail.t99000026", userInfo.getLocale()) + " created.");
 	    		}
+	    		
+    			sentFolder.open(Folder.READ_WRITE);
+    			sentFolder.appendMessages(new Message[]{message});
+    			sentFolder.close(true);
+    			logger.debug("Mail is successfully saved in sent folder.");
 	        }
         
 		} catch (MessagingException e) {
