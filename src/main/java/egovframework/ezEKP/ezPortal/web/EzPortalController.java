@@ -1674,13 +1674,15 @@ public class EzPortalController extends EgovFileMngUtil {
 	 * 포탈 - 환경설정 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/environmentMain.do")
-	public String environmentMain(Model model, HttpServletRequest req) throws Exception {
+	public String environmentMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String usePortal = "";
 		String url = "";
 		String funCode = "";
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
-		usePortal = config.getProperty("config.Use_Portal");
+		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		if (req.getParameter("funCode") != null && !req.getParameter("funCode").equals("")) {
 			funCode = req.getParameter("funCode");
