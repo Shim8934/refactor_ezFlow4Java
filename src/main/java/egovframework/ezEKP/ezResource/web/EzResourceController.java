@@ -909,8 +909,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("displayName", userInfo.getDisplayName1());
 		model.addAttribute("ownerCall", userInfo.getPhone());
 		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
-		model.addAttribute("langPrimary", config.getProperty("config.lang_Primary1"));
-		model.addAttribute("langSecondary", config.getProperty("config.lang_Secondary1"));
+		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		
 		return "/ezResource/resAddClsItem";
 	}
@@ -1436,7 +1436,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		int pNum = 0;
 		int num = 0;
 		
-		if (config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			useIE11Browser = "CK";
 		}
 		if (req.getParameter("ownerID") != null) {

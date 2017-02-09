@@ -712,7 +712,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		SSL = req.getRequestURL().toString();
-		usePortal = config.getProperty("config.Use_Portal");
+		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
