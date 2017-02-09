@@ -1410,6 +1410,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRegAudioVisualExInfo", map);
 	}
 	
+	public void insertSpecialCatalogInfo_Rec(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertSpecialCatalogInfo_Rec", map);
+	}
+	
+	public void insertSpecialCatalogInfo_Rec2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertSpecialCatalogInfo_Rec2", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1564,6 +1572,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateAprLineInfo3(Map<String, Object> map3) throws Exception{
 		update("EzApprovalG.updateAprLineInfo3", map3);
+	}
+	
+	public void updateProxyExpAprLine(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateProxyExpAprLine", map);
 	}
 	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{

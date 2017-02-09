@@ -13432,7 +13432,7 @@
        												WHERE  
        													DocID = #v_DocID#
        												AND
-       													TENANT_ID = #v_TENANTID#) END AS FLAGCOUNT 
+       													TENANT_ID = #v_TENANTID#)  ELSE  1 END AS FLAGCOUNT 
        				FROM (
    							SELECT 
    								CASE WHEN DocState='017' THEN 'Y' 
@@ -14494,5 +14494,60 @@
    		(RecordID, SeperateAttachNo, Summary, RecordType, TENANT_ID) 
    		VALUES 
    		(#v_RECID#, #v_SEPATTSN#, #v_SUMMARY#, #v_RECTYPE#, #v_TENANTID#)
+   </insert>
+   
+   <update id="EzApprovalG.updateProxyExpAprLine" parameterClass="Map">
+   		UPDATE 
+   			TBL_EXPAPRLINE 
+   		SET 
+   			proxyuserid = #v_PROXYUSERID#,
+            proxyusername = #v_PROXYUSERNAME#,
+            proxyusername2 = #v_PROXYUSERNAME2#,
+            proxyuserjobtitle = #v_PROXYUSERJOBTITLE#,
+            proxyuserjobtitle2 =  #v_PROXYUSERJOBTITLE2#,
+			proxyuserdeptid = #v_PROXYUSERDEPTID#,
+            proxyuserdeptname = #v_PROXYUSERDEPTNAME#,
+            proxyuserdeptname2 = #v_PROXYUSERDEPTNAME2#
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			AprMemberSN = #v_CURAPRMEMBERSN#
+		AND 
+			orguserid = #v_USERID#
+		AND 
+			TENANT_ID = #v_TENANTID#
+   </update>
+   
+   <insert id="EzApprovalG.insertSpecialCatalogInfo_Rec" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_REC 
+   		(RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) 
+   		(SELECT 
+   			#v_RECORDID#, SerialNo, SC1, SC2, SC3, TENANT_ID 
+   		 FROM 
+   		 	TBL_SPECIALCATALOGINFO_CAB 
+   		 INNER JOIN 
+   		 	(Select 
+   		 		CabinetClassNo
+   		 	 From 
+   		 	 	TBL_CABINET 
+   		 	 Where 
+   		 	 	TBL_CABINET.CabinetID = #v_CABID#) TBL_CABINET 
+   		  ON 
+   		  	TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo = TBL_CABINET.CabinetClassNo 
+   		  AND 
+   		  	TBL_SPECIALCATALOGINFO_CAB.TENANT_ID = TBL_CABINET.TENANT_ID 
+          Where 
+          	SerialNo='000' 
+          AND 
+          	TBL_CABINET.TENANT_ID= #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertSpecialCatalogInfo_Rec2" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_REC 
+   		(RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) 
+   		Values 
+   		(#v_RECORDID#, #v_SERIALNO#, #SC1#, #SC2#, #SC3#, #v_TENANTID#)
    </insert>
 </sqlMap>
