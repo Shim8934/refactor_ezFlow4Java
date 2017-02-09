@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,7 @@ import com.sun.media.jfxmedia.logging.Logger;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
@@ -66,6 +68,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
 	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
 	//TODO getLocalTime, 추후 commonUtil 로 이동시 삭제
 	@Autowired
 	private EzResourceService ezResourceService;
@@ -85,8 +90,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 왼쪽메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/personalLeft.do")
-	public String personalLeft (Model model) throws Exception {
-		String usePortal = config.getProperty("config.Use_Portal");
+	public String personalLeft (@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String usePortal = ezCommonService.getTenantConfig("Use_portal", userInfo.getTenantId());
 		String useKMS = config.getProperty("config.Use_ezKMS");
 		
 		model.addAttribute("usePortal", usePortal);
@@ -289,7 +296,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 등록,수정화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
-	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "new";
 		
@@ -297,7 +304,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
 		
@@ -346,7 +353,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			topID = "Top";
 		}
 		
-		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang()));
+		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("topID", topID);
 		
