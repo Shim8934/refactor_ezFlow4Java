@@ -438,6 +438,7 @@ alert("savesub Start");
 						// td안에 테이블이 존재하는 경우
 						else {
 alert("td안에 테이블이 존재하는 경우");
+alert("portletHeight="+tdsub_item.parentElement.style.height.toString());
 							strXML += "<ROW>";
 							strXML += "<TYPE>1</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";

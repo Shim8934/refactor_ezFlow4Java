@@ -720,11 +720,13 @@ public class EzPortalController extends EgovFileMngUtil {
 				strHTML = ezPortalService.getDefaultPortalPage();
 			} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
 				if (editMode.equals("new_inherit")) {
+					logger.debug("new_inherit");
 					strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
 					logger.debug("strHTML="+strHTML);
 				} else {
+					logger.debug("no new_inherit");
 					strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
 					width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
 					height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
@@ -1066,7 +1068,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String noneActiveX = "";
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String mailAddress = "";
 		String displayName = "";
@@ -1083,7 +1085,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//String userOffset = userInfo.getOs().split("\\|")[1];
 		String userOffset = "+09:00";
 		
-		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			useIE11Browser = "CK";
 		}
 		

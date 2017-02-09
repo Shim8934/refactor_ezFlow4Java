@@ -997,7 +997,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleMain.do")
 	public String scheduleMain(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = config.getProperty("config.EDITOR");
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String resID = "";
 		String strBrdNm = "";
 		String strOwnDeptNm = "";
@@ -1151,7 +1151,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTimeRepeat = "";
 		String endDateTimeRepeat = "";
 		
-		if (config.getProperty("config.IE11EDITOR").equals("CK")) {
+		if (ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			useIE11Browser = "CK";
 		}
 		if (req.getParameter("ownerID") != null) {

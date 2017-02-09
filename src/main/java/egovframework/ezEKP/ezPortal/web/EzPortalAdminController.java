@@ -179,7 +179,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	public String themeInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		String mode = "new";
-		String strUserLang = commonUtil.getMultiData(userInfo.getLang());
+		String strUserLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String pKeyCode = "";
 		String themeNm1 = "";
 		String themeNm2 = "";
@@ -648,6 +648,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 			}
 		}
+		logger.debug("portalGubun="+portalGubun);
 		
 		recordCnt = ezPortalService.searchMyPortalPageCount(pSearchString, portalGubun, userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("recordCnt="+recordCnt);

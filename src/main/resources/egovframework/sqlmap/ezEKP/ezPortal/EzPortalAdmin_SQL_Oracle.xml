@@ -387,7 +387,7 @@
 		<isNotEmpty property="v_STRQUERY">
 			<![CDATA[
 				AND
-					PAGEUID IN (#v_STRQUERY#)
+					PARENTPAGEUID IN (#v_STRQUERY#)
 				AND
 					OWNERPAGEUID = #v_PORTLET_OWNERPAGEUID#	
 			]]>	
@@ -413,17 +413,17 @@
 		]]>
 	</select>
 	
-	<!-- <procedure id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
+	 <!-- <procedure id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
 		<![CDATA[
-			{CALL EZSP_SEARCHPORTALPAGE2(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+			{CALL ezPortal.EZSP_SEARCHPORTALPAGE2(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure> -->
+	</procedure> --> 
 	
-	<select id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
+	 <select id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
 		<![CDATA[
 			$strSQL$
 		]]>
-	</select>
+	</select> 
 	
 	<!-- <procedure id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
 		<![CDATA[
@@ -2443,7 +2443,7 @@
 			DELETE 
 				TBL_PORTALPAGE_CACHE
 			WHERE
-				 PORTALPAGEID = #pPageID#
+				 PORTALPAGEID = #pageUID#
 			AND
 				TENANT_ID = #tenantID#	  
 		]]>
