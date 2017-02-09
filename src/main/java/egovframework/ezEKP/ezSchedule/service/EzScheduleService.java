@@ -4,12 +4,12 @@ import java.util.List;
 
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 
@@ -26,23 +26,23 @@ public interface EzScheduleService {
 	
 	public List<AttachListVO> getAttachList(String scheduleId) throws Exception;
 	
-	public List<PubScheHqVO> getPublicScheduleHq(String userId) throws Exception;
+	public List<ScheduleHqVO> getPublicScheduleHq(String userId, int tenantId) throws Exception;
 	
-	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang) throws Exception;
+	public List<ScheduleSecretaryVO> getPublicScheduleSec(String userId, String lang, int tenantId) throws Exception;
 	
-	public List<PubScheDeptVO> getPublicScheduleDept(String userId, String lang) throws Exception;
+	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId) throws Exception;
 	
-	public List<PubScheCumulerVO> getPublicScheduleCumuler(String userId, String lang) throws Exception;
+	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId) throws Exception;
 	
 	public int getNewScheduleId() throws Exception;
 	
-	public int getReceiveCount (String pUserId) throws Exception;
+	public int getReceiveCount (String pUserId, int tenantId) throws Exception;
 	
-	public int getInviteScheduleGroupCnt (String pUserId) throws Exception;
+	public int getInviteScheduleGroupCnt (String pUserId, int tenantId) throws Exception;
 
 	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception;
 
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin) throws Exception;
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin, int tenantId) throws Exception;
 	
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId) throws Exception;
 
@@ -71,6 +71,14 @@ public interface EzScheduleService {
 	public String scheduleGetRegi(String companyID, int tenantId) throws Exception;
 
 	public List<ScheduleSecretaryVO> getSecretaryList(String userId, int tenantId) throws Exception;
+
+	public void deleteScheduleConfig(String userID, int tenantID) throws Exception;
+
+	public void deleteSecretary(String userID, int tenantID) throws Exception;
+
+	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception;
+
+	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception;
 
 	
 }

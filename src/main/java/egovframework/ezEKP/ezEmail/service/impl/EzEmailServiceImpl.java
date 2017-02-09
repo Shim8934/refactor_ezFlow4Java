@@ -599,20 +599,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pLocalServerName, List<String> pInnerAddresses) throws Exception {
+	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
 		String messageIdParam = "messageId=" + URLEncoder.encode(pMessageId, "UTF-8");
 		String senderEmailParam = "senderEmail=" + URLEncoder.encode(pUserId + "@" + domainName, "UTF-8");
 		String subjectParam = "subject=" + URLEncoder.encode(pSubject, "UTF-8");
-		String serverNameParam = "serverName=" + URLEncoder.encode(pLocalServerName, "UTF-8");
 		
 		StringBuilder receiverEmailParam = new StringBuilder();
 		for (String innerAddress : pInnerAddresses) {
 			receiverEmailParam.append("&re=" + URLEncoder.encode(innerAddress, "UTF-8"));
 		}
 		
-		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam + "&" + serverNameParam;
+		String inputParams = messageIdParam + "&" + senderEmailParam + "&" + subjectParam;
 		inputParams += receiverEmailParam.toString();
 		logger.debug("inputParams=" + inputParams);
 		

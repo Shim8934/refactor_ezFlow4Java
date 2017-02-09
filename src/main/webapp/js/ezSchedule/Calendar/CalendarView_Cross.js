@@ -1,10 +1,11 @@
 ﻿var DefaultView = 0;
 var sStartDate, sEndDate;
 var typeCal = 0;
-var sDate = parent.frames["left"].sDate;//new Date();
+var sDate = parent.frames["left"].sDate;
 
-//리스트뷰 바디 생성
+
 var startOfWeek, endOfWeek;
+
 var xmlhttp;
 var g_szCurrentApptNum = null;
 var g_szCurrentApptPNum;
@@ -24,18 +25,21 @@ var dayOfWeeks;
 var monthHeight = ((parseInt(document.documentElement.clientHeight, 10) - 260) / 6) - 11;
 
 function CalendarView(pTagetID) {
+
     document.getElementById(pTagetID).innerHTML = "";
 
     if (!parent.frames["left"].document.getElementById("iYear"))
         return;
 
+
     if (DefaultView == 0)
-        dayOfWeeks = strLang5; // 일>토
+        dayOfWeeks = strLang5; 
     else if (DefaultView == 1)
-        dayOfWeeks = strLang6; // 월>일
+        dayOfWeeks = strLang6; 
 
     var objElm = document.getElementById(pTagetID);
     if (objElm) {
+
         var tDiv = document.createElement("DIV");
         tDiv.setAttribute("id", "tooltip");
         tDiv.style.position = "absolute";
@@ -63,7 +67,6 @@ function CalendarView(pTagetID) {
             oTable.setAttribute("width", "100%");
             oTh.setAttribute("id", "calTitle");
             oTh.colSpan = "2";
-            
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
@@ -77,7 +80,7 @@ function CalendarView(pTagetID) {
                     tempyearmemorial = yearmemorialDayCheck(sDate, LunarDate);
                     LunarDate = LunarDatemonth + "." + LunarDateday;
                 }
-                
+
                 oTable.className = "calendar_day_title";
                 if (tempyear > 1800 && tempyear <= 2101) {
                     var isholiday = false;
@@ -125,7 +128,19 @@ function CalendarView(pTagetID) {
                     else if (holidayname == "" && holidayname2 != "")
                         holidayname = holidayname2;
 
-                    var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    var dayText;
+                    if (LunarUse)
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    else
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+
+
+                    var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
+                    if (current_day.getDay() == "6")
+                        oTh.style.color = "#0032cf";
+                    else if (current_day.getDay() == "0" || isholiday)
+                        oTh.style.color = "#ee1c25";
+
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
@@ -134,7 +149,7 @@ function CalendarView(pTagetID) {
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
-            
+
             var mSpan = document.createElement("SPAN");
             mSpan.className = "btn_prev";
             var mImg = document.createElement("IMG");
@@ -156,12 +171,10 @@ function CalendarView(pTagetID) {
             var mImg = document.createElement("IMG");
             mImg.setAttribute("src", "/images/calendar/btn_calendar_next.gif");
             mImg.setAttribute("border", "0");
-            
             if (typeCal == 0)
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].nextMonth()");
             else
                 mImg.setAttribute("onclick", "parent.frames[\"left\"].nextDay()");
-            
             mSpan.appendChild(mImg);
             oTh.appendChild(mSpan);
             oTBody.appendChild(oTh);
@@ -171,6 +184,7 @@ function CalendarView(pTagetID) {
                 oTr.setAttribute("id", "calTR");
                 var oTd = document.createElement("TD");
                 oTd.className = "calendar_time";
+
                 var dTable = document.createElement("TABLE")
                 var dTbody = document.createElement("TBODY");
                 dTable.setAttribute("cellpadding", "0");
@@ -225,11 +239,11 @@ function CalendarView(pTagetID) {
 
             oTable.appendChild(oTBody);
             objElm.appendChild(oTable);
-            
             if (typeCal == 2) {
                 var oDiv = document.createElement("DIV");
                 oDiv.setAttribute("id", "CalDiv")
             }
+
         }
         else {
             var oTable = document.createElement("TABLE");
@@ -254,13 +268,14 @@ function CalendarView(pTagetID) {
             oDiv.setAttribute("id", "CalDiv")
         }
 
+
+
         var oTable = document.createElement("TABLE");
         oTable.setAttribute("id", "dayDiv");
         oTable.setAttribute("cellpadding", "0");
         oTable.setAttribute("cellspacing", "0");
         oTable.setAttribute("border", "0");
         oTable.setAttribute("width", "100%");
-        
         if (typeCal == 0)
             oTable.className = "calendar_month";
         else if (typeCal == 1)
@@ -292,17 +307,18 @@ function CalendarView(pTagetID) {
         objElm = null;
     }
 
+
     CalViewSource();
     resize();
 }
 
-///////////// 월보기 Calendar 생성 시작 /////////////
+
 function GetMonthBodyObj() {
     var year = parent.frames["left"].document.getElementById("iYear").value;
     var month = parseInt(parent.frames["left"].document.getElementById("iMon").value, 10);
 
-    oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  // 이전달
-    oThisDate = new Date(year, month - 1, 1); // 현재달
+    oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  
+    oThisDate = new Date(year, month - 1, 1); 
     oBeforeDate.setTime(oBeforeDate.getTime() + (oBeforeDate.getTimezoneOffset() + (oBeforeDate.getHours() * 60) + oBeforeDate.getMinutes()) * 60 * 1000);
     oThisDate.setTime(oThisDate.getTime() + (oThisDate.getTimezoneOffset() + (oThisDate.getHours() * 60) + oThisDate.getMinutes()) * 60 * 1000);
 
@@ -314,12 +330,12 @@ function GetMonthBodyObj() {
         oThisMonth = 0;
     }
 
-    oBeforeDate.setDate(oBeforeMaxDay - startThisDay + 1 + DefaultView); // 월의 시작일 지정
+    oBeforeDate.setDate(oBeforeMaxDay - startThisDay + 1 + DefaultView); 
 
     var oTbody = document.createElement("TBODY");
     var objTr = document.createElement("TR");
 
-    // day of the week Start
+    
     for (var j = 0; j < 7; j++) {
         var objTh = document.createElement("TH");
         var oText = document.createTextNode(dayOfWeeks.split(";")[j]);
@@ -345,13 +361,13 @@ function GetMonthBodyObj() {
         objTh = null;
     }
     oTbody.appendChild(objTr);
-    // day of the week End
+    
     if (oBeforeMaxDay != 0) {
         oThisDate = oBeforeDate;
     }
     sStartDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
 
-    //Month Start
+    
     var TDIndex = 0;
     for (var i = 0; i < 6; i++) {
         var objTr = document.createElement("TR");
@@ -364,7 +380,7 @@ function GetMonthBodyObj() {
         }
         oTbody.appendChild(objTr);
     }
-    //Month End
+    
     oThisDate.setDate(oThisDate.getDate());
     sEndDate = oThisDate.getFullYear() + "-" + (oThisDate.getMonth() + 1) + "-" + oThisDate.getDate();
     objTr = null;
@@ -372,7 +388,7 @@ function GetMonthBodyObj() {
     return oTbody;
 }
 
-// 선택한 월의 날짜 입력 시작
+
 function MonthData(oThisDate, TDIndex) {
     var tempyear = oThisDate.getFullYear();
     var LunarDateFull;
@@ -388,7 +404,7 @@ function MonthData(oThisDate, TDIndex) {
 
     var objTd = document.createElement("TD");
 
-    // 매월 1일은 월/일 모두 표시
+    
     if (oThisDate.getDate() == "1")
         var pDateData = (oThisDate.getMonth() + 1) + strLang122 + " " + oThisDate.getDate() + strLang123
     else
@@ -443,29 +459,30 @@ function MonthData(oThisDate, TDIndex) {
         holidayname = holidayname2;
 
     var className = "";
-    if (oThisMonth != oThisDate.getMonth()) // 현재월 이외의 날
+    if (oThisMonth != oThisDate.getMonth()) 
         className = " gray";
-    else if (oThisDate.getDay() == 0 || isholiday)  // 일요일
+    else if (oThisDate.getDay() == 0 || isholiday)  
         className = " sun";
-    else if (oThisDate.getDay() == 6)  // 토요일
+    else if (oThisDate.getDay() == 6)  
         className = " sat";
+
 
     var nowDate = new Date();
     var cell_ID = (oThisDate.getFullYear()) + "-" + leadingZeros((oThisDate.getMonth() + 1), 2) + "-" + leadingZeros(oThisDate.getDate(), 2);
     var nowDay = (nowDate.getFullYear()) + "-" + leadingZeros((nowDate.getMonth() + 1), 2) + "-" + leadingZeros(nowDate.getDate(), 2);
 
     if (cell_ID == nowDay)
-        objTd.className = "today";  // 현재일
+        objTd.className = "today";  
     else
-        objTd.className = className; // 나머지일
+        objTd.className = className; 
 
     objTd.setAttribute("id", "index_" + TDIndex);
     objTd.setAttribute("day", cell_ID);
-    objTd.onmousedown = function () { MultiSelectStart(this); };
-    objTd.onmouseup = function () { MultiSelectEnd(this); };
-    objTd.onmouseover = function () { MultiSelectItems(this); };
+    objTd.onmousedown = function (event) { MultiSelectStart(this, event); };
+    objTd.onmouseup = function (event) { MultiSelectEnd(this, event); };
+    //objTd.onmouseover = function (event) { MultiSelectItems(this, event); };
 
-    // 일자 영역
+    
     var subTable = document.createElement("TABLE")
     var subTr = document.createElement("TR")
     var subTd = document.createElement("TD")
@@ -478,24 +495,27 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("onmouseout", "MonthlyViewHeader_onMouseOut(this)");
     subTd.setAttribute("ondblclick", "WriteDateSchedule(this)");
     subTd.setAttribute("dispDate", cell_ID);
-    //subTd.innerHTML = pDateData;
+    
     if (tempyear > 1800 && tempyear <= 2101) {
-        subTd.innerHTML = pDateData + " (" + LunarDate2 + ") " + holidayname;
-    } else {
-        subTd.innerHTML = pDateData;
+        if (LunarUse)
+            subTd.innerHTML = pDateData + " (" + LunarDate2 + ") " + holidayname;
+        else
+            subTd.innerHTML = pDateData + " " + holidayname;
     }
+    else
+        subTd.innerHTML = pDateData;
+
     subTr.appendChild(subTd);
     subTable.appendChild(subTr);
     objTd.appendChild(subTable);
 
-    // 데이터 영역
+    
     var subSpan = document.createElement("SPAN")
     var subTable = document.createElement("TABLE")
     subSpan.className = "span_list";
 
     if (monthHeight < 50)
         monthHeight = 70;
-    
     subSpan.style.height = monthHeight + "px"
     subSpan.setAttribute("name", "span_list");
     subTable.setAttribute("id", "TD_" + cell_ID + "_Value");
@@ -508,20 +528,20 @@ function MonthData(oThisDate, TDIndex) {
 
     oThisDate.setDate(oThisDate.getDate() + 1);
     return objTd;
-}// 선택한 월의 날짜 입력 완료
-///////////// 월보기 Calendar 생성 종료 /////////////
-///////////////////////Drag/////////////////////////
+}
+
+
 var DragStartItemID = "";
 var DragEndItemID = "";
 var IsDrag = false;
-function MultiSelectStart(obj) {
+function MultiSelectStart(obj, event) {
     IsDrag = true;
-    DragStartItemID = obj.getAttribute("id");
+    DragStartItemID = GetAttribute(obj, "id");
 }
-function MultiSelectItems(obj) {
+function MultiSelectItems(obj, event) {
     if (IsDrag) {
         var StartIdex = parseInt(DragStartItemID.replace("index_",""));
-        var Endidex = parseInt(obj.getAttribute("id").replace("index_", ""));
+        var Endidex = parseInt(GetAttribute(obj, "id").replace("index_", ""));
 
         if (StartIdex > Endidex) {
             var tempIndex = Endidex;
@@ -537,9 +557,9 @@ function MultiSelectItems(obj) {
         }
     }
 }
-function MultiSelectEnd(obj) {
+function MultiSelectEnd(obj, event) {
     IsDrag = false;
-    DragEndItemID = obj.getAttribute("id");
+    DragEndItemID = GetAttribute(obj, "id");
     if (DragStartItemID == DragEndItemID) {
         document.getElementById(DragEndItemID).style.backgroundColor = "";
         DragStartItemID = "";
@@ -558,28 +578,28 @@ function Write() {
         DragEndItemID = DragStartItemID;
         DragStartItemID = tempIndex;
     }
-    var startdate = document.getElementById(DragStartItemID).getAttribute("day");
-    var enddate = document.getElementById(DragEndItemID).getAttribute("day");
+    var startdate = GetAttribute(document.getElementById(DragStartItemID), "day");
+    var enddate = GetAttribute(document.getElementById(DragEndItemID), "day");
 
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - 760) / 2;
     var pLeft = (pwidth - 790) / 2;
     var feature = GetOpenPosition(790, 830);
-//    if (CrossYN()) {
-//        window.open("schedule_write_Cross.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-//    }
-//    else {
-//        window.open("schedule_write.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-//    }
+    if (CrossYN()) {
+        window.open("schedule_write_Cross.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+    }
+    else {
+        window.open("schedule_write.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    }
     DragStartItemID = "";
     DragEndItemID = "";
     for (var i = 0; i <= 41; i++) {
         document.getElementById("index_" + i).style.backgroundColor = "";
     }
 }
-///////////////////////Drag/////////////////////////
-///////////// 주보기 Calendar 생성 시작 /////////////
+
+
 function GetWeekTopObj() {
     var oTable = document.createElement("TABLE");
     oTable.className = "calendar_week_title";
@@ -592,7 +612,7 @@ function GetWeekTopObj() {
     var objTd = document.createElement("TH");
     objTd.className = "calendar_th_time"
     objTr.appendChild(objTd);
-    // this Month Start
+    
     for (var j = 0; j < 7; j++) {
         var objTd = document.createElement("TH");
 
@@ -721,7 +741,7 @@ function GetWeekBodyObj() {
     oTr.appendChild(oTD);
 
 
-    // this Month Start
+    
     for (var j = 0; j < 7; j++) {
         var objTD = WeekData(startOfWeek, dayOfWeeks.split(";")[j], j);
         oTr.appendChild(objTD);
@@ -729,7 +749,7 @@ function GetWeekBodyObj() {
         startOfWeek.setDate(startOfWeek.getDate() + 1)
         endOfWeek.setDate(endOfWeek.getDate() + 1)
 
-    }// this Month Start
+    }
 
     var calTr = document.getElementById("calTR");
     if (calTr) {
@@ -742,7 +762,7 @@ function GetWeekBodyObj() {
     return oTbody;
 }
 
-// 시작과 끝의 월이 같은 데이터 입력
+
 function WeekData(startOfWeek, dayOfWeek, pCnt) {
     var tempyear = startOfWeek.getFullYear();
     var LunarDateFull;
@@ -808,8 +828,11 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         else if (holidayname == "" && holidayname2 != "")
             holidayname = holidayname2;
 
-        var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
-
+        var weekData;
+        if (LunarUse)
+            weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
+        else
+            weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname;
         if (isholiday)
             document.getElementById("list_Title" + pCnt).className += " sun";
     }
@@ -895,9 +918,9 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
     }
     return objTd;
 }
-///////////// 주보기 Calendar 생성 종료 /////////////
 
-///////////// 일보기 Calendar 생성 시작 /////////////
+
+
 function GetDayBodyObj() {
     var oTbody = document.createElement("TBODY");
     var objTr = document.createElement("TR");
@@ -934,13 +957,15 @@ function GetDayBodyObj() {
 
     objTr.appendChild(objTd);
 
+
     var objTd = document.createElement("TD");
     objTd.className = "td_list";
 
     for (var j = 0; j < 24; j++) {
+
         var objTD = DayData(j);
         objTd.appendChild(objTD);
-    }// this Month Start
+    }
     objTr.appendChild(objTd);
     oTbody.appendChild(objTr);
 
@@ -954,6 +979,7 @@ function GetDayBodyObj() {
 
 
 function DayData(j) {
+
     var divID = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
     var sTable = document.createElement("TABLE");
     sTable.setAttribute("cellpadding", "0");
@@ -982,7 +1008,7 @@ function DayData(j) {
     sTable.appendChild(s_Tr);
     return sTable;
 }
-///////////// 일보기 Calendar 생성 종료 /////////////
+
 
 
 
@@ -993,7 +1019,7 @@ function mfGetUTFIsoDate(iYr, iMon, iDate, iHr, iMin) {
     oDate.setHours(iHr, iMin, 0);
 
     var iYear = oDate.getFullYear();
-    var szMonth = oDate.getMonth() + 1; //0 offset adjustment
+    var szMonth = oDate.getMonth() + 1; 
     var szDate = oDate.getDate();
     var szHours = oDate.getHours();
     var szMinutes = oDate.getMinutes();
@@ -1035,30 +1061,19 @@ function mfFormatTime(iMin) {
     var L_AM_Text = strLang1;
     var L_PM_Text = strLang2;
     var szRet = mfFormatTime.szFormat;
-    if (-1 < szRet.search(/\[t/g)) //must be first before we modify iHr
+    if (-1 < szRet.search(/\[t/g)) 
     {
         szRet = szRet.replace(/\[tt\]/g, (iHr > 11 && iHr < 24) ? L_PM_Text : L_AM_Text);
         szRet = szRet.replace(/\[t\]/g, (iHr > 11 && iHr < 24) ? L_PM_Text : L_AM_Text);
     }
-    if (-1 < szRet.search(/\[h/g)) //12 hour format
+    if (-1 < szRet.search(/\[h/g)) 
     {
-        if (iHr > 12) {
-        	if (iHr == 24) {
-        		iHr = "0";
-        	} else {
-        		if(iHr > 24){
-        			iHr -= 24;
-        		} else {
-        			iHr -= 12;
-        		}
-        	}        		
-        } else if (iHr == 0) {        	
-        	iHr = 12;
-        }        
+        if (iHr > 12) iHr -= 12;
+        if (iHr == 0) iHr = 12;
         szRet = szRet.replace(/\[hh\]/g, iHr > 9 ? iHr : "0" + iHr);
         szRet = szRet.replace(/\[h\]/g, iHr);
     }
-    if (-1 < szRet.search(/\[H/g)) //24 hour	format
+    if (-1 < szRet.search(/\[H/g)) 
     {
         szRet = szRet.replace(/\[HH\]/g, iHr > 9 ? iHr : "0" + iHr);
         szRet = szRet.replace(/\[H\]/g, iHr);
@@ -1067,7 +1082,6 @@ function mfFormatTime(iMin) {
         szRet = szRet.replace(/\[mm\]/g, iMn > 9 ? iMn : "0" + iMn);
         szRet = szRet.replace(/\[m\]/g, iMn);
     }
-
     return (szRet);
 }
 
@@ -1125,14 +1139,14 @@ function lunarCalc(year, month, day, type, leapmonth) {
     var lunLeapMonth, lunMonthDay;
     var i, lunIndex;
     var solMonthDay = [31, 0, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    /* range check */
+    
     if (year < 1800 || year > 2101) {
         alert('1800년부터 2101년까지만 지원합니다');
         return;
     }
-    /* 속도 개선을 위해 기준 일자를 여러개로 한다 */
+    
     if (year >= 2080) {
-        /* 기준일자 양력 2080년 1월 1일 (음력 2079년 12월 10일) */
+        
         solYear = 2080;
         solMonth = 1;
         solDay = 1;
@@ -1140,11 +1154,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 10;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 2080 년 2월 28일 */
-        lunMonthDay = 30; /* 2079년 12월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 2060) {
-        /* 기준일자 양력 2060년 1월 1일 (음력 2059년 11월 28일) */
+        
         solYear = 2060;
         solMonth = 1;
         solDay = 1;
@@ -1152,11 +1166,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 28;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 2060 년 2월 28일 */
-        lunMonthDay = 30; /* 2059년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 2040) {
-        /* 기준일자 양력 2040년 1월 1일 (음력 2039년 11월 17일) */
+        
         solYear = 2040;
         solMonth = 1;
         solDay = 1;
@@ -1164,11 +1178,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 17;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 2040 년 2월 28일 */
-        lunMonthDay = 29; /* 2039년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
     }
     else if (year >= 2020) {
-        /* 기준일자 양력 2020년 1월 1일 (음력 2019년 12월 7일) */
+        
         solYear = 2020;
         solMonth = 1;
         solDay = 1;
@@ -1176,11 +1190,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 7;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 2020 년 2월 28일 */
-        lunMonthDay = 30; /* 2019년 12월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 2000) {
-        /* 기준일자 양력 2000년 1월 1일 (음력 1999년 11월 25일) */
+        
         solYear = 2000;
         solMonth = 1;
         solDay = 1;
@@ -1188,11 +1202,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 25;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 2000 년 2월 28일 */
-        lunMonthDay = 30; /* 1999년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1980) {
-        /* 기준일자 양력 1980년 1월 1일 (음력 1979년 11월 14일) */
+        
         solYear = 1980;
         solMonth = 1;
         solDay = 1;
@@ -1200,11 +1214,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 14;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1980 년 2월 28일 */
-        lunMonthDay = 30; /* 1979년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1960) {
-        /* 기준일자 양력 1960년 1월 1일 (음력 1959년 12월 3일) */
+        
         solYear = 1960;
         solMonth = 1;
         solDay = 1;
@@ -1212,11 +1226,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 3;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1960 년 2월 28일 */
-        lunMonthDay = 29; /* 1959년 12월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
     }
     else if (year >= 1940) {
-        /* 기준일자 양력 1940년 1월 1일 (음력 1939년 11월 22일) */
+        
         solYear = 1940;
         solMonth = 1;
         solDay = 1;
@@ -1224,11 +1238,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 22;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1940 년 2월 28일 */
-        lunMonthDay = 29; /* 1939년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 29; 
     }
     else if (year >= 1920) {
-        /* 기준일자 양력 1920년 1월 1일 (음력 1919년 11월 11일) */
+        
         solYear = 1920;
         solMonth = 1;
         solDay = 1;
@@ -1236,11 +1250,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 11;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1920 년 2월 28일 */
-        lunMonthDay = 30; /* 1919년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1900) {
-        /* 기준일자 양력 1900년 1월 1일 (음력 1899년 12월 1일) */
+        
         solYear = 1900;
         solMonth = 1;
         solDay = 1;
@@ -1248,11 +1262,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 1;
         lunLeapMonth = 0;
-        solMonthDay[1] = 28; /* 1900 년 2월 28일 */
-        lunMonthDay = 30; /* 1899년 12월 */
+        solMonthDay[1] = 28; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1880) {
-        /* 기준일자 양력 1880년 1월 1일 (음력 1879년 11월 20일) */
+        
         solYear = 1880;
         solMonth = 1;
         solDay = 1;
@@ -1260,11 +1274,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 20;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1880 년 2월 28일 */
-        lunMonthDay = 30; /* 1879년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1860) {
-        /* 기준일자 양력 1860년 1월 1일 (음력 1859년 12월 9일) */
+        
         solYear = 1860;
         solMonth = 1;
         solDay = 1;
@@ -1272,11 +1286,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 9;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1860 년 2월 28일 */
-        lunMonthDay = 30; /* 1859년 12월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1840) {
-        /* 기준일자 양력 1840년 1월 1일 (음력 1839년 11월 27일) */
+        
         solYear = 1840;
         solMonth = 1;
         solDay = 1;
@@ -1284,11 +1298,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 27;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1840 년 2월 28일 */
-        lunMonthDay = 30; /* 1839년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1820) {
-        /* 기준일자 양력 1820년 1월 1일 (음력 1819년 11월 16일) */
+        
         solYear = 1820;
         solMonth = 1;
         solDay = 1;
@@ -1296,11 +1310,11 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 11;
         lunDay = 16;
         lunLeapMonth = 0;
-        solMonthDay[1] = 29; /* 1820 년 2월 28일 */
-        lunMonthDay = 30; /* 1819년 11월 */
+        solMonthDay[1] = 29; 
+        lunMonthDay = 30; 
     }
     else if (year >= 1800) {
-        /* 기준일자 양력 1800년 1월 1일 (음력 1799년 12월 7일) */
+        
         solYear = 1800;
         solMonth = 1;
         solDay = 1;
@@ -1308,8 +1322,8 @@ function lunarCalc(year, month, day, type, leapmonth) {
         lunMonth = 12;
         lunDay = 7;
         lunLeapMonth = 0;
-        solMonthDay[1] = 28; /* 1800 년 2월 28일 */
-        lunMonthDay = 30; /* 1799년 12월 */
+        solMonthDay[1] = 28; 
+        lunMonthDay = 30; 
     }
     lunIndex = lunYear - 1799;
     while (true) {
@@ -1326,12 +1340,12 @@ function lunarCalc(year, month, day, type, leapmonth) {
           leapmonth == lunLeapMonth) {
             return new myDate(solYear, solMonth, solDay, 0);
         }
-        /* add a day of solar calendar */
+        
         if (solMonth == 12 && solDay == 31) {
             solYear++;
             solMonth = 1;
             solDay = 1;
-            /* set monthDay of Feb */
+            
             if (solYear % 400 == 0)
                 solMonthDay[1] = 29;
             else if (solYear % 100 == 0)
@@ -1347,7 +1361,7 @@ function lunarCalc(year, month, day, type, leapmonth) {
         }
         else
             solDay++;
-        /* add a day of lunar calendar */
+        
         if (lunMonth == 12 &&
          ((lunarMonthTable[lunIndex][lunMonth - 1] == 1 && lunDay == 29) ||
          (lunarMonthTable[lunIndex][lunMonth - 1] == 2 && lunDay == 30))) {
@@ -1404,7 +1418,7 @@ function lunarCalc(year, month, day, type, leapmonth) {
 var lunarMonthTable = [
 [1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2],
 [2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 2, 1],
-[1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2], /* 1801 */
+[1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2], 
 [1, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1],
 [2, 3, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
 [2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],
@@ -1414,7 +1428,7 @@ var lunarMonthTable = [
 [1, 2, 2, 1, 5, 2, 1, 2, 1, 1, 2, 1],
 [2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2],
 [1, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 2],
-[1, 1, 5, 2, 1, 2, 2, 1, 2, 2, 1, 2], /* 1811 */
+[1, 1, 5, 2, 1, 2, 2, 1, 2, 2, 1, 2], 
 [1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1],
 [2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1],
 [2, 5, 2, 1, 1, 1, 2, 1, 2, 2, 1, 2],
@@ -1424,7 +1438,7 @@ var lunarMonthTable = [
 [2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2],
 [1, 2, 1, 5, 2, 2, 1, 2, 2, 1, 2, 1],
 [1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
-[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2], /* 1821 */
+[1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2], 
 [2, 1, 5, 1, 1, 2, 1, 2, 2, 1, 2, 2],
 [2, 1, 2, 1, 1, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 2, 1, 2, 1, 4, 1, 2, 1, 2, 2],
@@ -1434,7 +1448,7 @@ var lunarMonthTable = [
 [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
 [1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 1, 2, 3, 2, 1, 2, 2, 1, 2, 2, 2],
-[1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2], /* 1831 */
+[1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2], 
 [1, 2, 1, 2, 1, 1, 2, 1, 5, 2, 2, 2],
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
 [1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
@@ -1444,7 +1458,7 @@ var lunarMonthTable = [
 [1, 2, 1, 5, 1, 2, 2, 1, 2, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
 [2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
-[1, 2, 4, 1, 1, 2, 1, 2, 1, 2, 2, 1],   /* 1841 */
+[1, 2, 4, 1, 1, 2, 1, 2, 1, 2, 2, 1],   
 [2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1],
 [2, 2, 2, 1, 2, 1, 4, 1, 2, 1, 2, 1],
 [2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
@@ -1454,7 +1468,7 @@ var lunarMonthTable = [
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
 [2, 1, 2, 3, 2, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
-[2, 2, 1, 2, 1, 1, 2, 3, 2, 1, 2, 2],   /* 1851 */
+[2, 2, 1, 2, 1, 1, 2, 3, 2, 1, 2, 2],   
 [2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 1, 2],
 [2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
 [1, 2, 1, 2, 1, 2, 5, 2, 1, 2, 1, 2],
@@ -1464,7 +1478,7 @@ var lunarMonthTable = [
 [1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
 [2, 1, 6, 1, 1, 2, 1, 1, 2, 1, 2, 2],
-[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2],   /* 1861 */
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2],   
 [2, 1, 2, 1, 2, 2, 1, 5, 2, 1, 1, 2],
 [1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
 [1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
@@ -1474,7 +1488,7 @@ var lunarMonthTable = [
 [1, 2, 2, 3, 2, 1, 1, 2, 1, 2, 2, 1],
 [2, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 2, 2, 1, 2, 1, 2, 1, 1, 5, 2, 1],
-[2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2],   /* 1871 */
+[2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1, 2],   
 [1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
 [1, 1, 2, 1, 2, 4, 2, 1, 2, 2, 1, 2],
 [1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 1],
@@ -1484,7 +1498,7 @@ var lunarMonthTable = [
 [2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 2, 4, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2],
-[1, 2, 1, 2, 1, 2, 5, 2, 2, 1, 2, 1],   /* 1881 */
+[1, 2, 1, 2, 1, 2, 5, 2, 2, 1, 2, 1],   
 [1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1, 2],
 [2, 1, 1, 2, 3, 2, 1, 2, 2, 1, 2, 2],
@@ -1494,7 +1508,7 @@ var lunarMonthTable = [
 [2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
 [1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
-[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],   /* 1891 */
+[1, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],   
 [1, 1, 2, 1, 1, 5, 2, 2, 1, 2, 2, 2],
 [1, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
@@ -1504,7 +1518,7 @@ var lunarMonthTable = [
 [2, 1, 5, 2, 2, 1, 2, 1, 2, 1, 2, 1],
 [2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 5, 2, 2, 1, 2],
-[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],   /* 1901 */
+[1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],   
 [2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
 [1, 2, 1, 2, 3, 2, 1, 1, 2, 2, 1, 2],
 [2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1],
@@ -1514,7 +1528,7 @@ var lunarMonthTable = [
 [2, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
 [1, 5, 1, 2, 1, 2, 1, 2, 2, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
-[2, 1, 2, 1, 1, 5, 1, 2, 2, 1, 2, 2],   /* 1911 */
+[2, 1, 2, 1, 1, 5, 1, 2, 2, 1, 2, 2],   
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
 [2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2],
 [2, 2, 1, 2, 5, 1, 2, 1, 2, 1, 1, 2],
@@ -1524,7 +1538,7 @@ var lunarMonthTable = [
 [2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 2, 1, 1, 2, 1, 5, 2, 1, 2, 2, 2],
 [1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
-[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],   /* 1921 */
+[2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],   
 [2, 1, 2, 2, 3, 2, 1, 1, 2, 1, 2, 2],
 [1, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
 [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 1],
@@ -1534,7 +1548,7 @@ var lunarMonthTable = [
 [1, 5, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],
 [1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],
 [1, 2, 2, 1, 1, 5, 1, 2, 1, 2, 2, 1],
-[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],   /* 1931 */
+[2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],   
 [2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
 [1, 2, 2, 1, 6, 1, 2, 1, 2, 1, 1, 2],
 [1, 2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2],
@@ -1544,7 +1558,7 @@ var lunarMonthTable = [
 [2, 2, 1, 1, 2, 1, 4, 1, 2, 2, 1, 2],
 [2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 1, 2],
 [2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
-[2, 2, 1, 2, 2, 4, 1, 1, 2, 1, 2, 1],   /* 1941 */
+[2, 2, 1, 2, 2, 4, 1, 1, 2, 1, 2, 1],   
 [2, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 2],
 [1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
 [2, 1, 2, 4, 1, 2, 1, 2, 2, 1, 2, 2],
@@ -1554,7 +1568,7 @@ var lunarMonthTable = [
 [2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
 [2, 1, 2, 2, 1, 2, 3, 2, 1, 2, 1, 2],
 [1, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
-[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],   /* 1951 */
+[2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],   
 [1, 2, 1, 2, 4, 1, 2, 2, 1, 2, 1, 2],
 [1, 2, 1, 1, 2, 2, 1, 2, 2, 1, 2, 2],
 [1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
@@ -1564,7 +1578,7 @@ var lunarMonthTable = [
 [1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
 [1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
 [2, 1, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1],
-[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],   /* 1961 */
+[2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],   
 [1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
 [2, 1, 2, 3, 2, 1, 2, 1, 2, 2, 2, 1],
 [2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2],
@@ -1574,7 +1588,7 @@ var lunarMonthTable = [
 [1, 2, 1, 2, 2, 1, 5, 2, 1, 2, 1, 2],
 [1, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1],
 [2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
-[1, 2, 1, 1, 5, 2, 1, 2, 2, 2, 1, 2],   /* 1971 */
+[1, 2, 1, 1, 5, 2, 1, 2, 2, 2, 1, 2],   
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 2, 1],
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2],
 [2, 2, 1, 5, 1, 2, 1, 1, 2, 2, 1, 2],
@@ -1584,7 +1598,7 @@ var lunarMonthTable = [
 [2, 1, 2, 2, 1, 2, 2, 1, 2, 1, 2, 1],
 [2, 1, 1, 2, 1, 6, 1, 2, 2, 1, 2, 1],
 [2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
-[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],   /* 1981 */
+[1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],   
 [2, 1, 2, 3, 2, 1, 1, 2, 1, 2, 2, 2],
 [2, 1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
 [2, 1, 2, 2, 1, 1, 2, 1, 1, 5, 2, 2],
@@ -1594,7 +1608,7 @@ var lunarMonthTable = [
 [1, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
 [2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2],
 [1, 2, 1, 1, 5, 1, 2, 2, 1, 2, 2, 2],
-[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],   /* 1991 */
+[1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],   
 [1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
 [1, 2, 5, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2],
@@ -1604,7 +1618,7 @@ var lunarMonthTable = [
 [2, 1, 1, 2, 3, 2, 2, 1, 2, 2, 2, 1],
 [2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2, 1],
 [2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1],
-[2, 2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2],   /* 2001 */
+[2, 2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2],   
 [2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2],
 [1, 5, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
@@ -1614,7 +1628,7 @@ var lunarMonthTable = [
 [2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2],
 [2, 2, 1, 1, 5, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
-[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],   /* 2011 */
+[2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],   
 [2, 1, 2, 5, 2, 2, 1, 1, 2, 1, 2, 1],
 [2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2],
 [1, 2, 1, 2, 1, 2, 1, 2, 5, 2, 1, 2],
@@ -1624,7 +1638,7 @@ var lunarMonthTable = [
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],
 [2, 1, 2, 5, 2, 1, 1, 2, 1, 2, 1, 2],
-[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],   /* 2021 */
+[1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],   
 [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
 [1, 5, 2, 1, 2, 1, 2, 2, 1, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1],
@@ -1634,7 +1648,7 @@ var lunarMonthTable = [
 [2, 2, 2, 1, 5, 1, 2, 1, 1, 2, 2, 1],
 [2, 2, 1, 2, 2, 1, 1, 2, 1, 1, 2, 2],
 [1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
-[2, 1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1],   /* 2031 */
+[2, 1, 5, 2, 1, 2, 2, 1, 2, 1, 2, 1],   
 [2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 5, 2],
 [1, 2, 1, 1, 2, 1, 2, 1, 2, 2, 1, 2],
@@ -1644,7 +1658,7 @@ var lunarMonthTable = [
 [2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],
 [2, 2, 1, 2, 5, 2, 1, 2, 1, 2, 1, 1],
 [2, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 1],
-[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],   /* 2041 */
+[2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],   
 [1, 5, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2],
 [2, 1, 2, 1, 1, 2, 3, 2, 1, 2, 2, 2],
@@ -1654,7 +1668,7 @@ var lunarMonthTable = [
 [1, 2, 2, 1, 2, 2, 1, 2, 1, 1, 2, 1],
 [2, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2, 1],
 [1, 2, 4, 1, 2, 1, 2, 2, 1, 2, 2, 1],
-[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],   /* 2051 */
+[2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2],   
 [1, 2, 1, 1, 2, 1, 1, 5, 2, 2, 2, 2],
 [1, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 2],
 [1, 2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2],
@@ -1664,7 +1678,7 @@ var lunarMonthTable = [
 [2, 1, 2, 4, 2, 1, 2, 1, 2, 2, 1, 1],
 [2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1],
 [2, 1, 1, 2, 1, 1, 2, 2, 1, 2, 2, 1],
-[2, 2, 3, 2, 1, 1, 2, 1, 2, 2, 2, 1],   /* 2061 */
+[2, 2, 3, 2, 1, 1, 2, 1, 2, 2, 2, 1],   
 [2, 2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1],
 [2, 2, 1, 2, 1, 2, 3, 2, 1, 2, 1, 2],
 [2, 2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1],
@@ -1674,7 +1688,7 @@ var lunarMonthTable = [
 [2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 1, 2],
 [1, 2, 1, 5, 1, 2, 1, 2, 2, 2, 1, 2],
 [2, 1, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2],
-[2, 1, 2, 1, 2, 1, 1, 5, 2, 1, 2, 2],   /* 2071 */
+[2, 1, 2, 1, 2, 1, 1, 5, 2, 1, 2, 2],   
 [2, 1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2],
 [2, 1, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1],
 [2, 1, 2, 2, 1, 5, 2, 1, 2, 1, 2, 1],
@@ -1684,7 +1698,7 @@ var lunarMonthTable = [
 [2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 2, 2],
 [1, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 2],
 [2, 1, 5, 2, 1, 1, 2, 1, 2, 1, 2, 2],
-[1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],   /* 2081 */
+[1, 2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2],   
 [1, 2, 2, 2, 1, 2, 3, 2, 1, 1, 2, 2],
 [1, 2, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
 [2, 1, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2],
@@ -1694,7 +1708,7 @@ var lunarMonthTable = [
 [1, 2, 1, 5, 1, 2, 1, 1, 2, 2, 2, 1],
 [2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2, 1],
 [2, 2, 2, 1, 2, 1, 1, 5, 1, 2, 2, 1],
-[2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],   /* 2091 */
+[2, 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1],   
 [2, 2, 1, 2, 2, 1, 2, 1, 2, 1, 2, 1],
 [1, 2, 2, 1, 2, 4, 2, 1, 2, 1, 2, 1],
 [2, 1, 1, 2, 1, 2, 2, 1, 2, 2, 1, 2],
