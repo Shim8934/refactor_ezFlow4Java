@@ -102,7 +102,7 @@ public class EzCommunityAdminController {
 	@RequestMapping(value = "/admin/ezCommunity/bbsList.do")
 	public String bbsList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useEditor = ezCommonService.getTenantConfig("config.EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String code = "", keyword = "", sRadio = "", titleName = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 17;
 		

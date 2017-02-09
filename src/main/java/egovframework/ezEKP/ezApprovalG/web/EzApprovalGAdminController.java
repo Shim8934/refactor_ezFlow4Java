@@ -208,8 +208,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String serverName = userInfo.getServerName();
 		String tCheck = request.getParameter("tCheck");
-		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary= ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary= ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String title = "", topID = "";
 		
 		if (tCheck.equals("fContIns")) {
@@ -331,9 +331,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String formProcSpelling = ezCommonService.getTenantConfig("config.FormProcSpelling", userInfo.getTenantId()); 
-		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
+		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -371,9 +371,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String formProcSpelling = ezCommonService.getTenantConfig("config.FormProcSpelling", userInfo.getTenantId()); 
-		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
+		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String contID = request.getParameter("contID");
 		String formID = request.getParameter("formID");
@@ -717,8 +717,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMContType.do")
 	public String apprMContType(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String primary = ezCommonService.getTenantConfig("config.LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
-		String secondary = ezCommonService.getTenantConfig("config.LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -2201,7 +2201,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String useEditor = ezCommonService.getTenantConfig("config.EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();

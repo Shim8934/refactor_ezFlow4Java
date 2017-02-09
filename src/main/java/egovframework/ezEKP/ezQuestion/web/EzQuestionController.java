@@ -1174,7 +1174,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                     String propList = "department;mail;displayname;title;description;company;title";
                     String pClass = "all";
                        
-                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, ezCommonService.getTenantConfig("config.PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
+                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
              			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
              				if(xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent() != "") {
@@ -1219,7 +1219,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 	ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
                 	
                 	String propList = "department;mail;displayName;title;description;company";
-                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, ezCommonService.getTenantConfig("config.PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
+                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
 
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
 					String userDeptId = "";
