@@ -54,7 +54,6 @@
 	    var g_DisplayNamePrintable = "${displayNamePrintable}";
 	    var g_showEnglishDisplay = "";
 	    var g_charsetCheck = "${charsetCheck}";
-		var g_use_ApprovalG = "${userInfoApprovalG}";
 	    var g_ReSendFlag = "${reSendFlag}";
 	    var BigSizeAttachMBSize = "${bigSizeMailAttachLimit}";
 	    var totBigSizeAttachMBSize = "${totBigSizeMailAttachLimit}";
