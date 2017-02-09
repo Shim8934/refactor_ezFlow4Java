@@ -804,6 +804,9 @@ function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
             if (eSubject.value.length > 120) {
+            	MailStatus = "NO";
+            	isAutoSave = false;
+            	
                 alert(strLang95);
                 return;
             }
@@ -930,6 +933,8 @@ function Save_onClick_Complete(ReturnValue) {
                 else
                     alert(strLang104);
                 g_saveHttp = null;
+            	MailStatus = "NO";
+            	isAutoSave = false;
             }
         }
     } catch (e) {
