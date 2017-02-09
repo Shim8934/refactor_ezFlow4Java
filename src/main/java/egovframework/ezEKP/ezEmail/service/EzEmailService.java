@@ -34,7 +34,7 @@ public interface EzEmailService {
 	public String getMailReservedTime(String pMessageId) throws Exception;
 	public List<MailReadVO> getMailReadList(int tenantId, String pUserId, String pMessageId) throws Exception;
 	public List<MailCancelVO> getMailCancelList(String pMessage) throws Exception;
-	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, String pLocalServerName, List<String> pInnerAddresses) throws Exception;
+	public void setMailCancelSend(int tenantId, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception;
 	public String getMailReceiveMessageId(String pNum) throws Exception;
 	public void updateMailReceiveDetailInfo(String pNum, List<String[]> receiveDetailList) throws Exception;
 	public List<String> getMailReceiveAddress(String pNum) throws Exception;
