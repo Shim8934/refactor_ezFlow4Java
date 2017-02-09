@@ -33,11 +33,11 @@ public class EzCommonDAO extends EgovAbstractDAO{
     @Autowired
     private EzEmailUtil ezEmailUtil;
     
-	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception{
+	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
 	}
 	
-	public String getContentInfo(Map<String, Object> map) throws Exception{
+	public String getContentInfo(Map<String, Object> map) throws Exception {
 		return (String) select("EzCommonDAO.getContentInfo", map);
 	}
 
@@ -99,7 +99,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         }       
 	}
 
-    private String selectUserGetTimeZoneForJMocha(String userID, int tenantID) throws Exception{
+    private String selectUserGetTimeZoneForJMocha(String userID, int tenantID) throws Exception {
         logger.debug("selectUserGetTimeZoneForJMocha started. tenantID=" + tenantID + ",userID=" + userID);
         
         String returnValue = null;
@@ -140,7 +140,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         return returnValue;
     }
 	
-    private String selectUserGetTimeZoneForLocal(String userID, int tenantID) throws Exception{
+    private String selectUserGetTimeZoneForLocal(String userID, int tenantID) throws Exception {
     	Map<String, Object> map = new HashMap<String, Object>();
     	
     	map.put("userID", userID);
@@ -149,7 +149,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         return (String) select("EzCommonDAO.selectUserGetTimeZone", map);
     }
 	
-	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception{
+	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return selectUserGetTimeZoneForJMocha(userID, tenantID);
         } else {
@@ -262,7 +262,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	    }
 	}
 
-	private int getTenantIdByDomainNameForJMocha(Map<String, Object> map) throws Exception{
+	private int getTenantIdByDomainNameForJMocha(Map<String, Object> map) throws Exception {
 		String domainName = (String)map.get("DOMAIN_NAME");
 		
         logger.debug("getTenantIdByDomainNameForJMocha started. domainName=" + domainName);
@@ -298,7 +298,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         return returnValue;
     }
 	
-    private int getTenantIdByDomainNameForLocal(Map<String, Object> map) throws Exception{
+    private int getTenantIdByDomainNameForLocal(Map<String, Object> map) throws Exception {
     	return (Integer) select("EzCommonDAO.getTenantIdByDomainName", map);
     }
 	
@@ -310,7 +310,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         }               
 	}
 	
-	private List<TenantServerNameVO> getTenantServerNameListForJMocha() throws Exception{
+	private List<TenantServerNameVO> getTenantServerNameListForJMocha() throws Exception {
 		logger.debug("getTenantServerNameListForJMocha started.");
         
 		List<TenantServerNameVO> list = new ArrayList<TenantServerNameVO>();
@@ -371,7 +371,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
         }               
 	}
 	
-	private List<TenantVO> getTenantListForJMocha() throws Exception{
+	private List<TenantVO> getTenantListForJMocha() throws Exception {
 		logger.debug("getTenantList started.");
         
 		List<TenantVO> list = new ArrayList<TenantVO>();
@@ -420,7 +420,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	@SuppressWarnings("unchecked")
-	private List<TenantVO> getTenantListForLocal() throws Exception{
+	private List<TenantVO> getTenantListForLocal() throws Exception {
 		return (List<TenantVO>) list("EzCommonDAO.getTenantList");
     }
 	
@@ -433,8 +433,49 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
+	private Map<String, Object> getTenantConfigsForJMocha(int tenantID) throws Exception {
+		logger.debug("getTenantConfigsForJMocha started. tenantID=" + tenantID);
+        
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String inputParams = "tenantId=" + tenantID;
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/getTenantConfigs";
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+        logger.debug("response=" + response);
+        
+        String resultCode = "Error";
+        int reasonCode = -100; 
+                
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+            resultCode = (String)responseObj.get("resultCode");     
+            
+            if (resultCode.equals("OK")) {
+                reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+                
+                if (reasonCode == 0) {
+                	map = (Map<String, Object>)responseObj.get("result");
+                }
+            }
+        }                       
+        
+        logger.debug("getTenantConfigsForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+        return map;
+    }
+	
+	@SuppressWarnings("unchecked")
+	private Map<String, Object> getTenantConfigsForLocal(int tenantID) throws Exception {
 		return (Map<String, Object>) map("EzCommonDAO.getTenantConfigs", tenantID, "PROPERTY_NAME", "PROPERTY_VALUE");
+    }
+	
+	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+			return getTenantConfigsForJMocha(tenantID);
+		} else {
+			return getTenantConfigsForLocal(tenantID);
+		}
 	}
 	
 }
