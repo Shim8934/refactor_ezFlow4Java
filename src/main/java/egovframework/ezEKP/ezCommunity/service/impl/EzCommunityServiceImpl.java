@@ -744,7 +744,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pMaxSize = Integer.parseInt(request.getParameter("maxSize").trim());
 		}
 		
-		String userExtension = ezCommonService.getTenantConfig("config.USE_FileExtension", userInfo.getTenantId());
+		String userExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
