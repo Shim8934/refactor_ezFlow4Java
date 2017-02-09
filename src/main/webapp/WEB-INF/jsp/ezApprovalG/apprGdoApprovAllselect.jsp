@@ -77,7 +77,7 @@
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "DOCID", document.frm.chk.value.split("|")[0]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "ORGAPRUSERID", document.frm.chk.value.split("|")[1]);
 		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "FORMID", document.frm.chk.value.split("|")[2]);
-		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk[i].value.split("|")[3]);
+		                createNodeAndAppandNodeText(xmlpara, doc, objDocinfoNode, "TYPE", document.frm.chk.value.split("|")[3]);
 		            }
 		        }
 		        xmlhttp = createXMLHttpRequest();
