@@ -1173,7 +1173,8 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PROXYUSERDEPTID", proxyUserDeptID);
 		map.put("v_STARTDATE", commonUtil.getDateStringInUTC(startDate, offset, true));
 		map.put("v_ENDDATE", endDate);
-		
+		map.put("v_TENANT_ID", tenantID);
+
 		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			 ezOrganDAO.setProxyUserInfo(map);
 			 return "OK";
