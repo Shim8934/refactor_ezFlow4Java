@@ -5453,13 +5453,13 @@
 		
 		<isEqual property="v_ANSWERTYPE" compareValue="3">
 			<![CDATA[
-				,answeretc = #v_ANSWERETC#,
+				,answeretc = #v_ANSWERETC#
 			]]>
 		</isEqual>
 		
 		<isEqual property="v_ANSWERTYPE" compareValue="2">
 			<![CDATA[
-				,answeretc = #v_ANSWERETC#,
+				,answeretc = #v_ANSWERETC#
 			]]>
 		</isEqual>
 		
