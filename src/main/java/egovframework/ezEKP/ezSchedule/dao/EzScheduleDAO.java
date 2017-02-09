@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheCumulerVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheDeptVO;
-import egovframework.ezEKP.ezSchedule.vo.PubScheHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO;
@@ -47,8 +46,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PubScheHqVO> getPublicScheduleHq(Map<String, Object> map){
-		return (List<PubScheHqVO>) list("EzScheduleDAO.getPublicScheduleHq", map);
+	public List<ScheduleHqVO> getPublicScheduleHq(Map<String, Object> map){
+		return (List<ScheduleHqVO>) list("EzScheduleDAO.getPublicScheduleHq", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -57,13 +56,13 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PubScheDeptVO> getPublicScheduleDept(Map<String, Object> map){
-		return (List<PubScheDeptVO>) list("EzScheduleDAO.getPublicScheduleDept", map);
+	public List<ScheduleDeptVO> getPublicScheduleDept(Map<String, Object> map){
+		return (List<ScheduleDeptVO>) list("EzScheduleDAO.getPublicScheduleDept", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PubScheCumulerVO> getPublicScheduleCumuler(Map<String, Object> map){
-		return (List<PubScheCumulerVO>) list("EzScheduleDAO.getPublicScheduleCumuler", map);
+	public List<ScheduleCumulerVO> getPublicScheduleCumuler(Map<String, Object> map){
+		return (List<ScheduleCumulerVO>) list("EzScheduleDAO.getPublicScheduleCumuler", map);
 	}
 
 	public int getNewScheduleId(Map<String, Object> map) {
@@ -72,13 +71,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 
 	public int getReceiveCount(Map<String, Object> map) {
-		select("EzScheduleDAO.getReceiveCount", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzScheduleDAO.getReceiveCount", map);		
 	}
 
 	public int getInviteScheduleGroupCnt(Map<String, Object> map) {
-		select("EzScheduleDAO.getInviteScheduleGroupCnt", map);
-		return (int) map.get("v_pCount");
+		return (int) select("EzScheduleDAO.getInviteScheduleGroupCnt", map);		
 	}
 
 	public String getConfigInfo(Map<String, Object> map) {
@@ -169,6 +166,22 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ScheduleSecretaryVO> getSecretaryList(Map<String, Object> map) throws Exception {
 		return (List<ScheduleSecretaryVO>) list("EzScheduleDAO.getSecretaryList", map);
+	}
+
+	public void deleteScheduleConfig(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleConfig", map);		
+	}
+
+	public void deleteSecretary(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteSecretary", map);
+	}
+
+	public void insertScheduleConfig(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleConfig", map);		
+	}
+
+	public void insertSecretary(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertSecretary", map);		
 	}
 
 }

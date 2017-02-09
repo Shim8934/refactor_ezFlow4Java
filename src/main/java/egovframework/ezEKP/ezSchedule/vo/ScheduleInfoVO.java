@@ -58,6 +58,8 @@ public class ScheduleInfoVO {
 	private String contentPath;
 
 	private String groupName;
+	
+	private int repeatCount;
 
 	/**
 	 * @return the scheduleId
@@ -465,4 +467,12 @@ public class ScheduleInfoVO {
 		this.groupName = groupName;
 	}
 
+	public int getRepeatCount() {
+		return repeatCount;
+	}
+
+	public void setRepeatCount(int repeatCount) {
+		this.repeatCount = repeatCount;
+	}
+	
 }
