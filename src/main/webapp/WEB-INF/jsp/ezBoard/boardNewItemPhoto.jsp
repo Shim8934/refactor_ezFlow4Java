@@ -393,6 +393,11 @@
 	                }
 	                catch (e) { }
 	
+	                try {
+						window.opener.leftCountRf();
+					} catch (e) {
+					}
+					
 					window.close();
 	            } else {
 	                if (loadXMLString(xmlhttp.responseText).text == "INACCESSIBLE")

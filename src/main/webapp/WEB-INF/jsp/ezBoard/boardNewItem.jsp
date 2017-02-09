@@ -821,6 +821,12 @@
 		
 		                }
 		            }
+
+		            try {
+						window.opener.leftCountRf();
+					} catch (e) {
+					}
+
 		            window.close();
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")

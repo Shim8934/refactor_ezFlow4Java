@@ -228,7 +228,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	pMode = 1;
         }
         //Library 연결 부분 Method화
-        String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang), userInfo.getTenantId());
+        String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang, userInfo.getTenantId()), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
 
@@ -371,7 +371,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	   String lang = userInfo.getLang();
        String pRootTreeID = req.getParameter("rootTreeID");
        String pCountFlag = req.getParameter("countFlag");
-       String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang), userInfo.getTenantId());
+       String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang, userInfo.getTenantId()), userInfo.getTenantId());
 
        if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
     	   Document doc = commonUtil.convertStringToDocument(resultXML);
@@ -791,7 +791,7 @@ public class EzBoardController extends EgovFileMngUtil{
     public String getApprboardList(BoardVO boardVO, LoginVO userInfo, String mode, String type) throws Exception{
     	String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(boardVO.getLang());
+        String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
 
@@ -1041,7 +1041,7 @@ public class EzBoardController extends EgovFileMngUtil{
     public String getMyboardList(BoardVO boardVO, LoginVO userInfo, String mode) throws Exception{
     	String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(boardVO.getLang());
+        String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
 
@@ -1286,7 +1286,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getQnAListItem(BoardVO boardVO, LoginVO userInfo, String type, String adminType) throws Exception{
     	String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(boardVO.getLang());
+        String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
 
@@ -1411,7 +1411,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
     					resultXML.append("<TITLE>"+ commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString()) +"</TITLE>");
     					
-    					if (commonUtil.getPrimaryData(boardVO.getLang()).equals("1")) {
+    					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
     						resultXML.append("<WRITERNAME>"+noticeList.get(k).get("WRITERNAME")+"</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>"+noticeList.get(k).get("WRITERDEPTNAME")+"</WRITERDEPTNAME>");
     					} else {
@@ -1523,7 +1523,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getThumbList(BoardVO boardVO, LoginVO userInfo, String type) throws Exception{
     	String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
         
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(boardVO);
         
@@ -1570,7 +1570,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
         
-        boardListVO.setStartRow(boardConfigVO.getListCount() * (boardVO.getPageNum()-1) + 1);
+        boardListVO.setStartRow(boardConfigVO.getListCount() * (boardVO.getPageNum() - 1) + 1);
         boardListVO.setEndRow(boardConfigVO.getListCount() * boardVO.getPageNum());
         
         if (boardVO.getTitle() == null) {
@@ -1727,7 +1727,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getSearchMyBoardListItemXML(LoginVO userInfo, BoardVO boardVO, String mode) throws Exception{
 		String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
         boardVO.setLang(userInfo.getLang());
         boardVO.setTenantID(userInfo.getTenantId());
 
@@ -1872,7 +1872,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getSearchThumbListXML(LoginVO userInfo, BoardVO boardVO) throws Exception{
 		String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
         boardVO.setLang(userInfo.getLang());
         boardVO.setTenantID(userInfo.getTenantId());
 
@@ -2012,7 +2012,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getSearchBoardListItemXML(LoginVO userInfo, BoardVO boardVO) throws Exception{
 		String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(userInfo.getLang());
+        String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
         boardVO.setLang(userInfo.getLang());
         boardVO.setTenantID(userInfo.getTenantId());
 
@@ -2147,7 +2147,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getNewItemList(BoardVO boardVO, LoginVO userInfo) throws Exception{
         String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(boardVO.getLang());
+        String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
         
         BoardListVO boardListVO = new BoardListVO();
         
@@ -2273,7 +2273,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getBoardListItem(BoardVO boardVO, LoginVO userInfo, String type) throws Exception{
         String orderOption1 = "";
         String orderOption2 = "";
-        String strMultiData = commonUtil.getMultiData(boardVO.getLang());
+        String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
 
@@ -2404,7 +2404,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString())  + "</TITLE>");
     					
-    					if (commonUtil.getPrimaryData(boardVO.getLang()).equals("1")) {
+    					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
     						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
     					} else {
@@ -2563,7 +2563,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	pMode = 1;
 	    }
 	
-	    String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+	    String strXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 
 	    Document doc = commonUtil.convertStringToDocument(strXML);
 	    NodeList nList = doc.getElementsByTagName("NODE");
@@ -2739,7 +2739,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	boardAttr = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
         	boardAttrCount = boardAttr.size();
         	
-            if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
+            if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
             	extenLang = "2";
             }
         }
@@ -2921,7 +2921,7 @@ public class EzBoardController extends EgovFileMngUtil{
         List<BoardAttributeVO> boardAttributeListVO = new ArrayList<BoardAttributeVO>();
         if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
         	boardAttributeListVO = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
-        	if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
+        	if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
         		extenLang = "2";
         	}
         }
@@ -2979,7 +2979,7 @@ public class EzBoardController extends EgovFileMngUtil{
     			}
         	}
         	if (boardInfo.getGuBun().equals("2")) {
-        		if (commonUtil.getMultiData(userInfo.getLang()).equals("")) {
+        		if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
         			strWriterFakeName = boardListVO.getWriterName();
         			boardListVO.setWriterName("");
         		} else {
@@ -4472,7 +4472,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
 			List<BoardAttributeVO> attributeList = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
 			
-			if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
+			if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 				extenLang = "2";
 			}
 			model.addAttribute("attributeList", attributeList);
@@ -4523,7 +4523,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		
-		List<BoardReadVO> boardReadList = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+		List<BoardReadVO> boardReadList = ezBoardService.getReaderList(boardID, itemID, userInfo.getId(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		model.addAttribute("boardReadList", boardReadList);
 		model.addAttribute("offset", userInfo.getOffset());
@@ -4957,7 +4957,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!commonUtil.getPrimaryData(userInfo.getLang()).equals("1")) {
+		if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
 			boardInfo.setBoardName(boardInfo.getBoardName2());
 		}
 		
@@ -5689,14 +5689,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		int startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
         int endRow = page * boardInfo.getSs_board_maxRows();
         
-        List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+        List<BoardListVO> reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
         totalCount = ezBoardService.getReservedItemListCount(userInfo.getId(), userInfo.getTenantId());
         
         if (reservedList == null && page > 1) {
         	page -= 1;
         	startRow = (page - 1) * boardInfo.getSs_board_maxRows() + 1;
         	endRow = page * boardInfo.getSs_board_maxRows();
-        	reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+        	reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
         }
         
         if (totalCount > 0) {
@@ -5808,9 +5808,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String retXML = "";
 		
 		if (!mode.equals("temp")) {
-			retXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+			retXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
 		} else {
-			retXML = ezBoardService.getItemTempXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+			retXML = ezBoardService.getItemTempXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
 		}
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
@@ -5996,7 +5996,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String userName = "";
 		
-		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang());
+		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, userInfo.getTenantId());
         StringBuffer sb = new StringBuffer();
@@ -6168,7 +6168,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			pMode = 1;
 		}
 		
-		String retXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getTenantId());
+		String retXML = ezBoardService.getBoardTree(pRootBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
@@ -6193,7 +6193,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 
-		String result = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+		String result = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
 
 		logger.debug("getItemInfo ended");
 		
@@ -6321,7 +6321,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			return ;
 		}
 		
-		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
@@ -6371,7 +6371,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang()), userInfo.getOffset(), userInfo.getTenantId());
+		String strXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String gubun = doc.getElementsByTagName("GUBUN").item(0).getTextContent();

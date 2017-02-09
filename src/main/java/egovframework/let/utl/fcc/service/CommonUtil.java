@@ -489,16 +489,16 @@ public class CommonUtil {
         }        
     }
 	
-	public String getMultiData(String lang){
-		if (!lang.equals(config.getProperty("config.primary"))) {
+	public String getMultiData(String lang, int tenantID) throws Exception{
+		if (!lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
 			return "2";
 		} else {
 			return "";
 		}
 	}
 	
-	public String getPrimaryData(String lang){
-		if (lang.equals(config.getProperty("config.primary"))) {
+	public String getPrimaryData(String lang, int tenantID) throws Exception {
+		if (lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
 			return "1";
 		} else {
 			return "2";

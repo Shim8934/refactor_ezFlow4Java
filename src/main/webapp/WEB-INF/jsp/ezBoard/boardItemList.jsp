@@ -601,6 +601,21 @@
 		            getBoardList();
 		        }
 		    }
+		    
+		    function leftCountRf() {
+				var pDiv, pId, pValue;
+			    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
+
+			    for (var i = 0; i < h2.length; i++) {
+			        if (h2[i].className == "on") {
+			            pId = h2[i].getElementsByTagName("div")[0].id;
+			            pId = pId.replace("TreeCtr", "TreeCtrl");
+			            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
+			            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+			            break;
+			        }
+			    }
+		    }
 		
 		    function NewItem_onclick() {
 		        if (Write_FG != "true") {
@@ -611,7 +626,7 @@
 
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
 		    }
-		
+		    
 		    function ItemRead_onclick(obj) {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t194' />");
