@@ -110,7 +110,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
-		String multiData = commonUtil.getMultiData(userInfo.getLang());
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		String editor = ""; //config에는 CK등록되어있고 ""일때 폼프로세서적용 
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
@@ -269,7 +269,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String contID = request.getParameter("fContID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang()), companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getGroupDept(contID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), companyID, userInfo.getTenantId());
 		
 		return result;
 	}
