@@ -793,6 +793,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("myPortalPageID", myPortalPageID);
 		model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("editMode", editMode);
 		
 		return "/ezPortal/portalPortalPage";
 		
