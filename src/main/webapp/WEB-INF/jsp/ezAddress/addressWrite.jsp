@@ -205,24 +205,12 @@
 		        if (!check_length(document.getElementById("TextHomePage").value, 250, "<spring:message code='ezAddress.t293' />")) return;
 		        if (!check_length(document.getElementById("TextComAddr").value, 250, "<spring:message code='ezAddress.t295' />")) return;
 		        if (!check_length(document.getElementById("TextHomeAddr").value, 250, "<spring:message code='ezAddress.t296' />")) return;
-		        if ((document.getElementById("TextEmail").value != "" && addressid == "") ||
-				     (document.getElementById("TextEmail").value != "" && addressid != "" && document.getElementById("TextEmail").value != textEmail)) {
-		        	var AddressCnt = Get_SameAddressCnt();
-					
-		            if (parseInt(AddressCnt) > 0) {
-// 		                alert("<spring:message code='ezAddress.t225' />");
-// 		                return;
-		            }
-		        }
 				
+		        var pTextEmail = TrimText(document.getElementById("TextEmail").value);
 		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
-		        if (document.getElementById("TextEmail").value.trim() == "") {
-// 		        	alert("<spring:message code='ezAddress.t350' />");
-// 		            document.getElementById("TextEmail").focus();
-// 		            return;
-		        }
-		        else if (regex.test(document.getElementById("TextEmail").value) === false) {
+		        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 		            alert("<spring:message code='ezAddress.t1100' />");
+		            document.getElementById("TextEmail").value = pTextEmail;
 		            document.getElementById("TextEmail").focus();
 		            return;
 		        }
@@ -244,7 +232,7 @@
 		        createNodeAndInsertText(xmlDom, objNode, "SCOMPANYPHONE", document.getElementById("TextCompanyPhone").value);
 		        createNodeAndInsertText(xmlDom, objNode, "SMOBILE", document.getElementById("TextMobile").value);
 		        createNodeAndInsertText(xmlDom, objNode, "SFAX", document.getElementById("TextFax").value);
-		        createNodeAndInsertCDataText(xmlDom, objNode, "SEMAIL", document.getElementById("TextEmail").value);
+		        createNodeAndInsertCDataText(xmlDom, objNode, "SEMAIL", pTextEmail);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SHOMEPAGE", document.getElementById("TextHomePage").value);
 		        createNodeAndInsertText(xmlDom, objNode, "SCOMPANYZIP", document.getElementById("TextComZip").value);
 		        createNodeAndInsertCDataText(xmlDom, objNode, "SCOMPANYADDR", document.getElementById("TextComAddr").value);
@@ -267,10 +255,6 @@
 		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
 		            if (xmlHTTP.status != 200) {
 		            	alert("<spring:message code='ezAddress.t181' />");
-		            }
-		            else if (xmlHTTP.responseText == "PRE") {
-		            	alert("위치확인용");
-		            	alert("<spring:message code='ezAddress.t225' />");
 		            }
 		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
 		            	alert("<spring:message code='ezAddress.t1' />");
@@ -301,6 +285,8 @@
 		        }
 		        
 		    }
+		    
+		    /* 2017-02-10 이효민 : 메일 필드 중복체크 하지 않음.
 		    function Get_SameAddressCnt() {
 		        var xmlHTTP = createXMLHttpRequest();
 		        var xmlDom = createXmlDom();
@@ -311,18 +297,14 @@
 		        createNodeAndInsertText(xmlDom, objNode, "FOLDERTYPE", foldertype);
 		        createNodeAndInsertText(xmlDom, objNode, "FOLDERID", folderid);
 		        
-		        /* if(foldertype == "P")
-		            xmlHTTP.open("POST", "RemoteEWS/address_Get_SearchCnt.aspx", false);
-		        else
-		            xmlHTTP.open("POST", "Remote/address_Get_SearchCnt.aspx", false); */
 		        xmlHTTP.open("POST", "/ezAddress/addressGetSearchCnt.do", false);
-		            
 		        xmlHTTP.send(xmlDom);
 		        if (xmlHTTP.status != 200)
 		            alert("<spring:message code='ezAddress.t230' />");
 		        else
 		            return xmlHTTP.responseText;
-		    }
+		    } */
+		    
 		    function close_onclick() {
 		        if (checkblankbox()) {
 		            window.close();
