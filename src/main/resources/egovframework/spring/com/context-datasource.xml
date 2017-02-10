@@ -30,13 +30,13 @@
     <alias name="dataSource-${Globals.DbType}" alias="egov.dataSource" />
     
 	<!-- mysql -->
-    <!--<bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="${Globals.DriverClassName}"/>
         <property name="url" value="${Globals.Url}" />
         <property name="username" value="${Globals.UserName}"/>
         <property name="password" value="${Globals.Password}"/>
         <property name="validationQuery" value="select 1"></property>
-    </bean>-->
+    </bean>
     
     <!-- Oracle -->
     <bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">

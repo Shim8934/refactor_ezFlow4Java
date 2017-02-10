@@ -136,8 +136,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
@@ -517,8 +517,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String lang = userInfo.getPrimary();		
-		String primary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		
@@ -1316,8 +1317,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String topID = "";        
         String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
-		String primary = config.getProperty("config.lang_Primary" + user.getLang());
-		String secondary = config.getProperty("config.lang_Secondary" + user.getLang());
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + user.getLang(), user.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
