@@ -196,8 +196,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/addNoticeCK.do")
 	public String addNoticeCK(@CookieValue("loginCookie") String loginCookie, PersonalNoticeVO vo, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		String itemSeq = "";
 		
 		if (request.getParameter("itemSeq") != null) {
@@ -464,10 +466,11 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickPoll 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
-	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
@@ -676,8 +679,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	public String addPopupCK(@CookieValue("loginCookie") String loginCookie, PersonalPopupVO vo, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = "";
-		String langPrimary = config.getProperty("config.lang_Primary" + userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary" + userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		
 		String companyID = request.getParameter("companyID");
 		
 		String initDate = ezResourceService.getLocalTime(EgovDateUtil.getTodayTime());

@@ -224,150 +224,178 @@
 		
 	<select id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
 		<![CDATA[
-			SELECT * 
-   			FROM (	SELECT * 
-    					FROM (	SELECT *
-        							FROM (	SELECT *
-          										FROM (SELECT
-          													A.BRD_ID,
-                    										A.ITEM_NO,
-                    										A.USER_ID,
-										                    A.USER_NM$v_PLANG$ AS USER_NM,
-										                    A.USER_EMAIL,
-										                    A.TITLE,
-										                    A.CONTENT,
-										                    A.POLL_ENDDATE,
-										                    A.POST_DATE,
-										                    B.PUBLIC_RESULT_FLG,
-										                    B.PUBLIC_FLG,
-										                    B.MULTI_RESPONSE_FLG,
-										                    B.END_FLG,
-										                    B.RESPONSE_RANGE
-            											FROM
-              												TBL_POLL_ITEM A INNER JOIN TBL_POLL_PERMISSION B
-              											ON A.BRD_ID = B.BRD_ID
-              											AND A.BRD_ID = #v_PSTRBRDID#
-              											AND A.ITEM_NO = B.ITEM_NO
-              											AND A.TENANT_ID = B.TENANT_ID
-            											WHERE
-              												(	A.BRD_ID = #v_PSTRBRDID#
-              													AND A.COMPLETE_FLAG = 'Y'
-              													AND A.TENANT_ID = #tenantID#
-              													AND B.TENANT_ID = #tenantID#
-              													AND ( 	B.RESPONSE_RANGE = '0'
-                    														AND to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:ss') BETWEEN to_date(A.POLL_STARTDATE, 'yyyy-MM-DD HH24:MI:ss')
-                    														AND to_date(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss') +A.POST_TERM
-                    													)
-                    											 
-              										OR (A.USER_ID = #v_PUSERID#))
+			SELECT
+				* 
+   			FROM
+   				(SELECT
+   					* 
+    			FROM
+    				(SELECT
+    					*
+        			FROM
+        				(SELECT
+        					*
+						FROM
+							(SELECT
+								A.brd_id,
+								A.item_no,
+								A.user_id,
+								A.user_nm$v_PLANG$ AS USER_NM,
+								A.user_email,
+								A.title,
+								A.content,
+								A.poll_enddate,
+								A.post_date,
+								B.public_result_flg,
+								B.public_flg,
+								B.multi_response_flg,
+								B.end_flg,
+								B.response_range
+							FROM
+								TBL_POLL_ITEM A
+							INNER JOIN
+								TBL_POLL_PERMISSION B
+							ON
+								A.brd_id = B.brd_id
+							AND
+								A.brd_id = #v_PSTRBRDID#
+							AND
+								A.item_no = B.item_no
+							AND
+								A.tenant_id = B.tenant_id
+							WHERE
+								(A.brd_id = #v_PSTRBRDID#
+								AND
+									A.complete_flag = 'Y'
+								AND
+									A.tenant_id = #tenantID#
+								AND
+									B.tenant_id = #tenantID#
+								AND
+									(B.response_range = '0'
+								AND
+									TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:ss') BETWEEN TO_DATE(A.poll_startdate, 'yyyy-MM-DD HH24:MI:ss')
+								AND
+									TO_DATE(A.poll_enddate, 'yyyy-MM-DD HH24:MI:ss') + A.post_term)
+								OR
+									(A.user_id = #v_PUSERID#)
+								)
 		]]>
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.title LIKE '%' ||#v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
 		<isNotEqual property="rangeLength" compareValue="0">
 			<isNotEqual property="v_PRANGE" compareValue="2">
 				<![CDATA[
-					AND B.RESPONSE_RANGE = #v_PRANGE#
+					AND B.response_range = #v_PRANGE#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
 			UNION 
    				SELECT 
-      				A.BRD_ID, 
-      				A.ITEM_NO, 
-				    A.USER_ID, 
-				    A.USER_NM$v_PLANG$ AS USER_NM, 
-				    A.USER_EMAIL, 
-				    A.TITLE, 
-				    A.CONTENT, 
-				    A.POLL_ENDDATE, 
-				    A.POST_DATE, 
-				    B.PUBLIC_RESULT_FLG, 
-				    B.PUBLIC_FLG, 
-				    B.MULTI_RESPONSE_FLG, 
-				    B.END_FLG, 
-				    B.RESPONSE_RANGE 
+      				A.brd_id, 
+      				A.item_no, 
+				    A.user_id, 
+				    A.user_nm$v_PLANG$ AS USER_NM, 
+				    A.user_email, 
+				    A.title, 
+				    A.content, 
+				    A.poll_enddate, 
+				    A.post_date, 
+				    B.public_result_flg, 
+				    B.public_flg, 
+				    B.multi_response_flg, 
+				    B.end_flg, 
+				    B.response_range 
    				FROM 
       				TBL_POLL_ITEM A, 
       				TBL_POLL_PERMISSION B, 
       				TBL_POLL_RESPONSEPERSON D
-    			WHERE (  	A.BRD_ID = B.BRD_ID 
-      						AND
-      							A.ITEM_NO = B.ITEM_NO
-      						AND
-      							B.RESPONSE_RANGE = '1' 
-      						AND
-      							A.BRD_ID = D.BRD_ID 
-      						AND
-      							A.ITEM_NO = D.ITEM_NO
-      						AND
-      							#v_PUSERID# = D.USER_ID
-      						AND
-      							A.BRD_ID = #v_PSTRBRDID#
-      						AND
-      							A.COMPLETE_FLAG = 'Y'
-      						AND
-      							to_date(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM >= to_date(#nowDate#, 'yyyy-MM-DD HH24:MI:ss')
-      						AND
-      							A.TENANT_ID = B.TENANT_ID
-      						AND
-      							A.TENANT_ID = D.TENANT_ID
-      						AND
-      							A.TENANT_ID = #tenantID#			
-      					
+    			WHERE
+    				(A.brd_id = B.brd_id 
+      				AND
+      					A.item_no = B.item_no
+      				AND
+      					B.response_range = '1' 
+      				AND
+      					A.brd_id = D.brd_id 
+      				AND
+      					A.item_no = D.item_no
+      				AND
+      					D.user_id = #v_PUSERID#
+					AND
+						A.brd_id = #v_PSTRBRDID#
+					AND
+						A.complete_flag = 'Y'
+					AND
+						TO_DATE(A.poll_enddate, 'yyyy-MM-DD HH24:MI:ss')+A.post_term >= TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss')
+					AND
+						A.tenant_id = B.tenant_id
+					AND
+						A.tenant_id = D.tenant_id
+					AND
+						A.tenant_id = #tenantID#
 		]]>
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.TITLE LIKE '%' ||#v_PTITLE# || '%'
+				AND A.title LIKE '%' ||#v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
 		<isNotEqual property="rangeLength" compareValue="0">
 			<isNotEqual property="v_PRANGE" compareValue="2">
 				<![CDATA[
-					AND B.RESPONSE_RANGE = #v_PRANGE#
+					AND B.response_range = #v_PRANGE#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
-				)
-			) P ORDER BY P.POST_DATE ASC,P.ITEM_NO ASC) WHERE ROWNUM <= #v_PTOTALCNT#
-		) K ORDER BY K.ITEM_NO DESC, K.POST_DATE DESC) WHERE ROWNUM <= #v_PPAGESIZE#
+									)
+								) P
+							ORDER BY
+								P.post_date ASC,
+								P.item_no ASC)
+						WHERE
+							ROWNUM <= #v_PTOTALCNT#
+					) K
+				ORDER BY
+					K.item_no DESC,
+					K.post_date DESC)
+			WHERE
+				ROWNUM <= #v_PPAGESIZE#
 		]]>
-		
-		
 	</select>
 
 	<!-- <procedure id="EzQuestionDAO.getUserPollItem" parameterClass="Map" resultMap="qstUserPollItemVO">
@@ -1430,145 +1458,149 @@
 	<select id="EzQuestionDAO.getQstListCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(P.ITEM_NO) 
-			FROM (	SELECT  
-      						A.BRD_ID,  
-      						A.ITEM_NO, 
-      						A.USER_ID, 
-      						A.USER_NM$v_PLANG$ AS USER_NM, 
-      						A.USER_EMAIL, 
-      						A.TITLE, 
-      						A.CONTENT, 
-      						A.POLL_ENDDATE, 
-      						A.POST_DATE, 
-      						B.PUBLIC_RESULT_FLG, 
-      						B.PUBLIC_FLG, 
-      						B.MULTI_RESPONSE_FLG, 
-      						B.END_FLG, 
-      						B.RESPONSE_RANGE 
-  						FROM  
-      						TBL_POLL_ITEM A INNER JOIN TBL_POLL_PERMISSION B
-        				ON
-        					A.BRD_ID = B.BRD_ID 
-      					AND
-      						A.BRD_ID = #v_PSTRBRDID#
-      					AND
-      						A.ITEM_NO = B.ITEM_NO
-      					AND
-      						A.TENANT_ID = B.TENANT_ID	
-    					WHERE ( 	A.BRD_ID = #v_PSTRBRDID# 
-    								AND
-    									A.COMPLETE_FLAG = 'Y'	
-      								AND
-      									(	B.RESPONSE_RANGE = '0' AND TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss')
-           								BETWEEN
-           									TO_DATE(A.POLL_STARTDATE,'yyyy-MM-DD HH24:MI:ss')
-           								AND
-           									TO_DATE(A.POLL_ENDDATE ,'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM
-           								)
-           							AND
-           								A.TENANT_ID = #tenantID#
-           							AND
-           								B.TENANT_ID = #tenantID#		
-      								OR
-      									(A.USER_ID = #v_PUSERID#)
-      							) ]]>
+				COUNT(P.item_no) 
+			FROM 
+				(SELECT  
+					A.brd_id, 
+					A.item_no,
+					A.user_id,
+					A.user_nm$v_PLANG$ AS user_nm,
+					A.user_email,
+					A.title,
+					A.content,
+					A.poll_enddate,
+					A.post_date,
+					B.public_result_flg,
+					B.public_flg,
+					B.multi_response_flg,
+					B.end_flg,
+					B.response_range
+				FROM
+					TBL_POLL_ITEM A
+				INNER JOIN
+					TBL_POLL_PERMISSION B
+        		ON
+					A.brd_id = B.brd_id
+				AND
+					A.brd_id = #v_PSTRBRDID#
+				AND
+					A.item_no = B.item_no
+				AND
+					A.tenant_id = B.tenant_id
+				WHERE
+					(A.brd_id = #v_PSTRBRDID#
+					AND
+						A.complete_flag = 'Y'	
+					AND
+						(B.response_range = '0'
+						AND
+							TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss') BETWEEN TO_DATE(A.poll_startdate,'yyyy-MM-DD HH24:MI:ss') AND TO_DATE(A.poll_enddate ,'yyyy-MM-DD HH24:MI:ss') + A.post_term
+						)
+					AND
+						A.TENANT_ID = #tenantID#
+					AND
+						B.TENANT_ID = #tenantID#		
+					OR
+						A.USER_ID = #v_PUSERID#
+					)
+		]]>
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.TITLE LIKE '%' || #v_PTITLE# || '%'
+				AND A.title LIKE '%' || #v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
 		<isNotEqual property="rangeLength" compareValue="0">
 			<isNotEqual property="v_PRANGE" compareValue="2">
 				<![CDATA[
-					AND B.RESPONSE_RANGE = #v_PRANGE#
+					AND B.response_range = #v_PRANGE#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<![CDATA[
 			UNION 
    				SELECT 
-      				A.BRD_ID, 
-      				A.ITEM_NO, 
-				    A.USER_ID, 
-				    A.USER_NM$v_PLANG$ AS USER_NM, 
-				    A.USER_EMAIL, 
-				    A.TITLE, 
-				    A.CONTENT, 
-				    A.POLL_ENDDATE, 
-				    A.POST_DATE, 
-				    B.PUBLIC_RESULT_FLG, 
-				    B.PUBLIC_FLG, 
-				    B.MULTI_RESPONSE_FLG, 
-				    B.END_FLG, 
-				    B.RESPONSE_RANGE 
+      				A.brd_id, 
+      				A.item_no, 
+				    A.user_id, 
+				    A.user_nm$v_PLANG$ AS user_nm, 
+				    A.user_email, 
+				    A.title, 
+				    A.content, 
+				    A.poll_enddate, 
+				    A.post_date, 
+				    B.public_result_flg, 
+				    B.public_flg, 
+				    B.multi_response_flg, 
+				    B.end_flg, 
+				    B.response_range 
    				FROM 
       				TBL_POLL_ITEM A, 
       				TBL_POLL_PERMISSION B, 
       				TBL_POLL_RESPONSEPERSON D
-    			WHERE (  	A.BRD_ID = B.BRD_ID 
-      						AND
-      							A.ITEM_NO = B.ITEM_NO
-      						AND
-      							B.RESPONSE_RANGE = '1' 
-      						AND
-      							A.BRD_ID = D.BRD_ID 
-      						AND
-      							A.ITEM_NO = D.ITEM_NO
-      						AND
-      							#v_PUSERID# = D.USER_ID
-      						AND
-      							A.BRD_ID = #v_PSTRBRDID#
-      						AND
-      							A.COMPLETE_FLAG = 'Y'
-      						AND
-      							TO_DATE(A.POLL_ENDDATE, 'yyyy-MM-DD HH24:MI:ss')+A.POST_TERM >= to_date(#nowDate#, 'YYYY-MM-dd HH24:MI:ss')
-      						AND
-      							A.TENANT_ID = B.TENANT_ID
-      						AND
-      							A.TENANT_ID = D.TENANT_ID
-      						AND
-      							A.TENANT_ID = #tenantID#			
-      					)
+    			WHERE
+    				(A.brd_id = B.brd_id 
+					AND
+						A.item_no = B.item_no
+					AND
+						B.response_range = '1' 
+					AND
+						A.brd_id = D.brd_id 
+					AND
+						A.item_no = D.item_no
+					AND
+						D.user_id = #v_PUSERID#
+					AND
+						A.brd_id = #v_PSTRBRDID#
+					AND
+						A.complete_flag = 'Y'
+					AND
+						TO_DATE(A.poll_enddate, 'yyyy-MM-DD HH24:MI:ss')+A.post_term >= TO_DATE(#nowDate#, 'YYYY-MM-dd HH24:MI:ss')
+					AND
+						A.tenant_id = B.tenant_id
+					AND
+						A.tenant_id = D.tenant_id
+					AND
+						A.tenant_id = #tenantID#			
+      				)
 		]]>
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.TITLE LIKE '%' || #v_PTITLE# || '%'
+				AND A.title LIKE '%' || #v_PTITLE# || '%'
 			]]>
 		</isNotEmpty>
 		
 		<isNotEqual property="rangeLength" compareValue="0">
 			<isNotEqual property="v_PRANGE" compareValue="2">
 				<![CDATA[
-					AND B.RESPONSE_RANGE = #v_PRANGE#
+					AND B.response_range = #v_PRANGE#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_STARTDATE, 'yyyy-MM-dd HH24:MI:ss') <= to_date('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND to_date(A.POLL_ENDDATE, 'yyyy-MM-dd HH24:MI:ss') >= to_date('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -1607,15 +1639,15 @@
 	<select id="EzQuestionDAO.getQstResponse" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				RESPONSENO
+				NVL(COUNT(responseno), 0)
         	FROM
         		TBL_POLL_RESPONSE 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
 			AND
-				TENANT_ID = #tenantID#	
+				tenant_id = #tenantID#	
 		]]>
 	</select>
 	
@@ -2827,7 +2859,7 @@
 		]]>
 	</update>
 	
-	 <update id="EzQuestionDAO.updateTBL_POLLItem" parameterClass="Map">
+	 <update id="EzQuestionDAO.updateTblPollItem" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
 				TBL_POLL_ITEM
@@ -2842,7 +2874,7 @@
 		]]>
 	</update>
 	
-	 <update id="EzQuestionDAO.updateTBL_POLLPermission" parameterClass="Map">
+	 <update id="EzQuestionDAO.updateTblPollPermission" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
 				TBL_POLL_PERMISSION

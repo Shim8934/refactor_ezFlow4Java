@@ -427,6 +427,7 @@ alert("savesub Start");
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
 							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 							strXML += "<PORTLETDISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</PORTLETDISPLAYNAME>";
+alert("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML));
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
@@ -553,14 +554,14 @@ alert("prevpageid="+prevpageid);
 			                        pObject.getElementsByTagName("td").item(i).style.cursor = "pointer";
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			                        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			                        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 								}
 								// 상속페이지 - 옵션포틀릿
 								else
 			                    {
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			                        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			                        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 								}
 							}
 						}
@@ -570,8 +571,8 @@ alert("prevpageid="+prevpageid);
 			    {
 			        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			        //pObject.getElementsByTagName("td").item(i).onclick = function() {selectcell(evnet);};
-			        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			        pObject.getElementsByTagName("td").item(i).onclick = function() {selectcell(evnet);};
+			        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 				}
 			}
 			
@@ -618,13 +619,11 @@ alert("prevpageid="+prevpageid);
 		}
 
 		// 신규생성 포틀릿 알림메시지
-		function dblclicknotice()
-		{
+		function dblclicknotice() {
 			alert("<spring:message code='ezPortal.t291' />");
 		}
 
-		    // 영역 선택시 처리selectcell
-
+		// 영역 선택시 처리selectcell
 		function selectcell(e) {
 			    var Event = e ? e : window.event;
 			    var Element = Event.target ? Event.target : Event.srcElement;
@@ -648,22 +647,18 @@ alert("prevpageid="+prevpageid);
 				var maxHeight = 0;
 				var compareHeight = 0;
 				
-				if (tblObject.getAttribute("height") != "")
+				if (tblObject.getAttribute("height") != "") {
 				    maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
+				}
 				
 				// 해당 table의 height를 구한다.
-				for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++)
-				{
-					try{
-					    compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
-						
-						if (compareHeight != "")
-						{
-							if (parseInt(compareHeight, 10) > maxHeight)
-								maxHeight = parseInt(compareHeight, 10);
+				for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
+					compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
+					if (compareHeight != "") {
+						if (parseInt(compareHeight, 10) > maxHeight) {
+							maxHeight = parseInt(compareHeight, 10);
 						}
-					
-					} catch (e) {}
+					}
 				}
 				
 				document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
@@ -674,20 +669,18 @@ alert("prevpageid="+prevpageid);
 				document.getElementById("txtHeight").disabled = false;
 				
 				// 메인테이블이 수정되는 경우를 고려
-				if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%")
-				{
+				if (document.getElementById("txtWidth").value == "" || document.getElementById("txtWidth").value == "100%") {
 					document.getElementById("txtWidth").value = "*";
 					
 					// 메인테이블을 제외하고 테이블 너비 조정불가
-					if (tblObject.id != "main_table")
+					if (tblObject.id != "main_table") {
 						document.getElementById("txtWidth").disabled = true;
+					}
 				}
 				
 				// 상속받은 페이지인 경우 테이블 사이즈 조정 불가
-				if (parentpageid.toLowerCase() != "top")
-				{
-					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid)
-					{
+				if (parentpageid.toLowerCase() != "top") {
+					if (typeof(tblObject.parentElement.ownerpageuid) == "undefined" || tblObject.parentElement.ownerpageuid != pageid) {
 						document.getElementById("txtWidth").disabled = true;
 						document.getElementById("txtHeight").disabled = true;
 						bCanModify = false;
@@ -696,7 +689,6 @@ alert("prevpageid="+prevpageid);
 				
 				// 선택한 개체의 종류
 				selObjClass = "TABLE";
-			
 		}
 
 		function selectcellTitle(e) {
@@ -710,6 +702,7 @@ alert("prevpageid="+prevpageid);
 			//event.cancalBubble = true;
 			//event.returnValue = false;
 		}
+		
 		function selectcell2(obj) {
 		        if (obj.getAttribute("id") == "") return;
 		        if (obj.getAttribute("id").indexOf("sub") > -1) return;
@@ -735,18 +728,14 @@ alert("prevpageid="+prevpageid);
 		            maxHeight = parseInt(tblObject.getAttribute("height").replace("px", ""), 10);
 				
 		        // 해당 table의 height를 구한다.
-		        for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++)
-		        {
-		            try{
+		        for (var i=0; i<tblObject.getElementsByTagName("tr").length; i++) {
 		                compareHeight = tblObject.getElementsByTagName("tr").item(i).style.height.replace("px", "");
 						
-		                if (compareHeight != "")
-		                {
-		                    if (parseInt(compareHeight, 10) > maxHeight)
+		                if (compareHeight != "") {
+		                    if (parseInt(compareHeight, 10) > maxHeight) {
 		                        maxHeight = parseInt(compareHeight, 10);
+		                    }
 		                }
-					
-		            } catch (e) {}
 		        }
 				
 		        document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
@@ -787,19 +776,16 @@ alert("prevpageid="+prevpageid);
 		    var Event = e ? e : window.event;
 		    var eventItem = Event.target ? Event.target : Event.srcElement;
 
-			//var eventItem = event.srcElement;
+			var eventItem = event.srcElement;
 
-			if (eventItem.getAttribute("id") == "") 
-			{
+			if (eventItem.getAttribute("id") == "") {
 				eventItem = eventItem.parentElement;
 			}
 			
 			selectedSubCell = eventItem.getAttribute("id");
-			try
-			{
-				if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
-			} catch(e) {}
-
+alert("selectedSubCell="+selectedSubCell);
+			if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
+			
 			if (selectedSubCell.substr(0,2).toLowerCase() != "su") {
 				selectedSubCell = "";
 				return;
