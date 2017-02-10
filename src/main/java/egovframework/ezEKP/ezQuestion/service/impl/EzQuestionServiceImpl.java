@@ -258,7 +258,6 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pQuesContent", qstCompleteVO.getQuesContent());
 		map.put("v_pAnswerType", qstCompleteVO.getAnswerType());
 		map.put("v_pmultiselect", qstCompleteVO.getMultiSelect());
-		map.put("v_PQUES_SN", "");
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.insertQuestion(map);
 	}

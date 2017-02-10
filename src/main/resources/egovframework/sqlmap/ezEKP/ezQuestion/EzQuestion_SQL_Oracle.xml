@@ -3,101 +3,101 @@
 
 <sqlMap namespace="ezQuestion">
 
-	<typeAlias  alias="QstListVO" 					type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
+	<typeAlias  alias="QstListVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstListVO"/>
 	<typeAlias  alias="QstUserPollItemVO" 		type="egovframework.ezEKP.ezQuestion.vo.QstUserPollItemVO"/>
 	<typeAlias  alias="QstUserPermissionVO" 	type="egovframework.ezEKP.ezQuestion.vo.QstUserPermissionVO"/>
-	<typeAlias	alias="QstAttachVO" 				type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
-	<typeAlias	alias="QstVO" 						type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
+	<typeAlias	alias="QstAttachVO" 			type="egovframework.ezEKP.ezQuestion.vo.QstAttachVO"/>
+	<typeAlias	alias="QstVO" 					type="egovframework.ezEKP.ezQuestion.vo.QstVO"/>
 	<typeAlias	alias="QstAnswerVO"				type="egovframework.ezEKP.ezQuestion.vo.QstAnswerVO"/>
-	<typeAlias	alias="QstResponsePersonVO"	type="egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO"/>
+	<typeAlias	alias="QstResponsePersonVO"		type="egovframework.ezEKP.ezQuestion.vo.QstResponsePersonVO"/>
 	<typeAlias	alias="QstReuseQuestionVO"		type="egovframework.ezEKP.ezQuestion.vo.QstReuseQuestionVO"/>
-	<typeAlias  alias="QstResponseVO"				type="egovframework.ezEKP.ezQuestion.vo.QstResponseVO"/>
+	<typeAlias  alias="QstResponseVO"			type="egovframework.ezEKP.ezQuestion.vo.QstResponseVO"/>
 	<typeAlias  alias="QstTempSaveVO"			type="egovframework.ezEKP.ezQuestion.vo.QstTempSaveVO"/>
 	<typeAlias  alias="QstDeleteAttachUrlVO"	type="egovframework.ezEKP.ezQuestion.vo.QstDeleteAttachUrlVO"/>
 	
 	<resultMap class="QstListVO" id="qstListVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
-		<result property="userID"					column="USER_ID"						columnIndex="3"/>
-		<result property="userNm"				column="USER_NM"					columnIndex="4"/>
-		<result property="userEmail"				column="USER_EMAIL"					columnIndex="5"/>
-		<result property="title"						column="TITLE"							columnIndex="6"/>
-		<result property="pollEndDate"			column="POLL_ENDDATE"			columnIndex="7"/>
-		<result property="postDate"				column="POST_DATE"					columnIndex="8"/>
-		<result property="publicResultFlg"		column="PUBLIC_RESULT_FLG"		columnIndex="9"/>
-		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="10"/>
-		<result property="multiResponseFlg"	column="MULTI_RESPONSE_FLG"	columnIndex="11"/>
-		<result property="endFlg"					column="END_FLG"						columnIndex="12"/>
-		<result property="responseRange"		column="RESPONSE_RANGE"		columnIndex="13"/>
+		<result property="brdID"				column="BRD_ID"				/>
+		<result property="itemNo"				column="ITEM_NO"			/>
+		<result property="userID"				column="USER_ID"			/>
+		<result property="userNm"				column="USER_NM"			/>
+		<result property="userEmail"			column="USER_EMAIL"			/>
+		<result property="title"				column="TITLE"				/>
+		<result property="pollEndDate"			column="POLL_ENDDATE"		/>
+		<result property="postDate"				column="POST_DATE"			/>
+		<result property="publicResultFlg"		column="PUBLIC_RESULT_FLG"	/>
+		<result property="publicFlg"			column="PUBLIC_FLG"			/>
+		<result property="multiResponseFlg"		column="MULTI_RESPONSE_FLG"	/>
+		<result property="endFlg"				column="END_FLG"			/>
+		<result property="responseRange"		column="RESPONSE_RANGE"		/>
 	</resultMap>
 	
 	<resultMap class="QstUserPollItemVO" id="qstUserPollItemVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
-		<result property="userID"					column="USER_ID"						columnIndex="3"/>
-		<result property="userNm"				column="USER_NM"					columnIndex="4"/>
-		<result property="userNm2"				column="USER_NM2"					columnIndex="5"/>
-		<result property="userEmail"				column="USER_EMAIL"					columnIndex="6"/>
-		<result property="userDeptID"			column="USER_DEPTID"				columnIndex="7"/>
-		<result property="userDeptNm"			column="USER_DEPTNM"				columnIndex="8"/>
-		<result property="title"						column="TITLE"							columnIndex="9"/>
-		<result property="content"				column="CONTENT"					columnIndex="10"/>
-		<result property="postDate"				column="POST_DATE"					columnIndex="11"/>
-		<result property="updateDate"			column="UPDATE_DATE"				columnIndex="12"/>
-		<result property="endDate"				column="END_DATE"					columnIndex="13"/>
-		<result property="postTerm"				column="POST_TERM"					columnIndex="14"	nullValue="0"/>
-		<result property="itemRef"				column="ITEM_REF"						columnIndex="15"/>
-		<result property="itemLevel"				column="ITEM_LEVEL"					columnIndex="16"/>
-		<result property="itemStep"				column="ITEM_STEP"					columnIndex="17"/>
-		<result property="itemImp"				column="ITEM_IMP"						columnIndex="18"/>
-		<result property="HasAttach"				column="HASATTACH"				columnIndex="19"/>
-		<result property="SrCuserID"				column="SRCUSER_ID"					columnIndex="20"/>
-		<result property="SrCuserNm"			column="SRCUSER_NM"				columnIndex="21"/>
-		<result property="SrCuserEmail"			column="SRCUSER_EMAIL"			columnIndex="22"/>
-		<result property="itemGb"					column="ITEM_GB"						columnIndex="23"/>
-		<result property="readCnt"				column="READ_CNT"					columnIndex="24"/>
-		<result property="pollStartDate"			column="POLL_STARTDATE"			columnIndex="25"/>
-		<result property="pollEndDate"			column="POLL_ENDDATE"			columnIndex="26"/>
-		<result property="responseCnt"			column="RES_CNT"						columnIndex="27"/>
-		<result property="completeFlag"		column="COMPLETE_FLAG"			columnIndex="28"/>
-        <result property="tenantID"               column="TENANT_ID"                  columnIndex="29"/>
+		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
+		<result property="itemNo"				column="ITEM_NO"			columnIndex="2"/>
+		<result property="userID"				column="USER_ID"			columnIndex="3"/>
+		<result property="userNm"				column="USER_NM"			columnIndex="4"/>
+		<result property="userNm2"				column="USER_NM2"			columnIndex="5"/>
+		<result property="userEmail"			column="USER_EMAIL"			columnIndex="6"/>
+		<result property="userDeptID"			column="USER_DEPTID"		columnIndex="7"/>
+		<result property="userDeptNm"			column="USER_DEPTNM"		columnIndex="8"/>
+		<result property="title"				column="TITLE"				columnIndex="9"/>
+		<result property="content"				column="CONTENT"			columnIndex="10"/>
+		<result property="postDate"				column="POST_DATE"			columnIndex="11"/>
+		<result property="updateDate"			column="UPDATE_DATE"		columnIndex="12"/>
+		<result property="endDate"				column="END_DATE"			columnIndex="13"/>
+		<result property="postTerm"				column="POST_TERM"			columnIndex="14"	nullValue="0"/>
+		<result property="itemRef"				column="ITEM_REF"			columnIndex="15"/>
+		<result property="itemLevel"			column="ITEM_LEVEL"			columnIndex="16"/>
+		<result property="itemStep"				column="ITEM_STEP"			columnIndex="17"/>
+		<result property="itemImp"				column="ITEM_IMP"			columnIndex="18"/>
+		<result property="HasAttach"			column="HASATTACH"			columnIndex="19"/>
+		<result property="SrCuserID"			column="SRCUSER_ID"			columnIndex="20"/>
+		<result property="SrCuserNm"			column="SRCUSER_NM"			columnIndex="21"/>
+		<result property="SrCuserEmail"			column="SRCUSER_EMAIL"		columnIndex="22"/>
+		<result property="itemGb"				column="ITEM_GB"			columnIndex="23"/>
+		<result property="readCnt"				column="READ_CNT"			columnIndex="24"/>
+		<result property="pollStartDate"		column="POLL_STARTDATE"		columnIndex="25"/>
+		<result property="pollEndDate"			column="POLL_ENDDATE"		columnIndex="26"/>
+		<result property="responseCnt"			column="RES_CNT"			columnIndex="27"/>
+		<result property="completeFlag"			column="COMPLETE_FLAG"		columnIndex="28"/>
+        <result property="tenantID"             column="TENANT_ID"          columnIndex="29"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPermissionVO" id="qstUserPermissionVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
-		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="3"/>
-		<result property="publicResultFlg"		column="PUBLIC_RESULT_FLG"		columnIndex="4"/>
-		<result property="multiResponseFlg"	column="MULTI_RESPONSE_FLG"	columnIndex="5"/>
-		<result property="endFlg"					column="END_FLG"						columnIndex="6"/>
+		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
+		<result property="itemNo"				column="ITEM_NO"			columnIndex="2"/>
+		<result property="publicFlg"			column="PUBLIC_FLG"			columnIndex="3"/>
+		<result property="publicResultFlg"		column="PUBLIC_RESULT_FLG"	columnIndex="4"/>
+		<result property="multiResponseFlg"		column="MULTI_RESPONSE_FLG"	columnIndex="5"/>
+		<result property="endFlg"				column="END_FLG"			columnIndex="6"/>
 		<result property="responseRange"		column="RESPONSE_RANGE"		columnIndex="7"/>
 	</resultMap>
 	
 	<resultMap class="QstUserPermissionVO" id="qstResponsePermissionVO">
-		<result property="publicFlg"				column="PUBLIC_FLG"					columnIndex="1"/>
+		<result property="publicFlg"			column="PUBLIC_FLG"			columnIndex="1"/>
 		<result property="responseRange"		column="RESPONSE_RANGE"		columnIndex="2"/>
 	</resultMap>
 	
 	<resultMap class="QstAttachVO" id="qstAttachVO">
-		<result property="attachNo"				column="ATTACHNO"					columnIndex="1"/>
-		<result property="attachName"			column="ATTACHNAME"				columnIndex="2"/>
-		<result property="attachUrl"				column="ATTACHURL"					columnIndex="3"/>
-		<result property="attachType"			column="ATTACHTYPE"				columnIndex="4"/>
+		<result property="attachNo"				column="ATTACHNO"			columnIndex="1"/>
+		<result property="attachName"			column="ATTACHNAME"			columnIndex="2"/>
+		<result property="attachUrl"			column="ATTACHURL"			columnIndex="3"/>
+		<result property="attachType"			column="ATTACHTYPE"			columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="QstVO" id="qstVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
-		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
-		<result property="questionNo"			column="QUESTION_NO"				columnIndex="3"/>
-		<result property="quesContent"			column="QUESCONTENT"				columnIndex="4"/>
-		<result property="answerType"			column="ANSWERTYPE"				columnIndex="5"/>
-		<result property="answerViewType"	column="ANSWERVIEWTYPE"		columnIndex="6" 	nullValue="0"/>
-		<result property="multiSelect"			column="MULTISELECT"				columnIndex="7"/>
-		<result property="quesSn"					column="QUES_SN"						columnIndex="8"/>
+		<result property="brdID"				column="BRD_ID"				columnIndex="1"/>
+		<result property="itemNo"				column="ITEM_NO"			columnIndex="2"/>
+		<result property="questionNo"			column="QUESTION_NO"		columnIndex="3"/>
+		<result property="quesContent"			column="QUESCONTENT"		columnIndex="4"/>
+		<result property="answerType"			column="ANSWERTYPE"			columnIndex="5"/>
+		<result property="answerViewType"		column="ANSWERVIEWTYPE"		columnIndex="6" 	nullValue="0"/>
+		<result property="multiSelect"			column="MULTISELECT"		columnIndex="7"/>
+		<result property="quesSn"				column="QUES_SN"			columnIndex="8"/>
 	</resultMap>
 	
 	<resultMap class="QstAnswerVO" id="qstAnswerVO">
-		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
+		<result property="brdID"				column="BRD_ID"						columnIndex="1"/>
 		<result property="itemNo"				column="ITEM_NO"						columnIndex="2"/>
 		<result property="questionNo"			column="QUESTION_NO"				columnIndex="3"/>
 		<result property="answerNo"				column="ANSWERNO"					columnIndex="4"/>
@@ -507,15 +507,15 @@
         	FROM
         		TBL_POLL_QUESTION 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
 			AND
-				QUES_SN IS NOT NULL
+				ques_sn IS NOT NULL
 			AND
-				TENANT_ID = #tenantID#	
+				tenant_id = #tenantID#	
         	ORDER BY
-        		QUES_SN
+        		ques_sn
 		]]>
 	</select>
 	
@@ -1926,24 +1926,12 @@
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.insertQuestion" parameterClass="Map">
-		<selectKey keyProperty="v_PQUES_SN" resultClass="Integer">
-			<![CDATA[
-				SELECT
-					NVL(MAX(QUES_SN)  + 1, 1) 
-			    FROM
-			    	TBL_POLL_QUESTION 
-    			WHERE
-    				ITEM_NO = #v_PITEMNO#
-    			AND
-    				TENANT_ID = #tenantID#	
-			]]>
-		</selectKey>
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_QUESTION
         		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_PQUES_SN#, #tenantID# )
+        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID# )
 		]]>
 	</insert>
 	
