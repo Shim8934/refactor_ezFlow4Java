@@ -629,10 +629,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	    if (strProp != null) {
 	    	boardInfo.setExpireDays(commonUtil.getDateStringInUTC(strProp.getItemExpires(), userInfo.getOffset(), false));
-	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
+ 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
 		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
-		    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
 		    } else {
 		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
 		    }
@@ -3334,7 +3334,7 @@ public class EzBoardController extends EgovFileMngUtil{
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
-
+        
         int maxSize = 0;
         String pBoardID = "";
         String pMode = "";
@@ -4954,10 +4954,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String strNow = "";
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		
-		if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
-		}
 		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "main/warning"; 
