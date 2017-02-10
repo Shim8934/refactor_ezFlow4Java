@@ -3315,8 +3315,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
-        logger.debug("uploadSDate="+uploadSDate);
-        logger.debug("uploadEDate"+uploadEDate);
 		model.addAttribute("uploadSDate", uploadSDate);
 		model.addAttribute("uploadEDate", uploadEDate);
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
@@ -3739,7 +3737,6 @@ public class EzQuestionController extends EgovFileMngUtil {
         			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
         		/*}*/
         		
-
         		switch(answerType){
         		case 1:
         			if (multiSelect.equals("1")){
