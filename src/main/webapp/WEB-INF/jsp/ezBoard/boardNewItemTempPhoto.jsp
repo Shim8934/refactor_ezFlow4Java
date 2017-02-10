@@ -809,6 +809,12 @@
 	                    obj.parentNode.removeChild(obj);
 	                }
 	            }
+	            
+	            if (uniqueIDs == null || uniqueIDs == "") {
+	            	alert("<spring:message code='ezBoard.t601'/>");
+		    		return;	
+	            }
+	            
 	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID, false);
 	            xmlhttp.send(xmldom);
 	

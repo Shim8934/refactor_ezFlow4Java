@@ -536,7 +536,7 @@
            				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
            				document.write("</h2>\n");
            				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width:auto;overflow-x:auto;overflow-y:auto;padding-left:10px;padding-bottom:20px'></div>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; -ms-overflow-x: auto; -ms-overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
         			});

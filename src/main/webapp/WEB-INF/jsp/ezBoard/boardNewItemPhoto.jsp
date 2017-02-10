@@ -527,20 +527,29 @@
 	                    obj.parentNode.removeChild(obj);
 	                }
 	            }
+	            
+	            if (uniqueIDs == null || uniqueIDs == "") {
+	            	alert("<spring:message code='ezBoard.t601'/>");
+		    		return;	
+	            }
+	            
 	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
 	            xmlhttp.send(fd);
 	
 	            document.getElementById("checkmenu").checked = false;
-	
-	            
-	        } else
-	        {
+	        } else {
 	            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
 	                if (document.getElementsByName('checkmenuSub')[i].checked) {
 	                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
 	                    obj.parentNode.removeChild(obj);
 	                }
 	            }
+	            
+	            if (uniqueIDs == null || uniqueIDs == "") {
+	            	alert("<spring:message code='ezBoard.t601'/>");
+		    		return;	
+	            }
+	            
 	            document.getElementById("checkmenu").checked = false;
 	        }
 	

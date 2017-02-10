@@ -274,10 +274,10 @@
 	            var xmlpara = createXmlDom();
 	            var objNode;
 	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "PTREEID", "");
+	            createNodeAndInsertText(xmlpara, objNode, "PTREEID", SelectedBoardID);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "");
-	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
+	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", "DEL");
 	            createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
 	
@@ -285,7 +285,10 @@
 	            xmlhttp.send(xmlpara);
 	
 	            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-	                if (getNodeText(GetChildNodes(xmlhttp.responseXML)[0]) == "OK") {
+	            	if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "EXIST") {
+	                    alert("<spring:message code='ezBoard.hyj04'/>");
+	                }
+	                if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "OK") {
 	                    alert("<spring:message code='ezBoard.t268'/>");
 	                    makeTreeList();
 	                }

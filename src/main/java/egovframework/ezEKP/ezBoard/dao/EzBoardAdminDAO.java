@@ -293,4 +293,8 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (int) select("EzBoardAdminDAO.getBoardManage", map);
 	}
 
+	public String getMyBoardTreeUpper(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
+		return (String) select("EzBoardAdminDAO.getMyBoardTreeUpper", boardMyFavoriteVO);
+	}
+
 }
