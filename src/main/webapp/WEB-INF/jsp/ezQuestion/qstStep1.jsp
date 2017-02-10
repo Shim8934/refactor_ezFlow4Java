@@ -199,8 +199,8 @@
             }
         }
         if (trim_Cross(document.getElementById("txtExpiredate").value) == "") {
-            document.getElementById("hidExpiredate").value = '${brdPostterm}';
-            document.getElementById("txtExpiredate").value = '${brdPostterm}';
+            document.getElementById("hidExpiredate").value = '0';
+            document.getElementById("txtExpiredate").value = '0';
         } else {
             var rtnValue = IsNumeric(trim_Cross(document.getElementById("txtExpiredate").value));
             if (!rtnValue) {
