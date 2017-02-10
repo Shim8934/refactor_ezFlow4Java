@@ -2597,7 +2597,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		List<PortalGetPortletParametersVO> param = ezPortalAdminService.getMenuItemParameters(tempUID, userInfo.getTenantId());
-		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.subMenuItemEdit1();
+		List<PortalTBLBuiltInParametersVO> paramType = ezPortalAdminService.subMenuItemEdit1(userInfo.getTenantId());
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		
 		String paramHtml = "";
