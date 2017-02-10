@@ -1,7 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
-    "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 
-<sqlMapConfig>	
-	<sqlMap resource="egovframework/sqlmap/let/user/login/EgovLoginUsr_SQL_Mysql.xml"/>
+<sqlMapConfig>
+    <!-- 1.사용자 모듈관리 SQL쿼리 XML -->
+    
+    <!-- 로그인 -->
+    <sqlMap resource="egovframework/sqlmap/let/user/login/EgovLoginUsr_SQL_Mysql.xml"/>
+    <!-- 게시판 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoard_SQL_Mysql.xml"/>
+    <!-- 조직도 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrgan_SQL_Mysql.xml"/>
+    <!-- 설문조사 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezQuestion/EzQuestion_SQL_Mysql.xml"/>
+    <!-- 이메일 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezEmail/EzEmail_SQL_Mysql.xml"/>
+    <!-- 공통 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCommon/EzCommon_SQL_Mysql.xml"/>
+    <!-- 자원관리 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResource_SQL_Mysql.xml"/>
+    <!-- 주소록 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezAddress/EzAddress_SQL_Mysql.xml"/>
+    <!-- 커뮤니티 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunity_SQL_Mysql.xml"/>
+    <!-- 전자결재G -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalG_SQL_Mysql.xml"/>
+    <!-- 전자결재S -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezApproval/EzApproval_SQL_Mysql.xml"/>
+    <!-- 스케쥴 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzSchedule_SQL_Mysql.xml"/>
+    <!-- 포탈 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortal_SQL_Mysql.xml"/>
+    <!-- 퍼스널 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonal_SQL_Mysql.xml"/>
+    
+    <!-- 2.관리자 모듈관리 SQL쿼리 XML -->
+    
+    <!-- 게시판 관리자 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezBoard/EzBoardAdmin_SQL_Mysql.xml"/>
+    <!-- 조직도 관리자 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezOrgan/EzOrganAdmin_SQL_Mysql.xml"/>
+    <!-- 전자결재G 관리자-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezApprovalG/EzApprovalGAdmin_SQL_Mysql.xml"/>
+    <!-- 전자결재S 관리자-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezApproval/EzApprovalAdmin_SQL_Mysql.xml"/>
+    <!-- 자원관리 관리자-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezResource/EzResourceAdmin_SQL_Mysql.xml"/>
+    <!-- 커뮤니티 관리자 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezCommunity/EzCommunityAdmin_SQL_Mysql.xml"/>
+    <!-- 포탈 관리자-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPortal/EzPortalAdmin_SQL_Mysql.xml"/>
+    <!-- 초기화면 관리자-->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezPersonal/EzPersonalAdmin_SQL_Mysql.xml"/>
+    <!-- 통계 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezStatistics/EzStatisticsAdmin_SQL_Mysql.xml"/>
+    <!-- 스케쥴 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzScheduleAdmin_SQL_Mysql.xml"/>
 </sqlMapConfig>

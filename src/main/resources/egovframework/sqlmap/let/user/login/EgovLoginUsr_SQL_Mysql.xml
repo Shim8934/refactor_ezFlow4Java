@@ -1,163 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
-<sqlMap namespace="LoginUsr">
+<sqlMap namespace="Login">
 
-	<typeAlias  alias="egovMap" type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
-	<typeAlias  alias="loginVO" type="egovframework.let.user.login.vo.LoginVO"/>
+    <typeAlias  alias="egovMap"                 type="egovframework.rte.psl.dataaccess.util.EgovMap"/>
+    <typeAlias  alias="loginVO"                 type="egovframework.let.user.login.vo.LoginVO"/>
 
-	<!-- 로그인 처리를 위한 resultMap -->
-	<resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id" column="id" columnIndex="1"/>
-		<result property="name" column="name" columnIndex="2"/>
-		<result property="ihidNum" column="ihidNum" columnIndex="3"/>
-		<result property="email" column="email" columnIndex="4"/>
-		<result property="password" column="password" columnIndex="5"/>
-		<result property="userSe" column="userSe" columnIndex="6"/>
-		<result property="orgnztId" column="orgnztId" columnIndex="7"/>
-		<result property="uniqId" column="uniqId" columnIndex="8"/>		
-	</resultMap>
-	
-	<!-- 아이디 찾기를 위한 resultMap 
-	<resultMap id="id" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="id" column="id" columnIndex="1"/>
-	</resultMap>
-	-->
-	<!-- 비밀번호 처리를 위한 resultMap 
-	<resultMap id="password" class="egovframework.let.user.login.vo.LoginVO">
-		<result property="password" column="password" columnIndex="1"/>
-	</resultMap>
-	-->
-	<!-- 일반 로그인 -->
-	<select id="loginDAO.actionLogin" resultMap="login">
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-            SELECT EMPLYR_ID AS id
-                 , USER_NM AS name
-                 , PASSWORD AS password
-                 , IHIDNUM AS ihidNum
-                 , EMAIL_ADRES AS email
-                 , 'USR' AS userSe
-                 , ORGNZT_ID AS orgnztId
-                 , ESNTL_ID AS uniqId
-              FROM LETTNEMPLYRINFO
-             WHERE EMPLYR_ID = #id#
-               AND PASSWORD = #password#
-               AND EMPLYR_STTUS_CODE = 'P'
-			]]>
-		</isEqual>
-	</select>
-	
-	<!-- 인증서 로그인
-	<select id="loginDAO.actionCrtfctLogin" resultMap="login">
-		<![CDATA[
-		SELECT emplyr_id AS id
-		     , USER_NM AS name
-		     , password AS password
-		     , ihidnum AS ihidNum
-		     , email_adres AS email
-		     , 'USR' AS userSe
-		     , orgnzt_id AS orgnztId
-		     , ESNTL_ID AS uniqId
-		  FROM LETTNEMPLYRINFO
-		 WHERE sub_dn = #dn#
-		]]>
-	</select>
-	 -->
-	<!-- 아이디 찾기
-	<select id="loginDAO.searchId" resultMap="id">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT mber_id AS id
-			  FROM LETTNGNRLMBER
-			 WHERE mber_nm = #name#
-			   AND mber_email_adres = #email#
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprsmber_id AS id
-			  FROM LETTNENTRPRSMBER
-			 WHERE cmpny_nm = #name#
-			   AND applcnt_email_adres = #email#
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT emplyr_id AS id
-			  FROM LETTNEMPLYRINFO
-			 WHERE USER_NM = #name#
-			   AND email_adres = #email#
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
-	</select>
-	 -->
-	<!-- 비밀번호 찾기 
-	<select id="loginDAO.searchPassword" resultMap="password">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			SELECT password AS password
-			  FROM LETTNGNRLMBER
-			 WHERE mber_id = #id#
-			   AND mber_nm = #name#
-			   AND mber_email_adres = #email#
-			   AND password_hint = #passwordHint#
-			   AND password_cnsr = #passwordCnsr#
-			   AND mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			SELECT entrprs_mber_password AS password
-			  FROM LETTNENTRPRSMBER
-			 WHERE entrprsmber_id = #id#
-			   AND cmpny_nm = #name#
-			   AND applcnt_email_adres = #email#
-			   AND entrprs_mber_password_hint = #passwordHint#
-			   AND entrprs_mber_password_cnsr = #passwordCnsr#
-			   AND entrprs_mber_sttus = 'P'
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			SELECT password AS password
-			  FROM LETTNEMPLYRINFO
-			 WHERE emplyr_id = #id#
-			   AND USER_NM = #name#
-			   AND email_adres = #email#
-			   AND password_hint = #passwordHint#
-			   AND password_cnsr = #passwordCnsr#
-			   AND emplyr_sttus_code = 'P'
-			]]>
-		</isEqual>
-	</select>
-	-->
-	<!-- 변경된 비밀번호를 저장 
-	<update id="loginDAO.updatePassword">
-		<isEqual property="userSe" compareValue="GNR">
-			<![CDATA[
-			UPDATE LETTNGNRLMBER
-			   SET password = #password#
-			 WHERE mber_id = #id#
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="ENT">
-			<![CDATA[
-			UPDATE LETTNENTRPRSMBER
-			   SET entrprs_mber_password = #password#
-			 WHERE entrprsmber_id = #id#
-			]]>
-		</isEqual>
-		<isEqual property="userSe" compareValue="USR">
-			<![CDATA[
-			UPDATE LETTNEMPLYRINFO
-			   SET password = #password#
-			 WHERE emplyr_id = #id#
-			]]>
-		</isEqual>
-	</update>
-	-->
+    <!-- 로그인 처리를 위한 resultMap -->
+    <resultMap id="login" class="egovframework.let.user.login.vo.LoginVO">
+        <result property="id"                   column="cn"                         columnIndex="1"/>
+        <result property="password"             column="password"                   columnIndex="2"/>
+        <result property="displayName1"         column="displayname"                columnIndex="3"/>
+        <result property="displayName2"         column="displayname2"               columnIndex="4"/>
+        <result property="deptID"               column="department"                 columnIndex="5"/>
+        <result property="deptName1"            column="description"                columnIndex="6"/>
+        <result property="deptName2"            column="description2"               columnIndex="7"/>
+        <result property="title1"               column="title"                      columnIndex="8"/>
+        <result property="title2"               column="title2"                     columnIndex="9"/>
+        <result property="companyID"            column="companyid"                  columnIndex="10"/>
+        <result property="companyName1"         column="company"                    columnIndex="11"/>
+        <result property="companyName2"         column="company2"                   columnIndex="12"/>      
+        <result property="updateDT"             column="updatedt"                   columnIndex="13"/>
+        <result property="rollInfo"             column="rollinfo"                   columnIndex="14"/>
+        <result property="phone"                column="telephonenumber"            columnIndex="15"/>
+        <result property="email"                column="mail"                       columnIndex="16"/>
+        <result property="jikChek"              column="jikchek"                    columnIndex="17"/>
+        <result property="tenantId"             column="tenant_id"                  columnIndex="18"/>
+        <result property="deptPathCode"         column="deptPathCode"               columnIndex="19"/>
+        <result property="primary"              column="primaryLang"                columnIndex="20"/>
+    </resultMap>    
+    
+    <resultMap id="tenantServerName" class="egovframework.let.user.login.vo.TenantServerNameVO">
+        <result property="serverName"           column="SERVER_NAME"                columnIndex="1"/>    
+        <result property="tenantId"             column="TENANT_ID"                  columnIndex="2"/>
+    </resultMap>    
+ 
+    <!-- 일반 로그인 -->
+    <select id="loginDAO.selectUser" resultMap="login">
+        <!-- 일반회원 -->       
+        <![CDATA[
+            SELECT 
+                cn,
+                password,               
+                displayname,
+                displayname2,
+                department,              
+                description,
+                description2,
+                title,
+                title2,
+                physicaldeliveryofficename as companyid,
+                company,
+                company2,
+                updatedt,
+                extensionattribute1 as rollinfo,
+                telephonenumber,
+                mail,
+                extensionattribute10 as jikchek,
+                tenant_id,
+                (SELECT concat('top,Top,', dept_cd_path) FROM TBL_DEPTMASTER WHERE cn = a.department AND tenant_id = #tenantId#) AS deptPathCode,
+                (SELECT property_value FROM TBL_TENANT_CONFIG   WHERE tenant_id = #tenantId# AND UPPER(property_name) = 'PRIMARYLANG') AS primaryLang
+            FROM 
+                TBL_USERMASTER a
+            WHERE 
+                cn = #id# AND tenant_id = #tenantId#
+        ]]>
+        <isNotEqual prepend="AND" property="dn" compareValue="NOPASSWORD" >         
+            password = #password#
+        </isNotEqual>
+    </select>
+    
+    <select id="loginDAO.getUserIDList" resultClass="String">
+        <!-- 모든회원 -->       
+        <![CDATA[
+            SELECT 
+                cn
+            FROM 
+                TBL_USERMASTER
+            WHERE
+                cn != 'masteradmin'     
+            AND
+                password IS NULL                     
+        ]]>
+    </select>
+    
+    <insert id="loginDAO.insertLog" parameterClass="loginVO">
+        <![CDATA[
+            INSERT INTO TBL_CONNECTION_INFO(
+                USERID,        USERNM,             USERNM2,            DEPTID,             DEPTNM,             DEPTNM2, 
+                TITLE,          TITLE2,             COMPANYID,          COMPANYNM,          COMPANYNM2,         CONNECTIP, 
+                CONNECTTIME,    CONNECTBROWSER,     CONNECTOS,          CONNECTAGENT,      TENANT_ID
+            )
+            VALUES(
+                #id#,          #displayName1#,     #displayName2#,     #deptID#,           #deptName1#,        #deptName2#,    
+                #title1#,       #title2#,           #companyID#,        #companyName1#,     #companyName2#,     #ip#,   
+                now(),        #browser#,          #os#,               #agent#,        #tenantId#  
+            )               
+        ]]>
+    </insert>
+    
+    <update id="loginDAO.updateUser" parameterClass="loginVO">
+        <![CDATA[
+            UPDATE TBL_USERMASTER
+            SET
+                ipaddress = #ip#,
+                lastlogin = #lastLogin#,
+                logincnt = logincnt + 1
+            WHERE
+                cn = #id#                                   
+        ]]>
+    </update>
+    
+    <update id="loginDAO.updatePassword" parameterClass="loginVO">
+        <![CDATA[
+            UPDATE TBL_USERMASTER
+            SET
+                password = #password#               
+            WHERE
+                cn = #id#                                   
+        ]]>
+    </update>
+ 
+    <select id="loginDAO.selectTenantServerName" parameterClass="Map" resultMap="tenantServerName">
+        <![CDATA[
+            SELECT 
+                SERVER_NAME, TENANT_ID
+            FROM 
+                TBL_TENANT_SERVERNAME 
+            WHERE  
+                SERVER_NAME = #serverName#
+        ]]>
+    </select>
+ 
 </sqlMap>

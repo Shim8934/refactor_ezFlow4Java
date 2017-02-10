@@ -398,7 +398,7 @@
 	
 	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
 		<![CDATA[
-			DELETE 
+			DELETE FROM
 				TBL_Board_TreeCache
 	    	WHERE
 	    		TENANT_ID = #v_TENANTID#
@@ -1168,9 +1168,8 @@
 	       AND
 	       		boardid = #pBoardID# 
 	       AND 
-	       		accessid = #userDeptPath# 
-	       AND 
-	       		LIMIT 1
+	       		accessid = #userDeptPath#  
+	       LIMIT 1
 		]]>
 	</select>	
 	

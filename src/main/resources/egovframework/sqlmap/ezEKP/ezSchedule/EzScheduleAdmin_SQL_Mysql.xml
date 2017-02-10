@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezScheduleAdmin">
+	<typeAlias  alias="ScheduleShareVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO"/>
+	
+	<resultMap class="ScheduleShareVO" id="scheduleShareVO">
+		<result property="rowIndex"			column="ROWINDEX"			columnIndex="1"/>
+		<result property="rowCount"			column="ROWCOUNT"			columnIndex="2"/>
+		<result property="idx"				column="IDX"				columnIndex="3"/>
+		<result property="userName"			column="USERNAME"			columnIndex="4"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="5"/>
+		<result property="deptName"			column="DEPTNAME"			columnIndex="6"/>		
+	</resultMap>
+					
+	<select id="EzScheduleAdminDAO.scheduleGetShareManage" parameterClass="map" resultMap="scheduleShareVO">
+		<![CDATA[
+			SELECT 
+				rowindex,
+				rowcount,
+				idx,
+				username,
+				description,
+				deptname	 
+        	FROM ( 
+        			SELECT 
+        				ROW_NUMBER() OVER ( ORDER BY A.idx DESC  ) rowindex,
+                    	COUNT(A.idx) OVER ( ) rowcount,
+                      	A.idx,
+                      	CASE #v_LANGDATA#
+                        	WHEN '1' THEN username
+                            WHEN '2' THEN username2
+                      		ELSE username2
+                      	END username  ,
+                      	CASE #v_LANGDATA#
+	                        WHEN '1' THEN B.description
+                            WHEN '2' THEN B.description2
+                      		ELSE B.description2
+                      	END description,
+                      	CASE #v_LANGDATA#
+							WHEN '1' THEN departmentname
+                            WHEN '2' THEN departmentname2
+                      		ELSE departmentname2
+                      	END deptname  
+               		FROM 
+               			TBL_SCHEDULE_PUBLIC_DEPT A INNER JOIN TBL_USERMASTER B ON A.usercn = B.cn
+               		WHERE
+               			A.tenant_id = #v_TENANTID#	
+			) PUBLIC_DEPARTMEN
+		]]>
+	</select>
+	
+	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_SCHEDULE_PUBLIC_DEPT(
+				USERCN, 		USERNAME, 		USERNAME2, 		DEPARTMENTCN, 	DEPARTMENTNAME, 	DEPARTMENTNAME2,	TENANT_ID 
+			) VALUES (
+				#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#,		#v_TENANTID#			
+			)
+		]]>			
+	</insert>
+	
+	<insert id="EzScheduleAdminDAO.scheduleSaveHoliday" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_HOLIDAYLIST(
+				HOLIDAYNAME,		HOLIDAYNAME2, 		HOLIDAYDATE, 		ISSOLAR, 		ISREPEAT, 		ISUSE, 		ISREST, 		USECOMPANY,			TENANT_ID 
+			) VALUES (
+				#v_HOLIDAYNAME#,	#v_HOLIDAYNAME2#,	#v_HOLIDAYDATE#,	#v_ISSOLAR#,	#v_ISREPEAT#,	1,			#v_ISREST#, 	#v_COMPANYID#,		#v_TENANTID#		
+			)
+		]]>
+	</insert>
+	
+	<insert id="EzScheduleAdminDAO.scheduleInsertLunarUse" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_LUNARUSE(
+				USECOMPANY,			LUNARUSE, 			TENANT_ID 
+			) VALUES (
+				#v_COMPANYID#,		#v_LUNARUSE#,		#v_TENANTID#
+			)
+		]]>
+	</insert>
+	
+	<insert id="EzScheduleAdminDAO.scheduleInsertRegi" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_PREVIOSLYREGI(
+				USECOMPANY,			PREVIOSLYREGIUSE, 	TENANT_ID 
+			) VALUES (
+				#v_COMPANYID#,		#v_REGI#,			#v_TENANTID#
+			)
+		]]>
+	</insert>
+	
+	<update id="EzScheduleAdminDAO.scheduleChangeHolidayUse" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_HOLIDAYLIST
+			SET 
+				ISUSE = #v_ISUSE# 
+			WHERE  
+				HOLIDAYID = #v_HOLIDAYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleAdminDAO.scheduleUpdateHoliday" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_HOLIDAYLIST
+			SET 
+				HOLIDAYNAME = #v_HOLIDAYNAME#,
+                HOLIDAYNAME2 = #v_HOLIDAYNAME2#,
+                HOLIDAYDATE = #v_HOLIDAYDATE#,
+                ISSOLAR = #v_ISSOLAR#,
+                ISREPEAT = #v_ISREPEAT#,
+                ISREST = #v_ISREST#,
+                USECOMPANY = #v_COMPANYID#
+            WHERE  
+            	HOLIDAYID = #v_HOLIDAYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleAdminDAO.scheduleUpdateLunarUse" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_LUNARUSE
+			SET 
+				LUNARUSE = #v_LUNARUSE#
+            WHERE  
+            	USECOMPANY = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleAdminDAO.scheduleUpdateRegi" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_PREVIOSLYREGI
+			SET 
+				PREVIOSLYREGIUSE = #v_REGI#
+            WHERE  
+            	USECOMPANY = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<delete id="EzScheduleAdminDAO.scheduleDelShareDept" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SCHEDULE_PUBLIC_DEPT
+			WHERE
+				IDX = #v_ID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>				
+	</delete>
+	
+	<delete id="EzScheduleAdminDAO.scheduleDelHoliday" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_HOLIDAYLIST
+			WHERE
+				HOLIDAYID = #v_HOLIDAYID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>			
+	</delete>
+
+</sqlMap>
+
