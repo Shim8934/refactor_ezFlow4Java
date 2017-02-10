@@ -6260,7 +6260,7 @@ public class EzBoardController extends EgovFileMngUtil{
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardItem.getTitle() + "</a>");
         bodyContent.append("</DIV>");
         
-        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255") + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
         
         List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
         
