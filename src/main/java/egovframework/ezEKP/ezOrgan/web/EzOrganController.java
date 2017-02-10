@@ -160,7 +160,7 @@ public class EzOrganController {
                     tooltip = arry[3].replace("/", ":") + " ~ " + arry[4].replace("/", ":");
                     
                     if (arry.length > 5) {
-                        tooltip += " " + messageSource.getMessage(arry[5]);
+                        tooltip += " " + messageSource.getMessage(arry[5], userInfo.getLocale());
                     }
                     
                     /* 
