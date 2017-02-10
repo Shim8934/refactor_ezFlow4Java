@@ -865,11 +865,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstStep1(HttpServletRequest req,Model model)  {
 		String brdID = req.getParameter("brdID");
 		String brdNm = req.getParameter("brdNm");
-		String brdPostterm = req.getParameter("brdPostterm");
+//		String brdPostterm = req.getParameter("brdPostterm");
 
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
-		model.addAttribute("brdPostterm", brdPostterm);
+//		model.addAttribute("brdPostterm", brdPostterm);
 		return "/ezQuestion/qstStep1";
 	}
 	
@@ -3305,10 +3305,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("itemNo="+itemID);
 		
 		Integer responseNo = ezQuestionService.getQstResponse(req.getParameter("brdID"), req.getParameter("itemNo"), loginVO.getTenantId());
-		
-		if (responseNo == null) {
-			responseNo = 0;
-		}
 		
         if(responseNo >= 1) {
         	resultYN = true;

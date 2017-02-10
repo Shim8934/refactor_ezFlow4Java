@@ -210,16 +210,16 @@
 		        	var AddressCnt = Get_SameAddressCnt();
 					
 		            if (parseInt(AddressCnt) > 0) {
-		                alert("<spring:message code='ezAddress.t225' />");
-		                return;
+// 		                alert("<spring:message code='ezAddress.t225' />");
+// 		                return;
 		            }
 		        }
 				
 		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
 		        if (document.getElementById("TextEmail").value.trim() == "") {
-		        	alert("<spring:message code='ezAddress.t350' />");
-		            document.getElementById("TextEmail").focus();
-		            return;
+// 		        	alert("<spring:message code='ezAddress.t350' />");
+// 		            document.getElementById("TextEmail").focus();
+// 		            return;
 		        }
 		        else if (regex.test(document.getElementById("TextEmail").value) === false) {
 		            alert("<spring:message code='ezAddress.t1100' />");
@@ -269,6 +269,7 @@
 		            	alert("<spring:message code='ezAddress.t181' />");
 		            }
 		            else if (xmlHTTP.responseText == "PRE") {
+		            	alert("위치확인용");
 		            	alert("<spring:message code='ezAddress.t225' />");
 		            }
 		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {

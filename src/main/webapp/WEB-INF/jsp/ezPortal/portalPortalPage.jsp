@@ -427,6 +427,7 @@ alert("savesub Start");
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
 							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 							strXML += "<PORTLETDISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</PORTLETDISPLAYNAME>";
+alert("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML));
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
