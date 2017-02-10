@@ -1,0 +1,2574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezPortalAdmin">
+	<typeAlias  alias="PortalUseThemeCheckVO" 						type="egovframework.ezEKP.ezPortal.vo.PortalUseThemeCheckVO"/>
+	<typeAlias  alias="PortalTBLSkinGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalTBLSkinGeneralVO"/>
+	<typeAlias  alias="PortalDeleteSubPageVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalDeleteSubPageVO"/>
+	<typeAlias  alias="PortalSearchPortalPage2VO" 					type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortalPage2VO"/>
+	<typeAlias  alias="PortalPortletGeneralVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalPortletGeneralVO"/>
+	<typeAlias  alias="PortalTBLPortalPageCategoryVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalTBLPortalPageCategoryVO"/>
+	<typeAlias  alias="PortalSearchPortlet2VO" 							type="egovframework.ezEKP.ezPortal.vo.PortalSearchPortlet2VO"/>
+	<typeAlias  alias="PortalTBLBuiltInParametersVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLBuiltInParametersVO"/>
+	<typeAlias  alias="PortalLoadLogoItemsVO" 							type="egovframework.ezEKP.ezPortal.vo.PortalLoadLogoItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsImageVO" 				type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsImageVO"/>
+	<typeAlias  alias="PortalTBLTopMenuItemsVO" 					type="egovframework.ezEKP.ezPortal.vo.PortalTBLTopMenuItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsVO" 			type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsVO"/>
+	<typeAlias  alias="PortalMenuItemItemsMenuItemsSVO" 		type="egovframework.ezEKP.ezPortal.vo.PortalMenuItemItemsMenuItemsSVO"/>
+	
+	<resultMap class="PortalMenuItemItemsMenuItemsVO" id="portalMenuItemItemsMenuItemsVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentUID"					column="PARENTUID"				columnIndex="2"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="3"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="4"			nullValue=""/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="5"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="6"/>
+		<result property="subFlag"					column="SUBFLAG"					columnIndex="8"			nullValue="0"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="9"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="10"/>
+		<result property="linkURL"					column="LINKURL"					columnIndex="11"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="12"/>
+		<result property="leftMargin"					column="LEFTMARGIN"			columnIndex="13"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="14"/>
+	</resultMap>
+	
+	<resultMap class="PortalMenuItemItemsMenuItemsSVO" id="portalMenuItemItemsMenuItemsSVO">
+		<result property="uID"							column="UID_"						columnIndex="1"/>
+		<result property="parentMenuID"			column="PARENTMENUID"		columnIndex="2"/>
+		<result property="ownerPageID"				column="OWNERPAGEID"			columnIndex="3"/>
+		<result property="displayName"				column="DISPLAYNAME"			columnIndex="4"/>
+		<result property="displayName2"			column="DISPLAYNAME2"		columnIndex="5"/>
+		<result property="columnPos"				column="COLUMNPOS"			columnIndex="6"			nullValue="0"/>
+		<result property="imageUId"					column="IMAGEUID"				columnIndex="7"/>
+		<result property="linkURL"					column="LINKURL"					columnIndex="8"/>
+		<result property="linkLocation"				column="LINKLOCATION"			columnIndex="9"/>
+		<result property="windowOption"			column="WINDOWOPTION"		columnIndex="10"/>
+		<result property="tenantID"			column="TENANT_ID"		columnIndex="11"/>
+	</resultMap>
+	
+	<!-- <procedure id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SET_THEMEINFO(#v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, #v_TOPHEIGHT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.setThemeInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			EXISTS ( SELECT UID_ 
+                      		FROM TBL_THEME_GENERAL 
+                       		WHERE  UID_ = #v_PUID# )
+		]]>
+	</select>
+	
+	<update id="EzPortalAdminDAO.setThemeInfo" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_THEME_GENERAL
+         	SET
+         		DISPLAYNAME = #v_PDISNM1#,
+             	DISPLAYNAME2 = #v_PDISNM2#,
+             	DISPLAYNAME3 = #v_PDISNM3#,
+             	DISPLAYNAME4 = #v_PDISNM4#,
+             	IMAGEURL = #v_PIMAGEURL#,
+             	TOPURL = #v_PTOPURL#,
+             	MAINURL = #v_PMAINURL#,
+             	MODIFYDATE = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
+             	TOPHEIGHT = #v_TOPHEIGHT#
+       		WHERE
+       			UID_ = #v_PUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>		
+	</update>
+	
+	<insert id="EzPortalAdminDAO.setThemeInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_THEME_GENERAL
+        		( UID_, DISPLAYNAME, DISPLAYNAME2, DISPLAYNAME3, DISPLAYNAME4, IMAGEURL, TOPURL, MAINURL, COMPANAYID, CREATORID, CREATORNM, CREATEDATE, MODIFYDATE, TOPHEIGHT, TENANT_ID )
+        	VALUES
+        		( #v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TOPHEIGHT#, #tenantID# )
+		]]>
+	</insert>
+	
+	
+	<!-- <procedure id="EzPortalAdminDAO.topSetUsePage2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_TOP_SETUSEPAGE2(#v_pUID#, #v_pCOMPANYID#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.topSetUsePage2" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_TOPMENU_GENERAL
+      		SET
+      			USEFLAG = 'Y'
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND
+      			COMPANYID = #v_pCOMPANYID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.topOutOfSetUsePage" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_TOP_OUTOFSETUSEPAGE(#v_pUID#, #v_pCOMPANYID#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.topOutOfSetUsePage" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TOPMENU_GENERAL
+         	SET
+         		USEFLAG = ' '
+       		WHERE  
+       			UID_ = #v_pUID#
+        	AND 
+        		COMPANYID = #v_pCOMPANYID#
+        	AND
+        		TENANT_ID = #tenantID#
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.setUseLang" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SETUSELANG(#v_pUID#, #v_pCOMPANYID#, #v_pLANGSTR#)}
+		]]>
+	</procedure> -->
+  
+    <update id="EzPortalAdminDAO.setUseLang" parameterClass="Map">
+        <![CDATA[
+	         UPDATE
+                TBL_TOPMENU_GENERAL
+		]]>
+        <isEqual property="v_pLANGSTR" compareValue="1">
+            <![CDATA[
+	             SET
+                    LANG = '1'
+		    ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="2">
+            <![CDATA[
+               SET
+                    LANG = '2'
+            ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="3">
+            <![CDATA[
+               SET
+                    LANG = '3'
+            ]]>
+        </isEqual>
+        <isEqual property="v_pLANGSTR" compareValue="4">
+            <![CDATA[
+               SET
+                    LANG = '4'
+            ]]>
+        </isEqual>
+        <![CDATA[
+	         WHERE
+                UID_ = #v_pUID#
+             AND
+                CompanyID = #v_pCOMPANYID#
+             AND
+                TENANT_ID = #tenantID#   
+		]]>
+    </update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_PORTAL_SAVESKIN(#v_UID#, #v_SKINNAME#, #v_SKINBGFLAG#, #v_SKINBGCOLOR#, #v_SKINBGIMAGE#, #v_SKINFONTCOLOR#, #v_SKINFONTOVERCOLOR#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_SKIN_ITEMS
+        		( UID_, SKINNUM, SKINNAME, SKINBGFLAG, SKINBGCOLOR, SKINBGIMAGE, SKINFONTCOLOR, SKINFONTOVERCOLOR, TENANT_ID )
+        	VALUES
+        		( #v_UID#, 1, #v_SKINNAME#, #v_SKINBGFLAG#, #v_SKINBGCOLOR#, #v_SKINBGIMAGE#, #v_SKINFONTCOLOR#, #v_SKINFONTOVERCOLOR#, #tenantID# )
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzPortalAdminDAO.saveTopMenu6" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVETOPMENU6(#v_pUID#, #v_pPAGEUID#, #v_pCOLUMNPOS#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.saveTopMenu6" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				ROWPOS
+      		FROM 
+      			TBL_TOPMENU_ITEMS 
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND 
+      			PAGEUID = #v_pPAGEUID#		
+      		AND
+      			ColumnPos = #v_pCOLUMNPOS#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+<!-- 	<procedure id="EzPortalAdminDAO.saveTopMenu3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVETOPMENU3(#v_pUID#, #v_pPAGEUID#, #v_pPARENTPAGEUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.saveTopMenu3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)  TOTALCOUNT
+      		FROM
+      			TBL_TOPMENU_ITEMS 
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND
+      			PAGEUID = #v_pPAGEUID#
+      		AND
+      			PARENTPAGEUID = #v_pPARENTPAGEUID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveTopMenu4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVETOPMENU4(#v_pUID#, #v_pPAGEUID#, #v_pCOLUMNPOS#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.saveTopMenu4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				ROWPOS
+      		FROM 
+      			TBL_TOPMENU_ITEMS 
+      		WHERE  
+      			UID_ = #v_pUID#
+      		AND 
+      			PAGEUID = #v_pPAGEUID#
+      		AND 
+      			COLUMNPOS = #v_pCOLUMNPOS#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage5" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE5(#v_pPORTLET_UID#, #v_pPPAGEID#, #v_pPPARENTPAGEID#, #v_pPORTLET_OWNERPAGEUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage5" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)  TOTALCOUNT
+        	FROM 
+        		TBL_PORTALPAGE_ITEMS 
+       		WHERE  
+       			UID_ = #v_pPORTLET_UID#
+            AND 
+            	PAGEUID = #v_pPPAGEID#
+            AND
+            	PARENTPAGEUID = #v_pPPARENTPAGEID#
+            AND 
+            	OWNERPAGEUID = #v_pPORTLET_OWNERPAGEUID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage6" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE6(#v_pPORTLET_UID#, #v_PPORTLET_PAGEUID#, #v_pPCOLUMNPOS#,#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage6" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				ROWPOS
+        	FROM 
+        		TBL_PORTALPAGE_ITEMS 
+	       	WHERE  
+	       		UID_ = #v_pPORTLET_UID#
+    	   	AND 
+    	   		PAGEUID = #v_PPORTLET_PAGEUID#
+       		AND 
+       			COLUMNPOS = #v_pPCOLUMNPOS#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage8" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE8(#v_pPORTLET_UID#, #v_pPORTLET_PAGEUID#, #v_pPCOLUMNPOS#,#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage8" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			 SELECT
+			 	ROWPOS
+        	 FROM 
+        	 	TBL_PORTALPAGE_ITEMS 
+       		 WHERE  
+       		 	UID_ = #v_pPORTLET_UID#
+             AND 
+             	PAGEUID = #v_pPORTLET_PAGEUID#
+             AND 
+             	COLUMNPOS = #v_pPCOLUMNPOS#
+             AND
+             	TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE2(#v_pPORTLET_PREVPAGEID#, #v_pCOLUMNPOS#,#v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				ROWPOS
+      		FROM 
+      			TBL_PORTALPAGE_ITEMS 
+      		WHERE  
+      			UID_ = #v_pPORTLET_PREVPAGEID#
+      		AND 
+      			COLUMNPOS = #v_pCOLUMNPOS#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.searchPortalPageCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SEARCHPORTALPAGECOUNT2(#v_DISPLAYNAME#, #v_GUBUNFLAG#, #v_ARRPARAM#, #v_COMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.searchPortalPageCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_) 
+			FROM
+				TBL_PORTALPAGE_GENERAL A  
+			WHERE
+				(NOT EXISTS(SELECT UID_ FROM TBL_PORTALPAGE_ITEMS  WHERE UID_ = A.UID_)) 
+			AND
+				DISPLAYNAME LIKE '%' || #v_DISPLAYNAME# || '%'
+			AND
+				TENANT_ID = #tenantID#	
+		]]>	
+		<isNotEmpty property="v_COMPANYID">
+			<![CDATA[
+				AND
+					COMPANYID = #v_COMPANYID#
+			]]>	
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_GUBUNFLAG">
+			<![CDATA[
+				AND 
+					GUBUNFLAG IN (' || #v_ARRPARAM# || ')
+			]]>
+		</isNotEmpty>
+		
+		<isNotEmpty property="v_COMPANYID">
+			<isNotEmpty property="v_GUBUNFLAG">
+				<![CDATA[
+					AND
+						COMPANYID = #v_COMPANYID#
+					AND 
+						GUBUNFLAG IN (' || #v_ARRPARAM# || ')
+				]]>
+			</isNotEmpty>
+		</isNotEmpty>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.getItemsCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_GETITEMSCOUNT(#v_PORTLET_UID#, #v_PORTLET_OWNERPAGEUID#, #v_STRQUERY#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.getItemsCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)
+   			FROM
+   				TBL_PORTALPAGE_ITEMS 
+			WHERE
+				UID_ = #v_PORTLET_UID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+		<isNotEmpty property="v_STRQUERY">
+			<![CDATA[
+				AND
+					PARENTPAGEUID IN (#v_STRQUERY#)
+				AND
+					OWNERPAGEUID = #v_PORTLET_OWNERPAGEUID#	
+			]]>	
+		</isNotEmpty>
+		
+		<isEmpty property="v_STRQUERY">
+			<![CDATA[
+			AND
+				OWNERPAGEUID = #v_PORTLET_OWNERPAGEUID#
+			]]>		
+		</isEmpty>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.searchPortletCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SEARCHPORTLETCOUNT2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pCOMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.searchPortletCount2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			$strSQL$
+		]]>
+	</select>
+	
+	 <!-- <procedure id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
+		<![CDATA[
+			{CALL ezPortal.EZSP_SEARCHPORTALPAGE2(#v_ENDROW#, #v_DISPLAYNAME#, #v_USERFLAG#, #v_GUBUNFLAG#, #v_ARRPARAM#, #v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> --> 
+	
+	 <select id="EzPortalAdminDAO.searchPortalPage2" parameterClass="Map" resultClass="PortalSearchPortalPage2VO">
+		<![CDATA[
+			$strSQL$
+		]]>
+	</select> 
+	
+	<!-- <procedure id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
+		<![CDATA[
+			{CALL EZSP_SEARCHPORTLET2(#v_pGUBUNFLAG#, #v_pPAGEGUBUNFLAG#, #v_pDISPLAYNAME#, #v_pENDROW#, #v_pSTARTROW#, #v_pCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
+		<![CDATA[
+			$strSQL$
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.createNewPortlet" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CREATENEWPORLET(#v_pNEWID#, #v_pCOMPANYID#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.createNewPortlet" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTLET_GENERAL
+        		( UID_, DISPLAYNAME, PORTLET_TYPE, SHOWTITLEBAR, COMPANYID, HEIGHT, GUBUNFLAG, WIDTH, TENANT_ID )
+        	VALUES
+        		( #v_pNEWID#, '새 포틀릿', 1, 1, #v_pCOMPANYID#, 0, 0, 0, #tenantID#)
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.createNewSubMenuItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CREATENEWSUBMENUITEM(#v_NEWUID#, #v_PARENTUID#, #v_PAGEID#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.createNewSubMenuItem" parameterClass="Map">
+		<![CDATA[
+			 INSERT INTO 
+			 	TBL_MENUITEM_ITEMS_MENUITEMS_S
+      			( UID_, PARENTMENUID, OWNERPAGEID, DISPLAYNAME, DISPLAYNAME2, TENANT_ID )
+      		VALUES 
+      			( #v_NEWUID#, #v_PARENTUID#, #v_PAGEID#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.createNewLogoItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CREATENEWLOGOITEM(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.createNewLogoItem_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_LOGOS
+   				( UID_, OWNERPAGEID, TENANT_ID )
+   			VALUES
+   				( #v_PUID#, #v_PPAGEID#, #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.createNewLogoItem" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_MENUITEM_ITEMS_IMAGE
+      			( UID_, OWNERPAGEID, SKINNUM, DISPLAYNAME, DISPLAYNAME2, TENANT_ID )
+      		VALUES 
+      			( #v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.createNewMenuItem" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CREATENEWMENUITEM(#v_PUID#, #v_PPARENTUID#, #v_POWNERPAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.createNewMenuItem" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_MENUITEMS
+      			( UID_, PARENTUID, OWNERPAGEID, DISPLAYNAME, DISPLAYNAME2, TENANT_ID )
+      		VALUES 
+      			( #v_PUID#, #v_PPARENTUID#, #v_POWNERPAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #tenantID# )
+		]]>
+	</insert>
+	
+<!-- 	<procedure id="EzPortalAdminDAO.createNewMenuItem2" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CREATENEWMENUITEM2(#v_PUID#, #v_PPARENTUID#, #v_PPARENTMENUID#, #v_POWNERPAGEID#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.createNewMenuItem2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_MENUITEMS
+      			( UID_, PARENTUID, PARENTMENUID, OWNERPAGEID, TENANT_ID )
+      		VALUES 
+      			( #v_PUID#, #v_PPARENTUID#, #v_PPARENTMENUID#, #v_POWNERPAGEID#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.setUsePage2" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_SETUSEPAGE2(#v_pUSERFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.setUsePage2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTALPAGE_GENERAL
+         	SET 
+         		USEFLAG = #v_pUSERFLAG#
+       		WHERE  
+       			UID_ = #v_pUID#
+        	AND 
+        		COMPANYID = #v_pCOMPANYID#
+        	AND
+        		GUBUNFLAG = #v_pGUBUNFLAG#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.outOfSetUsePage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_OUTOFSETUSEPAGE(#v_pUSERFLAG#, #v_pUID#, #v_pCOMPANYID#, #v_pGUBUNFLAG#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.outOfSetUsePage" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTALPAGE_GENERAL
+         	SET 
+         		USEFLAG = #v_pUSERFLAG#
+       		WHERE
+       			UID_ = #v_pUID#
+        	AND 
+        		COMPANYID = #v_pCOMPANYID#
+        	AND
+        		GUBUNFLAG = #v_pGUBUNFLAG#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.setDefaultPage" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_SET_DEFAULTPAGE(#v_PUSERFLAG#, #v_PUID#, #v_PCOMPANYID#, #v_PGUBUNFLAG#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.setDefaultPage" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTALPAGE_GENERAL
+         	SET
+         		DEFAULTPAGE = #v_PUSERFLAG#
+       		WHERE
+       			UID_ = #v_PUID#
+        	AND 
+        		COMPANYID = #v_PCOMPANYID#
+        	AND
+        		GUBUNFLAG = #v_PGUBUNFLAG#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.insertAclItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_INSERTACLITEM(#v_UID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_EDIT_RIGHT#, #v_VIEW_RIGHT#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.insertAclItem_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTAL_ACL
+		    WHERE
+		    	UID_ = #v_UID#
+             AND 
+             	ACCESSID = #v_ACCESSID#
+             AND
+             	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<insert id="EzPortalAdminDAO.insertAclItem" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTAL_ACL
+        		( UID_, ACCESSID, ACCESSNAME, EDIT_RIGHT, VIEW_RIGHT, TENANT_ID )
+        	VALUES
+        		( #v_UID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_EDIT_RIGHT#, #v_VIEW_RIGHT#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deleteAclItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_DELETEACLITEM(#v_UID#, #v_ACCESSID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.deleteAclItem" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTAL_ACL
+	       WHERE
+				UID_ = #v_UID#
+			AND
+				ACCESSID = #v_ACCESSID#
+			AND 
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveNewPortletProperties" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVENEWPORLETPROPERTIES(#v_pDISPLAYNAME#, #v_pDISPLAYNAME2#, #v_pPORTLET_TYPE#, #v_pURL#, #v_pMAXURL#, #v_pSHOWTITLEBAR#, #v_pUSERTYPE#, #v_pWIDTH#, #v_pHEIGHT#, #v_pGUBUNFLAG#, #v_pUID#, #v_pFRAMETYPE#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.saveNewPortletProperties" parameterClass="Map">
+		<![CDATA[
+			 UPDATE
+			 	TBL_PORTLET_GENERAL
+         	 SET 
+         	 	DISPLAYNAME = #v_pDISPLAYNAME#,
+             	DISPLAYNAME2 = #v_pDISPLAYNAME2#,
+             	PORTLET_TYPE = #v_pPORTLET_TYPE#,
+             	URL = #v_pURL#,
+             	MAXURL = #v_pMAXURL#,
+             	SHOWTITLEBAR = #v_pSHOWTITLEBAR#,
+             	USERTYPE = #v_pUSERTYPE#,
+             	WIDTH = #v_pWIDTH#,
+             	HEIGHT = #v_pHEIGHT#,
+             	GUBUNFLAG = #v_pGUBUNFLAG#,
+             	FRAMETYPE = #v_pFRAMETYPE#
+       		WHERE
+       			UID_ = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortletSubProperty" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPORTLETSUBPROPERTY(#v_OLDUSERTYPE#, #v_UID#, #v_CREATORID#, #v_USERTYPE#, #v_USERID#, #v_URL#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.savePortletSubProperty_D" parameterClass="Map" >
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_URL
+        	WHERE
+        		UID_ = #v_UID#
+        	AND
+        		CREATORID = #v_CREATORID#
+        	AND
+        		USERTYPE = #v_OLDUSERTYPE#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzPortalAdminDAO.savePortletSubProperty_S" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+           	FROM
+           		DUAL
+           	WHERE
+           		NOT EXISTS ( SELECT 
+           								UID_ 
+                              		FROM
+                              			TBL_PORTLET_URL 
+                              		WHERE
+                              		 	UID_ = #v_UID#
+                              		AND
+                              			CREATORID = #v_USERID#
+                              		AND
+                              			USERTYPE = #v_USERTYPE#
+                              		AND
+                              			TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPortalAdminDAO.savePortletSubProperty" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTLET_URL( UID_, CREATORID, USERTYPE, URL, TENANT_ID )
+            VALUES
+            	( #v_UID#, #v_USERID#, #v_USERTYPE#, #v_URL#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortletSubProperty2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPORTLETSUBPROPERTY2(#v_UID#, #v_DISPLAYNAME#, #v_HTMLDATA#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.savePortletSubProperty2_D" parameterClass="Map" >
+		<![CDATA[
+			 DELETE 
+			 	TBL_PORTLET_HTMLPAGE
+   			WHERE
+   				UID_ = #v_UID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<insert id="EzPortalAdminDAO.savePortletSubProperty2" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTLET_HTMLPAGE
+	      		( UID_, DISPLAYNAME, HTMLDATA, TENANT_ID )
+	      	VALUES
+	      		( #v_UID#, #v_DISPLAYNAME#, #v_HTMLDATA#, #tenantID# )
+	     ]]> 		
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortletSubProperty3" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPORTLETSUBPROPERTY3(#v_UID#, #v_IMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_IMAGETYPE#, #v_OPENMODE#, #v_WINDOWSOPTION#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.savePortletSubProperty3_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_IMAGE
+   			WHERE
+   				UID_ = #v_UID#
+		]]>
+	</delete>
+	
+	<insert id="EzPortalAdminDAO.savePortletSubProperty3" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTLET_IMAGE
+      			( UID_, IMAGEPATH, IMAGEWIDTH, IMAGEHEIGHT, IMAGETYPE, OPENMODE, WINDOWOPTION, TENANT_ID )
+      		VALUES 
+      			( #v_UID#, #v_IMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_IMAGETYPE#, #v_OPENMODE#, #v_WINDOWSOPTION#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortletSubProperty4" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPORTLETSUBPROPERTY4(#v_OLDUSERTYPE#, #v_UID#, #v_CREATORID#, #v_BOARDID#, #v_USERTYPE#, #v_USERID#, #v_ITEMCOUNT#, #v_ITEMFIELDS#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.savePortletSubProperty4_D" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_BOARD  
+        	WHERE  
+        		UID_ = #v_UID#
+        	AND 
+        		CREATORID = #v_CREATORID#
+        	AND 
+        		USERTYPE = #v_OLDUSERTYPE#
+        	AND 
+        		BOARDID = #v_BOARDID#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzPortalAdminDAO.savePortletSubProperty4_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+         	FROM
+         		DUAL
+         	WHERE
+         		NOT EXISTS ( 	SELECT
+         							 	UID_ 
+                            		FROM
+                            			TBL_PORTLET_BOARD 
+                            		WHERE
+                            			UID_ = #v_UID#
+                            		AND
+                            			CREATORID = #v_USERID#
+                            		AND
+                            			USERTYPE = #v_USERTYPE#
+                            		AND
+                            			BOARDID = #v_BOARDID#
+                            		AND
+                            			TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPortalAdminDAO.savePortletSubProperty4"  parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTLET_BOARD
+ 	          ( UID_, CREATORID, USERTYPE, BOARDID, ITEMCOUNT, ITEMFIELDS, TENANT_ID )
+           VALUES 
+     	      ( #v_UID#, #v_USERID#, #v_USERTYPE#, #v_BOARDID#, #v_ITEMCOUNT#, #v_ITEMFIELDS#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.removeParameter" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_REMOVEPARAMETER(#v_MODE#, #v_UID#, #v_PARAMNAVE#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.removeParameter" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTLET_PARAMETERS  
+        	WHERE
+        		UID_ = #v_UID#
+        	AND
+        		PARAMNAME = #v_PARAMNAVE#
+        	AND
+        		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.removeParameter_D" parameterClass="Map">
+		<![CDATA[
+				DELETE
+					TBL_MENUITEM_PARAMETERS
+        		WHERE
+        			UID_ = #v_UID#
+        		AND
+        			PARAMNAME = #v_PARAMNAVE#
+        		AND
+        			TENANT_ID = #tenantID#	
+			]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortletParameters" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPORLETPARAMETERS(#v_pUID#, #v_pPARAMNAME#, #v_pPARAMVALUE#, #v_pPARAMTYPE#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.savePortletParameters" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_PORTLET_PARAMETERS
+        		( UID_, PARAMNAME, PARAMVALUE, PARAMTYPE, TENANT_ID )
+        	VALUES
+        		( #v_pUID#, #v_pPARAMNAME#, #v_pPARAMVALUE#, #v_pPARAMTYPE#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveMenuItemParameters" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEMENUITEMPARAMETERS(#v_UID#, #v_PARAMNAME#, #v_PARAMVALUE#, #v_PARAMTYPE#)}
+		]]>
+	</procedure> -->
+	
+	<insert id="EzPortalAdminDAO.saveMenuItemParameter" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_MENUITEM_PARAMETERS
+     			( UID_, PARAMNAME, PARAMVALUE, PARAMTYPE, TENANT_ID )
+      		VALUES 
+     			( #v_UID#, #v_PARAMNAME#, #v_PARAMVALUE#, #v_PARAMTYPE#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveLogoImage" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVELOGOIMAGE(#v_UID#, #v_OWNERPAGEID#, #v_SKINNUM#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_NORMALIMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_LINKURL#, #v_LINKLOCATION#, #v_WINDOWOPTION#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.saveLogoImage_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_IMAGE
+   			WHERE  
+   				UID_ = #v_UID#
+   			AND 
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.saveLogoImage_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_LOGOS
+   			WHERE
+   				UID_ = #v_UID#
+   			AND
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<insert id="EzPortalAdminDAO.saveLogoImage_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_MENUITEM_ITEMS_LOGOS
+  				( UID_, OWNERPAGEID, TENANT_ID )
+   			VALUES
+   				( #v_UID#, #v_OWNERPAGEID#, #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.saveLogoImage" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_IMAGE
+   				( UID_, OWNERPAGEID, SKINNUM, DISPLAYNAME, DISPLAYNAME2, NORMALIMAGEPATH, IMAGEWIDTH, IMAGEHEIGHT, LINKURL, LINKLOCATION, WINDOWOPTION, TENANT_ID )
+   			VALUES
+   				( #v_UID#, #v_OWNERPAGEID#, #v_SKINNUM#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_NORMALIMAGEPATH#, #v_IMAGEWIDTH#, #v_IMAGEHEIGHT#, #v_LINKURL#, #v_LINKLOCATION#, #v_WINDOWOPTION#, #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveLogoImage2" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVELOGOIMAGE2(#v_UID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.saveLogoImage2_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_IMAGE
+   			WHERE  
+   				UID_ = #v_UID#
+   			AND 
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.saveLogoImage2_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_MENUITEM_ITEMS_LOGOS
+   			WHERE
+   				UID_ = #v_UID#
+   			AND
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.saveLogoImage2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTAL_ACL
+      		WHERE
+      			UID_ = #v_UID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePositionSettings" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEPOSITIONSETTINGS(#v_pALIGN#, #v_pVALIGN#, #v_pLEFTMARGIN#, #v_pRIGHTMARGIN#, #v_pTOPMARGIN#, #v_pBOTTOMMARGIN#, #v_pUID#, #v_pPAGEID#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.savePositionSettings" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_TOPMENU_ITEMS
+         	SET
+         		ALIGN = #v_pALIGN#,
+             	VALIGN = #v_pVALIGN#,
+             	LEFTMARGIN = #v_pLEFTMARGIN#,
+             	RIGHTMARGIN = #v_pRIGHTMARGIN#,
+             	TOPMARGIN = #v_pTOPMARGIN#,
+             	BOTTOMMARGIN = #v_pBOTTOMMARGIN#
+       		WHERE
+       			UID_ = #v_pUID#
+      		AND
+      			OWNERPAGEID = #v_pPAGEID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveMenuItemConfig" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEMENUITEMCONFIG(#v_PPUID#, #v_PIMGUID#, #v_PPAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #v_PNORMALIMAGE#, #v_POVERIMAGE#, #v_PSKINNUM#, #v_PIMAGEWIDTH#, #v_PIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PNEWUID#, #v_PIMAGETYPE#, #v_EMPTYIMGID#, #v_PCOMPANYID#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+			SET
+				DISPLAYNAME = #v_PDISPLAYNAME#, DISPLAYNAME2 = #v_PDISPLAYNAME2#, TENANT_ID = #tenantID#, LINKURL = #v_PLINKURL# 
+			WHERE 
+				UID_ = #v_PPUID# 
+			AND
+				OWNERPAGEID = #v_PPAGEID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+			SET
+				DISPLAYNAME = #v_PDISPLAYNAME#, DISPLAYNAME2 = #v_PDISPLAYNAME2#, TENANT_ID = #tenantID#
+			WHERE 
+				UID = #v_PPUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID# 	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U3" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_USERSTARTPAGE_ITEM
+			SET
+				LINKURL = #v_PLINKURL# 
+			WHERE
+				UID_ = #v_PPUID# 
+			AND
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U4" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_IMAGE
+			SET
+				NORMALIMAGEPATH = #v_PNORMALIMAGE#,
+				OVERIMAGEPATH = #v_POVERIMAGE#
+			WHERE
+				UID_ = #v_PIMGUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				SKINNUM = #v_PSKINNUM#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U5" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_IMAGE
+			SET
+				IMAGEWIDTH = #v_PIMAGEWIDTH#
+			WHERE
+				UID_ = #v_PIMGUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				SKINNUM = #v_PSKINNUM#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U6" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_MENUITEM_ITEMS_IMAGE
+			SET
+				IMAGEHEIGHT = #v_PIMAGEHEIGHT#
+			WHERE
+				UID_ = #v_PIMGUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				SKINNUM = #v_PSKINNUM#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U7" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_IMAGE
+			SET
+				LINKURL = #v_PLINKURL#,
+                LINKLOCATION = #v_PLINKLOCATION#,
+                WINDOWOPTION = #v_PWINDOWOPTION#
+            WHERE  
+            	UID_ = #v_PIMGUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<insert id="EzPortalAdminDAO.saveMenuItemConfig_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_IMAGE
+				( UID_, OWNERPAGEID, DISPLAYNAME, IMAGETYPE, NORMALIMAGEPATH, OVERIMAGEPATH, IMAGEWIDTH, IMAGEHEIGHT, LINKURL, LINKLOCATION, WINDOWOPTION, SKINNUM, TENANT_ID )
+            VALUES
+            	( #v_PNEWUID#, #v_PPAGEID#, #v_PDISPLAYNAME#, #v_PIMAGETYPE#, #v_PNORMALIMAGE#, #v_POVERIMAGE#, #v_PIMAGEWIDTH#, #v_PIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PSKINNUM#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U8" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_MENUITEM_ITEMS_MENUITEMS
+			SET
+				IMAGEUID = #v_PNEWUID#
+			WHERE
+				UID_ = #v_PPUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<delete id="EzPortalAdminDAO.saveMenuItemConfig_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_MENUITEM_ITEMS_IMAGE
+			WHERE
+				UID_ = #v_PIMGUID#
+            AND
+            	OWNERPAGEID = #v_PPAGEID#
+            AND
+            	SKINNUM = #v_PSKINNUM#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<select id="EzPortalAdminDAO.saveMenuItemConfig_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)  
+          	FROM
+          		TBL_MENUITEM_ITEMS_IMAGE 
+          	WHERE
+          		UID_ = #v_PIMGUID#
+          	AND
+          		OWNERPAGEID = #v_PPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U9" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+			SET
+				IMAGEUID = #v_EMPTYIMGID#
+			WHERE
+				UID_ = #v_PPUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveMenuItemConfig_U10" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+          	SET
+          		LINKURL = #v_PLINKURL#,
+          		LINKLOCATION = #v_PLINKLOCATION#,
+          		WINDOWOPTION = #v_PWINDOWOPTION#
+          	WHERE
+          		UID_ = #v_PPUID#
+          	AND
+          		OWNERPAGEID = #v_PPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveSubMenuItemConfig" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVESUBMENUITEMCONFIG(#v_P_SUB_UID#, #v_P_SUB_PAGEID#, #v_PUID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #v_PNORMALIMAGEPATH#, #v_POVERIMAGEPATH#, #v_PIMAGEWIDTH#, #v_PPIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PSKIN#, #v_PNEWID#, #v_IMAGETYPE#, #v_EMPTYPUID#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzPortalAdminDAO.saveSubMenuItemConfig_U1" parameterClass="Map">
+		<isNotEmpty property="v_PLINKURL">
+			UPDATE 
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+       		SET
+       			DISPLAYNAME = #v_PDISPLAYNAME#,
+       			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
+       			LINKURL = #v_PLINKURL#,
+       			LINKLOCATION = #v_PLINKLOCATION#,
+       			WINDOWOPTION =  #v_PWINDOWOPTION#,
+       			TENANT_ID = #tenantID#
+       		WHERE
+       			UID_ = #v_P_SUB_UID#
+       		AND
+       			OWNERPAGEID = #v_P_SUB_PAGEID#
+		</isNotEmpty>
+		<isEmpty property="v_PLINKURL">
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+       		SET
+       			DISPLAYNAME = #v_PDISPLAYNAME#,
+       			DISPLAYNAME2 = #v_PDISPLAYNAME2#,
+       			TENANT_ID = #tenantID#
+       		WHERE
+       			UID_ = #v_P_SUB_UID#
+       		AND
+       			OWNERPAGEID = #v_P_SUB_PAGEID#
+		</isEmpty>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveSubMenuItemConfig_U2" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_IMAGE
+			SET
+				NORMALIMAGEPATH = #v_PNORMALIMAGEPATH#,
+				OVERIMAGEPATH = #v_POVERIMAGEPATH#,
+				IMAGEWIDTH = #v_PIMAGEWIDTH#,
+				IMAGEHEIGHT = #v_PPIMAGEHEIGHT#,
+				LINKURL = #v_PLINKURL#,
+				LINKLOCATION = #v_PLINKLOCATION#,
+				WINDOWOPTION = #v_PWINDOWOPTION#
+			WHERE
+				UID_ = #v_PUID#
+			AND
+				OWNERPAGEID = #v_P_SUB_PAGEID#
+			AND
+				SKINNUM = #v_PSKIN#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<insert id="EzPortalAdminDAO.saveSubMenuItemConfig_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_MENUITEM_ITEMS_IMAGE
+				( UID_, OWNERPAGEID, DISPLAYNAME, DISPLAYNAME2, IMAGETYPE, NORMALIMAGEPATH, OVERIMAGEPATH, IMAGEWIDTH, IMAGEHEIGHT, LINKURL, LINKLOCATION, WINDOWOPTION, SKINNUM, TENANT_ID )
+            VALUES
+            	( #v_PNEWID#, #v_P_SUB_PAGEID#, #v_PDISPLAYNAME#, #v_PDISPLAYNAME2#, #v_IMAGETYPE#, #v_PNORMALIMAGEPATH#, #v_POVERIMAGEPATH#, #v_PIMAGEWIDTH#, #v_PPIMAGEHEIGHT#, #v_PLINKURL#, #v_PLINKLOCATION#, #v_PWINDOWOPTION#, #v_PSKIN#, #tenantID# )
+		]]>
+	</insert>
+	
+	<update id="EzPortalAdminDAO.saveSubMenuItemConfig_U3" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+			SET
+				IMAGEUID = #v_PNEWID#
+			WHERE
+				UID_ = #v_P_SUB_UID#
+			AND
+				OWNERPAGEID = #v_P_SUB_PAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.saveSubMenuItemConfig_U4" parameterClass="Map" >
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+            SET
+            	IMAGEUID = #v_EMPTYPUID#,
+                LINKURL = #v_PLINKURL#,
+                LINKLOCATION = #v_PLINKLOCATION#,
+                WINDOWOPTION = #v_PWINDOWOPTION#
+            WHERE  
+            	UID_ = #v_P_SUB_UID#
+            AND 
+            	OWNERPAGEID = #v_P_SUB_PAGEID#
+            AND
+            	TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzPortalAdminDAO.removeMenuItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_REMOVEMENUITEM(#v_UID#, #v_PARENTUID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.removeMenuItem_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				IMAGEUID 
+   			FROM
+   				TBL_MENUITEM_ITEMS_MENUITEMS 
+   			WHERE
+   				UID_ = #v_UID#
+   			AND
+   				PARENTUID = #v_PARENTUID#
+   			AND
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<delete id="EzPortalAdminDAO.removeMenuItem_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_IMAGE
+          	WHERE
+          		UID_ = #v_PIMAGEUID#
+          	AND
+          		OWNERPAGEID = #v_PARENTUID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>	
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.removeMenuItem_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+          	WHERE
+          		UID_ = #v_UID#
+          	AND
+          		PARENTUID = #v_PARENTUID#
+          	AND
+          		OWNERPAGEID = #v_OWNERPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>	
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.removeMenuItem_D3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+          	WHERE
+          		UID_ = #v_UID#
+          	AND
+          		PARENTUID = #v_PARENTUID#
+          	AND
+          		OWNERPAGEID = #v_OWNERPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>	
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.removeSubMenuItem" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_REMOVESUBMENUITEM(#v_UID#, #v_PARENTUID#, #v_OWNERPAGEID#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.removeSubMenuItem_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				IMAGEUID 
+		   	FROM
+		   		TBL_MENUITEM_ITEMS_MENUITEMS_S 
+   			WHERE
+   				UID_ = #v_UID#
+   			AND
+   				PARENTMENUID = #v_PARENTUID#
+   			AND
+   				OWNERPAGEID = #v_OWNERPAGEID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<delete id="EzPortalAdminDAO.removeSubMenuItem_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_IMAGE
+          	WHERE
+          		UID_ = #v_PIMAGEUID#
+          	AND
+          		OWNERPAGEID = #v_OWNERPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.removeSubMenuItem_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+          	WHERE
+          		UID_ = #v_UID#
+          	AND
+          		PARENTMENUID = #v_PARENTUID#
+          	AND
+          		OWNERPAGEID = #v_OWNERPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.removeSubMenuItem_D3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+          	WHERE
+          		UID_ = #v_UID#
+          	AND
+          		PARENTMENUID = #v_PARENTUID#
+          	AND
+          		OWNERPAGEID = #v_OWNERPAGEID#
+          	AND
+          		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.logoEdit" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZSP_LOGO_EDIT(#v_UID#, #v_OWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.logoEdit" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			 SELECT
+			 	NVL(DISPLAYNAME, ' ') DISPLAYNAME  ,
+             	NVL(DISPLAYNAME2, ' ') DISPLAYNAME2  ,
+             	NVL(NORMALIMAGEPATH, ' ') NORMALIMAGEPATH  ,
+             	NVL(IMAGEWIDTH, 0) IMAGEWIDTH  ,
+             	NVL(IMAGEHEIGHT, 0) IMAGEHEIGHT  ,
+             	NVL(LINKURL, ' ') LINKURL  ,
+             	NVL(LINKLOCATION, ' ') LINKLOCATION  ,
+             	NVL(WINDOWOPTION, ' ') WINDOWOPTION  
+        	FROM
+        		TBL_MENUITEM_ITEMS_IMAGE 
+       		WHERE
+       			UID_ = #v_UID#
+			AND
+				OWNERPAGEID = #v_OWNERPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadPositionSettings" parameterClass="Map" resultClass="PortalTBLTopMenuItemsVO">
+		<![CDATA[
+			{CALL EZSP_LOADPOSITIONSETTINGS(#v_pPUID#, #v_pPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadPositionSettings" parameterClass="Map" resultClass="PortalTBLTopMenuItemsVO">
+		<![CDATA[
+			SELECT
+				ALIGN ,
+             	VALIGN ,
+             	LEFTMARGIN ,
+             	RIGHTMARGIN ,
+             	TOPMARGIN ,
+             	BOTTOMMARGIN 
+        	FROM
+        		TBL_TOPMENU_ITEMS 
+       		WHERE
+       			UID_ = #v_pPUID#
+			AND
+				OWNERPAGEID = #v_pPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZSP_LOADMENUITEMS(#v_pPARENTUID#, #v_pOWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_MENUITEM_ITEMS_MENUITEMS 
+       		WHERE
+       			PARENTUID = #v_pPARENTUID#
+			AND
+				OWNERPAGEID = #v_pOWNERPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+        	ORDER BY
+        		COLUMNPOS ASC
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadSubMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			{CALL EZSP_LOADSUBMENUITEMS(#v_PPARENTMENUID#, #v_POWNERPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadSubMenuItems" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_MENUITEM_ITEMS_MENUITEMS_S 
+       		WHERE
+       			PARENTMENUID = '$v_PPARENTMENUID$'
+			AND
+				OWNERPAGEID = #v_POWNERPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+        	ORDER BY
+        		COLUMNPOS ASC
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			{CALL EZSP_LOADMENUITEMCONFIG(#v_PUID#, #v_PPAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_MENUITEM_ITEMS_MENUITEMS 
+       		WHERE
+       			UID_ = #v_PUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+<!-- 	<procedure id="EzPortalAdminDAO.loadMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZSP_LOADMENUITEMCONFIG2(#v_PUID#, #v_PPAGEID#, #v_PSKINNUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_MENUITEM_ITEMS_IMAGE 
+       		WHERE  
+       			UID_ = #v_PUID#
+			AND
+				OWNERPAGEID = #v_PPAGEID#
+			AND
+				SKINNUM = #v_PSKINNUM#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadSubMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			{CALL EZSP_LOADSUBMENUITEMCONFIG(#v_UID#, #v_PAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadSubMenuItemConfig" parameterClass="Map" resultMap="portalMenuItemItemsMenuItemsSVO">
+		<![CDATA[
+			SELECT
+				* 
+      		FROM
+      			TBL_MENUITEM_ITEMS_MENUITEMS_S 
+      		WHERE
+      			UID_ = #v_UID#
+      		AND 
+      			OWNERPAGEID = #v_PAGEID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadSubMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			{CALL EZSP_LOADSUBMENUITEMCONFIG2(#v_UID#, #v_PAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadSubMenuItemConfig2" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
+		<![CDATA[
+			SELECT 
+				* 
+      		FROM
+      			TBL_MENUITEM_ITEMS_IMAGE 
+      		WHERE
+      			UID_ = #v_UID#
+      		AND
+      			OWNERPAGEID = #v_PAGEID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE4(#v_pPORTLET_PAGEUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage4" parameterClass="Map" resultClass="Integer">
+		<![CDATA[	
+			SELECT 
+				DEPTH
+        	FROM
+        		TBL_PORTALPAGE_GENERAL 
+       		WHERE
+       			UID_ = #v_pPORTLET_PAGEUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE3(#pPortletUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[	
+			SELECT 
+				DEPTH
+        	FROM
+        		TBL_PORTALPAGE_GENERAL 
+       		WHERE
+       			UID_ = #v_pPORTLET_UID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.useThemeCheck" parameterClass="String"  resultClass="PortalUseThemeCheckVO" >
+		<![CDATA[
+			{CALL EZSP_USE_THEME_CHECK(#v_PUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.useThemeCheck" parameterClass="Map"  resultClass="PortalUseThemeCheckVO">
+		<![CDATA[
+			SELECT
+				( SELECT
+				 	 COUNT(UID_)  
+				  FROM
+					 TBL_TOPMENU_GENERAL 
+               	  WHERE  
+               	  	 THEMEUID = #v_PUID#
+               	  AND
+               	  	TENANT_ID = #tenantID#  ) topUserCount  ,
+             	( SELECT
+             		 COUNT(UID_)  
+               	  FROM
+               	  	TBL_PORTALPAGE_GENERAL 
+                  WHERE
+                  	THEMEUID = #v_PUID# 
+                  AND
+                  	TENANT_ID = #tenantID#	) portalPage  
+        	FROM
+        		DUAL
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveTopMenu2" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVETOPMENU2(#pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.saveTopMenu2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				DEPTH
+      		FROM
+      			TBL_TOPMENU_GENERAL 
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.saveTopMenu5" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVETOPMENU5(#pUID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.saveTopMenu5" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				DEPTH
+      		FROM
+      			TBL_TOPMENU_GENERAL 
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.savePortalPage7" parameterClass="String" resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_SAVEPORTALPAGE7(#pParentPageID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.savePortalPage7" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				DEPTH
+        	FROM
+        		TBL_PORTALPAGE_GENERAL 
+       		WHERE
+       			UID_ = #v_pPPARENTPAGEID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+<!-- 	<procedure id="EzPortalAdminDAO.deleteTheme" parameterClass="String" >
+		<![CDATA[
+			{CALL EZSP_DELETE_THEME(#v_PUID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.deleteTheme" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_THEME_GENERAL
+	        WHERE
+	        	UID_ = #v_PUID#
+	        AND
+	        	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deleteTopPage" parameterClass="String"  resultClass="String">
+		<![CDATA[
+			{CALL EZSP_DELETETOPPAGE(#v_pPAGEUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.deleteTopPage" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT 
+				UID_ 
+        	FROM
+        		TBL_TOPMENU_ITEMS 
+       		WHERE
+       			PAGEUID = #v_pPAGEUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deletePortalPage" parameterClass="String"  resultClass="String">
+		<![CDATA[
+			{CALL EZSP_DELETEPORTALPAGE(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.deletePortalPage" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT 
+				UID_ 
+      		FROM
+      			TBL_PORTALPAGE_ITEMS	 
+      		WHERE
+      			PAGEUID = #v_pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.getParentPageIDList" parameterClass="String"  resultClass="String">
+		<![CDATA[
+			{CALL EZSP_GETPARENTPAGEIDLIST(#v_pTEMP#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.getParentPageIDList" parameterClass="Map"  resultClass="String">
+		<![CDATA[
+			SELECT 
+				PARENTUID 
+        	FROM
+        		TBL_PORTALPAGE_GENERAL 
+       		WHERE
+       			UID_ = #v_pTEMP#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deletePortalPage2" parameterClass="String">
+		<![CDATA[
+			{CALL EZSP_DELETEPORTALPAGE2(#v_pUID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage2" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTALPAGE_GENERAL
+	       WHERE
+	       		UID_ = #v_pUID#
+	       	AND
+	       		TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deletePortalPage3" parameterClass="String">
+		<![CDATA[
+			{CALL EZSP_DELETEPORTALPAGE3(#v_pUID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage3_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_ITEMS
+   			WHERE
+   				OWNERPAGEUID = #v_pUID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage3_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_ITEMS_CHANGE
+   			WHERE
+   				OWNERPAGEUID = #v_pUID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage3_D3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_ITEMS_CHANGE
+   			WHERE
+   				USERPAGEUID = #v_pUID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage3_D4" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTAL_ACL
+   			WHERE  
+   				UID_ = #v_PUID#
+   			AND
+   				TENANT_ID = #tenantID#		
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPage3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_GENERAL
+      		WHERE
+      			UID_ = #v_pUID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.topDeleteSubPage" parameterClass="String"  resultClass="PortalDeleteSubPageVO">
+		<![CDATA[
+			{CALL EZSP_TOP_DELETESUBPAGE(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.topDeleteSubPage" parameterClass="Map"  resultClass="PortalDeleteSubPageVO">
+		<![CDATA[
+			SELECT
+				UID_ , PAGEUID 
+        	FROM
+        		TBL_TOPMENU_ITEMS 
+       		WHERE
+       			PAGEUID = #v_pUID#
+       		AND
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.getPortletProperties" parameterClass="String"  resultClass="PortalPortletGeneralVO" remapResults="true">
+		<![CDATA[
+			{CALL EZSP_GETPORLETPROPERTIES(#v_pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.getPortletProperties_S1" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+        	FROM
+        		DUAL
+       		WHERE
+       			EXISTS ( SELECT
+       							 * 
+                      		FROM
+                      			TBL_PORTLET_GENERAL 
+                       		WHERE
+                       			UID_ = #v_pUID#
+                            AND
+                                TENANT_ID = #tenantID# )
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.getPortletProperties_S2" parameterClass="Map" resultClass="PortalPortletGeneralVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_PORTLET_GENERAL 
+       		WHERE
+       			UID_ = #v_pUID#
+            AND
+                TENANT_ID = #tenantID#
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.deletePortlet" parameterClass="String">
+		<![CDATA[
+			{CALL EZSP_DELETEPORLET(#pUID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_GENERAL
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_HTMLPAGE
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_IMAGE
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D4" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTLET_BOARD
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D5" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTLET_URL
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D6" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTLET_PARAMETERS
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet_D7" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_ITEMS
+		    WHERE
+		    	UID_ = #v_UID#
+		    AND
+		    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortlet" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_PORTALPAGE_ITEMS_CHANGE
+  	 	    WHERE
+  	 	    	UID_ = #v_UID#
+  	 	    AND
+  	 	    	TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzPortalAdminDAO.loadLogoItems" parameterClass="String"  resultClass="PortalLoadLogoItemsVO">
+		<![CDATA[
+			{CALL EZSP_LOADLOGOITEMS(#pPageID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.loadLogoItems" parameterClass="Map"  resultClass="PortalLoadLogoItemsVO">
+		<![CDATA[
+			SELECT
+				A.* ,
+				B.DISPLAYNAME ,
+             	B.DISPLAYNAME2 ,
+             	B.NORMALIMAGEPATH 
+        	FROM
+        		TBL_MENUITEM_ITEMS_LOGOS A,
+             	TBL_MENUITEM_ITEMS_IMAGE B
+       		WHERE
+       			A.UID_ = B.UID_
+			AND
+				A.OWNERPAGEID = B.OWNERPAGEID
+			AND
+				A.OWNERPAGEID = #v_pPAGEID#
+			AND
+				A.TENANT_ID = #tenantID#
+			AND
+				B.TENANT_ID = #tenantID#		
+			ORDER BY 
+				B.DISPLAYNAME ASC
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.getMenuItemParameters" parameterClass="String"  resultClass="PortalGetPortletParametersVO">
+		<![CDATA[
+			{CALL EZSP_GETMENUITEMPARAMETERS(#pUID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.getMenuItemParameters" parameterClass="Map"  resultClass="PortalGetPortletParametersVO">
+		<![CDATA[
+			SELECT
+				A.UID_ ,
+             	A.PARAMNAME ,
+             	A.PARAMVALUE ,
+             	A.PARAMTYPE ,
+             	B.PARAMINFO ,
+             	B.DESCRIPTION 
+        	FROM
+        		TBL_MENUITEM_PARAMETERS A
+			JOIN
+				TBL_BUILTIN_PARAMETERS B  
+			ON
+				A.PARAMTYPE = B.PARAMTYPE
+			AND
+				A.TENANT_ID = B.TENANT_ID	
+       		WHERE
+       			UID_ = #v_UID#
+       		AND
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			B.TENANT_ID = #tenantID#		
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.getPortletCategory"  resultClass="PortalTBLPortalPageCategoryVO">
+		<![CDATA[
+			{CALL EZSP_GETPORTLETCATETORY(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.getPortletCategory" parameterClass="Integer" resultClass="PortalTBLPortalPageCategoryVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_PORTLET_CATEGORY
+        	WHERE
+        		TENANT_ID = $tenantID$	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.menuItemEdit"  resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			{CALL EZSP_MENUITEM_EDIT(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.menuItemEdit" parameterClass="Integer" resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_BUILTIN_PARAMETERS
+        	WHERE
+        		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzPortalAdminDAO.subMenuItemEdit1"  resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			{CALL EZSP_SUBMENUITEM_EDIT1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzPortalAdminDAO.subMenuItemEdit1" resultClass="PortalTBLBuiltInParametersVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_BUILTIN_PARAMETERS
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.saveTopMenu"  parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)
+			FROM
+				TBL_TOPMENU_GENERAL
+			WHERE
+				UID_ = #uID#	 
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.savePortalPage"  parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(UID_)
+			FROM
+				TBL_PORTALPAGE_GENERAL
+			WHERE
+				UID_ = #pageID#
+			AND
+				TENANT_ID = #tenantID#		 
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.selectSkinGeneral" parameterClass="Map" resultClass="PortalTBLSkinGeneralVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_SKIN_GENERAL
+            AND
+                TENANT_ID = #tenantID#        
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.selectTblTopMenuItemsUID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UID_
+			FROM
+				TBL_TOPMENU_ITEMS
+			WHERE
+				(NOT 
+					(UID_ IN (#pArrParam#)
+					)
+				)
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#
+			AND
+				TENANT_ID = #tenantID#					
+		]]>
+	</select>
+	
+	<select id="EzPortalAdminDAO.selectTblPortalPageItemsUID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				UID_
+			FROM
+				TBL_PORTALPAGE_ITEMS
+			WHERE
+				(NOT 
+					(UID_ IN (#pArrParam#)
+					)
+				)
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#		
+			AND
+				TENANT_ID = #tenantID#			
+		]]>
+	</select>
+	
+	<insert id="EzPortalAdminDAO.insertTblTopMenuItems" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_TOPMENU_ITEMS(
+					UID_, PAGEUID, PARENTPAGEUID, OWNERPAGEID, MENUITEMTYPE, DISPLAYNAME, WIDTH, HEIGHT, ROWPOS, COLUMNPOS, CANREMOVE, CANRESIZE, CANREPLACE, TENANT_ID
+					)
+			VALUES (
+				#uID#, #pageUID#, #parentPageID#, #ownerPageID#, #menuItemType#, #displayName#, #width#, #height#, #rowPos#, #columnPos#, #canRemove#, #canResize#, #canReplace#, #tenantID#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.insertTblPortalPageItems" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTALPAGE_ITEMS(
+					UID_, PAGEUID, PARENTPAGEUID, OWNERPAGEUID, PORTLETTYPE, DISPLAYNAME, WIDTH, HEIGHT, ROWPOS, COLUMNPOS, CANREMOVE, CANRESIZE, CANREPLACE, TENANT_ID
+					)
+			VALUES (
+				#uID#, #pageUID#, #parentPageID#, #ownerPageID#, #portletType#, #displayName#, #width#, #height#, #rowPos#, #columnPos#, #canRemove#, #canResize#, #canReplace#, #tenantID#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.insertTblTopMenuGeneral" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_TOPMENU_GENERAL(
+					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, COMPANYID, THEMEUID, TENANT_ID
+					)
+			VALUES (
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, sysdate, #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #companyID#, #themeUID#, #tenantID#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<insert id="EzPortalAdminDAO.insertTblPortalPageGeneral" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTALPAGE_GENERAL(
+					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, GUBUNFLAG, COMPANYID, THEMEUID, TABLEVIEWOPTION, TENANT_ID
+					)
+			VALUES (
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #gubunFlag#,#companyID#, #themeUID#, #tableViewOption#, #tenantID#
+			) 
+			 
+		]]>
+	</insert>
+	
+	<update id="EzPortalAdminDAO.updateTopMenuGeneral" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_TOPMENU_GENERAL
+			SET 
+				DISPLAYNAME = #displayName#, DISPLAYNAME2 = #displayName2#, WIDTH = #width#, HEIGHT = #height#, ROWLENGTH = #rowLength#, COLUMNLENGTH = #columnLength#, ROWSPLIT = #rowSplit#, COLUMNSPLIT = #columnSplit#, THEMEUID = #pThemeUID#
+			WHERE
+				 UID_ = #pPageID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.updatePortalPageGeneral" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_PORTALPAGE_GENERAL
+			SET 
+				DISPLAYNAME = #displayName#, DISPLAYNAME2 = #displayName2#, WIDTH = #width#, HEIGHT = #height#, ROWLENGTH = #rowLength#, COLUMNLENGTH = #columnLength#, ROWSPLIT = #rowSplit#, COLUMNSPLIT = #columnSplit#, GUBUNFLAG = #gubunFlag#, THEMEUID = #pThemeUID#, TABLEVIEWOPTION = #tableViewOption#
+			WHERE
+				 UID_ = #pPageID# 
+			AND
+				TENANT_ID = #tenantID#	 
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.updateTblTopMenuItems" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TOPMENU_ITEMS
+			SET 
+				MENUITEMTYPE = #menuItemType#, DISPLAYNAME = #displayName#, WIDTH = #width#, HEIGHT = #height#, ROWPOS = #rowPos#, COLUMNPOS = #columnPos#, CANREMOVE = #canRemove#, CANRESIZE = #canResize#, CANREPLACE = #canReplace#
+			WHERE 
+				UID_ = #uID#
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#
+			AND
+				TENANT_ID = #tenantID#			  
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.updateTblPortalPageItems" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PORTALPAGE_ITEMS
+			SET 
+				PORTLETTYPE = #portletType#, DISPLAYNAME = #displayName#, WIDTH = #width#, HEIGHT = #height#, ROWPOS = #rowPos#, COLUMNPOS = #columnPos#, CANREMOVE = #canRemove#, CANRESIZE = #canResize#, CANREPLACE = #canReplace#
+			WHERE 
+				UID_ = #uID#
+			AND
+				PAGEUID = #pageUID#
+			AND
+				PARENTPAGEUID = #parentPageUID#
+			AND
+				OWNERPAGEUID = #ownerPageUID#
+			AND
+				TENANT_ID = #tenantID#				  
+		]]>
+	</update>
+	
+	<update id="EzPortalAdminDAO.updateMenuItemSetOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS
+			SET 
+				COLUMNPOS = #columnPos#
+			WHERE 
+				UID_ = #uID#
+			AND
+				OWNERPAGEID = #ownerPageID#
+			AND
+				TENANT_ID = #tenantID#				  
+		]]>
+	</update>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems2" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_TOPMENU_ITEMS
+			WHERE
+				 (NOT
+				 	(UID_
+				 		IN ( #strUIDList# )
+				 	)
+				 )
+			AND
+				PAGEUID = #pageUID#
+			AND 
+				PARENTPAGEUID = #parentPageUID#
+			AND
+				TENANT_ID = #tenantID#						 		 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPageItems" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_PORTALPAGE_ITEMS
+			WHERE
+				 (NOT
+				 	(UID_
+				 		IN ( #strUIDList# )
+				 	)
+				 )
+			AND
+				PAGEUID = #pageUID#
+			AND 
+				PARENTPAGEUID = #parentPageUID#	
+			AND
+				OWNERPAGEUID = #callingPageID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems3" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_TOPMENU_ITEMS
+			WHERE
+				UID_ = #pUID#
+			AND 
+				PAGEUID = #pageUID#
+			AND
+				TENANT_ID = #tenantID#						 		 
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deletePortalPageCache" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTALPAGE_CACHE
+			WHERE
+				 PORTALPAGEID = #pageUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuGeneralUID" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_TOPMENU_GENERAL
+			WHERE
+				 UID_ = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+		<delete id="EzPortalAdminDAO.deletePortalPageGeneralUID" parameterClass="Map">
+		<![CDATA[
+			DELETE 
+				TBL_PORTALPAGE_GENERAL
+			WHERE
+				 UID_ = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItemsS" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_MENUITEM_ITEMS_MENUITEMS_S
+			WHERE
+				 OWNERPAGEID = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItems" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_MENUITEM_ITEMS_MENUITEMS
+			WHERE
+				 OWNERPAGEID = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTblMenuItemsImage" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_MENUITEM_ITEMS_IMAGE
+			WHERE
+				 OWNERPAGEID = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteTopMenuItems" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_TOPMENU_ITEMS
+			WHERE
+				 OWNERPAGEID = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	<delete id="EzPortalAdminDAO.deleteSkinItemsUID" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				 TBL_SKIN_ITEMS
+			WHERE
+				 UID_ = #pUID#
+			AND
+				TENANT_ID = #tenantID#	  
+		]]>
+	</delete>
+	
+	
+
+</sqlMap>
+
+

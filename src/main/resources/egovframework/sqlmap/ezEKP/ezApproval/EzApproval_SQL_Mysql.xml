@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApproval">
+	<typeAlias  alias="ApprContInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprContInfoVO"/>
+	<typeAlias  alias="ApprDocInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO"/>
+	<typeAlias  alias="ApprDocViewVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocViewVO"/>
+	
+	<select id="EzApprovalDAO.getUserContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<isEqual property="ownFlag" compareValue="1">
+			<![CDATA[
+				SELECT 
+					A.ContainerID ,
+                	B.ContainerTypeName$lang$ ContainerTypeName,
+                	B.ContainerTypeID 
+           		FROM 
+           			tbContainer A
+               	JOIN 
+               		tbContainerType B    
+               	ON 
+               		A.tenant_id = B.tenant_id
+               	AND
+               		A.ContainerTypeID = B.ContainerTypeID
+                JOIN 
+                	tbContainerUseDep C
+                ON 
+                	A.tenant_id = C.tenant_id
+                AND    
+                	A.ContainerID = C.ContainerID
+          		WHERE
+          			A.tenant_id = #tenantID#
+          		AND  
+          			C.UseDepID = #myDeptID#
+                AND 
+                	A.ContainerOwnDepID = #useDeptID#
+           		ORDER BY 
+           			B.ContainerTypeID
+			]]>
+		</isEqual>
+		<isEqual property="ownFlag" compareValue="2">
+			<![CDATA[
+				SELECT 
+					A.ContainerID ,
+                   	B.ContainerTypeName$lang$ ContainerTypeName,
+                   	B.ContainerTypeID ,
+                   	A.ContainerOwnDepID 
+              	FROM 
+              		tbContainer A
+                JOIN 
+                	tbContainerType B    
+                ON 
+                	A.tenant_id = B.tenant_id
+                AND
+                	A.ContainerTypeID = B.ContainerTypeID
+                JOIN 
+                	tbContainerUseDep C    
+                ON 
+                	A.tenant_id = C.tenant_id
+                AND
+                	A.ContainerID = C.ContainerID
+             	WHERE  
+             		A.tenant_id = #tenantID#
+             	AND
+             		C.UseDepID = #myDeptID#
+                AND 
+                	A.ContainerOwnDepID <> #myDeptID#
+              	ORDER BY 
+              		A.ContainerOwnDepID,
+                    B.ContainerTypeID
+			]]>
+		</isEqual>
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContInfo1" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				A.ContainerID ,
+             	B.ContainerTypeName$lang$ ContainerTypeName ,
+             	B.ContainerTypeID 
+        	FROM 
+        		tbContainer A,
+             	tbContainerType B 
+       		WHERE  
+       			A.tenant_id = B.tenant_id
+       		AND
+       			A.ContainerTypeID = B.ContainerTypeID
+            AND
+            	A.tenant_id = #tenantID#
+            AND 
+            	A.ContainerOwnDepID = #myDeptID#
+        	ORDER BY 
+        		B.ContainerTypeID
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getCodeContainer" parameterClass="UserInfo" resultClass="ApprDocInfoVO">
+		SELECT 
+			B.ItemCode ,
+			<isEqual property="lang" compareValue="1">
+	            D.itemname itemname
+			</isEqual>
+			<isNotEqual property="lang" compareValue="1">
+	            D.itemname itemname2
+			</isNotEqual>
+        <![CDATA[
+        FROM 
+        	TBENDAPRDOCINFO A
+        JOIN 
+        	TBEXPENDAPRDOCINFO B    
+        ON 
+        	A.tenant_id = B.tenant_id
+        AND
+        	A.DocID = B.DocID
+        JOIN 
+        	tbContainer C
+        ON 
+        	A.tenant_id = C.tenant_id
+        AND
+        	A.ContainerID = C.ContainerID
+        JOIN 
+        	TBDOCNUM_ITEM D   
+        ON 
+        	B.tenant_id = D.tenant_id
+        AND
+        	B.ItemCode = D.itemcode
+        WHERE  
+        	A.tenant_id = #tenantId#
+        AND
+        	B.DelFlag IS NULL
+        AND 
+        	( B.ItemCode IS NOT NULL )
+        AND 
+        	( B.ItemCode <> '' )
+        AND 
+        	( A.ContainerID IN ( SELECT 
+									F.ContainerID 
+	                              FROM 
+	                              		tbContainer F
+	                              LEFT JOIN 
+	                              		tbContainerUseDep E   
+	                              ON 
+	                              		F.tenant_id = E.tenant_id
+	                              AND
+	                              		F.ContainerID = E.ContainerID
+	                              WHERE
+	                              		F.tenant_id = #tenantId#
+	                              AND  
+	                              		( F.ContainerOwnDepID = #deptID# )
+	                              OR 
+	                              		( E.UseDepID = #deptID# ) )
+                  )
+        ]]>  
+        <isEqual property="lang" compareValue="1">
+	        GROUP BY 
+	        	B.ItemCode,
+	        	D.itemname
+		</isEqual>
+		<isNotEqual property="lang" compareValue="1">
+	        GROUP BY 
+	        	B.ItemCode,
+	        	D.itemname2
+		</isNotEqual>
+        ORDER BY 
+        	B.ItemCode
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContTree" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				USERCONTID ,
+             	USERCONTNAME ,
+             	DESCRIPTION 
+        	FROM 
+        		TBUSERCONT
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			PARENTCONTID = #parentContID#
+            AND 
+            	OWNUSERID = #userID#
+        	ORDER BY 
+        		USERCONTNAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getDeptContTree" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTCONTID ,
+             	DEPTCONTNAME ,
+             	DESCRIPTION ,
+             	SN ,
+             	MANAGEUSERID 
+        	FROM 
+        		TBDEPTCONT 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			PARENTCONTID = #parentContID#
+            AND 
+            	OWNDEPTID = #deptID#
+        	ORDER BY 
+        		SN,
+                DEPTCONTNAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getUserContTreeLeaf" parameterClass="ApprContInfoVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				count(*)
+        	FROM 
+        		TBUSERCONT 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			PARENTCONTID = #userID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getDeptContTreeLeaf" parameterClass="ApprContInfoVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*)
+        	FROM 
+        		TBDEPTCONT 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			PARENTCONTID = #deptContID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getListContainerCont" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONTAINERID 
+			FROM 
+				TBCONTAINER A
+   			INNER JOIN 
+   				TBCONTAINERTODOCSTATE B  
+   			ON 
+   				A.TENANT_ID = B.TENANT_ID
+   			AND
+   				A.CONTAINERTYPEID = B.CONTAINERTYPEID
+   			WHERE 
+   				A.TENANT_ID = #tenantID#
+   			AND
+   				B.DOCUMENTSTATE IN (#staDSPumYui#, #staDSBalSin#)        
+   			AND 
+   				CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getListContainer" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				CONTAINERID 
+        	FROM 
+        		tbContainer A
+            JOIN 
+            	TBCONTAINERTODOCSTATE B    
+            ON 
+            	A.tenant_id = B.tenant_id
+            AND
+            	A.ContainerTypeID = B.ContainerTypeID
+       		WHERE
+       			A.TENANT_ID = #tenantID#
+       		AND  
+       			B.DocumentState = #staDSBansong#
+            AND 
+            	CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getSpecialContTree" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+             	CONTTYPE ,
+             	SN ,
+             	CONTNAME ,
+             	SUBQUERY 
+        	FROM 
+        		TBSPECIALCONTAINERINFO 
+       		WHERE
+       			TENANT_ID = #tenantId#
+       		AND 
+       			DEPTID = #deptID#
+        	ORDER BY 
+        		CONTTYPE,
+                SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getIsUse" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ISUSE 
+        	FROM 
+        		TBCODELIST 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			CODE1 = #code1#
+            AND 
+            	CODE2 = #code2#
+		]]>
+	</select>
+	
+	<select id="EzApprovalDAO.getAprDocCount" parameterClass="Map" resultClass="Integer">
+		<isEqual property="listType" compareValue="1">
+			<![CDATA[
+				SELECT 
+					COUNT(DOCID) 
+				FROM 
+					VAPRDOINGDOCLIST  
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					APRMEMBERID 
+				IN 
+					($userIDs$)
+			]]>
+		</isEqual>
+		<isNotEqual property="listType" compareValue="1">
+			<isEqual property="listType" compareValue="2">
+				<![CDATA[
+					SELECT 
+						COUNT(DOCID) 
+					FROM 
+						VAPRWILLDOCLIST  
+					WHERE
+						TENANT_ID = #tenantID#
+					AND
+						COMPANYID = #companyID#
+					AND 
+						APRMEMBERID = #userID# 
+					AND 
+						APRMEMBERSN = 1
+				]]>
+			</isEqual>
+			<isNotEqual property="listType" compareValue="2">
+				<isEqual property="listType" compareValue="3">
+					<![CDATA[
+						SELECT 
+							COUNT(DISTINCT DOCID) 
+						FROM 
+							VAPRWILLDOCLIST  
+						WHERE
+							TENANT_ID = #tenantID#
+						AND
+							COMPANYID = #companyID#
+						AND  
+							APRMEMBERID = #userID#
+					]]>
+				</isEqual>
+				<isNotEqual property="listType" compareValue="3">
+					<isEqual property="listType" compareValue="4">
+						<![CDATA[
+							SELECT 
+								COUNT(A.DOCID)      
+               				FROM 
+               					TBAPRRECEIPTPROCESSINFO A
+               				INNER JOIN 
+               					TBAPRDOCINFO B
+               				ON
+               					A.TENANT_ID = B.TENANT_ID
+               				AND
+               					A.COMPANYID = B.COMPANYID
+               				AND 
+               					A.DOCID = B.DOCID      
+               				INNER JOIN 
+               					TBEXPAPRDOCINFO C
+               				ON 
+               					C.TENANT_ID = B.TENANT_ID
+               				AND
+               					C.COMPANYID = B.COMPANYID
+               				AND
+               					C.DOCID = B.DOCID 
+               				WHERE
+               					A.TENANT_ID = #tenantID#
+               				AND
+               					A.COMPANYID = #companyID#
+               				AND 
+               					A.PROCESSYN <> 'Y' 
+               				AND 
+               					(((A.PROCESSORID = #userID#)     
+               				AND 
+               					(A.APRSTATE = #staASJiJung# OR A.APRSTATE = #staASWheSong#))
+						]]>
+						<isEqual property="userFlag" compareValue="admin" prepend="OR">
+								(A.ReceivedDeptID = #userDeptID#
+							AND 
+								A.AprState IN (#staASDoJak#, #staASBaeBu#)) 
+                  			OR 
+                  				(A.ReceivedDeptID = #userDeptID#
+                  			AND 
+                  				A.AprState = #staASWheSong#)
+						</isEqual>
+						)
+					</isEqual>
+					<isNotEqual property="listType" compareValue="4">
+						<isEqual property="listType" compareValue="6">
+							<![CDATA[
+								SELECT 
+									COUNT(A.DOCID)      
+                  				FROM 
+                  					TBAPRRECEIPTPROCESSINFO A
+                  				INNER JOIN 
+                  					TBAPRDOCINFO B
+                  				ON 
+                  					A.TENANT_ID = B.TENANT_ID
+                  				AND
+                  					A.COMPANYID = B.COMPANYID
+                  				AND
+                  					A.DOCID = B.DOCID      
+                  				INNER JOIN 
+                  					TBEXPAPRDOCINFO C
+                  				ON 
+                  					C.TENANT_ID = B.TENANT_ID
+                  				AND
+                  					C.COMPANYID = B.COMPANYID
+                  				AND
+                  					C.DOCID = B.DOCID      
+                  				WHERE
+                  					A.TENANT_ID = #tenantID#
+                  				AND
+                  					A.COMPANYID = #companyID#
+                  				AND 
+                  					A.PROCESSORID = #userID#     
+                  				AND 
+                  					(A.APRSTATE = #staASJinHang#  
+                  				OR 
+                  					A.APRSTATE = #staASBanSong#)      
+                  				AND 
+                  					A.PROCESSYN <> 'Y'
+							]]>
+						</isEqual>
+						<isNotEqual property="listType" compareValue="6">
+							<isEqual property="listType" compareValue="9">
+								<![CDATA[
+									SELECT 
+										COUNT(SN) 
+									FROM 
+										TBTMPAPRDOCINFO  
+									WHERE 
+										TENANT_ID = #tenantID#
+									AND
+										COMPANYID = #companyID#
+									AND
+										OWNERID = #userID#
+								]]>
+							</isEqual>
+							<isNotEqual property="listType" compareValue="9">
+								<![CDATA[
+									SELECT 
+										COUNT(DOCID) 
+									FROM 
+										VAPRDOINGDOCLIST  
+									WHERE 
+										TENANT_ID = #tenantID#
+									AND
+										COMPANYID = #companyID#
+									AND
+										APRMEMBERID IN ($userIDs$)
+								]]>
+							</isNotEqual>
+						</isNotEqual>
+					</isNotEqual>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+		<isNotEmpty property="subQuery" prepend="AND">
+			$subQuery$
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalDAO.getLeftDocCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(DOCID) AS COUNT 
+			FROM 
+				VAPRDOINGDOCLIST  
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERID IN ($userIDs$)  
+			AND 
+				STARTDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+				 
+			UNION ALL
+			
+			SELECT 
+				COUNT(DOCID) 
+			FROM 
+				VAPRWILLDOCLIST  
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				APRMEMBERID = #userID# 
+			AND 
+				APRMEMBERSN = 1  
+			AND 
+				STARTDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') 
+			
+			UNION ALL
+			
+			SELECT 
+				COUNT(DISTINCT DOCID) 
+			FROM 
+				VAPRWILLDOCLIST  
+			WHERE 
+				APRMEMBERID = #userID#
+			AND 
+				STARTDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			
+			UNION ALL
+			
+			SELECT 
+				COUNT(TBAPRRECEIPTPROCESSINFO.DOCID)      
+   			FROM 
+   				TBAPRRECEIPTPROCESSINFO A 
+   			INNER JOIN 
+   				TBAPRDOCINFO B 
+   			ON 
+   				A.TENANT_ID = B.TENANT_ID
+   			AND
+   				A.COMPANYID = B.COMPANYID
+   			AND
+   				A.DOCID = B.DOCID      
+   			INNER JOIN 
+   				TBEXPAPRDOCINFO C 
+   			ON 
+   				C.TENANT_ID = B.TENANT_ID
+   			AND
+   				C.COMPANYID = B.COMPANYID
+   			AND
+   				C.DOCID = B.DOCID 
+   			WHERE
+   				A.TENANT_ID = #tenantID#
+   			AND
+   				A.COMPANYID = #companyID#
+   			AND 
+   				A.PROCESSYN <> 'Y' 
+   			AND 
+   				(((A.PROCESSORID = #userID#)     
+   					AND 
+   				(A.APRSTATE = #staASJiJung# 
+		   			OR 
+		   		A.APRSTATE = #staASWheSong#))
+		]]>
+		<isEqual property="userFlag" compareValue="admin" prepend="OR">
+			<![CDATA[
+				(A.ReceivedDeptID = #userDeptID# 
+      				AND 
+      			A.AprState IN (#staASDoJak#, #staASBaeBu#)) 
+      				OR 
+      			(A.ReceivedDeptID = #userDeptID#
+      				AND 
+      			A.AprState = #staASWheSong#)
+			]]>
+		</isEqual>
+		<![CDATA[
+			)  
+			AND 
+				PROCESSDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND PROCESSDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+				
+			UNION ALL
+			
+			SELECT 
+				COUNT(TBAPRRECEIPTPROCESSINFO.DOCID)      
+   			FROM 
+   				TBAPRRECEIPTPROCESSINFO A 
+   			INNER JOIN 
+   				TBAPRDOCINFO B 
+   			ON 
+                A.TENANT_ID = B.TENANT_ID
+            AND
+                A.COMPANYID = B.COMPANYID
+            AND
+   				A.DOCID = B.DOCID      
+   			INNER JOIN 
+   				TBEXPAPRDOCINFO C 
+   			ON 
+                C.TENANT_ID = B.TENANT_ID
+            AND
+                C.COMPANYID = B.COMPANYID
+            AND
+   				C.DOCID = B.DOCID      
+   			WHERE
+                A.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = #companyID#
+            AND 
+   				A.PROCESSORID = #userID#     
+   			AND 
+   				(A.APRSTATE = #staASJinHang#  
+   					OR 
+   				A.APRSTATE = #staASBanSong#)      
+   			AND 
+   				A.PROCESSYN <> 'Y'  
+   			AND 
+   				PROCESSDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND PROCESSDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+   			
+   			UNION ALL
+   			
+   			SELECT 
+   				COUNT(DISTINCT A.DOCID) 
+   			FROM 
+   				TBENDAPRDOCINFO A  
+   			LEFT OUTER JOIN 
+   				TBENDAPRLINEINFO B  
+   			ON 
+                A.TENANT_ID = B.TENANT_ID
+            AND
+                A.COMPANYID = B.COMPANYID
+            AND
+   				A.DOCID = B.DOCID 
+       		LEFT OUTER JOIN 
+       			TBEXPENDAPRLINE C  
+       		ON 
+                A.TENANT_ID = C.TENANT_ID
+            AND
+                A.COMPANYID = C.COMPANYID
+            AND
+       			A.DOCID = C.DOCID    
+   			INNER JOIN 
+   				TBEXPENDAPRDOCINFO D  
+   			ON 
+                A.TENANT_ID = D.TENANT_ID
+            AND
+                A.COMPANYID = D.COMPANYID
+            AND
+   				A.DOCID = D.DOCID  
+   			WHERE 
+   				B.APRMEMBERID = #userID# 
+   			AND 
+   				D.DELFLAG IS NULL 
+   			AND 
+   				B.AprType = 'A03040' 
+   			AND 
+   				B.AprState = 'A04002' 
+   			AND 
+   				ENDDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+   			
+   			UNION ALL
+   			
+   			SELECT 
+   				COUNT(SN) 
+   			FROM 
+   				TBTMPAPRDOCINFO  
+   			WHERE 
+                TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#
+            AND
+   				OWNERID = #userID# 
+   			AND 
+   				STARTDATE >= TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+		]]>
+	</select>
+  
+    <select id="EzApprovalDAO.getWebPartList" parameterClass="Map" resultClass="ApprDocViewVO">
+          <isEqual property="listType" compareValue="1">
+              <![CDATA[
+                SELECT 
+                	* 
+                FROM
+                	(SELECT 
+                		DOCID, 
+                		APRMEMBERID,
+                		CASE
+                			WHEN APRMEMBERNAME$strLang$ IS NULL
+                			THEN ''
+                			ELSE APRMEMBERNAME$strLang$
+                		END APRMEMBERNAME,
+      					APRMEMBERDEPTID, 
+      					HREF, 
+      					DOCTITLE, 
+      					FUNCTIONTYPE, 
+      					DOCSTATE,
+      					CASE
+                			WHEN WRITERNAME$strLang$ IS NULL
+                			THEN ''
+                			ELSE WRITERNAME$strLang$
+                		END WRITERNAME,
+      					'0' AS RECEIVESN
+	      			FROM 
+	      				VAPRDOINGDOCLIST  
+	      			WHERE 
+	      				TENANT_ID = #tenantID#
+	      			AND
+	      				COMPANYID = #companyID#
+	      			AND
+	      				APRMEMBERID IN ($userIDs$)
+              ]]>
+              <isNotEmpty property="subQuery" prepend="AND">
+              	$subQuery$
+              </isNotEmpty>
+              <![CDATA[
+					ORDER BY 
+						STARTDATE DESC ) 
+				WHERE 
+					ROWNUM <= #listCount#
+			  ]]>
+        </isEqual>
+        <isNotEqual property="listType" compareValue="1">
+          <isEqual property="listType" compareValue="2">
+            <![CDATA[
+            	SELECT 
+            		* 
+            	FROM 
+            		( SELECT 
+            			DOCID, 
+            			CASE
+                			WHEN WRITERNAME$strLang$ IS NULL
+                			THEN ''
+                			ELSE WRITERNAME$strLang$
+                		END WRITERNAME,
+            			HREF, 
+            			DOCTITLE, 
+            			HASOPINIONYN
+         			  FROM 
+         			  	VAPRWILLDOCLIST  
+         			  WHERE 
+         			  	TENANT_ID = #tenantID#
+         			  AND
+         			  	COMPANYID = #companyID#
+         			  AND
+         			  	APRMEMBERID = #userID# 
+         			  AND 
+         			  	APRMEMBERSN = 1
+            ]]>
+            <isNotEmpty property="subQuery" prepend="AND">
+              	$subQuery$
+            </isNotEmpty>
+            <![CDATA[
+	            	  ORDER BY 
+	            		STARTDATE DESC ) 
+            	WHERE 
+            		ROWNUM <= #listCount#
+			]]>
+          </isEqual>
+          <isNotEqual property="listType" compareValue="2">
+            <isEqual property="listType" compareValue="3">
+            	<![CDATA[
+            		SELECT 
+            			* 
+            		FROM 
+            			( SELECT 
+            				DISTINCT DOCID, 
+            				CASE
+	                			WHEN WRITERNAME$strLang$ IS NULL
+	                			THEN ''
+	                			ELSE WRITERNAME$strLang$
+	                		END WRITERNAME,
+            				HREF, 
+            				DOCTITLE, 
+            				HASOPINIONYN, 
+            				STARTDATE 
+            			  FROM 
+            			  	VAPRWILLDOCLIST  
+            			  WHERE 
+            			  	APRMEMBERID = #userID#
+				]]>
+				<isNotEmpty property="subQuery" prepend="AND">
+              		$subQuery$
+            	</isNotEmpty>
+            	<![CDATA[
+		            	  ORDER BY 
+		            		STARTDATE DESC ) 
+	            	WHERE 
+	            		ROWNUM <= #listCount#
+				]]>
+            </isEqual>
+            <isNotEqual property="listType" compareValue="3">
+              <isEqual property="listType" compareValue="4">
+                <![CDATA[
+                	SELECT 
+                		* 
+                	FROM 
+                		(SELECT 
+                			B.DOCID, 
+                			B.HREF,
+                			CASE
+	                			WHEN A.SENTDEPTNAME$strLang$ IS NULL
+	                			THEN ''
+	                			ELSE A.SENTDEPTNAME$strLang$
+	                		END SENTDEPTNAME, 
+                           	B.DOCTITLE,     
+               				A.DOCSTATE, 
+               				A.APRSTATE,
+               				B.HASOPINIONYN     
+               			 FROM 
+               			 	TBAPRRECEIPTPROCESSINFO A  
+               			 INNER JOIN 
+               			 	TBAPRDOCINFO B 
+               			 ON 
+               			 	A.TENANT_ID = B.TENANT_ID
+               			 AND
+               			 	A.COMPANYID = B.COMPANYID
+               			 AND
+               			 	A.DOCID = B.DOCID      
+               			 INNER JOIN 
+               				TBEXPAPRDOCINFO C 
+               			 ON 
+               			 	C.TENANT_ID = B.TENANT_ID
+               			 AND
+               			 	C.COMPANYID = B.COMPANYID
+               			 AND
+               			 	C.DOCID = B.DOCID 
+               			 WHERE
+               			 	A.TENANT_ID = #tenantID#
+               			 AND
+               			 	A.COMPANYID = #companyID#
+               			 AND 
+               			 	A.PROCESSYN <> 'Y'
+               			 AND 
+               			 	(((A.PROCESSORID = #userID#)     
+               			 AND 
+               			 	(A.APRSTATE = #staASJiJung# 
+               			 		OR 
+               			 	A.APRSTATE = #staASWheSong#))
+                ]]>
+                <isEqual property="userFlag" compareValue="admin" prepend="OR">
+                	<![CDATA[
+                		(A.RECEIVEDDEPTID = #userDeptID#
+                			AND 
+                		A.APRSTATE IN (#staASDoJak#, #staASBaeBu#)) 
+                			OR 
+                		(A.RECEIVEDDEPTID = #userDeptID#      
+                  			AND 
+                  		A.APRSTATE = #staASWheSong#)
+					]]>
+                </isEqual>
+                )
+                <isNotEmpty property="subQuery" prepend="AND">
+              		$subQuery$
+            	</isNotEmpty>
+            	<![CDATA[
+		            	  ORDER BY 
+		            		PROCESSDATE DESC ) 
+	            	WHERE 
+	            		ROWNUM <= #listCount#
+				]]>
+              </isEqual>
+              <isNotEqual property="listType" compareValue="4">
+                <isEqual property="listType" compareValue="6">
+                	<![CDATA[
+                		SELECT 
+                			* 
+                		FROM 
+                			(SELECT 
+                				B.DOCID,     
+                  				B.HREF, 
+                  				B.HASOPINIONYN, 
+                  				B.DOCTITLE,
+                              	CASE
+		                			WHEN B.WRITERNAME$strLang$ IS NULL
+		                			THEN ''
+		                			ELSE B.WRITERNAME$strLang$
+		                		END WRITERNAME,
+                              	B.ORGDOCID, 
+                  				A.DocState , 
+                  				A.AprState 
+                  			 FROM 
+                  			 	TBAPRRECEIPTPROCESSINFO A
+                  			 INNER JOIN 
+                  			 	TBAPRDOCINFO B
+                  			 ON 
+                  			 	A.TENANT_ID = B.TENANT_ID
+                  			 AND
+                  			 	A.COMPANYID = B.COMPANYID
+                  			 AND
+                  			 	A.DOCID = B.DOCID      
+                  			 INNER JOIN 
+                  			 	TBEXPAPRDOCINFO C 
+                  			 ON 
+                  			 	C.TENANT_ID = B.TENANT_ID
+                  			 AND
+                  			 	C.COMPANYID = B.COMPANYID
+                  			 AND
+                  			 	C.DOCID = B.DOCID      
+                  			 WHERE
+                  			 	A.TENANT_ID = #tenantID#
+                  			 AND
+                  			 	A.COMPANYID = #companyID#
+                  			 AND 
+                  			 	A.PROCESSORID = #userID#     
+                  			 AND 
+                  			 	(A.APRSTATE = #staASJinHang#  
+                  			 		OR 
+                  			 	A.APRSTATE = #staASBanSong#)      
+                  			 AND 
+                  			 	A.PROCESSYN <> 'Y'
+					]]>
+					<isNotEmpty property="subQuery" prepend="AND">
+              			$subQuery$
+	            	</isNotEmpty>
+	            	<![CDATA[
+			            	  ORDER BY 
+			            		PROCESSDATE DESC ) 
+		            	WHERE 
+		            		ROWNUM <= #listCount#
+					]]>
+                </isEqual>
+                <isNotEqual property="listType" compareValue="6">
+                	<![CDATA[
+                		SELECT 
+                			* 
+                		FROM
+                			(SELECT 
+                				DOCID, 
+                				APRMEMBERID,
+                				CASE
+		                			WHEN APRMEMBERNAME$strLang$ IS NULL
+		                			THEN ''
+		                			ELSE APRMEMBERNAME$strLang$
+		                		END APRMEMBERNAME, 
+                  				APRMEMBERDEPTID, 
+                  				HREF, 
+                  				DOCTITLE, 
+                  				FUNCTIONTYPE, 
+                  				DOCSTATE, 
+                  				CASE
+		                			WHEN B.WRITERNAME$strLang$ IS NULL
+		                			THEN ''
+		                			ELSE B.WRITERNAME$strLang$
+		                		END WRITERNAME, 
+                  				'0' AS RECEIVESN
+                  			 FROM 
+                  			 	VAPRDOINGDOCLIST  
+                  			 WHERE 
+                  			 	TENANT_ID = #tenantID#
+                  			 AND
+                  			 	COMPANYID = #companyID#
+                  			 AND
+                  			 	APRMEMBERID IN ($userIDs$)
+					]]>
+					<isNotEmpty property="subQuery" prepend="AND">
+	              		$subQuery$
+	            	</isNotEmpty>
+	            	<![CDATA[
+			            	  ORDER BY 
+			            		STARTDATE DESC ) 
+		            	WHERE 
+		            		ROWNUM <= #listCount#
+					]]>
+                </isNotEqual>
+              </isNotEqual>
+            </isNotEqual>
+          </isNotEqual>
+        </isNotEqual>
+    </select>
+	
+	<insert id="EzApprovalDAO.createUserCont" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="maxContainerID" resultClass="String">
+			<![CDATA[
+				SELECT
+					NVL(MAX(usercontid), '0000000000') + 1
+				FROM 
+					TBUSERCONT
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBUSERCONT ( 
+				USERCONTID, 	  USERCONTNAME,   PARENTCONTID,   DESCRIPTION,   OWNUSERID, TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #userContName#, #parentContID#, #description#, #userID#, 	#tenantID# 
+	     	)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalDAO.createDeptCont" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="maxContainerID" resultClass="String">
+			<![CDATA[
+				SELECT
+					 NVL(MAX(deptcontid), '0000000000') + 1
+				FROM 
+					TBDEPTCONT
+				WHERE
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO TBDEPTCONT ( 
+				DEPTCONTID, 	  DEPTCONTNAME,   PARENTCONTID,   SN,   DESCRIPTION,   OWNDEPTID, MANAGEUSERID,   TENANT_ID 
+			)
+	     	VALUES ( 
+	     		#maxContainerID#, #deptContName#, #parentContID#, #sn#, #description#, #deptID#,  #manageUserID#, #tenantID# 
+	     	)
+		]]>
+	</insert>
+</sqlMap>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezEmail">
+	<typeAlias  alias="MailGeneralVO" type="egovframework.ezEKP.ezEmail.vo.MailGeneralVO"/>
+	<typeAlias  alias="MailSignatureVO" type="egovframework.ezEKP.ezEmail.vo.MailSignatureVO"/>
+	<typeAlias  alias="MailDeleteVO" type="egovframework.ezEKP.ezEmail.vo.MailDeleteVO"/>
+	<typeAlias  alias="MailReservationVO" type="egovframework.ezEKP.ezEmail.vo.MailReservationVO"/>
+	<typeAlias  alias="MailColorVO" type="egovframework.ezEKP.ezEmail.vo.MailColorVO"/>
+	<typeAlias  alias="MailReadVO" type="egovframework.ezEKP.ezEmail.vo.MailReadVO"/>
+	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
+	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
+	
+	<resultMap id="mailGeneral" class="MailGeneralVO">
+		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
+		<result property="refreshInterval" column="REFRESHINTERVAL" columnIndex="2"/>
+		<result property="keepDeleteLength" column="KEEPDELETELENGTH" columnIndex="3"/>
+		<result property="previewMode" column="PREVIEWMODE" columnIndex="4"/>
+		<result property="previewWList" column="PREVIEWWLIST" columnIndex="5"/>
+		<result property="previewWContent" column="PREVIEWWCONTENT" columnIndex="6"/>
+		<result property="previewHList" column="PREVIEWHLIST" columnIndex="7"/>
+		<result property="previewHContent" column="PREVIEWHCONTENT" columnIndex="8"/>
+ 		<result property="mailSenderNm" column="MAILSENDERNM" columnIndex="9" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<resultMap id="mailSignature" class="MailSignatureVO">
+		<result property="useFlag" column="USEFLAG" columnIndex="1"/>
+		<result property="content1" column="CONTENT1" columnIndex="2" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="content2" column="CONTENT2" columnIndex="3" jdbcType="CLOB" javaType="java.lang.String"/>
+		<result property="content3" column="CONTENT3" columnIndex="4" jdbcType="CLOB" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<resultMap id="mailDelete" class="MailDeleteVO">
+		<result property="itemSeq" column="ITEMSEQ" columnIndex="1"/>
+		<result property="expireTime" column="EXPIRETIME" columnIndex="2"/>
+		<result property="path" column="PATH" columnIndex="3"/>
+		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>
+		<result property="folderName" column="FOLDERNAME" columnIndex="5"/>
+	</resultMap>
+	
+	<resultMap id="mailDelete2" class="MailDeleteVO">
+		<result property="userId" column="USERID" columnIndex="1"/>
+		<result property="expireTime" column="EXPIRETIME" columnIndex="2"/>
+		<result property="path" column="PATH" columnIndex="3"/>
+		<result property="deleteUnread" column="DELETEUNREAD" columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation" class="MailReservationVO">
+		<result property="messageId" column="MESSAGEID" columnIndex="1"/>
+		<result property="sendDate" column="SENDDATE" columnIndex="2"/>
+		<result property="subject" column="SUBJECT" columnIndex="3"/>
+		<result property="modify" column="MODIFY" columnIndex="4"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation2" class="MailReservationVO">
+		<result property="messageId" column="MESSAGEID" columnIndex="1"/>
+		<result property="connUrl" column="CONNURL" columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation3" class="MailReservationVO">
+		<result property="sendDate" column="SENDDATE" columnIndex="1"/>
+	</resultMap>
+	
+	<resultMap id="mailReservation4" class="MailReservationVO">
+		<result property="subject" column="SUBJECT" columnIndex="1"/>
+	</resultMap>
+	
+	<resultMap id="mailColor" class="MailColorVO">
+		<result property="importanceColor" column="IMPORTANCECOLOR" columnIndex="1"/>
+		<result property="inmailColor" column="INMAILCOLOR" columnIndex="2"/>
+		<result property="outmailColor" column="OUTMAILCOLOR" columnIndex="3"/>
+	</resultMap>
+	
+	<resultMap id="mailRead" class="MailReadVO">
+		<result property="readDate" column="READDATE" columnIndex="1"/>
+		<result property="readerEmail" column="READEREMAIL" columnIndex="2"/>
+		<result property="readerName" column="READERNAME" columnIndex="3"/>
+	</resultMap>
+	
+	<resultMap id="mailCancel" class="MailCancelVO">
+		<result property="readerEmail" column="READEREMAIL" columnIndex="1"/>
+		<result property="status" column="STATUS" columnIndex="2"/>
+	</resultMap>
+	
+	<resultMap id="mailPOP3" class="MailPOP3VO">
+		<result property="pop3Server" column="POP3Server" columnIndex="1"/>
+		<result property="pop3PortNo" column="POP3PortNo" columnIndex="2"/>
+		<result property="pop3UserId" column="POP3UserID" columnIndex="3"/>
+		<result property="pop3Pw" column="POP3PW" columnIndex="4"/>
+		<result property="saveTo" column="SaveTo" columnIndex="5"/>
+		<result property="deleteYN" column="DeleteYN" columnIndex="6"/>
+		<result property="pop3SslYN" column="POP3SSLYN" columnIndex="7"/>
+		<result property="saveTofolder" column="SAVETOFOLDER" columnIndex="8"/>
+	</resultMap>
+	
+	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
+		{CALL EZEMAIL.EZSP_GETMAILGENERAL(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+
+	<procedure id="EzEmailDAO.setMailGeneral" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILGENERAL(#v_PUSERID#, #v_PLISTCNT#, #v_PREFRESHINTERVAL#, #v_PKEEPDELETELENGTH#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailGeneral2" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILGENERAL2(#v_PUSERID#, #v_PLISTCNT#, #v_PREFRESHINTERVAL#, #v_PKEEPDELETELENGTH#, #v_PREVIEWMODE#, #v_PREVIEWWLIST#, #v_PREVIEWWCONTENT#, #v_PREVIEWHLIST#, #v_PREVIEWHCONTENT#, #v_MAILSENDERNM#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailSignature" parameterClass="Map" resultMap="mailSignature">
+		{CALL EZEMAIL.EZSP_GETSIGNATURE(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailSignature" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETSIGNATURE(#v_USERID#, #v_USEFLAG#, #v_CONTENT1#, #v_CONTENT2#, #v_CONTENT3#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailDelete" parameterClass="Map" resultMap="mailDelete">
+		{CALL EZEMAIL.EZSP_GETMAILDELETE(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailDelete" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILDELETE(#v_PUSERID#, #v_PPATH#, #v_PEXPIRETIME#, #v_PFOLDERNAME#, #v_PDELETEUNREAD#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.deleteMailDelete" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_DELETEMAILDELETE(#v_PUSERID#, #v_PITEMSEQ#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailDeleteList" resultMap="mailDelete2">
+		{CALL EZEMAIL.EZSP_GETMAILDELETELIST(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReserved" parameterClass="Map" resultMap="mailReservation">
+		{CALL EZEMAIL.EZSP_GETRESERVEDMAIL(#v_PURL#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailReserved" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETRESERVEDMAIL(#v_PMESSAGEID#, #v_PSUBJECT#, #v_PSENDDATE#, #v_PCONNURL#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.deleteMailReserved" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_DELETERESERVEDMAIL(#v_PMESSAGEID#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReservedTime" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_GETRESERVERDMAILTIME(#v_MESSAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailColor" resultMap="mailColor">
+		{CALL EZEMAIL.EZSP_GETCOLOR(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.checkReservedMail" parameterClass="Map" resultMap="mailReservation4">
+		{CALL EZEMAIL.EZSP_CHECKRESERVEDMAIL(#v_MESSAGEID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.updateReservedMail" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_UPDATERESERVERDMAIL(#v_MESSAGEID#, #v_SUBJECT#, #v_SENDDATE#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReadList" parameterClass="Map" resultMap="mailRead">
+		{CALL EZEMAIL.EZSP_GETMAILREADLIST(#v_PUSERID#, #v_PMESSAGEID#, #v_PMESSAGEID2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailCancelList" parameterClass="Map" resultMap="mailCancel">
+		{CALL EZEMAIL.EZSP_GETMAILCANCELLIST(#v_PMESSAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.checkDoubleMailReceive" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_CHECKDOUBLE_MAILRECE(#v_SENDEREMAIL#, #v_SUBJECT#, #v_RECDATE#, #v_MESSAGEID#, #v_SERVERNAME#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.insertMailReceiveInfo" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_INSERT_MAILRECEIVE_I(#v_SENDEREMAIL#, #v_SUBJECT#, #v_RECDATE#, #v_MESSAGEID#, #v_SERVERNAME#, #v_RECALLKEY#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.insertMailReceiveDetailInfo" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_MAIL_INSERT_MAILRECEIVE_D(#v_NUM#, #v_RECEIVEID#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReceiveMessageId" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_SELECT_MAILRECEIVE_M(#v_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.updateMailReceiveDetailInfo" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_MAIL_UPDATE_MAILRECEIVE_D(#v_NUM#, #v_EMAIL#, #v_CODE#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailReceiveAddress" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_MAIL_SELECT_MAILRECEIVE_A(#v_NUM#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailPOP3" parameterClass="Map" resultMap="mailPOP3">
+		{CALL EZEMAIL.EZSP_GETMAILPOP3(#v_PUSERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailPOP3" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILPOP3(#v_PUSERID#, #v_PPOP3SERVER#, #v_PPOP3USERID#, #v_PMESSAGEID#, #v_PPOP3DUPMSG#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.getMailPOP3List" parameterClass="Map" resultClass="String">
+		{CALL EZEMAIL.EZSP_GETMAILPOP3LIST(#v_PUSERID#, #v_PPOP3SERVER#, #v_PPOP3USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+	</procedure>
+	
+	<procedure id="EzEmailDAO.setMailColor" parameterClass="Map">
+		{CALL EZEMAIL.EZSP_SETMAILCOLOR(#v_IMPORTANCE#, #v_INMAIL#, #v_OUTMAIL#)}
+	</procedure>
+	
+	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
+		<![CDATA[
+			SELECT 
+				messageid, connurl
+	        FROM 
+	        	ezEmail.TBLRESERVEDMAIL 
+	       	WHERE  
+	       		senddate <= (SELECT SYS_EXTRACT_UTC(SYSTIMESTAMP) FROM DUAL)
+       	]]>
+	</select>
+	
+	<insert id="EzEmailDAO.insertPop3" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO ezEmail.TBLMAILPOP3 (UserID, POP3Server, POP3PortNo, POP3UserID, POP3PW, SaveTo, DeleteYN, POP3SSLYN, SAVETOFOLDER) 
+			VALUES (#v_USERID#, #v_POP3SERVER#, #v_POP3PORTNO#, #v_POP3USERID#, #v_POP3PW#, #v_SAVETO#, #v_DELETEYN#, #v_POP3SSLYN#, #v_SAVETOFOLDER#)
+       	]]>
+	</insert>
+	
+	<delete id="EzEmailDAO.deletePop3ByUserId" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM ezEmail.TBLMAILPOP3 
+			WHERE UserID=#v_USERID#
+       	]]>
+	</delete>
+	
+	<delete id="EzEmailDAO.deletePop3List" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM ezEmail.TBLMAILPOP3LIST
+			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
+       	]]>
+	</delete>
+	
+</sqlMap>

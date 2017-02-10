@@ -353,9 +353,9 @@ public class EzBoardController extends EgovFileMngUtil{
             if (i != resultList.size() - 1)
                 BoardIdList += ";";            
         }
-        BoardIdListCount = BoardIdList.split(";").length - 1;
+        BoardIdListCount = BoardIdList.split(";").length;
         
-        rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(),BoardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
+        rtv = ezBoardService.get_parentBoardName(BoardIdList.trim(), BoardIdListCount, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getLocale());
         
         return "<DATA><TOPBOARDLIST>" + rtv + "</TOPBOARDLIST></DATA>";
     }
@@ -582,10 +582,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int i = 0; i < userDeptPath.split(",").length; i++)
 		{
 			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
-			if (boardInfoTemp == null) {
-				break;
-			} else {
+			if (boardInfoTemp != null) {
 				boardInfo = boardInfoTemp;
+				break;
 			}
 		}
 		
@@ -3198,7 +3197,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardListVO.setStartDate(commonUtil.getTodayUTCTime(""));
 		}
 		
-		boardListVO.setEndDate(doc.getElementsByTagName("ENDDATE").item(0).getTextContent());
+		boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
 		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
 		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
@@ -5263,7 +5262,7 @@ public class EzBoardController extends EgovFileMngUtil{
             	FileUtils.copyFile(file, file3);
             }
             
-            sb.append("<IMAGEPATH>" + g_ImageUrl +";" +"</IMAGEPATH>");
+            sb.append("<IMAGEPATH>" + g_ImageUrl + ";" + "</IMAGEPATH>");
             sb.append("</ROW>");
         }
         

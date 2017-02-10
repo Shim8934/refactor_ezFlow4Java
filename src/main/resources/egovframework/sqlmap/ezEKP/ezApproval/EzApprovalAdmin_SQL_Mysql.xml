@@ -1,0 +1,2054 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezApprovalAdmin">
+	<typeAlias  alias="ApprCodeVO" 						type="egovframework.ezEKP.ezApproval.vo.ApprCodeVO"/>
+	<typeAlias  alias="ApprDocNumVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocNumVO"/>
+	<typeAlias  alias="ApprDocItemVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocItemVO"/>
+	<typeAlias  alias="ApprLineInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprLineInfoVO"/>
+	<typeAlias  alias="ApprExcelOutVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprExcelOutVO"/>
+	<typeAlias  alias="ApprAutoRuleVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO"/>
+	<typeAlias  alias="ApprConnInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprConnInfoVO"/>
+	<typeAlias  alias="ApprFormInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO"/>
+	<typeAlias  alias="ApprSealInfoVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprSealInfoVO"/>
+	<typeAlias  alias="ApprFormContVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprFormContVO"/>
+	<typeAlias  alias="ApprDocGroupVO" 					type="egovframework.ezEKP.ezApproval.vo.ApprDocGroupVO"/>
+	<typeAlias  alias="ApprReceiptInfoVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiptInfoVO"/>
+	<typeAlias  alias="ApprReceiveGroupVO"				type="egovframework.ezEKP.ezApproval.vo.ApprReceiveGroupVO"/>
+	
+	<select id="EzApprovalAdminDAO.getCode2Name" parameterClass="ApprCodeVO" resultClass="String">
+		<![CDATA[
+			SELECT 
+				NAME$lang$ AS NAME 
+			FROM 
+				EZFLOWYJ.TBCODELIST  
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				CODE1 = #code1# 
+			AND 
+				CODE2 = #code2#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getDocType" parameterClass="Integer" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT 
+				CODE, 
+				NAME1 AS NAME 
+			FROM 
+				EZFLOWYJ.TBCODEDOCTYPE  
+			WHERE
+				TENANT_ID = #tenantID#
+			AND 
+				ISUSE = '1' 
+			ORDER BY 
+				CODE
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContainerInfoManage" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				tbContainer.ContainerID ,
+             	tbContainer.ContainerTypeID ,
+             	tbContainer.ContainerOwnDepID ,
+             	tbContainerType.ContainerTypeName ,
+             	tbContainerType.ContainerTypeName2 
+        	FROM 
+        		EZFLOWYJ.tbContainer 
+            JOIN 
+            	EZFLOWYJ.tbContainerType
+            ON 
+            	tbContainer.tenant_id = tbContainerType.tenant_id
+            AND
+            	tbContainer.companyid = tbContainerType.companyid
+            AND
+            	tbContainer.ContainerTypeID = tbContainerType.ContainerTypeID
+       		WHERE
+       			tbContainer.tenant_id = #tenantId#
+       		AND
+       			tbContainer.companyid = #companyID#
+       		AND  
+       			CONTAINEROWNDEPID = #deptID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContTypeInfo" parameterClass="UserInfo" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT
+				containerTypeName$primary$,
+				containerTypeID
+			FROM
+				EZFLOWYJ.tbcontainertype
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyID = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(tbContainer.ContainerID) 
+		    FROM 
+		    	EZFLOWYJ.tbContainer 
+		    JOIN 
+		    	EZFLOWYJ.tbContainerType 
+		    ON 
+		    	tbContainer.tenant_id = tbContainerType.tenant_id
+		    AND
+		    	tbContainer.companyid = tbContainerType.companyid
+		    AND
+		    	tbContainer.ContainerTypeID = tbContainerType.ContainerTypeID
+   			WHERE  
+   				tbContainer.tenant_id = #tenantID#
+   			AND
+   				tbContainer.companyid = #companyID#
+   			AND
+   				tbContainer.ContainerTypeID = #codeID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getListHeader" parameterClass="Map" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT 
+				NAME$lang$ AS NAME, 
+				WIDTH, 
+				COLNAME 
+			FROM 
+				EZFLOWYJ.TBLISTOPTION  
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				LISTTYPE = #listCode# 
+			AND 
+				DTYPE IS NULL 
+			ORDER BY 
+				SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContainerToDocStateInfo" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				CTDS.CONTAINERTYPEID, 
+				CTDS.DOCUMENTSTATE,
+				CT.CONTAINERTYPENAME, 
+				CT.CONTAINERTYPENAME2, 
+   				CDS.NAME1 AS DOCUMENTSTATENAME,
+   				CDS.CODE AS DOCUMENTCODE
+   			FROM 
+   				EZFLOWYJ.TBCODEDOCSTATE CDS 
+   			LEFT JOIN 
+   				EZFLOWYJ.TBCONTAINERTODOCSTATE CTDS  
+   			ON  
+   				CTDS.TENANT_ID = CDS.TENANT_ID
+   			AND
+   				CTDS.COMPANYID = CDS.COMPANYID
+   			AND
+   				CTDS.DOCUMENTSTATE = CDS.CODE  
+   			LEFT JOIN 
+   				TBCONTAINERTYPE CT  
+   			ON 
+   				CTDS.TENANT_ID = CT.TENANT_ID
+   			AND
+   				CTDS.COMPANYID = CT.COMPANYID
+   			AND 
+   				CTDS.CONTAINERTYPEID = CT.CONTAINERTYPEID 
+   			WHERE 
+   				CDS.TENANT_ID = #tenantID#
+   			AND
+   				CDS.COMPANYID = #companyID#
+   			AND
+   				CDS.ISUSE = '1' 
+   			ORDER BY 
+   				DOCUMENTSTATENAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContainerUseDeptInfo" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				USEDEPID 
+        	FROM 
+        		EZFLOWYJ.tbContainerUseDep 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			CONTAINERID = #contID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContList" parameterClass="Map" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+             	CONTTYPE ,
+             	SN ,
+             	CONTNAME ,
+             	SUBQUERY 
+        	FROM 
+        		EZFLOWYJ.TBSPECIALCONTAINERINFO 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			DEPTID = #deptID#
+        	ORDER BY 
+        		CONTTYPE,
+                SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfoContTypeName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				containertypename$lang$ as containerTypeName
+			FROM
+				EZFLOWYJ.TBCONTAINERTYPE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containertypeid = #contType#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT 
+				CODE2, 
+				NAME$lang$ AS NAME 
+			FROM 
+				EZFLOWYJ.TBCODELIST 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				CODE1 = #code1# 
+   			AND 
+   				ISUSE = '1' 
+   			ORDER BY 
+   				CODE2
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfo" parameterClass="ApprContInfoVO" resultClass="ApprContInfoVO">
+		<![CDATA[
+			SELECT 
+				DEPTID ,
+        		CONTTYPE ,
+        		SN ,
+        		CONTNAME ,
+        		SUBQUERY 
+   			FROM 
+   				EZFLOWYJ.TBSPECIALCONTAINERINFO 
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				COMPANYID = #companyID#
+  			AND  
+  				DEPTID = #deptID#
+           	AND 
+           		CONTTYPE = #contType#
+           	AND 
+           		SN = #sn#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSpecialContInfoFormName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CONCAT(CONCAT(FORMID,';'), FORMNAME$lang$) AS FORMIDNAME 
+			FROM 
+				EZFLOWYJ.TBFORMINFO  
+			WHERE 
+			  	$subQuery$
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContainerInfo" parameterClass="Map" resultClass="ApprFormContVO">
+		<isEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					FORMCONTID ,
+                	FORMCONTNAME,
+                	FORMCONTNAME2,
+                	FORMCONTOWNDEPID ,
+                	FORMCONTPARENTS ,
+                	FORMCONTDESCRIPTION 
+           		FROM 
+           			EZFLOWYJ.TBFormContainer 
+          		WHERE
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND  
+          			FORMCONTPARENTS = #id#
+			]]>
+		</isEmpty>
+		<isNotEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					DISTINCT fc.FormContID ,
+                   	fc.FormContName,
+                   	fc.FormContName2,
+                    fc.FormContOwnDepID ,
+                    fc.FormContParents ,
+                    fc.FormContdescription 
+           		FROM 
+           			EZFLOWYJ.TBFormContainer fc
+                LEFT JOIN 
+                	EZFLOWYJ.TBFormContUserGroup fcug   
+                ON
+                	fc.tenant_id = fcug.tenant_id
+                AND
+                	fc.companyid = fcug.companyid
+                AND 
+                	fc.FormContID = fcug.FormContID
+          		WHERE
+          			fc.tenant_id = #tenantID#
+          		AND
+          			fc.companyid = #companyID#
+          		AND  
+          			fc.FormContParents = #id#
+                AND 
+                	( fc.FormContOwnDepID = 'ALL' 
+                      OR fc.FormContOwnDepID = #deptID# 
+                	  OR fcug.FormContUserDepID = #deptID# )
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContainerCntChild" parameterClass="Map" resultClass="Integer">
+		<isEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					COUNT(FORMCONTID)
+           		FROM 
+           			EZFLOWYJ.TBFormContainer 
+          		WHERE  
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND
+          			FORMCONTPARENTS = #formContID#
+			]]>
+		</isEmpty>
+		<isNotEmpty property="deptID">
+			<![CDATA[
+				SELECT 
+					DISTINCT COUNT(fc.FormContID)
+           		FROM 
+           			EZFLOWYJ.TBFormContainer fc 
+                LEFT JOIN 
+                	EZFLOWYJ.TBFormContUserGroup fcug    
+                ON 
+                	fc.tenant_id = fcug.tenant_id
+                AND
+                	fc.companyid = fcug.companyid
+                AND
+                	fc.FormContID = fcug.FormContID
+          		WHERE
+          			fc.tenant_id = #tenantID#
+          		AND
+          			fc.companyid = #companyID#
+          		AND  
+          			fc.FormContParents = #formContID#
+                AND 
+                	( fc.FormContOwnDepID = 'ALL'
+                	OR fc.FormContOwnDepID = #deptID#
+                	OR fcug.FormContUserDepID = #deptID# )
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormInfo" parameterClass="ApprFormInfoVO" resultClass="ApprFormInfoVO">
+		<isEqual property="formKind" compareValue="A01000">
+			<![CDATA[
+				SELECT 
+					formid,
+					formDescription,
+					formDocType,
+					formFileLocation,
+					formName,
+					formName2 
+           		FROM 
+           			EZFLOWYJ.TBFormInfo 
+          		WHERE  
+          			TENANT_ID = #tenantID#
+          		AND
+          			COMPANYID = #companyID#
+          		AND
+          			FORMCONTID = #formContID#
+                AND 
+                	( CASE
+                		WHEN #searchType# = '0' AND #lang# = '1'
+                			THEN FORMNAME
+                        WHEN #searchType# = '0' AND #lang# != '1' 
+                       		THEN FORMNAME2
+                        WHEN #searchType# = '1' 
+                       		THEN FORMDESCRIPTION
+                 	    ELSE FORMNAME
+                    END ) LIKE '%' || #searchName# || '%'
+           		ORDER BY 
+           			FORMORDER
+			]]>
+		</isEqual>
+		<isNotEqual property="formKind" compareValue="A01000">
+			<isEqual property="formKind" compareValue="BASE">
+				<![CDATA[
+					SELECT 
+						formid,
+						formDescription,
+						formDocType,
+						formFileLocation,
+						formName,
+						formName2 
+	           		FROM 
+	           			EZFLOWYJ.TBFormInfo 
+	          		WHERE  
+	          			TENANT_ID = #tenantID#
+	          		AND
+	          			COMPANYID = #companyID#
+	          		AND  
+	          			FORMCONTID = #formContID#
+	                AND 
+	                	( FORMDOCTYPE = 'A01001' OR FORMDOCTYPE = 'A01002' OR FORMDOCTYPE = 'A01003' )
+	                AND 
+	                	( CASE
+	                		WHEN #searchType# = '0' AND #lang# = '1' 
+	                        	THEN FORMNAME
+	                        WHEN #searchType# = '0' AND #lang# != '1' 
+	                       		THEN FORMNAME2
+	                        WHEN #searchType# = '1' 
+	                        	THEN FORMDESCRIPTION
+	                    	ELSE FORMNAME
+	                      END ) LIKE '%' || #searchName# || '%'
+	              	ORDER BY 
+	              		FORMORDER
+				]]>
+			</isEqual>
+			<isNotEqual property="formKind" compareValue="BASE">
+				<![CDATA[
+					SELECT 
+						formid,
+						formDescription,
+						formDocType,
+						formFileLocation,
+						formName,
+						formName2 
+	           		FROM 
+	           			EZFLOWYJ.TBFormInfo 
+	          		WHERE  
+	          			TENANT_ID = #tenantID#
+	          		AND
+	          			COMPANYID = #companyID#
+	          		AND  
+	          			FORMCONTID = #formContID#
+                    AND 
+                    	FORMDOCTYPE = #formKind#
+                    AND 
+                    	( CASE
+                    		WHEN #searchType# = '0' AND #lang# = '1' 
+                    			THEN FORMNAME
+                            WHEN #searchType# = '0' AND #lang# != '1' 
+                            	THEN FORMNAME2
+                            WHEN #searchType# = '1' 
+                            	THEN FORMDESCRIPTION
+                    		ELSE FORMNAME
+                       	  END ) LIKE '%' || #searchName# || '%'
+              		ORDER BY 
+              			FORMORDER
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getUserSecurityCode" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CASE
+					WHEN extensionattribute6 IS NULL
+					THEN '0'
+					ELSE extensionattribute6
+				END userSecurityCode
+			FROM
+				TBLUSERMASTER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				CN = #userID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getCodeIsUse" parameterClass="ApprCodeVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				isuse
+			FROM
+				EZFLOWYJ.TBCODELIST
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				code1 = #code1#
+			AND
+				code2 = #code2#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContDocListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(DISTINCT A.DOCID)
+   			FROM 
+   				EZFLOWYJ.TBENDAPRDOCINFO A  
+   			LEFT OUTER JOIN 
+   				EZFLOWYJ.TBENDAPRLINEINFO  
+   			ON 
+   				A.TENANT_ID = TBENDAPRLINEINFO.TENANT_ID
+   			AND
+   				A.DOCID = TBENDAPRLINEINFO.DOCID 
+       		LEFT OUTER JOIN 
+       			EZFLOWYJ.TBEXPENDAPRLINE  
+       		ON 
+       			A.TENANT_ID = TBEXPENDAPRLINE.TENANT_ID
+       		AND
+       			A.DOCID = TBEXPENDAPRLINE.DOCID    
+   			INNER JOIN 
+   				EZFLOWYJ.TBEXPENDAPRDOCINFO  
+   			ON 
+   				A.TENANT_ID = TBEXPENDAPRDOCINFO.TENANT_ID
+   			AND
+   				A.DOCID = TBEXPENDAPRDOCINFO.DOCID
+   			WHERE
+   				A.TENANT_ID = #tenantID#
+   			AND
+				TBEXPENDAPRDOCINFO.DELFLAG IS NULL
+		]]>
+		<isEmpty property="contID" prepend="AND">
+			TBENDAPRLINEINFO.APRMEMBERID = #userID#
+		</isEmpty>
+		<isNotEmpty property="contID">
+			<isEqual property="contID" compareValue="ADMIN" prepend="AND">
+				CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="contID" compareValue="ADMIN" prepend="AND">
+				CONTAINERID IN (#contID#)
+			</isNotEqual>
+		</isNotEmpty>
+		<isNotEqual property="userSecurityCode" compareValue="0">
+			<isNotEqual property="contID" compareValue="ADMIN">
+				<isEqual property="securityFlag" compareValue="Y" prepend="AND">
+					<![CDATA[
+							( #userSecurityCode# <= TBEXPENDAPRDOCINFO.SECURITYCODE OR ( SELECT 
+																							CASE
+																								WHEN COUNT(DocID) > 0
+																								THEN 'Y'
+																								ELSE 'N'
+																							END getIsLineInfo
+																						 FROM 
+																						 	EZFLOWYJ.TBENDAPRLINEINFO 
+       																					 WHERE  
+       																					 	tenant_id = #tenantID#
+       																					 AND
+       																					 	companyid = #companyID#
+       																					 AND
+       																					 	DocID = A.DOCID
+                																		 AND 
+                																		 	AprMemberID = #userID# )  = 'Y')
+					]]>
+				</isEqual>
+				<isNotEqual property="securityFlag" compareValue="Y" prepend="AND">
+					<![CDATA[
+						#userSecurityCode# <= TBEXPENDAPRDOCINFO.SECURITYCODE
+					]]>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+		<isEqual property="publicFlag" compareValue="Y">
+			<isNotEmpty property="contID">
+				<![CDATA[
+					AND 
+						( (A.ISPUBLIC <> 'N' OR A.ISPUBLIC IS NULL)
+	      			OR 
+	      				(A.ISPUBLIC = 'N' AND TBENDAPRLINEINFO.APRMEMBERID = #userID# ))
+				]]>
+			</isNotEmpty>
+		</isEqual>
+		<isNotEmpty property="subQuery" prepend="AND">
+			$subQuery$
+		</isNotEmpty>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getProcessYN" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				*
+     		FROM ( SELECT 
+     					ProcessYN 
+     			   FROM 
+     			   		EZFLOWYJ.TBENDRECEIPTPOINTINFO 
+    			   WHERE
+    			   		tenant_id = #tenantID#
+    			   AND	
+    			   		companyid = #companyID#
+    			   AND  
+    			   		DocID = #docID#
+     			   ORDER BY 
+     			   		ProcessYN )
+     		WHERE 
+     			ROWNUM <= 1
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getContDocList" parameterClass="Map" resultClass="ApprDocInfoVO">
+		<![CDATA[
+			SELECT 
+				* 
+			FROM 
+				( SELECT 
+						A.* ,
+						B.NAME1 AS DOCTYPENAME,
+				   		C.NAME1 AS DOCSTATENAME, 
+				   		D.NAME1 AS FUNCTIONTYPENAME ,
+				   		GETSENDSTATUS(A.DOCID) AS SENDFLAG
+   				  FROM 
+   				  		( $strSubQuery$ ) 
+   				  WHERE
+   				  		TENANT_ID = #tenantID#
+   				  AND
+   				  		COMPANYID = #companyID#
+   				  AND 
+   				  		ROWNUM <= #querySizeSub#) A 
+   				  INNER JOIN 
+   				  		EZFLOWYJ.TBCODEDOCTYPE B  
+   				  ON 
+   				  		A.TENANT_ID = B.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = B.COMPANYID
+   				  AND
+   				  		A.DOCTYPE = B.CODE 
+   				  INNER JOIN 
+   				  		EZFLOWYJ.TBCODEDOCSTATE C  
+   				  ON	
+   				  		A.TENANT_ID = C.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = C.COMPANYID
+   				  AND 
+   				  		A.DOCSTATE = C.CODE
+   				  INNER JOIN 
+   				  		EZFLOWYJ.TBCODEAPRSTATE D  
+   				  ON 
+   				  		A.TENANT_ID = D.TENANT_ID
+   				  AND
+   				  		A.COMPANYID = D.COMPANYID
+   				  AND
+   				  		A.FUNCTIONTYPE = D.CODE 
+   				  $orderByMain$ ) 
+   		  	 WHERE 
+   		  	 	 ROWNUM <= #querySizeMain#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getReceiveGroupInfo" parameterClass="Map" resultClass="ApprReceiveGroupVO" remapResults="true">
+		<isEqual property="mode" compareValue="ITEM">
+			<![CDATA[
+				SELECT 
+					mainid,
+					subid,
+					deptid,
+					deptname$lang$ as deptname,
+					addcompanyid 
+              	FROM 
+              		EZFLOWYJ.TBADMINRECEIPTGROUP_SUB 
+             	WHERE  
+             		tenant_id = #tenantID#
+             	AND	
+             		companyid = #companyID#
+             	AND
+             		MAINID = #groupID#
+              	ORDER BY 
+              		SUBID
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="ITEM">
+			<isEqual property="mode" compareValue="JOIN">
+				<![CDATA[
+					SELECT 
+						DISTINCT M.MAINID ,
+                        M.MAINNAME 
+                 	FROM 
+                 		EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN M 
+                    JOIN 
+                    	EZFLOWYJ.TBADMINRECEIPTGROUP_SUB S 
+                    ON 
+                    	M.tenant_id = S.tenant_id
+                    AND
+                    	M.companyid = S.companyid
+                    AND
+                    	M.MAINID = S.MAINID
+                    WHERE
+                    	tenant_id = #tenantID#
+                    AND
+                    	companyid = #companyid#
+                 	ORDER BY 
+                 		M.MAINID
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="JOIN">
+				<![CDATA[
+					SELECT 
+						mainid,
+						mainname
+                 	FROM 
+                 		EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
+                 	WHERE
+                 		tenant_id = #tenantID#
+                 	AND
+                 		companyid = #companyID# 
+                 	ORDER BY 
+                 		MAINID
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeGroup" parameterClass="ApprDocGroupVO" resultClass="ApprDocGroupVO">
+		SELECT 
+			groupid,
+			g_level,
+			g_upperid,
+			groupname,
+			groupname2,
+			etc
+   		FROM 
+   			EZFLOWYJ.TBDOCNUM_GROUP 
+  		WHERE  
+  			TENANT_ID = #tenantID#
+  		AND
+  			COMPANYID = #companyID#
+  		AND
+  			G_LEVEL = #g_level#
+		<isNotEqual property="groupID" compareValue="0" prepend="AND">
+			g_upperid = #groupID#
+		</isNotEqual>
+   		ORDER 
+   			BY GROUPID
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeGroupLeaf" parameterClass="ApprDocGroupVO" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				COUNT(*) 
+           	FROM 
+           		EZFLOWYJ.TBDOCNUM_GROUP 
+          	WHERE  
+          		TENANT_ID = #tenantID#
+          	AND
+          		COMPANYID = #companyID#
+          	AND
+          		G_UPPERID = #groupID#
+           	ORDER BY 
+           		GROUPID
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getItemCodeItem" parameterClass="ApprDocGroupVO" resultClass="ApprDocItemVO">
+		<![CDATA[
+			SELECT 
+				groupid,
+				itemcode,
+				itemname,
+				itemname2,
+				itemlimit,
+				itemsecurity,
+				itempublic 
+        	FROM 
+        		EZFLOWYJ.TBDOCNUM_ITEM 
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND  
+       			GROUPID = #groupID#
+        	ORDER BY 
+        		ITEMCODE
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getEtcName" parameterClass="ApprCodeVO" resultClass="String">
+		<![CDATA[
+			SELECT 
+				NAME$lang$ AS NAME 
+			FROM 
+				EZFLOWYJ.TBCODELIST  
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				CODE1 = #code1# 
+			AND 
+				NAME$lang$ LIKE CONCAT('%', #code2#)
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getMaxItemCode" parameterClass="UserInfo" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				CASE
+					WHEN LPAD(MAX(itemcode), 3, '0') IS NULL
+					THEN '0000000001'
+					ELSE LPAD(MAX(itemcode) + 1, 3, '0')
+				END maxContID
+			FROM
+				EZFLOWYJ.TBDOCNUM_ITEM
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getSealList" parameterClass="ApprSealInfoVO" resultClass="ApprSealInfoVO">
+		SELECT 
+			SEALNUM, 
+			SEALNAME, 
+			SEALPATH, 
+			SEALWIDTH, 
+			SEALHEIGHT, 
+            REGDATE, 
+            DELDATE, 
+            REGUSERID, 
+            REGUSERNAME$lang$ AS REGUSERNAME 
+        FROM 
+        	EZFLOWYJ.TBSEALINFO  
+        WHERE
+        	TENANT_ID = #tenantID#
+        AND
+        	COMPANYID = #companyID#
+		<isNotEqual property="listFlag" compareValue="ADMIN" prepend="AND">
+			DELDATE IS NULL
+		</isNotEqual>
+        ORDER BY 
+        	REGDATE DESC
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getUserDocCount" parameterClass="ApprExcelOutVO" resultClass="ApprLineInfoVO">
+		<![CDATA[
+			SELECT 
+				APRMEMBERDEPTID, 
+				APRMEMBERID, 
+				APRMEMBERNAME$multiLang$ AS APRMEMBERNAME, 
+				APRMEMBERDEPTNAME$multiLang$ AS APRMEMBERDEPTNAME,          
+   				APRMEMBERJOBTITLE$multiLang$ AS APRMEMBERJOBTITLE, 
+   				APRTYPE, 
+   				C.NAME1 AS APRTYPENAME, 
+   				COUNT(APRMEMBERID) AS APRCOUNT 
+   			FROM 
+   				EZFLOWYJ.TBENDAPRLINEINFO E      
+   			INNER JOIN 
+   				EZFLOWYJ.TBCODEAPRTYPE C  
+   			ON 
+   				E.TENANT_ID = C.TENANT_ID
+   			AND
+   				E.COMPANYID = C.COMPANYID
+   			AND
+   				E.APRTYPE = C.CODE     
+   			WHERE
+   				E.TENANT_ID = #tenantID#
+   			AND
+   				E.COMPANYID = #companyID#
+   			AND 
+   				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+   			AND 
+   				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+   			GROUP BY 
+   				APRMEMBERDEPTID, 
+   				APRMEMBERID, 
+   				APRMEMBERNAME$multiLang$, 
+   				APRMEMBERDEPTNAME$multiLang$, 
+   				APRMEMBERJOBTITLE$multiLang$, 
+   				APRTYPE, 
+   				C.NAME1
+		]]>
+		<isEqual property="userFlag" compareValue="0">
+			ORDER BY APRTYPE, APRMEMBERDEPTNAME, APRMEMBERNAME
+		</isEqual>
+		<isEqual property="userFlag" compareValue="1">
+			ORDER BY APRMEMBERDEPTNAME, APRMEMBERNAME, APRTYPE
+		</isEqual>
+		<isEqual property="userFlag" compareValue="2">
+			ORDER BY APRMEMBERNAME, APRMEMBERDEPTNAME, APRTYPE
+		</isEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getDeptTranSendDocCount" parameterClass="ApprExcelOutVO" resultClass="ApprReceiptInfoVO">
+		<isEqual property="mode" compareValue="SEND">
+			<![CDATA[
+				SELECT 
+					SENTDEPTID, 
+					SENTDEPTNAME$multiLang$ AS SENTDEPTNAME, 
+					COUNT(SENTDEPTID) AS APRCOUNT      
+      			FROM 
+      				EZFLOWYJ.EZFLOWYJ.TBENDRECEIPTPROCESSINFO  
+      			WHERE 
+      				TENANT_ID = #tenantID#
+      			AND
+      				COMPANYID = #companyID#
+      			AND
+      				DOCSTATE = 'A02011'
+      			AND 
+      				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+      			AND 
+      				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+      			GROUP BY 
+      				SENTDEPTID, 
+      				SENTDEPTNAME$multiLang$ 
+      			ORDER BY 
+      				SENTDEPTNAME
+			]]>
+		</isEqual>
+		<isNotEqual property="mode" compareValue="SEND">
+			<isEqual property="mode" compareValue="RECV">
+				<![CDATA[
+					SELECT 
+						RECEIVEDDEPTID, 
+						RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME,     
+         				COUNT(RECEIVEDDEPTID) AS APRCOUNT 
+         			FROM 
+         				EZFLOWYJ.TBENDRECEIPTPROCESSINFO     
+         			WHERE 
+         				TENANT_ID = #tenantID#
+         			AND
+         				COMPANYID = #companyID#
+         			AND
+         				DOCSTATE = 'A02011'
+         			AND 
+         				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+         			AND 
+         				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')      
+         			GROUP BY 
+         				RECEIVEDDEPTID, 
+         				RECEIVEDDEPTNAME$multiLang$ 
+         			ORDER BY 
+         				RECEIVEDDEPTNAME
+				]]>
+			</isEqual>
+			<isNotEqual property="mode" compareValue="RECV">
+				<![CDATA[
+					SELECT 
+						SENTDEPTID, 
+						SENTDEPTNAME$multiLang$ AS SENTDEPTNAME, 
+						RECEIVEDDEPTID,      
+         				RECEIVEDDEPTNAME$multiLang$ AS RECEIVEDDEPTNAME, 
+         				COUNT(SENTDEPTID) AS APRCOUNT 
+         			FROM 
+         				EZFLOWYJ.TBENDRECEIPTPROCESSINFO  
+         			WHERE 
+         				TENANT_ID = #tenantID#
+         			AND
+         				COMPANYID = #companyID#
+         			AND
+         				DOCSTATE = 'A02011'     
+         			AND 
+         				PROCESSDATE >= TO_DATE(#fromDate#, 'YYYY-MM-DD HH24:MI:SS') 
+         			AND 
+         				PROCESSDATE < TO_DATE(#toDate#, 'YYYY-MM-DD HH24:MI:SS')
+         			GROUP BY 
+         				SENTDEPTID, 
+         				SENTDEPTNAME$multiLang$ , 
+         				ReceivedDeptID, 
+         				ReceivedDeptName$multiLang$  
+         			ORDER BY 
+         				SENTDEPTNAME, 
+         				RECEIVEDDEPTNAME
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getAprType" parameterClass="UserInfo" resultClass="ApprCodeVO">
+		<![CDATA[
+			SELECT
+				code,
+				NAME1 as NAME
+			FROM
+				EZFLOWYJ.TBCODEAPRTYPE
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+			AND
+				isuse = '1'
+			ORDER BY
+				code
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormAprRule" parameterClass="Map" resultClass="ApprAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				formid,
+             	autorulesn,
+             	autoruleguid,
+             	checkfieldtype,
+             	checkfield,
+             	operatortype,
+             	operator,
+             	condtype,
+             	condvalue,
+             	condvaluedeptid,
+             	doctype 
+        	FROM 
+        		EZFLOWYJ.TBFORM_AUTORULE 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		AUTORULESN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormAprRuleLine" parameterClass="Map" resultClass="ApprAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				FORMID,
+             	AUTORULEGUID,
+             	APRMEMBERSN,
+             	APRTYPE,
+             	APRSTATE,
+             	APRMEMBERID,
+             	APRMEMBERISDEPTYN,
+             	APRMEMBERNAME,
+             	APRMEMBERNAME2,
+             	APRMEMBERJOBTITLE,
+	            APRMEMBERJOBTITLE2,
+             	APRMEMBERDEPTID,
+    	        APRMEMBERDEPTNAME,
+        	    APRMEMBERDEPTNAME2,
+            	APRMEMBERLDAPPATH,
+             	RECEIVEDDATE,
+             	PROCESSDATE,
+             	REASONDONOTAPPROV,
+             	ISPROPOSERYN,
+             	ISBRIEFUSERYN
+            FROM 
+            	EZFLOWYJ.TBFORM_AUTORULELINE 
+	        WHERE  
+	        	TENANT_ID = #tenantID#
+	        AND
+	        	COMPANYID = #companyID#
+	        AND
+	        	FORMID = #formID#
+        	ORDER BY 
+        		AUTORULEGUID,
+                APRMEMBERSN DESC
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContentReform" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				REFORMFUCTIONFILELOCATION 
+			FROM 
+				EZFLOWYJ.TBFormInfo A 
+			INNER JOIN 
+				EZFLOWYJ.TBAUTODOCNUM_ITEM B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.companyid = B.companyid
+			AND
+				A.FormID = B.FormID
+			WHERE 
+				A.tenant_id = #tenantID#
+			AND
+				A.companyid = #companyID#
+			AND
+				A.FormID = #formID#
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormRecvAdmin" parameterClass="ApprFormInfoVO" resultClass="ApprReceiveGroupVO">
+		<![CDATA[
+			SELECT 
+				DEPTID,
+             	UserID 
+        	FROM 
+        		EZFLOWYJ.TBFormRecv 
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+        	ORDER BY 
+        		DEPTSN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormProperty" parameterClass="Map" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CODE, 
+				ID, 
+				NAME 
+			FROM 
+				EZFLOWYJ.TBFORMPROPERTY
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				UPPERCODE = #upperCode#
+			ORDER BY 
+				NAME
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormConnInfo" parameterClass="UserInfo" resultClass="ApprConnInfoVO">
+		<![CDATA[
+			SELECT 
+				SN, 
+				CONNNODE,
+				CONNINFO,
+				DESCRIPTION, 
+				UPPERNODE 
+			FROM 
+				EZFLOWYJ.TBFORMCONNINFO
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANYID = #companyID#
+			ORDER BY 
+				SN
+		]]>
+	</select>
+	
+	<select id="EzApprovalAdminDAO.getFormContent" parameterClass="ApprFormInfoVO" resultClass="ApprFormInfoVO">
+		<![CDATA[
+			SELECT 
+				FormContID ,
+             	A.FormID ,
+             	FormName ,
+             	FormName2 ,
+             	FormDocType ,
+             	Formdescription ,
+             	FormFilelocation ,
+             	FormVersion ,
+             	FormOrder ,
+             	KEEPPERIOD ,
+             	KEEPPERIODCODE ,
+             	SECURITYLEVEL ,
+             	ISPUBLIC ,
+             	ITEMCODE ,
+             	ITEMNAME ,
+             	ITEMNAME2 ,
+             	USEFLAG 
+        	FROM 
+        		EZFLOWYJ.TBFormInfo A
+            JOIN 
+            	EZFLOWYJ.TBAUTODOCNUM_ITEM B   
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.COMPANYID = B.COMPANYID
+            AND
+            	A.FormID = B.FormID
+       		WHERE
+       			A.TENANT_ID = #tenantID#
+       		AND
+       			A.COMPANYID = #companyID#
+       		AND  
+       			A.FormID = #formID#
+		]]>
+	</select>
+	
+	<insert id="EzApprovalAdminDAO.insertContainerType" parameterClass="Map">
+		<selectKey keyProperty="maxID" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(CONTAINERTYPEID) IS NULL
+						THEN '100'
+						ELSE MAX(CONTAINERTYPEID)
+					END maxID
+			    FROM 
+			    	EZFLOWYJ.TBContainerType
+			    WHERE
+			    	tenant_id = #tenantID#
+			    AND
+			    	companyid = #companyID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBContainerType ( 
+				CONTAINERTYPEID, CONTAINERTYPENAME, CONTAINERTYPENAME2, COMPANYID, 		TENANT_ID 
+			)
+        	VALUES ( 
+        		#maxID# + 10, 	 #docTypeName#, 	#docTypeName2#, 	#companyID#, 	#tenantID# 
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainerToDocStateInfo" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL	
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainer" parameterClass="Map">
+		<selectKey keyProperty="maxContID" resultClass="String">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN LPAD(MAX(CONTAINERID), 10, '0') IS NULL
+						THEN '0000000001'
+						ELSE LPAD(MAX(CONTAINERID) + 1, 10, '0')
+					END maxContID
+				FROM
+					EZFLOWYJ.TBCONTAINER
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+			]]>
+		</selectKey>
+		
+		INSERT INTO EZFLOWYJ.TBCONTAINER (
+			ContainerID, ContainerTypeID, ContainerOwnDepID, companyid,   tenant_id
+		)
+		VALUES (
+			#maxContID#, #contType#,	  #contOwnDeptID#,	 #companyID#, #tenantID#
+		)
+		
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertContainerUseDept" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertSpecialContInfo" parameterClass="ApprContInfoVO">
+		<selectKey keyProperty="sn" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(SN) IS NULL
+						THEN 1
+						ELSE MAX(SN) + 1
+					END SN
+        		FROM 
+        			EZFLOWYJ.TBSPECIALCONTAINERINFO 
+       			WHERE
+       				TENANT_ID = #tenantID#
+       			AND
+       				COMPANYID = #companyID#
+       			AND  
+       				DEPTID = #deptID#
+                AND 
+                	CONTTYPE = #contType#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBSPECIALCONTAINERINFO (
+				DeptID,   ContType,   SN, 	contName, 	subquery, 	companyid, 	 tenant_id
+			)
+			VALUES (
+				#deptID#, #contType#, #sn#, #contName#, #subQuery#, #companyID#, #tenantID#
+			) 
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertReceiveGroupInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN ( 
+				MAINNAME,	 COMPANYID,   TENANT_ID 
+			)
+     		VALUES ( 
+     			#groupName#, #companyID#, #tenantID#
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertReceiveGroupItemInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBADMINRECEIPTGROUP_SUB (
+				MAINID,    DEPTID, 	 DEPTNAME, 	 DEPTNAME2,   ADDCOMPANYID,   COMPANYID,   TENANT_ID
+			)
+     		VALUES (
+     			#groupID#, #deptID#, #deptName#, #deptName2#, #addCompanyID#, #companyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<selectKey keyProperty="groupID" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN MAX(groupid) IS NULL
+						THEN 1
+						ELSE MAX(groupid) + 1
+					END groupid 
+     			FROM 
+     				EZFLOWYJ.TBDOCNUM_GROUP
+     			WHERE
+     				tenant_id = #tenantID#
+     			AND
+     				companyid = #companyID#
+			]]>
+		</selectKey>
+		
+		INSERT INTO EZFLOWYJ.TBDOCNUM_GROUP ( 
+			GROUPID,   G_LEVEL,   G_UPPERID, 	  GROUPNAME,   GROUPNAME2,   ETC,  COMPANYID,   TENANT_ID 
+		)
+     	VALUES ( 
+     		#groupID#, #g_level#, #g_upperID#,    #groupName#, #groupName2#, NULL, #companyID#, #tenantID# 
+     	)
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBDOCNUM_ITEM ( 
+				GROUPID,   ITEMCODE,   ITEMNAME,   ITEMNAME2,   ITEMLIMIT,   ITEMSECURITY,   ITEMPUBLIC,   COMPANYID,   TENANT_ID 
+			)
+     		VALUES ( 
+     			#groupID#, #itemCode#, #itemName#, #itemName2#, #itemLimit#, #itemSecurity#, #itemPublic#, #companyID#, #tenantID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertSealInfo" parameterClass="ApprSealInfoVO">
+		<selectKey keyProperty="sealNum" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					CASE
+						WHEN MAX(SEALNUM) IS NULL
+						THEN 1
+						ELSE MAX(SEALNUM) + 1
+					END sealNum
+				FROM
+					EZFLOWYJ.TBSEALINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+			]]>
+		</selectKey>
+		<![CDATA[
+			INSERT INTO EZFLOWYJ.TBSEALINFO ( 
+				SEALNUM,   SEALNAME,   SEALPATH,   SEALWIDTH,   SEALHEIGHT,   REGDATE,   								   REGUSERID,   REGUSERNAME,   REGUSERNAME2,   COMPANYID,   TENANT_ID 
+			)
+      		VALUES ( 
+      			#sealNum#, #sealName#, #sealPath#, #sealWidth#, #sealHeight#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #regUserID#, #regUserName#, #regUserName2#, #companyID#, #tenantID# 
+      		)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormContainer" parameterClass="ApprFormContVO">
+		<selectKey keyProperty="id" resultClass="Integer">
+			SELECT
+				CASE
+					WHEN MAX(FORMCONTID) IS NULL
+					THEN #id#
+					ELSE MAX(FORMCONTID) + 1
+				END id
+			FROM
+				EZFLOWYJ.TBFORMCONTAINER
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</selectKey>
+		INSERT INTO EZFLOWYJ.TBFORMCONTAINER (
+			FormContID, FormContName,   FormContName2,   FormContOwnDepID, FormContParents,   FormContdescription,   companyID,   tenant_id
+		) 
+		VALUES (
+			#id#,       #formContName#, #formContName2#, #formContDept#,   #formContParents#, #formContDescription#, #companyID#, #tenantID# 
+		)
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormContainerUserGroup" parameterClass="String">
+		<![CDATA[
+ 			INSERT ALL
+ 			$insString$
+ 			SELECT * FROM DUAL	
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormData" parameterClass="ApprFormInfoVO">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT
+				CASE
+					WHEN MAX(FORMID) IS NULL
+					THEN CONCAT(#year#, '000001')
+					ELSE TO_CHAR(MAX(FORMID) + 1)
+				END id
+			FROM
+				EZFLOWYJ.TBFORMINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+		</selectKey>
+		
+		INSERT INTO EZFLOWYJ.TBFormInfo ( 
+			FORMCONTID,   FORMID, FORMNAME,   FORMNAME2,   FORMDOCTYPE, FORMDESCRIPTION,   FORMFILELOCATION, 					FORMVERSION, FormConnXML, TENANT_ID,  COMPANYID 
+		)
+        VALUES ( 
+        	#formContID#, #id#,   #formName#, #formName2#, #formKind#,  #formDescription#, CONCAT(#url#, CONCAT(#id#, #formFormat#)), '1', 		 #formConn#,  #tenantID#, #companyID# 
+        )
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.setAutoDocNum" parameterClass="ApprFormInfoVO">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT 
+				'OK' 
+        	FROM 
+        		DUAL
+       		WHERE 
+       			EXISTS ( SELECT 
+       						FORMID 
+                      	 FROM 
+                      	 	EZFLOWYJ.TBAUTODOCNUM_ITEM 
+                       	 WHERE  
+                       	 	TENANT_ID = #tenantID#
+                       	 AND
+                       	 	COMPANYID = #companyID#
+                       	 AND
+                       	 	FORMID = #formID# )
+		</selectKey>
+		
+		<isEqual property="id" compareValue="OK">
+			UPDATE EZFLOWYJ.TBAUTODOCNUM_ITEM
+         	SET 
+         		KEEPPERIOD = #keepPeriod#,
+             	KEEPPERIODCODE = #keepPeriodCode#,
+             	SecurityLevel = #securityLevel#,
+             	IsPublic = #isPublic#,
+             	ItemCode = #tbItemCode#,
+             	ItemName = #tbItemName#,
+             	ItemName2 = #tbItemName2#,
+             	UseFlag = #useFlag#
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+		</isEqual>
+		
+		<isNotEqual property="id" compareValue="OK">
+			INSERT INTO EZFLOWYJ.TBAUTODOCNUM_ITEM (
+				FORMID,   KEEPPERIOD,   SECURITYLEVEL,   ISPUBLIC,   ITEMCODE, 	   ITEMNAME, 	 ITEMNAME2, 	USEFLAG,   KEEPPERIODCODE,   TENANT_ID,  COMPANYID
+			)
+        	VALUES ( 
+        		#formID#, #keepPeriod#, #securityLevel#, #isPublic#, #tbItemCode#, #tbItemName#, #tbItemName2#, #useFlag#, #keepPeriodCode#, #tenantID#, #companyID# 
+        	)
+		</isNotEqual>
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertAutoRule" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO EZFLOWYJ.TBFORM_AUTORULE ( 
+						FORMID,   AUTORULESN,   AUTORULEGUID,   CHECKFIELDTYPE,   CHECKFIELD,   OPERATORTYPE,  OPERATOR,   CONDTYPE,   CONDVALUE,   CONDVALUEDEPTID,   DOCTYPE,   TENANT_ID,  COMPANYID 
+					)
+					VALUES (
+						#ApprAutoRuleVOs[].formID#, #ApprAutoRuleVOs[].autoRuleSN#, #ApprAutoRuleVOs[].autoRuleGUID#, #ApprAutoRuleVOs[].checkFieldType#, #ApprAutoRuleVOs[].checkField#, #ApprAutoRuleVOs[].operatorType#, #ApprAutoRuleVOs[].operator#, #ApprAutoRuleVOs[].condType#, #ApprAutoRuleVOs[].condValue#, #ApprAutoRuleVOs[].condValueDeptID#, #ApprAutoRuleVOs[].docType#, #ApprAutoRuleVOs[].tenantID#, #ApprAutoRuleVOs[].companyID#
+					)
+				]]>
+			</iterate>
+		SELECT * FROM dual
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertAutoRuleLine" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO EZFLOWYJ.TBFORM_AUTORULELINE ( 
+						FORMID,   AUTORULEGUID,   APRMEMBERSN,   APRTYPE,   APRSTATE,   APRMEMBERID,   APRMEMBERISDEPTYN,   APRMEMBERNAME,   APRMEMBERNAME2,   APRMEMBERJOBTITLE,   APRMEMBERJOBTITLE2,   APRMEMBERDEPTID,   APRMEMBERDEPTNAME,   APRMEMBERDEPTNAME2,   APRMEMBERLDAPPATH,   RECEIVEDDATE,  PROCESSDATE,   REASONDONOTAPPROV,   ISPROPOSERYN,   ISBRIEFUSERYN,   TENANT_ID,  COMPANYID 
+		        	)
+		        	VALUES (
+		        		#ApprAutoRuleVOs[].formID#, #ApprAutoRuleVOs[].autoRuleGUID#, #ApprAutoRuleVOs[].aprMemberSN#, #ApprAutoRuleVOs[].aprType#, #ApprAutoRuleVOs[].aprState#, #ApprAutoRuleVOs[].aprMemberID#, #ApprAutoRuleVOs[].aprMemberIsDeptYN#, #ApprAutoRuleVOs[].aprMemberName#, #ApprAutoRuleVOs[].aprMemberName2#, #ApprAutoRuleVOs[].aprMemberJobTitle#, #ApprAutoRuleVOs[].aprMemberJobTitle2#, #ApprAutoRuleVOs[].aprMemberDeptID#, #ApprAutoRuleVOs[].aprMemberDeptName#, #ApprAutoRuleVOs[].aprMemberDeptName2#, #ApprAutoRuleVOs[].aprMemberLdapPath#, #ApprAutoRuleVOs[].receiveDate#, #ApprAutoRuleVOs[].processDate#, #ApprAutoRuleVOs[].reasonDoNotApprov#, #ApprAutoRuleVOs[].isProposerYN#, #ApprAutoRuleVOs[].isBriefUserYN#, #ApprAutoRuleVOs[].tenantID#, #ApprAutoRuleVOs[].companyID#
+		        	)
+				]]>
+			</iterate>
+		SELECT * FROM dual
+	</insert>
+	
+	<insert id="EzApprovalAdminDAO.insertFormRecv" parameterClass="List">
+		INSERT ALL
+			<iterate>
+				<![CDATA[
+					INTO EZFLOWYJ.TBFORMRECV (
+						FORMID,   DEPTID,   DEPTSN,   USERID,   TENANT_ID,  COMPANYID
+					)
+					VALUES (
+						#apprReceiveGroupVOs[].formID#, #apprReceiveGroupVOs[].deptID#, #apprReceiveGroupVOs[].deptSN#, #apprReceiveGroupVOs[].userID#, #apprReceiveGroupVOs[].tenantID#, #apprReceiveGroupVOs[].companyID#
+					)
+				]]>
+			</iterate>
+		SELECT * FROM dual
+	</insert>
+		
+	<insert id="EzApprovalAdmin.formMove" parameterClass="ApprFormContVO">
+		<selectKey keyProperty="formOrder" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					MAX(FORMORDER) + 1
+				FROM
+					EZFLOWYJ.TBFORMINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					FORMCONTID = #selContID#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBFORMINFO 
+			SET 
+				FORMCONTID = #selContID#, 
+				FORMORDER = #formOrder# 
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMCONTID = #contID# 
+			AND  
+				FORMID = #formID#
+		]]>
+	</insert>
+	
+	<update id="EzApprovalAdminDAO.updateContainer" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBCONTAINER 
+			SET 
+				ContainerTypeID = #contType#,
+				ContainerOwnDepID = #contOwnDeptID#
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND 
+				ContainerID = #contID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN1" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
+      		SET 
+      			SN = '0'
+    		WHERE  
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND
+    			DeptID = #deptID#
+     		AND 
+     			ContType = #contType#
+     		AND 
+     			SN = #sn#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN2" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
+      		SET 
+      			SN = #sn#
+    		WHERE
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+    			DeptID = #deptID#
+     		AND 
+     			ContType = #contType2#
+     		AND 
+     			SN = #sn2#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.changeSpecialContSN3" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBSPECIALCONTAINERINFO
+         	SET 
+         		SN = #sn2#
+       		WHERE
+       			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+       			DeptID = #deptID#
+        	AND 
+        		ContType = #contType#
+        	AND 
+        		SN = '0'
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveAllDocList1" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
+			SET 
+				OrgContID = #sourceContID#
+			WHERE 
+				TBEXPENDAPRDOCINFO.DocID IN ( SELECT 
+												DocID 
+											  From 
+											  	EZFLOWYJ.TBENDAPRDOCINFO A 
+											  WHERE
+											  	A.tenant_id = #tenantID#
+											  AND
+											  	A.companyid = #companyID#
+											  AND
+											  	A.ContainerID = #sourceContID# )
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveAllDocList2" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBENDAPRDOCINFO 
+			SET 
+				ContainerID = #targetContID#
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #sourceContID# 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveDocList1" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBENDAPRDOCINFO 
+			SET 
+				ContainerID = #targetContID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #sourceContID#
+			AND
+				docID IN ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.moveDocList2" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
+			SET 
+				OrgContID = #sourceContID#
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid IN ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.deleteAllDocList" parameterClass="Map">
+		UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO 
+		SET 
+			DelFlag = 'Y'
+		WHERE
+			TBEXPENDAPRDOCINFO.DocID IN ( SELECT
+											docid
+										  FROM
+										  	EZFLOWYJ.TBENDAPRDOCINFO
+										  WHERE
+										  	tenant_id = #tenantID#
+										  AND
+										  	companyid = #companyID#
+										  AND
+										  	containerid = #contID#
+										  <isEmpty property="startPeriod">
+										  	<![CDATA[
+										  		AND 
+										  			enddate >= #startDate# 
+										  		AND 
+										  			enddate <= #endDate# 
+										  	]]>
+										  </isEmpty> 
+										 )
+		AND
+			delflag IS NULL
+		<isEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isEmpty> 
+	</update>
+	
+	<update id="EzApprovalAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBEXPENDAPRDOCINFO
+			SET
+				delflag = 'Y'
+			WHERE
+				tenant_id = #tenantID#
+		  	AND
+		  		companyid = #companyID#
+		  	AND
+		  		docid IN ( $subQuery$ )
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateGroupMainInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
+      		SET 
+      			MAINNAME = #groupName#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			MAINID = #groupID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBDOCNUM_GROUP
+      		SET 
+      			GROUPNAME = #groupName#,
+          		GROUPNAME2 = #groupName2#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBDOCNUM_ITEM
+      		SET 
+      			ITEMNAME = #itemName#,
+          		ITEMNAME2 = #itemName2#,
+          		ITEMLIMIT = #itemLimit#,
+          		ITEMSECURITY = #itemSecurity#,
+          		ITEMPUBLIC = #itemPublic#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+     		AND 
+     			ITEMCODE = #itemCode#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.deleteSealInfo" parameterClass="ApprSealInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBSEALINFO
+         	SET 
+         		DELDATE = TO_DATE(#delDate#, 'YYYY-MM-DD HH24:MI:SS')
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			DELDATE IS NULL
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateFormVersion" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBFORMINFO
+			SET 
+				FORMVERSION = FORMVERSION + 1
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdminDAO.updateFormData" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBFormInfo
+	        SET 
+	        	FORMCONTID = #formContID#,
+             	FORMNAME = #formName#,
+             	FORMNAME2 = #formName2#,
+             	FORMDOCTYPE = #formKind#,
+             	FORMDESCRIPTION = #formDescription#,
+             	FORMFILELOCATION = CONCAT(#url#, CONCAT(#formID#, #formFormat#)),
+             	FormConnXML = #formConn#
+       		WHERE  
+       			TENANT_ID = #tenantID#
+       		AND
+       			COMPANYID = #companyID#
+       		AND
+       			FORMID = #formID#
+		]]>
+	</update>
+	
+	<update id="EzApprovalAdmin.setFormOrder" parameterClass="ApprFormContVO">
+		<![CDATA[
+			UPDATE EZFLOWYJ.TBFormInfo
+			SET 
+				FormOrder = #formOrder# + 1
+            WHERE
+            	TENANT_ID = #tenantID#
+            AND
+            	COMPANYID = #companyID#
+            AND  
+            	FormID = #formID#
+            AND 
+            	FormContID = #formContID#
+		]]>
+	</update>
+	
+	<delete id="EzApprovalAdminDAO.deleteContDocState" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBCONTAINERTODOCSTATE
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+      			CONTAINERTYPEID = #codeID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerType" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBContainerType
+      		WHERE
+      			TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND  
+      			CONTAINERTYPEID = #codeID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerToDocStateInfo" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBContainerToDocState 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				DocumentState IN ($delString$)
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainerUseDept" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBContainerUseDep 
+			WHERE 
+				TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+				ContainerID = #contID# 
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteContainer" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBContainer
+	        WHERE  
+	        	TENANT_ID = #tenantID#
+      		AND
+      			COMPANYID = #companyID#
+      		AND
+	        	CONTAINERID = #contID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteSpecialContInfo" parameterClass="ApprContInfoVO">
+		<![CDATA[
+			DELETE FROM EZFLOWYJ.TBSPECIALCONTAINERINFO 
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				DeptID = #deptID#
+			AND
+				contType = #contType#
+			AND
+				sn = #sn#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteGroupMainInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBADMINRECEIPTGROUP_MAIN
+    		WHERE
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND  
+    			MAINID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteGroupSubItemInfo" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBADMINRECEIPTGROUP_SUB
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND  
+				SUBID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteItemCodeGroup" parameterClass="ApprDocGroupVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBDOCNUM_GROUP
+		    WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	GROUPID = #groupID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteItemCodeItem" parameterClass="ApprDocItemVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBDOCNUM_ITEM
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			COMPANYID = #companyID#
+    		AND
+    			GROUPID = #groupID#
+            AND 
+            	ITEMCODE = #itemCode#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteFormContUserGroup" parameterClass="Map">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFormContUserGroup
+		    WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	FORMCONTID = #formContID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteFormContainer" parameterClass="Map">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFormContainer
+	        WHERE  
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND
+		    	FORMCONTID = #formContID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteAutoRule" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFORM_AUTORULE
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteAutoRuleLine" parameterClass="ApprAutoRuleVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFORM_AUTORULELINE
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdminDAO.deleteFormRecv" parameterClass="ApprReceiveGroupVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFORMRECV
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdmin.deleteForm" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFormInfo
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND  
+		    	FORMID = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalAdmin.deleteFavoriteForm" parameterClass="ApprFormInfoVO">
+		<![CDATA[
+			DELETE EZFLOWYJ.TBFavoriteFormInfo
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
+		    AND  
+		    	FORMID = #formID#
+		]]>
+	</delete>
+
+</sqlMap>

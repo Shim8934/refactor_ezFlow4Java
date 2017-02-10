@@ -82,19 +82,33 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Override
 	public String setMyBoardTreeConfig(BoardMyFavoriteVO boardMyFavoriteVO) throws Exception {
+		String rtnValue = "";
+		
 		try {
 			if (boardMyFavoriteVO.getMode().equals("NEW")) {
-				ezBoardAdminDAO.setMyBoardTreeConfig_N(boardMyFavoriteVO);	
+				ezBoardAdminDAO.setMyBoardTreeConfig_N(boardMyFavoriteVO);
+				
+				rtnValue = "OK";
 			} else if (boardMyFavoriteVO.getMode().equals("MOD")) {
-				ezBoardAdminDAO.setMyBoardTreeConfig_M(boardMyFavoriteVO);	
+				ezBoardAdminDAO.setMyBoardTreeConfig_M(boardMyFavoriteVO);
+				
+				rtnValue = "OK";
 			} else if (boardMyFavoriteVO.getMode().equals("DEL")) {
-				ezBoardAdminDAO.setMyBoardTreeConfig_D(boardMyFavoriteVO);	
+				String treeUpper = ezBoardAdminDAO.getMyBoardTreeUpper(boardMyFavoriteVO);
+				
+				if (treeUpper.equals("0")) {
+					ezBoardAdminDAO.setMyBoardTreeConfig_D(boardMyFavoriteVO);	
+					
+					rtnValue = "OK";
+				} else {
+					rtnValue = "EXIST";
+				}
 			}
-			
-			return "OK";
 		} catch (Exception e) {
-			return "ERROR"; 
+			rtnValue = "ERROR"; 
 		}
+		
+		return rtnValue;
 	}
 
 	@Override

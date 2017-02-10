@@ -759,6 +759,19 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardAdminDAO.getMyBoardTreeUpper" parameterClass="MyFavoriteVO" resultClass="String">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_Board_MyTree
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				treeupper = #treeId#
+		]]>
+	</select>
+	
 	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_MyTree ( 
@@ -788,13 +801,10 @@
 	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
 		<![CDATA[
 			DELETE TBL_Board_MyTree
-			WHERE  
+			WHERE
 				TENANT_ID = #tenantID#
 			AND
-				( TREEID = #treeUpper#
-            	  AND USERID = #userId# )
-            OR 
-            	TREEUPPER = #treeUpper#
+				TREEID = #treeId#
 		]]>
 	</delete>
 	

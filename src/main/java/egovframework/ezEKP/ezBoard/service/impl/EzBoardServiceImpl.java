@@ -1854,7 +1854,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public String getBoardTree(String pRootBoardID, String pUserID, String pDeptID, String pCompanyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String pStrLang, int tenantID) throws Exception {
 		int count = 0;
-        String strForbiddenBoardIDList = "";				
+        String strForbiddenBoardIDList = "";
         String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID, tenantID);
         
         if (retValue != null && retValue.length() > 30) {
@@ -1871,7 +1871,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             if (pMode == 0) {
             	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, tenantID);            
             } else {
-            	brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pUserID, pMode, pSelectBy, pExcludeBoardID, tenantID);            
+            	List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, tenantID);
+            	
+            	if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
+            		for (BoardTreeVO k : tempBrdBoardTreeList) {
+            			brdBoardTreeList.add(k);
+            		}
+            	}
             }
             
             List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
@@ -1882,6 +1888,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			strForbiddenBoardIDList += boardID.trim();
                 }
             }
+            
+            
         }
 
         StringBuilder result = new StringBuilder();
@@ -2316,6 +2324,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			result = "OK";
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "ERROR";
 		}		

@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="ezResourceAdmin">
+	<typeAlias  alias="ResGetSubClsListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO"/>
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
+	
+	<resultMap class="ResGetSubClsListVO" 	id="resGetSubClsListVO">
+		<result property="brdID"						column="BRD_ID"					columnIndex="1"/>
+		<result property="brdCompany"				column="BRD_COMPANY"		columnIndex="2"/>
+		<result property="brdNm"						column="BRD_NM"					columnIndex="3"/>
+		<result property="brdNm2"					column="BRD_NM2"				columnIndex="4" 		nullValue="0"/>
+		<result property="brdGroup"					column="BRD_GROUP"				columnIndex="5"/>
+		<result property="brdGb"						column="BRD_GB"					columnIndex="6"/>
+		<result property="brdRef"						column="BRD_REF"					columnIndex="7"			nullValue="0"/>
+		<result property="brdLevel"					column="BRD_LEVEL"				columnIndex="8"			nullValue="0"/>
+		<result property="brdStep"					column="BRD_STEP"				columnIndex="9"/>
+		<result property="brdPostTerm"				column="BRD_POSTTERM"		columnIndex="10"/>
+		<result property="brdExplain"				column="BRD_EXPLAIN"			columnIndex="11"/>
+		<result property="brdAccess"					column="BRD_ACCESS"			columnIndex="12"/>
+		<result property="brdUpper"					column="BRD_UPPER"				columnIndex="13"/>
+		<result property="brdCount"					column="BRD_COUNT"				columnIndex="14"/>
+		<result property="brdURL"						column="BRD_URL"					columnIndex="15"/>
+		<result property="attachSize"					column="ATTACH_SIZE"			columnIndex="16"/>
+		<result property="replyMailFg"				column="REPLY_MAIL_FG"		columnIndex="17"		nullValue="0"/>
+		<result property="ownDeptID"				column="OWNDEPTID"			columnIndex="18"/>
+		<result property="ownDeptNm"				column="OWNDEPTNM"			columnIndex="19"/>
+		<result property="ownDeptNm2"			column="OWNDEPTNM2"			columnIndex="20" 		nullValue="0"/>
+		<result property="ownerID"					column="OWNERID"				columnIndex="21"/>
+		<result property="ownerNm"					column="OWNERNM"				columnIndex="22"/>
+		<result property="ownerNm2"				column="OWNERNM2"			columnIndex="23"/>
+		<result property="ownerPosition"			column="OWNERPOSITION"		columnIndex="24"/>
+		<result property="ownerPosition2"			column="OWNERPOSITION2"	columnIndex="25"/>
+		<result property="ownerCall"					column="OWNERCALL"			columnIndex="26"/>
+		<result property="makeDate"					column="MAKEDATE"				columnIndex="27"/>
+		<result property="resLocation"				column="RESLOCATION"			columnIndex="28"/>
+		<result property="brdUpper2"				column="BRD_UPPER2"			columnIndex="29"/>
+		<result property="approveFlag"				column="APPROVEFLAG"			columnIndex="30"/>
+	</resultMap>
+	
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"						column="DEPT_YN"					columnIndex="1"/>
+		<result property="sdaYn"						column="SDA_YN"					columnIndex="1"/>
+		<result property="memberNam"				column="MEMBER_NAM"			columnIndex="1"/>
+		<result property="memberID"				column="MEMBER_ID"				columnIndex="1"/>
+		<result property="accessLvl"					column="ACCESS_LVL"			columnIndex="1"/>
+	</resultMap>
+	
+	<!-- <procedure id="EzResourceAdminDAO.addClsData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_ADDCLSDATA(#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
+			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#, #v_P_IS_COMPANY#)}
+		]]>
+	</procedure> -->
+	
+	
+        
+     <select id="EzResourceAdminDAO.addClsData_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(Brd_ID) , 0) + 1)
+        	FROM 
+        		TBL_RS_BRD
+        	WHERE
+        		TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceAdminDAO.addClsData_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(Brd_Level + 1)
+   			FROM 
+   				TBL_RS_BRD 
+   			WHERE  
+   				BRD_ID = #v_P_ClassGB#
+   			AND 
+   				BRD_COMPANY = #v_P_CompanyID#
+   			WHERE
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceAdminDAO.addClsData_S3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				(NVL(MAX(Brd_Step) , 0) + 1)
+   			FROM 
+   				TBL_RS_BRD 
+   			WHERE  
+   				BRD_UPPER = #v_P_ClassGB#
+   			AND 
+   				BRD_COMPANY = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<insert id="EzResourceAdminDAO.addClsData_I1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_RS_BRD
+     			( BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
+				   , BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE
+				   , ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, BRD_NM2, TENANT_ID )
+     		VALUES
+     			( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#), RTRIM(#v_P_OwnerCall#)
+     				, RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#, '1', RTRIM(#v_Brd_Level#)
+     				, RTRIM(#v_Brd_Step#), RTRIM(TO_CHAR(SYSDATE,'YYYYMMDD')), 20, 'A00', '', RTRIM(#v_P_AccessNoty#), 365, 0, 0, RTRIM(#v_P_Brd_NM2#), #tenantID# )
+		]]>
+	</insert>
+	
+	<insert id="EzResourceAdminDAO.addClsData_I2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_RS_RESACL
+   				( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+    		VALUES
+    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#), #tenantID#)
+		]]>
+	</insert>
+	
+	<insert id="EzResourceAdminDAO.addClsData_I3" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO 
+				TBL_RS_RESACL
+     			( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+     		VALUES
+     			( #v_Brd_ID#, 'Y', 'Y', RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerID#), '1', RTRIM(#v_P_CompanyID#), #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzResourceAdminDAO.modifyClsData" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_MODIFYCLSDATA(#v_P_Brd_ID#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#
+			, #v_P_Brd_Explain#, #v_P_AccessNoty#, #v_P_CompanyID#, #v_P_Brd_NM2#)}
+		]]>
+	</procedure> -->
+	
+	<update id="EzResourceAdminDAO.modifyClsData" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET 
+      			OWNDEPTID = RTRIM(#v_P_ODeptID#),
+          		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
+          		OWNERID = RTRIM(#v_P_OwnerID#),
+          		OWNERNM = RTRIM(#v_P_OwnerNm#),
+          		OWNERPOSITION = RTRIM(#v_P_OwnerPos#),
+          		OWNERCALL = RTRIM(#v_P_OwnerCall#),
+          		BRD_NM = RTRIM(#v_P_Brd_NM#),
+          		BRD_ACCESS = RTRIM(#v_P_AccessNoty#),
+          		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
+          		BRD_NM2 = RTRIM(#v_P_Brd_NM2#)
+    		WHERE
+    			BRD_ID = #v_P_Brd_ID#
+    		AND
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzResourceAdminDAO.saveACL" parameterClass="Map" >
+		<![CDATA[
+			{CALL EZSP_SAVEACL(#v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#)}
+		]]>
+	</procedure> -->
+	<update id="EzResourceAdminDAO.saveACL_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_RESACL
+      		SET
+      			DEPT_YN = #v_P_Dept_YN#,
+          		SDA_YN = #v_P_SDA_YN#,
+          		MEMBER_NAM = #v_P_Member_nam#,
+          		ACCESS_LVL = #v_P_Access_lvl#
+    		WHERE
+    			RESID = #v_P_ResID#
+     		AND
+     			COMPANYID = #v_P_CompanyID#
+     		AND
+     			MEMBER_ID = #v_P_Member_ID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<insert id="EzResourceAdminDAO.saveACL" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_RS_RESACL
+            	( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
+           	VALUES
+           		( RTRIM(#v_P_ResID#), RTRIM(#v_P_Dept_YN#), RTRIM(#v_P_SDA_YN#),RTRIM(#v_P_Member_nam#), RTRIM(#v_P_Member_ID#), RTRIM(#v_P_Access_lvl#), RTRIM(#v_P_CompanyID#), #tenantID# )
+		]]>
+	</insert>
+	
+	<!-- <procedure id="EzResourceAdminDAO.delTBL_RS_RESACLl" parameterClass="Map"  resultClass="Integer">
+		<![CDATA[
+			{CALL EZSP_DELTBL_RS_RESACLL(#v_P_RESID#, #v_P_COMPANYID#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
+		]]>
+	</procedure> -->
+	<delete id="EzResourceAdminDAO.delResAcll" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_RESACL
+          	WHERE  
+          		RESID = #v_P_RESID#
+			AND
+				COMPANYID = #v_P_COMPANYID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzResourceAdminDAO.chgClsOrder" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_CHGCLSORDER(#v_P_SourceID#, #v_P_TargetID#, #v_P_CompanyID#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceAdminDAO.chgClsOrder_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				BRD_STEP
+   			FROM
+   				TBL_RS_BRD 
+   			WHERE
+   				BRD_ID = #v_P_SourceID#
+   			AND
+   				BRD_COMPANY = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceAdminDAO.chgClsOrder_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				BRD_STEP
+   			FROM
+   				TBL_RS_BRD 
+   			WHERE
+   				BRD_ID = #v_P_TargetID#
+   			AND
+   				BRD_COMPANY = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<update id="EzResourceAdminDAO.chgClsOrder_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET 
+      			BRD_STEP = #v_SourceStep#
+    		WHERE
+    			BRD_ID = #v_P_SourceID#
+     		AND
+     			BRD_COMPANY = #v_P_CompanyID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<update id="EzResourceAdminDAO.chgClsOrder_U2" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET 
+      			BRD_STEP = #v_TargetStep#
+    		WHERE
+    			BRD_ID = #v_P_TargetID#
+     		AND
+     			BRD_COMPANY = #v_P_CompanyID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzResourceAdminDAO.moveCls" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_MOVECLS(#v_P_SourceID#, #v_P_ParentID#, #v_P_CompanyID#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceAdminDAO.moveCls_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				BRD_REF
+    		FROM
+    			TBL_RS_BRD 
+    		WHERE  
+    			BRD_ID = #v_P_ParentID#
+    		AND
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceAdminDAO.moveCls_S2" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				BRD_LEVEL + 1
+    		FROM
+    			TBL_RS_BRD 
+    		WHERE  
+    			BRD_ID = #v_P_ParentID#
+    		AND
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceAdminDAO.moveCls_S3" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				NVL(MAX(BRD_STEP) , 0) + 1
+    		FROM
+    			TBL_RS_BRD 
+    		WHERE
+    			BRD_UPPER = #v_P_ParentID#
+    		AND
+    			BRD_COMPANY = #v_P_CompanyID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<update id="EzResourceAdminDAO.moveCls" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET
+      			BRD_REF = #v_TargetRef#,
+          		BRD_LEVEL = #v_TargetLevel#,
+          		BRD_STEP = #v_TargetStep#,
+          		BRD_UPPER = #v_P_ParentID#
+    		WHERE
+    			BRD_ID = #v_P_SourceID#
+     		AND
+     			BRD_COMPANY = #v_P_CompanyID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<select id="EzResourceAdminDAO.moveSubCls_S1" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				BRD_ID 
+     		FROM
+     			TBL_RS_BRD 
+     		WHERE
+     			BRD_UPPER = #v_P_ParentID#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<update id="EzResourceAdminDAO.moveSubCls_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+      		SET 
+      			BRD_LEVEL = #v_P_TargetLevel#
+    		WHERE  
+    			BRD_UPPER = #v_P_ParentID#
+    		AND
+    			TENANT_ID = #tenantID#	
+		]]>
+	</update>
+	
+	<!-- <procedure id="EzResourceAdminDAO.delClsData" parameterClass="Map">
+		<![CDATA[
+			{CALL EZSP_DELCLSDATA(#v_P_Brd_ID#, #v_P_CompanyID#)}
+		]]>
+	</procedure> -->
+	
+	<delete id="EzResourceAdminDAO.delClsData_D1" parameterClass="Map">
+		<![CDATA[
+			DELETE
+				TBL_RS_BRD
+   			WHERE  
+   				BRD_ID = #v_P_Brd_ID#
+   			AND 
+   				BRD_COMPANY = #v_P_CompanyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<update id="EzResourceAdminDAO.delClsData_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_RS_BRD
+   			SET 
+   				BRD_STEP = BRD_STEP - 1
+   			WHERE  
+   				BRD_UPPER = ( SELECT
+   										BRD_UPPER 
+                        			  FROM
+                        			  	TBL_RS_BRD 
+                        			  WHERE  
+                        			  	BRD_ID = #v_P_Brd_ID#
+                        			  AND 
+                        			  	BRD_COMPANY = #v_P_CompanyID# )
+			AND
+				BRD_STEP > ( SELECT
+									 BRD_STEP 
+                    				FROM
+                    					TBL_RS_BRD 
+                    				WHERE
+                    					BRD_ID = #v_P_Brd_ID#
+                    				AND
+                    					BRD_COMPANY = #v_P_CompanyID# )
+            AND
+            	TENANT_ID = #tenantID#        					
+		]]>
+	</update>
+	
+	<delete id="EzResourceAdminDAO.delClsData_D2" parameterClass="Map">
+		<![CDATA[
+			 DELETE
+			 	TBL_RS_SCHEDULE
+   			WHERE
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceAdminDAO.delClsData_D4" parameterClass="Map">
+		<![CDATA[
+			 DELETE
+			 	TBL_RS_SCHEDULEREPETITION
+   			WHERE
+   				OWNERID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceAdminDAO.delClsData_D5" parameterClass="Map">
+		<![CDATA[
+			 DELETE
+			 	TBL_RS_RESACL
+   			WHERE
+   				RESID = #v_P_Brd_ID#
+   			AND 
+				COMPANYID = #v_P_CompanyID#
+			AND
+				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<!-- <procedure id="EzResourceAdminDAO.getSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZSP_GETSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #v_P_UserID#, #v_P_DeptPath#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceAdminDAO.getSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			SELECT
+				* 
+        	FROM
+        		TBL_RS_BRD 
+       		WHERE
+       			BRD_UPPER = #v_P_ParentID#
+			AND
+				BRD_COMPANY = #v_P_CompanyID#
+			AND
+				BRD_GB = u'1'
+			AND
+				BRD_ID IN ( SELECT
+									 RESID 
+                                FROM
+                                	TBL_RS_RESACL 
+                                WHERE
+                                	CompanyID = #v_P_CompanyID#
+                                AND 
+                                	MEMBER_ID IN ( #v_P_DeptPath# )
+                                AND 
+                                	BRD_ID IN ( SELECT
+                                						 BRD_ID 
+                                                	 FROM
+                                                	 	 TBL_RS_BRD 
+                                                	 WHERE
+                                                	 	 BRD_UPPER = #v_P_ParentID#
+                                                	 AND
+                                                	 	 BRD_COMPANY = #v_P_CompanyID#
+                                                	 AND
+                                                	 	 BRD_GB = u'1' )
+								
+                                UNION 
+                                	SELECT
+	                                	RESID 
+	                                FROM
+	                                	TBL_RS_RESACL 
+	                                WHERE
+	                                	COMPANYID = #v_P_CompanyID#
+	                                AND
+	                                	MEMBER_ID = #v_P_UserID#
+									AND
+										BRD_ID IN ( SELECT 
+															BRD_ID 
+	                                                     FROM
+	                                                     	TBL_RS_BRD 
+	                                                     WHERE
+	                                                     	BRD_UPPER = #v_P_ParentID#
+	                                                     AND
+	                                                        BRD_COMPANY = #v_P_CompanyID#
+	                                                     AND
+	                                                        BRD_GB = u'1' )
+             				  )
+          AND
+          	TENANT_ID = #tenantID#   				  
+       	 ORDER BY Brd_Step
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzResourceAdminDAO.getAdmSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZSP_GETADMSUBCLSLIST(#v_P_ParentID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceAdminDAO.getAdmSubClsList" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_RS_BRD A
+       		WHERE
+       			BRD_UPPER = #v_P_ParentID#
+       		AND
+       			BRD_COMPANY = #v_P_CompanyID#
+       		AND
+       			BRD_GB = u'1'
+			AND
+				TENANT_ID = #tenantID#       			
+      		ORDER BY BRD_STEP
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			{CALL EZSP_GETCLSACLLIST(#v_P_Brd_ID#, #v_P_CompanyID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	<select id="EzResourceAdminDAO.getClsAclList" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+            	SDA_YN ,
+             	MEMBER_NAM ,
+             	MEMBER_ID ,
+             	ACCESS_LVL 
+        	FROM
+        		TBL_RS_RESACL 
+       		WHERE
+       			RESID = #v_P_Brd_ID#
+       		AND
+       			COMPANYID = #v_P_CompanyID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<!-- <procedure id="EzResourceAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			{CALL EZSP_GETBRDINFO(#v_PBRDID#, #v_PCOMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
+		]]>
+	</procedure> -->
+	
+	<select id="EzResourceAdminDAO.getBrdInfo" parameterClass="Map"  resultMap="resGetSubClsListVO">
+		<![CDATA[
+			SELECT 
+				* 
+      		FROM
+      			TBL_RS_BRD 
+      		WHERE  
+      			BRD_ID = #v_PBRDID#
+      		AND 
+      			BRD_COMPANY = #v_PCOMPANYID#
+      		AND
+      			TENANT_ID = #tenantID#	
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.subResCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(BRD_ID) , 0)
+   			FROM 
+   				TBL_RS_BRD 
+   			WHERE
+   				BRD_UPPER = #resID#
+   			AND 
+   				Brd_Company = #companyID#
+   			AND 
+   				BRD_GB = '2'
+            AND
+                TENANT_ID = #tenantID#      			
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.subClsCnt" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT 
+				NVL(COUNT(BRD_ID) , 0)
+   			FROM 
+   				TBL_RS_BRD 
+   			WHERE
+   				BRD_UPPER = #resID#
+   			AND 
+   				Brd_Company = #companyID#
+   			AND 
+   				BRD_GB = '1'
+            AND
+                TENANT_ID = #tenantID#      			
+		]]>
+	</select>
+</sqlMap>
+

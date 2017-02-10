@@ -49,15 +49,16 @@
 		  <h2><spring:message code='ezBoard.t356'/></h2>
 		  <div class="box" >
 		    <table style="width:100%" class="popuplist">
-		    	<c:forEach var="list" items="${boardReadList}">
+		    	<c:forEach var="list" items="${boardReadList}" varStatus="seq">
 		    		<tr>
-				        <td style="white-space:nowrap" id="readDate"></td>
+				        <td style="white-space:nowrap" id="readDate${seq.index}"></td>
 				        <td style="cursor:pointer; white-space:nowrap" onClick="show_info('${list.userID}');"><b style="color:black"> ${list.userName} </b>( ${list.userID} )</td>
 				        <td style="white-space:nowrap; color:#168501">${list.userDeptName}</td>
 				        <td style="width:100%; white-space:nowrap; color:#737373"><c:out value="${list.userTitle}"/></td>
 		    			<script type="text/javascript">
+		    				var seq = "${seq.index}";
 		    				var readDate = GetLocalTime("${offset}", "${list.readDate}")
-		    				$("#readDate").html("[ " + readDate + " ]");
+		    				$("#readDate" + seq).html("[ " + readDate + " ]");
 		    			</script>
 		      		</tr>
 		    	</c:forEach>
