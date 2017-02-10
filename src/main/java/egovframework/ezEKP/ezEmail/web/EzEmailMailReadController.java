@@ -718,18 +718,22 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 * 메일 대용량 첨부파일 다운로드 실행 함수
 	 */
 	@RequestMapping(value="/ezEmail/downloadAttachCommon.do", produces = "text/xml; charset=utf-8")
-	public void downloadAttachCommon(Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void downloadAttachCommon(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachCommon started.");
 		
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
-		String tenantId = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
+		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
 		
-		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", Integer.parseInt(tenantId));
+		int tenantId = Integer.parseInt(tenantIdStr);
+		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
 		String realPath = commonUtil.getRealPath(request);
 		pDirPath = realPath + pDirPath;
 		String xmlPath = pDirPath + commonUtil.separator + fileDate + commonUtil.separator + fileId;
 		logger.debug("realFilePath=" + xmlPath);
+		
+		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
 		
 		//get original filename from text file
 		String fileName = "";
@@ -763,7 +767,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			downFile(request, response, xmlPath, fileName);
 		} catch (FileNotFoundException e) {
 			response.setContentType("text/plain; charset=utf-8");
-			response.getWriter().print(egovMessageSource.getMessage("main.t4"));
+			response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 		}
 		
 		logger.debug("downloadAttachCommon ended.");

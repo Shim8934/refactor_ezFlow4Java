@@ -88,12 +88,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 	}
 
 	@Override
-	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {		
-		if (!pUserID.equals("") && pDeptID.equals("")){
+	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {
+	    // pUserID는 값이 있으나 pDeptID가 비어 있을 때는 해당 사용자의 부서 ID를 구한다. 
+		if (!pUserID.equals("") && pDeptID.equals("")) {
 			OrganDeptVO organVo = getDeptInfo(pUserID, primary, tenantID);
 			pDeptID = organVo.getDepartment();
         }		
-		if (pDeptID.equals("")){
+		
+		// pDeptID가 비어 있는 경우엔 Top ID로 처리한다.
+		if (pDeptID.equals("")) {
 			pDeptID = pTopID;
 		}
 		
@@ -102,40 +105,48 @@ public class EzOrganServiceImpl implements EzOrganService {
         String deptInfo = "";
         String deptID = pDeptID;               
         
-        do{
+        do {
 			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_CN", deptID);
 			map.put("v_LANGDATA", primary);
 			map.put("v_TENANT_ID", tenantID);
 			
+			// 지정된 부서의 자식 부서 목록을 가져온다.
 			List<OrganDeptVO> list = ezOrganDAO.getDeptTreeInfo(map);
 			
-			String[] memberInfo2 = new String[list.size()];
-	        //String[] memberSortInfo2 = new String[list.size()];
-	        int memberCount2 = 0;
+			String[] memberInfo = new String[list.size()];
+	        int memberCount = 0;
 										
-			for(int i=0; i<list.size(); i++){
+	        // 자식 부서 각각의 정보를 가지고 온다.
+			for (int i = 0; i < list.size(); i++) {
 				OrganDeptVO obj = list.get(i);
 				
-				if(obj.getType().toLowerCase().equals("dept")){					
-					Map<String, Object> map1 = new HashMap<String, Object>();				
+				if (obj.getType().toLowerCase().equals("dept")) {					
+					Map<String, Object> map1 = new HashMap<String, Object>();	
+					
 					map1.put("v_CN", obj.getCn());
 					map1.put("v_LANGDATA", primary);
 					map1.put("v_TENANT_ID", tenantID);
 					
+					// 자식 부서의 상세 정보를 가져온다.
 					OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
 	                
-	                memberInfo2[memberCount2] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList);
-	                memberCount2++;
+					// 자식 부서의 상세 정보를 XML String 형태로 변환한다.
+	                memberInfo[memberCount] = getTreeNodeInfo(result, pDeptID, prevDeptID, deptInfo, pPropList);
+	                memberCount++;
 				}		
 			}
-			StringBuilder deptlist2 = new StringBuilder("<NODES>");
+			
+			// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
+			StringBuilder deptlist = new StringBuilder("<NODES>");
 	
-	        for (int k = 0; k < memberCount2; k++){
-	            deptlist2.append(memberInfo2[k]);
+	        for (int k = 0; k < memberCount; k++) {
+	            deptlist.append(memberInfo[k]);
 	        }
-	        deptlist2.append("</NODES>");	
-	        deptInfo = deptlist2.toString();	
+	        
+	        deptlist.append("</NODES>");	
+	        deptInfo = deptlist.toString();	
 	        prevDeptID = deptID;
 	        
 	        logger.debug("prevDeptID=" + prevDeptID);
@@ -145,15 +156,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 			map2.put("v_LANGDATA", primary);
 			map2.put("v_TENANT_ID", tenantID);
 			
+			// 지정된 부서 자체의 상세 정보를 가지고 온다.
 	        vo = ezOrganDAO.getTBLDeptMaster(map2);
 	        
-	        if (!deptID.toLowerCase().equals(pTopID.toLowerCase())){	        	
+	        // 지정된 부서의 부모 부서 ID를 구한다.
+	        if (!deptID.toLowerCase().equals(pTopID.toLowerCase())) {	        	
                 deptID = getPropertyValue(deptID, "extensionAttribute1", tenantID);                
 	        }
 	        
 	        logger.debug("deptID=" + deptID);
 	        
-        }while(!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
+	        // 부모 부서가 있는 경우 부모 부서로 이동하여 처리를 반복한다.
+        } while (!prevDeptID.toLowerCase().equals(pTopID.toLowerCase()) && !deptID.equals(""));
 		
         deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";
         
@@ -198,7 +212,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return deptlist.toString();
 	}
 	
-	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception{
+	private String getTreeNodeInfo(OrganDeptVO vo, String pOrgDeptID, String pPrevDeptID, String pDeptInfo, String pPropList) throws Exception {
 		logger.debug("getTreeNodeInfo started");
 
 		StringBuilder nodeInfo = new StringBuilder();
@@ -207,12 +221,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		nodeInfo.append("<VALUE>" + commonUtil.cleanValue(vo.getDeptNM()) + "</VALUE>");
 		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
 	
-		if (!pPropList.equals("")){					
+		if (!pPropList.equals("")) {					
 			pPropList = convertAddandConvert("group", pPropList);
 			
 			String[] proplist = pPropList.split(";");						
 
-			for(String propname : proplist){
+			// 속성 목록에 있는 각 속성과 이름이 동일한 필드의 값을 부서의 vo 객체로부터 가져와 XML String 형태로 구성한다.
+			for (String propname : proplist) {
 				Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);					
              	
@@ -221,36 +236,48 @@ public class EzOrganServiceImpl implements EzOrganService {
 				                    + "</" + propname.toUpperCase() + ">");
 			}
 		}
+		
+		// 부서의 자식 부서의 갯수를 구한다.
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId());
-		logger.debug("cnt="+cnt);
-		if (cnt > 0){
+		
+		logger.debug("child cnt=" + cnt);
+		
+		if (cnt > 0) {
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
-		}else{
+		} else {
 	        nodeInfo.append("<ISLEAF>TRUE</ISLEAF>");
 		}
-		if(vo.getCn() != null){
-			if(vo.getExtensionAttribute2() != null){
+		
+		if (vo.getCn() != null) {
+			if (vo.getExtensionAttribute2() != null) {
+			    // 현재 처리하는 부서가 회사일 경우 회사 아이콘이 표시되도록 한다.
 				if (vo.getCn().toLowerCase().equals(vo.getExtensionAttribute2().toLowerCase())){
 			        nodeInfo.append("<SETNODEICONBYNAME>ICONCOMP</SETNODEICONBYNAME>");
 				}
 			}
-			if(pPrevDeptID != null){
+			
+			if (pPrevDeptID != null) {
+			    // 현재 부서의 직전에 처리했던 자식 부서의 XML String 정보를 추가한다. 
 			    if (vo.getCn().toLowerCase().equals(pPrevDeptID.toLowerCase()) && !pDeptInfo.equals("<NODES></NODES>")){
 			        nodeInfo.append("<EXPANDED>TRUE</EXPANDED>" + pDeptInfo);
 			    }
 			}
-			if(pOrgDeptID != null){
+			
+			if (pOrgDeptID != null) {
+			    // 사용자가 최초로 지정한 부서가 선택되도록 한다.
 			    if (vo.getCn().toLowerCase().equals(pOrgDeptID.toLowerCase())){
 			        nodeInfo.append("<SELECT/>");
 			    }
 			}
 		}
+		
 	    /* 2015-06-30 표준모듈:추가(결재문서수신여부) - KSK */
-		if(vo.getExtensionAttribute11() != null){
-		    if (vo.getExtensionAttribute11().toUpperCase().equals("N")){
+		if (vo.getExtensionAttribute11() != null) {
+		    if (vo.getExtensionAttribute11().toUpperCase().equals("N")) {
 		        nodeInfo.append("<SETTEXTCOLORBYNAME>GRAY</SETTEXTCOLORBYNAME>");
 		    }		    
 		}
+		
 	    nodeInfo.append("</NODE>");
 
 	    logger.debug("nodeInfo="+nodeInfo.toString());
@@ -621,22 +648,24 @@ public class EzOrganServiceImpl implements EzOrganService {
         String returnValue = "";
         String addPopList = pProvValue;
         
-        for (int i = 0; i < arryProvValue.length; i++)
-        {
+        for (int i = 0; i < arryProvValue.length; i++) {
             returnValue = "";
             returnValue = addPropList(pClass, arryProvValue[i]);
-            if (!returnValue.equals(""))
+            
+            if (!returnValue.equals("")) {
             	addPopList = addPopList + ";" + returnValue;
+            }
         }
+        
         return addPopList;              
     }
 	
-	private String addPropList(String pType, String pAttribute){
+	private String addPropList(String pType, String pAttribute) {
     	String strRet = "";
 
-        if (!pType.equals("user")){
+        if (!pType.equals("user")) {
             // 부서
-            switch (pAttribute.toUpperCase()){
+            switch (pAttribute.toUpperCase()) {
                 case "DISPLAYNAME": strRet = "displayName1;displayName2";
                     break;
                 case "DESCRIPTION": strRet = "description1;description2";
@@ -646,9 +675,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                 default: strRet = "";
                     break;
             }
-        }else{
+        } else {
         	//사용자
-            switch (pAttribute.toUpperCase()){
+            switch (pAttribute.toUpperCase()) {
                 case "DISPLAYNAME": strRet = "displayName1;displayName2";
                     break;
                 case "DESCRIPTION": strRet = "description1;description2";
@@ -666,6 +695,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                     break;
             }
         }
+        
         return strRet;
     }
 	

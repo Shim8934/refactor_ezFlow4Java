@@ -3,14 +3,14 @@
 
 <sqlMap namespace="ezOrgan">
 
-	<typeAlias alias="OrganDeptVO"							type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
+	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							  columnIndex="1"/>
-		<result property="displayName" 					column="displayName" 			  columnIndex="2"/>
-		<result property="extensionAttribute15" 			column="extensionAttribute15"	  columnIndex="3"/>
-		<result property="type" 								column="type" 						  columnIndex="4"/>		
+		<result property="displayName" 					        column="displayName" 			          columnIndex="2"/>
+		<result property="extensionAttribute15" 			    column="extensionAttribute15"	          columnIndex="3"/>
+		<result property="type" 								column="type" 						      columnIndex="4"/>		
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -65,13 +65,9 @@
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
-		<result property="title" 									column="title" 							columnIndex="1"/>
+		<result property="title" 							    column="title" 							columnIndex="1"/>
 		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
 	</resultMap>
-	
-	<!-- <procedure id="EzOrganDAO.getPropertyValue" parameterClass="Map" resultClass="String" remapResults="true">
-		{CALL EZSP_GETPROPERTYVALUE(#v_CN#, #v_FIELD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
 	
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
 		<![CDATA[	
@@ -165,15 +161,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getSIPUriList" parameterClass="Map" resultClass="String">
-		{CALL EZSP_GETSIPURILIST(#iv_CNLIST#, #iv_EMAILLIST#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
-		{CALL EZSP_GETDEPTTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
+		
 	 <select id="EzOrganDAO.getDeptTreeInfo" parameterClass="Map" resultMap="deptTreeInfo">
 		<![CDATA[
 			SELECT
@@ -190,7 +178,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                       		'user' TYPE  
                			FROM
                				TBL_USERMASTER 
@@ -211,7 +199,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                       		'dept' TYPE  
                			FROM
                				TBL_DEPTMASTER 
@@ -222,11 +210,7 @@
         	ORDER BY A.EXTENSIONATTRIBUTE15
 		]]>
 	</select> 
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
-		{CALL EZSP_GETDEPTSUBTREEINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
+		
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
 		<![CDATA[
 			SELECT
@@ -246,7 +230,7 @@
                        		END
                        			DISPLAYNAME  ,
                       		'dept' TYPE  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') 
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) 
                      		EXTENSIONATTRIBUTE15  
                			FROM
                				TBL_DEPTMASTER 
@@ -258,11 +242,7 @@
         		A.EXTENSIONATTRIBUTE15
 		]]>
 	</select> 
-	
-	 <!-- <procedure id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZSP_GETDEPTMEMBERLIST(#v_CLASS#, #v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> --> 
-	
+		
 	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
@@ -280,7 +260,7 @@
                        				DISPLAYNAME2
                        			END
                        				DISPLAYNAME  ,
-                       			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                        		FROM
                        			TBL_USERMASTER 
@@ -300,7 +280,7 @@
                        			ELSE
                        				DISPLAYNAME2
                        			END
-                       				DISPLAYNAME  , SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       				DISPLAYNAME  , CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -330,7 +310,7 @@
                       		DISPLAYNAME2
                       	END
                       		DISPLAYNAME  ,
-                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                       	'dept' TYPE  
                     FROM
                     	TBL_DEPTMASTER 
@@ -358,7 +338,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE  
                           		FROM
                           			TBL_USERMASTER 
@@ -379,7 +359,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
                           		FROM
                           			TBL_ADDJOBMASTER B
@@ -402,7 +382,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                            			'dept' TYPE  
                           		FROM
                           			TBL_DEPTMASTER 
@@ -418,11 +398,7 @@
 			</isNotEqual>
 		</isNotEqual>
 	</select> 
-	
-	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
-		{CALL EZSP_GETDEPTMEMBERLISTPAGE(#v_CLASS#, #v_CN#, #v_LANGDATA#, #v_PAGE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
@@ -445,7 +421,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_USERMASTER 
@@ -466,7 +442,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_ADDJOBMASTER B
@@ -500,7 +476,7 @@
                     	DISPLAYNAME2
                     END
                     	DISPLAYNAME  ,
-                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                        CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                         'DEPT' TYPE  
             	FROM
             		TBL_DEPTMASTER 
@@ -529,7 +505,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                            FROM
                            		TBL_USERMASTER 
@@ -550,7 +526,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                              FROM
                              	TBL_ADDJOBMASTER B
@@ -573,7 +549,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
                                 'DEPT' TYPE  
                             FROM
                             	TBL_DEPTMASTER 
@@ -589,11 +565,7 @@
 		</isEqual>	
 	
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
-		{CALL EZSP_GETDEPTMEMBERLISTCOUNT(#v_CN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getMemberListCount" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -620,11 +592,7 @@
               			B.TENANT_ID = #tenantID#	 ) AA
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getTBL_DEPTMASTER" parameterClass="Map" resultClass="OrganDeptVO">
-		{CALL EZSP_GETTBL_DEPTMASTER(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
 			SELECT
@@ -689,11 +657,7 @@
 	       		TENANT_ID = #v_TENANT_ID#		
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getTBL_USERMASTER" parameterClass="Map" resultMap="userInfo">
-		{CALL EZSP_GETTBL_USERMASTER(#v_CN#, #v_DEPTCD#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">
 		<![CDATA[
 			SELECT
@@ -877,11 +841,7 @@
             	B.TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
-		{CALL EZSP_GETUSERINFO(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
@@ -987,11 +947,7 @@
              	TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
-		{CALL EZSP_GETUSERADDJOBINFO(#v_PCN#, #v_PDEPT#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getUserAddjobInfo" parameterClass="Map" resultMap="userAddJobInfo">
 		<![CDATA[
 			SELECT
@@ -1027,11 +983,7 @@
         		A.TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</select>
-	
-	<!-- <procedure id="EzOrganDAO.updateProperty" parameterClass="Map">
-		{CALL EZSP_UPDATEONEPROPERTY(#v_CN#, #v_CLASS#, #v_PROPNAME#, #v_PROPVALUE#, #v_FLAG#)}
-	</procedure> -->
-	
+		
 	<update id="EzOrganDAO.updateProperty" parameterClass="Map">
 		<![CDATA[
 			UPDATE
@@ -1083,11 +1035,6 @@
 		]]>
 	</statement>
 	
-	<!-- <procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
-	
-		{CALL EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
-	</procedure> -->
-	
 	<select id="EzOrganDAO.setProxyUserInfo_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1131,11 +1078,7 @@
             	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
 		]]>
 	</insert>
-	
-	<!-- <procedure id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
-		{CALL EZSP_DELPROXYUSERINFO(#v_USERID#)}
-	</procedure> -->
-	
+		
 	<delete id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		<![CDATA[
 			DELETE
@@ -1146,11 +1089,7 @@
         		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-	
-	<!-- <procedure id="EzOrganDAO.getBirthUserList" parameterClass="String" resultClass="OrganUserVO">
-		{CALL EZSP_GETBIRTHUSERLIST(#v_COMPANYID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure> -->
-	
+		
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
