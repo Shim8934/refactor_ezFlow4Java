@@ -2827,7 +2827,7 @@
 		]]>
 	</update>
 	
-	 <update id="EzQuestionDAO.updateTBL_POLLItem" parameterClass="Map">
+	 <update id="EzQuestionDAO.updateTblPollItem" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
 				TBL_POLL_ITEM
@@ -2842,7 +2842,7 @@
 		]]>
 	</update>
 	
-	 <update id="EzQuestionDAO.updateTBL_POLLPermission" parameterClass="Map">
+	 <update id="EzQuestionDAO.updateTblPollPermission" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
 				TBL_POLL_PERMISSION
