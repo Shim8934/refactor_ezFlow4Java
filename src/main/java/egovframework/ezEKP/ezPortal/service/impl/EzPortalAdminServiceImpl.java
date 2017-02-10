@@ -984,6 +984,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 				NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+				logger.debug("nodesLength="+nodes.getLength());
 				for (j=0; j<nodes.getLength(); j++) {
 					NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
 					portletType = nodesPortletType.item(j).getTextContent();
@@ -991,7 +992,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					portletUID = nodesPortletUID.item(j).getTextContent();
 					NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
 					portletPageUID = nodesPortletPageUID.item(j).getTextContent();
-					portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+					NodeList nodesPortletDisplayName = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETDISPLAYNAME", xmlDom, XPathConstants.NODESET);
+					//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+					portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 					
 					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
@@ -1297,6 +1300,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				XPath xpath = XPathFactory.newInstance().newXPath();
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 					NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
+					logger.debug("nodesLength="+nodes.getLength());
 					for (j=0; j<nodes.getLength(); j++) {
 						//////
 						NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
@@ -1308,8 +1312,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletUID = nodesPortletUID.item(j).getTextContent();
 						NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
 						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
-						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
-						
+						NodeList nodesPortletDisplayName = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETDISPLAYNAME", xmlDom, XPathConstants.NODESET);
+						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
+						logger.debug("portletDisplayName["+j+"]="+portletDisplayName);
 						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						

@@ -982,8 +982,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/portletEdit.do")
 	public String portletEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uID = "";
 		String menuIndex = "1";
 		String mode = "edit";
@@ -1513,8 +1514,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/logoEdit.do")
 	public String logoEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uID = "";
 		String menuIndex = "1";
 		String mode = "edit";
@@ -1870,8 +1872,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/menuItemEdit.do")
 	public String menuItemEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uID = "";
 		String imageUID = "";
 		String imageWidth = "";
@@ -2421,8 +2424,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/subMenuItemEdit.do")
 	public String subMenuItemEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-		String langPrimary = config.getProperty("config.lang_Primary"+userInfo.getLang());
-		String langSecondary = config.getProperty("config.lang_Secondary"+userInfo.getLang());
+		
+		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		String uID = "";
 		String imageUID = "";
 		String imageWidth = "";

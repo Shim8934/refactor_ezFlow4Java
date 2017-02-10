@@ -2101,244 +2101,253 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getRenderedPortalPageColumn (String pPortalPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+		logger.debug("getRenderedPortalPageColumn started");
 		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
 		StringBuilder sb = new StringBuilder();
 		String strSQL = "";
-        
-        String parentPortalPageID = pPortalPageID;
-        int count = 0;
-
-        strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
-        
-        while (count < 10) {
-        	
-        	parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
-
-        	if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
-        		break;
-        	}
-        	//String param = String.valueOf(count);
-        	String param = parentPortalPageID;
-        	strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
-        	count ++;
-        }
-        
-        if (userInfo.isRootPage() == true) {
-        	result = getTBLPortalPageItemsT(strSQL);
-        } else {
-        	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId()));
-
-        }
-
-        if (result == null) {
-        	return "";
-        }
-        
-        boolean loadFlag = true;
-        
-        for (int i=0; i<result.size(); i++) {
-        	int portletType = result.get(i).getPortletType();
-        	String portletUID = result.get(i).getuID();
-        	String portletPageUID = result.get(i).getPageUID();
-        	String portletDisplayName = result.get(i).getDisplayName();
-        	int portletWidth = result.get(i).getWidth();
-        	int portletHeight = result.get(i).getHeight();
-        	int portletCanRemove = result.get(i).getCanRemove();
-        	int portletCanResize = result.get(i).getCanResize();
-        	int portletCanReplace = result.get(i).getCanRemove();
-        	int portletPaddingLeft = result.get(i).getLeftMargin();
-        	int portletPaddingRight = result.get(i).getRightMargin();
-        	int portletPaddingTop = result.get(i).getTopMargin();
-        	int portletPaddingBottom = result.get(i).getBottomMargin();
-        	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-        	String portletMandatory = result.get(i).getMandatory();
-        	String portletMoveURL = "";
-        	
-        	if (pMode.equals("edit")) {
-        		if (portletHeight != 0) {
-        			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
-        		} else {
-        			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
-        		}
-        		if (portletType == 0) {
-        			if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        				sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
-        			}
-        		} else {
-        			sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
-        		}
-        		sb.append("</TR>\n");
-        	} else {
-        		if (userInfo.getTableViewOption().equals("D")) {
-        			if (i == 0) {
-        				sb.append("<div class='section1_bg'><section class='section1'>\n");
-        			} else {
-        				if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
-        					sb.append("<div id='Center'>");
-                            loadFlag = false;
-        				}
-        				
-        				sb.append("<section class='section" + (i + 1) + "'>\n");
-        			}
-        			if (portletType == 0) {
-        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-        					sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        				}
-        			} else {
-        				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
-        			}
-        			if (i == 0) {
-        				sb.append("</section></div>\n");
-        			} else {
-        				sb.append("</section>\n");
-        			}
-        		} else {
-        			if (i == 0) {
-        				sb.append("<div class='section1_bg'><section class='section1'>\n");
-        				if (portletType == 0) {
-        					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        					}
-        				} else {
-        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
-        				}
-        				if (i == 0) {
-        					sb.append("</section></div>\n");
-        				} else {
-        					sb.append("</section>\n");
-        				}
-        			} else {
-        				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
-        					sb.append("<div id='Center' style=' margin-top: 15px; '>");
-                            sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
-                            sb.append("<tbody>");
-        				}
-        				
-        				sb.append("<TR>");
-        				
-        				if (portletType == 0) {
-        					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        						portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-        						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
-        					}
-        				} else {
-        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
-        				}
-        				sb.append("</TR>\n");
-        				
-        				if (userInfo.getTableViewOption().equals("T") && loadFlag) {
-        					 sb.append("</tbody>");
-                             sb.append("</table>");
-                             sb.append("</div>\n");
-                             loadFlag = false;
-        				}
-        			}
-        		}
-        	}
-        }
-        
+		
+		String parentPortalPageID = pPortalPageID;
+		int count = 0;
+		
+		strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+		
+		while (count < 10) {
+			
+			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
+			
+			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+				break;
+			}
+			//String param = String.valueOf(count);
+			String param = parentPortalPageID;
+			strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+			count ++;
+		}
+		
+		if (userInfo.isRootPage() == true) {
+			result = getTBLPortalPageItemsT(strSQL);
+		} else {
+			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId()));
+			
+		}
+		
+		if (result == null) {
+			return "";
+		}
+		
+		boolean loadFlag = true;
+		
+		for (int i=0; i<result.size(); i++) {
+			int portletType = result.get(i).getPortletType();
+			String portletUID = result.get(i).getuID();
+			String portletPageUID = result.get(i).getPageUID();
+			String portletDisplayName = result.get(i).getDisplayName();
+			int portletWidth = result.get(i).getWidth();
+			int portletHeight = result.get(i).getHeight();
+			int portletCanRemove = result.get(i).getCanRemove();
+			int portletCanResize = result.get(i).getCanResize();
+			int portletCanReplace = result.get(i).getCanRemove();
+			int portletPaddingLeft = result.get(i).getLeftMargin();
+			int portletPaddingRight = result.get(i).getRightMargin();
+			int portletPaddingTop = result.get(i).getTopMargin();
+			int portletPaddingBottom = result.get(i).getBottomMargin();
+			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
+			String portletMandatory = result.get(i).getMandatory();
+			String portletMoveURL = "";
+			
+			if (pMode.equals("edit")) {
+				if (portletHeight != 0) {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+				} else {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+				}
+				if (portletType == 0) {
+					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+					}
+				} else {
+					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+				}
+				sb.append("</TR>\n");
+			} else {
+				logger.debug("no edit");
+				if (userInfo.getTableViewOption().equals("D")) {
+					if (i == 0) {
+						sb.append("<div class='section1_bg'><section class='section1'>\n");
+					} else {
+						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
+							sb.append("<div id='Center'>");
+							loadFlag = false;
+						}
+						
+						sb.append("<section class='section" + (i + 1) + "'>\n");
+					}
+					if (portletType == 0) {
+						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+						}
+					} else {
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+					}
+					if (i == 0) {
+						sb.append("</section></div>\n");
+					} else {
+						sb.append("</section>\n");
+					}
+				} else {
+					if (i == 0) {
+						sb.append("<div class='section1_bg'><section class='section1'>\n");
+						if (portletType == 0) {
+							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							}
+						} else {
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						}
+						if (i == 0) {
+							sb.append("</section></div>\n");
+						} else {
+							sb.append("</section>\n");
+						}
+					} else {
+						if (userInfo.getTableViewOption().equals("T") && loadFlag) {
+							sb.append("<div id='Center' style=' margin-top: 15px; '>");
+							sb.append("<table border='0' cellpadding='0' cellspacing='0' width='100%'>");
+							sb.append("<tbody>");
+						}
+						
+						sb.append("<TR>");
+						
+						if (portletType == 0) {
+							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+								sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+							}
+						} else {
+							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+						}
+						sb.append("</TR>\n");
+						
+						if (userInfo.getTableViewOption().equals("T") && loadFlag) {
+							sb.append("</tbody>");
+							sb.append("</table>");
+							sb.append("</div>\n");
+							loadFlag = false;
+						}
+					}
+				}
+			}
+		}
+		
+		logger.debug("sb="+sb.toString());
+		logger.debug("getRenderedPortalPageColumn ended");
 		return sb.toString();
 	
 	}
 	
 	public String getRenderedPortalPageColumnInsert (String pPortalPageID, String pCallingPageID, String pAccessIDList, int pColumnIndex, String pMode, LoginVO userInfo) throws Exception {
+		logger.debug("getRenderedPortalPageColumnInsert started");
+
 		List<PortalTBLPortalPageItemsVO> result = new ArrayList<PortalTBLPortalPageItemsVO>();
 		StringBuilder sb = new StringBuilder();
 		String strSQL = "";
-        String parentPortalPageID = pCallingPageID;
-        int count = 0;
-  ///////////////////////tenantID      
-        strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
-        
-        while (count < 10) {
-        	parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
-
-        	String param = parentPortalPageID;
-        	strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
-        	count ++;
-        }
-        
-        if (userInfo.isRootPage() == true) {
-        	result = getTBLPortalPageItemsT(strSQL);
-        } else {
-        	result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID, userInfo.getTenantId()));
-        }
-        
-        if (result == null) {
-        	return "";
-        }
-        
-        for (int i=0; i<result.size(); i++) {
-        	int portletType = result.get(i).getPortletType();
-        	String portletUID = result.get(i).getuID();
-        	String portletPageUID = result.get(i).getPageUID();
-        	String portletDisplayName = result.get(i).getDisplayName();
-        	int portletWidth = result.get(i).getWidth();
-        	int portletHeight = result.get(i).getHeight();
-        	int portletCanRemove = result.get(i).getCanRemove();
-        	int portletCanResize = result.get(i).getCanResize();
-        	int portletCanReplace = result.get(i).getCanRemove();
-        	int portletPaddingLeft = result.get(i).getLeftMargin();
-        	int portletPaddingRight = result.get(i).getRightMargin();
-        	int portletPaddingTop = result.get(i).getTopMargin();
-        	int portletPaddingBottom = result.get(i).getBottomMargin();
-        	String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-        	String portletMandatory = result.get(i).getMandatory();
-        	String portletMoveURL = "";
-
-        	if (pMode.equals("edit")) {
-        		if (portletHeight != 0) {
-        			sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
-        		} else {
-        			sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
-            		}
-  
-            		if (portletType == 0) {
-            			if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-            				sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
-        			}
-        		} else {
-        			sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
-        		}
-        		sb.append("</TR>\n");
-        	} else {
-        		if (userInfo.getTableViewOption().equals("D")) {
-        			if (portletType == 0) {
-        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-        					if (portletWidth == 9999) {
-        						String portletWidthStr = "100%"; 
-        						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        					} else {
-        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        					}
-        				}
-        			} else {
-        				sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
-
-        			}
-        		} else {
-        			if (portletType == 0) {
-        				if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-        					portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-        					
-        					if (portletWidth == 9999) {
-        						String portletWidthStr = "100%"; 
-        						sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        					} else {
-        						sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
-        					}
-        					
-        					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
-        					}
-        				} else {
-        					sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
-        				}
-        			}
-        		}
-        	}
+		String parentPortalPageID = pCallingPageID;
+		int count = 0;
+		///////////////////////tenantID      
+		strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+		
+		while (count < 10) {
+			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId());
+			
+			String param = parentPortalPageID;
+			strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+			count ++;
+		}
+		
+		if (userInfo.isRootPage() == true) {
+			result = getTBLPortalPageItemsT(strSQL);
+		} else {
+			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID, userInfo.getTenantId()));
+		}
+		
+		if (result == null) {
+			return "";
+		}
+		
+		for (int i=0; i<result.size(); i++) {
+			int portletType = result.get(i).getPortletType();
+			String portletUID = result.get(i).getuID();
+			String portletPageUID = result.get(i).getPageUID();
+			String portletDisplayName = result.get(i).getDisplayName();
+			int portletWidth = result.get(i).getWidth();
+			int portletHeight = result.get(i).getHeight();
+			int portletCanRemove = result.get(i).getCanRemove();
+			int portletCanResize = result.get(i).getCanResize();
+			int portletCanReplace = result.get(i).getCanRemove();
+			int portletPaddingLeft = result.get(i).getLeftMargin();
+			int portletPaddingRight = result.get(i).getRightMargin();
+			int portletPaddingTop = result.get(i).getTopMargin();
+			int portletPaddingBottom = result.get(i).getBottomMargin();
+			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
+			String portletMandatory = result.get(i).getMandatory();
+			String portletMoveURL = "";
+			
+			if (pMode.equals("edit")) {
+				if (portletHeight != 0) {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+				} else {
+					sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+				}
+				
+				if (portletType == 0) {
+					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+					}
+				} else {
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+				}
+				sb.append("</TR>\n");
+			} else {
+				if (userInfo.getTableViewOption().equals("D")) {
+					if (portletType == 0) {
+						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							if (portletWidth == 9999) {
+								String portletWidthStr = "100%"; 
+								sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							} else {
+								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							}
+						}
+					} else {
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo) + "\n");
+						
+					}
+				} else {
+					if (portletType == 0) {
+						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							
+							if (portletWidth == 9999) {
+								String portletWidthStr = "100%"; 
+								sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							} else {
+								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+							}
+							
+							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+						}
+					} else {
+						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
+					}
+				}
+			}
+		}
+		
+		logger.debug("sb="+sb.toString());
+		logger.debug("getRenderedPortalPageColumnInsert ended");
         
 		return sb.toString();
 	
