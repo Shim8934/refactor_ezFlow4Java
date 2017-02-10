@@ -629,10 +629,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	
 	    if (strProp != null) {
 	    	boardInfo.setExpireDays(commonUtil.getDateStringInUTC(strProp.getItemExpires(), userInfo.getOffset(), false));
-	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
+ 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
 		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
-		    	boardInfo.setBoardName2(strProp.getBoardName2().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
 		    } else {
 		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
 		    }
@@ -3334,7 +3334,7 @@ public class EzBoardController extends EgovFileMngUtil{
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
-
+        
         int maxSize = 0;
         String pBoardID = "";
         String pMode = "";
@@ -4955,10 +4955,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
-			boardInfo.setBoardName(boardInfo.getBoardName2());
-		}
-		
 		if (boardInfo.getWrite_FG().equals("false")) {
 			return "main/warning"; 
 		}
@@ -5018,13 +5014,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				File file1 = new File(s_imagePath);
 				
 				if (file.exists()) {
-					FileUtils.deleteQuietly(file);
+					deleteFile(imagePath);
 				}
 				if (file1.exists()) {
-					FileUtils.deleteQuietly(file1);
+					deleteFile(s_imagePath);
 				}
 			}
-			return " ";
+			
+			return "DEL";
 		} else {
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());
@@ -6263,7 +6260,7 @@ public class EzBoardController extends EgovFileMngUtil{
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardItem.getTitle() + "</a>");
         bodyContent.append("</DIV>");
         
-        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255") + boardInfo.getBoardName() + "] " + boardItem.getTitle();
+        String subject = "[" + egovMessageSource.getMessage("ezBoard.t255", userInfo.getLocale()) + boardInfo.getBoardName() + "] " + boardItem.getTitle();
         
         List<BoardAccessVO> list = ezBoardService.getPostNotiMailUserList(boardID, userInfo.getPrimary(), userInfo.getTenantId());
         

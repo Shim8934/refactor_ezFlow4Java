@@ -2266,7 +2266,7 @@ public class EzResourceController extends EgovFileMngUtil {
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
         bodyContent.append("</DIV>");
         
-        String subject = "[" + egovMessageSource.getMessage("ezResource.t171") + resInfo.getBrdNm() + "] " + title;
+        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + resInfo.getBrdNm() + "] " + title;
         
         
     	InternetAddress from = new InternetAddress();
@@ -2314,21 +2314,21 @@ public class EzResourceController extends EgovFileMngUtil {
         bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (approve.equals("1")) {
-        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009"));
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008")+" : " + resInfo.getBrd_Nm());
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale())+" : " + resInfo.getBrd_Nm());
         } else {
-        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900010"));
-        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900007")+" : " + resInfo.getBrd_Nm());
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale())+" : " + resInfo.getBrd_Nm());
         }
         
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004")+" : " + commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" + commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
+        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale())+" : " + commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" + commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
         bodyContent.append("</DIV>");
         
         String subject = "";
         if (approve.equals("1")) {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900010")+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale())+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         } else {
-        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011")+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale())+" :" + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         }
         
     	InternetAddress from = new InternetAddress();

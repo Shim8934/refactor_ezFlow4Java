@@ -264,6 +264,11 @@
 				    alert("<spring:message code='ezBoard.t454'/>");
 				    return;	
 			    }
+	            
+	            if (document.getElementsByName('checkmenuSub').length > 100) {
+	            	alert("<spring:message code='ezBoard.hyj05'/>");
+				    return;
+	            }
 			    
 			    newID = "{" + GetGUID() + "}";
 	
@@ -403,305 +408,305 @@
 	                    alert(strLang73);
 	                else
 	                    alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
-	        }
+		        }
+		
+		        xmlhttp = null;
+		        xmldom = null;
+		    }
+		
+		    function imgtemp_onclick() {
+		        if (document.form.file1.value != "") {
+		            var fd = new FormData();
+		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
+		                fd.append("file1", document.getElementById("form").file1.files[i]);
+		            }
+		            fd.append("mode", document.getElementById("mode").value);
+		            isfileup = true;
+		            xhr = new XMLHttpRequest();
+		            xhr.upload.addEventListener("progress", uploadProgress, false);
+		            xhr.addEventListener("load", uploadComplete, false);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.send(fd);
+		            document.getElementById("progdiv").style.display = "";
+		        }
+		    }
+		    
+		    function returnvalue(strXML) {
+		        ImgaeReturnXml = loadXMLString(strXML);
+		        var nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
+		        for (var i = 0; i < nodes.length ; i++) {
+		
+		            if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
+		                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+		                return;
+		            }
+		            saveItemBoardId = pBoardID;
+		            var rtnMode = getNodeText(GetChildNodes(nodes[i])[5]);
+		            var imgFileName = getNodeText(GetChildNodes(nodes[i])[0]);
+		            var localFileName = getNodeText(GetChildNodes(nodes[i])[2]);
+		            var imgFileSize = getNodeText(GetChildNodes(nodes[i])[3]);
+		            var imgUniqueID = getNodeText(GetChildNodes(nodes[i])[6]);
 	
-	        xmlhttp = null;
-	        xmldom = null;
-	    }
+		            addimageline(imgFileName, localFileName, imgUniqueID, imgFileSize);
+		        }
+		
+		        var attachXml = "<LISTVIEWDATA><ROWS>";
+		        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
+		            attachXml += "<ROW><CELL>";
+		            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+		            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
+		            attachXml += "<DATA3></DATA3>";
+		            attachXml += "<DATA4></DATA4>";
+		            attachXml += "<DATA5>Y</DATA5>";
+		            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
+		            attachXml += "</CELL></ROW>";
+		        }
+		        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
+		
+		        var xmlDom = createXmlDom();
+		        xmlDom = loadXMLString(attachXml);
+		        pAttachListXml = xmlDom;
+		    }
+		
+		    //사진추가
+		    function btn_PhotoAttachAdd() {
+		    	pAttachListXml = "";
+		    	
+		        if (CrossYN()) {
+		        	document.getElementById('mode').value = "PICTURE";
+		            document.form.file1.click();
+		        } else {
+		            if (isdad || CrossYN()) {
+		            	document.getElementById('mode').value = "PICTURE";
+		                document.form.file1.click();
+		            } else {
+		                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
+		                ezUtil.UseUTF8 = true;
 	
-	    function imgtemp_onclick() {
-	        if (document.form.file1.value != "") {            
-	            var fd = new FormData();
-	            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
-	                fd.append("file1", document.getElementById("form").file1.files[i]);
-	            }
-	            fd.append("mode", document.getElementById("mode").value);
-	            isfileup = true;
-	            xhr = new XMLHttpRequest();
-	            xhr.upload.addEventListener("progress", uploadProgress, false);
-	            xhr.addEventListener("load", uploadComplete, false);
-	            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
-	            xhr.send(fd);
-	            document.getElementById("progdiv").style.display = "";
-	        }
-	    }
-	    
-	    function returnvalue(strXML) {
-	        ImgaeReturnXml = loadXMLString(strXML);
-	        var nodes = SelectNodes(ImgaeReturnXml, "ROOT/NODES/NODE");
-	        for (var i = 0; i < nodes.length ; i++) {
+		                var file = ezUtil.OpenLoadDlgMultiNew("", "");
+		                if (!file)
+		                    return;
 	
-	            if (getNodeText(GetChildNodes(nodes[i])[1]) == "overflow") {
-	                alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
-	                return;
-	            }
-	            saveItemBoardId = pBoardID;
-	            var rtnMode = getNodeText(GetChildNodes(nodes[i])[5]);
-	            var imgFileName = getNodeText(GetChildNodes(nodes[i])[0]);
-	            var localFileName = getNodeText(GetChildNodes(nodes[i])[2]);
-	            var imgFileSize = getNodeText(GetChildNodes(nodes[i])[3]);
-	            var imgUniqueID = getNodeText(GetChildNodes(nodes[i])[6]);
-
-	            addimageline(imgFileName, localFileName, imgUniqueID, imgFileSize);
-	        }
+		                g_fileList = file.split("|");
 	
-	        var attachXml = "<LISTVIEWDATA><ROWS>";
-	        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
-	            attachXml += "<ROW><CELL>";
-	            attachXml += "<DATA1>" + "/upload_board/tempUploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
-	            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
-	            attachXml += "<DATA3></DATA3>";
-	            attachXml += "<DATA4></DATA4>";
-	            attachXml += "<DATA5>Y</DATA5>";
-	            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
-	            attachXml += "</CELL></ROW>";
-	        }
-	        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
+		                var fileSize = 0;
+		                for (var i = 0; i < g_fileList.length - 1; i++) {
+		                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
+		                        alert("" + strLang6 + "");
+		                        return;
+		                    }
+		                    
+		                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
+		                    if (temp.length > 111) {
+		                        alert("" + strLang7 + "");
+		                        return;
+		                    }
+		                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
+		                    
+		                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
+		                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
+		                        return;
+		                    }
+		                }
+		                ezUtil = null;
 	
-	        var xmlDom = createXmlDom();
-	        xmlDom = loadXMLString(attachXml);
-	        pAttachListXml = xmlDom;
-	    }
-	
-	    //사진추가
-	    function btn_PhotoAttachAdd() {
-	    	pAttachListXml = "";
-	    	
-	        if (CrossYN()) {
-	        	document.getElementById('mode').value = "PICTURE";
-	            document.form.file1.click();
-	        } else {
-	            if (isdad || CrossYN()) {
-	            	document.getElementById('mode').value = "PICTURE";
-	                document.form.file1.click();
-	            } else {
-	                var ezUtil = new ActiveXObject("EzUtil.MiscFunc.1");
-	                ezUtil.UseUTF8 = true;
-
-	                var file = ezUtil.OpenLoadDlgMultiNew("", "");
-	                if (!file)
-	                    return;
-
-	                g_fileList = file.split("|");
-
-	                var fileSize = 0;
-	                for (var i = 0; i < g_fileList.length - 1; i++) {
-	                    if (ezUtil.GetFileSize(g_fileList[i]) == 0) {
-	                        alert("" + strLang6 + "");
-	                        return;
-	                    }
-	                    
-	                    var temp = ezUtil.ExtractFileName(g_fileList[i]);
-	                    if (temp.length > 111) {
-	                        alert("" + strLang7 + "");
-	                        return;
-	                    }
-	                    fileSize = ezUtil.GetFileSize(g_fileList[i]);
-	                    
-	                    if (fileSize > parseInt(AttachLimit) * 1024 * 1024) {
-	                        alert("" + strLang8 + "" + AttachLimit + "MB" + strLang9 + "");
-	                        return;
-	                    }
-	                }
-	                ezUtil = null;
-
-	                var fileNamelist = "";
-	                var fileName = "";
-	                saveItemBoardId = pBoardID;
-	                show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
-	            }
-	        }
-	    }
-	
-	    //사진삭제
-	    function btn_PhotoAttachDel()
-	    {
-	        if (isdad || CrossYN()) {
-	            var xmlhttp = createXMLHttpRequest();
-	            var uniqueIDs = "";
-	            var fd = new FormData();
-	            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
-	                if (document.getElementsByName('checkmenuSub')[i].checked) {
-	                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
-	                    uniqueIDs += obj.getAttribute('uniqueID') + ";";
-	                    obj.parentNode.removeChild(obj);
-	                }
-	            }
-	            
-	            if (uniqueIDs == null || uniqueIDs == "") {
-	            	alert("<spring:message code='ezBoard.t601'/>");
-		    		return;	
-	            }
-	            
-	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
-	            xmlhttp.send(fd);
-	
-	            document.getElementById("checkmenu").checked = false;
-	        } else {
-	            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
-	                if (document.getElementsByName('checkmenuSub')[i].checked) {
-	                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
-	                    obj.parentNode.removeChild(obj);
-	                }
-	            }
-	            
-	            if (uniqueIDs == null || uniqueIDs == "") {
-	            	alert("<spring:message code='ezBoard.t601'/>");
-		    		return;	
-	            }
-	            
-	            document.getElementById("checkmenu").checked = false;
-	        }
-	
-	        var attachXml = "<LISTVIEWDATA><ROWS>";
-	        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
-	            attachXml += "<ROW><CELL>";
-	            attachXml += "<DATA1>" + "/files/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
-	            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
-	            attachXml += "<DATA3></DATA3>";
-	            attachXml += "<DATA4></DATA4>";
-	            attachXml += "<DATA5>Y</DATA5>";
-	            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
-	            attachXml += "</CELL></ROW>";
-	        }
-	        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
-	
-	        var xmlDom = createXmlDom();
-	        xmlDom = loadXMLString(attachXml);
-	        pAttachListXml = xmlDom;
-	
-	        xmldom = null;
-	        xmlHTTP = null;
-	    }
-	
-	    function imagecheckAll(checkeds)
-	    {
-	        if (document.getElementsByName('checkmenu')[0].checked) {
-	            for(var i = 0 ; i <document.getElementsByName('checkmenuSub').length ; i++)
-	                document.getElementsByName('checkmenuSub')[i].checked = true;
-	        } else {
-	            for (var i = 0 ; i < document.getElementsByName('checkmenuSub').length ; i++)
-	                document.getElementsByName('checkmenuSub')[i].checked = false;
-	        }
-	    }
-	
-	    //create guid
-	    function S4() {
-	        return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
-	    }
-	
-	    function GetGUID() {
-	        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-	    }
-	
-	    function CustomRandom() {
-	        var now = new Date();
-	        var seed = now.getMilliseconds();
-	        return Math.random(seed) + 1;
-	    }
-	        //
-	
-	    function onDragEnter(evt) {
-	        try{
-	            evt.dataTransfer.dropEffect = "copy";
-	            evt.stopPropagation();
-	            evt.preventDefault();
-	        }
-	        catch (e) {
-	            evt.dataTransfer.dropEffect = "none";
-	        }
-	    }
-	    function onDragOver(evt) {
-	        try{
-	            evt.dataTransfer.dropEffect = "copy";
-	            evt.stopPropagation();
-	            evt.preventDefault();
-	        }
-	        catch(e){
-	            evt.dataTransfer.dropEffect = "none";
-	        }
-	    }
-	    var xhr = null;
-	    function onDrop(evt) {
-	        try{
-	            evt.stopPropagation();
-	            evt.preventDefault();
-	
-	            if (isfileup) {
-	                alert("<spring:message code='ezBoard.t2000'/>");
-	                return;
-	            }
-	
-	            var file = evt.dataTransfer.files;
-	
-	            var fd = new FormData();
-	            for (var i = 0; i < file.length; i++) {
-	                fd.append("file1", file[i]);
-	            }
-	            fd.append("mode", document.getElementById("mode").value);
-	            isfileup = true;
-	            xhr = new XMLHttpRequest();
-	            xhr.upload.addEventListener("progress", uploadProgress, false);
-	            xhr.addEventListener("load", uploadComplete, false);
-	            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
-	            xhr.send(fd);
-	
-	            document.getElementById("progdiv").style.display = "";
-	        }
-	        catch(e){
-	        }
-	    }
-	    function uploadProgress(evt) {
-	        if (evt.lengthComputable) {
-	            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
-	            document.getElementById('prog_bar').style.width = percentComplete + "%";
-	            document.getElementById('prog_num').innerHTML = percentComplete;
-	        }
-	    }
-	    function uploadComplete() {
-	        document.getElementById("progdiv").style.display = "none";
-	        document.getElementById("prog_bar").style.width = "0%";
-	        document.getElementById("prog_num").innerHTML = "";
-	        //document.getElementById("file1").type = "text";
-	        //document.getElementById("file1").type = "file";
-	
-	        document.getElementById("file1").value = "";
-	        returnvalue(xhr.responseText);
-	        isfileup = false;
-	    }
-	    var writeboardselect_modal_dialogArguments = new Array();
-	    function NewItem_onclick() {
-	        if (CrossYN()) {
-	            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-	            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
-	            try { OpenWin.focus(); } catch (e) { }
-	        }
-	        else {
-	            var wWeight = "345";
-	            var wHeight = "660";
-	            var heigth = window.screen.availHeight;
-	            var width = window.screen.availWidth;
-	            var left = (width - wWeight) / 2;
-	            var top = (heigth - wHeight) / 2;
-	            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
-	                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
-	
-	            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
-	                GetBoardInfo();
-	                if (ret[2] != "3" && ret[2] != "4") {
-	                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
-	                        return;
-	                    else {
-                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
-	                    }
-	                }
-	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerHTML = ret[1];
-	
-	                SelBoard = true;
-	            }
-	        }
-	    }
+		                var fileNamelist = "";
+		                var fileName = "";
+		                saveItemBoardId = pBoardID;
+		                show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
+		            }
+		        }
+		    }
+		
+		    //사진삭제
+		    function btn_PhotoAttachDel()
+		    {
+		        if (isdad || CrossYN()) {
+		            var xmlhttp = createXMLHttpRequest();
+		            var uniqueIDs = "";
+		            var fd = new FormData();
+		            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
+		                if (document.getElementsByName('checkmenuSub')[i].checked) {
+		                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
+		                    uniqueIDs += obj.getAttribute('uniqueID') + ";";
+		                    obj.parentNode.removeChild(obj);
+		                }
+		            }
+		            
+		            if (uniqueIDs == null || uniqueIDs == "") {
+		            	alert("<spring:message code='ezBoard.t601'/>");
+			    		return;	
+		            }
+		            
+		            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+		            xmlhttp.send(fd);
+		
+		            document.getElementById("checkmenu").checked = false;
+		        } else {
+		            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
+		                if (document.getElementsByName('checkmenuSub')[i].checked) {
+		                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
+		                    obj.parentNode.removeChild(obj);
+		                }
+		            }
+		            
+		            if (uniqueIDs == null || uniqueIDs == "") {
+		            	alert("<spring:message code='ezBoard.t601'/>");
+			    		return;	
+		            }
+		            
+		            document.getElementById("checkmenu").checked = false;
+		        }
+		
+		        var attachXml = "<LISTVIEWDATA><ROWS>";
+		        for (var i = 0 ; i < document.getElementById("addimagecontent").childNodes.length ; i++) {
+		            attachXml += "<ROW><CELL>";
+		            attachXml += "<DATA1>" + "/files/upload_board/" + pBoardID + "/uploadFile/" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA1>";
+		            attachXml += "<DATA2>" + GetAttribute(document.getElementsByName('imgView')[i], 'uniqueId') + "</DATA2>";
+		            attachXml += "<DATA3></DATA3>";
+		            attachXml += "<DATA4></DATA4>";
+		            attachXml += "<DATA5>Y</DATA5>";
+		            attachXml += "<DATA6>" + GetAttribute(document.getElementsByName('imgView')[i], 'size') + "</DATA6>";
+		            attachXml += "</CELL></ROW>";
+		        }
+		        attachXml += "</ROWS></LISTVIEWDATA>";  //pAttachListXml
+		
+		        var xmlDom = createXmlDom();
+		        xmlDom = loadXMLString(attachXml);
+		        pAttachListXml = xmlDom;
+		
+		        xmldom = null;
+		        xmlHTTP = null;
+		    }
+		
+		    function imagecheckAll(checkeds)
+		    {
+		        if (document.getElementsByName('checkmenu')[0].checked) {
+		            for(var i = 0 ; i <document.getElementsByName('checkmenuSub').length ; i++)
+		                document.getElementsByName('checkmenuSub')[i].checked = true;
+		        } else {
+		            for (var i = 0 ; i < document.getElementsByName('checkmenuSub').length ; i++)
+		                document.getElementsByName('checkmenuSub')[i].checked = false;
+		        }
+		    }
+		
+		    //create guid
+		    function S4() {
+		        return ((CustomRandom() * 0x10000) | 0).toString(16).substring(1);
+		    }
+		
+		    function GetGUID() {
+		        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+		    }
+		
+		    function CustomRandom() {
+		        var now = new Date();
+		        var seed = now.getMilliseconds();
+		        return Math.random(seed) + 1;
+		    }
+		        //
+		
+		    function onDragEnter(evt) {
+		        try{
+		            evt.dataTransfer.dropEffect = "copy";
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        catch (e) {
+		            evt.dataTransfer.dropEffect = "none";
+		        }
+		    }
+		    function onDragOver(evt) {
+		        try{
+		            evt.dataTransfer.dropEffect = "copy";
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		        }
+		        catch(e){
+		            evt.dataTransfer.dropEffect = "none";
+		        }
+		    }
+		    var xhr = null;
+		    function onDrop(evt) {
+		        try{
+		            evt.stopPropagation();
+		            evt.preventDefault();
+		
+		            if (isfileup) {
+		                alert("<spring:message code='ezBoard.t2000'/>");
+		                return;
+		            }
+		
+		            var file = evt.dataTransfer.files;
+		
+		            var fd = new FormData();
+		            for (var i = 0; i < file.length; i++) {
+		                fd.append("file1", file[i]);
+		            }
+		            fd.append("mode", document.getElementById("mode").value);
+		            isfileup = true;
+		            xhr = new XMLHttpRequest();
+		            xhr.upload.addEventListener("progress", uploadProgress, false);
+		            xhr.addEventListener("load", uploadComplete, false);
+		            xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.send(fd);
+		
+		            document.getElementById("progdiv").style.display = "";
+		        }
+		        catch(e){
+		        }
+		    }
+		    function uploadProgress(evt) {
+		        if (evt.lengthComputable) {
+		            var percentComplete = Math.round(evt.loaded * 100 / evt.total);
+		            document.getElementById('prog_bar').style.width = percentComplete + "%";
+		            document.getElementById('prog_num').innerHTML = percentComplete;
+		        }
+		    }
+		    function uploadComplete() {
+		        document.getElementById("progdiv").style.display = "none";
+		        document.getElementById("prog_bar").style.width = "0%";
+		        document.getElementById("prog_num").innerHTML = "";
+		        //document.getElementById("file1").type = "text";
+		        //document.getElementById("file1").type = "file";
+		
+		        document.getElementById("file1").value = "";
+		        returnvalue(xhr.responseText);
+		        isfileup = false;
+		    }
+		    var writeboardselect_modal_dialogArguments = new Array();
+		    function NewItem_onclick() {
+		        if (CrossYN()) {
+		            writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		            var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(345, 660));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else {
+		            var wWeight = "345";
+		            var wHeight = "660";
+		            var heigth = window.screen.availHeight;
+		            var width = window.screen.availWidth;
+		            var left = (width - wWeight) / 2;
+		            var top = (heigth - wHeight) / 2;
+		            var ret = window.showModalDialog("/ezBoard/writeBoardSelectModal.do", "",
+		                "DialogHeight:660px;DialogWidth:345px;status:no;help:no;edge:sunken,top=" + top + ",left = " + left);
+		
+		            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
+		                GetBoardInfo();
+		                if (ret[2] != "3" && ret[2] != "4") {
+		                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
+		                        return;
+		                    else {
+	                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+		                    }
+		                }
+		                pBoardID = ret[0];
+		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		
+		                SelBoard = true;
+		            }
+		        }
+		    }
 	        function NewItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined" && typeof (ret) == "object") {
 	                GetBoardInfo();
@@ -718,18 +723,18 @@
 	                SelBoard = true;
 	            }
 	        }
-	    function GetBoardInfo() {
-	        var xmlhttp_boardinfo = createXMLHttpRequest();
-	        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
-	        xmlhttp_boardinfo.send();
-	        if (xmlhttp_boardinfo.status == 200) {
-	            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
-	            AttachLimit = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "ATTACHLIMIT")[0]);
-	            ExpireDays = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "EXPIREDAYS")[0]);
-	            gubun = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "GUBUN")[0]);
-	        }
-	        xmlhttp_boardinfo = null;
-	    }
+		    function GetBoardInfo() {
+		        var xmlhttp_boardinfo = createXMLHttpRequest();
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.send();
+		        if (xmlhttp_boardinfo.status == 200) {
+		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
+		            AttachLimit = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "ATTACHLIMIT")[0]);
+		            ExpireDays = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "EXPIREDAYS")[0]);
+		            gubun = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "GUBUN")[0]);
+		        }
+		        xmlhttp_boardinfo = null;
+		    }
 	    </script>
 	</head>
 	<c:if test="${!isCrossBrowser}">

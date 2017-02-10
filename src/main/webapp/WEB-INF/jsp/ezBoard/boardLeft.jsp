@@ -516,7 +516,7 @@
 	    <div id="left" style="overflow: auto">
 	        <div class="left_board" title="PIMS"></div>
 	        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-	            <h2>마이게시판</h2>
+	            <h2><spring:message code="ezBoard.t360"/></h2>
 	        </div>
 	        <ul id="TreeCtrl_MyBoardTree_ul">
 	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>
@@ -536,7 +536,7 @@
            				document.write("<div id='TreeCtr" + i + "' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text() + "\")'>" + $(this).find("DATA2").text() + "</div>");
            				document.write("</h2>\n");
            				document.write("<ul>\n");
-           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; -ms-overflow-x: auto; -ms-overflow-y: auto;'></div>\n");
+           				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 200px; padding-bottom: 20px; padding-left: 10px; overflow-x: auto; overflow-y: auto;'></div>\n");
            				document.write("</ul>\n");
            				i++;
         			});

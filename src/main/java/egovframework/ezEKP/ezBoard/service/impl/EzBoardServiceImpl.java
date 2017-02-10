@@ -2254,11 +2254,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 			
-			if (!mode.equals("copy")) {
+			if (mode.equals("copy")) {
+				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+			} else if (mode.equals("temp")) {
+				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+			} else {
 				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-			} else {
-				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
 			}
 			
 			if (boardListVO.getParentWriteDate().equals("")) {
@@ -2352,7 +2355,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         	
         	for (int i = 0; i < strAttachments.split(";").length; i++) {
         		if (strType.equals("BOARD")) {
-        			
         			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath = strAttachments.split(";")[i];
         			} else {
