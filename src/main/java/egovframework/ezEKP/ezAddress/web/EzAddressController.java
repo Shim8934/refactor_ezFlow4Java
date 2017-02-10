@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -34,11 +36,11 @@ import com.opencsv.CSVWriter;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -1773,7 +1775,7 @@ public class EzAddressController{
 	        csvWriter.writeNext(headArray);
 	        csvWriter.flush();
 	        
-	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", "s_type,P");
+	        List<AddressVO> addressList = ezAddressService.getAllAddressList(userInfo.getTenantId(), folderId, ownerId, "", null);
 	        
 	        for (AddressVO address : addressList) {
 	        	String[] valueArray = new String[87];
@@ -1793,7 +1795,6 @@ public class EzAddressController{
 	        	valueArray[76] = address.getsName();
 	        	valueArray[55] = address.getsMemo();
 	        	
-	        	//TODO: 도로명 주소 적용
 	        	valueArray[8] = address.getsCompanyAddr();
 	        	valueArray[15] = address.getsHomeAddr();
 	        	/*if (xmldomInfo.GetElementsByTagName("SCOMPANYSTREET").Count > 0)
@@ -1849,6 +1850,7 @@ public class EzAddressController{
 	public String addressImport(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception {		
 		logger.debug("addressImport started.");
 		
+		String result = "OK";
 		String folderId = request.getParameter("folderid");
         String folderType = request.getParameter("foldertype");
         String ownerId = request.getParameter("ownerid");
@@ -1880,7 +1882,6 @@ public class EzAddressController{
 	        reader = new InputStreamReader(stream, charset);
 	        csvReader = new CSVReader(reader);
 	        csvList = csvReader.readAll();
-	        
         } catch (IOException e) {
         	logger.error(e.getMessage());
         	e.printStackTrace();
@@ -1902,220 +1903,80 @@ public class EzAddressController{
         	}
 		}
         
-        if (csvList == null || csvList.get(0) == null) {
-        	logger.error("csvList is null(or empty).");
+        if (csvList == null || csvList.get(0) == null || csvList.get(0).length == 0) {
+        	logger.error("Check CSV file format.");
         	model.addAttribute("result", "ERROR");
             return "ezAddress/addressImportComplete";
         }
         
-        int nameIndex = -1;
-        int lastNameIndex = -1;
-        int companyIndex = -1;
-        int deptIndex = -1;
-        int titleIndex = -1;
-        int companyPhoneIndex = -1;
-        int faxIndex = -1;
-        int mobileIndex = -1;
-        int emailIndex = -1;
-        int homePageIndex = -1;
-        int companyZipIndex = -1;
-        int companyAddrIndex = -1;
-        int homeZipIndex = -1;
-        int homeAddrIndex = -1;
-        int memoIndex = -1;
+        String[] headerArr = new String[]{
+        		egovMessageSource.getMessage("ezAddress.t124", locale), //name
+        		egovMessageSource.getMessage("ezAddress.t126", locale), //lastName
+        		egovMessageSource.getMessage("ezAddress.t51", locale), //company
+        		egovMessageSource.getMessage("ezAddress.t54", locale), //dept
+        		egovMessageSource.getMessage("ezAddress.t52", locale), //title
+        		egovMessageSource.getMessage("ezAddress.t68", locale), //companyPhone
+        		egovMessageSource.getMessage("ezAddress.t207", locale), //fax
+        		egovMessageSource.getMessage("ezAddress.t189", locale), //mobile
+        		egovMessageSource.getMessage("ezAddress.t38", locale), //email
+        		egovMessageSource.getMessage("ezAddress.t108", locale), //homePage
+        		egovMessageSource.getMessage("ezAddress.t134", locale), //companyZip
+        		egovMessageSource.getMessage("ezAddress.t203", locale), //companyAddr
+        		egovMessageSource.getMessage("ezAddress.t57", locale), //homeZip
+        		egovMessageSource.getMessage("ezAddress.t136", locale), //homeAddr
+        		egovMessageSource.getMessage("ezAddress.t91", locale) //memo
+        	};
         
-        String name = egovMessageSource.getMessage("ezAddress.t124", locale);
-        String lastName = egovMessageSource.getMessage("ezAddress.t126", locale);
-        String company = egovMessageSource.getMessage("ezAddress.t51", locale);
-        String dept = egovMessageSource.getMessage("ezAddress.t54", locale);
-        String title = egovMessageSource.getMessage("ezAddress.t52", locale);
-        String companyPhone = egovMessageSource.getMessage("ezAddress.t68", locale);
-        String fax = egovMessageSource.getMessage("ezAddress.t207", locale);
-        String mobile = egovMessageSource.getMessage("ezAddress.t189", locale);
-        String email = egovMessageSource.getMessage("ezAddress.t38", locale);
-        String homePage = egovMessageSource.getMessage("ezAddress.t108", locale);
-        String companyZip = egovMessageSource.getMessage("ezAddress.t134", locale);
-        String companyAddr = egovMessageSource.getMessage("ezAddress.t203", locale);
-        String homeZip = egovMessageSource.getMessage("ezAddress.t57", locale);
-        String homeAddr = egovMessageSource.getMessage("ezAddress.t136", locale);
-        String memo = egovMessageSource.getMessage("ezAddress.t91", locale);
+        String groupMailStr = egovMessageSource.getMessage("ezAddress.t180", locale);
+        String[] csvHeader = csvList.get(0);
+        String[] csvBody = null;
+        Map<String, String> csvBodyMap = null;
         
-        String[] header = csvList.get(0);
-        for (int i=0; i<header.length; i++) {
-        	if (header[i].equals(name)) {
-        		nameIndex = i;
-        	} else if (header[i].equals(lastName)) {
-        		lastNameIndex = i;
-        	} else if (header[i].equals(company)) {
-        		companyIndex = i;
-        	} else if (header[i].equals(dept)) {
-        		deptIndex = i;
-        	} else if (header[i].equals(title)) {
-        		titleIndex = i;
-        	} else if (header[i].equals(companyPhone)) {
-        		companyPhoneIndex = i;
-        	} else if (header[i].equals(fax)) {
-        		faxIndex = i;
-        	} else if (header[i].equals(mobile)) {
-        		mobileIndex = i;
-        	} else if (header[i].equals(email)) {
-        		emailIndex = i;
-        	} else if (header[i].equals(homePage)) {
-        		homePageIndex = i;
-        	} else if (header[i].equals(companyZip)) {
-        		companyZipIndex = i;
-        	} else if (header[i].equals(companyAddr)) {
-        		companyAddrIndex = i;
-        	} else if (header[i].equals(homeZip)) {
-        		homeZipIndex = i;
-        	} else if (header[i].equals(homeAddr)) {
-        		homeAddrIndex = i;
-        	} else if (header[i].equals(memo)) {
-        		memoIndex = i;
-        	}
-        }
-        
-        if (nameIndex == -1 && lastNameIndex == -1 && companyIndex == -1 && deptIndex == -1 && titleIndex == -1
-        		 && companyPhoneIndex == -1 && faxIndex == -1 && mobileIndex == -1 && emailIndex == -1 && homePageIndex == -1
-        		 && companyZipIndex == -1 && companyAddrIndex == -1 && homeZipIndex == -1 && homeAddrIndex == -1 && memoIndex == -1) {
-        	logger.error("Import address fail. Check the CSV file's header.");
-        	model.addAttribute("result", "ERROR");
-            return "ezAddress/addressImportComplete";
-        }
-
         for (int i=1; i<csvList.size(); i++) {
-        	String[] addressArr = csvList.get(i);
-        	if (addressArr == null) {
-        		logger.debug("csvList.get(" + i + ") is null.");
-        		continue;
-        	}
-        	
-        	String sName = "";
-        	String sCompany = "";
-        	String sDept = "";
-        	String sTitle = "";
-        	String sCompanyPhone = "";
-        	String sFax = "";
-        	String sMobile = "";
-        	String sEmail = "";
-        	String sHomePage = "";
-        	String sCompanyZip = "";
-        	String sCompanyAddr = "";
-        	String sHomeZip = "";
-        	String sHomeAddr = "";
-        	String sMemo = "";
-        	
-        	if (userInfo.getLang().equals("2")) { //영어권
-        		if (nameIndex != -1) {
-            		if (addressArr[nameIndex] != null) {
-            			sName = addressArr[nameIndex];
-            		}
-            	}
-        	} else {
-        		if (lastNameIndex != -1) {
-            		if (addressArr[lastNameIndex] != null) {
-            			sName = addressArr[lastNameIndex];
-            		}
-            	}
-            	if (nameIndex != -1) {
-            		if (addressArr[nameIndex] != null) {
-            			if (sName.trim().equals("")) {
-            				sName = addressArr[nameIndex];
-            			} else {
-            				sName += " " + addressArr[nameIndex];
-            			}
-            		}
-            	}
-        	}
-        	
-        	if (companyIndex != -1) {
-        		if (addressArr[companyIndex] != null) {
-        			sCompany = addressArr[companyIndex];
-        		}
-        	}
-        	if (deptIndex != -1) {
-        		if (addressArr[deptIndex] != null) {
-        			sDept = addressArr[deptIndex];
-        		}
-        	}
-        	if (titleIndex != -1) {
-        		if (addressArr[titleIndex] != null) {
-        			sTitle = addressArr[titleIndex];
-        		}
-        	}
-        	if (companyPhoneIndex != -1) {
-        		if (addressArr[companyPhoneIndex] != null) {
-        			sCompanyPhone = addressArr[companyPhoneIndex];
-        		}
-        	}
-        	if (faxIndex != -1) {
-        		if (addressArr[faxIndex] != null) {
-        			sFax = addressArr[faxIndex];
-        		}
-        	}
-        	if (mobileIndex != -1) {
-        		if (addressArr[mobileIndex] != null) {
-        			sMobile = addressArr[mobileIndex];
-        		}
-        	}
-        	if (emailIndex != -1) {
-        		if (addressArr[emailIndex] != null) {
-        			sEmail = addressArr[emailIndex];
-        		}
-        		if (sEmail.equals("")) {
-        			sEmail = " ";
-        		}
-        	}
-        	if (homePageIndex != -1) {
-        		if (addressArr[homePageIndex] != null) {
-        			sHomePage = addressArr[homePageIndex];
-        		}
-        	}
-        	if (companyZipIndex != -1) {
-        		if (addressArr[companyZipIndex] != null) {
-        			sCompanyZip = addressArr[companyZipIndex];
-        		}
-        	}
-        	if (companyAddrIndex != -1) {
-        		if (addressArr[companyAddrIndex] != null) {
-        			sCompanyAddr = addressArr[companyAddrIndex];
-        		}
-        	}
-        	if (homeZipIndex != -1) {
-        		if (addressArr[homeZipIndex] != null) {
-        			sHomeZip = addressArr[homeZipIndex];
-        		}
-        	}
-        	if (homeAddrIndex != -1) {
-        		if (addressArr[homeAddrIndex] != null) {
-        			sHomeAddr = addressArr[homeAddrIndex];
-        		}
-        	}
-        	if (memoIndex != -1) {
-        		if (addressArr[memoIndex] != null) {
-        			sMemo = addressArr[memoIndex];
-        		}
-        	}
-        	
-        	logger.debug("sName=" + sName + ",sCompany=" + sCompany + ",sDept=" + sDept + ",sTitle=" + sTitle + ",sCompanyPhone=" + sCompanyPhone
-        			 + ",sFax=" + sFax + ",sMobile=" + sMobile + ",sEmail=" + sEmail + ",sHomePage=" + sHomePage + ",sCompanyZip=" + sCompanyZip
-        			 + ",sCompanyAddr=" + sCompanyAddr + ",sHomeZip=" + sHomeZip + ",sHomeAddr=" + sHomeAddr + ",sMemo=" + sMemo);
-        	
         	try {
-				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
-						sName, sEmail, sCompany, sDept, sTitle, 
-						sCompanyPhone, sFax, sMobile, sHomePage, 
-						sCompanyZip, sCompanyAddr, sHomeZip, sHomeAddr, sMemo, "P");
+        		csvBody = csvList.get(i);
+	        	
+        		csvBodyMap = new HashMap<String, String>();
+	        	for (int j=0; j<csvBody.length; j++) {
+	        		csvBodyMap.put(csvHeader[j], csvBody[j]);
+	        	}
+	        	
+	        	csvBody = new String[headerArr.length];
+	        	Arrays.fill(csvBody, "");
+	        	
+	        	for (int j=0; j<headerArr.length; j++) {
+	        		if (csvBodyMap.get(headerArr[j]) != null) {
+	        			csvBody[j] = csvBodyMap.get(headerArr[j]);
+	            	}
+	        	}
+	        	
+	        	// 영어권이 아니면 이름 필드에 성+이름, 영어권이면 이름만
+	        	if (!userInfo.getLang().equals("2")) {
+	        		csvBody[0] = csvBody[1] + " " + csvBody[0];
+	        		csvBody[0] = csvBody[0].trim();
+	        	}
+	        	
+        		if (csvBody[8].equals(groupMailStr)) {
+        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "G");
+        		} else {
+        			ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
+        					csvBody[0], csvBody[8], csvBody[2], csvBody[3], csvBody[4], 
+        					csvBody[5], csvBody[6], csvBody[7], csvBody[9], 
+        					csvBody[10], csvBody[11], csvBody[12], csvBody[13], csvBody[14], "P");
+        		}
         	} catch (Exception e) {
-        		logger.error("Import address fail. sName=" + sName);
+        		result = "ERROR";
+        		logger.error("Import address fail. CSV " + i + "th line.");
         		e.printStackTrace();
         	}
         }
         
-        model.addAttribute("result", "OK");
+        model.addAttribute("result", result);
         
         logger.debug("addressImport ended.");
-        
         return "ezAddress/addressImportComplete";
 	}
 	
