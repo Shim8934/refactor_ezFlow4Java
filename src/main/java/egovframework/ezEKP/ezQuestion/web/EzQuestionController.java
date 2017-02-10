@@ -569,7 +569,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				row.appendChild(multiSelect);
 				row.appendChild(quesSn);
 				data.appendChild(row);
-
+				
 				if(question.getAnswerType() == 2){
 					strTagData = "<tr>";
 					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\">";
@@ -578,16 +578,15 @@ public class EzQuestionController extends EgovFileMngUtil {
                     Element subRow = doc.createElement("SUBROW");
                     subRow.appendChild(doc.createTextNode(strTagData));
                     row.appendChild(subRow);
-				}else if(question.getAnswerType() == 5){
+				/*}else if(question.getAnswerType() == 5){
 					strTagData = "<tr>";
 					strTagData +=		"<textarea style=\"Width:100%;height:85;\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
                     strTagData += "</tr>";
                     Element subRow = doc.createElement("SUBROW");
                     subRow.appendChild(doc.createTextNode(strTagData));
                     row.appendChild(subRow);
-                    dataSubProcess(loginCookie,question.getBrdID(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);
+                    dataSubProcess(loginCookie,question.getBrdID(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);*/
 				}else{
-					
 					if(question.getAnswerType() == 4){
 						 strTagData = "<tr>";
                          strTagData += "	<td style=\"word-break:break-all;padding:10px\">";
@@ -957,7 +956,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String pQstAnsInfo = "";
 		String pQstAttach = "";
 		String pDataXML = "";
-		//String pNoneActiveX = "";
 		
 		pMode = "NEW";
 		pAnswerType = "1";
@@ -3315,12 +3313,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		s.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String pollStartDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false);
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
-        /*String pollStartDate = s.parse(qstUserPollItemVO.getPollStartDate()).toString(); 
-        pollEndDate = s.parse(qstUserPollItemVO.getPollEndDate()).toString();*/
-		logger.debug("pollStartDate="+pollStartDate);
-		logger.debug("pollEndDate="+pollEndDate);
-        //String uploadSDate = isoUTFDate(pollStartDate).toString();
-        //String uploadEDate = isoUTFDate(pollEndDate).toString();
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
         logger.debug("uploadSDate="+uploadSDate);
@@ -3500,130 +3492,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 재사용 정보 불러오기 실행 함수
 	 */
-/*	@RequestMapping(value="/ezQuestion/callTempLoad.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
-	@ResponseBody
-	public String callTempLoad(@RequestBody String xmlDoc,HttpServletRequest req,Model model) throws Exception {
-		Document objXML = commonUtil.convertStringToDocument(xmlDoc);
-		String itemId = "";
-		int itemNo = 0;
-		String strQstNo = "";
-		String lastItemNo = "0";
-		String[] arrQuestion;
-		String strQuestion = "";
-		String temp = "";
-		if(req.getParameter("item_id") != null && req.getParameter("item_id").length() != 0) {
-			itemId = req.getParameter("item_id");
-			itemNo = Integer.parseInt(itemId);
-		}
-
-		ezQuestionService.questionDelete2(5, Integer.parseInt(itemId));
-		
-		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
-		arrQuestion = strQuestion.trim().split("\\;\\;");
-		
-		String[] arrLine;
-		String strResult = "";
-		boolean chkType = false;
-
-		List<QstTempSaveVO> qstTempSaveVO = ezQuestionService.tempSave(5, itemNo);
-		
-		StringBuilder str = new StringBuilder();
-		str.append("<DATA>");
-		
-		if(arrQuestion.length > 0) {
-			str.append("<QUESTION>");
-			for(int j=0; j<arrQuestion.length; j++) {
-				arrLine = arrQuestion[j].trim().split("\\|\\|");
-				
-				if(arrLine.length < 2) {
-					break;
-				}
-				if(strQstNo.trim() != lastItemNo.trim()) {
-					strResult = strResult.replace("| " + arrLine[1], "");
-					strResult = strResult + "| " + arrLine[1] + ";" + arrLine[5];
-					
-				}
-			}
-
-			temp = strResult;
-			str.append(temp);
-			str.append("</QUESTION>");
-			for(int i=0; i<arrQuestion.length; i++) {
-				arrLine = arrQuestion[i].trim().split("\\|\\|");
-
-				if(arrLine.length < 2) {
-					break;
-				}
-				strQstNo = arrLine[0];
-				
-				if(strQstNo.trim() != lastItemNo.trim()) {
-					strResult = strResult.replace("| "+arrLine[1], "");
-					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
-					
-					str.append("<ROW>");
-					str.append("<QUESTIONCONTENT>" + arrLine[1] + "</QUESTIONCONTENT>");
-					str.append("<ANSWERTYPE>" + arrLine[2] + "</ANSWERTYPE>");
-					str.append("<MULTISELECT>" + arrLine[4] + "</MULTISELECT>");
-					str.append("<SELVIEWSTART>0</SELVIEWSTART>");
-					str.append("<SELVIEWEND>0</SELVIEWEND>");
-
-					QstAttachVO qstAttachVO = new QstAttachVO();
-					qstAttachVO.setBrdId(5);
-					qstAttachVO.setItemNo(Integer.parseInt(itemId));
-					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
-					
-					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo3(qstAttachVO);
-					
-					if(qstAttach.size() > 0) {
-						for(int k=0; k<qstAttach.size(); k++) {
-							str.append("<ATTACH>");
-							str.append("<ROW>");
-							str.append("<TYPE>" + qstAttach.get(k).getAttachType() + "</TYPE>");
-							str.append("<TITLE>" + qstAttach.get(k).getAttachName() + "</TITLE>");
-							str.append("<HREF>" + qstAttach.get(k).getAttachUrl() + "</HREF>");
-							str.append("</ROW>");
-							str.append("</ATTACH>");
-						}
-					}
-					
-					if(arrLine[2] == "5") {
-						List<String> tableAnswerValue = ezQuestionService.tableAnswerValue(5, Integer.parseInt(itemId), qstTempSaveVO.get(i).getQuestionNo());
-						for(String tableAnswer : tableAnswerValue) {
-							str.append("<ANSWER_ANSWER>");
-							str.append("<ANSWER_TITLE>"+tableAnswer+"</ANSWER_TITLE>");
-							str.append("</ANSWER_ANSWER>");
-						}
-					}
-					ezQuestionService.questionDelete1(5, Integer.parseInt(itemId), Integer.parseInt(arrLine[0]));
-					QstCompleteVO qstCompleteVO = new QstCompleteVO();
-					qstCompleteVO.setQuesContent(arrLine[1]);
-					qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
-					qstCompleteVO.setMultiSelect(arrLine[4]);
-					qstCompleteVO.setStrBrdID(5);
-					qstCompleteVO.setItemNo(Integer.parseInt(itemId));
-					qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
-					qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
-					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
-					
-					ezQuestionService.insertQuestion(qstCompleteVO);
-					ezQuestionService.insertAnswerContent(qstCompleteVO);
-				}
-				
-				for(int j=0; j<arrQuestion.length; i++) {
-					str.append("<ANSWER>");
-					str.append("<ANSWERTITLE>"+arrLine[8]+"</ANSWERTITLE>");
-					str.append("</ANSWER>");
-				}
-				str.append("</ROW>");
-			}
-			str.append("</DATA>");
-			
-		}
-
-		
-		return str.toString();
-	}*/
-	
 	@RequestMapping(value="/ezQuestion/callTempLoad.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callTempLoad(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlDoc,HttpServletRequest req,Model model) throws Exception {
@@ -3778,7 +3646,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 		return returnXML;
 	}
-		
 	
 	/**
 	 * 전자설문 설문생성 재사용 정보 저장 실행 함수
@@ -3826,46 +3693,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자설문 설문생성 시간변환 실행 함수
-	 */
-	public String isoUTFDate(String dateTimeStr) throws Exception{
-        String timeSetStr = "";
-        String resultStr = "";
-
-        if (!dateTimeStr.trim().equals("")){
-            if (dateTimeStr.indexOf(" ") != -1){
-                if ((dateTimeStr.split(" ")[1].equals("오후") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t213"))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
-                    timeSetStr = (dateTimeStr.split(" ")[2].split(":")[0]) + 12;
-                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                }
-                else if (dateTimeStr.split(" ")[1].equals("오전") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezBoard.t212"))){
-                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
-                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    }
-                    else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
-                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    }
-                    else{
-                        timeSetStr = dateTimeStr.split(" ")[2];
-                    }
-                }
-                else{
-                    //timeSetStr = dateTimeStr.split(" ")[2];
-                	timeSetStr = dateTimeStr.split(" ")[1];
-                }
-                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
-            }
-            else{
-                resultStr = dateTimeStr + "T00:00:00.000Z";
-            }
-        }
-        else{
-            resultStr = "";
-        }
-        return resultStr;
-    }
-	
-	/**
 	 * 전자설문 설문리스트 권한없을 시 에러화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstMsgAdminConfirm.do")
@@ -3897,7 +3724,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		Node snewRow = doc.createElement("ITEM");
         int iCount = 0;
         String strTagData = "";
-        	
+        
         List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
 
         if(qstAnswerList != null){
@@ -3906,7 +3733,12 @@ public class EzQuestionController extends EgovFileMngUtil {
         		Node iValueNode = null;
         		iCount++;
         		
-        		itemNode = doc.createElement("TAG" + Integer.toString(iCount));
+        		/*if (answerType == 5) {
+        			itemNode = doc.createElement("TAG");
+        		} else {*/
+        			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
+        		/*}*/
+        		
 
         		switch(answerType){
         		case 1:
@@ -3958,9 +3790,10 @@ public class EzQuestionController extends EgovFileMngUtil {
                     break;
                     
         		case 5:
+        			//수정필요함 이효진
         			List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
         			
-        			if(iCount == 1){
+        			if (iCount == 1) {
         				strTagData = "<tr>";
         				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
         				

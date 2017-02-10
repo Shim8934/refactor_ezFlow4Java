@@ -516,7 +516,7 @@
 	    <div id="left" style="overflow: auto">
 	        <div class="left_board" title="PIMS"></div>
 	        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
-	            <h2>마이게시판</h2>
+	            <h2><spring:message code="ezBoard.t360"/></h2>
 	        </div>
 	        <ul id="TreeCtrl_MyBoardTree_ul">
 	            <h3 style="background:url('/images/ImgIcon/icon-flag.gif') no-repeat 20px 8px; border-bottom:1px solid #aeabab;"><span  style="width: 100%; display: inline-block;width: 100%;" onclick="favoriteList()"><spring:message code="ezBoard.t00010" /></span></h3>

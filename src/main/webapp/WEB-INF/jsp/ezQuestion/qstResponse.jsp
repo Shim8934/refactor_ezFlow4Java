@@ -36,7 +36,7 @@
 		    
 			MM_reloadPage(true);
 			
-			function tableXML(){
+			function tableXML() {
 				var xmlDoc = loadXMLString('${xmlResult}');
 				var DataNode = SelectSingleNode(xmlDoc, "DATA");
 				var RowNode = SelectSingleNode(DataNode,"ROW");
@@ -45,19 +45,18 @@
 
 				for(i=0;nodes.length>i; i++){
 					tableXml += "<tr>";
-					tableXml += "<th style='padding:3px 10px'>";
+					tableXml += "<th>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 					tableXml += "</th>";
 					tableXml += "</tr>";
-					tableXml += "<tr>";
-					tableXml += "<th style='padding:3px 10px'>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
-					tableXml += "</th>";
-					tableXml += "</tr>";
 					
+					//수정필요함 answerType 5일때 따로처리해야함 이효진
 					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
+					
 					if(itemNode != null){
 						var itemNodes = GetChildNodes(itemNode);
+						
 						for(j=0; itemNodes.length>j; j++){
 							tableXml += "<tr>";
 							tableXml += "<td style='padding:3px 10px'>";
@@ -67,6 +66,7 @@
 						}
 					}
 				}
+				
 				$("#xmlTable").html(tableXml);
 			}
 		</script>
@@ -249,18 +249,18 @@
 		                txtAnswer.value = strReplace;
 		            }
 		        }
-			    
 			}
 			
 			function file_open(pType, pBrdID, pItemNo, pQstNo, pAnsNo, pAttID){
 			    var pUrl = "/ezQuestion/qstAttachView.do?&type=" + pType + "&boardID=" + pBrdID + "&itemNo=" + pItemNo + "&qstNo=" + pQstNo + "&ansNo=" + pAnsNo + "&attID=" + pAttID;
 	
-			    if(pType == "1")
-			        openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
-			    else if(pType == "3")
-			        openwindow(pUrl, "", "420px", "410px", "0", "0", "500");
-			    else
+			    if(pType == "1") {
+			    	openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
+			    } else if(pType == "3") {
+			    	openwindow(pUrl, "", "420px", "410px", "0", "0", "500");
+			    } else {
 			        openwindow(pUrl, "", "415px", "120px", "0", "0", "500");
+			    }
 			}
 			
 			function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {

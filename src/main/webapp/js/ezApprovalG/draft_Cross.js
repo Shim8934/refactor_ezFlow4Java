@@ -176,7 +176,6 @@ function GetDraftAprLineInfo(ret)
 		SplitSign(OrderType,OrderName,OrderDept,OrderStat,OrderJobtitle);
     
 	LastSignSN = OrderType.length;
-    
     for(i=1;i<OrderType.length;i++)
     {
 		if (OrderType[i] == strAprType4 || OrderType[i] == strAprType16)
@@ -1545,6 +1544,9 @@ function SaveDraftDocInfo() {
     var rtnVal;
     SaveFile();
     rtnVal = SaveDraftDocInfo_ilban("002");
+    if (rtnVal.toUpperCase() == "FALSE") {
+    	 return rtnVal;
+    }
     rtnVal = SaveFile();
     if (rtnVal.toUpperCase() != "TRUE") {
         SaveOrgFile();
