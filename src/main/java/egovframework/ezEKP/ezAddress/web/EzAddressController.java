@@ -515,7 +515,8 @@ public class EzAddressController{
 				//주소록 중복검사(메일읽기->주소록에추가에서 중복검사를 하지않기때문에 필요함.)
 				boolean isDuplicate = ezAddressService.checkDuplicateAddress(userInfo.getTenantId(), ownerId, sEmail.trim());
 				if (isDuplicate) {
-					return "PRE";
+//					return "PRE";
+//					return "OK";
 				}
 				
 				ezAddressService.insertAddress(userInfo.getTenantId(), ownerId, folderId, userInfo.getId(), 
