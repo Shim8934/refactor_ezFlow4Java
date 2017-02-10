@@ -5014,13 +5014,14 @@ public class EzBoardController extends EgovFileMngUtil{
 				File file1 = new File(s_imagePath);
 				
 				if (file.exists()) {
-					FileUtils.deleteQuietly(file);
+					deleteFile(imagePath);
 				}
 				if (file1.exists()) {
-					FileUtils.deleteQuietly(file1);
+					deleteFile(s_imagePath);
 				}
 			}
-			return " ";
+			
+			return "DEL";
 		} else {
 			multiFile = request.getFiles("file1");
 			dirPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId());

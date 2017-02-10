@@ -602,21 +602,6 @@
 		        }
 		    }
 		    
-		    function leftCountRf() {
-				var pDiv, pId, pValue;
-			    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
-
-			    for (var i = 0; i < h2.length; i++) {
-			        if (h2[i].className == "on") {
-			            pId = h2[i].getElementsByTagName("div")[0].id;
-			            pId = pId.replace("TreeCtr", "TreeCtrl");
-			            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
-			            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
-			            break;
-			        }
-			    }
-		    }
-		
 		    function NewItem_onclick() {
 		        if (Write_FG != "true") {
 		            alert("<spring:message code='ezBoard.t262' />");
@@ -638,7 +623,7 @@
 		        var pLeft = (pwidth - 765) / 2;
 		        if (obj.getAttribute("DATA9") != "1" && obj.childNodes[2].style.fontWeight == "bold")
 		            obj.childNodes[2].style.fontWeight = "normal";
-//여기
+
 	            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		    function NoticeRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {

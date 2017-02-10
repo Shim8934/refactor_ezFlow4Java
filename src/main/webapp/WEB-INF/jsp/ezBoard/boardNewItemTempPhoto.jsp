@@ -9,7 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 	    <style type="text/css">
 	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
-	     </style>
+	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -141,7 +141,7 @@
                     var fileContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i]);
                     var flag = getNodeText(xmldom.getElementsByTagName("FLAG")[i]);
 
-                    imgpath = imgpath.split('/')[5];
+                    imgpath = imgpath.split('/')[7];
                     
                     attachXml += "<ROW><CELL>";
                     attachXml += "<DATA1>" + imgpath + "</DATA1>";
@@ -797,15 +797,12 @@
 	        //사진삭제
 	        function btn_PhotoAttachDel() {
 	            var xmlhttp = createXMLHttpRequest();
-	            var xmldom = createXmlDom();
-	            var objNode;
-	
-	            createNodeInsert(xmldom, objNode, "DATA");
-	
+	            var uniqueIDs = "";
+	            var fd = new FormData();
 	            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
 	                if (document.getElementsByName('checkmenuSub')[i].checked) {
 	                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
-	                    createNodeAndInsertText(xmldom, objNode, "UNIQUEID", obj.getAttribute('uniqueId'));
+	                    uniqueIDs += obj.getAttribute('uniqueID') + ";";
 	                    obj.parentNode.removeChild(obj);
 	                }
 	            }
@@ -815,8 +812,8 @@
 		    		return;	
 	            }
 	            
-	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID, false);
-	            xmlhttp.send(xmldom);
+	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+	            xmlhttp.send(fd);
 	
 	            document.getElementById("checkmenu").checked = false;
 	
