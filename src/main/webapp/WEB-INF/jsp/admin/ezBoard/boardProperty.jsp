@@ -697,7 +697,7 @@
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
-	                <input type="text" id="txtAttachLimit" style="width: 25px" value="<c:out value='${model.attachSizeLimit}' />" />&nbsp;MB
+	                <input type="text" id="txtAttachLimit" style="width: 25px" value="<c:out value='${model.attachSizeLimit}'/>" maxlength="3"/>&nbsp;MB
 	            </td>
 	        </tr>
 	        <tr style="${style}">
