@@ -58,6 +58,7 @@
 			event.cancelBubble = true;
 			event.returnValue = false;
 		}
+		
 		window.onload = function() {
 		    <% if (mode.equals("view")) { %>            
 		    QuickLinkCheck();
@@ -175,8 +176,8 @@
 		        xmlhttp.onreadystatechange = event_GetQuickLink;
 		        xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 		        xmlhttp.send(xmlpara);
-
 		    }
+		    
 		    function event_GetQuickLink() {
 		        if (xmlhttp != null && xmlhttp.readyState == 4) {
 		            if (xmlhttp.statusText == "OK") {
@@ -336,8 +337,7 @@
 			}
 		}
 
-		function load()
-		{
+		function load() {
 			var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=load");
 			if (typeof(ret) == "undefined") return;
 			
@@ -345,16 +345,14 @@
 		}
 		
 		// 상속
-		function inherit()
-		{
+		function inherit() {
 			var ret = window.showModalDialog("/ezPortal/portalPageSearch.do?mode=inherit", "", "dialogHeight:300px; dialogWidth:290px; status:no;scroll:auto; help:no; edge:sunken");
 			if (typeof(ret) == "undefined") return;
 			
 			document.location.href = "/ezPortal/portalPage.do?parentPageID=" + ret[0];
 		}
 
-		function CopyPortlet(pPortletID, pSourcePageID, pDestPageID)
-		{
+		function CopyPortlet(pPortletID, pSourcePageID, pDestPageID) {
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/ezPortal/copyPortlet.do?uID=" + pPortletID + "&sourcePageID=" + pSourcePageID + "&destPageID=" + pDestPageID, false);
 			xmlhttp.send();
@@ -408,9 +406,9 @@ alert("savesub Start");
 						// 해당 tr내의 td
 						var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
 						
-						try {
+						// 2017-02-10 try {
 							if (tdsub_item.id == "") continue;
-						} catch(e) { continue; }
+						// 2017-02-10} catch(e) { continue; }
 						
 						/*
 						if (previousCell != null) previousCell.style.backgroundColor = "white";
@@ -540,39 +538,33 @@ alert("AttachEvents Start");
 			        prevpageid = GetAttribute(pObject.getElementsByTagName("td").item(i), "pageuid");
 alert("prevpageid="+prevpageid);
 					// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
-			        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined")
-					{
+			        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined") {
 						// Root페이지 이거나 옵션 포틀릿인 경우
-			            if (pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid") == pageid || pObject.getElementsByTagName("td").item(i).getAttribute("mandatory") == "2")
-						{
-			                if (pObject.getElementsByTagName("td").item(i).children.item(0).tagName != "TABLE")
-							{
+			            if (pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid") == pageid || pObject.getElementsByTagName("td").item(i).getAttribute("mandatory") == "2") {
+			                if (pObject.getElementsByTagName("td").item(i).children.item(0).tagName != "TABLE") {
 								// Root페이지
-			                    if (pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid") == pageid)
-								{
+			                    if (pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid") == pageid) {
 			                        pObject.getElementsByTagName("td").item(i).ondblclick = dblclicksubcell;
 			                        pObject.getElementsByTagName("td").item(i).style.cursor = "pointer";
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			                        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			                        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 								}
 								// 상속페이지 - 옵션포틀릿
-								else
-			                    {
+								else {
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			                        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			                        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			                        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 								}
 							}
 						}
 					}
 				}
-				else
-			    {
+				else {
 			        pObject.getElementsByTagName("td").item(i).setAttribute("onclick", "selectsubcell(event)");
 			        pObject.getElementsByTagName("td").item(i).setAttribute("onkeydown", "cellkeydown(event)");
-			        pObject.getElementsByTagName("td").item(i).onclick = function() {selectcell(evnet);};
-			        pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
+			        //pObject.getElementsByTagName("td").item(i).onclick = function() {selectcell(evnet);};
+			        //pObject.getElementsByTagName("td").item(i).onkeydown = cellkeydown;
 				}
 			}
 			
@@ -591,8 +583,7 @@ alert("prevpageid="+prevpageid);
 			window.open("admin/edit/PortalPageItem_Edit.aspx?uid=" + pUID + "&pageid=" + pPageUID + "&ownerpageid=" + pageid + "&gubunFlag=" + gubunFlag + "&pUserID=" + pUserID + "&pUserName=" + escape(pUserName), "", "height = 320px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 320));
 		}
 
-		function dblclicksubcell()
-		{
+		function dblclicksubcell() {
 			var obj = null;
 			if (event.srcElement.id == "") obj = event.srcElement.parentElement;
 			else obj = event.srcElement;
@@ -630,6 +621,7 @@ alert("prevpageid="+prevpageid);
 			    if (Element.getAttribute("id") == "") return;
 			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
 			    selectedCell = Element.getAttribute("id");
+			    //selectedCell = GetAttribute(Element, "id");
 				if (previousCell != null) previousCell.style.backgroundColor = "white";
 				previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
 				previousCell.style.backgroundColor = "lightblue";
@@ -707,6 +699,7 @@ alert("prevpageid="+prevpageid);
 		        if (obj.getAttribute("id") == "") return;
 		        if (obj.getAttribute("id").indexOf("sub") > -1) return;
 		        selectedCell = obj.getAttribute("id");
+		        //selectedCell = GetAttribute(obj, "id");
 		        if (previousCell != null) previousCell.style.backgroundColor = "white";
 		        previousCell = obj.children.item(0).children.item(0).children.item(0).children.item(0);
 		        previousCell.style.backgroundColor = "lightblue";
@@ -738,7 +731,13 @@ alert("prevpageid="+prevpageid);
 		                }
 		        }
 				
-		        document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+		        // 2017-02-10 document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+		        if (getNodeText(cell.children.item(0).children.item(0).children.item(0).children.item(0)) == "*")
+		            document.getElementById("txtWidth").value = "*";
+		        else
+		            document.getElementById("txtWidth").value = cell.style.width.replace("px", "");
+		        
+		        
 		        document.getElementById("txtHeight").value = maxHeight;
 				
 		        bCanModify = true;
