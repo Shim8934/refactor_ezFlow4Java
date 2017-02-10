@@ -858,3 +858,19 @@ function Set_BoardConfig()
 		}     			
 	});
 }
+
+//레프트 메뉴카운트 업뎃용
+function leftCountRf() {
+	var pDiv, pId, pValue;
+    var h2 = window.parent.frames["left"].document.getElementsByTagName("h2");
+
+    for (var i = 0; i < h2.length; i++) {
+        if (h2[i].className == "on") {
+            pId = h2[i].getElementsByTagName("div")[0].id;
+            pId = pId.replace("TreeCtr", "TreeCtrl");
+            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
+            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+            break;
+        }
+    }
+}
