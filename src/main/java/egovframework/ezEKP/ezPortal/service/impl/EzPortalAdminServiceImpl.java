@@ -421,8 +421,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1() throws Exception {
-		return ezPortalAdminDAO.subMenuItemEdit1();
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		return ezPortalAdminDAO.subMenuItemEdit1(map);
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {

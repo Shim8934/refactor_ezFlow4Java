@@ -74,8 +74,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 () {
-		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.subMenuItemEdit1"); 
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 (Map<String, Object> map) {
+		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.subMenuItemEdit1", map); 
 	}
 	
 	@SuppressWarnings("unchecked")

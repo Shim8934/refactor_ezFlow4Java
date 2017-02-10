@@ -2211,12 +2211,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.subMenuItemEdit1" resultClass="PortalTBLBuiltInParametersVO">
+	<select id="EzPortalAdminDAO.subMenuItemEdit1" parameterClass="Map" resultClass="PortalTBLBuiltInParametersVO" >
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		TBL_BUILTIN_PARAMETERS
+        	AND
+        		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
