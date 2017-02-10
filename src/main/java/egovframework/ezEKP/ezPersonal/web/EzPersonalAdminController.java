@@ -466,7 +466,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickPoll 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
-	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) {
+	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
