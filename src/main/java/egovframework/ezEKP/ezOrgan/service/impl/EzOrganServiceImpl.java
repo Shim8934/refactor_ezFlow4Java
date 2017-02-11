@@ -36,6 +36,7 @@ public class EzOrganServiceImpl implements EzOrganService {
     @Autowired
     private Properties config;
 	
+    // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
 	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -58,9 +59,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	} else {
         		return ezOrganDAO.getPropertyValue_S5(map);
         	}
-        }    
-		
-		
+        }    		
 	}
 
 	@Override
@@ -74,7 +73,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getDeptFullPath(String deptID, int tenantID) throws Exception {
-		return ezOrganDAO.getDeptFullPath(deptID, tenantID);
+	    logger.debug("getDeptFullPath started");
+	    logger.debug("deptID=" + deptID + ",tenantID=" + tenantID);
+	    
+		String deptFullPath = ezOrganDAO.getDeptFullPath(deptID, tenantID);
+		
+		logger.debug("deptFullPath=" + deptFullPath);		        
+		logger.debug("getDeptFullPath ended");
+		
+		return deptFullPath;
 	}
 
 	@Override
@@ -87,8 +94,13 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return ezOrganDAO.getDeptInfo(map);
 	}
 
+	// 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	@Override
 	public String getDeptTreeInfo(String pUserID, String pDeptID, String pTopID, String pPropList, String primary, int tenantID) throws Exception {
+	    logger.debug("getDeptTreeInfo started");
+	    logger.debug("pUserID=" + pUserID + ",pDeptID=" + pDeptID + ",pTopID=" + pTopID
+	            + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
+	    
 	    // pUserID는 값이 있으나 pDeptID가 비어 있을 때는 해당 사용자의 부서 ID를 구한다. 
 		if (!pUserID.equals("") && pDeptID.equals("")) {
 			OrganDeptVO organVo = getDeptInfo(pUserID, primary, tenantID);
@@ -171,26 +183,34 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
         deptInfo = "<TREEVIEWDATA>" + getTreeNodeInfo(vo, pDeptID, prevDeptID, deptInfo, pPropList) + "</TREEVIEWDATA>";
         
+        logger.debug("deptInfo=" + deptInfo);
+        logger.debug("getDeptTreeInfo ended");
+        
         return deptInfo;
 	}
 	
+	// 지정된 부서의 자식 부서 목록을 XML 형식으로 반환한다.
 	@Override
 	public String getDeptSubTreeInfo(String pDeptID, String pPropList, String primary, int tenantID) throws Exception {
+	    logger.debug("getDeptSubTreeInfo started");
+	    logger.debug("pDeptID=" + pDeptID + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_CN", pDeptID);
 		map.put("v_LANGDATA", primary);
 		map.put("v_TENANT_ID", tenantID);
 		
+		// 지정된 부서의 자식 부서 목록을 가져온다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptSubTreeInfo(map);
 				
-		String[] memberInfo2 = new String[list.size()];
-		int memberCount2 = 0;
+		String[] memberInfo = new String[list.size()];
+		int memberCount = 0;
 		
-		for(int i=0; i<list.size(); i++){
+		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO obj = list.get(i);
 			
-			if(obj.getType().toLowerCase().equals("dept")){
+			if (obj.getType().toLowerCase().equals("dept")) {
 				Map<String, Object> map1 = new HashMap<String, Object>();
 				map1.put("v_CN", obj.getCn());
 				map1.put("v_LANGDATA", primary);
@@ -198,17 +218,22 @@ public class EzOrganServiceImpl implements EzOrganService {
 				
 				OrganDeptVO result = ezOrganDAO.getTBLDeptMaster(map1);
                 
-                memberInfo2[memberCount2] = getTreeNodeInfo(result, "", "", "", pPropList);
-                memberCount2++;
+                memberInfo[memberCount] = getTreeNodeInfo(result, "", "", "", pPropList);
+                memberCount++;
 			}		
 		}
+		
 		StringBuilder deptlist = new StringBuilder("<NODES>");
 		
-        for (int k = 0; k < memberCount2; k++){
-        	deptlist.append(memberInfo2[k]);
+        for (int k = 0; k < memberCount; k++) {
+        	deptlist.append(memberInfo[k]);
         }
+        
         deptlist.append("</NODES>");   
 
+        logger.debug("deptlist=" + deptlist);
+        logger.debug("getDeptSubTreeInfo ended");
+        
 		return deptlist.toString();
 	}
 	
@@ -239,8 +264,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		// 부서의 자식 부서의 갯수를 구한다.
 		int cnt = ezOrganDAO.deptSubDeptCnt(vo.getDepartment(), vo.getTenantId());
-		
-		logger.debug("child cnt=" + cnt);
 		
 		if (cnt > 0) {
 	        nodeInfo.append("<ISLEAF>FALSE</ISLEAF>");
@@ -280,18 +303,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 	    nodeInfo.append("</NODE>");
 
-	    logger.debug("nodeInfo="+nodeInfo.toString());
+	    logger.debug("nodeInfo=" + nodeInfo.toString());
 		logger.debug("getTreeNodeInfo ended");;
 		
 	    return nodeInfo.toString();
 	}
 
 	@Override
-	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID) throws Exception {	
-		if (!pLangCode.equals("2")){
-			pLangCode = "1";
-		}
-		
+	public String getDeptMemberList(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, int tenantID) throws Exception {
+	    logger.debug("getDeptMemberList started");
+	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		
@@ -300,58 +323,66 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_LANGDATA", pLangCode);
 		map.put("v_TENANT_ID", tenantID);
 		
+		// 지정된 부서의 멤버 목록을 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberList(map);
 		
-		int memberCount2 = 0;		
-		String[] memberInfo2 = new String[list.size()];
+		int memberCount = 0;		
+		String[] memberInfo = new String[list.size()];
 		
-		for (int i = 0; i < list.size(); i++){
+		for (int i = 0; i < list.size(); i++) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
 			
 			OrganDeptVO obj = list.get(i);			
             
-            if (obj.getType().toLowerCase().equals("user")){
+			// 멤버가 사원인 경우
+            if (obj.getType().toLowerCase().equals("user")) {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
         		
+        		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
-            }else{
+            // 멤버가 부서인 경우
+            } else {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
         		                
-        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
-                sb.append(commonUtil.getQueryResult(userVO));
+        		// 자식 부서의 상세 정보를 가져온다.
+        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);                
+                sb.append(commonUtil.getQueryResult(deptVO));
             }
+            
             sb.append("</DATA>");
             
-            String cn2 = obj.getCn();
-            String displayname2 = obj.getDisplayName();
+            String cn = obj.getCn();
 
-            //memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getCn());
-            memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getType());
-            memberCount2++;
+            memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
+            memberCount++;
         }
-        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
+		
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA><ROWS>");
         
-        for (int i = 0; i < memberCount2; i++) {
-            memberlist2.append(memberInfo2[i]);
+        for (int i = 0; i < memberCount; i++) {
+            memberlist.append(memberInfo[i]);
         }
-        memberlist2.append("</ROWS></LISTVIEWDATA>");
         
-        return memberlist2.toString();
+        memberlist.append("</ROWS></LISTVIEWDATA>");
+        
+        logger.debug("getDeptMemberList ended");
+        
+        return memberlist.toString();
 	}
 	
 	@Override
-	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {	
-		if (!pLangCode.equals("2")){
-			pLangCode = "1";
-		}
-		
+	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {
+        logger.debug("getDeptMemberListPagination started");
+        logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+                + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
+	    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -364,86 +395,95 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_STARTROW", (Integer.parseInt(pPage) -1) * 50 + 1);
 		map.put("v_ENDROW", Integer.parseInt(pPage) * 50 + 1);
 		
+		// 지정된 부서의 멤버 목록을 페이지를 고려하여 구한다.
 		List<OrganDeptVO> list = ezOrganDAO.getDeptMemberListPage(map);
 		
-		int memberCount2 = 0;		
-		String[] memberInfo2 = new String[list.size()];
+		int memberCount = 0;		
+		String[] memberInfo = new String[list.size()];
 		
-		for (int i = 0; i < list.size(); i++){
+		for (int i = 0; i < list.size(); i++) {
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
 			
 			OrganDeptVO obj = list.get(i);			
             
-            if (obj.getType().toLowerCase().equals("user")){
+			// 멤버가 사원인 경우
+            if (obj.getType().toLowerCase().equals("user")) {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_DEPTCD", pDeptID);
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
         		
+        		// 사원의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLUserMaster(map1);        		
                 sb.append(commonUtil.getQueryResult(userVO));
-            }else{
+            // 멤버가 부서인 경우
+            } else {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
         		                
+        		// 자식 부서의 상세 정보를 가져온다.
         		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
                 sb.append(commonUtil.getQueryResult(userVO));
             }
+            
             sb.append("</DATA>");
             
-            String cn2 = obj.getCn();
-            String displayname2 = obj.getDisplayName();
+            String cn = obj.getCn();
 
-            //memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getCn());
-            memberInfo2[memberCount2] = getMemberInfo(sb.toString(), pCellList, pPropList, cn2, displayname2, obj.getType());
-            memberCount2++;
+            memberInfo[memberCount] = getMemberInfo(sb.toString(), pCellList, pPropList, cn, obj.getType());
+            memberCount++;
         }
 		
+		// 지정된 부서의 사원수를 겸직 사원을 포함하여 구한다.
 		map2.put("v_CN", pDeptID);
 		map2.put("v_TENANT_ID", tenantID);
 		String totalcount = ezOrganDAO.getMemberListCount(map2);
-        StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA>");
-        memberlist2.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
-        for (int i = 0; i < memberCount2; i++){
-            memberlist2.append(memberInfo2[i]);
-        }
-        memberlist2.append("</ROWS></LISTVIEWDATA>");
+		
+        StringBuilder memberlist = new StringBuilder("<LISTVIEWDATA>");
+        memberlist.append("<TOTALCOUNT>" + totalcount + "</TOTALCOUNT><ROWS>");
         
-        return memberlist2.toString();
+        for (int i = 0; i < memberCount; i++) {
+            memberlist.append(memberInfo[i]);
+        }
+        
+        memberlist.append("</ROWS></LISTVIEWDATA>");
+        
+        return memberlist.toString();
 	}
 	
-	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pDeptID, String pDeptName, String pCategory){		
-		Document doc = commonUtil.convertStringToDocument(pXMLString);
-		logger.debug("getMemberInfo Start");
-		logger.debug("pXMLString="+pXMLString);
+	private String getMemberInfo(String pXMLString, String pCellList, String pPropList, String pMemberID, String pCategory) {		
+        logger.debug("getMemberInfo started");
+        logger.debug("pCellList=" + pCellList + ",pPropList=" + pPropList + ",pMemberID=" + pMemberID 
+                + ",pCategory=" + pCategory + ",pXMLString=" + pXMLString);
+
+	    Document doc = commonUtil.convertStringToDocument(pXMLString);
         StringBuilder nodeInfo = new StringBuilder("<ROW>");
         String[] celllist = pCellList.split(";");
         String cellvalue = "";
         pPropList = convertAddandConvert(pCategory, pPropList);
 
-        for (int i = 0; i < celllist.length; i++){
+        for (int i = 0; i < celllist.length; i++) {
         	cellvalue = "";
-            //if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPTID") != null && !pDeptID.equals(doc.getElementsByTagName("DEPTID").item(0).getTextContent()))){
-            if (!pDeptID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pDeptID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))){
-            	switch (celllist[i].toLowerCase()){
+
+            if (!pMemberID.equals("") && pCategory.equals("user") && (doc.getElementsByTagName("DEPARTMENT") != null && !pMemberID.equals(doc.getElementsByTagName("DEPARTMENT").item(0).getTextContent()))) {
+            	switch (celllist[i].toLowerCase()) {
                 case "department":
-                    cellvalue = pDeptID;
+                    cellvalue = pMemberID;
                     break;
                 case "description":
                     cellvalue = doc.getElementsByTagName("DESCRIPTION").item(0).getTextContent();
                     break;
                 case "title":
-                	//if (doc.getElementsByTagName("ADDJOB") != null && !doc.getElementsByTagName("ADDJOB").item(0).getTextContent().equals("")){
-                    if (doc.getElementsByTagName("TITLE") != null && !doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")){
+                    if (doc.getElementsByTagName("TITLE") != null && !doc.getElementsByTagName("TITLE").item(0).getTextContent().equals("")) {
                         cellvalue = doc.getElementsByTagName("TITLE").item(0).getTextContent();
                         String[] sublist = cellvalue.split(";");
                         cellvalue = "";
 
-                        for(String subinfo : sublist){
+                        for (String subinfo : sublist) {
                             String[] subinfolist = subinfo.split(":");
-                            if (subinfolist[0].equals(pDeptID) && subinfolist.length > 1) {                                
+                            if (subinfolist[0].equals(pMemberID) && subinfolist.length > 1) {                                
                                 cellvalue = subinfolist[1];
                                 break;
                             }
@@ -453,47 +493,55 @@ public class EzOrganServiceImpl implements EzOrganService {
                 }
             }
             
-            logger.debug("cellList["+i+"]="+celllist[i]);
-            if (cellvalue == "" || cellvalue == null){
-                if (celllist[i] != null && !celllist[i].equals("")){
-                    if (doc.getElementsByTagName(celllist[i].toUpperCase()) != null){
+            logger.debug("cellList["+i+"]=" + celllist[i]);
+            
+            if (cellvalue == "" || cellvalue == null) {
+                if (celllist[i] != null && !celllist[i].equals("")) {
+                    if (doc.getElementsByTagName(celllist[i].toUpperCase()) != null) {
                         cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
-                    }else{
+                    } else {
                         cellvalue = "";
                     }
-                }else{
+                } else {
                     cellvalue = "";
                 }
             }
 
             nodeInfo.append("<CELL><VALUE>" + commonUtil.cleanValue(cellvalue) + "</VALUE>");
 
-            if (i == 0){
+            if (i == 0) {
                 String strNode = "";
                 
-                if (doc.getElementsByTagName("CN") != null){
+                if (doc.getElementsByTagName("CN") != null) {
                     strNode = doc.getElementsByTagName("CN").item(0).getTextContent();
                 }
+                
                 nodeInfo.append("<DATA1>" + pCategory + "</DATA1><DATA2>" + strNode + "</DATA2>");
 
-                if (!pPropList.equals("")){
+                if (!pPropList.equals("")) {
                     String[] proplist = pPropList.split(";");
                     String propvalue;
                     
-                    for (int j = 0; j < proplist.length; j++){
-                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null && doc.getElementsByTagName(proplist[j].toUpperCase()).item(0) != null){
+                    for (int j = 0; j < proplist.length; j++) {
+                        if (doc.getElementsByTagName(proplist[j].toUpperCase()) != null && doc.getElementsByTagName(proplist[j].toUpperCase()).item(0) != null) {
                             propvalue = doc.getElementsByTagName(proplist[j].toUpperCase()).item(0).getTextContent();
-                        }else{
+                        } else {
                             propvalue = "";
                         }
+                        
                         nodeInfo.append("<DATA" + (j + 3) + ">" + propvalue + "</DATA" + (j + 3) + ">");
                     }
                 }
             }
+            
             nodeInfo.append("</CELL>");
         }
+        
         nodeInfo.append("</ROW>");
 
+        logger.debug("nodeInfo=" + nodeInfo);
+        logger.debug("getMemberInfo ended");
+        
         return nodeInfo.toString();        
     }	
 
@@ -632,7 +680,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				sb.append(commonUtil.getQueryResult(result));
 				sb.append("</DATA>");
 				
-				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", "", organVO.getType());
+				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
 				memberlist2.append(listInfo);
 			}			
 		}
@@ -643,7 +691,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return memberlist2.toString();
 	}
 	
-	public String convertAddandConvert(String pClass, String pProvValue){        
+	public String convertAddandConvert(String pClass, String pProvValue) {
+	    logger.debug("convertAddandConvert started");
+	    logger.debug("pClass=" + pClass + ",pProvValue=" + pProvValue);
+	    
         String[] arryProvValue = pProvValue.split(";");
         String returnValue = "";
         String addPopList = pProvValue;
@@ -656,6 +707,9 @@ public class EzOrganServiceImpl implements EzOrganService {
             	addPopList = addPopList + ";" + returnValue;
             }
         }
+        
+        logger.debug("addPopList=" + addPopList);
+        logger.debug("convertAddandConvert ended");
         
         return addPopList;              
     }
@@ -884,9 +938,11 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getPropertyList(String id, String pPropList, String primary, int tenantID) throws Exception {
+	    logger.debug("getPropertyList started");
+	    logger.debug("id=" + id + ",pPropList=" + pPropList + ",primary=" + primary + ",tenantID=" + tenantID);
+	    
 		String propValue = "";
 		StringBuilder propInfo = new StringBuilder("<DATA>");
-		primary = commonUtil.convertLangCode(primary);
 		
 		String dataType = "user";
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -901,7 +957,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			xmldom = commonUtil.convertStringToDocument(strXML);
 		}
 		
-		if(xmldom == null || xmldom.getElementsByTagName("ROW").getLength() == 0){
+		if (xmldom == null || xmldom.getElementsByTagName("ROW").getLength() == 0) {
 			map = new HashMap<String, Object>();
 			map.put("userID", id);
 			map.put("primary", primary);
@@ -915,15 +971,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 		pPropList = convertAddandConvert(dataType, pPropList);
         String[] propList = pPropList.split(";");
 		
-        for(String propname : propList){
-        	if (checkDBColum(propname.toUpperCase()) == false){
+        for (String propname : propList) {
+        	if (checkDBColum(propname.toUpperCase()) == false) {
                 propValue = getPropertyValue(id, propname, tenantID);
                 propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
-            }else if (propname.toUpperCase() != ""){
-            	
-                if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0){
+            } else if (propname.toUpperCase() != "") {            	
+                if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0) {
                     propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
-                }else{
+                } else {
                     propInfo.append("<" + propname.toUpperCase() + "></" + propname.toUpperCase() + ">");
                 }
             }
@@ -931,6 +986,9 @@ public class EzOrganServiceImpl implements EzOrganService {
         
         propInfo.append("</DATA>");
 
+        logger.debug("propInfo=" + propInfo);
+        logger.debug("getPropertyList ended");
+        
         return propInfo.toString();
 	}
 
@@ -1129,7 +1187,7 @@ public class EzOrganServiceImpl implements EzOrganService {
  				sb.append(commonUtil.getQueryResult(result));
  				sb.append("</DATA>");
  				
- 				ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", "", organVO.getType());
+ 				ListInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
  				memberlist2.append(ListInfo);
  			}			
  		}

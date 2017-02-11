@@ -1,7 +1,5 @@
 package egovframework.ezEKP.ezOrgan.web;
 
-import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -40,9 +38,6 @@ public class EzOrganController {
     
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	private Properties config;
 	
 	@Autowired
 	private EzOrganService ezOrganService;	
@@ -51,7 +46,7 @@ public class EzOrganController {
 	private EgovMessageSource messageSource;
 	
 	/**
-	 * 조직도 부서 트리 정보 호출 함수
+	 * 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
@@ -73,9 +68,8 @@ public class EzOrganController {
         
         logger.debug("deptID=" + deptID + ",topID=" + topID + ",propList=" + propList);
         
+        // 지정된 부서가 선택된 형태의 조직도 트리를 XML 형식으로 반환한다.
         String deptInfo = ezOrganService.getDeptTreeInfo(userID, deptID, topID, propList, userInfo.getPrimary(), tenantID);
-        
-        logger.debug("deptInfo=" + deptInfo);
         
         logger.debug("getDeptTreeInfo ended.");
         
@@ -83,24 +77,24 @@ public class EzOrganController {
 	}
 	
 	/**
-	 * 조직도 부서 서브트리 정보 호출 함수
+	 * 지정된 부서의 바로 아래에 위치한 자식 부서 목록을 XML 형식으로 반환한다.
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptSubTreeInfo.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptSubTreeInfo(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("getDeptSubTreeInfo started");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 				
 		String deptID = doc.getElementsByTagName("DEPTID").item(0).getTextContent();        
         String propList = doc.getElementsByTagName("PROP").item(0).getTextContent();
-        
+                
         String deptInfo = ezOrganService.getDeptSubTreeInfo(deptID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
-        logger.debug("deptSubInfo="+deptInfo);
         logger.debug("getDeptSubTreeInfo ended");
-		return deptInfo;
-	
+        
+		return deptInfo;	
 	}
 	
 	/**
@@ -108,11 +102,15 @@ public class EzOrganController {
 	 */
 	@RequestMapping(value = "/ezOrgan/getDeptFullPath.do", produces="text/html;charset=utf-8")
 	@ResponseBody
-	public String getDeptFullPath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getDeptFullPath(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("getDeptFullPath started");
+	    
 	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String cn = request.getParameter("cn");
 		
 		String result = ezOrganService.getDeptFullPath(cn, userInfo.getTenantId());
+		
+		logger.debug("getDeptFullPath ended");
 		
 		return result;
 	}
@@ -123,20 +121,24 @@ public class EzOrganController {
 	@RequestMapping(value = "/ezOrgan/getDeptMemberList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDeptMemberList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	    logger.debug("getDeptMemberList started");
+	    
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String deptid = request.getParameter("deptID");
 		String celllist = request.getParameter("cell");
 		String proplist = request.getParameter("prop");
 		String listtype = request.getParameter("type");		
-		String lang = userInfo.getPrimary();
+		String isPrimary = userInfo.getPrimary();
 		String page = request.getParameter("page");
 		String infoXML = "";
 
+		logger.debug("page=" + page);
+		
 		if (page == null) {		
-			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, lang, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberList(deptid, celllist, proplist, listtype, isPrimary, userInfo.getTenantId());
 		} else {
-			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, lang, page, userInfo.getTenantId());
+			infoXML = ezOrganService.getDeptMemberListPagination(deptid, celllist, proplist, listtype, isPrimary, page, userInfo.getTenantId());
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);
@@ -185,6 +187,8 @@ public class EzOrganController {
 		
 		String result = commonUtil.convertDocumentToString(doc);
 		result = result.replaceAll("null", "");
+		
+		logger.debug("getDeptMemberList ended");
 		
 		return result;
 	}

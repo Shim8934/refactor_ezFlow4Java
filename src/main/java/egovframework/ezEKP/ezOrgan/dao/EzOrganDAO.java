@@ -176,7 +176,19 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
     @SuppressWarnings("unchecked")
     private List<OrganDeptVO> getDeptMemberListForLocal(Map<String, Object> map) throws Exception {
-        return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberList", map);       
+        String type = (String)map.get("v_CLASS");
+        String deptId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getDeptMemberListForLocal started. tenantId=" + tenantId + ",deptId=" + deptId 
+                + ",isPrimary=" + isPrimary + ",type=" + type);
+        
+        List<OrganDeptVO> deptMemberList = (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberList", map);
+        
+        logger.debug("getDeptMemberListForLocal ended.");
+                
+        return deptMemberList;
     }
 	
 	public List<OrganDeptVO> getDeptMemberList(Map<String, Object> map) throws Exception {
@@ -250,7 +262,20 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
     @SuppressWarnings("unchecked")
     private List<OrganDeptVO> getDeptMemberListPageForLocal(Map<String, Object> map) throws Exception {
-        return (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);       
+        String type = (String)map.get("v_CLASS");
+        String deptId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        String page = (String)map.get("v_PAGE");
+        
+        logger.debug("getDeptMemberListPageForLocal started. tenantId=" + tenantId + ",deptId=" + deptId 
+                + ",isPrimary=" + isPrimary + ",type=" + type + ",page=" + page);
+        
+        List<OrganDeptVO> deptMemberList = (List<OrganDeptVO>) list("EzOrganDAO.getDeptMemberListPage", map);
+        
+        logger.debug("getDeptMemberListPageForLocal ended.");
+        
+        return deptMemberList;
     }
 	
 	public List<OrganDeptVO> getDeptMemberListPage(Map<String, Object> map) throws Exception {
@@ -431,9 +456,21 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private OrganUserVO getTBLUserMasterForLocal(Map<String, Object> map) throws Exception {
-        return (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
+        String userId = (String)map.get("v_CN");
+        String deptId = (String)map.get("v_DEPTCD");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getTBLUserMasterForLocal started. tenantId=" + tenantId + ",userId=" + userId + ",deptId=" + deptId + ",isPrimary=" + isPrimary);
+        
+        OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getTBLUserMaster", map);
+        
+        logger.debug("getTBLUserMasterForLocal ended.");
+        
+        return organUserVO;
     }
 	
+    // 지정된 부서에서의 사원의 상세 정보를 반환한다.(겸직 부서의 경우 겸직 부서에서의 직위를 반환한다.)
 	public OrganUserVO getTBLUserMaster(Map<String, Object> map) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getTBLUserMasterForJMocha(map);
@@ -514,9 +551,20 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private OrganDeptVO getTBLDeptMasterForLocal(Map<String, Object> map) throws Exception {
-        return (OrganDeptVO) select("EzOrganDAO.getTBLDeptMaster", map);
+        String deptId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getTBLDeptMasterForLocal started. tenantId=" + tenantId + ",deptId=" + deptId + ",isPrimary=" + isPrimary);
+        
+        OrganDeptVO organDeptVO = (OrganDeptVO) select("EzOrganDAO.getTBLDeptMaster", map);
+        
+        logger.debug("getTBLDeptMasterForLocal ended.");
+        
+        return organDeptVO;
     }
 	
+    // 부서의 상세 정보를 반환한다.
 	public OrganDeptVO getTBLDeptMaster(Map<String, Object> map) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getTBLDeptMasterForJMocha(map);
@@ -597,7 +645,17 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 
 	private OrganDeptVO getDeptInfoForLocal(Map<String, Object> map) {
-        return (OrganDeptVO) select("EzOrganDAO.getDeptInfo", map);
+        String deptId = (String)map.get("userID");
+        String isPrimary = (String)map.get("primary");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getDeptInfoForLocal started. tenantId=" + tenantId + ",deptId=" + deptId + ",isPrimary=" + isPrimary);
+	    
+        OrganDeptVO organDeptVO = (OrganDeptVO) select("EzOrganDAO.getDeptInfo", map);
+        
+        logger.debug("getDeptInfoForLocal ended.");
+
+        return organDeptVO;
     }
 	
 	public OrganDeptVO getDeptInfo(Map<String, Object> map) throws Exception {
@@ -608,7 +666,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
         }       
 	}
 
-    private OrganUserVO getUserInfoForJMocha(Map<String, Object> map) throws Exception{
+    private OrganUserVO getUserInfoForJMocha(Map<String, Object> map) throws Exception {
         String userId = (String)map.get("v_CN");
         String isPrimary = (String)map.get("v_LANGDATA");
         int tenantId = (Integer)map.get("v_TENANT_ID");
@@ -704,11 +762,21 @@ public class EzOrganDAO extends EgovAbstractDAO {
         return userVO;
     }
 	
-    private OrganUserVO getUserInfoForLocal(Map<String, Object> map) throws Exception{
-        return (OrganUserVO) select("EzOrganDAO.getUserInfo", map);
+    private OrganUserVO getUserInfoForLocal(Map<String, Object> map) throws Exception {
+        String userId = (String)map.get("v_CN");
+        String isPrimary = (String)map.get("v_LANGDATA");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getUserInfoForLocal started. tenantId=" + tenantId + ",userId=" + userId + ",isPrimary=" + isPrimary);
+        
+        OrganUserVO organUserVO = (OrganUserVO) select("EzOrganDAO.getUserInfo", map);
+        
+        logger.debug("getUserInfoForLocal ended.");
+        
+        return organUserVO;
     }
 	
-	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception{
+	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getUserInfoForJMocha(map);
         } else {
@@ -761,9 +829,20 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private String getMemberListCountForLocal(Map<String, Object> map) throws Exception {
-        return (String) select("EzOrganDAO.getMemberListCount", map);
+        String deptId = (String)map.get("v_CN");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getMemberListCountForLocal started. tenantId=" + tenantId + ",deptId=" + deptId);
+        
+        String memberCount = (String) select("EzOrganDAO.getMemberListCount", map);
+        
+        logger.debug("memberCount=" + memberCount);
+        logger.debug("getMemberListCountForLocal ended.");
+        
+        return memberCount;
     }
 	
+    // 특정 부서의 사원수를 겸직 사원을 포함하여 반환한다.
 	public String getMemberListCount(Map<String, Object> map) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return getMemberListCountForJMocha(map);
@@ -819,7 +898,18 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
     private String getPropertyValueForLocal(Map<String, Object> map) throws Exception {
-        return (String) select("EzOrganDAO.getPropertyValue", map);
+        String cn = (String)map.get("v_CN");
+        String field = (String)map.get("v_FIELD");
+        int tenantId = (Integer)map.get("v_TENANT_ID");
+        
+        logger.debug("getPropertyValueForLocal started. tenantId=" + tenantId + ",cn=" + cn + ",field=" + field);
+        
+        String propertyValue = (String) select("EzOrganDAO.getPropertyValue", map);
+        
+        logger.debug("propertyValue=" + propertyValue);
+        logger.debug("getPropertyValueForLocal ended.");
+        
+        return propertyValue;
     }
 	
 	public String getPropertyValue(Map<String, Object> map) throws Exception {
@@ -939,11 +1029,19 @@ public class EzOrganDAO extends EgovAbstractDAO {
         return returnValue;     
     }
 	
-    private int deptSubDeptCntForLocal(String deptID, int tenantId) throws Exception{
+    private int deptSubDeptCntForLocal(String deptID, int tenantId) throws Exception {
+        logger.debug("deptSubDeptCntForLocal started. deptID=" + deptID + ",tenantId=" + tenantId);
+        
     	Map<String, Object> map = new HashMap<String, Object>();
     	map.put("deptID", deptID);
     	map.put("tenantId", tenantId);
-        return (int) select("EzOrganDAO.deptSubDeptCnt", map);
+    	
+        int deptSubDeptCnt = (int) select("EzOrganDAO.deptSubDeptCnt", map);
+        
+        logger.debug("deptSubDeptCnt=" + deptSubDeptCnt);
+        logger.debug("deptSubDeptCntForLocal ended.");
+        
+        return deptSubDeptCnt;
     }
 	
 	public int deptSubDeptCnt(String deptID, int tenantId) throws Exception{
