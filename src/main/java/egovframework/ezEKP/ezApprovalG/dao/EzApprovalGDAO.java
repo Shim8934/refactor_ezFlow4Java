@@ -1487,7 +1487,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 
 	public void insertRejectExpendAprDocInfo(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.insertRejectExpendAprDocInfo", map);	}
+		insert("EzApprovalG.insertRejectExpendAprDocInfo", map);	
+	}
 
 	public void insertRejectExpendAprLine(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertRejectExpendAprLine", map);
@@ -1495,6 +1496,22 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void insertReciptInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertReciptInfo", map);
+	}
+	
+	public void insertLinTemplet(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertLinTemplet", map);
+	}
+	
+	public void insertLinTempletDetail(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertLinTempletDetail", map);
+	}
+	
+	public void insertDeptTemplet(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertDeptTemplet", map);
+	}
+	
+	public void insertDeptTempletDetail(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertDeptTempletDetail", map);
 	}
 	
 	public void setJijung(Map<String, Object> map) throws Exception{

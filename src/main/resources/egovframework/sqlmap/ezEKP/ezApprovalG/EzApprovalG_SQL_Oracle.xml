@@ -15043,6 +15043,37 @@
    		(DocID,     ReceiptPointID,      ReceiptPointName,      ReceiptPointName2,     ExtReceptYN,      ProcessYN, ProcessSN,       CanEditYN,     ExtReceptEmail,     ReceiptMemberID,      ReceiptMemberName,   ReceiptMemberName2,        ProcessDate,   ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID) 
    		VALUES 
    		(#v_DOCID# , #v_ReceiptPointID# , #v_ReceiptPointName#, #v_ReceiptPointName2#, #v_ExtReceptYN#, #v_ProcessYN#, #v_ProcessSN#, #v_CanEditYN#, #v_ExtReceptEmail#, #v_ReceiptMemberID# ,#v_ReceiptMemberName#, #v_ReceiptMemberName2# , $v_ProcessDate$, #v_ReceiptMemberJobTitle#, #v_ReceiptMemberJobTitle2#, #v_DeptMemberSN#, #v_TENANTID#) 
-             
+   </insert>
+   
+   <insert id="EzApprovalG.insertLinTemplet" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_LINTEMPLET 
+   			(UserID, FormID, AprLineSN, AprTempletName, TENANT_ID)
+         VALUES 
+         	(#v_UserID#, #v_FormID#, #v_AprLineSN#, #v_AprTempletName#, #v_TENANTID#) 
+   </insert>
+   
+   <insert id="EzApprovalG.insertLinTempletDetail" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_LINTEMPLETDETAIL 
+   			(UserID,      FormID,      AprLineSN,   AprMemberSN,      AprType,      AprState,    AprMemberID,       AprMemberIsDeptYN,  AprMemberName,      AprMemberName2,       AprMemberJobTitle,    AprMemberJobTitle2,     AprMemberDeptID,    MemberDeptName,    MemberDeptName2,     TENANT_ID)
+		VALUES 
+			(#v_UserID#, #v_FormID#, #v_AprLineSN#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_MemberDeptName#, #v_MemberDeptName2#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptTemplet" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_DEPTTEMPLET 
+   		(UserID, FormID, AprDeptSN, AprDeptTempletName, TENANT_ID) 
+         VALUES 
+         (#v_UserID#, #v_FormID#, #v_AprDeptSN#, #v_AprDeptTempletName#, #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertDeptTempletDetail" parameterClass="Map">
+   		  INSERT INTO 
+   		  		TBL_DEPTTEMPLETDETAIL 
+   		  (UserID,        FormID,   AprDeptSN,     AprDeptMemberSN,    AprMemberDeptID,    AprMemberDeptName,   AprMemberDeptName2,      ExtReceptYN,       ProcessYN,    CanEditYN,     ExtReceptEmail,      AprMemberID,      AprMemberName,      AprMemberName2,   AprMemberJobTitle,    AprMemberJobTitle2,TENANT_ID) 
+   		  VALUES 
+   		  (#v_UserID#, #v_FormID#, #v_AprDeptSN#, #v_AprDeptMemberSN#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_ExtReceptYN#, #v_ProcessYN#, #v_CanEditYN#, #v_ExtReceptEmail#, #v_AprMemberID#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_TENANTID#) 				
    </insert>
 </sqlMap>

@@ -2010,11 +2010,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					try {
 						ezApprovalGDAO.insertReciptInfo(map);
-						
 						rtnVal = "<RESULT>TRUE</RESULT>";
 					} catch (Exception e) {
 						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 						System.out.println(e.getMessage());
 						rtnVal = "<RESULT>FALSE</RESULT>";
 					}
@@ -2060,11 +2058,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						try {
 							
 							ezApprovalGDAO.insertReciptInfo(map);
-							
 							rtnVal = "<RESULT>TRUE</RESULT>";
 						} catch (Exception e) {
 							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 							System.out.println(e.getMessage());
 							rtnVal = "<RESULT>FALSE</RESULT>";
 						}
@@ -2351,7 +2347,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			ezApprovalGDAO.createNewDoc(map);
 			ezApprovalGDAO.createNewDoc2(map);
-
 			returnVal = tmpDocID.trim();
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -2407,7 +2402,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
 		NodeList rowNode = xmlDom.getElementsByTagName("ROW");
-		System.out.println(rowNode.getLength());
 		String strUserID = docNode.item(0).getChildNodes().item(0).getTextContent();
 		String strFormID = docNode.item(0).getChildNodes().item(1).getTextContent();
 		String strAprlineSN = docNode.item(0).getChildNodes().item(2).getTextContent();
@@ -2420,46 +2414,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			strSQL.append("INSERT INTO TBL_LINTEMPLET (UserID, FormID, AprLineSN, AprTempletName, TENANT_ID) ");
-            strSQL.append("VALUES ('" + strUserID + "', '" + strFormID + "', '" + strAprlineSN);
-			strSQL.append("', N'" + makeRightField(strAprTempletName) + "'," + tenantID +");\n");
+			
+			Map<String, Object> map	= new HashMap<>();
+			map.put("v_UserID", strUserID);
+			map.put("v_FormID", strFormID);
+			map.put("v_AprLineSN", strAprlineSN);
+			map.put("v_AprTempletName", makeRightField(strAprTempletName));
+			map.put("v_TENANTID", tenantID);
+			
+			try {
+				ezApprovalGDAO.insertLinTemplet(map);
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return rtnVal = "<RESULT>FALSE</RESULT>";
+			}
 
 			int i = 0;
 
 			for (i = 0; i < rowNode.getLength(); i++) {
-				strSQL.append("INSERT INTO TBL_LINTEMPLETDETAIL (UserID, FormID, AprLineSN, ");
-				strSQL.append("AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, ");
-                strSQL.append("AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, MemberDeptName, MemberDeptName2,TENANT_ID)");
-				strSQL.append(" VALUES ('" + strUserID + "', '" + strFormID);
-				strSQL.append("', '" + strAprlineSN + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(0).getTextContent()) + "', '");
-				strSQL.append(getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim() + "', '");
-				LOGGER.debug("getName2Code ended.");
-				strSQL.append(getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim() + "', '");
-				LOGGER.debug("getName2Code ended.");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(9).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(10).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(18).getTextContent().trim()) + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(19).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(22).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(23).getTextContent().trim()) + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(11).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(20).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(21).getTextContent().trim()) + "'" + "," +tenantID +");\n");
+				
+				map.put("v_AprMemberSN", makeRightField(rowNode.item(i).getChildNodes().item(0).getTextContent()));
+				map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+				map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				map.put("v_AprMemberID", makeRightField(rowNode.item(i).getChildNodes().item(9).getTextContent().trim()));
+				map.put("v_AprMemberIsDeptYN", makeRightField(rowNode.item(i).getChildNodes().item(10).getTextContent().trim()));
+				map.put("v_AprMemberName", makeRightField(rowNode.item(i).getChildNodes().item(18).getTextContent().trim()));
+				map.put("v_AprMemberName2", makeRightField(rowNode.item(i).getChildNodes().item(19).getTextContent().trim()));
+				map.put("v_AprMemberJobTitle", makeRightField(rowNode.item(i).getChildNodes().item(22).getTextContent().trim()));
+				map.put("v_AprMemberJobTitle2", makeRightField(rowNode.item(i).getChildNodes().item(23).getTextContent().trim()));
+				map.put("v_AprMemberDeptID", makeRightField(rowNode.item(i).getChildNodes().item(11).getTextContent().trim()));
+				map.put("v_MemberDeptName", makeRightField(rowNode.item(i).getChildNodes().item(20).getTextContent().trim()));
+				map.put("v_MemberDeptName2", makeRightField(rowNode.item(i).getChildNodes().item(21).getTextContent().trim()));
+
+				try {
+					ezApprovalGDAO.insertLinTempletDetail(map);
+					rtnVal = "<RESULT>TRUE</RESULT>";
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					System.out.println(e.getMessage());
+					return rtnVal = "<RESULT>FALSE</RESULT>";
+				}
 			}
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-		
-		try {
-			ezApprovalGDAO.transactionSQL(map);
-			
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
-		
 		return rtnVal;
 	}
 
@@ -2477,6 +2474,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.deleteLineTempletDetailInfo2(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -2951,6 +2949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			rtnValue = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = "<RESULT>FALSE</RESULT>";
 		}
 		return rtnValue;
@@ -2973,42 +2972,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			strSQL.append("INSERT INTO TBL_DEPTTEMPLET (UserID, FormID, AprDeptSN, AprDeptTempletName, TENANT_ID) ");
-            strSQL.append("VALUES ('" + strUserID + "', '" + strFormID + "', '" + strAprDeptSN);
-			strSQL.append("', N'" + makeRightField(strAprDeptTempletName) + "',"+ tenantID +");\n");
-
-			for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                strSQL.append("INSERT INTO TBL_DEPTTEMPLETDETAIL (UserID, FormID, AprDeptSN, ");
-                strSQL.append("AprDeptMemberSN, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, ExtReceptYN, ");
-                strSQL.append("ProcessYN, CanEditYN, ExtReceptEmail, AprMemberID, AprMemberName, AprMemberName2, ");
-                strSQL.append("AprMemberJobTitle, AprMemberJobTitle2,TENANT_ID) VALUES ('" + strUserID + "', '" + strFormID);
-				strSQL.append("', '" + strAprDeptSN + "', '");
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()) + "', '");
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()) + "', N'"); 
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()) + "', '"); 
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent()) + "', N'"); 
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent()) + "'," +tenantID+");\n");
-			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
-			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-
+			map.put("v_UserID", strUserID);
+			map.put("v_FormID", strFormID);
+			map.put("v_AprDeptSN", strAprDeptSN);
+			map.put("v_AprDeptTempletName", makeRightField(strAprDeptTempletName));
+			map.put("v_TENANTID", tenantID);
+			
+			
 			try {
-				ezApprovalGDAO.transactionSQL(map);
-				
+				ezApprovalGDAO.insertDeptTemplet(map);
 				rtnVal = "<RESULT>TRUE</RESULT>";
 			} catch (Exception e) {
-				rtnVal = "<RESULT>FALSE</RESULT>";
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return rtnVal = "<RESULT>FALSE</RESULT>";
 			}
+
+			for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+				
+				map.put("v_AprDeptMemberSN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()));
+				map.put("v_AprMemberDeptID", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()));
+				map.put("v_AprMemberDeptName", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()));
+				map.put("v_AprMemberDeptName2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()));
+				map.put("v_ExtReceptYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent()));
+				map.put("v_ProcessYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent()));
+				map.put("v_CanEditYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent()));
+				map.put("v_ExtReceptEmail", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent()));
+				map.put("v_AprMemberID", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent()));
+				map.put("v_AprMemberName", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()));
+				map.put("v_AprMemberName2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()));
+				map.put("v_AprMemberJobTitle", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent()));
+				map.put("v_AprMemberJobTitle2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent()));
+
+				try {
+					ezApprovalGDAO.insertDeptTempletDetail(map);
+					rtnVal = "<RESULT>TRUE</RESULT>";
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return rtnVal = "<RESULT>FALSE</RESULT>";
+				}
+			}
+
 		}
 		
 		return rtnVal;
@@ -4008,6 +4013,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -14905,6 +14911,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
