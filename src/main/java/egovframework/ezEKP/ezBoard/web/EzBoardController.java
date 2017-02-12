@@ -3854,7 +3854,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					deleteFile(realPath + docPath);
 				}
 			} else {
-				ezBoardService.deleteItem(tempItem, boardID, userInfo.getTenantId());
+				ezBoardService.deleteItem(mode, tempItem, boardID, userInfo.getTenantId());
 				if (docPath != null && !docPath.equals("")){
 					deleteFile(realPath + docPath);
 				}
@@ -5753,10 +5753,16 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/deleteTempItem.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String deleteTempItem(@RequestBody String strItemID, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+	public String deleteTempItem(@RequestBody String strItemID, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String resultVal = ezBoardService.deleteTempItem(strItemID, userInfo.getTenantId());
+		String mode = "";
+		
+		if (request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
+		
+		String resultVal = ezBoardService.deleteTempItem1(mode, strItemID, userInfo.getTenantId());
 		
 		return resultVal;
 	}

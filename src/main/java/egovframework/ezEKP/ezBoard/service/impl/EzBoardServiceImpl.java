@@ -488,7 +488,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception {
+	public void deleteItem(String mode, String itemID, String boardID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", itemID);
 		map.put("boardID", boardID);
@@ -498,6 +498,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardReply(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
 		ezBoardDAO.deleteBoardItemAttach(map);
+		
+		if (mode != null && mode.equals("PHOTO")) {
+			BoardListVO boardListVO = new BoardListVO();
+			boardListVO.setItemID(itemID);
+			boardListVO.setTenantID(tenantID);
+			
+			ezBoardDAO.deleteImageItem(boardListVO);
+		}
+		
 		ezBoardDAO.insertDeleteReservedItem(map);
 	}
 
@@ -1317,7 +1326,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String deleteTempItem(String strItemID, int tenantID) throws Exception {
+	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", strItemID);
 		map.put("tenantID", tenantID);
@@ -1328,9 +1337,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			ezBoardDAO.deleteBoardItemRead2(map);
 			ezBoardDAO.deleteBoardReply(map);
 			
+			if (mode != null && mode.equals("PHOTO")) {
+				BoardListVO boardListVO = new BoardListVO();
+				boardListVO.setItemID(strItemID);
+				boardListVO.setTenantID(tenantID);
+				
+				ezBoardDAO.deleteImageItem(boardListVO);
+			}
+			
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteTempItem");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "NO";
 		}
 	}
@@ -1640,6 +1658,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.deleteItemTempPhoto(boardListVO);
+		ezBoardDAO.deleteImageItem(boardListVO);
 		ezBoardDAO.brdNewItemTempPhoto(boardListVO);
 		photoSaveDB(boardListVO);
 		ezBoardDAO.newItem(boardListVO);

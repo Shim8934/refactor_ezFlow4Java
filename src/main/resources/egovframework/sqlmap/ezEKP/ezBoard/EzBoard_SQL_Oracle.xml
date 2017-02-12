@@ -4178,5 +4178,25 @@
    		]]>
 	</delete>
 	
+	<delete id="EzBoardDAO.deleteItemTempPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_BOARD_ITEM_TEMP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteImageItem" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_PHOTO_IMAGEITEM
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
+	</delete>
+	
 </sqlMap>
 
