@@ -363,34 +363,36 @@
 	            if (SelectSingleNodeValue(loadXMLString(xmlhttp.responseText), "RESULT") == "OK") {
 				    xmlhttp = null;
 				    xmldom = null;
-										
-					if (strItemID == "")
-					{
-					    xmlhttp = createXMLHttpRequest();
-						xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
-						xmlhttp.send();		
-						xmlhttp = null;
-					}
-					if (pMode == "reply")
-					{
-					    xmlhttp = createXMLHttpRequest();
-					    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
-					    xmlhttp.send();
-					    xmlhttp = null;
-					}
-					if ("${boardInfo.apprMail_FG}" == "Y") {
-					    xmlhttp = createXMLHttpRequest();
-					    if (pMode != "modify") {
-					        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
-					    } else {
-					        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
-					    }
-					    xmlhttp.send();
-					    xmlhttp = null;
-					}
-	
-	                alert("<spring:message code='ezBoard.t399'/>");
-	
+				    if (pMode != "temp") {
+						if (strItemID == "")
+						{
+						    xmlhttp = createXMLHttpRequest();
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+							xmlhttp.send();		
+							xmlhttp = null;
+						}
+						if (pMode == "reply")
+						{
+						    xmlhttp = createXMLHttpRequest();
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.send();
+						    xmlhttp = null;
+						}
+						if ("${boardInfo.apprMail_FG}" == "Y") {
+						    xmlhttp = createXMLHttpRequest();
+						    if (pMode != "modify") {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						    } else {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						    }
+						    xmlhttp.send();
+						    xmlhttp = null;
+						}
+						
+		                alert("<spring:message code='ezBoard.t399'/>");
+				    } else {
+		                alert("<spring:message code='ezBoard.t10033'/>");
+				    }
 	
 	                try {
 	                    window.opener.location.reload(false);

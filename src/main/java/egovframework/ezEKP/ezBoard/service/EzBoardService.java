@@ -206,7 +206,7 @@ public interface EzBoardService {
 	
 	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content, int tenantID) throws Exception;
 	
-	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception;
+	public void deleteItem(String mode, String itemID, String boardID, int tenantID) throws Exception;
 
 	public void deleteTempItem(String itemID, String boardID, int tenantID) throws Exception;
 	
@@ -214,8 +214,6 @@ public interface EzBoardService {
 
 	public void setListOrder(LoginVO userInfo, String pBoardList, String pDelBoardList) throws Exception;
 	
-	public String deleteTempItem(String strItemID, int tenantID) throws Exception;
-
 	public String getItemAttachmentXMLRetrans(BoardItemVO boardItemVO) throws Exception;
 
 	public String getItemAttachmentXML(BoardItemVO boardItemVO) throws Exception;
@@ -237,5 +235,7 @@ public interface EzBoardService {
 	public String getContentInfo(String type, String docID, int tenantID) throws Exception;
 
 	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception;
+
+	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception;
 
 }

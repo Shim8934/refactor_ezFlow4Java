@@ -596,4 +596,12 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardAttachVO) select("EzBoardDAO.getAttachInfo", map);
 	}
 
+	public void deleteItemTempPhoto(BoardListVO boardListVO) throws Exception {
+		delete("EzBoardDAO.deleteItemTempPhoto", boardListVO);
+	}
+
+	public void deleteImageItem(BoardListVO boardListVO) throws Exception {
+		delete("EzBoardDAO.deleteImageItem", boardListVO);
+	}
+
 }
