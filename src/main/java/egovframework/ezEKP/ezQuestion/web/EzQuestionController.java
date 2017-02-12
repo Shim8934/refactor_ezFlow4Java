@@ -3724,115 +3724,124 @@ public class EzQuestionController extends EgovFileMngUtil {
         String strTagData = "";
         
         List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
-
-        if(qstAnswerList != null){
-        	for(QstAnswerVO qstAnswer : qstAnswerList){
-                Node itemNode = null;
-        		Node iValueNode = null;
-        		iCount++;
-        		
-        		/*if (answerType == 5) {
-        			itemNode = doc.createElement("TAG");
-        		} else {*/
-        			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
-        		/*}*/
-        		
-        		switch(answerType){
-        		case 1:
-        			if (multiSelect.equals("1")){
-                        strTagData = "<input type=\"checkbox\" name=\"chk" + qstNo + "_" + Integer.toString(iCount) + "\" value=\"0\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                        strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
-                        iValueNode = doc.createTextNode(strTagData);
-                    }else{
-                    	 strTagData = "<input type=\"Radio\" name=\"rdo" + qstNo + "\" value=\"" + Integer.toString(iCount) + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                    	 strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
-                         iValueNode = doc.createTextNode(strTagData);
-                    }
-        			
-        			itemNode.appendChild(iValueNode);
-        			snewRow.appendChild(itemNode);
-        			iValueNode = null;
-        			itemNode = null;
-        			break;
-        			
-        		case 3:
-        			int rCount = 0;
-					String ansContent = commonUtil.cleanValue(qstAnswer.getAnswerContent());
-					
-					String[] ArryContent = ansContent.split("-");
-					rCount = Integer.parseInt(ArryContent[1]) - Integer.parseInt(ArryContent[0]);
-					strTagData = "<select name='sel " + qstNo + "'>";
-					
-					for (int j = 0; j < rCount; j++){
-					    strTagData += "<option>" + Integer.toString(j) + "</option>";
-					}
-					
-					strTagData += "</select>";
-					iValueNode = doc.createTextNode(strTagData);
-					itemNode.appendChild(iValueNode);
-					snewRow.appendChild(itemNode);
-					iValueNode = null;
-					itemNode = null;
-					break;
-					
-        		case 4:
-        			strTagData = "<input type=\"checkbox\" onchange=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                    strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
-                    iValueNode = doc.createTextNode(strTagData);
-                    strTagData = "";
-                    itemNode.appendChild(iValueNode);
-                    snewRow.appendChild(itemNode);
-                    iValueNode = null;
-                    itemNode = null;
-                    break;
-                    
-        		case 5:
-        			//수정필요함 이효진
-        			List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
-        			
-        			if (iCount == 1) {
-        				strTagData = "<tr>";
-        				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
-        				
-	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
-	    	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
-	    	    				strTagData += commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
-	    	    				strTagData += "</th>";
-						}
-	    				
-	    				strTagData += "</tr>";
-	    				strTagData += "<tr>";
-	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
-	    				
-	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
-	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
-						}
-	    				
-	    				strTagData += "</tr>";
-        			}else{
-        				strTagData = "<tr>";
-        				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
-        				
-	    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
-	    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
-						}
-	    				
-	    				strTagData += "</tr>";
-        			}
-        			
-        			iValueNode = doc.createTextNode(strTagData);
-					itemNode.appendChild(iValueNode);
-                    snewRow.appendChild(itemNode);
-                    iValueNode = null;
-                    itemNode = null;
-                    break;
-        		}
+//질
+        if (answerType == 5) {
+        	Node itemNode = null;
+    		Node iValueNode = null;
+    		
+    		itemNode = doc.createElement("TAG");
+    		strTagData = ""; // table 초기값입력.
+        	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
+        	for (QstAnswerVO qstAnswer : qstAnswerList) {
+        		if (iCount == 1) {
+    				strTagData += "<tr>";
+    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
+    				
+    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+    	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
+    	    				strTagData += commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
+    	    				strTagData += "</th>";
+    				}
+    				
+    				strTagData += "</tr>";
+    				strTagData += "<tr>";
+    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+    				
+    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+    				}
+    				
+    				strTagData += "</tr>";
+    			}else{
+    				strTagData = "<tr>";
+    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+    				
+    				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
+    					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio"+qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
+    				}
+    				
+    				strTagData += "</tr>";
+    			}
         	}
         	
-        	Node attr = doc.createAttribute("count");
-        	attr.setNodeValue(Integer.toString(iCount));
-        	row.appendChild(snewRow);
-        	snewRow = null;
+        	strTagData += ""; //테이닫
+			
+logger.debug("strTagData = " + strTagData);
+
+			iValueNode = doc.createTextNode(strTagData);
+			itemNode.appendChild(iValueNode);
+            snewRow.appendChild(itemNode);
+            iValueNode = null;
+            itemNode = null;
+        } else {
+        	if(qstAnswerList != null){
+            	for(QstAnswerVO qstAnswer : qstAnswerList){
+                    Node itemNode = null;
+            		Node iValueNode = null;
+            		iCount++;
+            		
+            		/*if (answerType == 5) {
+            			itemNode = doc.createElement("TAG");
+            		} else {*/
+            			itemNode = doc.createElement("TAG" + Integer.toString(iCount));
+            		/*}*/
+            		
+            		switch(answerType){
+            		case 1:
+            			if (multiSelect.equals("1")){
+                            strTagData = "<input type=\"checkbox\" name=\"chk" + qstNo + "_" + Integer.toString(iCount) + "\" value=\"0\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
+                            strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                            iValueNode = doc.createTextNode(strTagData);
+                        }else{
+                        	 strTagData = "<input type=\"Radio\" name=\"rdo" + qstNo + "\" value=\"" + Integer.toString(iCount) + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
+                        	 strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                             iValueNode = doc.createTextNode(strTagData);
+                        }
+            			
+            			itemNode.appendChild(iValueNode);
+            			snewRow.appendChild(itemNode);
+            			iValueNode = null;
+            			itemNode = null;
+            			break;
+            			
+            		case 3:
+            			int rCount = 0;
+    					String ansContent = commonUtil.cleanValue(qstAnswer.getAnswerContent());
+    					
+    					String[] ArryContent = ansContent.split("-");
+    					rCount = Integer.parseInt(ArryContent[1]) - Integer.parseInt(ArryContent[0]);
+    					strTagData = "<select name='sel " + qstNo + "'>";
+    					
+    					for (int j = 0; j < rCount; j++){
+    					    strTagData += "<option>" + Integer.toString(j) + "</option>";
+    					}
+    					
+    					strTagData += "</select>";
+    					iValueNode = doc.createTextNode(strTagData);
+    					itemNode.appendChild(iValueNode);
+    					snewRow.appendChild(itemNode);
+    					iValueNode = null;
+    					itemNode = null;
+    					break;
+    					
+            		case 4:
+            			strTagData = "<input type=\"checkbox\" onchange=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
+                        strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                        iValueNode = doc.createTextNode(strTagData);
+                        strTagData = "";
+                        itemNode.appendChild(iValueNode);
+                        snewRow.appendChild(itemNode);
+                        iValueNode = null;
+                        itemNode = null;
+                        break;
+            		}
+            	}
+            	
+            	Node attr = doc.createAttribute("count");
+            	attr.setNodeValue(Integer.toString(iCount));
+            	row.appendChild(snewRow);
+            	snewRow = null;
+            }
         }
     }
 	
