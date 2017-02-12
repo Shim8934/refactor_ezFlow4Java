@@ -16552,6 +16552,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_USERNAME2", UserName2);
 				map.put("v_TENANTID", tenantID);
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+				map.put("v_DATE", commonUtil.getTodayUTCTime("").substring(0, 10).replace("-", ""));
 				int newVersion = ezApprovalGDAO.newRecordVersion(map);
 				
 				if( newVersion < 2) {
@@ -18732,9 +18733,9 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 						ezApprovalGDAO.aprGetNewID(map);
 						String newID = ezApprovalGDAO.selectAprGetNewID(map);
 						int tmplen=20;
-						int strlen = tmplen - newID.length();
+						int strlen = tmplen - newID.trim().length();
 						for(int k = 0; k< strlen; k++){
-							newID = "0" + newID;
+							newID = "0" + newID.trim();
 						}
 						
 						map.put("v_DOCID",docID);
