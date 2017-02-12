@@ -1504,14 +1504,14 @@
 	<select id="EzPortalAdminDAO.logoEdit" parameterClass="Map" resultClass="PortalMenuItemItemsImageVO">
 		<![CDATA[
 			 SELECT
-			 	NVL(DISPLAYNAME, ' ') DISPLAYNAME  ,
-             	NVL(DISPLAYNAME2, ' ') DISPLAYNAME2  ,
-             	NVL(NORMALIMAGEPATH, ' ') NORMALIMAGEPATH  ,
-             	NVL(IMAGEWIDTH, 0) IMAGEWIDTH  ,
-             	NVL(IMAGEHEIGHT, 0) IMAGEHEIGHT  ,
-             	NVL(LINKURL, ' ') LINKURL  ,
-             	NVL(LINKLOCATION, ' ') LINKLOCATION  ,
-             	NVL(WINDOWOPTION, ' ') WINDOWOPTION  
+			 	IFNULL(DISPLAYNAME, ' ') DISPLAYNAME  ,
+             	IFNULL(DISPLAYNAME2, ' ') DISPLAYNAME2  ,
+             	IFNULL(NORMALIMAGEPATH, ' ') NORMALIMAGEPATH  ,
+             	IFNULL(IMAGEWIDTH, 0) IMAGEWIDTH  ,
+             	IFNULL(IMAGEHEIGHT, 0) IMAGEHEIGHT  ,
+             	IFNULL(LINKURL, ' ') LINKURL  ,
+             	IFNULL(LINKLOCATION, ' ') LINKLOCATION  ,
+             	IFNULL(WINDOWOPTION, ' ') WINDOWOPTION  
         	FROM
         		TBL_MENUITEM_ITEMS_IMAGE 
        		WHERE
