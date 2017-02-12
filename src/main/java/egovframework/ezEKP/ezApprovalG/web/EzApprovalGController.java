@@ -3802,6 +3802,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCabinetSearch.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String processDeptCode = request.getParameter("processDeptCode");
 		String productionYear = request.getParameter("productionYear");
