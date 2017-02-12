@@ -323,7 +323,7 @@
 								// 상속페이지에서 Root페이지의 옵션 포틀릿인 경우 삭제대상 정보를 저장
 								if (cell.ownerpageuid != pageid && cell.mandatory == "2")
 								{
-								    g_XML += "<ROW>" + "<UID_>" + cell.uid + "</UID_>" + "<PAGEUID>" + cell.pageuid + "</PAGEUID>" +
+								    g_XML += "<ROW>" + "<UID>" + cell.uid + "</UID>" + "<PAGEUID>" + cell.pageuid + "</PAGEUID>" +
 										"<OWNERPAGEUID>" + cell.ownerpageuid + "</OWNERPAGEUID>" +
 										"<USERPAGEUID>" + pageid + "</USERPAGEUID>" +
 										"<CHANGEFLAG>2</CHANGEFLAG>" + "</ROW>";
@@ -360,7 +360,7 @@
 		}
 		
 		function savesub(pObject, pPageID, pParentPageID, pDisplayName, pDisplayName2) {
-alert("savesub Start");
+console.log("savesub Start");
 			var pUserID = g_UserID;
 			var pUserName = g_UserName;
 
@@ -382,8 +382,7 @@ alert("savesub Start");
 
 			
 			// 대상테이블의 최상위td count
-			for (var i=0; i<pObject.children.item(0).children.item(0).children.length; i++)
-			{
+			for (var i=0; i<pObject.children.item(0).children.item(0).children.length; i++) {
 				if (pObject.children.item(0).children.item(0).children.item(i).id == "") continue;
 				
 				// 최상위td
@@ -405,7 +404,7 @@ alert("savesub Start");
 					{
 						// 해당 tr내의 td
 						var tdsub_item = td_item.children.item(0).children.item(0).children.item(j).children.item(0);
-						
+console.log("tdsub_item="+tdsub_item);
 						// 2017-02-10 try {
 							if (tdsub_item.id == "") continue;
 						// 2017-02-10} catch(e) { continue; }
@@ -423,9 +422,10 @@ alert("savesub Start");
 							strXML += "<TYPE>0</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
-							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							//strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							strXML += "<PORTLETHEIGHT>" + tdsub_item.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 							strXML += "<PORTLETDISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</PORTLETDISPLAYNAME>";
-alert("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML));
+console.log("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML));
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";				
@@ -436,13 +436,15 @@ alert("portletDisplayName="+ReplaceValidString(tdsub_item.firstChild.innerHTML))
 						}
 						// td안에 테이블이 존재하는 경우
 						else {
-alert("td안에 테이블이 존재하는 경우");
-alert("portletHeight="+tdsub_item.parentElement.style.height.toString());
+console.log("td안에 테이블이 존재하는 경우");
+console.log("portletHeight1="+tdsub_item.parentElement.style.height.toString());
+console.log("portletHeight2="+tdsub_item.parentElement.style.width.toString());
 							strXML += "<ROW>";
 							strXML += "<TYPE>1</TYPE>";
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
-							strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							//strXML += "<PORTLETHEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
+							strXML += "<PORTLETHEIGHT>" + tdsub_item.style.height.toString().replace("px", "") + "</PORTLETHEIGHT>";
 							strXML += "<PORTLETDISPLAYNAME>" + tdsub_item.getAttribute("pageuid") + "</PORTLETDISPLAYNAME>";
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
@@ -453,7 +455,7 @@ alert("portletHeight="+tdsub_item.parentElement.style.height.toString());
 							
 							// 하위테이블의 정보를 저장
 							savesub(tdsub_item.children.item(0), tdsub_item.getAttribute("uid"), "top", tdsub_item.getAttribute("uid"), "");
-alert("tdsub_item.uid="+tdsub_item.uid);
+console.log("tdsub_item.uid="+tdsub_item.uid);
 							prevPageID = tdsub_item.uid;
 							//prevPageID = tdsub_item.getAttribute("uid");
 						}
@@ -473,7 +475,7 @@ alert("tdsub_item.uid="+tdsub_item.uid);
 		}
 
 		function save() {
-alert("save Start");
+console.log("save Start");
 			if (document.getElementById("txtDisplayName").value == "") {
 				alert("<spring:message code='ezPortal.t289' />");
 				document.getElementById("txtDisplayName").focus();
@@ -502,7 +504,7 @@ alert("save Start");
 				// 삭제대상 포틀릿정보를 저장
 				g_XML = "<DATA>" + g_XML + "</DATA>";
 				xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "admin/remote/portal_SaveDelPortletInfo.aspx?userid=" + pUserID + "&username=" + pUserName, false);
+				xmlhttp.open("POST", "/admin/saveDelPortletInfo.do?userID=" + pUserID + "&userName=" + pUserName, false);
 				xmlhttp.send(g_XML);
 				xmlhttp = null;
 			}
@@ -522,7 +524,7 @@ alert("save Start");
 		}
 
 		function AttachEvents(pObject, pPageID) {
-alert("AttachEvents Start");
+console.log("AttachEvents Start");
 			var prevpageid = "";
 			var count = 0;
 			for (var i=0; i<pObject.getElementsByTagName("td").length; i++)
@@ -536,7 +538,7 @@ alert("AttachEvents Start");
 			        //prevpageid = pObject.getElementsByTagName("td").item(i).getAttribute("pageuid");
 
 			        prevpageid = GetAttribute(pObject.getElementsByTagName("td").item(i), "pageuid");
-alert("prevpageid="+prevpageid);
+console.log("prevpageid="+prevpageid);
 					// 상속받은 포틀릿중 필수포틀릿은 링크표시가 나타나지 않도록 한다.
 			        if (typeof(pObject.getElementsByTagName("td").item(i).getAttribute("ownerpageuid")) != "undefined" && typeof(pObject.getElementsByTagName("td").item(i).getAttribute("mandatory")) != "undefined") {
 						// Root페이지 이거나 옵션 포틀릿인 경우
@@ -620,8 +622,8 @@ alert("prevpageid="+prevpageid);
 			    var Element = Event.target ? Event.target : Event.srcElement;
 			    if (Element.getAttribute("id") == "") return;
 			    if (Element.getAttribute("id").indexOf("sub") > -1) return;
-			    selectedCell = Element.getAttribute("id");
-			    //selectedCell = GetAttribute(Element, "id");
+			    //selectedCell = Element.getAttribute("id");
+			    selectedCell = GetAttribute(Element, "id");
 				if (previousCell != null) previousCell.style.backgroundColor = "white";
 				previousCell = Element.children.item(0).children.item(0).children.item(0).children.item(0);
 				previousCell.style.backgroundColor = "lightblue";
@@ -782,7 +784,7 @@ alert("prevpageid="+prevpageid);
 			}
 			
 			selectedSubCell = eventItem.getAttribute("id");
-alert("selectedSubCell="+selectedSubCell);
+console.log("selectedSubCell="+selectedSubCell);
 			if (previousSubCell != null) previousSubCell.parentElement.style.backgroundColor = "white";
 			
 			if (selectedSubCell.substr(0,2).toLowerCase() != "su") {
@@ -959,7 +961,7 @@ alert("selectedSubCell="+selectedSubCell);
                newrow.style.width = "100%";
                newrow.style.height = ret[2];
                var subtdGetid = "subtd" + GetGUID().substr(0, 4);
-               var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
+               var strInnerHTML = "<td id=\"" + subtdGetid + "\"uid=\"" + ret[0] + "\" style=\"width:100%; height:"+ret[2]+"px\"  ownerpageuid='" + pageid + "' align=\"center\" onclick=\"selectsubcell(event)\" ondblclick=\"dblclicknotice()\" onkeydown=\"cellkeydown(event)\" canremove=\"1\"  canresize=\"1\"  canreplace=\"1\"><b> " + ret[1] + "</b></td>";
                newrow.innerHTML = strInnerHTML;
                var pageuid = "";
                if (GetPageID(document.getElementById(subtdGetid)) == null)
@@ -971,9 +973,9 @@ alert("selectedSubCell="+selectedSubCell);
                document.getElementById(subtdGetid).focus();
 
 		    }
-
-		function insertcell()
-		{
+		
+		// 열추가
+		function insertcell() {
 			if (!bCanModify)
 			{
 				alert("<spring:message code='ezPortal.t294' />");
@@ -1085,35 +1087,31 @@ alert("selectedSubCell="+selectedSubCell);
 			selectedCell = "";
 			selectedSubCell = "";
 		}
-
-		function removerow()
-		{
-			if (selectedSubCell == "")
-			{	
+		
+		//포틀릿 삭제
+		function removerow() {
+			if (selectedSubCell == "") {	
 				alert("<spring:message code='ezPortal.t299' />");
 				return;
 			}
 
 			var cell = eval(selectedSubCell);
 			
-			if (cell.getAttribute("canremove") != 1)
-			{
+			if (cell.getAttribute("canremove") != 1) {
 				alert("<spring:message code='ezPortal.t300' />");
 				return;
 			}
 			
 			// Root페이지가 아니고 필수 포틀릿인 경우
-		    if (cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "1")
-			{
+		    if (cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "1") {
 				alert("<spring:message code='ezPortal.t301' />");
 				//event.cancelBubble = true;
 				return;
 			}
 			
 			// 상속페이지에서 Root페이지의 옵션 포틀릿인 경우 삭제대상 정보를 저장
-		    if (parentpageid.toLowerCase() != "top" && cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "2")
-			{
-		        g_XML += "<ROW>" + "<UID_>" + cell.uid + "</UID_>" + "<PAGEUID>" + cell.pageuid + "</PAGEUID>" +
+		    if (parentpageid.toLowerCase() != "top" && cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "2") {
+		        g_XML += "<ROW>" + "<UID>" + cell.uid + "</UID>" + "<PAGEUID>" + cell.pageuid + "</PAGEUID>" +
 				         "<OWNERPAGEUID>" + cell.ownerpageuid + "</OWNERPAGEUID>" +
 				         "<USERPAGEUID>" + pageid + "</USERPAGEUID>" +
 				         "<CHANGEFLAG>2</CHANGEFLAG>" + "</ROW>";
@@ -1146,7 +1144,7 @@ alert("selectedSubCell="+selectedSubCell);
 				
 				// 상속페이지에서 Root페이지의 옵션 포틀릿인 경우 삭제대상 정보를 저장
 		        if (parentpageid.toLowerCase() != "top" && cell.getAttribute("ownerpageuid") != pageid && cell.getAttribute("mandatory") == "2") {
-		            g_XML += "<ROW>" + "<UID_>" + cell.getAttribute("UID_") + "</UID_>" + "<PAGEUID>" + cell.getAttribute("pageuid") + "</PAGEUID>" +
+		            g_XML += "<ROW>" + "<UID>" + cell.getAttribute("uid") + "</UID>" + "<PAGEUID>" + cell.getAttribute("pageuid") + "</PAGEUID>" +
 							"<OWNERPAGEUID>" + cell.getAttribute("ownerpageuid") + "</OWNERPAGEUID>" +
 							"<USERPAGEUID>" + pageid + "</USERPAGEUID>" +
 							"<CHANGEFLAG>2</CHANGEFLAG>" + "</ROW>";
@@ -1270,17 +1268,17 @@ alert("selectedSubCell="+selectedSubCell);
 			if (pDirection == "right")
 			{
 				curWidth += 2;
-				try {
-					cell.style.width = curWidth.toString();
-					cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
-				} catch(e) {}
+				//2017-02-11
+				cell.style.width = curWidth.toString();
+				cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
+				
 			}	
 			else if (pDirection == "left") {
 				curWidth -= 2;
-				try {
-					cell.style.width = curWidth.toString();
-					cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
-				} catch(e) {}
+				//2017-02-11
+				cell.style.width = curWidth.toString();
+				cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = curWidth.toString() + "px"; 
+				
 			}
 		}
 
@@ -1390,16 +1388,13 @@ alert("selectedSubCell="+selectedSubCell);
 			location.href = pURL;
 		}
 
-		function insertpage()
-		{
-			if (selectedCell == "")
-			{
+		function insertpage() {
+			if (selectedCell == "") {
 				alert("<spring:message code='ezPortal.t312' />");
 				return;
 			}
 			
-			if (eval(selectedCell).children.item(0).children.item(0).children.length > 9)
-			{
+			if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 				alert("<spring:message code='ezPortal.t292' />");
 				return;
 			}
@@ -1457,13 +1452,11 @@ alert(document.getElementById(subGetId));
 
 		}
 
-		function newpage()
-		{
+		function newpage() {
 			location.href = "/ezPortal/portalPage.do";
 		}
 
-		function layoutmode()
-		{
+		function layoutmode() {
 		    for (var i=0; i<document.getElementsByTagName("tr").length; i++)
 			{
 		        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
@@ -1474,8 +1467,7 @@ alert(document.getElementById(subGetId));
 			}
 		}
 
-		function editingmode()
-		{
+		function editingmode() {
 		    for (var i=0; i<document.getElementsByTagName("tr").length; i++)
 			{
 		        var evtHandler = document.getElementsByTagName("tr").item(i).onclick;
@@ -1486,14 +1478,12 @@ alert(document.getElementById(subGetId));
 			}
 		}
 		
-		function PageSizeChange()
-		{
+		function PageSizeChange() {
 			main_table.width = document.getElementById("txtWidth").value;
 			main_table.height = document.getElementById("txtHeight").value;
 		}
 
-		function ACLEdit()
-		{
+		function ACLEdit() {
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        window.open("/ezPortal/portalPageACL.do?uID=" + pageid, "", "height = 245px, width = 530px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(530, 245));
 		    else
@@ -1501,18 +1491,15 @@ alert(document.getElementById(subGetId));
 		}
 		
 		// 테이블 크기 조정
-		function resizeTable()
-		{
-			if (!bCanModify)
-			{
+		function resizeTable() {
+alert("resizeTable start");
+			if (!bCanModify) {
 				alert("<spring:message code='ezPortal.t313' />");
 				return;
 			}
 			
-			if (selObjClass == "TABLE")
-			{
-				if (selectedCell == "")
-				{
+			if (selObjClass == "TABLE") {
+				if (selectedCell == "") {
 					alert("<spring:message code='ezPortal.t314' />");
 					return;
 				}
@@ -1526,18 +1513,15 @@ alert(document.getElementById(subGetId));
 				var cell = eval(selectedCell);
 				
 				// 메인테이블 - 너비에 *를 설정한 경우
-				if (tblObject.id == "main_table" && document.getElementById("txtWidth").value == "*")
-				{
+				if (tblObject.id == "main_table" && document.getElementById("txtWidth").value == "*") {
 					tblObject.width = "100%";
 					
 					cell.style.width = "100%";
 					cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = "*";
 				}
 				
-				if (document.getElementById("txtWidth").value != "*" && document.getElementById("txtWidth").value != "")
-				{
-					if (!is_num(document.getElementById("txtWidth").value))
-					{
+				if (document.getElementById("txtWidth").value != "*" && document.getElementById("txtWidth").value != "") {
+					if (!is_num(document.getElementById("txtWidth").value)) {
 						alert("<spring:message code='ezPortal.t315' />");
 						return;
 					}
@@ -1546,40 +1530,36 @@ alert(document.getElementById(subGetId));
 					if (tblObject.id == "main_table")
 						tblObject.width = document.getElementById("txtWidth").value;
 					
-					cell.style.width = document.getElementById("txtWidth").value;
+					//2017-02-12
+					cell.style.width = document.getElementById("txtWidth").value + "px";
 					cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = document.getElementById("txtWidth").value + "px";
 				}
 				
-				if (!is_num(document.getElementById("txtHeight").value))
-				{
+				if (!is_num(document.getElementById("txtHeight").value)) {
 					alert("<spring:message code='ezPortal.t316' />");
 					return;
 				}
+				
 				tblObject.height = document.getElementById("txtHeight").value;
-				tblObject.parentElement.parentElement.style.height = document.getElementById("txtHeight").value;
+				tblObject.parentElement.parentElement.style.height = document.getElementById("txtHeight").value + "px";
 			}
-			else if (selObjClass == "CONTENTS")
-			{
-				if (selectedSubCell == "")
-				{	
+			else if (selObjClass == "CONTENTS") {
+				if (selectedSubCell == "") {	
 					alert("<spring:message code='ezPortal.t306' />");
 					return;
 				}
 
 				var cell = eval(selectedSubCell);
 				
-				if (cell.getAttribute("canresize") != 1)
-				{
+				if (cell.getAttribute("canresize") != 1) {
 					alert("<spring:message code='ezPortal.t317' />");
 					return;
 				}
 				
-				try {
-					cell.parentElement.style.height = document.getElementById("txtHeight").value;
-				} catch(e) { alert }
-			}
-			else
-			{
+				//2017-02-11
+				cell.parentElement.style.height = document.getElementById("txtHeight").value;
+				
+			} else {
 				alert("<spring:message code='ezPortal.t318' />");
 			}
 			
@@ -1587,8 +1567,7 @@ alert(document.getElementById(subGetId));
 		}
 		
 		// 초기화_관리자edit 2007-09-12
-		function ResetPortalPage()
-		{
+		function ResetPortalPage() {
 		    var xmlhttp = createXMLHttpRequest();
 			xmlhttp.open("POST", "/admin/resetPortalPage.do?pageID=" + pageid + "&comapnyID=" + g_CompanyID + "&baseType=" +g_BaseType, false);
 			xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
