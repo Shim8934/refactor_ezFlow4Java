@@ -7417,9 +7417,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				break;
 				
@@ -7477,9 +7475,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				break;
@@ -9837,16 +9833,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
-		//?꾩쭅 ?뚮꼳???덊븿
-		strSQL.append("UPDATE TBL_APRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
-        strSQL.append(" WHERE DocID = '");
-		strSQL.append(docID + "' AND AprMemberID = '" + userID + "' AND AprState = '" + staASJinHang + "' AND TENANT_ID=" + tenantID +";\n");
-
-		strSQL.append("UPDATE TBL_APRDOCINFO SET FunctionType = '" + aprState + "' WHERE DocID = '" + docID + "' AND TENANT_ID=" + tenantID +";\n");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_APRSTATE", aprState);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_DOCID", docID);
+		map.put("v_USERID", userID);
+		map.put("v_STAASJINHANG", staASJinHang);
+		map.put("v_TENANTID", tenantID);
+		
+		try{
+			ezApprovalGDAO.updateBoryuAprLineInfo(map);
+			ezApprovalGDAO.updateBoryuAprDocInfo(map);
+		} catch(Exception e){
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
+		}
 		
 		sendMsg(docID, "", "BOR", companyID, lang, tenantID);
 		
-		return strSQL.toString();
+		return "TRUE";
 	}
 
 	public String doBansong(String docID, String userID, String aprState, String dirPath, String companyID, String lang, LoginVO userInfo) throws Exception{
@@ -9936,7 +9942,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
 			} catch(Exception e) {
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 				return "FALSE";
 			}
 		}

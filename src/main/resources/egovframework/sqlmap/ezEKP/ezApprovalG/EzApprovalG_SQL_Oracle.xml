@@ -15076,4 +15076,31 @@
    		  VALUES 
    		  (#v_UserID#, #v_FormID#, #v_AprDeptSN#, #v_AprDeptMemberSN#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_ExtReceptYN#, #v_ProcessYN#, #v_CanEditYN#, #v_ExtReceptEmail#, #v_AprMemberID#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_TENANTID#) 				
    </insert>
+   
+   <update id="EzApprovalG.updateBoryuAprLineInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_APRSTATE#, 
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
+        WHERE 
+        	DocID = #v_DOCID#
+        AND 
+        	AprMemberID = #v_USERID#
+        AND 
+        	AprState = #v_STAASJINHANG# 
+        AND 
+        	TENANT_ID= #v_TENANTID#
+   </update>
+   
+   <update id="EzApprovalG.updateBoryuAprDocInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			FunctionType = #v_APRSTATE# 
+   		WHERE 
+   			DocID = #v_DOCID# 
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   </update>
 </sqlMap>
