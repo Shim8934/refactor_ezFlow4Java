@@ -758,7 +758,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	type = boardVO.getType();
         }
         
-        BoardPropertyVO boardInfo = getBoardInfo(boardID,userInfo);
+        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
         
         boardVO.setType(type);
         boardVO.setLang(userInfo.getLang());
@@ -2276,7 +2276,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
         // 헤더 정보를 세팅한다.
         int i = 0;
-        int hlength = headerList.size();
+        int hlength = headerList.size(); 
         int writeDateSN = 0;    //작성일 순번
         int titleSN = 0;            //제목 순번
 
