@@ -130,7 +130,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String DataType = "user";
 		Object vo = null;
 		StringBuilder propinfo = new StringBuilder("<DATA>");
-		pLangCode = commonUtil.convertLangCode(pLangCode);
 		
 		vo = getUserInfo(pCN, pLangCode, tenantID);
 

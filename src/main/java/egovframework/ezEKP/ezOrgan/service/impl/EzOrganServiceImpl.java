@@ -1038,8 +1038,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String getSearchListPagination(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String pLangCode, String page, int tenantID) throws Exception {
-		pLangCode = commonUtil.convertLangCode(pLangCode);
-		
 		String strSQL="";
 		int i=0;
 		String[] SearchList;
@@ -1200,6 +1198,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception {
 		String strFlag = "N";
 		
+		// 부서의 displayname 속성이 변경되는 경우
 		if (!pClass.equals("user")) {
 			if (propName.toLowerCase().indexOf("displayname") != -1) {
 				strFlag = "Y";
@@ -1224,9 +1223,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    	} else {
 	    		ezOrganDAO.updateProperty_U(map);
 	    	}
+	    	
+	    	// 부서의 displayname 속성이 변경되는 경우 해당 부서에 속한 사원의 부서 이름 속성도 함께 변경한다.
 	    	if (strFlag.equals("Y")) {
 	    		ezOrganDAO.updateProperty_U1(map);
 	    	}
+	    	
 	    	return "OK";
 	    }  
 		
