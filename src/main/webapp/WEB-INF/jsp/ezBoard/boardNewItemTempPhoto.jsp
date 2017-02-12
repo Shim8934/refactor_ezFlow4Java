@@ -441,7 +441,7 @@
 	            strXML += "<NODE>";
 	
 	            if (pMode != "modify") {
-	                strXML += "<ITEMID>" + strItemID + "</ITEMID>";
+	                strXML += "<ITEMID>" + newID + "</ITEMID>";
 	            } else {
 	                itemid = strItemID + ";"
 	                strXML += "<ITEMID>" + strItemID + "</ITEMID>";
@@ -500,7 +500,7 @@
 	            var imageid = "";
 	
 	            for (var i = 0; i < filecount ; i++) {
-	                var tmpId = "{" + GetGUID() + "} ";
+	                var tmpId = "{" + GetGUID() + "}";
 	                if (document.getElementsByName("mainFG")[i].checked)
 	                    mainImageID = tmpId;
 	

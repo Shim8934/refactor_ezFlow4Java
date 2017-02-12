@@ -891,12 +891,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	                    resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
 	                    
 	                    if (i == 0) {
-	                    	resultXML.append("<DATA1>"+noticeList.get(k).get("BOARDID")+"</DATA1>");
-	                    	resultXML.append("<DATA2>"+noticeList.get(k).get("ITEMID")+"</DATA2>");
-	            			resultXML.append("<DATA3>"+noticeList.get(k).get("WRITERID")+"</DATA3>");
-	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
-	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
-	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
+	                    	resultXML.append("<DATA1>" + noticeList.get(k).get("BOARDID") + "</DATA1>");
+	                    	resultXML.append("<DATA2>" + noticeList.get(k).get("ITEMID") + "</DATA2>");
+	            			resultXML.append("<DATA3>" + noticeList.get(k).get("WRITERID") + "</DATA3>");
+	    					resultXML.append("<DATA4>" + noticeList.get(k).get("IMPORTANCE") + "</DATA4>");
+	    					resultXML.append("<DATA5>" + noticeList.get(k).get("READFLAG") + "</DATA5>");
+	    					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)noticeList.get(k).get("ABSTRACT")) + "</DATA6>");
 	    					String nowDate = commonUtil.getTodayUTCTime("");
 	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 	    				    
@@ -905,10 +905,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					} else {
 	    						resultXML.append("<DATA7>N</DATA7>");
 	    					}
-	    					resultXML.append("<DATA8>"+noticeList.get(k).get("ITEMLEVEL")+"</DATA8>");
-	    					resultXML.append("<DATA9>"+noticeList.get(k).get("NOTICE")+"</DATA9>");
+	    					resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
+	    					resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 	    					resultXML.append("<DATA10></DATA10>");
-	    					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
+	    					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
 	                    }
 	                    resultXML.append("</CELL>");
 	                }
@@ -1004,12 +1004,12 @@ public class EzBoardController extends EgovFileMngUtil{
                 resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
                 if (i == 0) {
-                	resultXML.append("<DATA1>"+boardListItem.get(j).get("BOARDID")+"</DATA1>");
-                	resultXML.append("<DATA2>"+boardListItem.get(j).get("ITEMID")+"</DATA2>");
-        			resultXML.append("<DATA3>"+boardListItem.get(j).get("WRITERID")+"</DATA3>");
-					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
-					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
-					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
+                	resultXML.append("<DATA1>" + boardListItem.get(j).get("BOARDID") + "</DATA1>");
+                	resultXML.append("<DATA2>" + boardListItem.get(j).get("ITEMID") + "</DATA2>");
+        			resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
+					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
+					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardListItem.get(j).get("ABSTRACT")) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
@@ -1018,10 +1018,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA7>N</DATA7>");
 					}
-					resultXML.append("<DATA8>"+boardListItem.get(j).get("ITEMLEVEL")+"</DATA8>");
-					resultXML.append("<DATA9>"+boardListItem.get(j).get("NOTICE")+"</DATA9>");
-					resultXML.append("<DATA10>"+boardListItem.get(j).get("GUBUN")+"</DATA10>");
-					resultXML.append("<DATA11>"+boardListItem.get(j).get("ONELINECNT")+"</DATA11>");
+					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
+					resultXML.append("<DATA10>" + boardListItem.get(j).get("GUBUN") + "</DATA10>");
+					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -1094,24 +1094,24 @@ public class EzBoardController extends EgovFileMngUtil{
 	            int k = 0;
 	            int nlength = noticeList.size();
 	            
-	            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-	            resultXML.append("<PAGECNT>"+((int)noticeCount + (int)boardCount)+"</PAGECNT>");
-	            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-	            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-	            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-	            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-	            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-	            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-	            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-	            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+	            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+	            resultXML.append("<PAGECNT>" + ((int)noticeCount  +  (int)boardCount) + "</PAGECNT>");
+	            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+	            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+	            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+	            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+	            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+	            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+	            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+	            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
 	            resultXML.append("<LISTVIEWDATA>");
 	            resultXML.append("<HEADERS>");
 	            
 	            for (BoardListHeaderVO vo:headerList) {
 	            	resultXML.append("<HEADER>");
-	        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-	            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-	            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+	        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+	            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+	            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
 	            	resultXML.append("</HEADER>");
 	            }
 	            resultXML.append("</HEADERS>");
@@ -1133,15 +1133,15 @@ public class EzBoardController extends EgovFileMngUtil{
 	                    	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
 	                    }
 	                    
-	                    resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+	                    resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
 	                    
 	                    if (i == 0) {
-	                    	resultXML.append("<DATA1>"+noticeList.get(k).get("BOARDID")+"</DATA1>");
-	                    	resultXML.append("<DATA2>"+noticeList.get(k).get("ITEMID")+"</DATA2>");
-	            			resultXML.append("<DATA3>"+noticeList.get(k).get("WRITERID")+"</DATA3>");
-	    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
-	    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
-	    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
+	                    	resultXML.append("<DATA1>" + noticeList.get(k).get("BOARDID") + "</DATA1>");
+	                    	resultXML.append("<DATA2>" + noticeList.get(k).get("ITEMID") + "</DATA2>");
+	            			resultXML.append("<DATA3>" + noticeList.get(k).get("WRITERID") + "</DATA3>");
+	    					resultXML.append("<DATA4>" + noticeList.get(k).get("IMPORTANCE") + "</DATA4>");
+	    					resultXML.append("<DATA5>" + noticeList.get(k).get("READFLAG") + "</DATA5>");
+	    					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)noticeList.get(k).get("ABSTRACT")) + "</DATA6>");
 	    				    String nowDate = commonUtil.getTodayUTCTime("");
 	    				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 	    				    
@@ -1150,10 +1150,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					} else {
 	    						resultXML.append("<DATA7>N</DATA7>");
 	    					}
-	    					resultXML.append("<DATA8>"+noticeList.get(k).get("ITEMLEVEL")+"</DATA8>");
-	    					resultXML.append("<DATA9>"+noticeList.get(k).get("NOTICE")+"</DATA9>");
+	    					resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
+	    					resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
 	    					resultXML.append("<DATA10></DATA10>");
-	    					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
+	    					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
 	                    }
 	                    resultXML.append("</CELL>");
 	                }
@@ -1163,55 +1163,55 @@ public class EzBoardController extends EgovFileMngUtil{
 	            startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
 	            endRow = (personalCount * boardVO.getPageNum());
 	
-	            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-	            resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-	            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-	            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-	            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-	            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-	            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-	            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-	            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-	            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+	            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+	            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+	            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+	            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+	            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+	            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+	            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+	            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+	            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+	            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
 	            resultXML.append("<LISTVIEWDATA>");
 	            resultXML.append("<HEADERS>");
 	            
 	            for (BoardListHeaderVO vo:headerList) {
 	            	resultXML.append("<HEADER>");
-	        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-	            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-	            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+	        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+	            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+	            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
 	            	resultXML.append("</HEADER>");
 	            }
 	            resultXML.append("</HEADERS>");
 	            resultXML.append("<ROWS>");
 	        }
 	        if (boardVO.getPageNum() != 1) {
-	            startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount) + 1;
+	            startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount)  +  1;
 	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
 	        }
         } else {
-        	startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+        	startRow = ((personalCount * (boardVO.getPageNum() - 1)))  +  1;
             endRow = (personalCount * boardVO.getPageNum());
 
-            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-            resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
             resultXML.append("<LISTVIEWDATA>");
             resultXML.append("<HEADERS>");
             
             for (BoardListHeaderVO vo:headerList) {
             	resultXML.append("<HEADER>");
-        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
             	resultXML.append("</HEADER>");
             }
             resultXML.append("</HEADERS>");
@@ -1242,19 +1242,19 @@ public class EzBoardController extends EgovFileMngUtil{
 
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue = commonUtil.getDateStringInUTC((String) boardListItem.get(j).get(fieldName), userInfo.getOffset(), false);
-                	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+                	fieldValue = fieldValue.substring(0, fieldValue.length() - 3);
                 } else {
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
                 }
-                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 
                 if (i == 0) {
-                	resultXML.append("<DATA1>"+boardListItem.get(j).get("BOARDID")+"</DATA1>");
-                	resultXML.append("<DATA2>"+boardListItem.get(j).get("ITEMID")+"</DATA2>");
-        			resultXML.append("<DATA3>"+boardListItem.get(j).get("WRITERID")+"</DATA3>");
-					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
-					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
-					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
+                	resultXML.append("<DATA1>" + boardListItem.get(j).get("BOARDID") + "</DATA1>");
+                	resultXML.append("<DATA2>" + boardListItem.get(j).get("ITEMID") + "</DATA2>");
+        			resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
+					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
+					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardListItem.get(j).get("ABSTRACT")) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
@@ -1263,10 +1263,10 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA7>N</DATA7>");
 					}
-					resultXML.append("<DATA8>"+boardListItem.get(j).get("ITEMLEVEL")+"</DATA8>");
-					resultXML.append("<DATA9>"+boardListItem.get(j).get("NOTICE")+"</DATA9>");
-					resultXML.append("<DATA10>"+boardListItem.get(j).get("GUBUN")+"</DATA10>");
-					resultXML.append("<DATA11>"+boardListItem.get(j).get("ONELINECNT")+"</DATA11>");
+					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
+					resultXML.append("<DATA10>" + boardListItem.get(j).get("GUBUN") + "</DATA10>");
+					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -1348,24 +1348,24 @@ public class EzBoardController extends EgovFileMngUtil{
             int k = 0;
             int nlength = noticeList.size();
             
-            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-            resultXML.append("<PAGECNT>"+((int)noticeCount + (int)boardCount)+"</PAGECNT>");
-            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+            resultXML.append("<PAGECNT>" + ((int)noticeCount  +  (int)boardCount) + "</PAGECNT>");
+            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
             resultXML.append("<LISTVIEWDATA>");
             resultXML.append("<HEADERS>");
             
             for (BoardListHeaderVO vo:headerList) {
             	resultXML.append("<HEADER>");
-        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
             	resultXML.append("</HEADER>");
             }
             resultXML.append("</HEADERS>");
@@ -1387,15 +1387,15 @@ public class EzBoardController extends EgovFileMngUtil{
                     	fieldValue = commonUtil.cleanValue(String.valueOf(noticeList.get(k).get(fieldName)));
                     }
                     
-                    resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                    resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                     
                     if (i == 0) {
-                    	resultXML.append("<DATA1>"+noticeList.get(k).get("BOARDID")+"</DATA1>");
-                    	resultXML.append("<DATA2>"+noticeList.get(k).get("ITEMID")+"</DATA2>");
-            			resultXML.append("<DATA3>"+noticeList.get(k).get("WRITERID")+"</DATA3>");
-    					resultXML.append("<DATA4>"+noticeList.get(k).get("IMPORTANCE")+"</DATA4>");
-    					resultXML.append("<DATA5>"+noticeList.get(k).get("READFLAG")+"</DATA5>");
-    					resultXML.append("<DATA6>"+noticeList.get(k).get("ABSTRACT")+"</DATA6>");
+                    	resultXML.append("<DATA1>" + noticeList.get(k).get("BOARDID") + "</DATA1>");
+                    	resultXML.append("<DATA2>" + noticeList.get(k).get("ITEMID") + "</DATA2>");
+            			resultXML.append("<DATA3>" + noticeList.get(k).get("WRITERID") + "</DATA3>");
+    					resultXML.append("<DATA4>" + noticeList.get(k).get("IMPORTANCE") + "</DATA4>");
+    					resultXML.append("<DATA5>" + noticeList.get(k).get("READFLAG") + "</DATA5>");
+    					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)noticeList.get(k).get("ABSTRACT")) + "</DATA6>");
     					String nowDate = commonUtil.getTodayUTCTime("");
     				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
     				    
@@ -1404,21 +1404,21 @@ public class EzBoardController extends EgovFileMngUtil{
     					} else {
     						resultXML.append("<DATA7>N</DATA7>");
     					}
-    					resultXML.append("<DATA8>"+noticeList.get(k).get("ITEMLEVEL")+"</DATA8>");
-    					resultXML.append("<DATA9>"+noticeList.get(k).get("NOTICE")+"</DATA9>");
+    					resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
+    					resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
     					resultXML.append("<DATA10></DATA10>");
-    					resultXML.append("<DATA11>"+noticeList.get(k).get("ONELINECNT")+"</DATA11>");
-    					resultXML.append("<TITLE>"+ commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString()) +"</TITLE>");
+    					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
+    					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
-    						resultXML.append("<WRITERNAME>"+noticeList.get(k).get("WRITERNAME")+"</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>"+noticeList.get(k).get("WRITERDEPTNAME")+"</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
     					} else {
-    						resultXML.append("<WRITERNAME>"+noticeList.get(k).get("WRITERNAME2")+"</WRITERNAME>");
-    						resultXML.append("<WRITERDEPTNAME>"+noticeList.get(k).get("WRITERDEPTNAME2")+"</WRITERDEPTNAME>");
+    						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME2") + "</WRITERNAME>");
+    						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME>");
     					}
-    					resultXML.append("<WRITEDATE>"+noticeList.get(k).get("WRITEDATE")+"</WRITEDATE>");
-    					resultXML.append("<ATTACHMENTS>"+noticeList.get(k).get("ATTACHMENTS")+"</ATTACHMENTS>");
+    					resultXML.append("<WRITEDATE>" + noticeList.get(k).get("WRITEDATE") + "</WRITEDATE>");
+    					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
                     }
                     resultXML.append("</CELL>");
                 }
@@ -1428,24 +1428,24 @@ public class EzBoardController extends EgovFileMngUtil{
             startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
             endRow = (personalCount * boardVO.getPageNum());
 
-            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-            resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
             resultXML.append("<LISTVIEWDATA>");
             resultXML.append("<HEADERS>");
             
             for (BoardListHeaderVO vo:headerList) {
             	resultXML.append("<HEADER>");
-        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
             	resultXML.append("</HEADER>");
             }
             resultXML.append("</HEADERS>");
@@ -1477,14 +1477,14 @@ public class EzBoardController extends EgovFileMngUtil{
                     fieldValue = commonUtil.cleanValue(String.valueOf(boardListItem.get(j).get(fieldName)));
                 }
 
-                resultXML.append("<VALUE>"+fieldValue+"</VALUE>");
+                resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
                 if (i == 0) {
-                	resultXML.append("<DATA1>"+boardListItem.get(j).get("BOARDID")+"</DATA1>");
-                	resultXML.append("<DATA2>"+boardListItem.get(j).get("ITEMID")+"</DATA2>");
-        			resultXML.append("<DATA3>"+boardListItem.get(j).get("WRITERID")+"</DATA3>");
-					resultXML.append("<DATA4>"+boardListItem.get(j).get("IMPORTANCE")+"</DATA4>");
-					resultXML.append("<DATA5>"+boardListItem.get(j).get("READFLAG")+"</DATA5>");
-					resultXML.append("<DATA6>"+boardListItem.get(j).get("ABSTRACT")+"</DATA6>");
+                	resultXML.append("<DATA1>" + boardListItem.get(j).get("BOARDID") + "</DATA1>");
+                	resultXML.append("<DATA2>" + boardListItem.get(j).get("ITEMID") + "</DATA2>");
+        			resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
+					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
+					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardListItem.get(j).get("ABSTRACT")) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
@@ -1493,17 +1493,17 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA7>N</DATA7>");
 					}
-					resultXML.append("<DATA8>"+boardListItem.get(j).get("ITEMLEVEL")+"</DATA8>");
-					resultXML.append("<DATA9>"+boardListItem.get(j).get("NOTICE")+"</DATA9>");
+					resultXML.append("<DATA8>" + boardListItem.get(j).get("ITEMLEVEL") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
-					resultXML.append("<DATA11>"+boardListItem.get(j).get("ONELINECNT")+"</DATA11>");
-					resultXML.append("<TITLE>"+commonUtil.cleanValue(boardListItem.get(j).get("TITLE").toString())+"</TITLE>");
-					resultXML.append("<WRITERNAME>"+boardListItem.get(j).get("WRITERNAME")+"</WRITERNAME>");
-					resultXML.append("<WRITERNAME2>"+boardListItem.get(j).get("WRITERNAME2")+"</WRITERNAME2>");
-					resultXML.append("<WRITERDEPTNAME>"+boardListItem.get(j).get("WRITERDEPTNAME")+"</WRITERDEPTNAME>");
-					resultXML.append("<WRITERDEPTNAME2>"+boardListItem.get(j).get("WRITERDEPTNAME2")+"</WRITERDEPTNAME2>");
-					resultXML.append("<WRITEDATE>"+boardListItem.get(j).get("WRITEDATE")+"</WRITEDATE>");
-					resultXML.append("<ATTACHMENTS>"+boardListItem.get(j).get("ATTACHMENTS")+"</ATTACHMENTS>");
+					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
+					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
+					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
+					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
+					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
+					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
+					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -1585,22 +1585,22 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>"+boardListVO.getTotalCount()+"</TOTALCNT>");
-        resultXML.append("<PAGECNT>"+boardListVO.getPageCount()+"</PAGECNT>");
-        resultXML.append("<PERSONALCNT>"+boardListVO.getTotalCount()+"</PERSONALCNT>");
-        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<TOTALCNT>" + boardListVO.getTotalCount() + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + boardListVO.getPageCount() + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + boardListVO.getTotalCount() + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
         resultXML.append("</HEADERS>");
@@ -2245,13 +2245,13 @@ public class EzBoardController extends EgovFileMngUtil{
         			resultXML.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardList.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>1</DATA5>");
-					resultXML.append("<DATA6>" + boardList.get(j).get("ABSTRACT") + "</DATA6>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardList.get(j).get("ABSTRACT")) + "</DATA6>");
 					resultXML.append("<DATA7>N</DATA7>");
 					resultXML.append("<DATA8>" + boardList.get(j).get("ITEMLEVEL") + "</DATA8>");
 					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + boardList.get(j).get("MAINCONTENT") + "</DATA12>");
+					resultXML.append("<DATA12>" + commonUtil.cleanValue(boardList.get(j).get("MAINCONTENT").toString()) + "</DATA12>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -2385,7 +2385,7 @@ public class EzBoardController extends EgovFileMngUtil{
             			resultXML.append("<DATA3>" + noticeList.get(k).get("WRITERID") + "</DATA3>");
     					resultXML.append("<DATA4>" + noticeList.get(k).get("IMPORTANCE") + "</DATA4>");
     					resultXML.append("<DATA5>" + noticeList.get(k).get("READFLAG") + "</DATA5>");
-    					resultXML.append("<DATA6>" + noticeList.get(k).get("ABSTRACT") + "</DATA6>");
+    					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)noticeList.get(k).get("ABSTRACT")) + "</DATA6>");
     					String nowDate = commonUtil.getTodayUTCTime("");
     				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
     				    
@@ -2399,7 +2399,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA10></DATA10>");
     					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
     					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
-    					resultXML.append("<TITLE>" +  commonUtil.cleanValue(noticeList.get(k).get("TITLE").toString())  + "</TITLE>");
+    					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
     					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
     						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
@@ -2480,7 +2480,7 @@ public class EzBoardController extends EgovFileMngUtil{
         			resultXML.append("<DATA3>" + boardListItem.get(j).get("WRITERID") + "</DATA3>");
 					resultXML.append("<DATA4>" + boardListItem.get(j).get("IMPORTANCE") + "</DATA4>");
 					resultXML.append("<DATA5>" + boardListItem.get(j).get("READFLAG") + "</DATA5>");
-					resultXML.append("<DATA6>" + boardListItem.get(j).get("ABSTRACT") + "</DATA6>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardListItem.get(j).get("ABSTRACT")) + "</DATA6>");
 					String nowDate = commonUtil.getTodayUTCTime("");
 				    nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
 				    
@@ -2507,7 +2507,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					//resultXML.append("<DATA12>" + boardListItem.get(j).get("MAINCONTENT") + "</DATA12>");
 					resultXML.append("<DATA12>" + strOut.toString() + "</DATA12>");
-					resultXML.append("<TITLE>" + commonUtil.cleanValue(boardListItem.get(j).get("TITLE").toString()) + "</TITLE>");
+					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
 					resultXML.append("<WRITERDEPTNAME>" + boardListItem.get(j).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
@@ -3193,6 +3193,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")) {
 			boardListVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			boardListVO.setWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
 		} else {
 			boardListVO.setStartDate(commonUtil.getTodayUTCTime(""));
 		}

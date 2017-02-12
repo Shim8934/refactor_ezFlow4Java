@@ -1674,6 +1674,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateProxyExpAprLine", map);
 	}
 	
+	public void updateBoryuAprLineInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateBoryuAprLineInfo", map);
+	}
+	
+	public void updateBoryuAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateBoryuAprDocInfo", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}

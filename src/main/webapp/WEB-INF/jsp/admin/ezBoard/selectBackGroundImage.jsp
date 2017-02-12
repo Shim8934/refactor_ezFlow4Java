@@ -82,6 +82,13 @@
 		    }
 			
 			function btnSave_click(){
+				if (document.getElementById("imagewidth").value < 1 || isNaN(document.getElementById("imagewidth").value) || document.getElementById("imageheight").value < 1 || isNaN(document.getElementById("imageheight").value)) {
+		            return;
+		        }
+				if (document.getElementById("saveFileName").value == "" || document.getElementById("saveFileName").value == null) {
+		            return;
+		        }
+		        
 				if($("#backgroundID").val() == ""){
 					var guid = "{" + GetGUID() + "}";
 					$("#backgroundID").val(guid);

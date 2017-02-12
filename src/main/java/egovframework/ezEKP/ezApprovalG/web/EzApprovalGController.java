@@ -775,8 +775,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
-		String startDateTime = EgovDateUtil.getTodayTime();
-		String endDateTime = EgovDateUtil.getTodayTime();
+		String startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String endDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String initFlag = request.getParameter("initFlag");
 		String guBun = request.getParameter("guBun").trim();
 		String docSN = "";
@@ -3802,6 +3802,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/getCabinetSearch.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCabinetSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest request) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String processDeptCode = request.getParameter("processDeptCode");
 		String productionYear = request.getParameter("productionYear");
