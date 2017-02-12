@@ -1337,14 +1337,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			ezBoardDAO.deleteBoardItemRead2(map);
 			ezBoardDAO.deleteBoardReply(map);
 			
-			if (mode != null && mode.equals("PHOTO")) {
-				BoardListVO boardListVO = new BoardListVO();
-				boardListVO.setItemID(strItemID);
-				boardListVO.setTenantID(tenantID);
-				
-				ezBoardDAO.deleteImageItem(boardListVO);
-			}
-			
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteTempItem");
