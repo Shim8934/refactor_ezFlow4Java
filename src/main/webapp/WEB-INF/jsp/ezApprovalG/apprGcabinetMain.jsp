@@ -404,7 +404,6 @@
     }
 
     function InitSubMenu(MenuType) {
-    	alert(MenuType);
         if (g_sFlag == "m01")
             document.getElementById("tdichange_Rec").style.display = "";
         else
