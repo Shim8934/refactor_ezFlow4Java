@@ -404,6 +404,7 @@
     }
 
     function InitSubMenu(MenuType) {
+    	alert(MenuType);
         if (g_sFlag == "m01")
             document.getElementById("tdichange_Rec").style.display = "";
         else
@@ -965,7 +966,7 @@
             regsepattach_cross_dialogArguments[0] = para;
             regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 
-            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(565, 460));
+            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(565, 350));
             try { OpenWin.focus(); } catch (e) { }
         }
     }
