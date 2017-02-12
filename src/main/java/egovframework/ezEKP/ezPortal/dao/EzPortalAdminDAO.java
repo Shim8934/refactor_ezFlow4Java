@@ -159,6 +159,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		return (String)select("EzPortalAdminDAO.setThemeInfo_S", map);
 	}
 	
+	public String saveDelPortletInfo_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.saveDelPortletInfo_S", map);
+	}
+	
 	public int savePortalPage (Map<String, Object> map) {
 		return (int)select("EzPortalAdminDAO.savePortalPage", map);
 	}
@@ -311,8 +315,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.createNewMenuItem2", map);
 	}
 	
-	public void saveDelPortletInfo (Map<String, Object> map) {
-		insert("EzPortalAdminDAO.saveDelPortletInfo", map);
+	public void saveDelPortletInfo_I (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveDelPortletInfo_I", map);
 	}
 	
 	public void saveMenuItemConfig_I1 (Map<String, Object> map) {
