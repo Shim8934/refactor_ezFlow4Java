@@ -308,7 +308,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 부서정보 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/deptInfo.do")	
-	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String deptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	    logger.debug("deptInfo started");
+	    
         userInfo = commonUtil.userInfo(loginCookie);
         
         int tenantID = userInfo.getTenantId();        
@@ -323,6 +325,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         model.addAttribute("secondary", secondary);
         model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
         
+        logger.debug("deptInfo ended");
+        
         return "admin/ezOrgan/deptInfo";
 	}
 
@@ -331,7 +335,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getEntryInfo.do", produces = "text/xml;charset=utf-8")	
 	@ResponseBody
-	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String getEntryInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("getEntryInfo started");
+	    
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 	    
         int tenantID = userInfo.getTenantId();        
@@ -345,6 +351,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1", userInfo.getTenantId());		
 
+		logger.debug("getEntryInfo ended");
+		
 		return infoXML;
 	}
 	
@@ -353,7 +361,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveDeptInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveDeptInfo(@CookieValue("loginCookie") String loginCookie, OrganDeptVO vo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("saveDeptInfo started");
+	    
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
         
         int tenantID = userInfo.getTenantId();                              
@@ -371,8 +381,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         String nowDate = date.format(new Date()); 
         vo.setNowDate(nowDate);
         
+        // 부서정보를 수정하는 경우
 		if (vo.getParentCn() == null) {
 			ezOrganAdminService.updateDBData_dept(vo);
+		// 새로운 부서를 생성하는 경우
 		} else {
 			String cn = vo.getCn();
 			
@@ -424,6 +436,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				
 			}
 		}
+		
+		logger.debug("saveDeptInfo ended");
 		
 		return result;
 	}

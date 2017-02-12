@@ -1057,32 +1057,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
-	
-	<statement id="EzOrganDAO.updateProperty_U1" parameterClass="Map">
-		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER 
-   			USING (	SELECT
-   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2
-          				FROM
-          					TBL_USERMASTER 
-          				JOIN
-          					TBL_DEPTMASTER    ON TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN  AND TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-          				WHERE
-          					TBL_DEPTMASTER.CN = #v_CN#
-          				AND
-          					TBL_DEPTMASTER.TENANT_ID = #v_TENANT_ID#	
-          				AND
-          					TBL_DEPTMASTER	) src ON ( TBL_USERMASTER.ROWID = src.ROW_ID )
-   			WHEN
-   				MATCHED
-   			THEN 
-   				UPDATE SET
-   					DESCRIPTION = src.DISPLAYNAME,
-              		DESCRIPTION2 = src.DISPLAYNAME2
-		]]>
-	</statement>
-	
+		
 	<!-- <procedure id="EzOrganDAO.setProxyUserInfo" parameterClass="Map">
 	
 		{CALL EZSP_SETPROXYUSERINFO(#v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#)}
