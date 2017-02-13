@@ -118,7 +118,8 @@
 	
 	<delete id="EzCommonDAO.deleteUserLLocalInfo" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_USERLOCALINFO
+			DELETE FROM
+                TBL_USERLOCALINFO
 			WHERE
 				TENANT_ID = #v_TENANT_ID# 
 			AND
