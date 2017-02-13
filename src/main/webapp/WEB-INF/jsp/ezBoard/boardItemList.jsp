@@ -124,7 +124,7 @@
 		    {
 		        document.onselectstart = function () { return false; };
 		        var height = parseInt(document.documentElement.clientHeight - 200);
-		        //document.getElementById("divList").style.height = height + "px";
+		        
 		        Window_resize();
 		        
 		    };
@@ -145,10 +145,11 @@
 		        if (pBoardType == "2") {
 		            document.getElementById("btn_copy").style.display = "none";
 		            document.getElementById("btn_move").style.display = "none";
+		            document.getElementById("noti").style.display = "none";
 		        }
 		
 		        var height = parseInt(document.documentElement.clientHeight - 320);
-		        //document.getElementById("divList").style.height = height + "px";
+		        
 		        getBoardList();
 		        window_onunload_Event = true;
 		    };
