@@ -1574,6 +1574,42 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRejectAprReceiptProcessInfo", map);
 	}
 	
+	public void insertGamsaAprOpinionInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGamsaAprOpinionInfo", map);
+	}
+	
+	public void insertGongRamAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamAprDocInfo", map);
+	}
+	
+	public void insertGongRamExpAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamExpAprDocInfo", map);
+	}
+	
+	public void insertGongRamAprOpinionInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamAprOpinionInfo", map);
+	}
+
+	public void insertGongRamAprDocAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamAprDocAttachInfo", map);
+	}
+
+	public void insertGongRamAprAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamAprAttachInfo", map);
+	}
+	
+	public void insertGongRamAprLineInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamAprLineInfo", map);
+	}
+	
+	public void insertGongRamExpAprLine(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGongRamExpAprLine", map);
+	}
+	
+	public void insertGianAprDocAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertGianAprDocAttachInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1778,6 +1814,38 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateRejectAprReceiptProcessInfo", map);
 	}
 	
+	public void updateProYnEndReceiptPointInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateProYnEndReceiptPointInfo", map);
+	}
+	
+	public void updateGamsaAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateGamsaAprDocInfo", map);
+	}
+	
+	public void updateJubsuAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateJubsuAprReceiptProcessInfo", map);
+	}
+	
+	public void updateJubsuDocDelivery(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateJubsuDocDelivery", map);
+	}
+	
+	public void updateChamjoAprLineInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateChamjoAprLineInfo", map);
+	}
+	
+	public void updateChamjoEndAprLineInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateChamjoEndAprLineInfo", map);
+	}
+	
+	public void updateGongRamAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateGongRamAprDocInfo", map);
+	}
+	
+	public void updateGianAprDocInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateGianAprDocInfo", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -1924,6 +1992,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteHesongAprLineInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteHesongAprLineInfo", map);
+	}
+	
+	public void deleteGongRamAprLineInfo(Map<String, Object> map) {
+		delete("EzApprovalG.deleteGongRamAprLineInfo", map);
+	}
+
+	public void deleteGongRamExpAprLine(Map<String, Object> map) {
+		delete("EzApprovalG.deleteGongRamExpAprLine", map);
+	}
+	
+	public void deleteRollBackSignInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteRollBackSignInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
