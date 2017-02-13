@@ -610,28 +610,28 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')
+					docno LIKE '%' || #v_DOCNUMBER# || '%'
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
 			]]>
 		</isNotEqual>
 
@@ -1653,25 +1653,25 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')   
+					docno LIKE '%' || #v_DOCNUMBER# || '%'   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
+					doctitle LIKE '%' || #v_DOCTITLE# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
+					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
+					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_FORMID" compareValue="">
