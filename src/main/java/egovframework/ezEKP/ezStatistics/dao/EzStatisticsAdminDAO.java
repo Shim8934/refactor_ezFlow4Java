@@ -66,4 +66,20 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getMainList", statApprVO);
 	}
 
+	public void deleteDailyDocCountLog(StatApprVO statApprVO) throws Exception {
+		delete("EzStatisticsAdminDAO.deleteDailyDocCountLog", statApprVO);
+	}
+
+	public void deleteDailyFormCountLog(StatApprVO statApprVO) throws Exception {
+		delete("EzStatisticsAdminDAO.deleteDailyFormCountLog", statApprVO);
+	}
+
+	public void insertDailyDocCountLog(StatApprVO statApprVO) throws Exception {
+		insert("EzStatisticsAdminDAO.insertDailyDocCountLog", statApprVO);
+	}
+
+	public void insertDailyFormCountLog(StatApprVO statApprVO) throws Exception {
+		insert("EzStatisticsAdminDAO.insertDailyFormCountLog", statApprVO);
+	}
+
 }
