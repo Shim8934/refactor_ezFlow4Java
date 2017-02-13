@@ -2717,7 +2717,7 @@
 			SET
 				processdate = #v_pNow1#,
 				delflag = '1',
-				deletedate = #v_pNow2#
+				deletedate = TO_DATE(#v_pNow2#, 'YYYY-MM-DD HH24:MI:SS')
 			WHERE
 				taskcode = #taskCode#
 			AND
