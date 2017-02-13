@@ -3730,7 +3730,7 @@ public class EzQuestionController extends EgovFileMngUtil {
     		Node iValueNode = null;
     		
     		itemNode = doc.createElement("TAG");
-    		strTagData = ""; // table 초기값입력.
+    		strTagData = "<table id=\"table_answer\" style=\"width:100%;\"; class=\"ex\">"; // table 초기값입력.
         	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
         	for (QstAnswerVO qstAnswer : qstAnswerList) {
         		if (iCount == 1) {
@@ -3764,7 +3764,7 @@ public class EzQuestionController extends EgovFileMngUtil {
     			}
         	}
         	
-        	strTagData += ""; //테이닫
+        	strTagData += "</table>"; //테이블끝
 			
 logger.debug("strTagData = " + strTagData);
 
