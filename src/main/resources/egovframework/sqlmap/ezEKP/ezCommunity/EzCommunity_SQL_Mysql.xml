@@ -352,7 +352,7 @@
 				ref,
 				charfilename,
 				readnum,
-				DATE_ADD(DATE_FORMAT(writeday, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS writeday,
+				DATE_ADD(DATE_FORMAT(writeday, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writeday,
 				username,
 				username2,
 				id,
@@ -962,13 +962,13 @@
 				writerdeptname2,
 				writercompanyname,
 				writercompanyname2,
-				DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS writedate,
-				DATE_ADD(DATE_FORMAT(parentwritedate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS parentwritedate,
+				DATE_ADD(DATE_FORMAT(writedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writedate,
+				DATE_ADD(DATE_FORMAT(parentwritedate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS parentwritedate,
 				importance,
 				title,
 				contentlocation,
-				DATE_ADD(DATE_FORMAT(startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS startdate,
-				DATE_ADD(DATE_FORMAT(enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS enddate,
+				DATE_ADD(DATE_FORMAT(startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+				DATE_ADD(DATE_FORMAT(enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
 				abstract,
 				attachments,
 				upperitemidtree,
@@ -1121,8 +1121,8 @@
 		<![CDATA[
 			SELECT
 				A.itemid,
-				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS startdate,
-				DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL (#offset#/(60*24)) MINUTE) AS enddate,
+				DATE_ADD(DATE_FORMAT(A.startdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS startdate,
+				DATE_ADD(DATE_FORMAT(A.enddate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS enddate,
 				A.title,
 				A.attachments,
 				A.importance,
@@ -1177,7 +1177,7 @@
 				username$v_userInfo_lang$,
 				userid,
 				content,
-				DATE_ADD(writedate, INTERVAL (#offset#/(60*24)) MINUTE) AS writedate
+				DATE_ADD(writedate, INTERVAL #offset# MINUTE) AS writedate
 			FROM
 				TBL_COMM_ONELINEREPLY
 			WHERE
