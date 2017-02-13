@@ -503,8 +503,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		int depth = 0;
 		int interval = 100000;
 		String strUIDList = "";
-		String[] arr;
-		String pArrParam = "";
+		//String[] arr;
 		
 		Map<String, Object> saveMap = new HashMap<String, Object>();
 		saveMap.put("uID", pPageID);
@@ -630,7 +629,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			} else {
 				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
 			}
-			arr = strUIDList.split(",");
+			
+			//arr = strUIDList.split(",");
 			
 			Map<String, Object> map3 = new HashMap<String, Object>();
 			map3.put("pArrParam", strUIDList);
@@ -688,6 +688,12 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("companyID", pCompanyID);
 			map.put("themeUID", pThemeUID);
 			map.put("tenantID", tenantID);
+			
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			date.setTimeZone(TimeZone.getTimeZone("GMT"));
+			String nowDate = date.format(new Date());
+			map.put("nowDate", nowDate);
+			
 			ezPortalAdminDAO.insertTblTopMenuGeneral(map);
 			
 			XPath xpath = XPathFactory.newInstance().newXPath();
@@ -931,9 +937,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		int depth = 0;
 		int interval = 100000;
 		String strUIDList = "";
-		String[] arr;
-		String pArrParam = "";
-		String temp = "";
+		//String[] arr;
+		//String pArrParam = "";
 		String pThemeUID = "";
 		String pTableViewOption = "";
 		
@@ -1234,7 +1239,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				
 				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
 				logger.debug("strUIDList="+strUIDList);
-				arr = strUIDList.split(",");
+				//arr = strUIDList.split(",");
 				
 				Map<String, Object> map7 = new HashMap<String, Object>();
 				map7.put("pArrParam", strUIDList);
