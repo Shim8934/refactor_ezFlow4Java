@@ -60,7 +60,7 @@
 				TBL_DEPTMASTER
      			( CN, DISPLAYNAME, DISPLAYNAME2, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPTLEVEL, DEPT_CD_PATH, ADSPATH, UPDATEDT, TENANT_ID )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 1, #v_CN#, #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 1, #v_CN#, #v_LDAPPATH#, #nowDate#, #v_TENANT_ID# )
 		]]>
 	</insert>
 	
@@ -77,7 +77,7 @@
 				TBL_DEPTMASTER
     			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID )
      		VALUES
-     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_TENANT_ID# )
+     			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_TENANT_ID# )
 		]]>
 	</insert>
 	
@@ -132,7 +132,7 @@
 				TBL_USERMASTER
    				(CN, DISPLAYNAME, DISPLAYNAME2, MAIL, MAILNICKNAME, UPNNAME, DEPARTMENT, TITLE, TITLE2, TELEPHONENUMBER, HOMEPHONE, FACSIMILETELEPHONENUMBER, MOBILE, POSTALCODE, STREETADDRESS, EXTENSIONATTRIBUTE1,EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE102, EXTENSIONATTRIBUTE14, EXTENSIONATTRIBUTE15, ADSPATH, SIPURI, UPDATEDT, BIRTH, BIRTHTYPE, PASSWORD, TENANT_ID )
    			VALUES
-   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID# )
+   				( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, #v_TITLE#, #v_TITLE2#, #v_TELEPHONE#, #v_HOMEPHONE#, #v_FAX#, #v_MOBILE#, #v_POSTALCODE#, #v_ADDRESS#, #v_EXTATTR1#,#v_EXTATTR6#, #v_EXTATTR10#, #v_EXTATTR102#, #v_EXTATTR14#, #v_EXTATTR15#, #v_LDAPPATH#, #v_MAIL#, #nowDate#, #v_BIRTH#, #v_BIRTHTYPE#, #v_PASS#, #v_TENANT_ID# )
 		]]>
 	</insert>
 	
@@ -307,9 +307,9 @@
                				AND
                					TENANT_ID = #v_TENANT_ID#	
                				AND
-               					StartDate < to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+               					StartDate < #nowDate#
                				AND
-               					EndDate > to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') ) > 0
+               					EndDate > #nowDate# ) > 0
 		]]>
 	</select>
 	
@@ -556,30 +556,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
-	
-	<statement id="EzOrganAdminDAO.updateProperty_U1" parameterClass="Map">
-		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER 
-   			USING (	SELECT
-   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2
-          				FROM
-          					TBL_USERMASTER 
-          				JOIN
-          					TBL_DEPTMASTER    ON TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN  AND TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-          				WHERE
-          					TBL_DEPTMASTER.CN = #v_CN#
-          				AND
-          					TBL_DEPTMASTER	) src ON ( TBL_USERMASTER.ROWID = src.ROW_ID )
-   			WHEN
-   				MATCHED
-   			THEN 
-   				UPDATE SET
-   					DESCRIPTION = src.DISPLAYNAME,
-              		DESCRIPTION2 = src.DISPLAYNAME2
-		]]>
-	</statement>
-	
+		
 	<!-- <procedure id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_DB_SETRETIREUSER(#v_CN#)}
@@ -649,7 +626,7 @@
                     EXTENSIONATTRIBUTE14 ,
                     EXTENSIONATTRIBUTE15 ,
                     ADSPATH ,
-                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') ,
+                    #nowDate# ,
                     MOBILE_ENABLE ,
                     MOBILE_NOTUSE ,
                     MOBILE_PIN ,
@@ -733,7 +710,7 @@
                     	WHEN '1' THEN DISPLAYNAME2
                         ELSE DISPLAYNAME   
                         END DISPLAYNAME2,
-                  SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15                    
+                  CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15                    
                	  FROM 
                	  	TBL_DEPTMASTER 
                	  WHERE
@@ -1151,7 +1128,7 @@
 	                    EXTENSIONATTRIBUTE14 ,
 	                    EXTENSIONATTRIBUTE15 ,
 	                    ADSPATH ,
-	                    to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') AS UPDATEDT,
+	                    #nowDate# AS UPDATEDT,
 	                    MOBILE_ENABLE ,
 	                    MOBILE_NOTUSE ,
 	                    MOBILE_PIN ,
@@ -1212,9 +1189,9 @@
 	<select id="EzOrganAdminDAO.updateUserMaster_S" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				NVL(DISPLAYNAME2, ' ') as displayName2 ,
-          		NVL(TITLE2, ' ') as title2,
-          		NVL(EXTENSIONATTRIBUTE102, ' ') as extensionAttribute102 
+				IFNULL(DISPLAYNAME2, ' ') as displayName2 ,
+          		IFNULL(TITLE2, ' ') as title2,
+          		IFNULL(EXTENSIONATTRIBUTE102, ' ') as extensionAttribute102 
     		FROM
     			TBL_USERMASTER 
     		WHERE
@@ -1224,6 +1201,20 @@
 		]]>
 	</select>
 	
+    <update id="EzOrganAdminDAO.updateUserDeptDisplayName" parameterClass="OrganDeptVO">
+        <![CDATA[
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                DESCRIPTION = #displayName#,
+                DESCRIPTION2 = #displayName2#
+            WHERE
+                DEPARTMENT = #cn#
+            AND
+                TENANT_ID = #tenantId#  
+        ]]>
+    </update>
+ 
 	<update id="EzOrganAdminDAO.updateUserMaster_U" parameterClass="OrganUserVO">
 		<![CDATA[
 			UPDATE
@@ -1514,7 +1505,7 @@
 			UPDATE 
 				TBL_DEPTMASTER
      		SET
-     			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS') 
+     			updatedt = #nowDate# 
      	]]>		
 		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>
 		<isNotNull property="displayName2" prepend=","> <![CDATA[displayName2 = #displayName2#]]></isNotNull>     			
@@ -1547,7 +1538,7 @@
 			UPDATE
 				TBL_USERMASTER
      		SET
-     			updatedt = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+     			updatedt = #nowDate#
      	]]>	
 		<dynamic>
 	  		<isNotNull property="displayName" prepend=","> <![CDATA[displayName = #displayName#]]></isNotNull>

@@ -469,6 +469,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pstrBrdID", qstResponsePersonVO.getBrdID());
 		map.put("v_pItemNo", qstResponsePersonVO.getItemNo());
 		map.put("v_pUserID", qstResponsePersonVO.getUserID());
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.updateResponsePerson(map);
 	}

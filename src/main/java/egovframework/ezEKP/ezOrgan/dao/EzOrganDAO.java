@@ -1367,11 +1367,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public void updateProperty_U (Map<String, Object> map) throws Exception {
 		update("EzOrganDAO.updateProperty_U", map);
 	}
-	
-	public void updateProperty_U1 (Map<String, Object> map) throws Exception {
-		update("EzOrganDAO.updateProperty_U1", map);
-	}
-	
+		
 	public String setProxyUserInfo_S (Map<String, Object> map) throws Exception {
 		return (String) select("EzOrganDAO.setProxyUserInfo_S", map);
 	}

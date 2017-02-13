@@ -47,15 +47,21 @@ public class EzOrganServiceImpl implements EzOrganService {
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			return ezOrganDAO.getPropertyValue(map);
         } else {
+            // 지정된 사원이 존재하는 지 여부를 확인한다.
         	String temp = ezOrganDAO.getPropertyValue_S1(map);
         	
         	if (temp != null && temp.equals("1")) {
+        	    // 해당 사원이 Proxy User인 지 확인한다.
         		String temp1 = ezOrganDAO.getPropertyValue_S2(map);
+        		
+        		// Proxy User이고 지정된 속성이 권한 속성(EXTENSIONATTRIBUTE1)인 경우 a=1 권한을 추가하여 반환한다.
         		if (temp1 != null && temp1.equals("1")) {
         			return ezOrganDAO.getPropertyValue_S3(map);
+        		// Proxy User가 아닌 경우엔 해당 사원의 지정된 속성값을 그대로 반환한다.
         		} else {
         			return ezOrganDAO.getPropertyValue_S4(map);
         		}
+        	// 사원이 존재하지 않는 경우엔 부서 정보에서 지정된 속성값을 반환한다.
         	} else {
         		return ezOrganDAO.getPropertyValue_S5(map);
         	}
@@ -691,6 +697,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		return memberlist2.toString();
 	}
 	
+	// 사원이거나 부서의 경우 특정 속성에 대해 Primary 언어용 속성과 Secondary 언어용 속성을 추가하여 반환한다.
 	public String convertAddandConvert(String pClass, String pProvValue) {
 	    logger.debug("convertAddandConvert started");
 	    logger.debug("pClass=" + pClass + ",pProvValue=" + pProvValue);
@@ -714,6 +721,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         return addPopList;              
     }
 	
+	// 사원이거나 부서의 경우 특정 속성에 대해 Primary 언어용 속성과 Secondary 언어용 속성으로 변환한다.
 	private String addPropList(String pType, String pAttribute) {
     	String strRet = "";
 
@@ -1196,15 +1204,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 	@Override
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception {
-		String strFlag = "N";
-		
-		// 부서의 displayname 속성이 변경되는 경우
-		if (!pClass.equals("user")) {
-			if (propName.toLowerCase().indexOf("displayname") != -1) {
-				strFlag = "Y";
-			}
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -1212,32 +1211,20 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CLASS", pClass);
 		map.put("v_PROPNAME", propName);
 		map.put("v_PROPVALUE", propValue);
-		map.put("v_FLAG", strFlag);
 		
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			ezOrganDAO.updateProperty(map);
-			return "OK";
 	    } else {
+	        // 사원의 경우
 	    	if (pClass.toLowerCase().equals("user")) {
 	    		ezOrganDAO.updateProperty(map);
+	    	// 부서의 경우
 	    	} else {
 	    		ezOrganDAO.updateProperty_U(map);
 	    	}
-	    	
-	    	// 부서의 displayname 속성이 변경되는 경우 해당 부서에 속한 사원의 부서 이름 속성도 함께 변경한다.
-	    	if (strFlag.equals("Y")) {
-	    		ezOrganDAO.updateProperty_U1(map);
-	    	}
-	    	
-	    	return "OK";
-	    }  
+	    }
 		
-		/*try {
-			ezOrganDAO.updateProperty(map);
-			return "OK";
-		} catch (Exception e) {
-			return e.getMessage();
-		}*/
+        return "OK";		
 	}
 
 	@Override

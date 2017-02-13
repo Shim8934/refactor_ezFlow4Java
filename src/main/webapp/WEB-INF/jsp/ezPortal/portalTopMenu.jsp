@@ -1352,7 +1352,7 @@
 						alert("<spring:message code='ezPortal.t315' />");
 						return;
 					}
-				    cell.style.width = document.getElementById("txtWidth").value;
+				    cell.style.width = document.getElementById("txtWidth").value + "px";
 				    cell.children.item(0).children.item(0).children.item(0).children.item(0).innerHTML = document.getElementById("txtWidth").value + "px";
 				}
 				

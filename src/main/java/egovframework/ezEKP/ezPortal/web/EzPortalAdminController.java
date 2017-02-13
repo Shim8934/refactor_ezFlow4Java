@@ -32,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 
@@ -2709,6 +2708,31 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		return "/admin/ezPortal/portalImageView";
 		
 	}
+	
+	/**
+	 * 삭제대상 포틀릿정보 저장 함수
+	 */
+	@RequestMapping(value = "/admin/saveDelPortletInfo.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String saveDelPortletInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlStr,HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = "";
+		String userName = "";
+		
+		if (req.getParameter("userID") != null && !req.getParameter("userID").equals("")) {
+			userID = req.getParameter("userID");
+		}
+		
+		if (req.getParameter("userName") != null && !req.getParameter("userName").equals("")) {
+			userName = req.getParameter("userName");
+		}
+		
+		String result = ezPortalAdminService.saveDelPortletInfo(userID, userName, xmlStr, userInfo.getTenantId());
+		
+		return result;
+	}
+	
+	
 	
 	/**
 	 * 관리자 포탈 IE9 이미지 업로드 실행 함수

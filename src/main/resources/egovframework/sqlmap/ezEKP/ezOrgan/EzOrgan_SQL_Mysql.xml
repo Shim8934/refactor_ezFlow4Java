@@ -7,10 +7,10 @@
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
-		<result property="cn" 									column="cn" 							  columnIndex="1"/>
-		<result property="displayName" 					        column="displayName" 			          columnIndex="2"/>
-		<result property="extensionAttribute15" 			    column="extensionAttribute15"	          columnIndex="3"/>
-		<result property="type" 								column="type" 						      columnIndex="4"/>		
+		<result property="cn" 									column="cn" 							columnIndex="1"/>
+		<result property="displayName" 					        column="displayName" 			        columnIndex="2"/>
+		<result property="extensionAttribute15" 			    column="extensionAttribute15"	        columnIndex="3"/>
+		<result property="type" 								column="type" 						    columnIndex="4"/>		
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -405,7 +405,6 @@
 				SELECT
 					* 
                 FROM ( 	SELECT
-                				ROW_NUMBER() OVER ( ORDER BY EXTENSIONATTRIBUTE15 ASC, DISPLAYNAME ASC  ) ROWNUM_  ,
                                	CN ,
                                	DISPLAYNAME ,
                                	EXTENSIONATTRIBUTE15 ,
@@ -459,6 +458,7 @@
                   			ORDER BY
                   				EXTENSIONATTRIBUTE15 ASC,
                            		DISPLAYNAME ASC
+                            LIMIT #v_STARTROW#,#v_ENDROW# 
 			]]>
 		</isEqual>
 	
@@ -595,7 +595,7 @@
 		
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
 		<![CDATA[
-			SELECT
+		   SELECT
 				CN ,
              	CN DEPARTMENT  ,
              	CASE 
@@ -649,7 +649,7 @@
 	            UPDATEDT ,
 	            'dept' TYPE ,
 	            TENANT_ID as tenantId
-	        FROM
+	       FROM
 	        	TBL_DEPTMASTER 
 	       WHERE
 	       		CN = #v_CN#
@@ -1009,32 +1009,7 @@
 				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</update>
-	
-	<statement id="EzOrganDAO.updateProperty_U1" parameterClass="Map">
-		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER 
-   			USING (	SELECT
-   							TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2
-          				FROM
-          					TBL_USERMASTER 
-          				JOIN
-          					TBL_DEPTMASTER    ON TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN  AND TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID
-          				WHERE
-          					TBL_DEPTMASTER.CN = #v_CN#
-          				AND
-          					TBL_DEPTMASTER.TENANT_ID = #v_TENANT_ID#	
-          				AND
-          					TBL_DEPTMASTER	) src ON ( TBL_USERMASTER.ROWID = src.ROW_ID )
-   			WHEN
-   				MATCHED
-   			THEN 
-   				UPDATE SET
-   					DESCRIPTION = src.DISPLAYNAME,
-              		DESCRIPTION2 = src.DISPLAYNAME2
-		]]>
-	</statement>
-	
+		
 	<select id="EzOrganDAO.setProxyUserInfo_S" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -1060,8 +1035,8 @@
             	PROXYUSERID = #v_PROXYUSERID#,
                 PROXYUSERNAME = #v_PROXYUSERNAME#,
                 PROXYUSERDEPTID = #v_PROXYUSERDEPTID#,
-                STARTDATE = TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
-                ENDDATE = TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+                STARTDATE = #v_STARTDATE#,
+                ENDDATE = #v_ENDDATE#
            WHERE
            		USERID = #v_USERID#
            	AND
@@ -1075,13 +1050,13 @@
 				TBL_PROXYINFO
             	( USERID, PROXYUSERID, PROXYUSERNAME, PROXYUSERDEPTID, STARTDATE, ENDDATE, TENANT_ID )
             VALUES
-            	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, TO_DATE(#v_STARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANT_ID# )
+            	( #v_USERID#, #v_PROXYUSERID#, #v_PROXYUSERNAME#, #v_PROXYUSERDEPTID#, #v_STARTDATE#, #v_ENDDATE#, #v_TENANT_ID# )
 		]]>
 	</insert>
 		
 	<delete id="EzOrganDAO.delProxyUserInfo" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PROXYINFO
         	WHERE
         		USERID = #v_USERID#
@@ -1110,7 +1085,7 @@
       		AND
       			TENANT_ID = #v_TENANT_ID#	
       		AND
-      			NVL(BIRTH, ' ') <> ' '
+      			IFNULL(BIRTH, ' ') <> ' '
       		AND
       			TENANT_ID = #v_TENANT_ID#	
 			ORDER BY
@@ -1282,7 +1257,7 @@
 	<select id="EzOrganDAO.getDeptFullPath" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				'top,Top,' || dept_cd_path 
+				CONCAT('top,Top,', dept_cd_path) 
 	      	FROM 
 	      		TBL_DEPTMASTER 
 	      	WHERE  

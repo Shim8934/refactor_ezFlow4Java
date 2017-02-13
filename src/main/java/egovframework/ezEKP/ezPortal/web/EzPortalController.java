@@ -1701,6 +1701,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/myPortalPageList.do")
 	public String environmentMain(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("environmentMain started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pSearchString = "";
@@ -1726,8 +1728,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		gubunFlag = "1";
+		
 		List<PortalMyPortalListVO> myPortalList = ezPortalService.myPortalList(gubunFlag, userInfo.getDeptPathCode(), userInfo.getCompanyID(), userInfo.getTenantId());
-
+		
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
 			for (PortalMyPortalListVO myPortal : myPortalList) {
@@ -1749,12 +1752,13 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (uID != null && uID.equals(newPortalParentUID)) {
 						sb.append("<ROW>");
 						sb.append("<UID_>" + tempNewMyPortalPageList.get(t).getuID_() + "</UID_>");
-                        sb.append("<DISPLAYNAME>" + myPortalList.get(i).getDisplayName() + "</DISPLAYNAME>");
-                        sb.append("<USEFLAG>" + tempNewMyPortalPageList.get(t).getUseFlag() + "</USEFLAG>");
-                        sb.append("</ROW>");
+						sb.append("<DISPLAYNAME>" + myPortalList.get(i).getDisplayName() + "</DISPLAYNAME>");
+						sb.append("<USEFLAG>" + tempNewMyPortalPageList.get(t).getUseFlag() + "</USEFLAG>");
+						sb.append("</ROW>");
 					}
 				}
 			}
+			
 			sb.append("</DATA>");
 			newMyPortalPageList = sb.toString();
 		}
@@ -1774,7 +1778,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				} else {
 					portalGubun += ",'" + temp.getCategory() + "'";
 				}
- 			}
+			}
 		}
 		
 		gubunFlag = "1c";
@@ -1791,7 +1795,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
 		String resultHTML = "";
-
+		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent() != null && xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
 				resultHTML += "<script>var SelectedItems ="+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"</script>";
@@ -1801,7 +1805,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
-        		resultHTML += "</dl>";
+				resultHTML += "</dl>";
 			} else {
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
@@ -1809,7 +1813,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				resultHTML	+= "<img src='"+xmlDom.getElementsByTagName("IMAGEURL").item(i).getTextContent()+"' width='175' height='140'>";
 				resultHTML+= "</dt>";
 				resultHTML += "<dd>"+xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent()+"</dd>";		
-        		resultHTML += "</dl>";
+				resultHTML += "</dl>";
 			}
 		}
 		
@@ -1819,6 +1823,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("portalGubun", portalGubun);
+		
+
+		logger.debug("environmentMain ended");
 		return "/ezPortal/portalMyPortalPageList";
 	}
 	
@@ -2371,14 +2378,15 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/boardPortlet.do")
 	public void boardPortlet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale, HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		logger.debug("boardPortlet started");
-
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
+		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
+		
 		String pCreatorId = "";
 		String pBoardID = "";
 		String pItemCount = "";

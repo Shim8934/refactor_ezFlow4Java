@@ -124,17 +124,24 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         return ezOrganAdminDao.getUserCnList(tenantID);
     }
 	
+    // 사원 혹은 부서의 지정된 속성 목록을 XML 형식으로 반환한다.
 	@Override
 	public String getPropertyList(String pCN, String pPropList, String pLangCode, int tenantID) throws Exception {
+	    logger.debug("getPropertyList started");
+	    logger.debug("pCN=" + pCN + ",pPropList=" + pPropList + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
+	    
 		String propvalue = "";
 		String DataType = "user";
 		Object vo = null;
 		StringBuilder propinfo = new StringBuilder("<DATA>");
 		
+		// 지정된 pCN이 사원인지 확인하고 사원이면 해당 사원의 정보를 가져온다.
 		vo = getUserInfo(pCN, pLangCode, tenantID);
 
-		if(vo == null){
+		// 사원이 아닌 경우 부서 정보를 가져온다. 
+		if (vo == null) {
 			Map<String, Object> map1 = new HashMap<String, Object>();
+			
 			map1.put("userID", pCN);
 			map1.put("primary", pLangCode);
 			map1.put("v_TENANT_ID", tenantID);
@@ -143,22 +150,30 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			DataType = "group";
 		}
 		
+		// 지정된 속성 목록중 특정 속성에 대해 Primary 언어와 Secondary 언어용 속성을 추가 확장한다.
 		pPropList = ezOrganService.convertAddandConvert(DataType, pPropList);
 		String[] proplist = pPropList.split(";");
 	
-		for(String propname : proplist){
-            if (ezOrganService.checkDBColum(propname.toUpperCase()) == false){
+		// 각 속성을 XML 태그 및 값으로 변환한다.
+		for (String propname : proplist) {
+		    // VO 객체에 있는 속성이 아닌 경우엔 DB로부터 값을 읽어들인다.
+            if (ezOrganService.checkDBColum(propname.toUpperCase()) == false) {
                 propvalue = ezOrganService.getPropertyValue(pCN, propname, tenantID);
                 propinfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propvalue) + "</" + propname.toUpperCase() + ">");
-            }else if (!propname.toUpperCase().equals("")){
+            // VO 객체에 있는 속성인 경우에는 VO 객체로부터 값을 읽어들인다.
+            } else if (!propname.toUpperCase().equals("")) {
             	Field field = vo.getClass().getDeclaredField(propname);
             	field.setAccessible(true);          	            		
             	
             	propinfo.append("<" + propname.toUpperCase() + ">" + (field.get(vo) != null ? commonUtil.cleanValue(String.valueOf(field.get(vo))) : "") + "</" + propname.toUpperCase() + ">");            	            	            	                
             }
         }
+		
         propinfo.append("</DATA>");
   
+        logger.debug("propinfo=" + propinfo);
+        logger.debug("getPropertyList ended");
+        
         return propinfo.toString();
 	}
 
@@ -206,14 +221,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Override
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception{
-		String strFlag = "N";
-		
-		if(!pClass.equals("user")){
-			if(column.toLowerCase().indexOf("displayname") != -1){
-				strFlag = "Y";
-			}
-		}
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -221,18 +228,16 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CLASS", pClass);
 		map.put("v_PROPNAME", column);
 		map.put("v_PROPVALUE", number);
-		map.put("v_FLAG", strFlag);
 		
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			ezOrganAdminDao.updateProperty(map);
 	    } else {
+	        // 사원의 경우
 	    	if (pClass.toLowerCase().equals("user")) {
 	    		ezOrganAdminDao.updateProperty(map);
+	    	// 부서의 경우
 	    	} else {
 	    		ezOrganAdminDao.updateProperty_U(map);
-	    	}
-	    	if (strFlag.equals("Y")) {
-	    		ezOrganAdminDao.updateProperty_U1(map);
 	    	}
 	    }       
 	}
@@ -493,7 +498,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {
+	    logger.debug("updateDBData_dept started");
+	    
 		ezOrganAdminDao.updateDBData_dept(vo);
+		ezOrganAdminDao.updateUserDeptDisplayName(vo);
+		
+		logger.debug("updateDBData_dept ended");
 	}
 
 	@Override
@@ -531,10 +541,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			return ezOrganAdminDao.getUserInfo(map);
 		} else {
+		    // Proxy User인 지 여부를 확인한다.
 			String temp = ezOrganAdminDao.getUserInfo_S1(map);
     		
+			// Proxy User인 경우 a=1 권한을 추가하여 반환한다.
     		if (temp != null && temp.equals("1")) {
     			return ezOrganAdminDao.getUserInfo(map);
+    		// Proxy User가 아닌 경우엔 있는 그대로의 속성값을 반환한다.	
     		} else {
     			return ezOrganAdminDao.getUserInfo_S2(map);
     		}

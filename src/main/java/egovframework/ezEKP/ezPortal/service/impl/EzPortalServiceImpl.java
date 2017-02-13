@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -793,7 +792,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	public String getAccessList(LoginVO userInfo) {
-		
+		logger.debug("getAccessList started");
+
 		String pDeptPathCode = userInfo.getDeptPathCode();
 		logger.debug("pDeptPathCode="+pDeptPathCode);
 		String ret = "";
@@ -807,7 +807,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			pIDTop = pDeptPathCode.split("\\,")[1].trim();
 			//pIDCompany = pDeptPathCode.split("\\,")[2].trim();
 			pIDCompany = userInfo.getCompanyID();
-			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@pIDComapny="+pIDCompany);
 			pIDDept = pDeptPathCode.split("\\,")[3].trim();
 			pDeptPathCode = pIDUser + "," + pIDTop + "," + pIDDept + "," + pIDCompany;
 		}
@@ -817,27 +816,24 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		} else {
 			ret = pDeptPathCode;
 		}
+
+		logger.debug("getAccessList ended");
 		return ret;
 	}
 	
 	public String getDefaultTopMenu() {
-		try {
-			StringBuilder sb = new StringBuilder();
-			 sb.append("<table id='main_table' border=1 cellpadding=0 cellspacing=0 width=100% height=200px style='table-layout:fixed;boarder-collapse:collapse'>\n");
-             sb.append("<tr id='main_row'>\n");
-             sb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-             sb.append("<TBODY>");
-             sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-             sb.append("</TBODY></table></td>");
-             sb.append("</tr></table>");
-			
-             String strPage = sb.toString();
-             
-			return strPage;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("<table id='main_table' border=1 cellpadding=0 cellspacing=0 width=100% height=200px style='table-layout:fixed;boarder-collapse:collapse'>\n");
+        sb.append("<tr id='main_row'>\n");
+        sb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        sb.append("<TBODY>");
+        sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+        sb.append("</TBODY></table></td>");
+        sb.append("</tr></table>");
+		
+        String strPage = sb.toString();
+         
+        return strPage;
 	}
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception {
@@ -1224,7 +1220,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception {
 		logger.debug("searchMyPortalPage started");
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@userInfoCompany="+userInfo.getCompanyID());
 		
 		List<PortalTBLPortalPageGeneralVO> result = new ArrayList<PortalTBLPortalPageGeneralVO>();
 		String strRight = "";
@@ -1236,7 +1231,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		boolean bExist = false;
 		String pAccessIDList = getAccessList(userInfo);
-		logger.debug("@@@@@@@@@@@@@@pAccessIDList="+pAccessIDList);
+		logger.debug("pAccessIDList="+pAccessIDList);
 		
 		for (int i=0; i<pAccessIDList.split(",").length; i++) {
 			result = searchMyPortalPage2(pAccessIDList.split(",")[i].trim(), pGubunFlag, strRight, pCompanyID, userInfo.getTenantId());
@@ -1838,12 +1833,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 		
 		StringBuilder dsb = new StringBuilder();
-		dsb.append("<table id='main_table' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-		dsb.append("<tr id='main_row'>\n");
-		dsb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+		dsb.append("<table id=\"main_table\" border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
+		dsb.append("<tr id=\"main_row\">\n");
+		dsb.append("<td id=\"td0\" valign=top onclick=\"selectcell(event)\"><table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
 		dsb.append("<TBODY>");
 		if (pMode.equals("edit")) {
-			dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+			dsb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR>");
 		}
 		dsb.append("</TBODY></table></td>");
 		dsb.append("</tr></table>");
@@ -1870,11 +1865,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			else sb.append("width=100% ");
 			if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
 			else sb.append("height=100% ");
-			sb.append("style='table-layout:fixed;'>\n");
+			sb.append("style=\"table-layout:fixed;\">\n");
 			sb.append("<tr id='main_row'>\n");
 		} else {
 			if (userInfo.getTheme().equals("BASIC")) {
-				sb.append("<div id='Center'>");
+				sb.append("<div id=\"Center\">");
 			}
 		}
 		for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
@@ -1888,7 +1883,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							if (columnWidth.equals("9999px")) {
 								sb.append(">\n");
 							} else {
-								sb.append(" style='width:" + columnWidth + "'>\n");
+								sb.append(" style=\"width:" + columnWidth + "\">\n");
 							}
 						} else {
 							sb.append(">\n");
@@ -1897,14 +1892,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						sb.append(">\n");
 					}
 				} else {
-					sb.append("<td id='td" + String.valueOf(i + 1) + "' valign=top");
+					sb.append("<td id=\"td" + String.valueOf(i + 1) + "\" valign=top");
 					if (!pageColumnSplit.equals("")) {
 						if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
 							columnWidth = pageColumnSplit.split(";")[i] + "px";
 							if (columnWidth.equals("9999px")) {
 								sb.append(">\n");
 							} else {
-								sb.append(" style='width:" + columnWidth + "'>\n");
+								sb.append(" style=\"width:" + columnWidth + "\">\n");
 							}
 						}
 					} else {
@@ -1919,7 +1914,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 				
 				if (pMode.equals("edit")) {
-					sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>" + columnWidth + "</td></TR>\n");
 				}
 				
 				sb.append(getRenderedPortalPageColumn(pPortalPageID, pAccessIDList, i + 1, pMode, userInfo));
@@ -1961,12 +1956,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         }
         
         StringBuilder dsb = new StringBuilder();
-        dsb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4)  +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style='table-layout:fixed;boarder-collapse:collapse'>\n");
-        dsb.append("<tr id='main_row'>\n");
-        dsb.append("<td id='td"+ UUID.randomUUID().toString().substring(0, 4) +"' valign=top onclick='selectcell(event)'><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        dsb.append("<table id=\"main_table_"+ UUID.randomUUID().toString().substring(0, 4)  +"\" border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% height=100% style=\"table-layout:fixed;boarder-collapse:collapse\">\n");
+        dsb.append("<tr id=\"main_row\">\n");
+        dsb.append("<td id=\"td"+ UUID.randomUUID().toString().substring(0, 4) +"\" valign=top onclick=\"selectcell(event)\"><table border=0 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
         dsb.append("<TBODY>");
         if (pMode.equals("edit")) {
-        	dsb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+        	dsb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR>");
         }
         dsb.append("</TBODY></table></td>");
         dsb.append("</tr></table>");
@@ -1984,13 +1979,13 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         pageColumnSplit = getPortalConfigItem("ColumnSplit",RootParentUID, userInfo.getTenantId());
         
         if (pMode.equals("edit")) {
-        	sb.append("<table id='main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"' border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
+        	sb.append("<table id=\"main_table_"+ UUID.randomUUID().toString().substring(0, 4) +"\" border=" + boarderValue + " cellpadding=0 cellspacing=0 ");
             if (!("-1").equals(pageWidth) && !("0").equals(pageWidth) && !("").equals(pageWidth) && pageWidth.toLowerCase().equals("null")) sb.append("width=" + pageWidth + "px ");
             else sb.append("width=100% ");
             if (!("-1").equals(pageHeight) && !("0").equals(pageHeight) && !("").equals(pageHeight) && pageHeight.toLowerCase().equals("null")) sb.append("height=" + pageHeight + "px ");
             else sb.append("height=100% ");
-            sb.append("style='table-layout:fixed;'>\n");
-            sb.append("<tr id='main_row'>\n");
+            sb.append("style=\"table-layout:fixed;\">\n");
+            sb.append("<tr id=\"main_row\">\n");
         }
         
         for (i=0; i<Integer.parseInt(pageColumnLength); i++) {
@@ -2007,7 +2002,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             					if (columnWidth.equals("9999px")) {
             						sb.append(">\n");
             					} else {
-            						sb.append(" style='width:" + columnWidth + "'>\n");
+            						sb.append(" style=\"width:" + columnWidth + "\">\n");
             					}
             				} 
             			} else {
@@ -2015,14 +2010,14 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             			}
         			}
         		} else {
-        			sb.append("<td id='td" + UUID.randomUUID().toString().substring(0, 4) + "' valign=top");
+        			sb.append("<td id=\"td" + UUID.randomUUID().toString().substring(0, 4) + "\" valign=top");
         			if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
         				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
         					columnWidth = pageColumnSplit.split(";")[i] + "px";
         					if (columnWidth.equals("9999px")) {
         						sb.append(">\n");
         					} else {
-        						sb.append(" style='width:" + columnWidth + "'>\n");
+        						sb.append(" style=\"width:" + columnWidth + "\">\n");
         					}
         				}
         			} else {
@@ -2035,7 +2030,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                 	columnWidth = "*";
                 }
                 if (pMode.equals("edit")) {
-                	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
+                	sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 10px\" onclick=\"selectcellTitle(event)\"><td align=center>" + columnWidth + "</td></TR>\n");
                     sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
                     sb.append("</tbody>\n</table>\n</td>\n");
                 }
@@ -2045,7 +2040,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		} else {
         			String columnWidth = "*";
             		if (i == Integer.parseInt(pageColumnLength) - 1) {
-           				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style='padding-left:20px;'>\n");
+           				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style=\"padding-left:20px;\">\n");
             		} else {
             			sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
             			if (!pageColumnSplit.equals("")) {
@@ -2054,9 +2049,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             					if (columnWidth.equals("9999px")) {
             						columnWidth = "100%";
             						if (i == 0) {
-            							sb.append(" style='width:" + columnWidth + ";padding-right:20px;padding-left:5px;'>\n");
+            							sb.append(" style=\"width:" + columnWidth + ";padding-right:20px;padding-left:5px;\">\n");
             						} else {
-            							sb.append(" style='width:" + columnWidth + "'>\n");
+            							sb.append(" style=\"width:" + columnWidth + "\">\n");
             						}
             					} 
             				} 
@@ -2157,16 +2152,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			
 			if (pMode.equals("edit")) {
 				if (portletHeight != 0) {
-					sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
 				} else {
-					sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 100px\">\n");
 				}
 				if (portletType == 0) {
 					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2241,7 +2236,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
-		logger.debug("sb="+sb.toString());
+		logger.debug("getRenderedPortalPageColumn sb="+sb.toString());
 		logger.debug("getRenderedPortalPageColumn ended");
 		return sb.toString();
 	
@@ -2294,19 +2289,20 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			String portletMandatory = result.get(i).getMandatory();
 			String portletMoveURL = "";
 			
+			logger.debug("@@@@@@@@@@@portletHeight="+portletHeight);
 			if (pMode.equals("edit")) {
 				if (portletHeight != 0) {
-					sb.append("<TR style='WIDTH: 100%; HEIGHT: " + portletHeight + "px'>\n");
+					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: " + portletHeight + "px\">\n");
 				} else {
-					sb.append("<TR style='WIDTH: 100%; HEIGHT: 100px'>\n");
+					sb.append("<TR style=\"WIDTH: 100%; HEIGHT: 100px\">\n");
 				}
 				
 				if (portletType == 0) {
 					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + "' align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2316,9 +2312,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
 							if (portletWidth == 9999) {
 								String portletWidthStr = "100%"; 
-								sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							} else {
-								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 						}
 					} else {
@@ -2332,12 +2328,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 							
 							if (portletWidth == 9999) {
 								String portletWidthStr = "100%"; 
-								sb.append("<iframe width='" + portletWidthStr + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							} else {
-								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
+								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 							
-							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + " align=\"middle\"\" valign=top uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 						}
 					} else {
 						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
@@ -2346,7 +2342,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			}
 		}
 		
-		logger.debug("sb="+sb.toString());
+		logger.debug("getRenderedPortalPageColumnInsert sb="+sb.toString());
 		logger.debug("getRenderedPortalPageColumnInsert ended");
         
 		return sb.toString();
@@ -2474,7 +2470,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
 
-StringBuilder strData = new StringBuilder();
+		StringBuilder strData = new StringBuilder();
 		
 		boolean firstFlag = true;
 		int val = 0;
