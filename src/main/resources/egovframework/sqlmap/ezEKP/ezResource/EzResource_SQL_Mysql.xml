@@ -323,33 +323,32 @@
 	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
 			<![CDATA[
-				  SELECT A.BRD_ID brd_id ,
-                   A.BRD_NM brd_nm ,
-                   A.BRD_NM2 brd_nm2 ,
-                   A.BRD_LEVEL brd_level ,
-                   A.BRD_STEP brd_step ,
-                   A.BRD_POSTTERM brd_postterm ,
-                   A.BRD_UPPER brd_upper ,
-                   A.BRD_GB brd_gb ,
-                   A.BRD_URL brd_url ,
-                   A.BRD_EXPLAIN brd_explain ,
-                   A.BRD_ACCESS brd_access ,
-                   A.ATTACH_SIZE attach_size ,
-                   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                     FROM TBL_RS_BRD 
-                      WHERE  BRD_UPPER = A.BRD_ID
-                               AND Brd_Company = #v_P_CompanyID#
-                               AND Brd_GB = N'1'
-                               AND TENANT_ID = #tenantID# ) sub_clscnt ,
-                   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                     FROM TBL_RS_BRD 
-                     WHERE  BRD_UPPER = A.BRD_ID
-                            AND Brd_Company = #v_P_CompanyID#
-                            AND Brd_GB = N'2'
-                            AND TENANT_ID = #tenantID# ) sub_rescnt ,
-                   N'0' Access_Lvl ,
-
-                   A.APPROVEFLAG 
+				SELECT A.BRD_ID brd_id ,
+                  	   A.BRD_NM brd_nm ,
+                  	   A.BRD_NM2 brd_nm2 ,
+                  	   A.BRD_LEVEL brd_level ,
+                  	   A.BRD_STEP brd_step ,
+                  	   A.BRD_POSTTERM brd_postterm ,
+                  	   A.BRD_UPPER brd_upper ,
+                  	   A.BRD_GB brd_gb ,
+                  	   A.BRD_URL brd_url ,
+                  	   A.BRD_EXPLAIN brd_explain ,
+                  	   A.BRD_ACCESS brd_access ,
+                  	   A.ATTACH_SIZE attach_size ,
+                  	   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+                         FROM TBL_RS_BRD 
+                         WHERE BRD_UPPER = A.BRD_ID
+                     	 AND Brd_Company = #v_P_CompanyID#
+                     	 AND Brd_GB = '1'
+                     	 AND TENANT_ID = #tenantID# ) sub_clscnt ,
+                   	   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+                   		 FROM TBL_RS_BRD 
+                 		 WHERE  BRD_UPPER = A.BRD_ID
+                         AND Brd_Company = #v_P_CompanyID#
+                         AND Brd_GB = '2'
+                         AND TENANT_ID = #tenantID# ) sub_rescnt ,
+                   	   '0' Access_Lvl ,
+					   A.APPROVEFLAG 
 				FROM TBL_RS_BRD A
             	WHERE  BRD_ID = 1
 				AND Brd_Company = #v_P_CompanyID#
@@ -359,74 +358,70 @@
 		<isNotEmpty property="v_P_ParentID">
 			<isEqual property="v_P_TreeType" compareValue="0">
 				<![CDATA[
-					 SELECT A.BRD_ID brd_id ,
-                      A.BRD_NM brd_nm ,
-                      A.BRD_NM2 brd_nm2 ,
-                      A.BRD_LEVEL brd_level ,
-                      A.BRD_STEP brd_step ,
-                      A.BRD_POSTTERM brd_postterm ,
-                      A.BRD_UPPER brd_upper ,
-                      A.BRD_GB brd_gb ,
-                      A.BRD_URL brd_url ,
-                      A.BRD_EXPLAIN brd_explain ,
-                      A.BRD_ACCESS brd_access ,
-                      A.ATTACH_SIZE attach_size ,
-
-                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                        FROM TBL_RS_BRD 
-                        WHERE  BRD_UPPER = A.BRD_ID
-                        AND Brd_Company = #v_P_CompanyID#
-                        AND Brd_GB = N'1'
-                        AND TENANT_ID = #tenantID# ) sub_clscnt ,
-
-                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                        FROM TBL_RS_BRD 
-                        WHERE  BRD_UPPER = A.BRD_ID
-                        AND Brd_Company = #v_P_CompanyID#
-                        AND Brd_GB = N'2' 
-                        AND TENANT_ID = #tenantID#) sub_rescnt ,
-
-                      N'0' Access_Lvl ,
-
-                      A.APPROVEFLAG 
-                 FROM TBL_RS_BRD A
-                 WHERE  Brd_Upper = IFNULL(#v_P_ParentID#,0)
-                 AND Brd_Company = #v_P_CompanyID#
-                 AND TENANT_ID = #tenantID#
-                 ORDER BY Brd_Step 
+					SELECT A.BRD_ID brd_id ,
+                		   A.BRD_NM brd_nm ,
+                    	   A.BRD_NM2 brd_nm2 ,
+                    	   A.BRD_LEVEL brd_level ,
+                    	   A.BRD_STEP brd_step ,
+                    	   A.BRD_POSTTERM brd_postterm ,
+                    	   A.BRD_UPPER brd_upper ,
+                    	   A.BRD_GB brd_gb ,
+                    	   A.BRD_URL brd_url ,
+                    	   A.BRD_EXPLAIN brd_explain ,
+                    	   A.BRD_ACCESS brd_access ,
+                    	   A.ATTACH_SIZE attach_size ,
+						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+							 FROM TBL_RS_BRD 
+                    		 WHERE  BRD_UPPER = A.BRD_ID
+                    		 AND Brd_Company = #v_P_CompanyID#
+                    		 AND Brd_GB = '1'
+            				 AND TENANT_ID = #tenantID# ) sub_clscnt ,
+						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+							 FROM TBL_RS_BRD 
+							 WHERE  BRD_UPPER = A.BRD_ID
+							 AND Brd_Company = #v_P_CompanyID#
+							 AND Brd_GB = '2' 
+							 AND TENANT_ID = #tenantID#) sub_rescnt ,
+						   '0' Access_Lvl ,
+						   A.APPROVEFLAG 
+					FROM TBL_RS_BRD A
+					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
+					AND Brd_Company = #v_P_CompanyID#
+					AND TENANT_ID = #tenantID#
+					ORDER BY Brd_Step
 				]]>
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0">
 				<![CDATA[
-					  SELECT A.BRD_ID brd_id ,
-                      A.BRD_NM brd_nm ,
-                      A.BRD_NM2 brd_nm2 ,
-                      A.BRD_LEVEL brd_level ,
-                      A.BRD_STEP brd_step ,
-                      A.BRD_POSTTERM brd_postterm ,
-                      A.BRD_UPPER brd_upper ,
-                      A.BRD_GB brd_gb ,
-                      A.BRD_URL brd_url ,
-                      A.BRD_EXPLAIN brd_explain ,
-                      A.BRD_ACCESS brd_access ,
-                      A.ATTACH_SIZE attach_size ,
-                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                        FROM TBL_RS_BRD 
-                         WHERE  BRD_UPPER = A.BRD_ID
-                                  AND Brd_Company = #v_P_CompanyID#
-                                  AND Brd_GB = N'1' ) sub_clscnt ,
-                      ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
-                        FROM TBL_RS_BRD 
-                         WHERE  BRD_UPPER = A.BRD_ID
-                                  AND Brd_Company = #v_P_CompanyID#
-                                  AND Brd_GB = N'2' ) sub_rescnt ,
-                      N'0' Access_Lvl ,
-                      A.APPROVEFLAG 
-                 FROM TBL_RS_BRD A
-                WHERE  Brd_Upper = IFNULL(#v_P_ParentID#,0)
-                         AND Brd_Company = #v_P_CompanyID#
-                         AND Brd_GB = N'1'
-                 ORDER BY Brd_Step 
+					SELECT A.BRD_ID brd_id ,
+						   A.BRD_NM brd_nm ,
+ 						   A.BRD_NM2 brd_nm2 ,
+						   A.BRD_LEVEL brd_level ,
+						   A.BRD_STEP brd_step ,
+						   A.BRD_POSTTERM brd_postterm ,
+						   A.BRD_UPPER brd_upper ,
+						   A.BRD_GB brd_gb ,
+						   A.BRD_URL brd_url ,
+						   A.BRD_EXPLAIN brd_explain ,
+						   A.BRD_ACCESS brd_access ,
+						   A.ATTACH_SIZE attach_size ,
+						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+							 FROM TBL_RS_BRD 
+							 WHERE BRD_UPPER = A.BRD_ID
+							 AND Brd_Company = #v_P_CompanyID#
+							 AND Brd_GB = '1' ) sub_clscnt ,
+						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+							 FROM TBL_RS_BRD 
+							 WHERE  BRD_UPPER = A.BRD_ID
+							 AND Brd_Company = #v_P_CompanyID#
+							 AND Brd_GB = '2' ) sub_rescnt ,
+						   '0' Access_Lvl ,
+						   A.APPROVEFLAG 
+					FROM TBL_RS_BRD A
+					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
+					AND Brd_Company = #v_P_CompanyID#
+					AND Brd_GB = '1'
+					ORDER BY Brd_Step 
 				]]>
 			</isNotEqual>	
 		</isNotEmpty>
@@ -441,12 +436,12 @@
 	<select id="EzResourceDAO.getSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
 			<![CDATA[
-				  SELECT
-                    A.BRD_ID BRD_ID ,  
-                    A.BRD_NM BRD_NM ,
-                    A.BRD_NM2 BRD_NM2 ,
-                    A.BRD_LEVEL BRD_LEVEL ,
-                    A.BRD_STEP BRD_STEP ,
+				SELECT
+					A.BRD_ID BRD_ID ,  
+					A.BRD_NM BRD_NM ,
+					A.BRD_NM2 BRD_NM2 ,
+					A.BRD_LEVEL BRD_LEVEL ,
+					A.BRD_STEP BRD_STEP ,
                     A.BRD_POSTTERM BRD_POSTTERM ,
                     A.BRD_UPPER BRD_UPPER ,
                     A.BRD_GB BRD_GB ,
@@ -675,9 +670,9 @@
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
-				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
-				STR_STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
@@ -689,9 +684,9 @@
                    	OR
                    		REFLAG = '2' )
 			AND 
-                ( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
+                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND 
-				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
+				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -740,9 +735,9 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			WHERE
-				STARTDATE <= STR_STR_TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
-        		STR_STR_TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+        		STR_TO_DATE(#v_pEndDate#, '%Y-%m-%d %T') <= ENDDATE
         	AND
         		COMPANYID = #v_pCompanyID#
         	AND 
@@ -810,7 +805,7 @@
 			AND
 				A.TENANT_ID = C.TENANT_ID	
 			WHERE
-				STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
 			AND
@@ -818,13 +813,11 @@
 			AND
 				REFLAG = '1'
 			AND
-				(STR_STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR STR_STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME)
+				(STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME)
 			AND
-				( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%'
-			OR
-				B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
+				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
+				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
         	ORDER BY
@@ -874,7 +867,7 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
         	WHERE
-        		STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+        		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND
@@ -959,13 +952,13 @@
 			AND
 				PNUM = #v_PNUM#
 			AND 
-				STARTDATE <= STR_STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
-				STR_STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
 			AND
-				( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
+				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
+				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -995,11 +988,10 @@
 			AND
 				BRD_GB = '2' 
 			AND
-				ROWNUM <= #v_PTOPCNT#
-			AND
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+			LIMIT #v_PTOPCNT#
 		]]>
 	</select>
 	
@@ -1047,7 +1039,7 @@
              	OWNERPOSITION2 ,
              	OWNERCALL ,
              	IFNULL(RESLOCATION, ' ') RESLOCATION  ,
-             	SUBSTR(MAKEDATE, 0, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, -2, 2) MAKEDATE  ,
+             	CONCAT(SUBSTR(MAKEDATE, 0, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, -2, 2)) MAKEDATE  ,
              	IFNULL(APPROVEFLAG, '0') APPROVEFLAG  ,
              	BRD_ACCESS 
         	FROM
@@ -1070,7 +1062,7 @@
 	</procedure> -->
 	<delete id="EzResourceDAO.delResData" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_BRD
 			WHERE
 				BRD_ID = #v_P_Brd_ID#
@@ -1112,7 +1104,7 @@
 	
 	<delete id="EzResourceDAO.delResData1" parameterClass="Map">
 		<![CDATA[
-			DELETE 
+			DELETE FROM
 				TBL_RS_SCHEDULE
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
@@ -1125,7 +1117,7 @@
 	
 	<delete id="EzResourceDAO.delResData2" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			 DELETE FROM
 			 	TBL_RS_SCHEDULEFILE
    			WHERE
    				OWNERID = #v_P_Brd_ID#
@@ -1138,7 +1130,7 @@
 	
 	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULEREPETITION
    			WHERE  
    				OWNERID = #v_P_Brd_ID#
@@ -1160,20 +1152,20 @@
 			UPDATE
 				TBL_RS_BRD
       		SET 
-      			OWNDEPTID = RTRIM(#v_P_ODeptID#),
-          		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
-          		OWNERID = RTRIM(#v_P_OwnerID#),
-          		OWNERNM = RTRIM(#v_P_OwnerNm#),
-          		OWNERPOSITION = RTRIM(#v_P_OwnerPos#),
-          		OWNERCALL = RTRIM(#v_P_OwnerCall#),
-          		BRD_NM = RTRIM(#v_P_Brd_NM#),
-          		RESLOCATION = RTRIM(#v_P_ResLocation#),
-          		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
-          		APPROVEFLAG = RTRIM(#v_P_Approve#),
-          		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
-          		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
-          		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
-          		OWNERPOSITION2 = RTRIM(#v_P_OwnerPos2#)
+      			OWNDEPTID = #v_P_ODeptID#,
+          		OWNDEPTNM = #v_P_ODeptNm#,
+          		OWNERID = #v_P_OwnerID#,
+          		OWNERNM = #v_P_OwnerNm#,
+          		OWNERPOSITION = #v_P_OwnerPos#,
+          		OWNERCALL = #v_P_OwnerCall#,
+          		BRD_NM = #v_P_Brd_NM#,
+          		RESLOCATION = #v_P_ResLocation#,
+          		BRD_EXPLAIN = #v_P_Brd_Explain#,
+          		APPROVEFLAG = #v_P_Approve#,
+          		BRD_NM2 = #v_P_Brd_NM2#,
+          		OWNDEPTNM2 = #v_P_ODeptNm2#,
+          		OWNERNM2 = #v_P_OwnerNm2#,
+          		OWNERPOSITION2 = #v_P_OwnerPos2#
     		WHERE
     			BRD_ID = #v_P_Brd_ID#
     		AND
@@ -1231,15 +1223,16 @@
 	
 	<insert id="EzResourceDAO.addResData" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO
-				TBL_RS_BRD ( BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
-      											, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
-      											, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID )
-        	VALUES ( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
-        				,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
-        				,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), RTRIM(to_char(sysdate,'YYYYMMDD'))
-        				,20, u'A00', u'', u'\c774 \bd84\b958\c5d0 \b300\d55c \c811\adfc \ad8c\d55c\c774 \c5c6\c2b5\b2c8\b2e4.', 365, 0, 0, RTRIM(#v_P_Approve#)
-      					,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), #tenantID# )
+			INSERT INTO TBL_RS_BRD ( 
+				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY, 
+				BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG, 
+				BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, TENANT_ID
+			)
+        	VALUES ( 
+        		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, #v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, 
+        		#v_Brd_ID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), 20, 'A00', '', u'\c774 \bd84\b958\c5d0 \b300\d55c \c811\adfc \ad8c\d55c\c774 \c5c6\c2b5\b2c8\b2e4.', 365, 0, 0, #v_P_Approve#,
+      			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #tenantID#
+			)
 		]]>		
 	</insert>
 	
@@ -1275,8 +1268,8 @@
 			UPDATE
 				TBL_RS_SCHEDULE
       		SET 
-      			STARTDATE = STR_STR_TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS'),
-          		ENDDATE = STR_STR_TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS')
+      			STARTDATE = STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T'),
+          		ENDDATE = STR_TO_DATE(#v_pEndDate#, '%Y-%m-%d %T')
     		WHERE
     			COMPANYID = #v_pCompanyID#
      		AND 
@@ -1299,8 +1292,8 @@
 			UPDATE
 				TBL_RS_SCHEDULEREPETITION
       		SET 
-      			STARTDATETIME = STR_STR_TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'),
-          		ENDDATETIME = STR_STR_TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS'), 
+      			STARTDATETIME = STR_TO_DATE(#v_pStartDateTime#, '%Y-%m-%d %T'),
+          		ENDDATETIME = STR_TO_DATE(#v_pEndDateTime#, '%Y-%m-%d %T'), 
           		REWAY = #v_pReWay#,
           		REDAY = #v_pReDay#,
           		RENUM = #v_pReNum#,
@@ -1362,7 +1355,7 @@
 			INSERT INTO 
 				TBL_RS_SCHEDULEREPETITION (NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID)
      		VALUES
-     			( #v_Num#, #v_pOwnerID#, STR_STR_TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), STR_STR_TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
+     			( #v_Num#, #v_pOwnerID#, STR_TO_DATE(#v_pStartDateTime#, '%Y-%m-%d %T'), STR_TO_DATE(#v_pEndDateTime#, '%Y-%m-%d %T')
      			, #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#
      			, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#, #tenantID# )
 		]]>
@@ -1399,7 +1392,7 @@
 	</procedure> -->
 	<delete id="EzResourceDAO.deleteRepetition" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULEREPETITION 
    			WHERE
    				OWNERID = #v_pOwnerID#
@@ -1555,7 +1548,7 @@
 	</procedure> -->
 	<delete id="EzResourceDAO.delFormID" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULEFORM
    			WHERE 
    				RESID = #v_DELCODE#
@@ -1597,7 +1590,7 @@
 			UPDATE
 				TBL_RS_SCHEDULE
 			SET
-				REFLAG = u'4'
+				REFLAG = '4'
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1639,8 +1632,8 @@
 	                    TITLE ,
 	                    LOCATION ,
 	                    TIMEDISPLAY ,
-	                    STR_TO_DATE(#v_P_sDate# || SUBSTR(STARTDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS') ,
-	                    STR_TO_DATE(#v_P_eDate# || SUBSTR(ENDDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS'),
+	                    STR_TO_DATE(CONCAT(#v_P_sDate#, SUBSTR(STARTDATE, -9, 9)),'%Y-%m-%d %T') ,
+	                    STR_TO_DATE(CONCAT(#v_P_eDate#, SUBSTR(ENDDATE, -9, 9)),'%Y-%m-%d %T') ,
 	                    ALERTTIME ,
 	                    CONTENT ,
 	                    IMPORTANCE ,
@@ -1661,15 +1654,15 @@
 					AND
 						NUM = #v_P_pnum#
 					AND
-						REFLAG = u'1'
+						REFLAG = '1'
 					AND
-						TENANT_ID = #tenantID#	 )
+						TENANT_ID = #tenantID# )
 		]]>							
 	</insert>
 	
 	<delete id="EzResourceDAO.delResSch_D1" parameterClass="Map">
 		<![CDATA[
-			DELETE 
+			DELETE FROM
 				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
@@ -1684,7 +1677,7 @@
 	
 	<delete id="EzResourceDAO.delResSch_D2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULEREPETITION
             WHERE  
             	COMPANYID = #v_P_companyID#
@@ -1699,7 +1692,7 @@
 	
 	<delete id="EzResourceDAO.delResSch_D3" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULE
             WHERE 
             	COMPANYID = #v_P_companyID#
@@ -1755,7 +1748,7 @@
 	
 	<delete id="EzResourceDAO.modifyResSch_D1" parameterClass="Map">
 		<![CDATA[
-			DELETE 
+			DELETE FROM
 				TBL_RS_SCHEDULE
           	WHERE 
           		( COMPANYID = #v_P_companyID#
@@ -1784,7 +1777,7 @@
             ( num, ownerID, writerID, title, location, timeDisplay, startDate, endDate, alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, attachFlag, companyID, characterID
             , ownerNM, deptNM, ApproveFlag, TENANT_ID )
             VALUES
-            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'), STR_TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
+            ( #v_P_num#, #v_P_ownerID#, #v_P_writerID#, #v_P_title#, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#, '%Y-%m-%d %T'), STR_TO_DATE(#v_P_endDate#, '%Y-%m-%d %T'), #v_P_alertTime#, #v_P_content#, #v_P_importance#, #v_P_reFlag#, #v_P_gresFlag#, #v_P_entryList#, #v_P_allDay#, #nowDate#, #v_P_attachFlag#, #v_P_companyID#, #v_P_characterID#, 
             #v_tmpOwnerNm#, #v_tmpDeptNm#, #v_P_Approve#, #tenantID# )
 		]]>
 	</insert>
@@ -1797,8 +1790,8 @@
             	TITLE = #v_P_title#,
 				LOCATION = #v_P_location#,
                 TIMEDISPLAY = #v_P_timeDisplay#,
-                STARTDATE = STR_TO_DATE(#v_P_startDate#, 'YYYY-MM-DD HH24:MI:SS'),
-                ENDDATE = STR_TO_DATE(#v_P_endDate#, 'YYYY-MM-DD HH24:MI:SS'),
+                STARTDATE = STR_TO_DATE(#v_P_startDate#, '%Y-%m-%d %T'),
+                ENDDATE = STR_TO_DATE(#v_P_endDate#, '%Y-%m-%d %T'),
                 ALERTTIME = #v_P_alertTime#,
                 CONTENT = #v_P_content#,
                 IMPORTANCE = #v_P_importance#,
@@ -1842,7 +1835,7 @@
 	
 	<delete id="EzResourceDAO.modifyResSch_D2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_SCHEDULE
             WHERE  
             	COMPANYID = #v_P_companyID#
@@ -1862,29 +1855,29 @@
 			UPDATE 
 				TBL_RS_SCHEDULE
 			SET
-				TITLE = RTRIM(#v_P_title#),
-				LOCATION = RTRIM(#v_P_location#),
-                TIMEDISPLAY = RTRIM(#v_P_timeDisplay#),
-                STARTDATE = STR_TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'),
-                ENDDATE = STR_TO_DATE(RTRIM(#v_P_endDate#), 'YYYY-MM-DD HH24:MI:SS'),
-                ALERTTIME = RTRIM(#v_P_alertTime#),
+				TITLE = #v_P_title#,
+				LOCATION = #v_P_location#,
+                TIMEDISPLAY = #v_P_timeDisplay#,
+                STARTDATE = STR_TO_DATE(#v_P_startDate#,'%Y-%m-%d %T'),
+                ENDDATE = STR_TO_DATE(#v_P_endDate#, '%Y-%m-%d %T'),
+                ALERTTIME = #v_P_alertTime#,
                 CONTENT = #v_P_content#,
-                IMPORTANCE = RTRIM(#v_P_importance#),
-                REFLAG = RTRIM(#v_P_reFlag#),
-                GRESFLAG = RTRIM(#v_P_gresFlag#),
-                ALLDAY = RTRIM(#v_P_allDay#),
-                WRITEDAY = STR_TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),
-                ENTRYLIST = RTRIM(#v_P_entryList#),
-                ATTACHFLAG = RTRIM(#v_P_attachFlag#),
-                CHARACTERID = RTRIM(#v_P_characterID#),
-                APPROVEFLAG = RTRIM(#v_P_Approve#)
-         WHERE 
+                IMPORTANCE = #v_P_importance#,
+                REFLAG = #v_P_reFlag#,
+                GRESFLAG = #v_P_gresFlag#,
+                ALLDAY = #v_P_allDay#,
+                WRITEDAY = STR_TO_DATE(#nowDate#, '%Y-%m-%d %T'),
+                ENTRYLIST = #v_P_entryList#,
+                ATTACHFLAG = #v_P_attachFlag#,
+                CHARACTERID = #v_P_characterID#,
+                APPROVEFLAG = #v_P_Approve#
+         	WHERE 
          		COMPANYID = #v_P_companyID#
-         AND
+         	AND
          		NUM = #v_P_num#
-         AND
+         	AND
          		OWNERID = #v_P_ownerID#
-         AND
+         	AND
          		TENANT_ID = #tenantID#		
 		]]>
 	</update>
@@ -1928,10 +1921,10 @@
      			( OWNERID, NUM, PNUM, COMPANYID, WRITERID, DEPTNM, OWNERNM, TITLE, LOCATION, TIMEDISPLAY, STARTDATE, ENDDATE, ALLDAY, ALERTTIME, CONTENT, IMPORTANCE
      			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
-     			( RTRIM(#v_P_ownerID#), RTRIM(#v_Num#), RTRIM(#v_P_pnum#), RTRIM(#v_P_companyID#), RTRIM(#v_P_writerID#), RTRIM(#v_P_deptNM#), RTRIM(#v_P_ownerNM#), RTRIM(#v_P_title#)
-     			, RTRIM(#v_P_location#), RTRIM(#v_P_timeDisplay#), STR_TO_DATE(RTRIM(#v_P_startDate#),'YYYY-MM-DD HH24:MI:SS'), STR_TO_DATE(RTRIM(#v_P_endDate#),'YYYY-MM-DD HH24:MI:SS')
-     			, RTRIM(#v_P_allDay#), RTRIM(#v_P_alertTime#), #v_P_content#, RTRIM(#v_P_importance#), IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), STR_TO_DATE(#nowDate#, 'yyyy-MM-dd hh24:MI:ss')
-     			, RTRIM(#v_P_entryList#), IFNULL(#v_P_characterID#,0), RTRIM(#v_P_attachFlag#), RTRIM(#v_P_Approve#), RTRIM(#v_P_ScheduleID#), #tenantID# )
+     			( #v_P_ownerID#, #v_Num#, #v_P_pnum#, #v_P_companyID#, #v_P_writerID#, #v_P_deptNM#, #v_P_ownerNM#, #v_P_title#
+     			, #v_P_location#, #v_P_timeDisplay#, STR_TO_DATE(#v_P_startDate#,'%Y-%m-%d %T'), STR_TO_DATE(#v_P_endDate#,'%Y-%m-%d %T')
+     			, #v_P_allDay#, #v_P_alertTime#, #v_P_content#, #v_P_importance#, IFNULL(#v_P_reFlag#,' '), IFNULL(#v_P_gresFlag#,' '), STR_TO_DATE(#nowDate#, '%Y-%m-%d %T')
+     			, #v_P_entryList#, IFNULL(#v_P_characterID#,0), #v_P_attachFlag#, #v_P_Approve#, #v_P_ScheduleID#, #tenantID# )
 		]]>
 	</insert>
 	

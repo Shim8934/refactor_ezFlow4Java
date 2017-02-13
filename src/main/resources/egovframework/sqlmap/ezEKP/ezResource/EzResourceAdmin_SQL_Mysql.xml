@@ -58,7 +58,7 @@
      <select id="EzResourceAdminDAO.addClsData_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				(NVL(MAX(Brd_ID) , 0) + 1)
+				(IFNULL(MAX(Brd_ID) , 0) + 1)
         	FROM 
         		TBL_RS_BRD
         	WHERE
@@ -84,7 +84,7 @@
 	<select id="EzResourceAdminDAO.addClsData_S3" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				(NVL(MAX(Brd_Step) , 0) + 1)
+				(IFNULL(MAX(Brd_Step) , 0) + 1)
    			FROM 
    				TBL_RS_BRD 
    			WHERE  
@@ -104,9 +104,9 @@
 				   , BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE
 				   , ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, BRD_NM2, TENANT_ID )
      		VALUES
-     			( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#), RTRIM(#v_P_OwnerCall#)
-     				, RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#, '1', RTRIM(#v_Brd_Level#)
-     				, RTRIM(#v_Brd_Step#), RTRIM(TO_CHAR(SYSDATE,'YYYYMMDD')), 20, 'A00', '', RTRIM(#v_P_AccessNoty#), 365, 0, 0, RTRIM(#v_P_Brd_NM2#), #tenantID# )
+     			( #v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#
+     				, #v_P_Brd_NM#, #v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, #v_Brd_ID#, '1', #v_Brd_Level#
+     				, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), 20, 'A00', '', #v_P_AccessNoty#, 365, 0, 0, #v_P_Brd_NM2#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -116,7 +116,7 @@
 				TBL_RS_RESACL
    				( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
     		VALUES
-    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', RTRIM(#v_P_CompanyID#), #tenantID#)
+    			( #v_Brd_ID#, 'Y', 'Y', 'everyone', 'everyone', '2', #v_P_CompanyID#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -126,7 +126,7 @@
 				TBL_RS_RESACL
      			( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
      		VALUES
-     			( #v_Brd_ID#, 'Y', 'Y', RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerID#), '1', RTRIM(#v_P_CompanyID#), #tenantID# )
+     			( #v_Brd_ID#, 'Y', 'Y', #v_P_OwnerNm#, #v_P_OwnerID#, '1', #v_P_CompanyID#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -142,16 +142,16 @@
 			UPDATE
 				TBL_RS_BRD
       		SET 
-      			OWNDEPTID = RTRIM(#v_P_ODeptID#),
-          		OWNDEPTNM = RTRIM(#v_P_ODeptNm#),
-          		OWNERID = RTRIM(#v_P_OwnerID#),
-          		OWNERNM = RTRIM(#v_P_OwnerNm#),
-          		OWNERPOSITION = RTRIM(#v_P_OwnerPos#),
-          		OWNERCALL = RTRIM(#v_P_OwnerCall#),
-          		BRD_NM = RTRIM(#v_P_Brd_NM#),
-          		BRD_ACCESS = RTRIM(#v_P_AccessNoty#),
-          		BRD_EXPLAIN = RTRIM(#v_P_Brd_Explain#),
-          		BRD_NM2 = RTRIM(#v_P_Brd_NM2#)
+      			OWNDEPTID = #v_P_ODeptID#,
+          		OWNDEPTNM = #v_P_ODeptNm#,
+          		OWNERID = #v_P_OwnerID#,
+          		OWNERNM = #v_P_OwnerNm#,
+          		OWNERPOSITION = #v_P_OwnerPos#,
+          		OWNERCALL = #v_P_OwnerCall#,
+          		BRD_NM = #v_P_Brd_NM#,
+          		BRD_ACCESS = #v_P_AccessNoty#,
+          		BRD_EXPLAIN = #v_P_Brd_Explain#,
+          		BRD_NM2 = #v_P_Brd_NM2#
     		WHERE
     			BRD_ID = #v_P_Brd_ID#
     		AND
@@ -192,7 +192,7 @@
 				TBL_RS_RESACL
             	( RESID, DEPT_YN, SDA_YN, MEMBER_NAM, MEMBER_ID, ACCESS_LVL, COMPANYID, TENANT_ID )
            	VALUES
-           		( RTRIM(#v_P_ResID#), RTRIM(#v_P_Dept_YN#), RTRIM(#v_P_SDA_YN#),RTRIM(#v_P_Member_nam#), RTRIM(#v_P_Member_ID#), RTRIM(#v_P_Access_lvl#), RTRIM(#v_P_CompanyID#), #tenantID# )
+           		( #v_P_ResID#, #v_P_Dept_YN#, #v_P_SDA_YN#, #v_P_Member_nam#, #v_P_Member_ID#, #v_P_Access_lvl#, #v_P_CompanyID#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -203,7 +203,7 @@
 	</procedure> -->
 	<delete id="EzResourceAdminDAO.delResAcll" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_RESACL
           	WHERE  
           		RESID = #v_P_RESID#
@@ -317,7 +317,7 @@
 	<select id="EzResourceAdminDAO.moveCls_S3" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(MAX(BRD_STEP) , 0) + 1
+				IFNULL(MAX(BRD_STEP) , 0) + 1
     		FROM
     			TBL_RS_BRD 
     		WHERE
@@ -381,7 +381,7 @@
 	
 	<delete id="EzResourceAdminDAO.delClsData_D1" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_RS_BRD
    			WHERE  
    				BRD_ID = #v_P_Brd_ID#
@@ -400,22 +400,22 @@
    				BRD_STEP = BRD_STEP - 1
    			WHERE  
    				BRD_UPPER = ( SELECT
-   										BRD_UPPER 
-                        			  FROM
-                        			  	TBL_RS_BRD 
-                        			  WHERE  
-                        			  	BRD_ID = #v_P_Brd_ID#
-                        			  AND 
-                        			  	BRD_COMPANY = #v_P_CompanyID# )
+								BRD_UPPER 
+                   			  FROM
+                   			  	TBL_RS_BRD 
+                   			  WHERE  
+                   			  	BRD_ID = #v_P_Brd_ID#
+                   			  AND 
+                   			  	BRD_COMPANY = #v_P_CompanyID# )
 			AND
 				BRD_STEP > ( SELECT
-									 BRD_STEP 
-                    				FROM
-                    					TBL_RS_BRD 
-                    				WHERE
-                    					BRD_ID = #v_P_Brd_ID#
-                    				AND
-                    					BRD_COMPANY = #v_P_CompanyID# )
+							 	BRD_STEP 
+               				 FROM
+                    		 	TBL_RS_BRD 
+                    		 WHERE
+                    		 	BRD_ID = #v_P_Brd_ID#
+                    		 AND
+                    		 	BRD_COMPANY = #v_P_CompanyID# )
             AND
             	TENANT_ID = #tenantID#        					
 		]]>
@@ -423,7 +423,7 @@
 	
 	<delete id="EzResourceAdminDAO.delClsData_D2" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			DELETE FROM
 			 	TBL_RS_SCHEDULE
    			WHERE
    				OWNERID = #v_P_Brd_ID#
@@ -436,7 +436,7 @@
 	
 	<delete id="EzResourceAdminDAO.delClsData_D4" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			DELETE FROM
 			 	TBL_RS_SCHEDULEREPETITION
    			WHERE
    				OWNERID = #v_P_Brd_ID#
@@ -449,7 +449,7 @@
 	
 	<delete id="EzResourceAdminDAO.delClsData_D5" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			DELETE FROM
 			 	TBL_RS_RESACL
    			WHERE
    				RESID = #v_P_Brd_ID#
@@ -476,7 +476,7 @@
 			AND
 				BRD_COMPANY = #v_P_CompanyID#
 			AND
-				BRD_GB = u'1'
+				BRD_GB = '1'
 			AND
 				BRD_ID IN ( SELECT
 									 RESID 
@@ -488,15 +488,15 @@
                                 	MEMBER_ID IN ( #v_P_DeptPath# )
                                 AND 
                                 	BRD_ID IN ( SELECT
-                                						 BRD_ID 
-                                                	 FROM
-                                                	 	 TBL_RS_BRD 
-                                                	 WHERE
-                                                	 	 BRD_UPPER = #v_P_ParentID#
-                                                	 AND
-                                                	 	 BRD_COMPANY = #v_P_CompanyID#
-                                                	 AND
-                                                	 	 BRD_GB = u'1' )
+                                					BRD_ID 
+                                                FROM
+                                                	TBL_RS_BRD 
+                                                WHERE
+                                                	BRD_UPPER = #v_P_ParentID#
+                                                AND
+                                                	BRD_COMPANY = #v_P_CompanyID#
+                                                AND
+                                                	BRD_GB = '1' )
 								
                                 UNION 
                                 	SELECT
@@ -509,15 +509,15 @@
 	                                	MEMBER_ID = #v_P_UserID#
 									AND
 										BRD_ID IN ( SELECT 
-															BRD_ID 
-	                                                     FROM
-	                                                     	TBL_RS_BRD 
-	                                                     WHERE
-	                                                     	BRD_UPPER = #v_P_ParentID#
-	                                                     AND
-	                                                        BRD_COMPANY = #v_P_CompanyID#
-	                                                     AND
-	                                                        BRD_GB = u'1' )
+														BRD_ID 
+	                                                FROM
+	                                                	TBL_RS_BRD 
+	                                                WHERE
+	                                                	BRD_UPPER = #v_P_ParentID#
+	                                                AND
+	                                                	BRD_COMPANY = #v_P_CompanyID#
+	                                                AND
+	                                                	BRD_GB = '1' )
              				  )
           AND
           	TENANT_ID = #tenantID#   				  
@@ -541,7 +541,7 @@
        		AND
        			BRD_COMPANY = #v_P_CompanyID#
        		AND
-       			BRD_GB = u'1'
+       			BRD_GB = '1'
 			AND
 				TENANT_ID = #tenantID#       			
       		ORDER BY BRD_STEP
@@ -596,7 +596,7 @@
 	<select id="EzResourceDAO.subResCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				NVL(COUNT(BRD_ID) , 0)
+				IFNULL(COUNT(BRD_ID) , 0)
    			FROM 
    				TBL_RS_BRD 
    			WHERE
@@ -613,7 +613,7 @@
 	<select id="EzResourceDAO.subClsCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				NVL(COUNT(BRD_ID) , 0)
+				IFNULL(COUNT(BRD_ID) , 0)
    			FROM 
    				TBL_RS_BRD 
    			WHERE
