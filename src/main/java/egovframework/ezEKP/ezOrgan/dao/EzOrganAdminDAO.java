@@ -726,9 +726,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private int companyChildCheckForLocal(Map<String, Object> map) throws Exception {
-        return (int) select("EzOrganAdminDAO.companyChildCheck", map);
+        String cn = (String)map.get("cn");
+        int tenantID = (Integer)map.get("tenantID");
+        
+        logger.debug("companyChildCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+        
+        int childCheck = (int) select("EzOrganAdminDAO.companyChildCheck", map);
+        
+        logger.debug("companyChildCheckForLocal started. childCheck=" + childCheck);
+                
+        return childCheck;
     }
 	
+    // 지정된 부서 바로 아래에 위치한 자식 부서의 수를 반환한다.
 	public int companyChildCheck(String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return companyChildCheckForJMocha(cn, tenantID);
@@ -781,8 +791,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return returnValue;             
     }
 	
-    private int userCheckForLocal(Map<String, Object> map) throws Exception{
-        return (int) select("EzOrganAdminDAO.userCheck", map);
+    private int userCheckForLocal(Map<String, Object> map) throws Exception {
+        String cn = (String)map.get("cn");
+        int tenantID = (Integer)map.get("tenantID");
+        
+        logger.debug("userCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+        
+        int check = (int) select("EzOrganAdminDAO.userCheck", map);
+        
+        logger.debug("userCheckForLocal started. check=" + check);
+                
+        return check;
     }
 	
 	public int userCheck(String cn, int tenantID) throws Exception{
@@ -790,8 +809,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             return userCheckForJMocha(cn, tenantID);
         } else {
         	Map<String, Object> map = new HashMap<String, Object>();
+        	
         	map.put("cn", cn);
         	map.put("tenantID", tenantID);
+        	
             return userCheckForLocal(map);
         }       
 	}
@@ -1039,6 +1060,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	date.setTimeZone(TimeZone.getTimeZone("GMT"));
     	String nowDate = date.format(new Date());
     	map.put("nowDate", nowDate);
+    	
         insert("EzOrganAdminDAO.insertDBData_dept", map);
     }
 	
@@ -1484,7 +1506,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         
         logger.debug("deleteDBDataForJMocha ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);        
         
-        if (reasonCode != 0) {
+        // reasonCode가 -1인 경우는 삭제하려던 레코드가 없는 경우이며 이 경우 성공으로 취급한다. 
+        if (reasonCode != 0 && reasonCode != -1) {
             if (targetClass.equals("group")) {
                 throw new Exception("Deleting Department Failed!");
             } else {
@@ -1753,11 +1776,21 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         
         return returnValue;
     }
-	
+	    
     private int userCountCheckForLocal(Map<String, Object> map) {
-        return (int) select("EzOrganAdminDAO.userCountCheck", map);
+        String cn = (String)map.get("cn");
+        int tenantID = (Integer)map.get("tenantID");
+        
+        logger.debug("userCountCheckForLocal started. cn=" + cn + ",tenantID=" + tenantID);
+        
+        int userCount = (int) select("EzOrganAdminDAO.userCountCheck", map);
+        
+        logger.debug("userCountCheckForLocal started. userCount=" + userCount);
+        
+        return userCount;
     }
 	
+    // 지정된 부서에 속한 사원의 수를 반환한다.
 	public int userCountCheck(String cn, int tenantID) throws Exception {
         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
             return userCountCheckForJMocha(cn, tenantID);

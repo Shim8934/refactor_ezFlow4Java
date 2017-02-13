@@ -220,7 +220,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception{
+	public void updateProperty(String cn, String column, String number, String pClass, int tenantID) throws Exception {
+	    logger.debug("updateProperty started");
+	    logger.debug("cn=" + cn + ",column=" + column + ",number=" + number + ",pClass=" + pClass + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -240,6 +243,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    		ezOrganAdminDao.updateProperty_U(map);
 	    	}
 	    }       
+		
+		logger.debug("updateProperty ended");
 	}
 
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
@@ -341,6 +346,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return ezOrganAdminDao.companyCheck(map);
 	}
 
+	// 지정된 부서 바로 아래에 위치한 자식 부서의 수를 반환한다.
 	@Override
 	public int companyChildCheck(String cn, int tenantID) throws Exception {
 		return ezOrganAdminDao.companyChildCheck(cn, tenantID);
@@ -396,6 +402,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void insertDBData_dept(OrganDeptVO vo) throws Exception {
+	    logger.debug("insertDBData_dept started");
+	    logger.debug("tenantId=" + vo.getTenantId() + ",cn=" + vo.getCn() + ",displayName=" + vo.getDisplayName()
+	            + ",displayName2=" + vo.getDisplayName2() + ",parentCn=" + vo.getParentCn());
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", vo.getTenantId());
@@ -418,14 +428,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-			ezOrganAdminDao.insertDBData_dept(map);
-        } else {
-        	//Local일때 프로시저 타는부분이 더 있어서 추가해줌.
-        	ezOrganAdminDao.insertDBData_dept(map);
-        	ezOrganAdminDao.updateDeptMaster(map);
-        }
+		ezOrganAdminDao.insertDBData_dept(map);
 		
+		logger.debug("insertDBData_dept ended");
 	}
 	
 	@Override
@@ -719,6 +724,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    }  
 	}
 
+	// 지정된 부서에 속한 사원의 수를 반환한다.
 	@Override
 	public int userCountCheck(String cn, int tenantID) throws Exception {
 		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
