@@ -1246,10 +1246,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertTbSpecialCatalogInfo_Cab2", map);
 	}
 	
-	public void insertTbAprReceiptProcessInfo(Map<String, Object> map1) throws Exception{
-		insert("EzApprovalG.insertTbAprReceiptProcessInfo", map1);
-	}
-	
 	public void insertTbContainer(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertTbContainer", map);
 	}
@@ -1546,6 +1542,38 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertProHistoryReceiptInfo2", map);
 	}
 	
+	public void insertHesongAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprReceiptProcessInfo", map);
+	}
+	
+	public void insertHesongAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprDocInfo", map);
+	}
+	
+	public void insertHesongExpAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprDocInfo", map);
+	}
+	
+	public void insertHesongAprAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprAttachInfo", map);
+	}
+
+	public void insertHesongAprDocAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprDocAttachInfo", map);
+	}
+
+	public void insertHesongAprOpinionInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprOpinionInfo", map);
+	}
+
+	public void insertHesongAprReceiptProcessInfo2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprReceiptProcessInfo2", map);
+	}
+	
+	public void insertRejectAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertRejectAprReceiptProcessInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1604,10 +1632,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateTbSeperateAttach(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateTbSeperateAttach", map);
-	}
-	
-	public void updateTbAprReceiptProcessInfo(Map<String, Object> map1) throws Exception{
-		update("EzApprovalG.updateTbAprReceiptProcessInfo", map1);
 	}
 	
 	public void jiJungUpdateReceiptProInfo(Map<String, Object> map) throws Exception{
@@ -1728,6 +1752,30 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateProEndAprDocInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateProEndAprDocInfo", map);
+	}
+	
+	public void updateReceiptPointInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateReceiptPointInfo", map);
+	}
+	
+	public void updateSusinEndReceiptPointInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateSusinEndReceiptPointInfo", map);
+	}
+	
+	public void updateSusinEndReceiptPointInfo2(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateSusinEndReceiptPointInfo2", map);
+	}
+	
+	public void updateHesongAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateHesongAprReceiptProcessInfo", map);
+	}
+	
+	public void updateHesongAprReceiptProcessInfo3(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateHesongAprReceiptProcessInfo3", map);
+	}
+	
+	public void updateRejectAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateRejectAprReceiptProcessInfo", map);
 	}
 	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
@@ -1868,6 +1916,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteReSendEndReceiptPointInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReSendEndReceiptPointInfo", map);
+	}
+	
+	public void deleteHesongExpAprLine(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteHesongExpAprLine", map);
+	}
+	
+	public void deleteHesongAprLineInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteHesongAprLineInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")

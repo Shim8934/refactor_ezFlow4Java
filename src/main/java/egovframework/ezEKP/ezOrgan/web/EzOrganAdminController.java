@@ -133,7 +133,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 회사추가 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/companyInfo.do")
-	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String companyInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	    logger.debug("companyInfo started.");
+	    
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
@@ -141,6 +143,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
+		
+		logger.debug("companyInfo ended.");
 		
 		return "admin/ezOrgan/companyInfo";
 	}
@@ -232,7 +236,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/delDept.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String delDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("delDept started.");
 	    
 	    LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -246,17 +250,19 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		logger.debug("cn=" + cn);
 		
+		// 제거하고자 하는 회사 혹은 부서 바로 아래에 위치한 자식 부서의 수를 구한다.
 		int cnt = ezOrganAdminService.companyChildCheck(cn, tenantID);
+		
+		// 제거하고자 하는 회사 혹은 부서에 속한 사원의 수를 반환한다.
 		int usercnt = ezOrganAdminService.userCountCheck(cn, tenantID);
 		
 		logger.debug("cnt=" + cnt + ",usercnt=" + usercnt);
 		
 		if (cnt > 0) {
 			result = "HASCHILD";
-		} else if(usercnt>0){
+		} else if(usercnt > 0) {
 			result = "HASCHILD";
-		}else {
-			
+		} else {			
 			// skyblue0o0
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 			String mailAddr = cn + "@" + domain;
@@ -267,13 +273,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			
 			logger.debug("removeGroup rc=" + rc);
 			
-			if (rc == 0) { // removeGroup 성공
-				
+			if (rc == 0) { // removeGroup 성공				
 				OrganDeptVO dept = ezOrganService.getDeptInfo(cn, "1", userInfo.getTenantId());
 				String groupAddr = dept.getExtensionAttribute1() + "@" + domain;
 				
 				logger.debug("groupAddr=" + groupAddr);
 				
+				// 상위 부서의 이메일 그룹 주소로부터 해당 부서를 삭제한다.
 				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 				
 				logger.debug("updateGroupDel rc=" + rc);
@@ -514,7 +520,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		logger.debug("pClass=" + pClass + ",cn=" + cn);
 		
-		for (int i=0; i<cnDatas.length; i++) {
+		for (int i = 0; i < cnDatas.length; i++) {
 			ezOrganAdminService.updateProperty(cnDatas[i], "EXTENSIONATTRIBUTE15", i+"", pClass, tenantID);	
 		}
 		

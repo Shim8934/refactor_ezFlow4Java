@@ -1281,7 +1281,7 @@ function organtreeview(thisobjid, elobjid) {
         (function() {
             // safari
             var protocol = window.location.protocol;
-            var serverName = window.location.hostname;
+            var serverName = window.location.host;
 
             var downloadPath = "";
 
@@ -1333,7 +1333,7 @@ function organtreeview(thisobjid, elobjid) {
                 //var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
             	var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
                 var protocol = window.location.protocol;
-                var serverName = window.location.hostname;
+                var serverName = window.location.host;
 
                 var downloadPath = "";
                 for (var i = 0; i < bimageNodes.length; i++) {
@@ -1392,7 +1392,7 @@ function organtreeview(thisobjid, elobjid) {
         	} else {
         		var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
         		var protocol = window.location.protocol;
-                var serverName = window.location.hostname;
+                var serverName = window.location.host;
 
                 var downloadPath = "";
                 for (var i = 0; i < bimageNodes.length; i++) {

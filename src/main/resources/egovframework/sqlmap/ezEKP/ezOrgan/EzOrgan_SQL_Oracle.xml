@@ -190,7 +190,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                       		'user' TYPE  
                			FROM
                				TBL_USERMASTER 
@@ -211,7 +211,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                       		'dept' TYPE  
                			FROM
                				TBL_DEPTMASTER 
@@ -246,7 +246,7 @@
                        		END
                        			DISPLAYNAME  ,
                       		'dept' TYPE  ,
-                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') 
+                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') 
                      		EXTENSIONATTRIBUTE15  
                			FROM
                				TBL_DEPTMASTER 
@@ -280,7 +280,7 @@
                        				DISPLAYNAME2
                        			END
                        				DISPLAYNAME  ,
-                       			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                        		FROM
                        			TBL_USERMASTER 
@@ -300,7 +300,8 @@
                        			ELSE
                        				DISPLAYNAME2
                        			END
-                       				DISPLAYNAME  , SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                       				DISPLAYNAME  , 
+                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -330,7 +331,7 @@
                       		DISPLAYNAME2
                       	END
                       		DISPLAYNAME  ,
-                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                       	'dept' TYPE  
                     FROM
                     	TBL_DEPTMASTER 
@@ -358,7 +359,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE  
                           		FROM
                           			TBL_USERMASTER 
@@ -379,7 +380,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
                           		FROM
                           			TBL_ADDJOBMASTER B
@@ -402,7 +403,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                            			'dept' TYPE  
                           		FROM
                           			TBL_DEPTMASTER 
@@ -445,7 +446,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_USERMASTER 
@@ -466,7 +467,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                      		SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_ADDJOBMASTER B
@@ -500,7 +501,7 @@
                     	DISPLAYNAME2
                     END
                     	DISPLAYNAME  ,
-                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                         'DEPT' TYPE  
             	FROM
             		TBL_DEPTMASTER 
@@ -529,7 +530,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                            FROM
                            		TBL_USERMASTER 
@@ -550,7 +551,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                              FROM
                              	TBL_ADDJOBMASTER B
@@ -573,7 +574,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, ' '))) || NVL(EXTENSIONATTRIBUTE15, ' ') EXTENSIONATTRIBUTE15  ,
+                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                                 'DEPT' TYPE  
                             FROM
                             	TBL_DEPTMASTER 

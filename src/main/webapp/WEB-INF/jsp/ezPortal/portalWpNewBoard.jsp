@@ -84,7 +84,7 @@
     	        		getBoardList_NewBoard_after(loadXMLString(xml));
     	        	},
     	        	error : function(error){
-    	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+    	        		console.log("<spring:message code='ezBoard.t22'/>portalWpNewBoard" + error);	
     	        	}
     	        	});
             	
