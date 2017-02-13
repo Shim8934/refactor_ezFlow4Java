@@ -282,7 +282,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PENDROW", boardListVO.getEndRow());
 		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		return ezBoardDAO.getNewItemList(map);
 	}
@@ -602,7 +603,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_END", end);
 		map.put("v_TENANTID", ezBoardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", end - start);
+		map.put("rowCount", end - (start - 1));
+		map.put("limit", start - 1);
 		
 		return ezBoardDAO.getNoticePostItem(map);
 	}
@@ -637,7 +639,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tempString", tempString);
 		map.put("iv_PORDERBYSUB", orderOption1);
-		map.put("rowCount", endRow - startRow);
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		return ezBoardDAO.getBoardListItem(map);
 	}
@@ -667,7 +670,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("type", type);
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("v_TENANTID", tenantID);
-		map.put("rowCount", endRow - startRow);
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		return ezBoardDAO.getQnABoardListItem(map);
 	}
@@ -700,7 +704,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_ABSTRACT", boardVO.getABSTRACT());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -751,7 +756,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("endRow", boardListVO.getEndRow());
 		map.put("v_PBOARDID", boardVO.getBoardId());
 		map.put("iv_PORDERBYSUB", boardListVO.getOrderBySub());
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		return ezBoardDAO.getThumbnailList(map);
 	}
@@ -785,7 +791,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("v_TEMP", "");
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -815,7 +822,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_START", start);
 		map.put("v_END", end);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", end - start);
+		map.put("rowCount", end - (start - 1));
+		map.put("limit", start - 1);
 		
 		return ezBoardDAO.getMyNoticePostItem(map);
 	}
@@ -841,7 +849,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", endRow - startRow);
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		return ezBoardDAO.getMyBoardListItem(map);
 	}
@@ -866,7 +875,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
-		map.put("rowCount", endRow - startRow);
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		return ezBoardDAO.getMyBoardListItemTemp(map);
 	}
@@ -892,7 +902,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", endRow - startRow);
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		return ezBoardDAO.getApprBoardListItem(map);
 	}
@@ -922,7 +933,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		return ezBoardDAO.getSearchMyBoardItemList(map);
 	}
@@ -951,7 +963,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
-		map.put("rowCount", boardListVO.getEndRow() - boardListVO.getStartRow());
+		map.put("rowCount", boardListVO.getEndRow() - (boardListVO.getStartRow() - 1));
+		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		return ezBoardDAO.getSearchMyBoardItemListTemp(map);
 	}
@@ -1080,7 +1093,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_pStartRow", pStartRow);
 		map.put("v_pEndRow", pEndRow);
 		map.put("v_TENANTID", tenantID);
-		map.put("rowCount", pEndRow - pStartRow);
+		map.put("rowCount", pEndRow - (pStartRow - 1));
+		map.put("limit", pStartRow - 1);
 		
 		return ezBoardDAO.photoViewDB(map);
 	}
