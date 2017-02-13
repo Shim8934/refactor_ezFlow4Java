@@ -1855,14 +1855,20 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 양식등록 실행  함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleSaveForm.do")
-	public void scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
+	@ResponseBody
+	public String scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String brdNm = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String formText = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
-		ezResourceService.insertForm(resID, brdNm, formText, userInfo.getTenantId());
-		
+		try{
+			ezResourceService.insertForm(resID, brdNm, formText, userInfo.getTenantId());
+			return "OK";
+		}catch(Exception e){
+			e.printStackTrace();
+			return "FALSE";
+		}
 	}
 	
 	/**
@@ -1871,6 +1877,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/scheduleDelForm.do")
 	@ResponseBody
 	public String scheduleDelForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String delCode = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();

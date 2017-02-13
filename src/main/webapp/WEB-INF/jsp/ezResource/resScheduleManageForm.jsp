@@ -79,7 +79,13 @@
 		        xmlHttp.send(xmlDoc);
 	
 		        rtnVal = xmlHttp.responseText;
-
+				
+		        if(rtnVal=="OK"){
+					alert("<spring:message code='ezResource.t56'/>");
+				}else if(rtnVal=="FALSE"){
+					alert("<spring:message code='ezResource.t42'/>");	
+				}
+		        
 	    	    OpenAlertUI(strLang256);
 	        	DivPopUpHidden();
 	        	window.close();
@@ -100,7 +106,7 @@
 
 	        	valFlag = DomHttp.responseText;
 	        	if (valFlag == "FALSE") {
-		            OpenAlertUI(strLang257);
+	        		OpenAlertUI(strLang257);
 	            	return;
 	        	}
 
@@ -131,6 +137,7 @@
 	        	if (reVal == "OK") {
 		            OpenAlertUI(strLang259);
 		            window.close();
+		            alert("<spring:message code='ezResource.t64'/>");
 	        	}
 	        	else
 		            OpenAlertUI(strLang260);
