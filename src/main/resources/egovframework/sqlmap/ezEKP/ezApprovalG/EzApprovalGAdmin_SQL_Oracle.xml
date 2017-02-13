@@ -191,7 +191,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					TBL_TASK_DEPTINFO.processdeptcode = #v_DEPTCODE#
+					TRIM(TBL_TASK_DEPTINFO.processdeptcode) = #v_DEPTCODE#
 			]]>
 		</isNotEqual>
 	</select>
@@ -296,7 +296,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	processdeptcode = #v_DEPTCODE#
+					(	TRIM(processdeptcode) = #v_DEPTCODE#
 					OR
 						taskcode LIKE 'ZZ%'
 					OR
@@ -1571,7 +1571,7 @@
 				WHERE
 					taskcode = #v_TASKCODE#
 				AND
-					processdeptcode = #v_DEPTID#
+					TRIM(processdeptcode) = #v_DEPTID#
 				AND
 					tenant_id = #tenantID#
 			]]>
