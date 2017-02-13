@@ -35,7 +35,7 @@
 					async : false,
 					url : "/ezBoard/confirmPassword.do",
 					data : { newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
-							 itemID : "${itemID}"	
+							 replyID : "${replyID}"
 							},
 					success: function(result){
 						rtnVal = result;

@@ -1317,10 +1317,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String getDocPassWord(String itemID, int tenantID) throws Exception {
+	public String getDocPassWord(String replyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("itemID", itemID);
-		map.put("tenantID", tenantID);
+		map.put("replyID", replyID);
+		map.put("tenantID", tenantID);	
 		
 		return ezBoardDAO.getDocPassWord(map);
 	}

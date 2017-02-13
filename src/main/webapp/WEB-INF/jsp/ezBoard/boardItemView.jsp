@@ -616,7 +616,7 @@
 				else {
 				    password = rsa.encrypt(document.getElementById("txtPassWord").value);
 				}
-				
+		
 				$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -647,21 +647,14 @@
 		    function delete_onelinereply(pReplyID) {
 		        delpReplyID = pReplyID;
 		        var xmlhttp = createXMLHttpRequest();
+		        
 		        if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (gubun == "2") {
 		
 		                if (CrossYN()) {
-		                    checkpassword_dialogArguments = new Array();
-		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
-		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
-		                    try { OpenWin.focus(); } catch (e) { }
-		                }
-		                else {
-		
-		                    var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
+		                	var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
 		                    var ret = window.showModalDialog("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "", feature);
-		
 		                    if (ret == "NO") {
 		                        alert("<spring:message code='ezBoard.t267' />");
 		                        return;
@@ -670,16 +663,22 @@
 		                        alert(strLang27);
 		                        return;
 		                    }
-		
 		                    xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
 		                    xmlhttp.send();
-		                    if (xmlhttp.responseText == "FAILFAIL") {
+		                    if (xmlhttp.responseText == "FAIL") {
 		                        alert("<spring:message code='ezBoard.t310' />");
 		                    }
 		
 		                    getOneLineReply();
 		                    xmlhttp = null;
 		                }
+		                else {		                	
+		                    checkpassword_dialogArguments = new Array();
+		                    checkpassword_dialogArguments[1] = delete_onelinereply_Complete;
+		                    var OpenWin = window.open("/ezBoard/checkPassWord.do?itemID=" + pItemID + "&replyID=" + pReplyID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+		                    try { OpenWin.focus(); } catch (e) { }
+		                }
+		                
 		            }
 		            else {
 		                xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
@@ -691,11 +690,12 @@
 		                if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		            }
 		        } else {
-		            if (!confirm("<spring:message code='ezBoard.t311' />")) return;
+		        	gubun=2;
+		        	if (!confirm("<spring:message code='ezBoard.t311' />")) return;
 		        }
 		        xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID + "&guBun=" + gubun, false);
-		        xmlhttp.send();
-		        if (xmlhttp.responseText == "FAILFAIL") {
+		        xmlhttp.send();	        
+		        if (xmlhttp.responseText == "FAIL") {
 		            alert("<spring:message code='ezBoard.t310' />");
 		        }
 		        getOneLineReply();
@@ -729,9 +729,9 @@
 		        for (var i = 0; i < xmldom.getElementsByTagName("REPLYID").length; i++) {
 		            temp = i + 1;
 		            if (gubun != "2")
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
+		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick='OpenUserInfo(\"" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "\")'><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
 		            else
-		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
+		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span style='cursor:pointer' onclick=''><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERID").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + " <img src='/images/oneline_delete.gif' style='cursor:pointer' onclick='delete_onelinereply(\"" + getNodeText(xmldom.getElementsByTagName("REPLYID").item(i)) + "\")'><br>";
 		        }
 		        if (i == 0)
 		            strHTML = "<spring:message code='ezBoard.t312' />";
