@@ -2332,7 +2332,7 @@
 					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, COMPANYID, THEMEUID, TENANT_ID
 					)
 			VALUES (
-				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, sysdate, #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #companyID#, #themeUID#, #tenantID#
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #companyID#, #themeUID#, #tenantID#
 			) 
 			 
 		]]>

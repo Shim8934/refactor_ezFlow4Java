@@ -54,6 +54,7 @@ function InitRegisterType() {
     switch (g_RecTypeCode) {
  
         case "1":
+
             if (ListTypeFlag == "10") {
             	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[1]);
             }
@@ -96,10 +97,10 @@ function InitRegisterType() {
 
             if (ListTypeFlag == "11" || ListTypeFlag == "0") {
             	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+            } else {
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
+        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
             }
-        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
-        	Root.appendChild(objCodeInfo.getElementsByTagName("REGISTERTYPE")[0].childNodes[6]);
-
             break;
     }
     InitCodeSelectBox(RegTypeCodeXml.documentElement.childNodes, selRegisterType);
@@ -285,6 +286,7 @@ function btnChangeCabinet_onclick_Complete(rtn) {
     DivPopUpHidden();
     if (rtn[0] == "TRUE") {
         g_CabListXml = rtn[1];
+        alert("32323" +g_CabListXml);
         InitCabinetInfo(g_CabListXml);
     }
 }
