@@ -503,8 +503,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		int depth = 0;
 		int interval = 100000;
 		String strUIDList = "";
-		String[] arr;
-		String pArrParam = "";
+		//String[] arr;
 		
 		Map<String, Object> saveMap = new HashMap<String, Object>();
 		saveMap.put("uID", pPageID);
@@ -630,7 +629,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			} else {
 				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
 			}
-			arr = strUIDList.split(",");
+			
+			//arr = strUIDList.split(",");
 			
 			Map<String, Object> map3 = new HashMap<String, Object>();
 			map3.put("pArrParam", strUIDList);
@@ -931,9 +931,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		int depth = 0;
 		int interval = 100000;
 		String strUIDList = "";
-		String[] arr;
-		String pArrParam = "";
-		String temp = "";
+		//String[] arr;
+		//String pArrParam = "";
 		String pThemeUID = "";
 		String pTableViewOption = "";
 		
@@ -1234,7 +1233,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				
 				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
 				logger.debug("strUIDList="+strUIDList);
-				arr = strUIDList.split(",");
+				//arr = strUIDList.split(",");
 				
 				Map<String, Object> map7 = new HashMap<String, Object>();
 				map7.put("pArrParam", strUIDList);

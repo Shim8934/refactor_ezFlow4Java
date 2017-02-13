@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezPortal.service.impl;
 
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -793,7 +792,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 
 	public String getAccessList(LoginVO userInfo) {
-		
+		logger.debug("getAccessList started");
+
 		String pDeptPathCode = userInfo.getDeptPathCode();
 		logger.debug("pDeptPathCode="+pDeptPathCode);
 		String ret = "";
@@ -807,7 +807,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			pIDTop = pDeptPathCode.split("\\,")[1].trim();
 			//pIDCompany = pDeptPathCode.split("\\,")[2].trim();
 			pIDCompany = userInfo.getCompanyID();
-			logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@pIDComapny="+pIDCompany);
 			pIDDept = pDeptPathCode.split("\\,")[3].trim();
 			pDeptPathCode = pIDUser + "," + pIDTop + "," + pIDDept + "," + pIDCompany;
 		}
@@ -817,27 +816,24 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		} else {
 			ret = pDeptPathCode;
 		}
+
+		logger.debug("getAccessList ended");
 		return ret;
 	}
 	
 	public String getDefaultTopMenu() {
-		try {
-			StringBuilder sb = new StringBuilder();
-			 sb.append("<table id='main_table' border=1 cellpadding=0 cellspacing=0 width=100% height=200px style='table-layout:fixed;boarder-collapse:collapse'>\n");
-             sb.append("<tr id='main_row'>\n");
-             sb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
-             sb.append("<TBODY>");
-             sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
-             sb.append("</TBODY></table></td>");
-             sb.append("</tr></table>");
-			
-             String strPage = sb.toString();
-             
-			return strPage;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
-		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("<table id='main_table' border=1 cellpadding=0 cellspacing=0 width=100% height=200px style='table-layout:fixed;boarder-collapse:collapse'>\n");
+        sb.append("<tr id='main_row'>\n");
+        sb.append("<td id='td0' valign=top onclick='selectcell(event)'><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>\n");
+        sb.append("<TBODY>");
+        sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>*</td></TR>");
+        sb.append("</TBODY></table></td>");
+        sb.append("</tr></table>");
+		
+        String strPage = sb.toString();
+         
+        return strPage;
 	}
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception {
@@ -1224,7 +1220,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	public String searchMyPortalPage (String pGubunFlag, String pMode, LoginVO userInfo, String pCompanyID) throws Exception {
 		logger.debug("searchMyPortalPage started");
-		logger.debug("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@userInfoCompany="+userInfo.getCompanyID());
 		
 		List<PortalTBLPortalPageGeneralVO> result = new ArrayList<PortalTBLPortalPageGeneralVO>();
 		String strRight = "";
@@ -1236,7 +1231,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		boolean bExist = false;
 		String pAccessIDList = getAccessList(userInfo);
-		logger.debug("@@@@@@@@@@@@@@pAccessIDList="+pAccessIDList);
+		logger.debug("pAccessIDList="+pAccessIDList);
 		
 		for (int i=0; i<pAccessIDList.split(",").length; i++) {
 			result = searchMyPortalPage2(pAccessIDList.split(",")[i].trim(), pGubunFlag, strRight, pCompanyID, userInfo.getTenantId());
@@ -2475,7 +2470,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	public String addBestTable (LoginVO userInfo) throws Exception {
 		logger.debug("addBestTable started");
 
-StringBuilder strData = new StringBuilder();
+		StringBuilder strData = new StringBuilder();
 		
 		boolean firstFlag = true;
 		int val = 0;
