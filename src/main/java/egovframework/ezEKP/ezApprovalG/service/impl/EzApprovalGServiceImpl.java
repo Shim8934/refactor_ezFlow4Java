@@ -4277,6 +4277,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.updateProEndAprDocInfo(map);	
     			rtn = true;
     		} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
     			System.out.println(e.getMessage());
     			rtn = false;
     		}
@@ -5647,7 +5648,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnVal = "<RESULT>TRUE</RESULT>";
 				} catch (Exception e) {
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 					return rtnVal = "<RESULT>FALSE</RESULT>";
 				}
 
@@ -6983,17 +6983,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
 		} else {
-			try {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-				map.put("companyID", companyID);
-				
-				ezApprovalGDAO.transactionSQL(map);
-				
 				return "<RESULT>TRUE</RESULT>";
-			} catch (Exception e) {
-				return "<RESULT>FALSE</RESULT>";
-			}
 		}
 	}
 
@@ -10408,9 +10398,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 		}
 		
 		if (rtnVal) {
@@ -10528,6 +10516,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
+				sendMsg(docID, "", "END", companyID, lang , userInfo.getTenantId());
+			}
+			
+			if (rtnVal) {
 				subSQL = deleteDocInfo(docID, "QUERY", companyID , userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
@@ -10535,9 +10527,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				sendMsg(docID, "", "END", companyID, lang , userInfo.getTenantId());
-			}
+		
 			
 			break;
 			
@@ -10593,6 +10583,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
+				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
+			}
+			
+			if (rtnVal) {
 				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
@@ -10600,9 +10594,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
-			}
+	
 			
 			break;
 			
@@ -10648,6 +10640,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
+				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
+			}
+			
+			if (rtnVal) {
 				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
@@ -10655,9 +10651,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
-			}
+		
 			
 			break;
 			
@@ -10690,6 +10684,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				if (rtnVal) {
+					sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
+				}
+				
+				if (rtnVal) {
 					subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -10697,9 +10695,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} 
 				}
 				
-				if (rtnVal) {
-					sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
-				}
+			
 			} else {
 				subSQL = doApproveEnd(docID, dirPath, deptID, false, companyID, userInfo.getTenantId());
 				
@@ -10722,9 +10718,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
+				}
+				
+				if (rtnVal) {
+					sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
 				}
 				
 				if (rtnVal) {
@@ -10735,9 +10733,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} 
 				}
 				
-				if (rtnVal) {
-					sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
-				}
+			
 			}
 			
 			break;
@@ -10818,9 +10814,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
+			}
+			
+			if (rtnVal) {
+				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
 			}
 			
 			if (rtnVal) {
@@ -10830,10 +10828,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnVal = false;
 				} 
 
-			}
-			
-			if (rtnVal) {
-				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
 			}
 			
 			break;
@@ -10872,18 +10866,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
+				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
+			}
+			
+			if (rtnVal) {
 				subSQL = deleteDocInfo(docID, "QUERY", companyID, userInfo.getTenantId());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
 				} 
-//				else {
-//					strSQL.append(subSQL);
-//				}
-			}
-			
-			if (rtnVal) {
-				sendMsg(docID, "", "END", companyID, lang, userInfo.getTenantId());
+
 			}
 			
 			break;
