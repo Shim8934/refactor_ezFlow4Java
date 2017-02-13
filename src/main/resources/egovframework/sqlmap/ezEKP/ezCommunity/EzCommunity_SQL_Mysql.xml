@@ -6508,7 +6508,7 @@
         		TBL_COMM_ITEM_ATTACHMENTS
        		VALUES
        			(#itemID#,
-       			SYS_GUID(),
+       			UUID(),
        			#filePath#,
        			#fileSize#,
        			#fileName#,
