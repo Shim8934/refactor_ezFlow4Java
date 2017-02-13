@@ -15730,7 +15730,7 @@
 			TBL_APRDOCATTACHINFO 
 		(DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) 
 		VALUES 
-		(#v_DOCID# , #v_TEMPSN#, #v_AttachDocName#, #v_AttachDocURL#, #v_SubAttachYN#, #v_AttachUserID#, #v_AttachUserName#, #v_AttachUserName2#, #v_AttachUserJobTitle#, #v_AttachUserJobTitle2#, #v_AttachUserDeptID#, #v_AttachUserDeptName#, #v_AttachUserDeptName2#, #v_TENANT_ID#)
+		(#v_DOCID# , #v_TEMPSN#, #v_AttachDocName#, #v_AttachDocURL#, #v_SubAttachYN#, #v_AttachUserID#, #v_AttachUserName#, #v_AttachUserName2#, #v_AttachUserJobTitle#, #v_AttachUserJobTitle2#, #v_AttachUserDeptID#, #v_AttachUserDeptName#, #v_AttachUserDeptName2#, #v_TENANTID#)
 	</insert>
 	
 	<update id="EzApprovalG.updateGianAprDocInfo" parameterClass="Map">
@@ -15743,4 +15743,35 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</update>
+	
+	<insert id="EzApprovalG.insertRegRecord" parameterClass="Map">
+		Insert Into 
+			TBL_RECORD
+		(RecordID,          DocID,  ProcessDeptName,      ProcessDeptName2,      ProcessDeptCode,    RegisterYear,    RegisterDate,                                    RegisterNo,    AprMemberTitle,     AprMemberTitle2,      DrafterName,      DrafterName2,     ExecuteDate,                                      ReceiptMemberName,          ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo,         ElectronicRecFlag, SpecialRecordCode,        PublicityCode,     LimitRange,      OldRecordFlag, DeleteDate, DelFlag,       SpecialCatalogFlag, AttachFlag,         CreateDate,                                RejectFlag, ManualRegFlag, DocType, TENANT_ID)
+		VALUES 
+		(#v_RecordID# , #v_DocID#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_ProcessDeptCode#, #v_RegisterYear#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_RegisterNo#, #v_AprMemberTitle#, #v_AprMemberTitle2#,  #v_DrafterName#,  #v_DrafterName2#,  TO_DATE(#v_ExecuteDate#,'YYYY-MM-DD HH24:MI:SS'),  #v_ReceiptMemberName#,  #v_ReceiptMemberName2#,  NULL,                NULL  ,         #v_DeliveryNo#, #v_ProduceDeptRegNo#, #v_ElectronicRecFlag#,  #v_SpecialRecordCode#, #v_PublicityCode#, #v_LimitRange#, #v_OldRecordFlag#, NULL,     #v_DelFlag#, #v_SpecialCatalogFlag#, #v_AttachFlag#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_RejectFlag#, #v_ManualRegFlag#, #v_DocType#, #v_TENANTID#)
+	</insert>
+	
+	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_ENDATTACHINFO 
+		(		DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID) 
+        ( SELECT 
+        		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID
+          FROM 
+          		TBL_APRATTACHINFO 
+          WHERE 
+          		DocID = #v_DOCID#
+		  AND
+				TENANT_ID = #v_TENANTID#)
+	</insert>
+	
+	<delete id="EzApprovalG.deleteRegAprAttachInfo" parameterClass="Map">
+	     DELETE FROM 
+	     	TBL_APRATTACHINFO 
+	     WHERE 
+	     	DocID = #v_DOCID#
+		 AND
+			TENANT_ID = #v_TENANTID#
+	</delete>
 </sqlMap>

@@ -1610,6 +1610,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertGianAprDocAttachInfo", map);
 	}
 	
+	public void insertRegRecord(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertRegRecord", map);
+	}
+	
+	public void insertRegEndAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertRegEndAttachInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2004,6 +2012,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteRollBackSignInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteRollBackSignInfo", map);
+	}
+	
+	public void deleteRegAprAttachInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteRegAprAttachInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
