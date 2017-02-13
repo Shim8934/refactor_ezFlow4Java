@@ -2120,7 +2120,7 @@
 	
 	<delete id="EzBoardDAO.deleteOneLineReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -3139,7 +3139,7 @@
 	
 	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_MyBoards
+			DELETE FROM TBL_Board_MyBoards
 			WHERE  
 				TENANT_ID = #tenantID#
 			AND
@@ -3575,7 +3575,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3585,7 +3585,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3595,7 +3595,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item
+			DELETE FROM TBL_Board_Item
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3605,7 +3605,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3615,7 +3615,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Attachments
+			DELETE FROM TBL_Board_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3636,7 +3636,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_temp
+			DELETE FROM TBL_Board_Item_temp
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3646,7 +3646,7 @@
 	
 	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Photo_ImageItem
+			DELETE FROM TBL_Photo_ImageItem
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
