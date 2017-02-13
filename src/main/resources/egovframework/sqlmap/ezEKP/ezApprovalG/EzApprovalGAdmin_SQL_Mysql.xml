@@ -75,7 +75,9 @@
 			AND
 				TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
 			WHERE
-				(TBL_CODELIST.code1 = 'A02' AND TBL_CODELIST.isuse = '1')
+				TBL_CODELIST.code1 = 'A02'
+			AND
+				TBL_CODELIST.isuse = '1'
 			AND
 				TBL_CODELIST.tenant_id = #tenantID#
 			ORDER BY
@@ -96,8 +98,8 @@
 			SELECT 
 				containerid,
 				usedepid,
-				(SELECT displayname FROM TBL_DEPTMASTER WHERE cn = A.usedepid) as containerTypeName,
-				(SELECT displayname2 FROM TBL_DEPTMASTER WHERE cn = A.usedepid) as containerTypeName2
+				(SELECT displayname FROM TBL_DEPTMASTER AS T1 WHERE cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBL_DEPTMASTER AS T2 WHERE cn = A.usedepid) as containerTypeName2
 			FROM
 				TBL_CONTAINERUSEDEP A
 			WHERE
@@ -156,7 +158,7 @@
 			SELECT
 				TBL_TASKCODE.taskcode,
 				TBL_TASKCODE.taskname,
-				NVL(TBL_TASKCODE.taskname2, TBL_TASKCODE.TASKNAME) AS TASKNAME2,
+				IFNULL(TBL_TASKCODE.taskname2, TBL_TASKCODE.TASKNAME) AS TASKNAME2,
 				TBL_TASKCODE.keepingperiod,
 				TBL_TASKCODE.creationdate CREATEDATE,
 				TBL_TASKCODE.kpreason,
@@ -264,19 +266,19 @@
 			SELECT
 				processdeptcode,
 				processdeptname,
-				NVL(processdeptname2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
+				IFNULL(processdeptname2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
 				categorycode,
 				cname,
-				NVL(cname2,CNAME) AS CNAME2,
+				IFNULL(cname2,CNAME) AS CNAME2,
 				mcategorycode,
 				mcname,
-				NVL(mcname2, MCNAME) AS MCNAME2,
+				IFNULL(mcname2, MCNAME) AS MCNAME2,
 				subcategorycode,
 				scname,
-				NVL(scname2, SCNAME) AS SCNAME2,
+				IFNULL(scname2, SCNAME) AS SCNAME2,
 				taskcode,
 				taskname,
-				NVL(taskname2, TASKNAME) AS TASKNAME2,
+				IFNULL(taskname2, TASKNAME) AS TASKNAME2,
 				keepingperiod,
 				keepingmethod,
 				keepingplace,
@@ -296,7 +298,7 @@
 		<isNotEqual property="v_DEPTCODE" compareValue="">
 			<![CDATA[
 				AND
-					(	RTRIM(processdeptcode) = #v_DEPTCODE#
+					(RTRIM(processdeptcode) = #v_DEPTCODE#
 					OR
 						taskcode LIKE 'ZZ%'
 					OR
@@ -355,8 +357,8 @@
 						sealpath,
 						sealwidth,
 						sealheight,
-						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						regdate,
+						deldate,
 						reguserid,
 						regusername
 					FROM
@@ -376,8 +378,8 @@
 						sealpath,
 						sealwidth,
 						sealheight,
-						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						regdate,
+						deldate,
 						reguserid,
 						regusername
 					FROM
@@ -401,10 +403,10 @@
 						sealpath,
 						sealwidth,
 						sealheight,
-						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						regdate,
+						deldate,
 						reguserid,
-						NVL(regusername2, REGUSERNAME) REGUSERNAME
+						IFNULL(regusername2, REGUSERNAME) REGUSERNAME
 					FROM
 						TBL_SEALINFO
 					WHERE
@@ -422,10 +424,10 @@
 						sealpath,
 						sealwidth,
 						sealheight,
-						TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-						TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+						regdate,
+						deldate,
 						reguserid,
-						NVL(regusername2, REGUSERNAME) REGUSERNAME
+						IFNULL(regusername2, REGUSERNAME) REGUSERNAME
 					FROM
 						TBL_SEALINFO
 					WHERE
@@ -456,8 +458,8 @@
 					sealpath,
 					sealwidth,
 					sealheight,
-					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					STR_TO_DATE(regdate, '%Y-%m-%d %H:%i:%s') REGDATE,
+					STR_TO_DATE(deldate, '%Y-%m-%d %H:%i:%s') DELDATE,
 					reguserid,
 					regusername,
 					regusername2
@@ -480,8 +482,8 @@
 					sealpath,
 					sealwidth,
 					sealheight,
-					TO_CHAR(regdate, 'YYYY-MM-DD HH24:MI:SS') REGDATE,
-					TO_CHAR(deldate, 'YYYY-MM-DD HH24:MI:SS') DELDATE,
+					STR_TO_DATE(regdate, '%Y-%m-%d %H:%i:%s') REGDATE,
+					STR_TO_DATE(deldate, '%Y-%m-%d %H:%i:%s') DELDATE,
 					reguserid,
 					regusername,
 					regusername2
@@ -511,23 +513,13 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.searchManageAprDocList"
 		parameterClass="Map" resultClass="ApprGAprDocInfoVO">
-		<![CDATA[
-			SELECT
-				*
-			FROM
-				(SELECT
-					A.*
-				FROM
-					(
-		]]>
 		
 		<![CDATA[
 			SELECT
 				*
 			FROM
 				(SELECT
-					rownum as rnum,
-					aa.*
+						*
 				FROM
 					(SELECT
 						TBL_APRDOCINFO.docid,
@@ -541,25 +533,25 @@
 						docno,
 						hasattachyn,
 						hasopinionyn,
-						TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
-						TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
+						STR_TO_DATE(startdate, '%Y-%m-%d %H:%i:%s') AS STARTDATE,
+						STR_TO_DATE(enddate, '%Y-%m-%d %H:%i:%s') AS ENDDATE,
 						writerid,
 						writername,
-						NVL(writername2, WRITERNAME) AS WRITERNAME2,
+						IFNULL(writername2, WRITERNAME) AS WRITERNAME2,
 						writerjobtitle,
-						NVL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
+						IFNULL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
 						writerdeptid,
 						writerdeptname,
-						NVL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
+						IFNULL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
 						ispublic,
 						securitycode,
 						storageperiod,
 						keyword,
 						formname,
-						NVL(formname2,FORMNAME) AS FORMNAME2,
+						IFNULL(formname2,FORMNAME) AS FORMNAME2,
 						itemcode,
 						itemname,
-						NVL(itemname2, ITEMNAME) AS ITEMNAME2,
+						IFNULL(itemname2, ITEMNAME) AS ITEMNAME2,
 						urgentapproval,
 						tempattribute,
 						status,
@@ -614,28 +606,28 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE '%' || #v_DOCNUMBER# || '%'
+					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
 			]]>
 		</isNotEqual>
 
@@ -656,28 +648,28 @@
 		<isNotEqual property="v_STARTDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+					STR_TO_DATE(startdate, '%Y-%m-%d %H:%i:%s') >= #v_STARTDATE1#
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_STARTDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#
+					STR_TO_DATE(startdate, '%Y-%m-%d %H:%i:%s') <= #v_STARTDATE2#
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_ENDDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+					STR_TO_DATE(enddate, '%Y-%m-%d %H:%i:%s') >= #v_ENDDATE1#   
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_ENDDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#
+					STR_TO_DATE(enddate, '%Y-%m-%d %H:%i:%s') <= #v_ENDDATE2#
 			]]>
 		</isNotEqual>
 
@@ -713,10 +705,8 @@
 		</isEqual>
 		
 		<![CDATA[
-					) aa
-				)
-			WHERE
-				rnum <= #v_PAGESIZE#) A
+			LIMIT
+				#v_PAGESIZE#) aa
 		]]>
 
 		<isNotEqual property="v_ORDEROPTION2" compareValue="">
@@ -744,11 +734,11 @@
 		</isEqual>
 		
 		<![CDATA[
-				)
-			WHERE
-				rownum <= #v_PAGESIZE2#
+			LIMIT
+				#v_PAGESIZE2#) A
 			ORDER BY
 				startdate DESC
+			
 		]]>
 	</select>
 
@@ -837,7 +827,7 @@
 				SELECT
 					categorycode,
 					name,
-					NVL(name2, NAME) NAME2,
+					IFNULL(name2, NAME) NAME2,
 					description,
 					'1' CATEGORYTYPE,
 					'ROOT'
@@ -854,7 +844,7 @@
 				SELECT
 					mcategorycode,
 					name,
-					NVL(name2, NAME) NAME2,
+					IFNULL(name2, NAME) NAME2,
 					description,
 					'2' CATEGORYTYPE,
 					categorycode 
@@ -873,7 +863,7 @@
 				SELECT
 					subcategorycode,
 					name,
-					NVL(name2, NAME) NAME2,
+					IFNULL(name2, NAME) NAME2,
 					description,
 					'3' CATEGORYTYPE,
 					mcategorycode
@@ -980,24 +970,21 @@
 			<isEqual property="v_TASKCODE" compareValue="">
 				<![CDATA[
 					SELECT
-						*
+						applydate,
+						taskcode,
+						taskname,
+						taskname2,
+						changefactor,
+						beforevalue,
+						aftervalue
 					FROM
-						(SELECT
-							applydate,
-							taskcode,
-							taskname,
-							taskname2,
-							changefactor,
-							beforevalue,
-							aftervalue
-						FROM
-							TBL_TASKCODEHISTORY
-						WHERE
-							tenant_id = #tenantID#
-						ORDER BY
-							sn DESC)
+						TBL_TASKCODEHISTORY
 					WHERE
-						ROWNUM <= 100
+						tenant_id = #tenantID#
+					ORDER BY
+						sn DESC
+					LIMIT
+						100
 				]]>
 			</isEqual>
 		</isEqual>
@@ -1007,8 +994,8 @@
 					SELECT
 						applydate,
 						taskcode,
-						NVL(taskname2, TASKNAME) TASKNAME,
-						NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+						IFNULL(taskname2, TASKNAME) TASKNAME,
+						IFNULL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
 						beforevalue,
 						aftervalue2 AFTERVALUE
 					FROM
@@ -1024,23 +1011,20 @@
 			<isEqual property="v_TASKCODE" compareValue="">
 				<![CDATA[
 					SELECT
-						*
+						applydate,
+						taskcode,
+						IFNULL(taskname2, TASKNAME) TASKNAME,
+						IFNULL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
+						beforevalue,
+						aftervalue2 AFTERVALUE
 					FROM
-						(SELECT
-							applydate,
-							taskcode,
-							NVL(taskname2, TASKNAME) TASKNAME,
-							NVL(changefactor2, CHANGEFACTOR) CHANGEFACTOR,
-							beforevalue,
-							aftervalue2 AFTERVALUE
-						FROM
-							TBL_TASKCODEHISTORY
-						WHERE
-							tenant_id = #tenantID#
-						ORDER BY
-							sn DESC)
+						TBL_TASKCODEHISTORY
 					WHERE
-						ROWNUM <= 100
+						tenant_id = #tenantID#
+					ORDER BY
+						sn DESC
+					LIMIT
+						100
 				]]>
 			</isEqual>
 		</isNotEqual>
@@ -1061,15 +1045,15 @@
 					SELECT
 						sentdeptid,
 						sentdeptname,
-						NVL(COUNT(sentdeptid), 0) APRCOUNT
+						IFNULL(COUNT(sentdeptid), 0) APRCOUNT
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
 						docstate = '011'
 					AND
-						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
-						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 					AND
 						tenant_id = #tenantID#
 					GROUP BY
@@ -1084,15 +1068,15 @@
 					SELECT
 						receiveddeptid ,
 						receiveddeptname ,
-						NVL(COUNT(receiveddeptid), 0) APRCOUNT
+						IFNULL(COUNT(receiveddeptid), 0) APRCOUNT
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
 						docstate = '011'
 					AND
-						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
-						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 					AND
 						tenant_id = #tenantID#
 					GROUP BY
@@ -1110,15 +1094,15 @@
 							sentdeptname,
 							receiveddeptid,
 							receiveddeptname,
-							NVL(COUNT(sentdeptid), 0) APRCOUNT
+							IFNULL(COUNT(sentdeptid), 0) APRCOUNT
 						FROM
 							TBL_ENDRECEIPTPROCESSINFO
 						WHERE
 							docstate = '011'
 						AND
-							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 						AND
-							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 						AND
 							tenant_id = #tenantID#
 						GROUP BY
@@ -1139,7 +1123,7 @@
 					SELECT
 						sentdeptid,
 						sentdeptname2 SENTDEPTNAME,
-						NVL(COUNT(sentdeptid), 0) APRCOUNT
+						IFNULL(COUNT(sentdeptid), 0) APRCOUNT
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
@@ -1147,9 +1131,9 @@
 					AND
 						receivesn = '2'
 					AND
-						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
-						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 					AND
 						tenant_id = #tenantID#
 					GROUP BY
@@ -1170,9 +1154,9 @@
 					WHERE
 						docstate = '011'
 					AND
-						processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
-						processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 					AND
 						tenant_id = #tenantID#
 					GROUP BY
@@ -1190,15 +1174,15 @@
 							sentdeptname2 SENTDEPTNAME,
 							receiveddeptid,
 							receiveddeptname2 RECEIVEDDEPTNAME,
-							NVL(COUNT(sentdeptid), 0) APRCOUNT
+							IFNULL(COUNT(sentdeptid), 0) APRCOUNT
 						FROM
 							TBL_ENDRECEIPTPROCESSINFO
 						WHERE
 							docstate = '011'
 						AND
-							processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 						AND
-							processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+							processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 						AND
 							tenant_id = #tenantID#
 						GROUP BY
@@ -1231,15 +1215,15 @@
 				aprmembername$v_STRLANG$,
 				aprmemberdeptname$v_STRLANG$,
 				aprmemberjobtitle$v_STRLANG$,
-				NVL(COUNT(aprmemberid), 0) AS APRCOUNT
+				IFNULL(COUNT(aprmemberid), 0) AS APRCOUNT
 			FROM
 				TBL_ENDAPRLINEINFO
 			WHERE
-				aprtype IN #v_APRTYPE#
+				aprtype = #v_APRTYPE#
 			AND
-				processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
+				processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 			AND
-				processdate < TO_DATE(#v_TO#, 'YYYY-MM-DD HH24:MI:SS')
+				processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
 			AND
 				tenant_id = #tenantID#
 			GROUP BY
@@ -1265,7 +1249,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(TBL_CONTAINER.containerid), 0)
+				IFNULL(COUNT(TBL_CONTAINER.containerid), 0)
 			FROM
 				TBL_CONTAINER
 			JOIN
@@ -1431,7 +1415,7 @@
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(categorycode), 0)
+					IFNULL(COUNT(categorycode), 0)
 				FROM
 					TBL_TASKCATEGORY
 				WHERE
@@ -1443,7 +1427,7 @@
 		<isEqual property="v_CATETYPE" compareValue="2">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(mcategorycode), 0)
+					IFNULL(COUNT(mcategorycode), 0)
 				FROM
 					TBL_TASKMIDDLECATEGORY
 				WHERE
@@ -1456,7 +1440,7 @@
 		<isEqual property="v_CATETYPE" compareValue="3">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(subcategorycode), 0)
+					IFNULL(COUNT(subcategorycode), 0)
 				FROM
 					TBL_TASKSUBCATEGORY
 				WHERE
@@ -1479,7 +1463,7 @@
 		<isEqual property="v_CATETYPE" compareValue="1">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(mcategorycode), 0)
+					IFNULL(COUNT(mcategorycode), 0)
 				FROM
 					TBL_TASKMIDDLECATEGORY
 				WHERE
@@ -1493,7 +1477,7 @@
 		<isEqual property="v_CATETYPE" compareValue="2">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(subcategorycode), 0)
+					IFNULL(COUNT(subcategorycode), 0)
 				FROM
 					TBL_TASKSUBCATEGORY
 				WHERE
@@ -1507,7 +1491,7 @@
 		<isEqual property="v_CATETYPE" compareValue="3">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(taskcode), 0)
+					IFNULL(COUNT(taskcode), 0)
 				FROM
 					TBL_TASKCODE
 				WHERE
@@ -1531,7 +1515,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(taskcode), 0)
+				IFNULL(COUNT(taskcode), 0)
 			FROM
 				TBL_TASKCODE
 			WHERE
@@ -1553,7 +1537,7 @@
 		<isEqual property="v_DEPTID" compareValue="">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(taskcode), 0)
+					IFNULL(COUNT(taskcode), 0)
 				FROM
 					TBL_CABINETCLASS
 				WHERE
@@ -1565,7 +1549,7 @@
 		<isNotEqual property="v_DEPTID" compareValue="">
 			<![CDATA[
 				SELECT
-					NVL(COUNT(taskcode), 0)
+					IFNULL(COUNT(taskcode), 0)
 				FROM
 					TBL_CABINETCLASS
 				WHERE
@@ -1589,7 +1573,7 @@
 		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(taskcode), 0)
+				IFNULL(COUNT(taskcode), 0)
 			FROM
 				TBL_TASK_DEPTINFO 
 			WHERE
@@ -1614,7 +1598,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(DISTINCT TBL_APRDOCINFO.docid), 0)
+				IFNULL(COUNT(DISTINCT TBL_APRDOCINFO.docid), 0)
 			FROM
 				TBL_APRDOCINFO
 			RIGHT OUTER JOIN
@@ -1657,25 +1641,25 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE '%' || #v_DOCNUMBER# || '%'   
+					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_FORMID" compareValue="">
@@ -1693,25 +1677,25 @@
 		<isNotEqual property="v_STARTDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') >= #v_STARTDATE1#
+					STR_TO_DATE(startdate, '%Y-%m-%d %H:%i:%s') >= #v_STARTDATE1#
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_STARTDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') <= #v_STARTDATE2#   
+					STR_TO_DATE(startdate, '%Y-%m-%d %H:%i:%s') <= #v_STARTDATE2#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_ENDDATE1" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') >= #v_ENDDATE1#   
+					STR_TO_DATE(enddate, '%Y-%m-%d %H:%i:%s') >= #v_ENDDATE1#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_ENDDATE2" compareValue="">
 			<![CDATA[
 				AND
-					TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') <= #v_ENDDATE2#   
+					STR_TO_DATE(enddate, '%Y-%m-%d %H:%i:%s') <= #v_ENDDATE2#   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_SUBQUERY" compareValue="">
@@ -1739,7 +1723,7 @@
 				tenant_id)
 			VALUES 
 				((SELECT
-					NVL(MAX(CAST(containertypeid as NUMBER)) , '1000') + 10
+					IFNULL(MAX(CAST(containertypeid as NUMBER)) , '1000') + 10
 				FROM
 					TBL_CONTAINERTYPE
 				WHERE
@@ -1801,7 +1785,7 @@
 				(SELECT
 					MAX(subid) + 1
 				FROM
-					TBL_ADMINRECEIPTGROUP_SUB),
+					TBL_ADMINRECEIPTGROUP_SUB AS T1),
 				#v_DEPTID#,
 				#v_DEPTNAME#,
 				#v_DEPTNAME2#,
@@ -1866,7 +1850,7 @@
 				((SELECT
 					MAX(mainid) + 1
 				FROM
-					TBL_ADMINRECEIPTGROUP_MAIN
+					TBL_ADMINRECEIPTGROUP_MAIN AS T1
 				WHERE
 					tenant_ID = #tenantID#),
 				#v_MAINNAME#,
@@ -2067,7 +2051,7 @@
 				UPDATE
 					TBL_SEALINFO
 				SET
-					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
 					deldate IS NULL
 				AND
@@ -2079,7 +2063,7 @@
 				UPDATE
 					TBL_SEALINFO
 				SET
-					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
 					sealnum = #v_SEALNUM#
 				AND
@@ -2101,7 +2085,7 @@
 				UPDATE
 					TBL_SEALDEPTINFO
 				SET
-					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
 					deldate IS NULL
 				AND
@@ -2115,7 +2099,7 @@
 				UPDATE
 					TBL_SEALDEPTINFO
 				SET
-					deldate = TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS')
+					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
 					sealnum = #v_SEALNUM#
 				AND
@@ -2138,7 +2122,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(sealnum), 0)
+				IFNULL(COUNT(sealnum), 0)
 			FROM
 				TBL_SEALINFO 
 			WHERE
@@ -2152,32 +2136,34 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_SEALINFO
-			(sealnum,
-			sealname,
-			sealpath,
-			sealwidth,
-			sealheight,
-			regdate,
-			deldate,
-			reguserid,
-			regusername,
-			regusername2,
-			tenant_id)
-        VALUES
-			((SELECT
-				NVL(MAX(sealnum), 0) + 1
-			FROM
-				TBL_SEALINFO),
-			#v_SEALNAME#,
-			#v_SEALPATH#,
-			#v_SEALWIDTH#,
-			#v_SEALHEIGHT#,
-			TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
-			NULL,
-			#v_REGUSERID#,
-			#v_REGUSERNAME#,
-			#v_REGUSERNAME2#,
-			#tenantID#)
+				(sealnum,
+				sealname,
+				sealpath,
+				sealwidth,
+				sealheight,
+				regdate,
+				deldate,
+				reguserid,
+				regusername,
+				regusername2,
+				tenant_id)
+        	VALUES
+				((SELECT
+					IFNULL(MAX(sealnum), 0) + 1
+				FROM
+					TBL_SEALINFO AS T1
+				WHERE
+					tenant_id = #tenantID#),
+				#v_SEALNAME#,
+				#v_SEALPATH#,
+				#v_SEALWIDTH#,
+				#v_SEALHEIGHT#,
+				DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s'),
+				NULL,
+				#v_REGUSERID#,
+				#v_REGUSERNAME#,
+				#v_REGUSERNAME2#,
+				#tenantID#)
 		]]>
 	</insert>
 
@@ -2213,7 +2199,7 @@
 		parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(sealnum), 0)
+				IFNULL(COUNT(sealnum), 0)
 			FROM
 				TBL_SEALDEPTINFO
 			WHERE
@@ -2243,9 +2229,9 @@
 				tenant_id)
 			VALUES
 				((SELECT
-					NVL(MAX(sealnum) , 0) + 1
+					IFNULL(MAX(sealnum) , 0) + 1
 				FROM
-					TBL_SEALDEPTINFO
+					TBL_SEALDEPTINFO AS T1
 				WHERE
 					deptid = #v_DEPTID#
 				AND
@@ -2255,7 +2241,7 @@
 				#v_SEALPATH#,
 				#v_SEALWIDTH#,
 				#v_SEALHEIGHT#,
-				TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS'),
+				DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s'),
 				NULL,
 				#v_REGUSERID#,
 				#v_REGUSERNAME#,
@@ -2420,7 +2406,7 @@
 		parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				NVL(MAX(containerid), '0000000000') as contid
+				IFNULL(MAX(containerid), '0000000000') as contid
         	FROM
         		TBL_CONTAINER
         	WHERE
@@ -2474,8 +2460,7 @@
 	<insert id="EzApprovalGAdmin.setTaskHistory" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_TASKCODEHISTORY
-				(sn,
-				applydate,
+				(applydate,
 				taskcode,
 				taskname,
 				taskname2,
@@ -2486,8 +2471,7 @@
 				aftervalue2,
 				tenant_id)
 			VALUES
-				(SEQ_TBL_TASKCODEHISTORY.nextval,
-				TO_DATE(#v_APPLYDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				(DATE_FORMAT(#v_APPLYDATE#, '%Y-%m-%d %H:%i:%s'),
 				#v_TASKCODE#,
 				#v_TASKNAME#,
 				#v_TASKNAME2#,
@@ -2527,7 +2511,7 @@
 				#v_TASKNAME#,
 				#v_TASKNAME2#,
 				#v_KEEPINGPERIOD#,
-				TO_DATE(#v_CREATIONDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+				DATE_FORMAT(#v_CREATIONDATE#, '%Y-%m-%d %H:%i:%s'),
 				#v_KPREASON#,
 				#v_KEEPINGMETHOD#,
 				#v_KEEPINGPLACE#,
@@ -2684,7 +2668,7 @@
 				TBL_TASK_DEPTINFO
 			SET
 				delflag = '1',
-				deletedate = TO_DATE(#now#, 'YYYY-MM-DD HH24:MI:SS')
+				deletedate = DATE_FORMAT(#now#, '%Y-%m-%d %H:%i:%s')
 			WHERE
 				taskcode = #taskCode#
 			AND
@@ -2705,7 +2689,7 @@
 			WHERE
 				taskcode = #taskCode#
 			AND
-				TRIM(processdeptcode) = #deptCode#
+				RTRIM(processdeptcode) = #deptCode#
 			AND
 				tenant_id = #tenantID#
 	    ]]>
@@ -2713,15 +2697,16 @@
 
 	<update id="EzApprovalGAdmin.removeDeptInfo" parameterClass="Map">
 		<![CDATA[
-			UPDATE TBL_TASK_DEPTINFO
+			UPDATE
+				TBL_TASK_DEPTINFO
 			SET
 				processdate = #v_pNow1#,
 				delflag = '1',
-				deletedate = TO_DATE(#v_pNow2#, 'YYYY-MM-DD HH24:MI:SS')
+				deletedate = DATE_FORMAT(#v_pNow2#, '%Y-%m-%d %H:%i:%s')
 			WHERE
 				taskcode = #taskCode#
 			AND
-				TRIM(processdeptcode) = #deptCode#
+				RTRIM(processdeptcode) = #deptCode#
 			AND
 				tenant_id = #tenantID#
 	    ]]>
@@ -2804,9 +2789,9 @@
 			SET
 				formcontid = #selContID#,
 				formorder = (SELECT
-								NVL(MAX(formorder), 0) + 1
+								IFNULL(MAX(formorder), 0) + 1
 							FROM
-								TBL_FORMINFO
+								TBL_FORMINFO AS T1
 							WHERE
 								formcontid = #selContID#
 							AND

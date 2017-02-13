@@ -518,72 +518,68 @@
 				(SELECT
 					A.*
 				FROM
-					(
-		]]>
-		
-		<![CDATA[
-			SELECT
-				*
-			FROM
-				(SELECT
-					rownum as rnum,
-					aa.*
-				FROM
 					(SELECT
-						TBL_APRDOCINFO.docid,
-						formid,
-						orgdocid,
-						doctype,
-						docstate,
-						functiontype,
-						href,
-						doctitle,
-						docno,
-						hasattachyn,
-						hasopinionyn,
-						TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
-						TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
-						writerid,
-						writername,
-						NVL(writername2, WRITERNAME) AS WRITERNAME2,
-						writerjobtitle,
-						NVL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
-						writerdeptid,
-						writerdeptname,
-						NVL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
-						ispublic,
-						securitycode,
-						storageperiod,
-						keyword,
-						formname,
-						NVL(formname2,FORMNAME) AS FORMNAME2,
-						itemcode,
-						itemname,
-						NVL(itemname2, ITEMNAME) AS ITEMNAME2,
-						urgentapproval,
-						tempattribute,
-						status,
-						specialrecordcode,
-						publicitycode,
-						limitrange,
-						pagenum,
-						cabinetid,
-						taskcode,
-						docnumcode,
-						orgdocnumcode,
-						seperateattachxml,
-						summary,
-						TBL_APRDOCINFO.TENANT_ID
+						*
 					FROM
-						TBL_APRDOCINFO
-					RIGHT OUTER JOIN
 						(SELECT
-							DISTINCT docid,
-							tenant_id
+							rownum as rnum,
+							aa.*
 						FROM
-							TBL_APRLINEINFO
-						WHERE
-							TENANT_ID = #tenantID#
+							(SELECT
+								TBL_APRDOCINFO.docid,
+								formid,
+								orgdocid,
+								doctype,
+								docstate,
+								functiontype,
+								href,
+								doctitle,
+								docno,
+								hasattachyn,
+								hasopinionyn,
+								TO_CHAR(startdate, 'YYYY-MM-DD HH24:MI:SS') AS STARTDATE,
+								TO_CHAR(enddate, 'YYYY-MM-DD HH24:MI:SS') AS ENDDATE,
+								writerid,
+								writername,
+								NVL(writername2, WRITERNAME) AS WRITERNAME2,
+								writerjobtitle,
+								NVL(writerjobtitle2, WRITERJOBTITLE) AS WRITERJOBTITLE2,
+								writerdeptid,
+								writerdeptname,
+								NVL(writerdeptname2,WRITERDEPTNAME) AS WRITERDEPTNAME2,
+								ispublic,
+								securitycode,
+								storageperiod,
+								keyword,
+								formname,
+								NVL(formname2,FORMNAME) AS FORMNAME2,
+								itemcode,
+								itemname,
+								NVL(itemname2, ITEMNAME) AS ITEMNAME2,
+								urgentapproval,
+								tempattribute,
+								status,
+								specialrecordcode,
+								publicitycode,
+								limitrange,
+								pagenum,
+								cabinetid,
+								taskcode,
+								docnumcode,
+								orgdocnumcode,
+								seperateattachxml,
+								summary,
+								TBL_APRDOCINFO.TENANT_ID
+							FROM
+								TBL_APRDOCINFO
+							RIGHT OUTER JOIN
+								(SELECT
+									DISTINCT docid,
+									tenant_id
+								FROM
+									TBL_APRLINEINFO
+								WHERE
+									TENANT_ID = #tenantID#
 		]]>
 
 		<isNotEqual property="v_APPROVUSER" compareValue="">
@@ -614,28 +610,28 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE '%' || #v_DOCNUMBER# || '%'
+					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
 			]]>
 		</isNotEqual>
 
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
 			]]>
 		</isNotEqual>
 
@@ -1235,7 +1231,7 @@
 			FROM
 				TBL_ENDAPRLINEINFO
 			WHERE
-				aprtype IN #v_APRTYPE#
+				aprtype = #v_APRTYPE#
 			AND
 				processdate >= TO_DATE(#v_FROM#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -1657,25 +1653,25 @@
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
 			<![CDATA[
 				AND
-					docno LIKE '%' || #v_DOCNUMBER# || '%'   
+					docno LIKE CONCAT('%', #v_DOCNUMBER#, '%')   
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DOCTITLE" compareValue="">
 			<![CDATA[
 				AND
-					doctitle LIKE '%' || #v_DOCTITLE# || '%'
+					doctitle LIKE CONCAT('%', #v_DOCTITLE#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DRAFTER" compareValue="">
 			<![CDATA[
 				AND
-					writername$v_LANGTYPE$ LIKE '%' || #v_DRAFTER# || '%'
+					writername$v_LANGTYPE$ LIKE CONCAT('%', #v_DRAFTER#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_DEPTNAME" compareValue="">
 			<![CDATA[
 				AND
-					writerdeptname$v_LANGTYPE$ LIKE '%' || #v_DEPTNAME# || '%'
+					writerdeptname$v_LANGTYPE$ LIKE CONCAT('%', #v_DEPTNAME#, '%')
 			]]>
 		</isNotEqual>
 		<isNotEqual property="v_FORMID" compareValue="">
