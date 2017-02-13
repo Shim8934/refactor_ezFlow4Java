@@ -2,7 +2,9 @@ package egovframework.ezEKP.ezCommunity.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.PrivateKey;
@@ -918,22 +920,28 @@ public class EzCommunityController extends EgovFileMngUtil{
                     bos.write(buffer, 0, bytesRead);
 //                    fileSize += bytesRead;
                 }
-            } catch (Exception e) {
-                throw e;                
-            } finally {
-                if (bos != null) {
-                    try {
-                        bos.close();
-                    } catch (Exception ignore) {
-                    }
-                }
-                if (stream != null) {
-                    try {
-                        stream.close();
-                    } catch (Exception ignore) {
-                    }
-                }
-            }
+            } catch (FileNotFoundException fnfe) {
+    			logger.debug("fnfe: {}", fnfe);
+    		} catch (IOException ioe) {
+    			logger.debug("ioe: {}", ioe);
+    		} catch (Exception e) {
+    			logger.debug("e: {}", e);
+    		} finally {
+    		    if (bos != null) {
+    				try {
+    				    bos.close();
+    				} catch (Exception ignore) {
+    					logger.debug("IGNORED: {}", ignore.getMessage());
+    				}
+    		    }
+    		    if (stream != null) {
+    				try {
+    				    stream.close();
+    				} catch (Exception ignore) {
+    					logger.debug("IGNORED: {}", ignore.getMessage());
+    				}
+    		    }
+    		}
             returnVal = "OK_" + uploadSN + "_" + fileName;
         }
         
@@ -1007,21 +1015,27 @@ public class EzCommunityController extends EgovFileMngUtil{
 				bos.write(buffer, 0, bytesRead);
 //				fileSize += bytesRead;
 			}
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
-			throw e;                
+			logger.debug("e: {}", e);
 		} finally {
-			if (bos != null) {
+		    if (bos != null) {
 				try {
-					bos.close();
+				    bos.close();
 				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
-			}
-			if (stream != null) {
+		    }
+		    if (stream != null) {
 				try {
-					stream.close();
+				    stream.close();
 				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
 				}
-			}
+		    }
 		}
 		
 		File imageFile = new File(attachPath);	
