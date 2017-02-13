@@ -66,7 +66,7 @@
       	       		getBoardList_after(xml);
       	       	},
       	       	error : function(error){
-      	       		alert("<spring:message code='ezBoard.t22'/>" + error);	
+      	       		alert("<spring:message code='ezBoard.t22'/>wpTotalSection2" + error);	
       	       	}
       	 	   });
         	}

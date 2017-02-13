@@ -1133,8 +1133,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
 		String subject = request.getParameter("pollSubject");
-		String selRes = request.getParameter("selRes");
-		String sel = request.getParameter("sel");
+		/*String selRes = request.getParameter("selRes");
+		String sel = request.getParameter("sel");*/
 		String selType = request.getParameter("selType");
 		String selectedNo = request.getParameter("selectedNo");
 		String answerViewType = request.getParameter("answerViewType");
@@ -1180,7 +1180,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				questionID = ezCommunityDAO.pollAddOkGoGet3(map1);
 				
-				int[] selNo = new int [100];
 				String[] answerContent = new String [100];
 				
 				switch (selectedNo) {
@@ -3314,8 +3313,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
-			String localPdsPath = ""; 
-			
+			 
+			/*String localPdsPath = "";*/
 			if (iColSpan == 6) {
 				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
 				/*String file = cBoard.getCharFileName();
@@ -3355,11 +3354,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String textContent = request.getParameter("textContent");
 		String MHTcontent = request.getParameter("content");
 		String title = request.getParameter("title");
-		String sRadio = request.getParameter("sRadio");
+		/*String sRadio = request.getParameter("sRadio");
 		String keyword = request.getParameter("keyword");
 		String id = request.getParameter("id");
 		String goToPage = request.getParameter("goToPage");
-		String block = request.getParameter("nowBlock");
+		String block = request.getParameter("nowBlock");*/
 		String attachList = request.getParameter("attachList");
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
@@ -5401,7 +5400,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	public Map<String, String> getAdjacentItemsPhoto(String boardID, CommunityBoardItemVO pItem, int tenantID, String offset) throws Exception {
 		logger.debug("getAdjacentItemsPhoto started.");
 		
-		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "", tempItemID = "", tempTitle = "";
+		String previousItemID = "", previousTitle = "", nextItemID = "", nextTitle = "";
 		Map<String, Object> map;
 		List<CommunityBoardItemVO> list;
 		

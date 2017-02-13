@@ -3113,8 +3113,8 @@ public class EzBoardController extends EgovFileMngUtil{
     		String rpwd = EgovFileScrty.decryptRsa(pk, doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
     		
     		doc.getElementsByTagName("DOCPASSWORD").item(0).setTextContent(EgovFileScrty.encryptPassword(rpwd, "unknown"));
-    	}
-
+    	}   	
+    	
         BoardPropertyVO boardInfo = getBoardInfo(doc.getElementsByTagName("BOARDID").item(0).getTextContent(), userInfo);
         
         if (boardInfo.getWrite_FG().equals("false")) {
@@ -4640,11 +4640,11 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/checkPassWord.do")
 	public String checkPassWord(HttpServletRequest request, Model model) throws Exception{
-		String itemID = request.getParameter("itemID");
+		String replyID = request.getParameter("replyID");
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
-		model.addAttribute("itemID", itemID);
+		model.addAttribute("replyID", replyID);
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
         
@@ -4661,7 +4661,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
-		String itemID = request.getParameter("itemID");
+    	String replyID = request.getParameter("replyID");
 		String newPassword = request.getParameter("newPassword");
 		String oldPassword = "";
 		
@@ -4669,8 +4669,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
 		
 		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
-		oldPassword = ezBoardService.getDocPassWord(itemID, userInfo.getTenantId()).trim();
-		
+		oldPassword = ezBoardService.getDocPassWord(replyID, userInfo.getTenantId()).trim();
+
 		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
 			return "OK";
 		} else {
@@ -5947,8 +5947,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
-		password = EgovFileScrty.decryptRsa(pk, password);
-		password = EgovFileScrty.encryptPassword(password, userInfo.getId());
+		String rpwd = EgovFileScrty.decryptRsa(pk, password);
+		password = EgovFileScrty.encryptPassword(rpwd, "unknown");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -5982,12 +5982,13 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 한줄댓글 오너체크 표출 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/checkOneLineOwner.do")
+	@ResponseBody
 	public String checkOneLineOwner(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String replyID = request.getParameter("replyID");
 		String result = ezBoardService.checkOneLineOwner(replyID, userInfo.getId(), userInfo.getTenantId());
-		
+
 		return result;
 	}
 	

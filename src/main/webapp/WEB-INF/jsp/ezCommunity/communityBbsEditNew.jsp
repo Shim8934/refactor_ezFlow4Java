@@ -42,6 +42,7 @@
 			var wDate = "<c:out value='${cBoard.writeDay}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
 			var writerFakeName = "<c:out value='${writerFakeName}'/>";
+			var dirPath = "<c:out value='${dirPath}'/>";
 			
 			window.onresize = function () {
 			    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 140 + "PX";
@@ -197,7 +198,7 @@
 						break;
 				}
 				
-				strContentLocation = "/files/upload_community/filedata/" + strReturn + "/" + fileName;
+				strContentLocation = dirPath + "/" + strReturn + "/" + fileName;
 			}
 			
 			var isComplete = false;

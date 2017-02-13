@@ -3943,13 +3943,13 @@
 	<select id="EzBoardDAO.getDocPassWord" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				docpassword 
+				password 
 			FROM 
-				TBL_BOARD_ITEM 
+				TBL_BOARD_ONELINEREPLY
 			WHERE 
 				tenant_id = #tenantID#
 			AND
-				itemid = #itemID#
+				replyID = #replyID#
 		]]>                
 	</select>
 	

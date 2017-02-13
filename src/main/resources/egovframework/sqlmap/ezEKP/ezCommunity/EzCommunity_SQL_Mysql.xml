@@ -4441,7 +4441,8 @@
   				QUERY = CONCAT(#v_pRootBoardID#, ',', #v_pUserID#, ',', #v_pDeptID#, ',', #v_pCompanyID#, ',', #v_pMode#, ',', #v_pSubFlag#, ',', #v_pSelectBy#, ',', #v_pExcludeBoardID#, ',', #v_pClubNo#, ',', #v_strLang#)
   			AND
   				tenant_id = #tenantID#
-		]]>	</delete>
+		]]>
+	</delete>
 	
 	<insert id="EzCommunityDAO.insertBoardTreeChache"			parameterClass="Map">
 		<![CDATA[
@@ -6507,7 +6508,7 @@
         		TBL_COMM_ITEM_ATTACHMENTS
        		VALUES
        			(#itemID#,
-       			SYS_GUID(),
+       			UUID(),
        			#filePath#,
        			#fileSize#,
        			#fileName#,

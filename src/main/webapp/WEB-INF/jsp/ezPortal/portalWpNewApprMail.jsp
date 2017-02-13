@@ -247,7 +247,7 @@
       	        		getDocList_after(loadXMLString(xml));
       	        	},
       	        	error : function(error){
-      	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+      	        		console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
       	        	}
       	        });
         	} else {
@@ -272,7 +272,7 @@
        	        		getDocList_after(loadXMLString(xml));
        	        	},
        	        	error : function(error){
-       	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
+       	        		console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail2" + error);	
        	        	}
        	        });	
         	}

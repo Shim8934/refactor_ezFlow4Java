@@ -222,8 +222,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.getDocPassWord", map);
 	}
 	
-	public String deleteOneLineReply(Map<String, Object> map) {
-		return (String) select("EzBoardDAO.deleteOneLineReply", map);
+	public void deleteOneLineReply(Map<String, Object> map) {
+		delete("EzBoardDAO.deleteOneLineReply", map);
 	}
 	
 	public String portalPageItemEdit(Map<String, Object> map) {
@@ -595,13 +595,13 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public BoardAttachVO getAttachInfo(Map<String, Object> map) throws Exception {
 		return (BoardAttachVO) select("EzBoardDAO.getAttachInfo", map);
 	}
-
+	
 	public void deleteItemTempPhoto(BoardListVO boardListVO) throws Exception {
-		delete("EzBoardDAO.deleteItemTempPhoto", boardListVO);
-	}
+        delete("EzBoardDAO.deleteItemTempPhoto", boardListVO);
+    }
 
-	public void deleteImageItem(BoardListVO boardListVO) throws Exception {
-		delete("EzBoardDAO.deleteImageItem", boardListVO);
+    public void deleteImageItem(BoardListVO boardListVO) throws Exception {
+        delete("EzBoardDAO.deleteImageItem", boardListVO);
 	}
-
+    
 }
