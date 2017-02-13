@@ -1531,7 +1531,7 @@
 				TBL_RS_SCHEDULEFORM
             	( RESID, BRDNM, FORMTEXT, TENANT_ID )
             VALUES
-            	( #v_RESID#, #v_BRDNM3#, #v_FORMTEXT#, #tenantID# )
+            	( #v_RESID#, #v_BRDNM#, #v_FORMTEXT#, #tenantID# )
 		]]>
 	</insert>
 	
