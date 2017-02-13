@@ -3284,7 +3284,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId()), userInfo.getTenantId());
+		String infoXML = ezOrganAdminService.getPropertyList(cID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmldom = commonUtil.convertStringToDocument(infoXML);
 		

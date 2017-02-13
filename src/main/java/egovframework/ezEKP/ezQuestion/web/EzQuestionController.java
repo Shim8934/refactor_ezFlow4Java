@@ -1209,7 +1209,7 @@ public class EzQuestionController extends EgovFileMngUtil {
                 	ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
                 	
                 	String propList = "department;mail;displayName;title;description;company";
-                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
+                	String pXML = ezOrganAdminService.getPropertyList(userID, propList, loginVO.getPrimary(), loginVO.getTenantId());
 
 					Document infoXML = commonUtil.convertStringToDocument(pXML);
 					String userDeptId = "";
