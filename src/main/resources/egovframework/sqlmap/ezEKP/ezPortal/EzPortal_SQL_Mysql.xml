@@ -317,9 +317,8 @@
 			WHERE
 				UID_ = #v_pUID# 
 			AND
-				LIMIT 1
-			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+            LIMIT 1	
 		]]>
 	</select>
 	
@@ -332,9 +331,8 @@
 			WHERE
 				UID_ = #v_pUID# 
 			AND
-				LIMIT 1
-			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+            LIMIT 1	
 		]]>
 	</select>
 	
@@ -1114,8 +1112,8 @@
 				UID_ = #v_pPAGEID#
 			AND
 				TENANT_ID = #tenantID#	 
-			AND
-				LIMIT 1
+			LIMIT
+                1
 		]]>
 	</select>
 	
@@ -1129,8 +1127,8 @@
 				UID_ = #v_pPORTLETID#
 			AND
 				TENANT_ID = #tenantID#
-			AND	
-				LIMIT 1
+			LIMIT
+                1
 		]]>
 	</select>
 	
@@ -1392,8 +1390,8 @@
 				TENANT_ID = #tenantID#	
 			AND
 				DEFAULTPAGE = 'Y'
-			AND
-				LIMIT 1
+			LIMIT
+                1
 		]]>
 	</select>  
 	
@@ -1620,13 +1618,13 @@
 		
 		<![CDATA[
 			WHERE
-				LIMIT #v_pENDROW#
-			AND
 				A.UID_ = B.PARENTUID
 			AND
 				A.TENANT_ID = #tenantID#
 			AND
-				B.TENANT_ID = #tenantID#		
+				B.TENANT_ID = #tenantID#
+            LIMIT
+                #v_pENDROW#		
 			ORDER BY
 				DISPLAYNAME ASC
 		]]>
@@ -1947,7 +1945,7 @@
 			FROM
 				TBL_PORTLET_GENERAL 
 			WHERE
-				DISPLAYNAME LIKE CONCAT('%', #v_pDISPLAYNAME# ,'%') AND LIMIT #v_pENDROW#
+				DISPLAYNAME LIKE CONCAT('%', #v_pDISPLAYNAME# ,'%') 
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -1982,7 +1980,9 @@
 		</isEmpty>
 		
 		<![CDATA[
-			ORDER BY
+            LIMIT
+                #v_pENDROW#  
+  			ORDER BY
 				DISPLAYNAME ASC
 		]]>
 	</select>
