@@ -442,7 +442,7 @@
               ORDER BY 
               	WriteDate ASC
               LIMIT
-              	#v_pStartRow# - 1, #v_pEndRow#
+              	#v_pStartRow#, #rowCount#
 		]]>
 	</select>
 	
@@ -925,9 +925,9 @@
      							 AND 
      							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
      			  ORDER BY 
-     					$iv_PORDERBYSUB$ ) T1 
+     					$iv_PORDERBYSUB$  
      			  LIMIT
-     					#v_PSTARTROW# - 1, #v_PENDROW#
+     					#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1029,7 +1029,7 @@
 			  ORDER BY
 			  	$iv_PORDERBYSUB$
 			  LIMIT
-			  	#startRow# - 1, #endRow#
+			  	#startRow#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap">
@@ -1050,7 +1050,7 @@
   				A.ATTACHMENTS,
   				A.ITEMLEVEL,
   				A.ABSTRACT,
-  				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+  				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
   				A.EXTENSIONATTRIBUTE5,
   				A.WRITERNAME2,
   				A.WRITERDEPTNAME2,
@@ -1129,7 +1129,7 @@
 		  ORDER BY 
 		  	$iv_PORDERBYSUB$
 		  LIMIT
-	  		#startRow# - 1, #endRow#
+	  		#startRow#, #rowCount#
 	</select>
 
 	<select id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
@@ -1204,7 +1204,7 @@
         			A.WriteDate DESC
        		</isEmpty>
        		LIMIT
-       			#v_START# - 1, #v_END#
+       			#v_START#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
@@ -1268,7 +1268,7 @@
                  	A.ParentWriteDate, 
                  	A.WriteDate DESC 
                  LIMIT
-                 	#v_START# -1, #v_END#
+                 	#v_START#, #rowCount#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_TYPE" compareValue="Y">
@@ -1408,7 +1408,7 @@
    				  ORDER BY 
    				  	$iv_PORDERBYSUB$
    				  LIMIT
-   				  	#v_PSTARTROW# - 1, #v_PENDROW#
+   				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1481,7 +1481,7 @@
   				  ORDER BY 
   				  	$iv_PORDERBYSUB$
   				  LIMIT
-  				  	#v_PSTARTROW# - 1, #v_PENDROW#
+  				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1503,7 +1503,7 @@
 	   				A.ATTACHMENTS,
 	   				A.ITEMLEVEL,
 	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 	   				A.EXTENSIONATTRIBUTE5,
 	   				A.WRITERNAME2,
 	   				A.WRITERDEPTNAME2,
@@ -1564,7 +1564,7 @@
   				   ORDER BY 
   				   		$iv_PORDERBYSUB$
    				   LIMIT
-   				   		#v_PSTARTROW# - 1, #v_PENDROW#
+   				   		#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1678,7 +1678,7 @@
 			ORDER BY 
 				$iv_PORDERBYSUB$
 			LIMIT
-				#startRow# - 1, #endRow#
+				#startRow#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
@@ -1751,7 +1751,7 @@
    		      ORDER BY 
    		      	$iv_PORDERBYSUB$
 	   		  LIMIT
-	   		  	#v_PSTARTROW# - 1, #v_PENDROW#   
+	   		  	#v_PSTARTROW#, #rowCount#   
 		]]>
 	</select>
 	
@@ -1884,7 +1884,7 @@
  				  ORDER BY 
  				  	$iv_PORDERBYSUB$
  				  LIMIT
- 				  	#v_PSTARTROW# - 1, #v_PENDROW#
+ 				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1963,7 +1963,7 @@
   				ORDER BY 
   				 	$iv_PORDERBYSUB$
   				LIMIT
-  				  	#v_PSTARTROW# - 1, #v_PENDROW# 
+  				  	#v_PSTARTROW#, #rowCount# 
 		]]>
 	</select>
 	
@@ -2038,7 +2038,7 @@
    				ORDER BY 
    					$iv_PORDERBYSUB$
    				LIMIT
-   					#v_PSTARTROW# - 1, #v_PENDROW#
+   					#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -2086,7 +2086,7 @@
 	
 	<delete id="EzBoardDAO.deleteOneLineReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -2982,39 +2982,7 @@
 				GUID = #attID#
 		]]>
 	</select>
-	
-	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_Item_Attachments ( 
-				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
-			)
-       		VALUES ( 
-       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
-       		)
-		]]>
-	</insert>
-	
-	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Photo_ImageItem
-			WHERE  
-				TENANT_ID = #v_TENANTID#
-			AND
-				IMAGEID = #v_pIMAGEID#
-		]]>
-	</delete>
-	
-	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Photo_ImageItem ( 
-				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
-			)
-     		VALUES ( 
-     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
-     		)
-		]]>
-	</insert>
-	
+		
 	<select id="EzBoardDAO.getApprFlag" parameterClass="BoardListVO" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -3027,586 +2995,6 @@
 				boardid = #boardID#
 		]]>
 	</select>
-	
-	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
-		INSERT INTO TBL_Board_Item ( 
-			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-        VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
-        )
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItem2" parameterClass="BoardListVO">
-		INSERT INTO TBL_Board_Item ( 
-			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-        VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
-        )
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
-		INSERT INTO TBL_Board_Item_temp ( 
-			ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
-		)
-       	VALUES ( 
-       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
-       	)
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, APPRFLAG, TENANT_ID 
-			)
-	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
-	        )
-		]]>
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemPhoto2" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO TBL_Board_Item ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, TENANT_ID 
-			)
-	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
-	        )
-		]]>
-	</insert>
-	
-	<insert id="EzBoardDAO.brdNewItemTempPhoto" parameterClass="BoardListVO">
-		<![CDATA[
-			INSERT INTO TBL_Board_Item_temp ( 
-				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, tenant_id 
-			)
-        	VALUES ( 
-        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
-        	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.set_ListOrder_U" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_MyBoards
-            SET 
-            	VIEWORDER = #count#
-            WHERE  
-            	TENANT_ID = #tenantID#
-            AND
-            	BOARDID = #boardID#
-            AND 
-            	( USERID = #userID#
-            	  OR USERID = 'everyone' )
-		]]>
-	</update>
-	
-	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_MyBoards
-			WHERE  
-				TENANT_ID = #tenantID#
-			AND
-				BOARDID = #boardID#
-            AND 
-            	USERID = #userID#
-		]]>
-	</delete>
-	
-	<update id="EzBoardDAO.set_ListOrder" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
-		    SET
-		    	VIEWORDER = ( SELECT 
-		      						VIEWORDER
-		        			  FROM 
-		        					TBL_Board_MyBoards 
-		        			  WHERE
-		        					TENANT_ID = #tenantID#
-		        			  AND  
-		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
-		    WHERE
-		    	TENANT_ID = #tenantID#
-		    AND  
-		    	USERID = #userID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.set_TabUsed" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
-          	SET 
-          		TABUSED = #v_TABUSED#
-          	WHERE
-          		TENANT_ID = #v_TENANTID#
-          	AND  
-          		USERID = #v_USERID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.set_TabUsed2" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_MyBoards
-          	SET 
-          		TABUSED = #v_TABUSED#
-          	WHERE  
-          		TENANT_ID = #v_TENANTID#
-          	AND
-          		BOARDID = #v_BOARDID#
-		]]>
-	</update>
-	
-
-	<select id="EzBoardDAO.getBoardConfig" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				USERID
-			FROM 
-				TBL_Board_Configuration
-			WHERE  
-				TENANT_ID = #v_TENANTID#
-			AND
-				USERID = #v_USERID#
-		]]>
-	</select>
-	
-	<update id="EzBoardDAO.setBoardList_Config_U" parameterClass="BoardConfigVO">
-		<![CDATA[
-			UPDATE TBL_Board_Configuration
-            SET 
-            	LISTCOUNT = #listCount#,
-            	PREVIEW = #preview#,
-            	PREVIEWWLIST = #previewWList#,
-            	PREVIEWWCONTENT = #previewWContent#,
-            	PREVIEWHLIST = #previewHList#,
-            	PREVIEWHCONTENT = #previewHContent#
-            WHERE  
-            	TENANT_ID = #tenantID#
-            AND
-            	USERID = #userId#
-		]]>
-	</update>
-	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
-		<![CDATA[
-			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
-			)
-          	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
-          	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.setBoardList_Config2_U" parameterClass="Map">
-		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
-			<![CDATA[
-				UPDATE TBL_Board_Configuration
-          		SET 
-          			PREVIEW = #v_PREVIEWMODE#
-        		WHERE  
-        			TENANT_ID = #v_TENANTID#
-        		AND
-        			USERID = #v_USERID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="W">
-			<![CDATA[
-				UPDATE TBL_Board_Configuration
-                SET 
-                	PREVIEW = #v_PREVIEWMODE#,
-                    PREVIEWWLIST = #v_LIST#,
-                    PREVIEWWCONTENT = #v_CONTENT#,
-                    ListCount = #v_LISTCNT#
-                WHERE
-                	TENANT_ID = #v_TENANTID#
-                AND  
-                	USERID = #v_USERID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="H">
-			<![CDATA[
-				UPDATE TBL_Board_Configuration
-                SET 
-                	PREVIEW = #v_PREVIEWMODE#,
-                    PREVIEWHLIST = #v_LIST#,
-                    PREVIEWHCONTENT = #v_CONTENT#,
-                    ListCount = #v_LISTCNT#
-                WHERE
-                	TENANT_ID = #v_TENANTID#
-                AND  
-                	USERID = #v_USERID#
-			]]>
-		</isEqual>
-	</update>
-	
-	<insert id="EzBoardDAO.setBoardList_Config2_I" parameterClass="Map">
-		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
-			<![CDATA[
-				INSERT INTO TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW,   	  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 50, 		   50, 				#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="W">
-			<![CDATA[
-				INSERT INTO TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, 	#v_CONTENT#, 	 50, 		   50, 				#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-		<isEqual property="v_PREVIEWMODE" compareValue="H">
-			<![CDATA[
-				INSERT INTO TBL_Board_Configuration ( 
-					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
-				)
-                VALUES ( 
-                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 #v_LIST#, 	   #v_CONTENT#, 	#v_TENANTID# 
-                )
-			]]>
-		</isEqual>
-	</insert>
-
-	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_Item_Read ( 
-				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
-			)
-        	VALUES ( 
-        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
-        	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.setAsRead2">
-		<![CDATA[
-			UPDATE TBL_Board_Item
-            SET 
-            	ReadCount = ReadCount + 1
-          	WHERE
-          		TENANT_ID = #v_TENANTID#
-          	AND  
-          		ItemID = #v_pItemID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.setNotiOrder" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_Item
-          	SET 
-          		NOTINO = #sn#
-        	WHERE  
-        		TENANT_ID = #tenantID#
-        	AND
-        		ITEMID = #itemID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.setMainImageID" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Photo_ImageItem
-        	SET 
-        		main_Flag = CASE
-        					WHEN imageID = #v_IMAGEID# THEN 'Y'
-        					ELSE 'N'
-        					END
-        	WHERE
-        		tenant_id = #v_TENANTID#
-        	AND  
-        		ItemID = #v_ITEMID#
-		]]>
-	</update>
-	
-	<select id="EzBoardDAO.setMainImageID2" parameterClass="Map" resultClass="String">
-		SELECT
-			main_flag
-		FROM
-			TBL_Photo_ImageItem
-		WHERE
-       		tenant_id = #v_TENANTID#
-       	AND  
-       		imageID = #v_IMAGEID#
-       	AND
-       		ItemID = #v_ITEMID#
-	</select>
-	
-	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_Configuration
-        	SET 
-        		ListCount = #v_LISTCOUNT#,
-              	PreView = #v_PREVIEW#
-        	WHERE  
-        		tenant_id = #v_TENANTID#
-        	AND
-        		UserID = #v_USERID#
-		]]>
-	</update>
-	
-	<insert id="EzBoardDAO.setBoardConfig2" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_Configuration ( 
-				UserID, 	ListCount, 	   PreView, 	tenant_id
-			)
-      		VALUES ( 
-      			#v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# 
-      		)
-		]]>
-	</insert>
-	
-	<update id="EzBoardDAO.updateMoveItem" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_Item
-      		SET 
-      			COPIEDITEM = 1
-    		WHERE  
-    			TENANT_ID = #tenantID#
-    		AND
-    			ITEMID = #destItemID#
-		]]>
-	</update>
-	
-	<select id="EzBoardDAO.getBoardApprListUser" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				APPRUSERID 
-			FROM 
-				TBL_Board_ApprList A
-            JOIN 
-            	TBL_Board_Item B   
-            ON 
-            	A.TENANT_ID = B.TENANT_ID
-            AND
-            	A.BOARDID = B.BOARDID
-            WHERE
-            	A.TENANT_ID = #v_TENANTID#
-            AND  
-            	ITEMID = #v_ITEMID#
-            AND 
-            	A.APPRUSERID = #v_USERID#
-		]]>
-	</select>
-	
-	<update id="EzBoardDAO.apprItem" parameterClass="Map">
-		<isEqual property="v_MODE" compareValue="Y">
-			<![CDATA[
-				UPDATE TBL_Board_Item
-                SET 
-                	APPRFLAG = 'Y'
-                WHERE  
-                	TENANT_ID = #v_TENANTID#
-                AND
-                	ITEMID = #v_ITEMID#
-			]]>
-		</isEqual>
-		<isEqual property="v_MODE" compareValue="C">
-			<![CDATA[
-				UPDATE TBL_Board_Item
-                SET 
-                	APPRFLAG = 'C'
-                WHERE  
-                	TENANT_ID = #v_TENANTID#
-                AND
-                	ITEMID = #v_ITEMID#
-			]]>
-		</isEqual>
-		<isNotEqual property="v_MODE" compareValue="Y">
-			<isNotEqual property="v_MODE" compareValue="C">
-				<![CDATA[
-					UPDATE TBL_Board_Item
-	                SET 
-	                	APPRFLAG = 'N'
-	                WHERE  
-	                	TENANT_ID = #v_TENANTID#
-	                AND
-	                	ITEMID = #v_ITEMID#
-				]]>
-			</isNotEqual>
-		</isNotEqual>
-	</update>
-	
-	<update id="EzBoardDAO.photoListUpdate" parameterClass="Map">
-		<isNotEmpty property="v_FilePath">
-			<![CDATA[
-				UPDATE TBL_Photo_ImageItem
-         		SET 
-         			FilePath = #v_FilePath#,
-             		FileContent = #v_FileContent#,
-             		ImageName = #v_OFileName#,
-             		WriteDate = #nowDate#
-       			WHERE
-       				tenant_id = #v_TENANTID#
-       			AND  
-       				ImageID = #v_ImageID#
-        		AND 
-        			BoardID = #v_BoardID#
-			]]>
-		</isNotEmpty>
-		<isEmpty property="v_FilePath">
-			<![CDATA[
-				UPDATE TBL_Photo_ImageItem
-         		SET 
-         			FileContent = #v_FileContent#
-       			WHERE  
-       				tenant_id = #v_TENANTID#
-       			AND
-       				ImageID = #v_ImageID#
-        		AND 
-        			BoardID = #v_BoardID#
-			]]>
-		</isEmpty>
-	</update>
-	
-	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
-			UPDATE TBL_Board_Item
-		    SET 
-		    	UpdateDate = #writeDate#,
-		    	Importance = #importance#,
-	          	Title = #title#,
-	          	ParentWriteDate = #parentWriteDate#,
-	          	StartDate = #startDate#,
-	          	EndDate = #endDate#,
-	          	Abstract = #ABSTRACT#,
-	          	Attachments = #hasAttach#,
-	          	ExtensionAttribute1 = #extensionAttribute1#,
-	          	ExtensionAttribute2 = #extensionAttribute2#,
-	          	ExtensionAttribute3 = #extensionAttribute3#,
-	          	ExtensionAttribute4 = #extensionAttribute4#,
-	          	ExtensionAttribute5 = #extensionAttribute5#,
-	          	DocPassWord = #docPassword#,
-	          	WriterName = #writerName#,
-	          	WriterName2 = #writerName2#,
-	          	ExtensionAttribute32 = #extensionAttribute32#,
-	          	WriterDeptName = #writerDeptName#,
-	          	WriterDeptName2 = #writerDeptName2#,
-	          	WriterCompanyName = #writerCompanyName#,
-	          	WriterCompanyName2 = #writerCompanyName2#,
-	          	extensionAttribute6 = #extensionAttribute6#,
-	          	extensionAttribute7 = #extensionAttribute7#,
-	          	extensionAttribute8 = #extensionAttribute8#,
-	          	extensionAttribute9 = #extensionAttribute9#,
-	          	extensionAttribute10 = #extensionAttribute10#
-    		WHERE  
-    			TENANT_ID = #tenantID#
-    		AND
-    			ItemID = #itemID#
-	</update>
-	
-	<update id="EzBoardDAO.setInitReadCount" parameterClass="BoardListVO">
-		<![CDATA[
-			UPDATE TBL_Board_Item
-			SET 
-				ReadCount = 0
-	      	WHERE
-	      		TENANT_ID = #tenantID#
-	      	AND
-	      		ItemID = #itemID#
-		]]>
-	</update>
-	
-	<update id="EzBoardDAO.setApprFlag" parameterClass="BoardListVO">
-		<![CDATA[
-			UPDATE TBL_Board_Item
-         	SET 
-         		APPRFLAG = 'N'
-       		WHERE
-       			TENANT_ID = #tenantID#
-       		AND  
-       			apprFlag = 'C'
-       		AND
-       			ItemID = #itemID#
-		]]>
-	</update>
-	
-	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
-		<![CDATA[
-			DELETE TBL_Board_Item_Read
-			WHERE
-				TENANT_ID = #tenantID#
-			AND  
-				ItemID = #itemID#
-		]]>
-	</delete>
-	
-	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_Item_Read
-			WHERE
-				TENANT_ID = #tenantID#
-			AND  
-				ItemID = #itemID#
-		]]>
-	</delete>
-	
-	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_Item
-      		WHERE  
-      			TENANT_ID = #tenantID#
-      		AND
-      			ITEMID = #itemID#
-		]]>
-	</delete>	
-	
-	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_OneLineReply
-      		WHERE  
-      			TENANT_ID = #tenantID#
-      		AND
-      			ITEMID = #itemID#
-		]]>
-	</delete>	
-	
-	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_Item_Attachments
-      		WHERE  
-      			TENANT_ID = #tenantID#
-      		AND
-      			ITEMID = #itemID#
-		]]>
-	</delete>	
-	
-	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_DeleteReservedItem (
-				BOARDID,   ITEMID,   TENANT_ID 
-			)
-      		VALUES ( 
-      			#boardID#, #itemID#, #tenantID# 
-      		)
-		]]>
-	</insert>
-	
-	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Board_Item_temp
-      		WHERE  
-      			TENANT_ID = #tenantID#
-      		AND
-      			ITEMID = #itemID#
-		]]>
-	</delete>
-	
-	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
-		<![CDATA[
-			DELETE TBL_Photo_ImageItem
-        	WHERE  
-        		TENANT_ID = #v_TENANTID#
-        	AND
-        		ImageID = #v_ImageID#
-        	AND 
-        		BoardID = #v_BoardID#
-		]]>
-	</delete>
 	
 	<select id="EzBoardDAO.portalPageItemEdit" parameterClass="map" resultClass="String">
 		<![CDATA[
@@ -4045,6 +3433,607 @@
 		]]>
 	</select>
 	
+	<select id="EzBoardDAO.getBoardApprListUser" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				APPRUSERID 
+			FROM 
+				TBL_Board_ApprList A
+            JOIN 
+            	TBL_Board_Item B   
+            ON 
+            	A.TENANT_ID = B.TENANT_ID
+            AND
+            	A.BOARDID = B.BOARDID
+            WHERE
+            	A.TENANT_ID = #v_TENANTID#
+            AND  
+            	ITEMID = #v_ITEMID#
+            AND 
+            	A.APPRUSERID = #v_USERID#
+		]]>
+	</select>
+	
+	<select id="EzBoardDAO.getBoardConfig" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				USERID
+			FROM 
+				TBL_Board_Configuration
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				USERID = #v_USERID#
+		]]>
+	</select>
+		
+	<select id="EzBoardDAO.setMainImageID2" parameterClass="Map" resultClass="String">
+		SELECT
+			main_flag
+		FROM
+			TBL_Photo_ImageItem
+		WHERE
+       		tenant_id = #v_TENANTID#
+       	AND  
+       		imageID = #v_IMAGEID#
+       	AND
+       		ItemID = #v_ITEMID#
+	</select>
+	
+	<insert id="EzBoardDAO.saveAttachInfo" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item_Attachments ( 
+				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
+			)
+       		VALUES ( 
+       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.photoSaveDB" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Photo_ImageItem ( 
+				ImageID, 	  ItemID, 	   BoardID, 	 WriterID, 		WriterName, 	 WriterDeptID, 		FilePath, 	   WriteDate, 	   FileContent, 	 ImageName, 	 main_flag, 											tenant_id 
+			)
+     		VALUES ( 
+     			#v_pIMAGEID#, #v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterDeptID#, #v_pFilePath#, #v_pWriteDate#, #v_pFileContent#, #v_pImageName#, (CASE WHEN #v_pIMAGEID# = #mainImageID# THEN 'Y' ELSE 'N' END), #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItem" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItem2" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item ( 
+			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+        VALUES ( 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemTemp" parameterClass="BoardListVO">
+		INSERT INTO TBL_Board_Item_temp ( 
+			ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
+		)
+       	VALUES ( 
+       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
+       	)
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, APPRFLAG, TENANT_ID 
+			)
+	        VALUES ( 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
+	        )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemPhoto2" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, TENANT_ID 
+			)
+	        VALUES ( 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
+	        )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardDAO.brdNewItemTempPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item_temp ( 
+				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, MainContent, tenant_id 
+			)
+        	VALUES ( 
+        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
+        	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.set_ListOrder_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_MyBoards
+            SET 
+            	VIEWORDER = #count#
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	BOARDID = #boardID#
+            AND 
+            	( USERID = #userID#
+            	  OR USERID = 'everyone' )
+		]]>
+	</update>
+	
+	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_MyBoards
+			WHERE  
+				TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardID#
+            AND 
+            	USERID = #userID#
+		]]>
+	</delete>
+	
+	<update id="EzBoardDAO.set_ListOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
+		    SET
+		    	VIEWORDER = ( SELECT 
+		      						VIEWORDER
+		        			  FROM 
+		        					TBL_Board_MyBoards 
+		        			  WHERE
+		        					TENANT_ID = #tenantID#
+		        			  AND  
+		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
+		    WHERE
+		    	TENANT_ID = #tenantID#
+		    AND  
+		    	USERID = #userID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.set_TabUsed" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_BOARD_NEWBOARD_ORDERINFO
+          	SET 
+          		TABUSED = #v_TABUSED#
+          	WHERE
+          		TENANT_ID = #v_TENANTID#
+          	AND  
+          		USERID = #v_USERID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.set_TabUsed2" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_MyBoards
+          	SET 
+          		TABUSED = #v_TABUSED#
+          	WHERE  
+          		TENANT_ID = #v_TENANTID#
+          	AND
+          		BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setBoardList_Config_U" parameterClass="BoardConfigVO">
+		<![CDATA[
+			UPDATE TBL_Board_Configuration
+            SET 
+            	LISTCOUNT = #listCount#,
+            	PREVIEW = #preview#,
+            	PREVIEWWLIST = #previewWList#,
+            	PREVIEWWCONTENT = #previewWContent#,
+            	PREVIEWHLIST = #previewHList#,
+            	PREVIEWHCONTENT = #previewHContent#
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	USERID = #userId#
+		]]>
+	</update>
+	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_Configuration ( 
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT ,   TENANT_ID
+			)
+          	VALUES ( 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent# , #tenantID# 
+          	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.setBoardList_Config2_U" parameterClass="Map">
+		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+          		SET 
+          			PREVIEW = #v_PREVIEWMODE#
+        		WHERE  
+        			TENANT_ID = #v_TENANTID#
+        		AND
+        			USERID = #v_USERID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="W">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+                SET 
+                	PREVIEW = #v_PREVIEWMODE#,
+                    PREVIEWWLIST = #v_LIST#,
+                    PREVIEWWCONTENT = #v_CONTENT#,
+                    ListCount = #v_LISTCNT#
+                WHERE
+                	TENANT_ID = #v_TENANTID#
+                AND  
+                	USERID = #v_USERID#
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="H">
+			<![CDATA[
+				UPDATE TBL_Board_Configuration
+                SET 
+                	PREVIEW = #v_PREVIEWMODE#,
+                    PREVIEWHLIST = #v_LIST#,
+                    PREVIEWHCONTENT = #v_CONTENT#,
+                    ListCount = #v_LISTCNT#
+                WHERE
+                	TENANT_ID = #v_TENANTID#
+                AND  
+                	USERID = #v_USERID#
+			]]>
+		</isEqual>
+	</update>
+	
+	<insert id="EzBoardDAO.setBoardList_Config2_I" parameterClass="Map">
+		<isEqual property="v_PREVIEWMODE" compareValue="OFF">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW,   	  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 50, 		   50, 				#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="W">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, #v_LIST#, 	#v_CONTENT#, 	 50, 		   50, 				#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+		<isEqual property="v_PREVIEWMODE" compareValue="H">
+			<![CDATA[
+				INSERT INTO TBL_Board_Configuration ( 
+					USERID, 	LISTCOUNT, 	 PREVIEW, 		  PREVIEWWLIST, PREVIEWWCONTENT, PREVIEWHLIST, PREVIEWHCONTENT, TENANT_ID 
+				)
+                VALUES ( 
+                	#v_USERID#, #v_LISTCNT#, #v_PREVIEWMODE#, 50, 			50, 			 #v_LIST#, 	   #v_CONTENT#, 	#v_TENANTID# 
+                )
+			]]>
+		</isEqual>
+	</insert>
+
+	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Item_Read ( 
+				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
+			)
+        	VALUES ( 
+        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, #nowDate#, #v_TENANTID# 
+        	)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.setAsRead2">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+            SET 
+            	ReadCount = ReadCount + 1
+          	WHERE
+          		TENANT_ID = #v_TENANTID#
+          	AND  
+          		ItemID = #v_pItemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setNotiOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+          	SET 
+          		NOTINO = #sn#
+        	WHERE  
+        		TENANT_ID = #tenantID#
+        	AND
+        		ITEMID = #itemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setMainImageID" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Photo_ImageItem
+        	SET 
+        		main_Flag = CASE
+        					WHEN imageID = #v_IMAGEID# THEN 'Y'
+        					ELSE 'N'
+        					END
+        	WHERE
+        		tenant_id = #v_TENANTID#
+        	AND  
+        		ItemID = #v_ITEMID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_Configuration
+        	SET 
+        		ListCount = #v_LISTCOUNT#,
+              	PreView = #v_PREVIEW#
+        	WHERE  
+        		tenant_id = #v_TENANTID#
+        	AND
+        		UserID = #v_USERID#
+		]]>
+	</update>
+	
+	<insert id="EzBoardDAO.setBoardConfig2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_Configuration ( 
+				UserID, 	ListCount, 	   PreView, 	tenant_id
+			)
+      		VALUES ( 
+      			#v_USERID#, #v_LISTCOUNT#, #v_PREVIEW#, #v_TENANTID# 
+      		)
+		]]>
+	</insert>
+	
+	<update id="EzBoardDAO.updateMoveItem" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+      		SET 
+      			COPIEDITEM = 1
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			ITEMID = #destItemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.apprItem" parameterClass="Map">
+		<isEqual property="v_MODE" compareValue="Y">
+			<![CDATA[
+				UPDATE TBL_Board_Item
+                SET 
+                	APPRFLAG = 'Y'
+                WHERE  
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	ITEMID = #v_ITEMID#
+			]]>
+		</isEqual>
+		<isEqual property="v_MODE" compareValue="C">
+			<![CDATA[
+				UPDATE TBL_Board_Item
+                SET 
+                	APPRFLAG = 'C'
+                WHERE  
+                	TENANT_ID = #v_TENANTID#
+                AND
+                	ITEMID = #v_ITEMID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_MODE" compareValue="Y">
+			<isNotEqual property="v_MODE" compareValue="C">
+				<![CDATA[
+					UPDATE TBL_Board_Item
+	                SET 
+	                	APPRFLAG = 'N'
+	                WHERE  
+	                	TENANT_ID = #v_TENANTID#
+	                AND
+	                	ITEMID = #v_ITEMID#
+				]]>
+			</isNotEqual>
+		</isNotEqual>
+	</update>
+	
+	<update id="EzBoardDAO.photoListUpdate" parameterClass="Map">
+		<isNotEmpty property="v_FilePath">
+			<![CDATA[
+				UPDATE TBL_Photo_ImageItem
+         		SET 
+         			FilePath = #v_FilePath#,
+             		FileContent = #v_FileContent#,
+             		ImageName = #v_OFileName#,
+             		WriteDate = #nowDate#
+       			WHERE
+       				tenant_id = #v_TENANTID#
+       			AND  
+       				ImageID = #v_ImageID#
+        		AND 
+        			BoardID = #v_BoardID#
+			]]>
+		</isNotEmpty>
+		<isEmpty property="v_FilePath">
+			<![CDATA[
+				UPDATE TBL_Photo_ImageItem
+         		SET 
+         			FileContent = #v_FileContent#
+       			WHERE  
+       				tenant_id = #v_TENANTID#
+       			AND
+       				ImageID = #v_ImageID#
+        		AND 
+        			BoardID = #v_BoardID#
+			]]>
+		</isEmpty>
+	</update>
+	
+	<update id="EzBoardDAO.brdUpdateItem" parameterClass="BoardListVO">
+			UPDATE TBL_Board_Item
+		    SET 
+		    	UpdateDate = #writeDate#,
+		    	Importance = #importance#,
+	          	Title = #title#,
+	          	ParentWriteDate = #parentWriteDate#,
+	          	StartDate = #startDate#,
+	          	EndDate = #endDate#,
+	          	Abstract = #ABSTRACT#,
+	          	Attachments = #hasAttach#,
+	          	ExtensionAttribute1 = #extensionAttribute1#,
+	          	ExtensionAttribute2 = #extensionAttribute2#,
+	          	ExtensionAttribute3 = #extensionAttribute3#,
+	          	ExtensionAttribute4 = #extensionAttribute4#,
+	          	ExtensionAttribute5 = #extensionAttribute5#,
+	          	DocPassWord = #docPassword#,
+	          	WriterName = #writerName#,
+	          	WriterName2 = #writerName2#,
+	          	ExtensionAttribute32 = #extensionAttribute32#,
+	          	WriterDeptName = #writerDeptName#,
+	          	WriterDeptName2 = #writerDeptName2#,
+	          	WriterCompanyName = #writerCompanyName#,
+	          	WriterCompanyName2 = #writerCompanyName2#,
+	          	extensionAttribute6 = #extensionAttribute6#,
+	          	extensionAttribute7 = #extensionAttribute7#,
+	          	extensionAttribute8 = #extensionAttribute8#,
+	          	extensionAttribute9 = #extensionAttribute9#,
+	          	extensionAttribute10 = #extensionAttribute10#
+    		WHERE  
+    			TENANT_ID = #tenantID#
+    		AND
+    			ItemID = #itemID#
+	</update>
+	
+	<update id="EzBoardDAO.setInitReadCount" parameterClass="BoardListVO">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+			SET 
+				ReadCount = 0
+	      	WHERE
+	      		TENANT_ID = #tenantID#
+	      	AND
+	      		ItemID = #itemID#
+		]]>
+	</update>
+	
+	<update id="EzBoardDAO.setApprFlag" parameterClass="BoardListVO">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+         	SET 
+         		APPRFLAG = 'N'
+       		WHERE
+       			TENANT_ID = #tenantID#
+       		AND  
+       			apprFlag = 'C'
+       		AND
+       			ItemID = #itemID#
+		]]>
+	</update>
+	
+	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_Board_Item_Read
+			WHERE
+				TENANT_ID = #tenantID#
+			AND  
+				ItemID = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_Item_Read
+			WHERE
+				TENANT_ID = #tenantID#
+			AND  
+				ItemID = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_Item
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>	
+	
+	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_OneLineReply
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>	
+	
+	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_Item_Attachments
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>	
+	
+	<insert id="EzBoardDAO.insertDeleteReservedItem" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_DeleteReservedItem (
+				BOARDID,   ITEMID,   TENANT_ID 
+			)
+      		VALUES ( 
+      			#boardID#, #itemID#, #tenantID# 
+      		)
+		]]>
+	</insert>
+	
+	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_Item_temp
+      		WHERE  
+      			TENANT_ID = #tenantID#
+      		AND
+      			ITEMID = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Photo_ImageItem
+        	WHERE  
+        		TENANT_ID = #v_TENANTID#
+        	AND
+        		ImageID = #v_ImageID#
+        	AND 
+        		BoardID = #v_BoardID#
+		]]>
+	</delete>
+	
 	<insert id="EzBoardDAO.photoListInsert" parameterClass="BoardListVO">
 		<![CDATA[
 			INSERT INTO TBL_PHOTO_IMAGEITEM(
@@ -4108,6 +4097,16 @@
 	        	itemid = #v_ITEMID#
 		]]>
 	</update>
+		
+	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Photo_ImageItem
+			WHERE  
+				TENANT_ID = #v_TENANTID#
+			AND
+				IMAGEID = #v_pIMAGEID#
+		]]>
+	</delete>
 	
 	<delete id="EzBoardDAO.newItem" parameterClass="BoardListVO">
 		<![CDATA[
@@ -4118,6 +4117,26 @@
 	   		AND
 	   			itemid = #itemID#
    		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteItemTempPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_BOARD_ITEM_TEMP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteImageItem" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_PHOTO_IMAGEITEM
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
 	</delete>
 	
 </sqlMap>

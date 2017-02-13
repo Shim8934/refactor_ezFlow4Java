@@ -2255,7 +2255,7 @@
 			UPDATE
 				TBL_POLL_RESPONSEPERSON
          	SET
-         		RESPONSE_DATE = SYSDATE
+         		RESPONSE_DATE = #v_pNow#
        		WHERE
        			BRD_ID = #v_pstrBrdID#
         	AND

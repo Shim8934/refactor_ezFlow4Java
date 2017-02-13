@@ -14,11 +14,11 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 		<script type="text/javascript" language="javascript">
 	        var SSUserID = "<c:out value='${user.id}'/>";
-	        var SSUserName = "<c:out value='${user.displayName1}'/>";
+	        var SSUserName = "<c:out value='${user.displayName}'/>";
 	        var SSDeptID = "<c:out value='${user.deptID}'/>";
-	        var SSDeptName = "<c:out value='${user.deptName1}'/>";
+	        var SSDeptName = "<c:out value='${user.deptName}'/>";
 	        var SSCompanyID = "<c:out value='${user.companyID}'/>";
-	        var SSCompanyName = "<c:out value='${user.companyName1}'/>";
+	        var SSCompanyName = "<c:out value='${user.companyName}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var SelectedBoardID = "";
 	        var SelectedBoardParentBoardID = "";

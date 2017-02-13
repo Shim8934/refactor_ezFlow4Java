@@ -285,6 +285,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		
 		ezCommunityAdminDAO.aspCommAdmitokSet2Update(map);

@@ -9,74 +9,58 @@
 		<title><spring:message code='ezSchedule.t357' /></title>
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
         <link rel="stylesheet" href="/css/ezSchedule/Tab.css" type="text/css" />
-	    
+        <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
+		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js?ver=1.9"></script>
+	    <script type="text/javascript" src="/js/ezSchedule/schedule_write_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
-
-		<!-- data picker-->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
-		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
+		<!-- data picker-->		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-
-		<!-- time picker-->
-		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<!-- time picker-->		
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
-        <c:if test="${isCrossBrowser != true}">
-        <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-        </c:if>  
-
-	    <script type="text/javascript">
-		    var userId			= "${userInfo.id}";
-		    var userName		= "${userInfo.displayName1}";
-		    var userName2		= "${userInfo.displayName2}";
-
-		    var scheduleId		= "${scheduleId}";
-		    var scheduleType	= "${scheduleType}";
-		    var dateType		= "${scheduleInfo.dateType}";
-		    var hasAttach		= "${hasAttach}";
-		    var strAttendant	= "${strAttendant}";
-		    var strAttach 		= "${strAttach}";
-		    var deptID			= "${userInfo.deptID}";
-		    var deptName		= "${userInfo.deptName}";
-		    var companyID		= "${userInfo.companyID}";
-
-		    var repetition		= "${repetition}";
-		    var pattern			= "${pattern}";
-		    var changeKey		= "${changeKey}";
-		    //		    var strLabelOwner	= "${strLabelOwner}";
-
-		    var otherId = "${otherId}";
-		    var startDate = "${startDate}";
-		    var endDate = "${endDate}";
-		    var content = "${content}";
-		    var contentPath = "${contentPath}";
-		    var isPublic = "${isPublic}";
-		    var importance = "${importance}";
-		    var repetitionDel = "${repetitionDel}";
-		    var recurringLabelText = "${recurringLabelText}";
-		    var startDateStringOrgin = "${startDateStringOrgin}";
-		    var endDateStringOrgin = "${endDateStringOrgin}";
-		    var pageFrom = "${pageFrom}";
-		    var timeCheckString = "<spring:message code='ezSchedule.t60' />";
-		    var deptName = "${userinfo.DeptName}";
-		    var attendantName = "${attendantName}";
-		    var attendantEmail = "${attendantEmail}";
-		    var useExchangePims = "${useExchangePims}";
-		    var noneActiveX = "${noneActiveX}";
-		    var pCompanyAdmin = "${companyAdmin}";
-		    var pDeptAdmin = "${deptAdmin}";
-		    var use_exchange_pims = "${useExchange}";
+        <script type="text/javascript">
+	        var userid = "<c:out value='${userId}'/>";
+	        var username = "<c:out value='${userName}'/>";
+	        var username2 = "<c:out value='${userName2}'/>";
+	        var otherid = "<c:out value='${otherId}'/>";
+	        var scheduleid = "<c:out value='${scheduleId}'/>";
+	        var datetype = "<c:out value='${dateType}'/>";
+	        var startdate = "<c:out value='${startDate}'/>";
+	        var enddate = "<c:out value='${endDate}'/>";
+	        var content = "<c:out value='${content}'/>";
+	        var contentpath = "${contentPath}";
+	        var ispublic = "<c:out value='${isPublic}'/>";
+	        var importance = "<c:out value='${importance}'/>";
+	        var repetition = "<c:out value='${repetition}'/>";
+	        var repetitiondel = "<c:out value='${repetitionDel}'/>";
+	        var scheduletype = "<c:out value='${scheduleType}'/>";
+	        var changekey = "<c:out value='${changeKey}'/>";
+	        var pattern = "<c:out value='${pattern}'/>";
+	        var recurringLabelText = "<c:out value='${recurringLabelText}'/>";
+	        var startDateStringOrgin = "<c:out value='${startDateStringOrgin}'/>";
+	        var endDateStringOrgin = "<c:out value='${endDateStringOrgin}'/>";
+	        var pageFrom = "<c:out value='${pageFrom}'/>";
+	        var timecheckstring = "<spring:message code='ezSchedule.t60' />";
+	        var companyID = "<c:out value='${companyID}'/>";
+	        var deptName = "<c:out value='${deptName}'/>";
+	        var deptID = "<c:out value='${deptID}'/>";
+	        var hasattach = "<c:out value='${hasAttach}'/>";
+	        var attendantname = "<c:out value='${attendantName}'/>";
+	        var attendantemail = "<c:out value='${attendantemail}'/>";
+	        /* var use_exchange_pims = "NO"; */
+	        /* var NoneActiveX = "NO"; */
+	        var pCompanyAdmin = "<c:out value='${pCompanyAdmin}'/>";
+	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
 		    
-		    document.onselectstart = function () { return false; };
-		    
+		    document.onselectstart = function () { return false; };		    
 		    window.onload = function () {
-		        if (scheduleId != "" && otherId == "" && (scheduleType != "1" && scheduleType != "6")) {
+		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
 		            if (document.getElementById("MsgTo_TR"))
 		                document.getElementById("MsgTo_TR").style.display = "none";
@@ -90,7 +74,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 
-		        if (scheduleId != "") {
+		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;
 	                document.getElementById("HolderEdit").style.display = "visible";
@@ -101,16 +85,14 @@
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
-	                if (scheduleType == "7")
-                    {
+	                if (scheduletype == "7") {
 		                document.getElementById("HolderEdit2").style.display = "none";
-                    }
+                    } 
 
-		            if (dateType == "1") {
+		            if (datetype == "1") {
 		                document.getElementById("alldaycheck").checked = false;
 		                allday_change();
-		            }
-		            else if (dateType == "3" && pattern == "0") {
+		            } else if (datetype == "3" && pattern == "0") {
 		                document.getElementById("alldaycheck").checked = false;
 		                allday_change();
 		                document.getElementById("periodblock").style.display = "";
@@ -124,7 +106,7 @@
 		                document.getElementById("periodblockTR").style.display = "none";
 		            }
 		            
-                    // 참석자 정보를 가져온다.
+                    /* // 참석자 정보를 가져온다.
                     if ("${scheduleInfo}" != null && "${scheduleInfo.hasAttendant}" == "Y")
                     {
 						document.getElementById("LabelAttendant").textContent = strAttendant;
@@ -143,68 +125,23 @@
                     
     		        document.getElementById("TextLocation").Text = "${scheduleInfo.location}";
     		        document.getElementById("TextTitle").Text = "${scheduleInfo.title}";
-    		        document.getElementById("LabelOwner").Text = "${strLabelOwner}";
-		        }	
-		        // scheduleId == ""
-		        else
-		        { 
-		        	if (dateType == "1") {
+    		        document.getElementById("LabelOwner").Text = "${strLabelOwner}"; */
+		        } else if (datetype != ""){ 
+		        	if (datetype == "1") {
 		                document.getElementById("alldaycheck").checked = false;
 		                allday_change();
 		            }
-
-		        	var userName, deptName, compName;
-		        	if ("${userInfo.primary}" == "1")
-	        		{
-	        			userName = "${userInfo.displayName1}";
-	        			deptName = "${userInfo.deptName1}";
-	        			compName = "${userInfo.companyName1}";
-	        		}
-		        	else
-	        		{
-	        			userName = "${userInfo.displayName2}";
-	        			deptName = "${userInfo.deptName2}";
-	        			compName = "${userInfo.companyName2}";
-	        		}
-		        	
-		        	var optUser = document.createElement("option");
-		        	optUser.value = "1" + ";;" + "${userInfo.id}";
-		        	optUser.innerHTML = "<spring:message code='ezSchedule.t372'/>" + userName;
-		        	document.getElementById("ListOwnerID").appendChild(optUser);
-		        	
-		        	var optDept = document.createElement("option");
-		        	optDept.value = "2" + ";;" + "${userInfo.deptID}";
-		        	optDept.innerHTML = "<spring:message code='ezSchedule.t373'/>" + deptName;
-		        	document.getElementById("ListOwnerID").appendChild(optDept);
-		        	
-		        	var optComp = document.createElement("option");
-		        	optComp.value = "3" + ";;" + "${userInfo.companyID}";
-		        	optComp.innerHTML ="<spring:message code='ezSchedule.t374'/>" + compName;
-		        	document.getElementById("ListOwnerID").appendChild(optComp);
-		        	
-                    // 20110408 본부 일정은 표준이 아니므로 제외
-//		        	var optHead = document.createElement("option");
-//		        	optHead.value = "4" + ";;" + "${userInfo.companyID}";
-//		        	optHead.innerHTML ="<spring:message code='ezSchedule.t995'/>" + userInfo.HQ;
-//		        	document.getElementById("ListOwnerID").appendChild(optHead);
-
-					<c:forEach items="${groupList}" var = "item" >
-			        	var optGroup = document.createElement("option");
-			        	optGroup.value = "3" + ";;" + "${item.groupId}";
-			        	optGroup.innerHTML ="<spring:message code='ezSchedule.t375'/>" + "${item.groupName}";
-			        	document.getElementById("ListOwnerID").appendChild(optGroup);
-					</c:forEach>
 		        }
 
 		        document.getElementById("publicSelect").disabled = true;
-		        if (scheduleType == "1" || scheduleType == "6")
+		        if (scheduletype == "1" || scheduletype == "6")
 		            document.getElementById("publicSelect").disabled = false;
 
-		        if (scheduleId == "")
+		        if (scheduleid == "")
 		            ListOwnerID_Change();
 
-		        if (hasAttach == "Y") {
-		            setAttachFileInfo(strAttach);
+		        if (hasattach == "Y") {
+		            setAttachFileInfo("${strXML}");
 		        }
 
 		        try{
@@ -214,20 +151,13 @@
 		        catch (e) { }
 
 		        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-
-		        var idx = 0;
-				<c:forEach items="${attendantList}" var = "item" >
-		            g_attendant["id"][i] = "${item.attendantId}";
-		            g_attendant["name1"][i] = "${item.attendantName}";
-					idx += 1;
-				</c:forEach>
-//		        for (var i = 0; i < attendantname.split("&").length - 1; i++) {
-//		            g_attendant["id"][i] = attendantemail.split("&")[i];
-//		            g_attendant["name1"][i] = attendantname.split("&")[i];
-//		        }
+		        
+		        for (var i = 0; i < attendantname.split("&").length - 1; i++) {
+		            g_attendant["id"][i] = attendantemail.split("&")[i];
+		            g_attendant["name1"][i] = attendantname.split("&")[i];
+		        }
 		    }
-
-		    // pSelectTab이 어디서 왔는지 확인해야 한다.
+		    
 		    window.onresize = function () {
 		        switch (pSelectTab) {
 		            case "schedule1":
@@ -262,10 +192,28 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
-		        var SDate = new Date("${uploadSDate}");
-		        SDate.setHours(SDate.getHours() - 9);
-		        var EDate = new Date("${uploadEDate}");
-		        EDate.setHours(EDate.getHours() - 9);
+				var uploadSDate = "${UploadSDate}";
+				var sYear = uploadSDate.substring(0, 4);
+				var sMonth = uploadSDate.substring(5, 7);
+				var sDay = uploadSDate.substring(8, 10);
+				var sHour = uploadSDate.substring(11, 13);
+				var sMin = uploadSDate.substring(14, 16);
+							
+				var uploadEDate = "${UploadEDate}";
+				var eYear = uploadEDate.substring(0, 4);
+				var eMonth = uploadEDate.substring(5, 7);
+				var eDay = uploadEDate.substring(8, 10);
+				var eHour = uploadEDate.substring(11, 13);
+				var eMin = uploadEDate.substring(14, 16);
+				
+		        var SDate = new Date();
+		        SDate.setFullYear(sYear, sMonth-1, sDay);
+		        SDate.setHours(sHour, sMin, 0, 0);
+		        
+		        var EDate = new Date();
+		        EDate.setFullYear(eYear, eMonth-1, eDay);
+		        EDate.setHours(eHour, eMin, 0, 0);
+		        		     
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		        $('#Stimepicker').timepicker();
@@ -279,7 +227,7 @@
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    });
 
-		    if ("${userInfo.lang}" == "1") {
+		    if ("${lang}" == "1") {
 			    $(function () {
 			        $.datepicker.regional['ko'] = {
 			            closeText: '닫기',
@@ -319,7 +267,7 @@
 		    
 		    var g_originalHTML = null;
 		    function DocumentComplete() {
-		        if ((scheduleType == "1" || scheduleType == "6") && "${content}" != "") {
+		        if ((scheduletype == "1" || scheduletype == "6") && "${content}" != "") {
 		            if (g_originalHTML == null) {
 		                message.SetEditorContent("${content}")
 		                g_originalHTML = message.GetEditorContent();
@@ -377,11 +325,7 @@
 		        }
 		        save_schedule();
 		    }
-		    
-		    // 구현 필요
-		    function Editor_Complete() {
-		    }
-
+		   
 		    function Print_onClick() {
 		        var printOwner = "";
 		        var printAttendant = "";
@@ -394,7 +338,7 @@
 		        var printAttach = "";
 		        var printDocument = "";
 
-		        if (scheduleId == "") {
+		        if (scheduleid == "") {
 		            printOwner = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].textContent;
 		            printAttendant = document.getElementById("receiverlist").textContent;
 		        }
@@ -437,8 +381,7 @@
 		            if (CrossYN()) {
 		                var filename = GetChildNodes(tmeptr[i])[1].textContent;
 		                var filesize = GetChildNodes(tmeptr[i])[2].textContent;
-		            }
-		            else {
+		            } else {
 		                var filename = GetChildNodes(tmeptr[i])[1].innerText;
 		                var filesize = GetChildNodes(tmeptr[i])[2].innerText;
 		            }
@@ -481,6 +424,7 @@
 	            form.setAttribute("method", method);
 	            form.setAttribute("target", title);
 	            form.setAttribute("action", path);
+	            
 	            for (var key in params) {
 	                var hiddenField = document.createElement("input");
 	                hiddenField.setAttribute("type", "hidden");
@@ -501,8 +445,7 @@
 	                <tr>
 	                    <td style="height: 20px">
 	                        <div id="menu">
-	                            <ul id="menuTable">
-	
+	                            <ul id="menuTable">	
 	                                <li><span onclick="checkupload()"><spring:message code='ezSchedule.t358'/></span></li>
 	                                <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
@@ -510,24 +453,20 @@
 	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
 	                                <li class="bar" style="background: none; border: 0; padding-left: 0; padding-right: 0; cursor: default; color: #fff; padding-top: 4px;">
 	                                    <img src="/images/pbar.gif"><spring:message code='ezSchedule.t310'/></li>
-	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;">
-	
+	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px; padding-right: 4px;">	
 	                                    <select id="importantSelect" name="importantSelect">
 	                                        <option value='1'><spring:message code='ezSchedule.t325'/></option>
 	                                        <option value='2' selected><spring:message code='ezSchedule.t326'/></option>
 	                                        <option value='3'><spring:message code='ezSchedule.t327'/></option>
-	                                    </select>
-	
+	                                    </select>	
 	                                </li>
 	                                <li class="bar" style="margin: 1 0 0 0; background: none; border: 0; padding-left: 0; padding-right: 0; cursor: default; color: #fff; padding-top: 4px;">
 	                                    <img src="/images/pbar.gif"><spring:message code='ezSchedule.t309'/></li>
-	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px;">
-	
+	                                <li id="menuTable" class="sel" style="background: none; border: none; padding-top: 4px;">	
 	                                    <select id="publicSelect" name="publicSelect">
 	                                        <option value='Y'><spring:message code='ezSchedule.t359'/></option>
 	                                        <option value='N' selected><spring:message code='ezSchedule.t360'/></option>
-	                                    </select>
-	
+	                                    </select>	
 	                                </li>
 	                                <!--
 	              <asp:PlaceHolder ID="HolderRepetition" runat="server" Visible="false">
@@ -563,30 +502,33 @@
                                             <td colspan="2">
                                                 <span ID="LabelOwner" style="OVERFLOW-Y: auto; PADDING-TOP: 2px height:19px;"></span></td>
 <!--                                                 <asp:Label ID="LabelOwner" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px" runat="server" Height="19"></asp:Label></td> -->
-                                        </tr>
-	
+                                        </tr>	
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="2">
-                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;"></select></td>
+                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;">
+                                            		${strOwnerID}
+                                            	</select>
+                                            </td>
                                         </tr>
-
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t365'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" /></td>
+	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" />
+	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t366'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" /></td>
+	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" />
+	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
 	                                        <td colspan="2"><span id="periodblock">
 	                                            <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
-	                                             <spring:message code='ezSchedule.t369'/>
-	                                           <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+	                                            <spring:message code='ezSchedule.t369'/>
+	                                           	<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
 	                                            ~
 	                                            <input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
 	                                            </span>
@@ -604,18 +546,18 @@
 	                                            <div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; HEIGHT: 19px; width: 565px">&nbsp;</div>
 	                                        </td>
 	                                        <td class="pos2"></td>
-	                                    </tr>
-	
+	                                    </tr>	
                                         <tr id="HolderEdit2" style="display: none;">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                                <span ID="LabelAttendant" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px height=19px"></span></td>
+                                                <span ID="LabelAttendant" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px height=19px"></span>
+											</td>
                                         </tr>
-
                                         <tr id="receiverTr1">
                                             <th rowspan="2"><a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
                                             <td class="pos1">
-                                                <input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return on_keydown(event)"></td>
+                                                <input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return on_keydown(event)">
+											</td>
                                             <td class="pos2"></td>
                                         </tr>
                                         <tr id="receiverTr2">
@@ -651,10 +593,10 @@
 	                <tr>
 	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
 	                    	<c:choose>
-	                            <c:when test="${editor == 'TAGFREE'}">
+	                            <c:when test="${EDITOR == 'TAGFREE'}">
 		                            <iframe id="message" class="viewbox" name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
 		                        </c:when>
-	                            <c:when test="${editor == 'DEXT'}">
+	                            <c:when test="${EDITOR == 'DEXT'}">
 		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
 		                        </c:when>
 		                        <c:otherwise>

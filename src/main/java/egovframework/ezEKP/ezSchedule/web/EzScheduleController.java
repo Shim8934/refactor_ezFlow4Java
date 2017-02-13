@@ -2,7 +2,6 @@ package egovframework.ezEKP.ezSchedule.web;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -57,7 +57,6 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 /** 
  * @Description [Controller] 스케쥴
@@ -976,377 +975,343 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정작성
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleWrite.do")
-	public String scheduleWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
-	    String defaultId = "";
-	    String otherId = "";
-	    String userId = "";
-	    String userName = "";
-	    //07.06.27 multidata
-	    String userName2 = "";
-	    String scheduleId = "";
-	    String dateType = "";
-	    String startDate = "";
-	    String endDate = "";
-	    String repetition = "";
-	    String repetitionDel = "";
-	    String content = "";
-	    String contentPath = "";
-	    String scheduleType = "";
-	    String importance = "";
-	    String isPublic = "";
-	    String changeKey = "";
-	    String pattern = "";
-	    String endDateString = "";
-	    String startDateString = "";
-	    String allDayString = "";
-	    String recurringPattern = "";
-	    String recurringLabelText = "";
-	    String startDateStringOrgin = "";
-	    String endDateStringOrgin = "";
-	    String pageFrom = "";
-	    String uploadSDate = "", uploadEDate = "", startDateTime = "", endDateTime = "";
-	    String strIReFlagVal = "";
-
-	    String strLabelOwner = "";
-	    String strAttendant = "";
-	    String strAttach = "";
-	    String hasAttach = "NO";
-	    
-	    String ownerId = "";
-	    String ownerName = "";
-	    String ownerName2 = "";
-	    	    
-	    String attendantName = "";
-	    String attendantEmail = "";
-	    String useExchangePims = "";
-	    String noneActiveX = "";
-	    String companyAdmin = "";
-	    String deptAdmin = "";
-	    String editor = "";
-        ScheduleInfoVO scheduleInfo = null;
-        List<AttendantListVO> attendantList = null;
-        List<AttachListVO> attachList = null;
-        List<ScheduleGroupListVO> groupList = null;
-        String pDirPath = config.getProperty("upload_schedule.ROOT");
-
+	public String scheduleWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {			
+		String _datetype = "";
+		String _startdate = "";
+		String _enddate = "";
+		String _repetition = "";
+		String _repetitiondel = "";
+		String _content = "";
+        String _contentpath = "";		
+		String _importance = "";
+		String _ispublic = "";
+        String _changekey = "";                       
+        String recurringLabelText = "";
+        String startDateStringOrgin = "";
+        String endDateStringOrgin = "";        
+		String UploadSDate="", UploadEDate="", startDateTime="", endDateTime="";
+        String strIReFlagVal = "";        
+        String _hasattach = "NO";
+        String _attendantname = "";
+        String _attendantemail = "";        
+        String pCompanyAdmin = "";
+        String pDeptAdmin = "";
+        int defaultIndex = 0;
+        
+        StringBuilder strAttach = new StringBuilder();
+        StringBuilder strOwnerID = new StringBuilder();
+               
 		loginVO = commonUtil.userInfo(loginCookie);
 
-        try
-        {
-            if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
-                companyAdmin = "Y";
-                deptAdmin = "Y";
-            } else if (loginVO.getRollInfo().contains("g=1")) {            
-                deptAdmin = "Y";
-            }
-            
-            editor = config.getProperty("config.EDITOR");
-            useExchangePims = config.getProperty("config.UseExchangePims");
-            
-            //본부일정
-            //GetHQInfo();
-            defaultId = request.getParameter("defaultid");
-    		if (defaultId == null) defaultId = "";
-             
-    		scheduleId = request.getParameter("id");
-    		if (scheduleId == null)
-    			scheduleId = "";
-    		else {
-    			scheduleId.replace(' ', '+');
-    			scheduleInfo = ezScheduleService.getScheduleInfo(scheduleId);
-    		}
-    		otherId = request.getParameter("otherid");
-    		if (otherId == null) otherId = "";
-             
-    		pageFrom = request.getParameter("pageFrom");
-    		if (pageFrom == null) pageFrom = "";
-             
-    		scheduleType = request.getParameter("type");
-    		if (scheduleType == null) scheduleType = "";
-             
-    		pattern = request.getParameter("pattern");
-    		if (pattern == null) pattern = "";
-             
-            userId = loginVO.getId();
-            //07.06.27 multidata
-            userName  = loginVO.getDisplayName1();
-            userName2 = loginVO.getDisplayName2();
-            //패스워드, 도메인 네임
-            String domainName = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
-            
-            String personalId = null;
-            String shareDeptId = null;
-            String shareCompanyId = null;
-            String loginId = config.getProperty("config.LoginIDType");
-
-            // 가장(Impersonation)할 로그인 ID : Email 또는 ID
-            if (loginId != null && loginId.equals("mail"))
-            {
-                personalId = loginVO.getEmail();
-            }
-            else
-            {
-                personalId = loginVO.getName();	// UserPrincipalName
-            } 
-            shareDeptId = "D" + loginVO.getDeptID() + "@" + domainName;
-            shareCompanyId = "C" + loginVO.getCompanyID() + "@" + domainName;
-
-            /**
-            * ///////////////////////////////////////////////////////////////////
-            */
-            String impersonAddr = null;
-    		List<ScheduleHqVO> pubScheHqVO = ezScheduleService.getPublicScheduleHq(loginVO.getId(), loginVO.getTenantId());
-
-            if (scheduleType.equals("1"))
-            {
-                impersonAddr = personalId;
-            }
-            else if (scheduleType.equals("2"))
-            {
-                impersonAddr = shareDeptId;
-            }
-            else if (scheduleType.equals("3"))
-            {
-                impersonAddr = shareCompanyId;
-            }
-            else if (scheduleType.equals("4") && pubScheHqVO.size() > 0)
-            {
-                impersonAddr = pubScheHqVO.get(0).getHqId().trim();
-            }
-            else if (scheduleType.equals("5"))
-            {
-                impersonAddr = otherId + "@" + domainName;
-            }
-            else if (scheduleType.equals("6"))
-            {
-                impersonAddr = otherId + "@" + domainName;
-            }
-            else
-            {
-                impersonAddr = personalId;
-            }
-            
-            if (scheduleId != "")
-            {
-                if ((scheduleType.equals("1") || scheduleType.equals("6")) && useExchangePims.equals("YES"))
-                {
-                	// Exchange는 사용하지 않으므로 SKIP
-                }
-                else if (scheduleInfo != null)
-                {
-                    contentPath = pDirPath + scheduleInfo.getContentPath();
-                    startDateStringOrgin	= scheduleInfo.getStartDate();
-                    endDateStringOrgin		= scheduleInfo.getEndDate();
-                    hasAttach = scheduleInfo.getHasAttach();
-                    
-                    String hasAttendant = scheduleInfo.getHasAttendant(); 
-                    if (hasAttendant == "Y")
-                    {
-                        String parentId = scheduleInfo.getParentId();
-                        if (parentId.equals("0"))
-                        {
-                        	parentId = scheduleId;
-                        }
-                        attendantList = ezScheduleService.getAttendantList(parentId);
-
-                        for (AttendantListVO attendant : attendantList)
-                        {
-                        	String status;
-
-                        	if (attendant.getStatus().equals("1")) {
-                                status = "(" + msg.getMessage("ezSchedule.t251") + ")";
-                        	} else if (attendant.getStatus().equals("2")) {
-                                status = "(" + msg.getMessage("ezSchedule.t168") + ")";
-                        	} else if (attendant.getStatus().equals("3")) {
-                                status = "(" + msg.getMessage("ezSchedule.t169") + ")";
-                        	} else {
-                                status = "(" + msg.getMessage("ezSchedule.t166") + ")";
-                        	}
-
-							if (strAttendant != "") {
-								strAttendant += ", ";
-							}
-
-                            // 07.06.27 multidata
-                            // 08.04.14 다국어 primary 멀티데이터 적용
-                            // Server.HtmlEncode(Name2) 처리를 어떻게 하나? (by kgs)
-                            if (loginVO.getLocale().equals("1"))
-                            {
-                            	strAttendant += "<span title='" + msg.getMessage("ezSchedule.t162") + "' style='cursor:pointer' onclick=show_personinfo('" + 
-                            			"${attendant.attendantId}" + "')>" +
-                                		"${attendant.attendantName}" + "')>" + status + "</span>";
-                            }
-                            else
-                            {
-                            	strAttendant += "<span title='" + msg.getMessage("ezSchedule.t162") + "' style='cursor:pointer' onclick=show_personinfo('" + 
-                            			"${attendant.attendantId}" + "')>" + "')>" +
-                                		"${attendant.attendantName2}" + "')>" + status + "</span>";
-                            }
-                        }
-                        
-                    }
-                    
-                    if (hasAttach == "Y")
-                    {
-                    	attachList = ezScheduleService.getAttachList(scheduleId);
-                        //LiteralAttach.Text = "";
-                        //infoXML = GetAttachList(loginid, loginpwd, domainName, casname, personalid, sharedeptid, sharecompanyid, _scheduleid, _scheduletype);
-                        //xmldom = GetXmlReaderString(infoXML);
-                        strAttach = "<ROOT><NODES>";
-                        for (AttachListVO attach : attachList)
-                        {
-                            strAttach += "<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath() + "/" + attach.getFileName() + "/" + attach.getFileSize() + "/ExistsImage") + "]]></DATA>";
-                            strAttach += "<DATA2><![CDATA[" + attach.getAttachId() + "]]></DATA2>";
-                            strAttach += "<DATA3><![CDATA[OK]]></DATA3>";
-                        }
-                        strAttach += "</NODES></ROOT>";
-
-                		// changeKey는 Exchange 일정인 경우에만 있으므로 생략
-                    }
-                    
-                    // 08.04.14 primary 값에 따라 가져오도록 수정함
-                    int primary = loginVO.getPrimary().equals("1") ? 1 : 2;
-                    
-                    if (scheduleType.equals("1") || scheduleType.equals("6"))
-                    {
-                        strLabelOwner = msg.getMessage("ezSchedule.t372");
-                        strLabelOwner += primary == 1 ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2();
-                    }
-                    else if (scheduleType.equals("2"))
-                    {
-                        strLabelOwner = msg.getMessage("ezSchedule.t373");
-                        strLabelOwner += primary == 1 ? loginVO.getDeptName1() : loginVO.getDeptName2();
-                    }
-                    else if (scheduleType.equals("3"))
-                    {
-                        strLabelOwner = msg.getMessage("ezSchedule.t374");
-                        strLabelOwner += primary == 1 ? loginVO.getCompanyName1() : loginVO.getCompanyName2();
-                    }
-                    else if (scheduleType.equals("4"))
-                    {
-                        impersonAddr = pubScheHqVO.get(0).getHqId().trim();
-                        strLabelOwner = msg.getMessage("ezSchedule.t995");
-                        strLabelOwner += primary == 1 ? pubScheHqVO.get(0).getHqName() : pubScheHqVO.get(0).getHqName2();
-                    }
-                    else if (scheduleType.equals("7"))
-                    {
-                        strLabelOwner = msg.getMessage("ezSchedule.t375");
-                        strLabelOwner += primary == 1 ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2();
-                    }
-                    
-                    ownerId			= scheduleInfo.getOwnerId();
-                    ownerName		= scheduleInfo.getOwnerName();
-                    ownerName2		= scheduleInfo.getOwnerName2();
-                    repetition		= scheduleInfo.getRepetition();
-                    repetitionDel	= scheduleInfo.getRepetitionDel();
-                    isPublic		= scheduleInfo.getIsPublic();
-                    importance		= scheduleInfo.getImportance();
-                }
-            }
-            // scheduleId == null
-            else {
-                groupList = ezScheduleService.getScheduleGroupList(loginVO.getId(), loginVO.getTenantId());
-            }
-            
-			String cDate = "";
-			String cTime = "";
-			
-			dateType = request.getParameter("datetype");
-			if (dateType == null) dateType = "";
-
-			startDateTime = request.getParameter("sdate");
-			if (startDateTime == null)
-			{
-				cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-				cTime = cDate.split(" ")[1].substring(0, 2);
-				
-				if (request.getParameter("startDate") != null) {
-					cDate = request.getParameter("startDate");
-				}
-				cDate = cDate.substring(0, 10);
-
-				uploadSDate = getUploadDate(cDate, cTime, true, locale);
-			} else {
-				uploadSDate = ezResourceService.isoUTFDate(startDateTime, locale);
-			}
-
-			endDateTime = request.getParameter("edate");
-			if (endDateTime == null)
-			{
-				cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-				cTime = cDate.split(" ")[1].substring(0, 2);
-				
-				if (request.getParameter("endDate") != null) {
-					cDate = request.getParameter("endDate");
-				}
-				cDate = cDate.substring(0, 10);
-
-				uploadEDate = getUploadDate(cDate, cTime, false, locale);
-			} else {
-				uploadEDate = ezResourceService.isoUTFDate(endDateTime, locale);
-			}
-
-			model.addAttribute("userInfo",		loginVO);
-            model.addAttribute("scheduleInfo",	scheduleInfo);
-            model.addAttribute("attendantList",	attendantList);
-            model.addAttribute("groupList",		groupList);
-
-            model.addAttribute("scheduleId",	scheduleId);
-            model.addAttribute("scheduleType",	scheduleType);
-            model.addAttribute("hasAttach",		hasAttach);
-            model.addAttribute("strAttach",		strAttach);
-            model.addAttribute("strAttendant",	strAttendant);
-            model.addAttribute("uploadSDate",	uploadSDate);
-            model.addAttribute("uploadEDate",	uploadEDate);
-            
-
-            model.addAttribute("content",		content);
-            model.addAttribute("contentPath",	contentPath);
-            model.addAttribute("isPublic",		isPublic);
-            model.addAttribute("importance",	importance);
-            model.addAttribute("repetition",	repetition);
-            model.addAttribute("repetitionDel",	repetitionDel);
-            model.addAttribute("changeKey",		changeKey);
-            model.addAttribute("pattern",		pattern);
-
-            model.addAttribute("otherId",		otherId);
-            model.addAttribute("dateType",		dateType);
-            model.addAttribute("startDate",		startDate);
-            model.addAttribute("endDate",		endDate);
-            model.addAttribute("recurringLabelText",	recurringLabelText);
-            model.addAttribute("startDateStringOrgin",	startDateStringOrgin);
-            model.addAttribute("endDateStringOrgin",	endDateStringOrgin);
-            model.addAttribute("pageFrom",		pageFrom);
-            model.addAttribute("attendantName",	attendantName);
-            model.addAttribute("attendantEmail",attendantEmail);
-            model.addAttribute("useExchangePims",useExchangePims);
-            model.addAttribute("noneActiveX",	noneActiveX);
-            model.addAttribute("companyAdmin",	companyAdmin);
-            model.addAttribute("deptAdmin",		deptAdmin);
-
+        if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
+        	pCompanyAdmin = "Y";
+        	pDeptAdmin = "Y";
+        } else if (loginVO.getRollInfo().contains("g=1")) {
+        	pDeptAdmin = "Y";
+        }        
+        
+        String _defaultid = request.getParameter("defaultid");
+		if (_defaultid == null) _defaultid = "";
+         
+		String _scheduleid = request.getParameter("id");
+		if (_scheduleid == null) {
+			_scheduleid = "";
+		} else {
+			_scheduleid.replace(" ", "+");
 		}
-        catch (Exception e)
-        {
-        	e.printStackTrace();
-//            WriteTextLog("schedulewriteCK", "PageLoad", Ex.toString());
-        }
+		
+		String _otherid = request.getParameter("otherid");
+		if (_otherid == null) _otherid = "";
+         
+		String pageFrom = request.getParameter("pageFrom");
+		if (pageFrom == null) pageFrom = "";
+         
+		String _scheduletype = request.getParameter("type");
+		if (_scheduletype == null) _scheduletype = "";
+         
+		String _pattern = request.getParameter("pattern");
+		if (_pattern == null) _pattern = "";
+         
+        String userId = loginVO.getId();            
+        String userName  = loginVO.getDisplayName1();
+        String userName2 = loginVO.getDisplayName2();
+        String primary = loginVO.getPrimary();
+        String EDITOR = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());        
+    	         
+System.out.println("=================================== start");                    
+        if (!_scheduleid.equals("")) {
+        	//HolderEdit.Visible = true;
+            //HolderEdit2.Visible = true;
+            //HolderWrite.Visible = false;
+            //HolderWrite2.Visible = false;
+            //HolderWrite3.Visible = false;
+System.out.println("=================================== scheduleID have");
+        	String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+        	String pDirPath = config.getProperty("upload_schedule.ROOT");
+        	
+        	ScheduleInfoVO scheduleInfo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());            	
+System.out.println("=================================== get scheduleInfo");
+            _contentpath = pDirPath + scheduleInfo.getContentPath();
+            startDateStringOrgin	= scheduleInfo.getStartDate();
+            endDateStringOrgin = scheduleInfo.getEndDate();
+            String hasAttendant = scheduleInfo.getHasAttendant();
             
+            //if (_scheduletype == "7") {
+            //    HolderEdit2.Visible = false;
+            //}
+                            
+            if (hasAttendant.equals("Y")) {
+System.out.println("=================================== has Attendant");            	
+            	StringBuilder strAttendant = new StringBuilder();
+                String parentId = (scheduleInfo.getParentId().equals("0") ? _scheduleid : scheduleInfo.getParentId());
+                
+                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, loginVO.getTenantId());
+
+                for (int i = 0; i < attendantList.size(); i++) {                    	
+                	AttendantListVO attendant = attendantList.get(i);
+                	String status = "";
+
+                	if (attendant.getStatus().equals("1")) {
+                        status = "(" + msg.getMessage("ezSchedule.t251", locale) + ")";
+                	} else if (attendant.getStatus().equals("2")) {
+                        status = "(" + msg.getMessage("ezSchedule.t168", locale) + ")";
+                	} else if (attendant.getStatus().equals("3")) {
+                        status = "(" + msg.getMessage("ezSchedule.t169", locale) + ")";
+                	} else {
+                        status = "(" + msg.getMessage("ezSchedule.t166", locale) + ")";
+                	}
+                	
+                	if (i != 0) {
+                		strAttendant.append(", ");
+                	}
+                	
+                    if (loginVO.getLang().equals("1")) {
+                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + 
+                    			attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName() + status + "</span>");
+                    } else {
+                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + 
+                    			attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName2() + status + "</span>");
+                    }
+                }                    
+            }                
+            _hasattach = scheduleInfo.getHasAttach();            
+            
+            if (_hasattach.equals("Y")) {
+System.out.println("=================================== has Attach");            	
+            	_hasattach = "YES";            	
+            	
+            	List<AttachListVO> attachList = ezScheduleService.getAttachList(_scheduleid, loginVO.getTenantId());
+            	
+            	strAttach.append("<ROOT><NODES>");
+            	
+                for (AttachListVO attach : attachList) {
+                    strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath() + "/" + attach.getFileName() + "/" + attach.getFileSize() + "/ExistsImage") + "]]></DATA>");
+                    strAttach.append("<DATA2><![CDATA[" + attach.getAttachId() + "]]></DATA2>");
+                    strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
+                }
+                strAttach.append("</NODES></ROOT>");            		
+            } else {
+            	_hasattach = "NO";
+            }
+            
+            //parameters
+            String ownerid = scheduleInfo.getOwnerId();
+            String ownername = scheduleInfo.getOwnerName();
+            String ownername2 = scheduleInfo.getOwnerName2();
+            _scheduletype = scheduleInfo.getScheduleType();
+            _datetype = scheduleInfo.getDateType();
+            _startdate = scheduleInfo.getStartDate();
+            _enddate = scheduleInfo.getEndDate();
+            startDateTime = _startdate;
+            endDateTime = _enddate;
+            _repetition = scheduleInfo.getRepetition();
+            _repetitiondel = scheduleInfo.getRepetitionDel().replaceAll("][", ", ").replaceAll("[","").replaceAll("]", "");
+            _ispublic = scheduleInfo.getIsPublic();
+            _importance = scheduleInfo.getImportance();
+            
+            //if (_datetype == "3" && _pattern == "1") {
+            //    HolderRepetition.Visible = true;
+            //}
+            
+            //TextLocation.Text = xmldom.SelectSingleNode("DATA/LOCATION").InnerText;
+            //TextTitle.Text = Server.HtmlDecode(xmldom.SelectSingleNode("DATA/TITLE").InnerText);
+            
+            String strLabelOwner = "";                
+            
+        	if (_scheduletype.equals("1") || _scheduletype.equals("6")) {
+                 strLabelOwner = msg.getMessage("ezSchedule.t372", locale);
+                 strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
+            } else if (_scheduletype.equals("2")) {
+                 strLabelOwner = msg.getMessage("ezSchedule.t373", locale);
+                 strLabelOwner += (primary.equals("1") ? loginVO.getDeptName() : loginVO.getDeptName2());
+            } else if (_scheduletype.equals("3")) {
+                 strLabelOwner = msg.getMessage("ezSchedule.t374", locale);
+                 strLabelOwner += (primary.equals("1") ? loginVO.getCompanyName() : loginVO.getCompanyName2());
+            } else if (_scheduletype.equals("4")) {
+                 //HQ관련
+            } else if (_scheduletype.equals("7")) {
+                 strLabelOwner = msg.getMessage("ezSchedule.t375", locale);
+                 strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
+            }              
+        } else {
+System.out.println("=================================== No!! scheduleID have");
+        	if (!_otherid.equals("")) {
+System.out.println("=================================== otherid have");        		
+        		//개인일정
+        		String type = _scheduletype;
+        		strOwnerID.append("<option value='" + type + ";;" + _otherid + "'>" + request.getParameter("othername") + "</option>");
+        	} else {
+System.out.println("=================================== No!! otherid have");				
+				defaultIndex = Integer.parseInt(_defaultid) -1;
+				
+				if (primary.equals("1")) {
+					//개인일정
+					strOwnerID.append("<option value='1;;" + userId + "'>" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName1() + "</option>");
+					//부서일정
+					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'>" + msg.getMessage("ezSchedule.t373", locale) + " " + loginVO.getDeptName1() + "</option>");
+					//회사일정
+					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'>" + msg.getMessage("ezSchedule.t374", locale) + " " + loginVO.getCompanyName1() + "</option>");
+				} else {
+					//개인일정
+					strOwnerID.append("<option value='1;;" + userId + "'>" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName2() + "</option>");
+					//부서일정
+					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'>" + msg.getMessage("ezSchedule.t373", locale) + " " + "</option>");
+					//회사일정
+					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'>" + msg.getMessage("ezSchedule.t374", locale) + " " + "</option>");
+				}
+            	
+            	List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, loginVO.getTenantId());
+            	
+            	for (ScheduleGroupListVO vo : gList) {
+            		//그룹 일정
+            		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'>" + msg.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");
+            	}
+        	}
+        
+			String cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);				
+System.out.println("=================================== all logic start");			
+			_datetype = request.getParameter("datetype");
+    		if (_datetype == null) _datetype = "";
+			
+			if (request.getParameter("sdate") != null) {
+System.out.println("=================================== sdate have");				
+				//startDateTime = ezResourceService.isoUTFDate(startDateTime, locale);
+				startDateTime = request.getParameter("sdate");
+			} else {
+System.out.println("=================================== No!! sdate have");				
+				if (request.getParameter("startdate") != null) {
+					cDate = request.getParameter("startdate");
+				}	
+				startDateTime = getUploadDate(cDate, true);
+			}
+			
+			if (request.getParameter("edate") != null) {
+System.out.println("=================================== edate have");				
+				endDateTime = request.getParameter("edate");
+			} else {
+System.out.println("=================================== No!! edate have");				
+				if (request.getParameter("enddate") != null) {
+System.out.println("=================================== enddate have");					
+					cDate = request.getParameter("enddate");
+				}	
+				endDateTime = getUploadDate(cDate, false);
+			}
+        }
+System.out.println("=================================== model start");        
+        UploadSDate = startDateTime;
+        UploadEDate = endDateTime;
+
+        model.addAttribute("userId", userId);
+        model.addAttribute("userName", userName);
+        model.addAttribute("userName2", userName2);
+        model.addAttribute("otherId", _otherid);
+        model.addAttribute("scheduleId", _scheduleid);
+        model.addAttribute("dateType", _datetype);
+        model.addAttribute("startDate", _startdate);
+        model.addAttribute("endDate", _enddate);
+        model.addAttribute("content", _content);
+        model.addAttribute("contentPath", _contentpath);
+        model.addAttribute("isPublic", _ispublic);
+        model.addAttribute("importance", _importance);
+        model.addAttribute("repetition", _repetition);
+        model.addAttribute("repetitionDel", _repetitiondel);
+        model.addAttribute("scheduleType", _scheduletype);
+        model.addAttribute("changeKey", _changekey);
+        model.addAttribute("pattern", _pattern);
+        model.addAttribute("recurringLabelText", recurringLabelText);
+        model.addAttribute("startDateStringOrgin", startDateStringOrgin);
+        model.addAttribute("endDateStringOrgin", endDateStringOrgin);
+        model.addAttribute("pageFrom", pageFrom); 
+        model.addAttribute("companyID", loginVO.getCompanyID());
+        model.addAttribute("deptName", loginVO.getDeptName());
+        model.addAttribute("deptID", loginVO.getDeptID());
+        model.addAttribute("hasAttach", _hasattach);
+        model.addAttribute("attendantName", _attendantname);
+        model.addAttribute("attendantemail", _attendantemail);
+        model.addAttribute("pCompanyAdmin", pCompanyAdmin);
+        model.addAttribute("pDeptAdmin", pDeptAdmin);
+        model.addAttribute("strXML", strAttach.toString());
+        model.addAttribute("UploadSDate", UploadSDate);
+        model.addAttribute("UploadEDate", UploadEDate);
+        model.addAttribute("lang", loginVO.getLang());        
+        model.addAttribute("EDITOR", EDITOR);
+        model.addAttribute("strIReFlagVal", strIReFlagVal);
+        model.addAttribute("strOwnerID", strOwnerID);
+        model.addAttribute("defaultIndex", defaultIndex);
+System.out.println("=================================== model end");
    		return "/ezSchedule/scheduleWrite";
+	}	
+		
+	/**
+	 * 일정작성 > 반복일정 선택
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleRepetition.do")
+	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("lang", loginSimpleVO.getLang());
+		
+		return "/ezSchedule/scheduleRepetition";
+	}
+	
+	/**
+	 * 일정작성 > 반복일정 선택
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleSelectResource.do")
+	public String scheduleSelectResource(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
+				
+		String brd_Gubun = request.getParameter("pbrdGubun");
+		String selectNo = request.getParameter("flag");
+		String startTime = request.getParameter("StartTime");
+		String endTime = request.getParameter("EndTime");
+		String serverName = request.getServerName();
+				
+		model.addAttribute("brd_Gubun", brd_Gubun);
+		model.addAttribute("selectNo", selectNo);
+		model.addAttribute("startTime", startTime);
+		model.addAttribute("endTime", endTime);
+		model.addAttribute("serverName", serverName);
+		model.addAttribute("userInfo", loginVO);		
+		
+		return "/ezSchedule/scheduleSelectResource";
 	}
 	
 	/**
 	 * 일정관리 Schedule 저장 호출 Method
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleSave.do")
-	public String scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, Model model, LoginVO loginVO) throws Exception {
-        String _domainname = null;
+	@ResponseBody
+	public void scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, Model model, LoginVO loginVO) throws Exception {        
         String pageFrom = "";
         String _pattern;
+        String saveScheduleId = "";
         List<String> inlineimage = new ArrayList<String>();
         List<String> inlineContent = new ArrayList<String>();
 
         try {
 			loginVO = commonUtil.userInfo(loginCookie);
+			String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 			
 			model.addAttribute("userInfo", loginVO);
 	
@@ -1365,18 +1330,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
 	        String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
 	        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();
-	        String schenddate	= doc.getElementsByTagName("ENDORGINDATE").item(0).getTextContent();	//?
+	        String schenddate	= doc.getElementsByTagName("ENDORGINDATE").item(0).getTextContent();
 	        String otherid		= doc.getElementsByTagName("OTHERID").item(0).getTextContent();
-
-	        if (scheduleid != "")
-	        {
-	            _pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
-	        }
-	        else
-	        {
-	        	scheduleid = "" + ezScheduleService.getNewScheduleId();
-	        }
 	        String pattern = "";
+
+	        if (scheduleid != "") {
+	            _pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
+	            pattern = _pattern;
+	        } /*else {
+	        	scheduleid = "" + ezScheduleService.getNewScheduleId();
+	        }	*/        
 	
 	        String startdate	= doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 	        String enddate		= doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
@@ -1386,168 +1349,27 @@ public class EzScheduleController extends EgovFileMngUtil {
 	        String content		= doc.getElementsByTagName("CONTENT").item(0).getTextContent();
 	        String attachxml	= doc.getElementsByTagName("ATTACHLIST").item(0).getTextContent();
 	        String attendantxml	= doc.getElementsByTagName("ATTENDANTLIST").item(0).getTextContent();
-	        String changekey	= doc.getElementsByTagName("CHANGEKEY").item(0).getTextContent();
-	        String contentPath	= doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent();
+	        String changekey	= doc.getElementsByTagName("CHANGEKEY").item(0).getTextContent();	               
 	        
-	        // repetition should be "". not " ". But "" is treated as null.
-	        if (repetition == null || repetition.equals("")) repetition = "R";
+	        if (pattern.equals("0")) {
+	        	repetition = "";
+	        }        
 	        
-	        // Test 필요
-	        String hasattach	= attachxml.length() > 0 ? "Y" : "N";
-	        String hasattendant	= attendantxml.length() > 0 ? "Y" : "N"; 
-	        String hascomment	= "N";	//?
-	        String isreadonly	= "N";	//?
-	        String repetitiondel= "N";	//?
-	        String groupname	= "";	//?
-
-	        if (pattern == "0")
-	        {
-	            repetition = "R";
-	        }
-	
-	        String domainName = null;
-	        domainName = config.getProperty("DomainName");
-	
-	        _domainname = domainName;
-	        String personalid = null;
-	        String sharedeptid = null;
-	        String sharecompanyid = null;
-	
-	        if (config.getProperty("LoginIDType") == "mail")
-	        {
-	            personalid = loginVO.getEmail(); 
-	        }
-	        else
-	        {
-	            personalid = loginVO.getEmail();	// UPNName
-	        }
-            sharedeptid = "D" + loginVO.getDeptID() + "@" + domainName;
-            sharecompanyid = "C" + loginVO.getCompanyID() + "@" + domainName;
-    		List<ScheduleHqVO> pubScheHqVO = ezScheduleService.getPublicScheduleHq(loginVO.getId(), loginVO.getTenantId());
-	
-	        String impersonaddr = null;
-	        switch (scheduletype)
-	        {
-	            case "1":
-	                impersonaddr = personalid;
-	                break;
-	            case "2":
-	                impersonaddr = sharedeptid;
-	                break;
-	            case "3":
-	                impersonaddr = sharecompanyid;
-	                break;
-	            case "4":
-	                impersonaddr = pubScheHqVO.get(0).getHqId();
-	                break;
-	            case "5":
-	            case "6":
-	                impersonaddr = otherid + "@" + domainName;
-	                break;
-	            case "8":
-	                impersonaddr = otherid;
-	                break;
-	            default:
-	                impersonaddr = personalid;
-	                break;
-	        }
-	        
-            String pDirPath = config.getProperty("upload_schedule.ROOT");
-	        String contentpath = doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent(); 
-	        String pContentPath;
-	        if (contentpath == "") {
-	        	pContentPath = pDirPath + commonUtil.separator + scheduleid;
-	        }
-	        else
-	        {
-	        	pContentPath = contentpath;
-	        }
-
-	        // 일정 저장 또는 업데이트
-			ScheduleInfoVO schInfoVO = new ScheduleInfoVO();
-			schInfoVO.setScheduleId(scheduleid);
-			schInfoVO.setParentId("0");
-			schInfoVO.setOwnerId(ownerid);
-			schInfoVO.setOwnerName(ownername);
-			schInfoVO.setOwnerName2(ownername2);
-			schInfoVO.setCreatorId(creatorid);
-			schInfoVO.setCreatorName(creatorname);
-			schInfoVO.setCreatorName2(creatorname2);
-			schInfoVO.setCreateDate("");	// Now
-			schInfoVO.setModifierId(creatorid);
-			schInfoVO.setModifierName(creatorname);
-			schInfoVO.setModifierName2(creatorname2);
-			schInfoVO.setModifyDate("");	// Now
-			schInfoVO.setScheduleType(scheduletype);
-			schInfoVO.setImportance(importance);
-			schInfoVO.setHasAttendant(hasattendant);
-			schInfoVO.setHasAttach(hasattach);
-			schInfoVO.setHasComment(hascomment);
-			schInfoVO.setIsReadOnly(isreadonly);
-			schInfoVO.setIsPublic(ispublic);
-			schInfoVO.setDateType(datetype);
-			schInfoVO.setStartDate(startdate);
-			schInfoVO.setEndDate(enddate);
-			schInfoVO.setRepetition(repetition);
-			schInfoVO.setRepetitionDel(repetitiondel);
-			schInfoVO.setTitle(title);
-			schInfoVO.setLocation(location);
-			schInfoVO.setContentPath(pContentPath);
-			schInfoVO.setGroupName(groupname);
-
-//	        // 첨부 파일 업로드
-//	        if (doc.getElementsByTagName("IMAGENAME").getLength() > 0)
-//	        {
-//	        	NodeList pImageNameNode = doc.getElementsByTagName("IMAGENAME");
-//	            if (pImageNameNode != null)
-//	            {
-//	                for (int i = 0; i < pImageNameNode.getLength(); i++)
-//	                {
-//	                    if (pImageNameNode.item(i).getTextContent().trim() != "")
-//	                    {
-//	                        inlineimage.add(pImageNameNode.item(i).getTextContent().trim());
-//	                    }
-//	                }
-//	            }
-//	        	NodeList pImageContentNode = doc.getElementsByTagName("IMAGECONTENT");
-//	            if (pImageContentNode != null)
-//	            {
-//	                for (int i = 0; i < pImageContentNode.getLength(); i++)
-//	                {
-//	                    if (pImageContentNode.item(i).getTextContent().trim() != "")
-//	                    {
-//	                        inlineContent.add(pImageContentNode.item(i).getTextContent().trim());
-//	                    }
-//	                }
-//	            }
-//	        }
-//	        
-
-//			if (pMode.equals("modify")) {
-//				ezBoardService.brdUpdateItem(boardListVO, "BOARD");
-//			} else if (pMode.equals("temp")) {
-//				ezBoardService.brdNewItemTemp(boardListVO);
-//			} else {
-				ezScheduleService.scheduleNewItem(schInfoVO);
-//			}
-			
-//			if (scheduleid == "")
-//                result = InsertSchedule_DB(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, attendantxml, contentpath);
-//            else
-//                result = UpdateSchedule_DB(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentpath);
-//
-//            if(!result.equals(""))
-//                response.write("OK_"+result);
-//            else
-//                response.write(result);
-	        
-	    }
-	    catch (Exception Ex)
-	    {
+	        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+  
+	        if (scheduleid == null || scheduleid.equals("")) {
+	        	//insertSchedule
+	        	startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), true);
+	        	enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), true);
+	        	
+	        	ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, attendantxml, defaultPath, loginVO.getTenantId());
+	        } else {
+	        	//updateSchedule
+	        	//ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentPath);
+	        }	        
+	    } catch (Exception Ex) {
 	        Ex.printStackTrace();;
-	    }
-		
-		return "ezSchedule/scheduleSave";
+	    }		
 	}
 
 //	// 일정 저장
@@ -1859,26 +1681,38 @@ public class EzScheduleController extends EgovFileMngUtil {
         return strXML.toString();
     }	
     
-    private String getUploadDate(String cDate, String cTime, boolean isStart, Locale locale)
-    {
-		String uploadDate = cDate + " " + cTime + ":00:00";
+    private String getUploadDate(String cDate, boolean isStart) throws Exception
+    {    	
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		Date now = sdf.parse(cDate);
 		
-		cDate = cDate.substring(0, 10);
-		if (LocalDateTime.now().getMinute() < 30) {
-			if (isStart) {
-				uploadDate = cDate + " " + cTime + ":00:00";
+		Calendar cal = Calendar.getInstance();		
+		cal.setTime(now);		
+			
+		if (isStart) {
+			String date = cDate.substring(0,10);
+			String hour = cDate.substring(11,13);
+			String time = cDate.substring(14,16);
+			
+			if (Integer.parseInt(time) < 30) {
+				cDate = date + " " + hour + ":00:00";
 			} else {
-				uploadDate = cDate + " " + cTime + ":00:30";
+				cDate = date + " " + hour + ":30:00";
 			}
-		} else {
-			if (isStart) {
-				uploadDate = cDate + " " + cTime + ":00:30";
-			} else {
-				uploadDate = cDate + " " + cTime + ":00:00";
-			}
-		}
+		} else {			
+			cal.add(Calendar.MINUTE, 30);
+			cDate = sdf.format(cal.getTime());
 
-		System.err.println("uploadDate: " + uploadDate);
-		return ezResourceService.isoUTFDate(uploadDate, locale);
+			String date = cDate.substring(0,10);
+			String hour = cDate.substring(11,13);
+			String time = cDate.substring(14,16);
+			
+			if (Integer.parseInt(time) < 30) {
+				cDate = date + " " + hour + ":00:00";
+			} else {
+				cDate = date + " " + hour + ":30:00";
+			}
+		}		
+		return cDate;
     }
 }

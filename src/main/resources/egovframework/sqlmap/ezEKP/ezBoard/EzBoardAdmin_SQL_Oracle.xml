@@ -398,7 +398,7 @@
 	
 	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
 		<![CDATA[
-			DELETE 
+			DELETE FROM 
 				TBL_Board_TreeCache
 	    	WHERE
 	    		TENANT_ID = #v_TENANTID#
@@ -581,7 +581,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
 		<![CDATA[
-			DELETE TBL_Board_BoardManage
+			DELETE FROM TBL_Board_BoardManage
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -591,7 +591,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
 		<![CDATA[
-			DELETE TBL_Board_BoardInfo
+			DELETE FROM TBL_Board_BoardInfo
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -601,7 +601,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteBoardMyBoard" parameterClass="Map" >
 		<![CDATA[
-			DELETE TBL_Board_MyBoards
+			DELETE FROM TBL_Board_MyBoards
       		WHERE
       			TENANT_ID = #v_TENANTID#
       		AND  
@@ -800,7 +800,7 @@
 	
 	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
 		<![CDATA[
-			DELETE TBL_Board_MyTree
+			DELETE FROM TBL_Board_MyTree
 			WHERE
 				TENANT_ID = #tenantID#
 			AND
@@ -881,7 +881,7 @@
 	
 	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_BoardManage
+			DELETE FROM TBL_Board_BoardManage
       		WHERE
       			tenant_id = #v_TENANTID#
       		AND  
@@ -1047,7 +1047,7 @@
 	
 	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_ApprList
+			DELETE FROM TBL_Board_ApprList
           	WHERE
           		TENANT_ID = #v_TENANTID#
           	AND  

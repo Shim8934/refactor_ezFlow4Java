@@ -3,7 +3,9 @@ package egovframework.ezEKP.ezApprovalG.web;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
@@ -358,17 +360,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
                 if (listType.equals("10")) {
-                	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
                 } else {
-                	returnQuery += " AND STARTDATE >= TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	returnQuery += " AND STARTDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
                 }
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
                 if (listType.equals("10")){
-                	returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
                 } else {
-                	returnQuery += " AND STARTDATE <= TO_DATE('" + commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	returnQuery += " AND STARTDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
                 }
             }
             
@@ -2182,7 +2184,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String path = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String ret = "";
+		InputStream stream = null;
+		OutputStream bos = null;
 		
+		try {
 		File file = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000");
 		File file1 = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID));
 
@@ -2203,10 +2208,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String saveFileName = tmpPath + commonUtil.separator + "TMP" + commonUtil.separator + docID + ".mht";
-		InputStream stream = null;
-		OutputStream bos = null;
 		
-		try {
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
 			bos = new FileOutputStream(saveFileName);
@@ -2222,8 +2224,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			ret = "FALSE";
 		} finally {
-			bos.close();
-			stream.close();
+		   if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		   if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
 		}
 	    
 		return ret;
@@ -2420,20 +2434,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String saveDir = "";
 		String ret = "";
 		String realPath = commonUtil.getRealPath(request);
+		InputStream stream = null;
+		OutputStream bos = null;
 		
 		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht"; 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
-
+		try {
+			
 		File file = new File(saveDir);
 		
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		
-		InputStream stream = null;
-		OutputStream bos = null;
 		
-		try {
+		
+
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
 			bos = new FileOutputStream(saveFileName);
@@ -2449,8 +2465,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} catch (Exception e) {
 			ret = "FALSE";
 		} finally {
-			bos.close();
-			stream.close();
+			   if (bos != null) {
+					try {
+					    bos.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+			   if (stream != null) {
+					try {
+						stream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
 		}
 	    
 		return ret;
@@ -2977,6 +3005,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String[] filePaths = xmlDom.getElementsByTagName("PPATHINFO").item(0).getTextContent().split(separators);
 		String[] fileNames = xmlDom.getElementsByTagName("PFILEINFO").item(0).getTextContent().split(separators);
 
+		ZipOutputStream zout = null;
+		FileInputStream inpStream = null;
+		String zipFilePath = null;
+		try{
 		File sourceDir = new File(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
 		
 		if (sourceDir.exists()) {
@@ -3015,14 +3047,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		String zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
+		 zipFilePath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + zipFileName + ".zip";
 
 		byte[] buffer = new byte[1024];
-		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+
+		 zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
 		zout.setEncoding("EUC-KR");
 		
 		for (int k = 0; k < filePaths.length; k++) {
-			FileInputStream inpStream = new FileInputStream(new File(realPath + filePaths[k]));
+			 inpStream = new FileInputStream(new File(realPath + filePaths[k]));
 			String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
 	                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 
@@ -3036,13 +3069,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			while ((length = inpStream.read(buffer)) > 0) {
 				zout.write(buffer, 0, length);
 			}
-			
-			zout.closeEntry();
-			inpStream.close();
 		}
-		
-		zout.close();
-	
+		} catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+			if (zout != null) {
+				try {
+					zout.closeEntry();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+			if (inpStream != null) {
+				try {
+					inpStream.close();
+					zout.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
 		return zipFilePath;
 	}
 	
@@ -4975,7 +5025,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String formText = request.getParameter("html");
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		InputStream stream = null;
+		OutputStream bos = null;
 		
+		try {
 		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
 		
 		if (!file.exists()) {
@@ -4983,11 +5036,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".mht";
-		
-		InputStream stream = null;
-		OutputStream bos = null;
-		
-		try {
+	
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
 			bos = new FileOutputStream(saveFileName);
@@ -5001,8 +5050,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 		} catch (Exception e) {
 		} finally {
-			bos.close();
-			stream.close();
+			   if (bos != null) {
+					try {
+					    bos.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+			   if (stream != null) {
+					try {
+						stream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
 		}
 		
 		return "SUCCESS";
@@ -5214,6 +5275,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getTodayUTCTime("yyyyMMdd") ;
 		FileOutputStream stream = null;
+		try{
 		File file = new File(strPath);
 		
 		if (!file.exists()) {
@@ -5231,7 +5293,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 //	     stream = new FileOutputStream("E:\\test2\\aaaaa.png");
 	     stream = new FileOutputStream(strPath+commonUtil.separator+docID+".png");
 	     stream.write(file2);
-	     stream.close();
+		}  catch (FileNotFoundException fnfe) {
+			logger.debug("fnfe: {}", fnfe);
+		} catch (IOException ioe) {
+			logger.debug("ioe: {}", ioe);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		}  finally {
+			   if (stream != null) {
+					try {
+						stream.close();
+					} catch (Exception ignore) {
+						logger.debug("IGNORED: {}", ignore.getMessage());
+					}
+			    }
+		}
 	     
 	     return "true";
 	}

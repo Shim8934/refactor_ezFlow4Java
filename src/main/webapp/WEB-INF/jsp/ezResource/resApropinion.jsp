@@ -27,7 +27,7 @@
 	    	}
 
 	    	function btn_OpinionCANCEL_onclick() {
-	        	if (ReturnFunction != null) {
+	    		if (ReturnFunction != null) {
 	            	ReturnFunction(false);
 	        	} else {
 		            window.returnValue = false;

@@ -2120,7 +2120,7 @@
 	
 	<delete id="EzBoardDAO.deleteOneLineReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -3067,7 +3067,7 @@
 			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, APPRFLAG, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
 		)
         VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, 'N', #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
         )
 	</insert>
 	
@@ -3076,7 +3076,7 @@
 			ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
 		)
         VALUES ( 
-        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
+        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID# 
         )
 	</insert>
 	
@@ -3085,7 +3085,7 @@
 			ItemID,   BoardID, 	 WriterID, 	 WriterName,   WriterName2,   WriterDeptID,   WriterDeptName,   WriterDeptName2,   WriterCompanyID,   WriterCompanyName,   WriterCompanyName2,   WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id 
 		)
        	VALUES ( 
-       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
+       		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE TENANT_ID = #tenantID# ), #docPassword#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#
        	)
 	</insert>
 	
@@ -3095,7 +3095,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, DocNo, DocPassWord, MainContent, APPRFLAG, TENANT_ID 
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, 'N', #tenantID# 
 	        )
 		]]>
 	</insert>
@@ -3106,7 +3106,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, DocNo, DocPassWord, MainContent, TENANT_ID 
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #mainContent#, #tenantID# 
 	        )
 		]]>
 	</insert>
@@ -3117,7 +3117,7 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, DocNo, DocPassWord, MainContent, tenant_id 
 			)
         	VALUES ( 
-        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
+        		#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, 0, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item_temp A WHERE tenant_id = #tenantID# ), #docPassword#, #mainContent#, #tenantID# 
         	)
 		]]>
 	</insert>
@@ -3139,7 +3139,7 @@
 	
 	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_MyBoards
+			DELETE FROM TBL_Board_MyBoards
 			WHERE  
 				TENANT_ID = #tenantID#
 			AND
@@ -3371,20 +3371,6 @@
        		ItemID = #v_ITEMID#
 	</select>
 	
-<!-- 	<update id="EzBoardDAO.setMainImageID2" parameterClass="Map"> -->
-<!-- 		<![CDATA[ -->
-<!-- 			UPDATE TBL_Photo_ImageItem -->
-<!--         	SET  -->
-<!--         		main_Flag = 'Y' -->
-<!--         	WHERE   -->
-<!--         		TENANT_ID = #v_TENANTID# -->
-<!--         	AND -->
-<!--         		ImageID = #v_IMAGEID# -->
-<!--         	AND  -->
-<!--         		ItemID = #v_ITEMID# -->
-<!-- 		]]> -->
-<!-- 	</update> -->
-	
 	<update id="EzBoardDAO.setBoardConfig" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_Board_Configuration
@@ -3575,7 +3561,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3585,7 +3571,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3595,7 +3581,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item
+			DELETE FROM TBL_Board_Item
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3605,7 +3591,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3615,7 +3601,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Attachments
+			DELETE FROM TBL_Board_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3636,7 +3622,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_temp
+			DELETE FROM TBL_Board_Item_temp
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3646,7 +3632,7 @@
 	
 	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Photo_ImageItem
+			DELETE FROM TBL_Photo_ImageItem
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
