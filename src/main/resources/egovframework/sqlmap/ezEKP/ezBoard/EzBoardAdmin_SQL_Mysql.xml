@@ -356,80 +356,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyBoards ( 
-				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
-			)
-         	( SELECT 
-         		#v_PUSERID# USERID ,
-              	BOARDID ,
-                BOARDNAME ,
-                BOARDNAME2 ,
-                ( SELECT 
-                	COUNT(BOARDID) + 1
-     			  FROM 
-     			  	TBL_Board_MyBoards 
-     			  WHERE
-     			  	TENANT_ID = #v_TENANTID#
-     			  AND  
-     			  	USERID = #v_PUSERID# ),
-                ( SELECT
-                	CASE 
-                		WHEN MAX(VIEWORDER) IS NULL 
-                		THEN 2 
-                		ELSE MAX(VIEWORDER) + 1 
-                	END 
-                  FROM 
-                  	TBL_Board_MyBoards 
-                  WHERE  
-                  	TENANT_ID = #v_TENANTID#
-                  AND
-                  	USERID = #v_PUSERID# ),
-                TENANT_ID
-           	  FROM 
-           	  	TBL_Board_BoardInfo 
-           	  WHERE
-           	  	TENANT_ID = #v_TENANTID#
-           	  AND
-           	  	BOARDID = #v_PBOARDID# )
-		]]>
-	</insert>
-	
-	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
-		<![CDATA[
-			DELETE FROM
-				TBL_Board_TreeCache
-	    	WHERE
-	    		TENANT_ID = #v_TENANTID#
-	    	AND  
-	    		QUERY = #v_PQUERY#
-    	]]>
-	</delete>
-	
-	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
-		<isEqual property="v_STRLANG" compareValue="2">
-			<![CDATA[
-				INSERT INTO TBL_Board_TreeCache ( 
-					QUERY, 		RESULT2 , 	TENANT_ID 
-				)
-	        	VALUES ( 
-	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
-	        	)
-        	]]>
-		</isEqual>
-		<isNotEqual property="v_STRLANG" compareValue="2">
-			<![CDATA[
-				INSERT INTO TBL_Board_TreeCache ( 
-					QUERY, 		RESULT, 	TENANT_ID 
-				)
-	        	VALUES (
-	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID# 
-	        	)
-	        ]]>
-		</isNotEqual>
-	</insert>
-	
 	<select id="EzBoardAdminDAO.checkIfBoardGroupAdmin" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -457,50 +383,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID 
-			)
-     		VALUES ( 
-     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID# 
-     		)
-		]]>
-	</insert>
-	
-	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage( 
-				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID 
-			)
-     		VALUES ( 
-     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID# 
-     		)
-		]]>
-	</insert>
-	
-	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID 
-			)
-	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 5, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID# 
-	   		)
-		]]>
-	</insert>
-	
-	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID 
-			)
-     		VALUES ( 
-     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID# 
-     		)
-		]]>
-	</insert>
-	
 	<select id="EzBoardAdminDAO.getParentBoardID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -526,164 +408,6 @@
        			BOARDID = #parentBoardID#
 		]]>
 	</select>
-	
-	<update id="EzBoardAdminDAO.createBoard_U" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo 
-      		SET 
-      			BOARDTREEPATH = #boardTreePath#
-    		WHERE
-    			TENANT_ID = #v_TENANTID#
-    		AND  
-    			BOARDID = #v_BOARDID#
-		]]>
-	</update>
-	
-	<update id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo
-            SET 
-            	TreeViewOrder = #v_count#
-            WHERE  
-            	tenant_id = #v_tenantID#
-            AND
-            	BoardID = #v_boardID#
-		]]>
-	</update>
-	
-	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
-				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
-			)
-           	VALUES ( 
-           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
-           	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardAdminDAO.saveBackGroundImage_U" parameterClass="Map" >
-		UPDATE TBL_Board_BoardBackGroundInfo
-           SET 
-        	<isNotEmpty property="v_ORGFILENAME">
-	           	ORGFILENAME = #v_ORGFILENAME#,
-        	</isNotEmpty>   
-        	<isNotEmpty property="v_SAVEFILENAME">
-        		SAVEFILENAME = #v_SAVEFILENAME#,
-        	</isNotEmpty>   
-               WIDTH = #v_WIDTH#,
-               HEIGHT = #v_HEIGHT#
-           WHERE
-           	TENANT_ID = #v_TENANTID#
-           AND  
-           	BACKGROUNDID = #v_BACKGROUNDID#
-	</update>
-	
-	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
-		<![CDATA[
-			DELETE FROM TBL_Board_BoardManage
-      		WHERE
-      			TENANT_ID = #v_TENANTID#
-      		AND  
-      			BoardID = #v_pBoardID#
-		]]>
-	</delete>
-	
-	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
-		<![CDATA[
-			DELETE FROM TBL_Board_BoardInfo
-      		WHERE
-      			TENANT_ID = #v_TENANTID#
-      		AND  
-      			BoardID = #v_pBoardID#
-		]]>
-	</delete>
-	
-	<delete id="EzBoardAdminDAO.deleteBoardMyBoard" parameterClass="Map" >
-		<![CDATA[
-			DELETE FROM TBL_Board_MyBoards
-      		WHERE
-      			TENANT_ID = #v_TENANTID#
-      		AND  
-      			BoardID = #v_pBoardID#
-		]]>
-	</delete>
-	
-	<insert id="EzBoardAdminDAO.insertDeleteReservedBoard" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_DeleteReservedBoard( 
-				BoardID, 	  TENANT_ID
-			)
-      		VALUES ( 
-      			#v_pBoardID#, #v_TENANTID# 
-      		)
-		]]>
-	</insert>
-	
-	<update id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo
-         	SET 
-         		ParentBoardID = #v_pNewParentBoardID#,
-             	BoardGroupID = #v_pNewBoardGroupID#
-       		WHERE
-       			tenant_id = #v_TENANTID#
-       		AND  
-       			BoardID = #v_pOrgBoardID#
-		]]>
-	</update>	
-	
-	<update id="EzBoardAdminDAO.moveBoard2" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardManage
-            SET 
-            	ParentBoardID = #v_pNewParentBoardID#
-           	WHERE
-           		tenant_id = #v_TENANTID#
-           	AND  
-           		BoardID = #v_pOrgBoardID#
-		]]>
-	</update>	
-	
-	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo
-      		SET 
-      			BOARDDESCRIPTION = #v_PDESCRIPTION#,
-          		ITEMEXPIRES = #v_PEXPIRES#,
-	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
-	          	URL = #v_PURL#,
-	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
-	          	GUBUN = #v_PGUBUN#,
-	          	BOARDNAME = #v_PBOARDNAME#,
-	          	DELETEAFTER = #v_PDELETEAFTER#,
-	          	BOARDCOLOR = #v_PBOARDCOLOR#,
-	          	BOARDNAME2 = #v_PBOARDNAME2#,
-	          	PORTLET = #v_PPORTLET#,
-	          	ONELINEREPLY = #v_PONELINEREPLY#,
-	          	BACKGROUND = #v_PBACKGROUND#,
-	          	FORMFLAG = #v_PFORM#,
-	          	APPRFLAG = #v_PAPPRFLAG#,
-	          	APPRMAILFLAG = #v_PAPPRMAILFLAG#
-    		WHERE
-    			TENANT_ID = #v_TENANTID#
-    		AND  
-    			BOARDID = #v_PBOARDID#
-		]]>
-	</update>
-	
-	<update id="EzBoardAdminDAO.saveBoardProperty2" parameterClass="Map" >
-		<![CDATA[
-			UPDATE TBL_Board_MyBoards
-      		SET 
-      			BOARDNAME = #v_PBOARDNAME#,
-          		BOARDNAME2 = #v_PBOARDNAME2#
-    		WHERE
-    			TENANT_ID = #v_TENANTID#
-    		AND  
-    			BOARDID = #v_PBOARDID#
-		]]>
-	</update>
 	
 	<select id="EzBoardAdminDAO.getBoardAccessList" parameterClass="Map" resultMap="boardAccessList">
 		<![CDATA[
@@ -772,64 +496,6 @@
 		]]>
 	</select>
 	
-	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
-		<![CDATA[
-			INSERT INTO TBL_Board_MyTree ( 
-				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID 
-			)
-            VALUES ( 
-            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
-            )
-		]]>
-	</insert>
-	
-	<update id="EzBoardAdminDAO.setMyBoardTreeConfig_M" parameterClass="MyFavoriteVO">
-		<![CDATA[
-			UPDATE TBL_Board_MyTree
-		    SET 
-		    	TREENAME = #treeName#,
-		    	TREENAME2 = #treeName2#
-            WHERE
-            	TENANT_ID = #tenantID#
-            AND  
-            	TREEID = #treeUpper#
-            AND 
-            	USERID = #userId#
-		]]>
-	</update>
-	
-	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
-		<![CDATA[
-			DELETE FROM TBL_Board_MyTree
-			WHERE  
-				TENANT_ID = #tenantID#
-			AND
-				TREEID = #treeId#
-		]]>
-	</delete>
-	
-	<update id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
-		<![CDATA[
-			UPDATE TBL_Board_MyTree
-            SET 
-            	TREEUPPER = #moveTreeID#,
-            	TREESTEP = ( SELECT 
-            					COUNT(TREENAME) + 1 
-                             FROM 
-                             	TBL_Board_MyTree 
-                             WHERE  
-                             	TREEUPPER = #moveTreeID#
-                             AND 
-                             	USERID = #userId# )
-            WHERE  
-            	TENANT_ID = #tenantID#
-            AND
-            	TREEID = #selTreeID#
-            AND 
-            	USERID = #userId#
-		]]>
-	</update>
-	
 	<select id="EzBoardAdminDAO.getBoardManage" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
@@ -844,52 +510,6 @@
      			AccessID = #v_pAccessID#
 		]]>
 	</select>
-	
-	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage ( 
-				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id 
-			)
-        	VALUES ( 
-        		#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pAccessName2#, #v_pAccess#, #v_pParentBoardID#, #v_pAdmin#, 	#v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pInherit#, #v_pPostNotice#, #v_pBoardGroupACL#, #v_TENANTID# 
-        	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardAdminDAO.saveACL_U" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_BoardManage
-         	SET 
-         		inherit_FG = #v_pInherit#,
-             	BoardAdmin_FG = #v_pAdmin#,
-             	ACCESS_ = #v_pAccess#,
-             	ListView_FG = #v_pListView#,
-             	Read_FG = #v_pRead#,
-             	Write_FG = #v_pWrite#,
-             	Reply_FG = #v_pReply#,
-             	Delete_FG = #v_pDelete#,
-             	PostNotice = #v_pPostNotice#,
-             	BoardGroupACL = #v_pBoardGroupACL#
-       		WHERE  
-       			tenant_id = #v_TENANTID#
-       		AND
-       			BoardID = #v_pBoardID#
-        	AND 
-        		AccessID = #v_pAccessID#
-		]]>
-	</update>
-	
-	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
-		<![CDATA[
-			DELETE FROM TBL_Board_BoardManage
-      		WHERE
-      			tenant_id = #v_TENANTID#
-      		AND  
-      			BoardID = #v_pBoardID#
-      		AND 
-      			AccessID = #v_pAccessID#
-		]]>
-	</delete>
 	
 	<select id="EzBoardAdminDAO.getUnderBoardID" remapResults="true" parameterClass="Map" resultClass="BoardPropertyVO">
 		<isEqual property="v_PTYPE" compareValue="1">
@@ -939,186 +559,7 @@
 			]]>
 		</isNotEqual>
 	</select>
-	
-	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
-		UPDATE TBL_Board_BoardManage
-        SET 
-        	BOARDID = #v_pBoardID#,
-            ACCESSID = #v_pAccessID#,
-            ACCESSNAME = #v_PACCESSNAME#,
-            ACCESSNAME2 = #v_PACCESSNAME2#,
-			<isEmpty property="v_PACCESSLEVEL">
-	            ACCESSLEVEL = NULL,
-			</isEmpty>
-			<isNotEmpty property="v_PACCESSLEVEL">
-	            ACCESSLEVEL = #v_PACCESSLEVEL#,
-			</isNotEmpty>
-            ACCESS_ = #v_PACCESS#,
-            PARENTBOARDID = #v_PPARENTBOARDID#,
-            BOARDADMIN_FG = #v_PBOARDADMIN_FG#,
-            LISTVIEW_FG = #v_PLISTVIEW_FG#,
-            READ_FG = #v_PREAD_FG#,
-            WRITE_FG = #v_PWRITE_FG#,
-            REPLY_FG = #v_PREPLY_FG#,
-            DELETE_FG = #v_PDELETE_FG#,
-            INHERIT_FG = #v_PINHERIT_FG#,
-            POSTNOTICE = #v_PPOSTNOTICE#,
-            BOARDGROUPACL = #v_PBOARDGROUPACL#
-        WHERE  
-        	TENANT_ID = #v_TENANTID#
-        AND
-        	ACCESSID = #v_PACCESSID#
-        AND 
-        	BOARDID = #v_PBOARDID#
-	</update>
-	
-	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
-		INSERT INTO TBL_Board_BoardManage (
-			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
-		)
-        VALUES ( 
-        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID# 
-        )
-	</insert>
-	
-	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
-			)
-            ( SELECT 
-            	#v_pBoardID# ,
-                ACCESSID ,
-                ACCESSNAME ,
-                ACCESSNAME2 ,
-                ACCESSLEVEL ,
-                ACCESS_ ,
-                #v_PPARENTBOARDID# ,
-                BOARDADMIN_FG ,
-                LISTVIEW_FG ,
-                READ_FG ,
-                WRITE_FG ,
-                REPLY_FG ,
-                DELETE_FG ,
-                INHERIT_FG ,
-                POSTNOTICE ,
-                BOARDGROUPACL,
-                TENANT_ID
-      	      FROM 
-      	      	TBL_Board_BoardManage 
-              WHERE  
-              	TENANT_ID = #v_TENANTID#
-              AND
-              	BOARDID = #v_PDEFAULTBOARDID# )
-		]]>
-	</insert>
-	
-	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
-			)
-        	( SELECT
-        		#v_pBoardID# ,
-                ACCESSID ,
-                ACCESSNAME ,
-                ACCESSNAME2 ,
-                ACCESSLEVEL ,
-                ACCESS_ ,
-                #v_PPARENTBOARDID# ,
-                BOARDADMIN_FG ,
-                LISTVIEW_FG ,
-                READ_FG ,
-                WRITE_FG ,
-                REPLY_FG ,
-                DELETE_FG ,
-                INHERIT_FG ,
-                POSTNOTICE ,
-                BOARDGROUPACL ,
-                TENANT_ID
-          	  FROM 
-          	  	TBL_Board_BoardManage 
-          	  WHERE  
-          	  	TENANT_ID = #v_TENANTID#
-          	  AND
-          	  	BOARDID = #v_PDEFAULTBOARDID# )
-		]]>
-	</insert>
-	
-	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
-		<![CDATA[
-			DELETE FROM TBL_Board_ApprList
-          	WHERE
-          		TENANT_ID = #v_TENANTID#
-          	AND  
-          		BoardID = #v_pBoardID#
-		]]>
-	</delete>
-	
-	<insert id="EzBoardAdminDAO.saveBoardProperty_appr_I" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_Board_ApprList ( 
-				BOARDID, APPRUSERID, TENANT_ID 
-			)
-          	VALUES ( 
-          		#v_pBoardID#, #v_pAPPRUSERID#, #v_TENANTID# 
-          	)
-		]]>
-	</insert>
-	
-	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
-		<isEqual property="v_PMODE" compareValue="Y">
-			<![CDATA[
-				UPDATE TBL_Board_Item
-           		SET 
-           			APPRFLAG = 'N'
-         		WHERE  
-         			TENANT_ID = #v_TENANTID#
-         		AND
-         			BOARDID = #v_PBOARDID#
-			]]>
-		</isEqual>
-		<isNotEqual property="v_PMODE" compareValue="Y">
-			<![CDATA[
-				UPDATE TBL_Board_Item
-           		SET 
-           			APPRFLAG = NULL
-         		WHERE  
-         			TENANT_ID = #v_TENANTID#
-         		AND
-         			BOARDID = #v_PBOARDID#
-			]]>
-		</isNotEqual>
-	</update>
-	
-	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
-		SELECT 
-			COUNT(BOARDID) CNT 
-        FROM 
-        	TBL_Board_BoardInfo 
-        WHERE
-        	TENANT_ID = #v_TENANTID#
-        AND  
-        	BOARDID = #v_PBOARDID#
-        <isEqual property="v_PMODE" compareValue="Y" prepend="AND">
-        	FORMFLAG = 'Y'
-        </isEqual>
-        AND 
-        	FORMLOCATION IS NOT NULL
-	</select>
-	
-	<update id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
-		<![CDATA[
-			UPDATE TBL_Board_BoardInfo
-      		SET 
-      			FORMLOCATION = #v_PFORMLOCATION#
-    		WHERE  
-    			TENANT_ID = #v_TENANTID#
-    		AND
-    			BOARDID = #v_PBOARDID#
-		]]>
-	</update>
-	
+		
 	<select id="EzBoardAdminDAO.checkApplyUser" resultMap="checkApplyUser">
 		<![CDATA[
 			SELECT 
@@ -1226,7 +667,107 @@
 	       		sn
 		]]>
 	</select>
+		
+	<select id="EzBoardAdminDAO.checkForm" parameterClass="Map" resultClass="Integer">
+		SELECT 
+			COUNT(BOARDID) CNT 
+        FROM 
+        	TBL_Board_BoardInfo 
+        WHERE
+        	TENANT_ID = #v_TENANTID#
+        AND  
+        	BOARDID = #v_PBOARDID#
+        <isEqual property="v_PMODE" compareValue="Y" prepend="AND">
+        	FORMFLAG = 'Y'
+        </isEqual>
+        AND 
+        	FORMLOCATION IS NOT NULL
+	</select>
 	
+	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl_I" parameterClass="Map">
+		INSERT INTO TBL_Board_BoardManage (
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+		)
+        VALUES ( 
+        	#v_pBoardID#, #v_pAccessID#, #v_PACCESSNAME#, #v_PACCESSNAME2#, <isEmpty property="v_PACCESSLEVEL">NULL,</isEmpty><isNotEmpty property="v_PACCESSLEVEL">#v_PACCESSLEVEL#,</isNotEmpty> #v_PACCESS#, #v_PPARENTBOARDID#, #v_PBOARDADMIN_FG#, #v_PLISTVIEW_FG#, #v_PREAD_FG#, #v_PWRITE_FG#, #v_PREPLY_FG#, #v_PDELETE_FG#, #v_PINHERIT_FG#, #v_PPOSTNOTICE#, #v_PBOARDGROUPACL#, #v_TENANTID# 
+        )
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.setUnderBoardIDAcl2" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardManage ( 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+			)
+            ( SELECT 
+            	#v_pBoardID# ,
+                ACCESSID ,
+                ACCESSNAME ,
+                ACCESSNAME2 ,
+                ACCESSLEVEL ,
+                ACCESS_ ,
+                #v_PPARENTBOARDID# ,
+                BOARDADMIN_FG ,
+                LISTVIEW_FG ,
+                READ_FG ,
+                WRITE_FG ,
+                REPLY_FG ,
+                DELETE_FG ,
+                INHERIT_FG ,
+                POSTNOTICE ,
+                BOARDGROUPACL,
+                TENANT_ID
+      	      FROM 
+      	      	TBL_Board_BoardManage A
+              WHERE  
+              	TENANT_ID = #v_TENANTID#
+              AND
+              	BOARDID = #v_PDEFAULTBOARDID# )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.copyBoardAcl" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardManage ( 
+				BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL, TENANT_ID 
+			)
+        	( SELECT
+        		#v_pBoardID# ,
+                ACCESSID ,
+                ACCESSNAME ,
+                ACCESSNAME2 ,
+                ACCESSLEVEL ,
+                ACCESS_ ,
+                #v_PPARENTBOARDID# ,
+                BOARDADMIN_FG ,
+                LISTVIEW_FG ,
+                READ_FG ,
+                WRITE_FG ,
+                REPLY_FG ,
+                DELETE_FG ,
+                INHERIT_FG ,
+                POSTNOTICE ,
+                BOARDGROUPACL ,
+                TENANT_ID
+          	  FROM 
+          	  	TBL_Board_BoardManage A
+          	  WHERE  
+          	  	TENANT_ID = #v_TENANTID#
+          	  AND
+          	  	BOARDID = #v_PDEFAULTBOARDID# )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.saveBoardProperty_appr_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_ApprList ( 
+				BOARDID, APPRUSERID, TENANT_ID 
+			)
+          	VALUES ( 
+          		#v_pBoardID#, #v_pAPPRUSERID#, #v_TENANTID# 
+          	)
+		]]>
+	</insert>
+		
 	<insert id="EzBoardAdminDAO.saveAttribute" parameterClass="BoardAttributeVO">
 		<![CDATA[
 			INSERT INTO	TBL_BOARD_BOARDINFO_ATTRIBUTE(
@@ -1248,6 +789,395 @@
 			)		
 		]]>		
 	</insert>
+		
+	<insert id="EzBoardAdminDAO.saveACL_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardManage ( 
+				BoardID, 	  AccessID, 	 AccessName, 	  AccessName2, 		ACCESS_, 	 ParentBoardID, 	 BoardAdmin_FG, ListView_FG,   Read_FG,   Write_FG,   Reply_FG,   Delete_FG,   inherit_FG,   PostNotice, 	  BoardGroupACL, 	  tenant_id 
+			)
+        	VALUES ( 
+        		#v_pBoardID#, #v_pAccessID#, #v_pAccessName#, #v_pAccessName2#, #v_pAccess#, #v_pParentBoardID#, #v_pAdmin#, 	#v_pListView#, #v_pRead#, #v_pWrite#, #v_pReply#, #v_pDelete#, #v_pInherit#, #v_pPostNotice#, #v_pBoardGroupACL#, #v_TENANTID# 
+        	)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.saveBackGroundImage_I" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardBackGroundInfo ( 
+				BACKGROUNDID, ORGFILENAME, SAVEFILENAME, REGUSERID, REGDATE, ISUSE, SN, WIDTH, HEIGHT, TENANT_ID 
+			)
+           	VALUES ( 
+           		#v_BACKGROUNDID#, #v_ORGFILENAME#, #v_SAVEFILENAME#, #v_REGUSERID#, #v_REGDATE#, CASE WHEN (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) IS NULL THEN 1 ELSE (select 0 from dual where 8 < (SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# AND ISUSE = '1')) END, ( SELECT COUNT(*) FROM TBL_Board_BoardBackGroundInfo A WHERE TENANT_ID = #v_TENANTID# ) + 1, #v_WIDTH#, #v_HEIGHT#, #v_TENANTID# 
+           	)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.insertDeleteReservedBoard" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_DeleteReservedBoard( 
+				BoardID, 	  TENANT_ID
+			)
+      		VALUES ( 
+      			#v_pBoardID#, #v_TENANTID# 
+      		)
+		]]>
+	</insert>
+		
+	<insert id="EzBoardAdminDAO.setMyBoardTreeConfig_N" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			INSERT INTO TBL_Board_MyTree ( 
+				TREEID, USERID, TREENAME, TREENAME2, TREESTEP, TREEUPPER, TREEBOARDID, TENANT_ID 
+			)
+            VALUES ( 
+            	#treeId#, #userId#, #treeName#, #treeName2#, ( SELECT CASE WHEN MAX(TREESTEP) IS NULL THEN 1 ELSE MAX(TREESTEP) + 1 END FROM TBL_Board_MyTree A WHERE TENANT_ID = #tenantID# AND TREEUPPER = #treeUpper# ), #treeUpper#, #boardId#, #tenantID# 
+            )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.addMyBoards" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_Board_MyBoards ( 
+				USERID, BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWNUM, VIEWORDER, TENANT_ID 
+			)
+         	( SELECT 
+         		#v_PUSERID# USERID ,
+              	BOARDID ,
+                BOARDNAME ,
+                BOARDNAME2 ,
+                ( SELECT 
+                	COUNT(BOARDID) + 1
+     			  FROM 
+     			  	TBL_Board_MyBoards 
+     			  WHERE
+     			  	TENANT_ID = #v_TENANTID#
+     			  AND  
+     			  	USERID = #v_PUSERID# ),
+                ( SELECT
+                	CASE 
+                		WHEN MAX(VIEWORDER) IS NULL 
+                		THEN 2 
+                		ELSE MAX(VIEWORDER) + 1 
+                	END 
+                  FROM 
+                  	TBL_Board_MyBoards 
+                  WHERE  
+                  	TENANT_ID = #v_TENANTID#
+                  AND
+                  	USERID = #v_PUSERID# ),
+                TENANT_ID
+           	  FROM 
+           	  	TBL_Board_BoardInfo 
+           	  WHERE
+           	  	TENANT_ID = #v_TENANTID#
+           	  AND
+           	  	BOARDID = #v_PBOARDID# )
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.getBoardTree_Set" parameterClass="Map">
+		<isEqual property="v_STRLANG" compareValue="2">
+			<![CDATA[
+				INSERT INTO TBL_Board_TreeCache ( 
+					QUERY, 		RESULT2 , 	TENANT_ID 
+				)
+	        	VALUES ( 
+	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID#
+	        	)
+        	]]>
+		</isEqual>
+		<isNotEqual property="v_STRLANG" compareValue="2">
+			<![CDATA[
+				INSERT INTO TBL_Board_TreeCache ( 
+					QUERY, 		RESULT, 	TENANT_ID 
+				)
+	        	VALUES (
+	        		#v_PQUERY#, #v_RESULT#, #v_TENANTID# 
+	        	)
+	        ]]>
+		</isNotEqual>
+	</insert>
+		
+	<insert id="EzBoardAdminDAO.createBoardGroup" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardInfo ( 
+				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDNO, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDGROUPID#, #v_BOARDGROUPNAME#, #v_BOARDGROUPNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), 'top', ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.createBoardGroup2" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardManage( 
+				BOARDID, 		  ACCESSID, 	ACCESSNAME, 	ACCESSNAME2,     ACCESSLEVEL, ACCESS_, PARENTBOARDID, BOARDADMIN_FG, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'true', 		 #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.createBoard_I" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardInfo ( 
+				BOARDID, BOARDNAME, BOARDNAME2, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID 
+			)
+	   		VALUES ( 
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 5, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID# 
+	   		)
+		]]>
+	</insert>
+	
+	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
+		<![CDATA[
+			INSERT INTO TBL_Board_BoardManage ( 
+				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID 
+			)
+     		VALUES ( 
+     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID# 
+     		)
+		]]>
+	</insert>
+	
+	<update id="EzBoardAdminDAO.setMyBoardTreeConfig_M" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			UPDATE TBL_Board_MyTree
+		    SET 
+		    	TREENAME = #treeName#,
+		    	TREENAME2 = #treeName2#
+            WHERE
+            	TENANT_ID = #tenantID#
+            AND  
+            	TREEID = #treeUpper#
+            AND 
+            	USERID = #userId#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.setMyBoardTreeMoveCopy" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			UPDATE TBL_Board_MyTree
+            SET 
+            	TREEUPPER = #moveTreeID#,
+            	TREESTEP = ( SELECT 
+            					* 
+            				 FROM (
+			           				SELECT 
+			           					COUNT(TREENAME) + 1 
+		                            FROM 
+		                            	TBL_Board_MyTree A
+		                            WHERE  
+		                            	TREEUPPER = #moveTreeID#
+		                            AND 
+		                            	USERID = #userId# ) AA )
+            WHERE  
+            	TENANT_ID = #tenantID#
+            AND
+            	TREEID = #selTreeID#
+            AND 
+            	USERID = #userId#
+		]]>
+	</update>
+		
+	<update id="EzBoardAdminDAO.createBoard_U" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_BoardInfo 
+      		SET 
+      			BOARDTREEPATH = #boardTreePath#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_BOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveBoardOrder" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_BoardInfo
+            SET 
+            	TreeViewOrder = #v_count#
+            WHERE  
+            	tenant_id = #v_tenantID#
+            AND
+            	BoardID = #v_boardID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveBackGroundImage_U" parameterClass="Map" >
+		UPDATE TBL_Board_BoardBackGroundInfo
+           SET 
+        	<isNotEmpty property="v_ORGFILENAME">
+	           	ORGFILENAME = #v_ORGFILENAME#,
+        	</isNotEmpty>   
+        	<isNotEmpty property="v_SAVEFILENAME">
+        		SAVEFILENAME = #v_SAVEFILENAME#,
+        	</isNotEmpty>   
+               WIDTH = #v_WIDTH#,
+               HEIGHT = #v_HEIGHT#
+           WHERE
+           	TENANT_ID = #v_TENANTID#
+           AND  
+           	BACKGROUNDID = #v_BACKGROUNDID#
+	</update>
+	
+	<update id="EzBoardAdminDAO.moveBoard" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_BoardInfo
+         	SET 
+         		ParentBoardID = #v_pNewParentBoardID#,
+             	BoardGroupID = #v_pNewBoardGroupID#
+       		WHERE
+       			tenant_id = #v_TENANTID#
+       		AND  
+       			BoardID = #v_pOrgBoardID#
+		]]>
+	</update>	
+	
+	<update id="EzBoardAdminDAO.moveBoard2" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_BoardManage
+            SET 
+            	ParentBoardID = #v_pNewParentBoardID#
+           	WHERE
+           		tenant_id = #v_TENANTID#
+           	AND  
+           		BoardID = #v_pOrgBoardID#
+		]]>
+	</update>	
+	
+	<update id="EzBoardAdminDAO.saveBoardProperty" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_BoardInfo
+      		SET 
+      			BOARDDESCRIPTION = #v_PDESCRIPTION#,
+          		ITEMEXPIRES = #v_PEXPIRES#,
+	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
+	          	URL = #v_PURL#,
+	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
+	          	GUBUN = #v_PGUBUN#,
+	          	BOARDNAME = #v_PBOARDNAME#,
+	          	DELETEAFTER = #v_PDELETEAFTER#,
+	          	BOARDCOLOR = #v_PBOARDCOLOR#,
+	          	BOARDNAME2 = #v_PBOARDNAME2#,
+	          	PORTLET = #v_PPORTLET#,
+	          	ONELINEREPLY = #v_PONELINEREPLY#,
+	          	BACKGROUND = #v_PBACKGROUND#,
+	          	FORMFLAG = #v_PFORM#,
+	          	APPRFLAG = #v_PAPPRFLAG#,
+	          	APPRMAILFLAG = #v_PAPPRMAILFLAG#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveBoardProperty2" parameterClass="Map" >
+		<![CDATA[
+			UPDATE TBL_Board_MyBoards
+      		SET 
+      			BOARDNAME = #v_PBOARDNAME#,
+          		BOARDNAME2 = #v_PBOARDNAME2#
+    		WHERE
+    			TENANT_ID = #v_TENANTID#
+    		AND  
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
+	
+	<update id="EzBoardAdminDAO.saveACL_U" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_BoardManage
+         	SET 
+         		inherit_FG = #v_pInherit#,
+             	BoardAdmin_FG = #v_pAdmin#,
+             	ACCESS_ = #v_pAccess#,
+             	ListView_FG = #v_pListView#,
+             	Read_FG = #v_pRead#,
+             	Write_FG = #v_pWrite#,
+             	Reply_FG = #v_pReply#,
+             	Delete_FG = #v_pDelete#,
+             	PostNotice = #v_pPostNotice#,
+             	BoardGroupACL = #v_pBoardGroupACL#
+       		WHERE  
+       			tenant_id = #v_TENANTID#
+       		AND
+       			BoardID = #v_pBoardID#
+        	AND 
+        		AccessID = #v_pAccessID#
+		]]>
+	</update>
+		
+	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
+		UPDATE TBL_Board_BoardManage
+        SET 
+        	BOARDID = #v_pBoardID#,
+            ACCESSID = #v_pAccessID#,
+            ACCESSNAME = #v_PACCESSNAME#,
+            ACCESSNAME2 = #v_PACCESSNAME2#,
+			<isEmpty property="v_PACCESSLEVEL">
+	            ACCESSLEVEL = NULL,
+			</isEmpty>
+			<isNotEmpty property="v_PACCESSLEVEL">
+	            ACCESSLEVEL = #v_PACCESSLEVEL#,
+			</isNotEmpty>
+            ACCESS_ = #v_PACCESS#,
+            PARENTBOARDID = #v_PPARENTBOARDID#,
+            BOARDADMIN_FG = #v_PBOARDADMIN_FG#,
+            LISTVIEW_FG = #v_PLISTVIEW_FG#,
+            READ_FG = #v_PREAD_FG#,
+            WRITE_FG = #v_PWRITE_FG#,
+            REPLY_FG = #v_PREPLY_FG#,
+            DELETE_FG = #v_PDELETE_FG#,
+            INHERIT_FG = #v_PINHERIT_FG#,
+            POSTNOTICE = #v_PPOSTNOTICE#,
+            BOARDGROUPACL = #v_PBOARDGROUPACL#
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	ACCESSID = #v_PACCESSID#
+        AND 
+        	BOARDID = #v_PBOARDID#
+	</update>
+	
+	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">
+		<isEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				UPDATE TBL_Board_Item
+           		SET 
+           			APPRFLAG = 'N'
+         		WHERE  
+         			TENANT_ID = #v_TENANTID#
+         		AND
+         			BOARDID = #v_PBOARDID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_PMODE" compareValue="Y">
+			<![CDATA[
+				UPDATE TBL_Board_Item
+           		SET 
+           			APPRFLAG = NULL
+         		WHERE  
+         			TENANT_ID = #v_TENANTID#
+         		AND
+         			BOARDID = #v_PBOARDID#
+			]]>
+		</isNotEqual>
+	</update>
+	
+	<update id="EzBoardAdminDAO.setBoardForm" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_BoardInfo
+      		SET 
+      			FORMLOCATION = #v_PFORMLOCATION#
+    		WHERE  
+    			TENANT_ID = #v_TENANTID#
+    		AND
+    			BOARDID = #v_PBOARDID#
+		]]>
+	</update>
 	
 	<update id="EzBoardAdminDAO.statusChangeBackGroundImage" parameterClass="BoardBackgroundVO">		
 		UPDATE TBL_BOARD_BOARDBACKGROUNDINFO
@@ -1271,6 +1201,16 @@
 				boardid = #boardID#
 		]]>					
 	</update>
+		
+	<delete id="EzBoardAdminDAO.saveBoardProperty_appr_D" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_ApprList
+          	WHERE
+          		TENANT_ID = #v_TENANTID#
+          	AND  
+          		BoardID = #v_pBoardID#
+		]]>
+	</delete>
 	
 	<delete id="EzBoardAdminDAO.deleteBackGroundImage" parameterClass="BoardBackgroundVO">
 		<![CDATA[		
@@ -1312,6 +1252,69 @@
 			WHERE
 				tenant_id = #tenantID#
 		]]>
+	</delete>
+		
+	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM TBL_Board_BoardManage
+      		WHERE
+      			tenant_id = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+      		AND 
+      			AccessID = #v_pAccessID#
+		]]>
+	</delete>
+		
+	<delete id="EzBoardAdminDAO.deleteBoardManage" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM TBL_Board_BoardManage
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteBoardInfo" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM TBL_Board_BoardInfo
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardAdminDAO.deleteBoardMyBoard" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM TBL_Board_MyBoards
+      		WHERE
+      			TENANT_ID = #v_TENANTID#
+      		AND  
+      			BoardID = #v_pBoardID#
+		]]>
+	</delete>
+		
+	<delete id="EzBoardAdminDAO.setMyBoardTreeConfig_D" parameterClass="MyFavoriteVO">
+		<![CDATA[
+			DELETE FROM TBL_Board_MyTree
+			WHERE  
+				TENANT_ID = #tenantID#
+			AND
+				TREEID = #treeId#
+		]]>
+	</delete>
+		
+	<delete id="EzBoardAdminDAO.getBoardTree_Set_D" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM
+				TBL_Board_TreeCache
+	    	WHERE
+	    		TENANT_ID = #v_TENANTID#
+	    	AND  
+	    		QUERY = #v_PQUERY#
+    	]]>
 	</delete>
 
 </sqlMap>
