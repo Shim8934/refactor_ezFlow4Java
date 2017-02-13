@@ -875,8 +875,9 @@
 		    function ChkPermanent() {
 		        if (pBoardType != "SELECT") {
 		            if (ExpireDays != -1) {
-		                if(!FirstFlag)
+		                if(!FirstFlag) {
 		                    alert("<spring:message code='ezBoard.t405' />");
+		                }
 		
 		                document.getElementById("ChkPermanence").checked = false;
 		                return;
@@ -884,11 +885,27 @@
 		            if (document.getElementById("ChkPermanence").checked) {
 		                document.getElementById("Makedate").style.display = "none";
 		            } else {
-		                document.getElementById("Makedate").style.display = "";
+		            	document.getElementById("Makedate").style.display = "";
 		                if (strEndDate != "") {
-		                    var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
-		                    NowDate.setMonth(NowDate.getMonth() - 1);
-		                    $("#Sdatepicker2").datepicker('setDate', NowDate);
+		                    if (strEndDate.substring(0, 4) == "9999") {
+		                        $("#Sdatepicker2").datepicker({
+		                            changeMonth: true,
+		                            changeYear: true,
+		                            autoSize: true,
+		                            showOn: "both",
+		                            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		                            buttonImageOnly: true
+		                        });
+		                        var NowDate2 = new Date();
+		                        NowDate2.setMonth(NowDate2.getMonth() + 1);
+		                        $("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
+		                        $("#Sdatepicker2").datepicker('setDate', NowDate2);
+		                    }
+		                    else {
+		                        var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
+		                        NowDate.setMonth(NowDate.getMonth() - 1);
+		                        $("#Sdatepicker2").datepicker('setDate', NowDate);
+		                    }
 		                }
 		            }
 		        }
