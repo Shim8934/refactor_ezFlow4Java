@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -851,9 +852,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	file.mkdir();
         }
         
-        FileOutputStream fileOutputStream = new FileOutputStream(new File(LfilePath));
-        fileOutputStream.write(imageBytes);
-        fileOutputStream.close();
+        OutputStream bos = null;
+        try {
+        	bos = new FileOutputStream(new File(LfilePath));
+        	bos.write(imageBytes);
+		} catch (Exception e) {
+			logger.debug("e: {}", e);
+		} finally {
+			if (bos != null) {
+				try {
+					bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+			}
+		}
         
 		return SfilePath;
 	}

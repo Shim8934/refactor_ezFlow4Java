@@ -1914,8 +1914,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			strForbiddenBoardIDList += boardID.trim();
                 }
             }
-            
-            
         }
 
         StringBuilder result = new StringBuilder();
@@ -2484,8 +2482,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		} catch (Exception e) {
 			ret = false;
 		} finally {
-			bos.close();
-			stream.close();
+			if(bos != null){
+				bos.close();
+			}
+			if(stream != null){
+				stream.close();
+			}
 		}
 		
 		return ret;

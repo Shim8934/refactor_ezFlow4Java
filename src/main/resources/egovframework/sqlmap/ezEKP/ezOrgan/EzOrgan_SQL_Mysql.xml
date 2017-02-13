@@ -178,7 +178,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                       		'user' TYPE  
                			FROM
                				TBL_USERMASTER 
@@ -199,7 +199,7 @@
                             	DISPLAYNAME2
                             END
                             	DISPLAYNAME  ,
-                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                       		'dept' TYPE  
                			FROM
                				TBL_DEPTMASTER 
@@ -230,7 +230,7 @@
                        		END
                        			DISPLAYNAME  ,
                       		'dept' TYPE  ,
-                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) 
+                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) 
                      		EXTENSIONATTRIBUTE15  
                			FROM
                				TBL_DEPTMASTER 
@@ -260,7 +260,7 @@
                        				DISPLAYNAME2
                        			END
                        				DISPLAYNAME  ,
-                       			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                       			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                        		FROM
                        			TBL_USERMASTER 
@@ -280,7 +280,8 @@
                        			ELSE
                        				DISPLAYNAME2
                        			END
-                       				DISPLAYNAME  , CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                       				DISPLAYNAME  , 
+                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                        			'user' TYPE  
                   			FROM
                   				TBL_ADDJOBMASTER B
@@ -310,7 +311,7 @@
                       		DISPLAYNAME2
                       	END
                       		DISPLAYNAME  ,
-                      	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                      	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                       	'dept' TYPE  
                     FROM
                     	TBL_DEPTMASTER 
@@ -338,7 +339,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                            			'user' TYPE  
                           		FROM
                           			TBL_USERMASTER 
@@ -359,7 +360,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
                           		FROM
                           			TBL_ADDJOBMASTER B
@@ -382,7 +383,7 @@
                           				DISPLAYNAME2
                           			END
                           				DISPLAYNAME  ,
-                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                          			CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                            			'dept' TYPE  
                           		FROM
                           			TBL_DEPTMASTER 
@@ -420,7 +421,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_USERMASTER 
@@ -441,7 +442,7 @@
                                             	DISPLAYNAME2
                                             END
                                             	DISPLAYNAME  ,
-                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                                      		CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                       		'USER' TYPE  
                                			FROM
                                				TBL_ADDJOBMASTER B
@@ -476,7 +477,7 @@
                     	DISPLAYNAME2
                     END
                     	DISPLAYNAME  ,
-                        CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                        CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                         'DEPT' TYPE  
             	FROM
             		TBL_DEPTMASTER 
@@ -505,7 +506,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                            FROM
                            		TBL_USERMASTER 
@@ -526,7 +527,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                                	CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                     'USER' TYPE  
                              FROM
                              	TBL_ADDJOBMASTER B
@@ -549,7 +550,7 @@
                                 	DISPLAYNAME2
                                 END
                                 	DISPLAYNAME  ,
-                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, ' '))), IFNULL(EXTENSIONATTRIBUTE15, ' ')) EXTENSIONATTRIBUTE15  ,
+                                CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                 'DEPT' TYPE  
                             FROM
                             	TBL_DEPTMASTER 
