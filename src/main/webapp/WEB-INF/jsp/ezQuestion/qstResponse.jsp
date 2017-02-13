@@ -51,18 +51,24 @@
 					tableXml += "</tr>";
 					tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
 					
-					//수정필요함 answerType 5일때 따로처리해야함 이효진
 					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
+					var answerType = SelectSingleNodeValue(nodes[i], 'ANSWERTYPE');
 					
-					if(itemNode != null){
+					if (answerType == '5') {
 						var itemNodes = GetChildNodes(itemNode);
 						
-						for(j=0; itemNodes.length>j; j++){
-							tableXml += "<tr>";
-							tableXml += "<td style='padding:3px 10px'>";
-							tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
-							tableXml += "</td>";
-							tableXml += "</tr>";
+						tableXml += SelectSingleNodeValue(itemNode, 'TAG');
+					} else {
+						if(itemNode != null){
+							var itemNodes = GetChildNodes(itemNode);
+							
+							for(j=0; itemNodes.length>j; j++){
+								tableXml += "<tr>";
+								tableXml += "<td style='padding:3px 10px'>";
+								tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
+								tableXml += "</td>";
+								tableXml += "</tr>";
+							}
 						}
 					}
 				}

@@ -1289,19 +1289,19 @@
 	<select id="EzQuestionDAO.getTableAnswer" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
-				ANSWER_ANSWERCONTENT 
+				answer_answercontent 
         	FROM
         		TBL_POLL_TABLE_ANSWER 
        		WHERE
-       			ITEM_NO = #v_PITEMNO#
+       			item_no = #v_pItemNo#
 			AND
-				BRD_ID = #v_PSTRBRDID#
+				brd_id = #v_pStrBrdID#
 			AND
-				QUESTION_NO = #v_PQUESTIONNO#
+				question_no = #v_pQuestionNo#
 			AND
-				TENANT_ID = #tenantID#	
+				tenant_id = #tenantID#	
         	ORDER BY
-        		ANSWERNO ASC
+        		answerno ASC
 		]]>
 	</select>
 	
