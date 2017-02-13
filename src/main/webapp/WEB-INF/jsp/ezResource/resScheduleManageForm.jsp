@@ -106,6 +106,7 @@
 
 	        	valFlag = DomHttp.responseText;
 	        	if (valFlag == "FALSE") {
+	        		alert("<spring:message code='ezResource.t63'/>");
 	        		OpenAlertUI(strLang257);
 	            	return;
 	        	}
@@ -118,8 +119,10 @@
 	        
 	    	}
 	    	function idDelBtn_onclick_Complete(retVal) {
-		        if (!retVal)
+		        if (!retVal) {
+		        	DivPopUpHidden();
 		            return;
+		        }
 
 	        	var xmlHttp = createXMLHttpRequest();
 	        	var xmlDoc = createXmlDom();
