@@ -20,11 +20,11 @@ public interface EzScheduleService {
 	
 	public ScheduleConfigVO getScheduleConfig(String userId, int tenantId) throws Exception;
 	
-	public ScheduleInfoVO getScheduleInfo(String scheduleId) throws Exception;
+	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception;
 	
-	public List<AttendantListVO> getAttendantList(String scheduleId) throws Exception;
+	public List<AttendantListVO> getAttendantList(String scheduleId, int tenantId) throws Exception;
 	
-	public List<AttachListVO> getAttachList(String scheduleId) throws Exception;
+	public List<AttachListVO> getAttachList(String scheduleId, int tenantId) throws Exception;
 	
 	public List<ScheduleHqVO> getPublicScheduleHq(String userId, int tenantId) throws Exception;
 	
@@ -39,8 +39,6 @@ public interface EzScheduleService {
 	public int getReceiveCount (String pUserId, int tenantId) throws Exception;
 	
 	public int getInviteScheduleGroupCnt (String pUserId, int tenantId) throws Exception;
-
-	public void scheduleNewItem(ScheduleInfoVO scheduleInfoVO) throws Exception;
 
 	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin, int tenantId) throws Exception;
 	
@@ -79,6 +77,10 @@ public interface EzScheduleService {
 	public void insertScheduleConfig(String userID, String defaultView,	String startDay, String startTime, String endTime, String autoDelete, int tenantID) throws Exception;
 
 	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception;
+
+	public void insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
+			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, String attachxml, String attendantxml, 
+			String contentPath, int tenantId) throws Exception;
 
 	
 }

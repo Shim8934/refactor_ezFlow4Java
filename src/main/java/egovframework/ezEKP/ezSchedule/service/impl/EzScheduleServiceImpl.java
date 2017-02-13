@@ -1,5 +1,11 @@
 package egovframework.ezEKP.ezSchedule.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -7,12 +13,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -62,25 +71,29 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public ScheduleInfoVO getScheduleInfo(String scheduleId) throws Exception {
+	public ScheduleInfoVO getScheduleInfo(String scheduleId, String offSetMin, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getScheduleInfo(map);
 	}
 
 	@Override
-	public List<AttendantListVO> getAttendantList(String scheduleId) throws Exception {
+	public List<AttendantListVO> getAttendantList(String scheduleId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getAttendantList(map);
 	}
 
 	@Override
-	public List<AttachListVO> getAttachList(String scheduleId) throws Exception {
+	public List<AttachListVO> getAttachList(String scheduleId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getAttachList(map);
 	}
@@ -147,11 +160,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getInviteScheduleGroupCnt(map);
-	}
-
-	@Override
-	public void scheduleNewItem(ScheduleInfoVO schInfoVO) throws Exception {
-		ezScheduleDAO.scheduleNewItem(schInfoVO);
 	}
 
 	@Override
@@ -654,7 +662,7 @@ System.out.println("=========================================================== 
 	@Override
 	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERID", userID);		
+		map.put("v_USERID", userID);
 		map.put("v_DISPLAYNAME", displayName);
 		map.put("v_DISPLAYNAME2", displayName2);
 		map.put("v_SECRETARYID", secretaryID);
@@ -662,6 +670,69 @@ System.out.println("=========================================================== 
 		map.put("v_TENANTID", tenantID);
 		
 		ezScheduleDAO.insertSecretary(map);
+	}
+
+	@Override
+	public void insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
+			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, String attachxml, String attendantxml, 
+			String defaultPath, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		//본문내용 MHT 저장
+		String contentPath = defaultPath + commonUtil.separator + "doc";
+		File file = new File(contentPath);
+
+		if (!file.exists()) {			
+			file.mkdirs();
+		}
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			contentPath += commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+
+			byte[] ct = Base64.decode(content);
+			stream = new ByteArrayInputStream(ct);
+			bos = new FileOutputStream(contentPath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+			//첨부파일 저장 + SQL
+			String hasattach = "N";
+			//비서관련 데이터 저장 로직 + SQL
+			String hasattendant = "N";
+			//일정 정보 저장
+			map.put("v_OWNERID", ownerid);
+			map.put("v_OWNERNAME", ownername);
+			map.put("v_CREATORID", creatorid);
+			map.put("v_CREATORNAME", creatorname);
+			map.put("v_SCHEDULETYPE", scheduletype);
+			map.put("v_IMPORTANCE", importance);
+			map.put("v_HASATTENDANT", hasattendant);
+			map.put("v_HASATTACH", hasattach);
+			map.put("v_ISPUBLIC", ispublic);
+			map.put("v_DATETYPE", datetype);
+			map.put("v_STARTDATE", startdate);
+			map.put("v_ENDDATE", enddate);
+			map.put("v_REPETITION", repetition);
+			map.put("v_TITLE", title);
+			map.put("v_LOCATION", location);
+			map.put("v_CONTENTPATH", contentPath);
+			map.put("v_TENANTID", tenantId);		
+			
+			ezScheduleDAO.insertSchedule(map);	
+		} catch (Exception e) {
+			
+		} finally {
+			if (stream != null) stream.close();				
+			if (bos != null) bos.close();
+		}			
 	}
 	
 	

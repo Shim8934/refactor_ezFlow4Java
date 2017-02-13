@@ -63,7 +63,7 @@ function check_time() {
 var SaveScheduleId = "";
 function save_schedule()
 {
-    if (scheduleId == "") {
+    if (scheduleid == "") {
         var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
         if (selectValue == companyID) {
             if (pCompanyAdmin != "Y") {
@@ -83,7 +83,7 @@ function save_schedule()
         alert(timecheckstring);
         return;
     }
-	if (scheduleId == "") check_name();
+	if (scheduleid == "") check_name();
 	
 	if (document.getElementById("TextTitle").value == "")
 	{
@@ -97,7 +97,7 @@ function save_schedule()
 	if (!check_length(document.getElementById("TextLocation").value, 50, strLang11)) return;
 
 	var ResourceSaveResult = false;
-	if (scheduleId == "") {
+	if (scheduleid == "") {
 	    if (document.getElementById("resourcelist")) {
 	        if (trim(document.getElementById("resourcelist").innerHTML) != "") {
 	            ResourceSaveResult = resource_Check();
@@ -111,7 +111,7 @@ function save_schedule()
     var ownername = "";
     var ownername2 = "";
 
-    if (scheduleId == "")
+    if (scheduleid == "")
 	{
         ownerid = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
 		ownerid = ownerid.split(";;")[1];
@@ -129,18 +129,18 @@ function save_schedule()
 	var objNode, objRow, objRows, objRowRow;
 
 	objNode = createNodeInsert(xmlDom, objNode, "DATA");
-	createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleId);
-	createNodeAndInsertText(xmlDom, objNode, "OWNERID", scheduleId != null ? ownerid : "");
-	createNodeAndInsertText(xmlDom, objNode, "OWNERNAME", scheduleId != null ? ownername : "");
+	createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleid);
+	createNodeAndInsertText(xmlDom, objNode, "OWNERID", scheduleid != null ? ownerid : "");
+	createNodeAndInsertText(xmlDom, objNode, "OWNERNAME", scheduleid != null ? ownername : "");
 	createNodeAndInsertText(xmlDom, objNode, "OWNERNAME2", ownername2);
-	createNodeAndInsertText(xmlDom, objNode, "CREATORID", userId);
-	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME", userName);
-	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", userName2);
-	createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changeKey);
-	createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", scheduleType);
+	createNodeAndInsertText(xmlDom, objNode, "CREATORID", userid);
+	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME", username);
+	createNodeAndInsertText(xmlDom, objNode, "CREATORNAME2", username2);
+	createNodeAndInsertText(xmlDom, objNode, "CHANGEKEY", changekey);
+	createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", scheduletype);
 	
 	var patternType = "";
-	if (scheduleId != "") {
+	if (scheduleid != "") {
 	    if (repetition != "" && pattern == "0")
 	    {
 	        createNodeAndInsertText(xmlDom, objNode, "PATTERN", "3");
@@ -149,7 +149,7 @@ function save_schedule()
 	    {
 	        createNodeAndInsertText(xmlDom, objNode, "PATTERN", pattern);
 	    }
-	    patternType = scheduleType;
+	    patternType = scheduletype;
 	}
 	else {
 	    var ownerids = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
@@ -185,7 +185,7 @@ function save_schedule()
 	}
 	createNodeAndInsertText(xmlDom, objNode, "IMPORTANCE", document.getElementById("importantSelect").value);
 	createNodeAndInsertText(xmlDom, objNode, "ISPUBLIC", document.getElementById("publicSelect").value);
-	createNodeAndInsertText(xmlDom, objNode, "OTHERID", scheduleId == "" ? ownerid : otherid);
+	createNodeAndInsertText(xmlDom, objNode, "OTHERID", scheduleid == "" ? ownerid : otherid);
 	createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
 	createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("TextTitle").value);
 	createNodeAndInsertText(xmlDom, objNode, "LOCATION", document.getElementById("TextLocation").value);
@@ -198,7 +198,7 @@ function save_schedule()
 	    linkColl[i].target = "_blank";
 	}
 
-	if (scheduleId == "")
+	if (scheduleid == "")
 	    createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
 	else {
 	    if (contentpath == "")
@@ -206,23 +206,13 @@ function save_schedule()
 	    else
 	        createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", contentpath);
 	}	
+   
+    var Doc_ContentHtml = document.createElement("DIV");
+    var strBody = message.GetEditorContent();
+    Doc_ContentHtml.innerHTML = strBody;
+    strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
 
-
-    ////
-	if ((patternType == "1" || patternType == "6") && use_exchange_pims == "YES") {
-	    //createNodeAndInsertText(xmlDom, objNode, "CONTENT", EmbedContentIntoXML(xmlDom, objNode));
-	    EmbedContentIntoXML(xmlDom, objNode);
-	    EmbedImageIntoXML(xmlDom, objNode);
-	}
-    else
-	{
-	    var Doc_ContentHtml = document.createElement("DIV");
-	    var strBody = message.GetEditorContent();
-	    Doc_ContentHtml.innerHTML = strBody;
-	    strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
-
-	    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
-	}
+    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
 
 	if (repetition == "")
 	{
@@ -599,7 +589,7 @@ function restore_deleted()
 
     var objNode;
     createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleId);
+    createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleid);
 	
 	xmlHTTP.open("POST", "remote/schedule_restore_deleted.aspx", false);
 	xmlHTTP.send(xmlDom);
@@ -634,7 +624,7 @@ var g_sdate = null;
 var g_edate = null;
 var schedule_repetition_cross_dialogArguments = new Array();
 function config_repeat()
-{
+{	
 	var args = new Array();	
 	if(pattern == "1")
 	{
@@ -660,7 +650,7 @@ function config_repeat()
 	schedule_repetition_cross_dialogArguments[0] = args;
 	schedule_repetition_cross_dialogArguments[1] = config_repeat_Complete;
 
-	DivPopUpShow(450, 535, "/myoffice/ezSchedule/htm/schedule_repetition_Cross.aspx");
+	DivPopUpShow(450, 542, "/ezSchedule/scheduleRepetition.do");
 }
 
 function config_repeat_Complete(rtn) {
@@ -896,10 +886,9 @@ function manage_resource()
     schedule_repetition_cross_dialogArguments[1] = manage_resource_Complete;
 
     if (CrossYN()) {
-        DivPopUpShow(550, 450, "/myoffice/ezSchedule/schedule_select_resource_Cross.aspx?StartTime=" + StartTime + "&EndTime=" + EndTime);
-    }
-    else {
-        var rtn = window.showModalDialog("schedule_select_resource_Cross.aspx?StartTime=" + StartTime + "&EndTime=" + EndTime, g_resource, "dialogHeight:440px; dialogWidth:550px; status:no; scroll:no; help:no; edge:sunken");
+        DivPopUpShow(550, 450, "/ezSchedule/scheduleSelectResource.do?StartTime=" + StartTime + "&EndTime=" + EndTime);
+    } else {    	
+        var rtn = window.showModalDialog("/ezSchedule/scheduleSelectResource.do?StartTime=" + StartTime + "&EndTime=" + EndTime, g_resource, "dialogHeight:440px; dialogWidth:550px; status:no; scroll:no; help:no; edge:sunken");
 
         if (typeof (rtn) != "undefined" && rtn.length == 2) {
             if (rtn[0].length == 0 && rtn[1].length == 0) {
@@ -1045,7 +1034,7 @@ function config_repeat_resource() {
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
 
-    DivPopUpShow(450, 540, "/myoffice/ezResource/ResSch/Schedule_Repetition_Cross.aspx");
+    DivPopUpShow(450, 540, "/ezResource/scheduleRepetition.do");
 }
 
 function config_repeat_resource_Complete(rgParams) {

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
@@ -169,7 +170,7 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 
 	public void deleteScheduleConfig(Map<String, Object> map) throws Exception {
-		delete("EzScheduleDAO.deleteScheduleConfig", map);		
+		delete("EzScheduleDAO.deleteScheduleConfig", map);
 	}
 
 	public void deleteSecretary(Map<String, Object> map) throws Exception {
@@ -177,11 +178,15 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 
 	public void insertScheduleConfig(Map<String, Object> map) throws Exception {
-		insert("EzScheduleDAO.insertScheduleConfig", map);		
+		insert("EzScheduleDAO.insertScheduleConfig", map);
 	}
 
 	public void insertSecretary(Map<String, Object> map) throws Exception {
-		insert("EzScheduleDAO.insertSecretary", map);		
+		insert("EzScheduleDAO.insertSecretary", map);
+	}
+
+	public void insertSchedule(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertSchedule", map);		
 	}
 
 }
