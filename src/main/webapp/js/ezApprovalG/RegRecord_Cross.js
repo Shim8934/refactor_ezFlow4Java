@@ -286,7 +286,6 @@ function btnChangeCabinet_onclick_Complete(rtn) {
     DivPopUpHidden();
     if (rtn[0] == "TRUE") {
         g_CabListXml = rtn[1];
-        alert("32323" +g_CabListXml);
         InitCabinetInfo(g_CabListXml);
     }
 }

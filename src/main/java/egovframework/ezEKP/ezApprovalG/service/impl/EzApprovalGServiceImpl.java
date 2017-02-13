@@ -1905,7 +1905,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_ISPROPOSERYN", makeRightField(nList.item(k).getChildNodes().item(13).getTextContent()));
 				map.put("v_ISBRIEFUSERYN", makeRightField(nList.item(k).getChildNodes().item(14).getTextContent()));
 
-			
 				ezApprovalGDAO.insertApprLine(map);
 				map.put("v_ORGUSERID", makeRightField(nList.item(k).getChildNodes().item(9).getTextContent()));
 
@@ -2013,7 +2012,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_TENANTID", tenantID);
 						
 						try {
-							
 							ezApprovalGDAO.insertReciptInfo(map);
 							rtnVal = "<RESULT>TRUE</RESULT>";
 						} catch (Exception e) {
@@ -3725,7 +3723,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 				map.put("v_RtnSN", curSN);
 				ezApprovalGDAO.insertTbSerialNumGen(map);
-			
 				ezApprovalGDAO.updateTbSerialNumGen(map);
 				
 				StringBuffer rowID = new StringBuffer();
@@ -6589,8 +6586,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateAttachDocInfo(Document docXML, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
-		
 		String docID = "";
 		Map<String, Object> map = new HashMap<String, Object>();
 
@@ -13440,7 +13435,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		rtnVal = "TRUE";
         	}
         }
-        
 		return rtnVal;
 	}
 
@@ -16727,8 +16721,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String registerRecord(Document xmlDom, int tenantID, String offset) throws Exception {
-		StringBuilder strSQL = new StringBuilder("");
-		StringBuilder subSQL2 = new StringBuilder();
 		String subSQL= "";
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String cabID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
@@ -16746,7 +16738,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String attachFlag = "0"; // 25
 		String docID = ""; // 26
 		
-		if(manualFlag.equals("1")){// 수기등록 문서이면
+		if(manualFlag.equals("1")) {// 수기등록 문서이면
 			//(2007.08.10 김상건) : 수기기록물이고 첨부파일이 있을 경우 docid 필요
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 			registerDate = xmlDom.getElementsByTagName("REGISTERDATE").item(0).getTextContent().trim();
@@ -16755,11 +16747,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			// 2011.04.04 수기등록시 첨부등록 추가
 			attachFlag = xmlDom.getElementsByTagName("ATTACHFLAG").item(0).getTextContent().trim();
 			regSn = getSerialNum("002", deptCode, "", companyID, langType, tenantID);
-			if(regSn.equals("")){
+			if(regSn.equals("")) {
 				return "<RESULT>FALSE</RESULT>";
 			}
 		}
-		else{
+		else {
 			registerDate = commonUtil.getTodayUTCTime("");
 			specialCatalogFlag = getRecordSCFlag(cabID, companyID, tenantID);
 			regSn = xmlDom.getElementsByTagName("REGSN").item(0).getTextContent().trim();
@@ -16768,8 +16760,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		}
 		
-		if(!regSn.trim().equals("")){
-			regSn=formatSerialNum(regSn);
+		if(!regSn.trim().equals("")) {
+			regSn = formatSerialNum(regSn);
 		}
 		
 		//동국대학교 수정(2007.07.26 김상건) : 회계년도가 3월 ~ 익년 2월까지이므로 RegYear 년도는 회계년도 값을 가져야 한다.
@@ -16799,17 +16791,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docType = "";
 		String visualAudioDesc= "";
 		String visualAudioType ="";
-		try{
+		try {
 			//등록대장 : listType=0일때는 들어갈 필요가 없다.NullPointException 무시하려고 try..catch
 			docType = xmlDom.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();	// 18
 		}
-		catch(Exception e){
+		catch(Exception e) {
 		}
-	    try{
+	    try {
 	    	visualAudioDesc = xmlDom.getElementsByTagName("VISUALAUDIODESC").item(0).getTextContent().trim();	// 19
 			visualAudioType = xmlDom.getElementsByTagName("VISUALAUDIOTYPE").item(0).getTextContent().trim();	// 20
 	    }
-	    catch(Exception e){
+	    catch(Exception e) {
 	    }
 		String originRegSn = xmlDom.getElementsByTagName("ORIGINREGSN").item(0).getTextContent().trim();	// 23
 
@@ -16825,55 +16817,67 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String recordID = deptCode + regYear + regSn;
 		//'생산등록번호(처리과기관코드+등록일련번호)
 		String registerSN = deptCode + regSn;
-		
+
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_RecordID", makeRightField(recordID));
+		map.put("v_DocID", makeRightField(docID));
+		map.put("v_ProcessDeptName", makeRightField(deptName));
+		map.put("v_ProcessDeptName2", makeRightField(deptName2));
+		map.put("v_ProcessDeptCode",  makeRightField(deptCode));
+		map.put("v_RegisterYear", makeRightField(regYear));
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_RegisterNo", makeRightField(registerSN));
+		map.put("v_AprMemberTitle", makeRightField(aprMemberTitle));
+		map.put("v_AprMemberTitle2", makeRightField(aprMemberTitle2));
+		map.put("v_DrafterName", makeRightField(drafterName));
+		map.put("v_DrafterName2", makeRightField(drafterName2));
+		map.put("v_ExecuteDate", makeRightField(executeDate));
+		map.put("v_ReceiptMemberName", makeRightField(receiptMember));
+		map.put("v_ReceiptMemberName2", makeRightField(receiptMember2));
+		map.put("v_DeliveryNo", makeRightField(deliveryNo));
+		map.put("v_ProduceDeptRegNo", makeRightField(originRegSn));
+		map.put("v_ElectronicRecFlag", makeRightField(electronicRecFlag));
+		map.put("v_SpecialRecordCode", makeRightField(specialRec));
+		map.put("v_PublicityCode", makeRightField(publicCode));
+		map.put("v_LimitRange", makeRightField(limiTrange));
+		map.put("v_OldRecordFlag", makeRightField(OldFlag));
+		map.put("v_DelFlag", makeRightField("0"));
+		map.put("v_SpecialCatalogFlag", makeRightField(specialCatalogFlag));
+		map.put("v_AttachFlag", makeRightField(attachFlag));
+		map.put("v_RejectFlag", makeRightField(rejectFlag));
+		map.put("v_ManualRegFlag", makeRightField(manualFlag));
+		map.put("v_DocType", makeRightField(docType));
+		map.put("v_TENANTID", tenantID);
+
 		 // 기록물 테이블에 저장하는 쿼리.
-        strSQL.append("Insert Into TBL_RECORD(RecordID, DocID, ProcessDeptName, ProcessDeptName2, ProcessDeptCode, ");
-        strSQL.append("RegisterYear, RegisterDate, RegisterNo, AprMemberTitle, AprMemberTitle2, DrafterName, DrafterName2, ExecuteDate, ");
-        strSQL.append("ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo, ProduceDeptRegNo, ElectronicRecFlag, ");
-		strSQL.append("SpecialRecordCode, PublicityCode, LimitRange, OldRecordFlag, DeleteDate, ");
-		strSQL.append("DelFlag, SpecialCatalogFlag, AttachFlag, CreateDate, RejectFlag, ManualRegFlag, ");
-		strSQL.append("DocType, TENANT_ID) VALUES ('" + makeRightField(recordID) + "', '" + makeRightField(docID));
-		strSQL.append("', N'" + makeRightField(deptName) + "', N'" + makeRightField(deptName2) + "', '" + makeRightField(deptCode));
-		strSQL.append("', '" + makeRightField(regYear) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')" );
-        strSQL.append(", '" + makeRightField(registerSN) + "', N'" + makeRightField(aprMemberTitle) + "', N'" + makeRightField(aprMemberTitle2));
-		strSQL.append("', N'" + makeRightField(drafterName) + "', N'" + makeRightField(drafterName2) + "', TO_DATE('" + makeRightField(executeDate));
-		strSQL.append("','YYYY-MM-DD HH24:MI:SS'), N'" + makeRightField(receiptMember) + "', N'" + makeRightField(receiptMember2) + "', NULL, NULL, '" + makeRightField(deliveryNo));
-		strSQL.append("', '" + makeRightField(originRegSn) + "', '" + makeRightField(electronicRecFlag));
-		strSQL.append("', '" + makeRightField(specialRec) + "', '" + makeRightField(publicCode));
-		strSQL.append("', '" + makeRightField(limiTrange) + "', '" + makeRightField(OldFlag));
-		strSQL.append("', NULL, '" + makeRightField("0") + "', '" + makeRightField(specialCatalogFlag));
-		strSQL.append("', '" + makeRightField(attachFlag) + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
-		strSQL.append(", '" + makeRightField(rejectFlag) + "', '" + makeRightField(manualFlag));
-		strSQL.append("', '" + makeRightField(docType) + "'," + tenantID + ");\n");
+		ezApprovalGDAO.insertRegRecord(map);
+		
         // '## 기록물 분리첨부 테이블에 저장
 		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
 		
-        if (subSQL.equals("FALSE")){
+        if (subSQL.equals("FALSE")) {
         	return "<RESULT>FALSE</RESULT>";
         }
 		
         // 2011.04.04 수기등록시 첨부등록 추가
         
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
-        if (manualFlag == "1")
-        {
-            if (docID != "")
-            {
-                subSQL2.append(" INSERT INTO TBL_ENDATTACHINFO (DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize, ");
-                subSQL2.append("	AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID) ");
-                subSQL2.append(" SELECT '" + docID + "', AttachFileSN,AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , ");
-                subSQL2.append(" AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID");
-                subSQL2.append(" FROM TBL_APRATTACHINFO WHERE DOCID = '" + docID + "',"+tenantID+" ;\n");
-
-                subSQL2.append(" DELETE FROM TBL_APRATTACHINFO WHERE DOCID = '" + docID + "' AND TENANT_ID=" + tenantID +";\n");
-
-                strSQL.append(subSQL2.toString());
+        if (manualFlag == "1") {
+            if (docID != "") {
+            	map.put("v_DOCID", docID);
+            	map.put("v_TENANTID", tenantID);
+            	try {
+	            	ezApprovalGDAO.insertRegEndAttachInfo(map);
+	            	ezApprovalGDAO.deleteRegAprAttachInfo(map);
+            	} catch(Exception e) {
+        			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            		return "<RESULT>FALSE</RESULT>";
+            	}
             }
         }
         
         // '## 분리첨부 추가저장
-		if (nodeSepAtta != null)
-		{
+		if (nodeSepAtta != null) {
 //			<SEPATTACHINFO>
 //				<SEPATTACH>
 //					<CABINETID>S907001e00000052004000013001</CABINETID>
@@ -16892,27 +16896,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        		
 	        		if (subSQL.equals("FALSE")) {
 	        			return "FALSE";
-	        		} else {
-	        			strSQL.append(subSQL);
-	        		}
+	        		} 
 	        	}
 	        }
 		}
 		// '특수목록 정보 저장
-		if (specialCatalogFlag.equals("1") && nodeSL != null)
-		{
+		if (specialCatalogFlag.equals("1") && nodeSL != null) {
 			subSQL = saveSpecialInfoRec(recordID, cabID, xmlDom, tenantID);
-			if (subSQL == "FALSE"){
+			if (subSQL == "FALSE") {
 				return "<RESULT>FALSE</RESULT>";
 			}
 		}
-
-		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
-
-		if (result)
-			return "<RESULT>TRUE</RESULT>";
-		else
-			return "<RESULT>FALSE</RESULT>";
+		return "<RESULT>TRUE</RESULT>";
 	}
 
 	@Override
@@ -17801,7 +17796,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          return strSQL;
 	}
 
-private StringBuilder ChangeCabBasicInfo(Document xmlDom, int tenantID) {
+	private StringBuilder ChangeCabBasicInfo(Document xmlDom, int tenantID) {
 		
 		StringBuilder strSQL = new StringBuilder();
 		StringBuilder subSQL = new StringBuilder();
@@ -17866,36 +17861,36 @@ private StringBuilder ChangeCabBasicInfo(Document xmlDom, int tenantID) {
 		return strSQL;
 	}
 
-private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, int tenantID) {
-	StringBuilder strSQL = new StringBuilder();
-	// '## 기존의 특수목록을 모두 지운다.
-    strSQL.append("Delete From TBL_SPECIALCATALOGINFO_CAB Where CabinetClassNo = '");
-	strSQL.append(makeRightField(cabClassNo) + "' And SerialNo != '000' AND TENANT_ID = " + tenantID +";\n");
-
-	// '## 특수목록 데이터 입력
-	NodeList nodesData = xmlDom.getElementsByTagName("SCDATA");
-
-	if (nodesData.getLength() > 0)
-	{
-		for (int i=0; i<nodesData.getLength(); i++)
+	private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, int tenantID) {
+		StringBuilder strSQL = new StringBuilder();
+		// '## 기존의 특수목록을 모두 지운다.
+	    strSQL.append("Delete From TBL_SPECIALCATALOGINFO_CAB Where CabinetClassNo = '");
+		strSQL.append(makeRightField(cabClassNo) + "' And SerialNo != '000' AND TENANT_ID = " + tenantID +";\n");
+	
+		// '## 특수목록 데이터 입력
+		NodeList nodesData = xmlDom.getElementsByTagName("SCDATA");
+	
+		if (nodesData.getLength() > 0)
 		{
-			strSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID) Values ('");
-			strSQL.append(makeRightField(cabClassNo) + "', '");
-			strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(0).getTextContent().trim()) + "', N'");
-			strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(1).getTextContent().trim()) + "', N'");
-			strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(2).getTextContent().trim()) + "', N'");
-            strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(3).getTextContent().trim()) + "'," + tenantID +");\n");
+			for (int i=0; i<nodesData.getLength(); i++)
+			{
+				strSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID) Values ('");
+				strSQL.append(makeRightField(cabClassNo) + "', '");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(0).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(1).getTextContent().trim()) + "', N'");
+				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(2).getTextContent().trim()) + "', N'");
+	            strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(3).getTextContent().trim()) + "'," + tenantID +");\n");
+			}
 		}
+		  strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
+	      strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBL_CABINETHISTORY ");
+		  strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
+		  strSQL.append("Insert Into TBL_SCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3 ,TENANT_ID) ");
+		  strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID ");
+	      strSQL.append("From TBL_SPECIALCATALOGINFO_CAB  Where CabinetClassNo = '" );
+	      strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID = " + tenantID +";\n END; \n ");
+	      return strSQL;
 	}
-	  strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
-      strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBL_CABINETHISTORY ");
-	  strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
-	  strSQL.append("Insert Into TBL_SCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3 ,TENANT_ID) ");
-	  strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID ");
-      strSQL.append("From TBL_SPECIALCATALOGINFO_CAB  Where CabinetClassNo = '" );
-      strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID = " + tenantID +";\n END; \n ");
-      return strSQL;
-}
 
 	@Override
 	public String getCabinetHistory(Document xmlDom, LoginVO userInfo) throws Exception {
@@ -17928,7 +17923,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		listString = getListHeader("099", companyID, langType, userInfo.getTenantId());
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
-		for(int i=0; i<listXML.getElementsByTagName("NAME").getLength(); i++){
+		for(int i=0; i<listXML.getElementsByTagName("NAME").getLength(); i++) {
 			strSQL.append("<HEADER>");
 			strSQL.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
 			strSQL.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
@@ -17937,7 +17932,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		strSQL.append("</HEADERS>");
 		strSQL.append("<ROWS>");
 		
-		for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++){
+		for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++) {
 			strSQL.append("<ROW>");
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VERSION").item(j).getTextContent()) + "</VALUE>");
@@ -17953,10 +17948,10 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 			strSQL.append("</CELL>");
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>"); 
-			if(makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")){
+			if(makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(j).getTextContent()).equals("0")) {
 				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj23", userInfo.getLocale()) : "BasicRegItems");
 			}
-			else{
+			else {
 				strSQL.append(langType.equals("1")? messageSource.getMessage("ezApprovalG.pjj24", userInfo.getLocale()) : "PreClassitems");
 			}
 			strSQL.append("</VALUE>") ;
@@ -17996,7 +17991,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		strSQL.append("<ROWS>");
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
-		for(int i=0; i<hlength; i++){
+		for(int i=0; i<hlength; i++) {
 			strSQL.append("<HEADER>");
 			strSQL.append("<NAME>" + listXML.getElementsByTagName("NAME").item(0).getTextContent() + "</NAME>");
 			strSQL.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(0).getTextContent() + "</WIDTH>");
@@ -18019,7 +18014,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		for(int j = 0; j< docXML.getElementsByTagName("ROW").getLength(); j++){
+		for(int j = 0; j< docXML.getElementsByTagName("ROW").getLength(); j++) {
 			strSQL.append("<ROW>");
 			strSQL.append("<CELL>");
 			strSQL.append("<VALUE>" + makeListField(docXML.getElementsByTagName("USERNAME" + strMultiData).item(j).getTextContent()) + "</VALUE>");
@@ -18037,47 +18032,50 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 
 	@Override
 	public String saveCabRoleInfo(Document xmlDom, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder("");
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
 		String idList = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
 		String nameList = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
 		String nameList2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
-
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_CABCLASSNO", cabClassNo);
-		map.put("v_TENANTID", tenantID);
-
-		ezApprovalGDAO.deleteTbCabRoleInfo(map);
-
-		String idListIndex[] = idList.split(",");
-		String nameListIndex[] = nameList.split(",");
-		String nameList2Index[] = nameList2.split(",");
 		
-		int end = idList.indexOf(",");
-		int end2 = idList.indexOf(",");
-		int end3 = idList.indexOf(",");
-		
-		for(int i=0; i<idListIndex.length; i++) {
-			if(end <= 0) {
-				end = idList.length()+1;
-			} 
+		try {
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("v_CABCLASSNO", cabClassNo);
+			map.put("v_TENANTID", tenantID);
+	
+			ezApprovalGDAO.deleteTbCabRoleInfo(map);
+	
+			String idListIndex[] = idList.split(",");
+			String nameListIndex[] = nameList.split(",");
+			String nameList2Index[] = nameList2.split(",");
 			
-			if(end2 <= 0) {
-				end2 = nameList.length()+1;
-			} 
+			int end = idList.indexOf(",");
+			int end2 = idList.indexOf(",");
+			int end3 = idList.indexOf(",");
 			
-			if(end3 <= 0) {
-				end3 = nameList2.length()+1;
-			} 
-			
-			map.put("v_ArrayString", idListIndex[i]);
-			map.put("v_ArrayString1", nameListIndex[i]);
-			map.put("v_ArrayString2", nameList2Index[i]);
-			
-			ezApprovalGDAO.insertTbCabRoleInfo(map);
+			for(int i=0; i<idListIndex.length; i++) {
+				if(end <= 0) {
+					end = idList.length()+1;
+				} 
+				
+				if(end2 <= 0) {
+					end2 = nameList.length()+1;
+				} 
+				
+				if(end3 <= 0) {
+					end3 = nameList2.length()+1;
+				} 
+				
+				map.put("v_ArrayString", idListIndex[i]);
+				map.put("v_ArrayString1", nameListIndex[i]);
+				map.put("v_ArrayString2", nameList2Index[i]);
+				
+				ezApprovalGDAO.insertTbCabRoleInfo(map);
+			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "<RESULT>FALSE</RESULT>";
 		}
-		
 		return "<RESULT>TRUE</RESULT>";
 	}
 
@@ -18089,11 +18087,12 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		try{
-	    ezApprovalGDAO.updateReceiptOffer(map);
-	    return "<RESULT>TRUE</RESULT>";
+		try {
+			ezApprovalGDAO.updateReceiptOffer(map);
+			return "<RESULT>TRUE</RESULT>";
 		}
-		catch(Exception e){
+		catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -18360,7 +18359,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		LOGGER.debug("getCode2Name ended.");
 		Map<String , Object> map = new HashMap<String, Object>();
 		try{
-			if(!gFlag.equals("G")){
+			if(!gFlag.equals("G")) {
 				 
 				 map.put("v_PROCESSYN", processYN);
 				 map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
@@ -18386,11 +18385,11 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 	 		   sb.append("</DATA>");
 	 		
 	 		   Document signXML = commonUtil.convertStringToDocument(sb.toString());
-	 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0){
+	 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0) {
 	 			   deptName = makeListField(signXML.getElementsByTagName("RECEIPTPOINTNAME").item(0).getTextContent());
 	               deptName2 = makeListField(signXML.getElementsByTagName("RECEIPTPOINTNAME2").item(0).getTextContent());
 	 		   }
-	 		   if(deptName.trim().equals("")){
+	 		   if(deptName.trim().equals("")) {
 	 			   map.put("v_DOCID", docID.trim());
 	 			   map.put("v_RECEIPTPOINTID", deptID.trim());
 	 			   map.put("v_FLAG", "END");
@@ -18407,7 +18406,7 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 	 	 		   sb2.append("</DATA>");
 	 	 		
 	 	 		   Document signXML2 = commonUtil.convertStringToDocument(sb2.toString());
-	 	 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0){
+	 	 		   if(signXML.getDocumentElement().getChildNodes().getLength()>0) {
 	 	 			  deptName = makeListField(signXML2.getElementsByTagName("RECEIPTPOINTNAME").item(0).getTextContent());
 	 	              deptName2 = makeListField(signXML2.getElementsByTagName("RECEIPTPOINTNAME2").item(0).getTextContent());
 	 	 		   }
@@ -18415,17 +18414,15 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 			}
 			else{
 				// 수정(2006.01.10) : 발송한 유통문서인 경우 발송 플래그(S) 업데이트 하도록 수정
-			    if( deptID.equals("")){
-			    	
+			    if( deptID.equals("")) {
 		        	map.put("v_DOCID", docID.trim());
 		        	map.put("v_TENANTID", tenantID);
 			    	ezApprovalGDAO.insertProHistoryReceiptInfo(map);
 				}
-				else{
-		 			 if (deptName.trim().equals("")){
+				else {
+		 			 if (deptName.trim().equals("")) {
 						deptName = docID;
 		 			 }
-		 			 
 		 			 	map.put("v_DOCID", docID.trim());
 		 			 	map.put("v_DEPTNAME", makeRightField(deptName.trim()));
 		 			 	map.put("v_DEPTNAME2", makeRightField(deptName2.trim()));
@@ -18435,9 +18432,8 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 		 			 	map.put("v_TENANTID", tenantID);
 		 			 	ezApprovalGDAO.insertProHistoryReceiptInfo2(map);
 			}
-			   
 		}
-		}catch(Exception e) {
+		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
