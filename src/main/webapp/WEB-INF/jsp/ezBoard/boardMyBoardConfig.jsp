@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	    <title></title>
+	    <title><spring:message code='ezBoard.t10044'/></title>
 	    <link rel="stylesheet" href="/css/email_tree.css" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
