@@ -562,4 +562,343 @@
         		SUBSTR(REGDATE, 0, 7)
 		]]>
 	</select>
+	
+		<insert id="EzStatisticsAdminDAO.insertDailyDocCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			INSERT INTO TBL_DAILYDOCCOUNTLOG ( 
+				REGDATE, DEPTID, DEPTNAME, USERID, USERNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID 
+			)
+     		( SELECT 
+     			#today# ,
+              	DEPARTMENT ,
+              	DESCRIPTION ,
+              	CN , 
+              	DISPLAYNAME ,
+              	DINGCNT ,
+              	DENDCNT ,
+              	DENDTIME ,
+              	SINGCNT ,
+              	SENDCNT ,
+              	SENDTIME ,
+              	RETUNCNT,
+              	TENANT_ID 
+       		  FROM 
+       		  	   ( SELECT 
+       		  			 CN ,
+	                     DISPLAYNAME ,
+	                     DESCRIPTION ,
+	                     DEPARTMENT  ,
+	                     IFNULL(DINGCNT, 0) DINGCNT  ,
+	                     IFNULL(SINGCNT, 0) SINGCNT  ,
+	                     IFNULL(DENDCNT, 0) DENDCNT  ,
+	                     IFNULL(SENDCNT, 0) SENDCNT  ,
+	                     IFNULL(DENDTIME, 0) DENDTIME  ,
+	                     IFNULL(SENDTIME, 0) SENDTIME  ,
+	                     IFNULL(RETUNCNT, 0) RETUNCNT  ,
+	                     TBA.TENANT_ID
+              		 FROM 
+              		 	  ( SELECT 
+              		 			CN ,
+	                            DISPLAYNAME ,
+	                            DESCRIPTION ,
+	                            DEPARTMENT ,
+	                            TENANT_ID
+                     		FROM 
+                     			TBL_USERMASTER ) TBA 
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+                                IFNULL(COUNT(*) , 0) DINGCNT  ,
+                                TENANT_ID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = 'A02001'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= #startDate#
+                            AND 
+                            	STARTDATE < #endDate#
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID ) TBB   
+                     ON 
+                     		TBA.TENANT_ID = TBB.TENANT_ID
+                     AND
+                     		TBA.CN = TBB.WRITERIDA
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+                                IFNULL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = 'A02011'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= #startDate#
+                            AND 
+                            	STARTDATE < #endDate#
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID ) TBB2   
+                     ON 
+                     		TBA.TENANT_ID = TBB2.TENANT_ID
+                     AND
+                     		TBA.CN = TBB2.WRITERIDA
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                IFNULL(COUNT(*) , 0) DENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME,
+                                TENANT_ID  
+                            FROM 
+                            	TBL_ENDAPRDOCINFO
+                            WHERE  
+                            	DOCSTATE = 'A02001'
+                            AND 
+                            	ENDDATE >= #startDate#
+                            AND 
+                            	ENDDATE < #endDate#
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID ) TBC 
+                     ON 
+                    		TBA.TENANT_ID = TBC.TENANT_ID
+                     AND
+                     
+                     		TBA.CN = TBC.WRITERIDB
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                IFNULL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME  ,
+                                TENANT_ID
+                            FROM 
+                            	TBL_ENDAPRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = 'A02011'
+                            AND 
+                            	ENDDATE >= #startDate#
+                            AND 
+                            	ENDDATE < #endDate#
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID ) TBC2 
+                     ON 
+                     		TBA.TENANT_ID = TBC2.TENANT_ID
+                     AND
+                     		TBA.CN = TBC2.WRITERIDB
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDC  ,
+                                WRITERDEPTID WRITERDEPTIDC  ,
+                                IFNULL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	FUNCTIONTYPE = 'A04004'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            AND 
+                            	STARTDATE >= #startDate#
+                            AND 
+                            	STARTDATE < #endDate#
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID ) TBD   
+                     ON 
+                     		TBA.TENANT_ID = TBD.TENANT_ID
+                     AND
+                     		TBA.CN = TBD.WRITERIDC ) AA )
+		]]>
+	</insert>
+	
+	<insert id="EzStatisticsAdminDAO.insertDailyFormCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			INSERT INTO TBL_DAILYFORMCOUNTLOG ( 
+				REGDATE, FORMID, FORMNAME, FORMCONTID, FORMCONTNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID 
+			)
+     		( 
+     			SELECT 
+     				#today# ,
+              		FORMID ,
+	              	FORMNAME ,
+	              	FORMCONTID ,
+	              	FORMCONTNAME ,
+	              	DINGCNT ,
+	              	DENDCNT ,
+	              	DENDTIME ,
+	              	SINGCNT ,
+	              	SENDCNT ,
+	              	SENDTIME ,
+	              	RETUNCNT ,
+	              	AA.TENANT_ID
+       			FROM 
+       				( SELECT 
+       					FORMCONTID ,
+                     	FORMCONTNAME ,
+                     	FORMID ,
+                     	FORMNAME ,
+                     	IFNULL(DINGCNT, 0) DINGCNT  ,
+                     	IFNULL(SINGCNT, 0) SINGCNT  ,
+                     	IFNULL(DENDCNT, 0) DENDCNT  ,
+                     	IFNULL(SENDCNT, 0) SENDCNT  ,
+                     	IFNULL(RETUNCNT, 0) RETUNCNT  ,
+                     	IFNULL(DENDTIME, 0) DENDTIME  ,
+                     	IFNULL(SENDTIME, 0) SENDTIME  ,
+                     	TBA.TENANT_ID  
+              		  FROM 
+              		  	( SELECT 
+              		  		A.FORMCONTID FORMCONTID  ,
+                            B.FORMCONTNAME FORMCONTNAME  ,
+                            FORMID ,
+                            FORMNAME ,
+                            A.TENANT_ID
+	                      FROM 
+	                     	TBL_FORMINFO A
+	                      JOIN 
+	                     	TBL_FORMCONTAINER B
+	                      ON 
+	                      	A.TENANT_ID = B.TENANT_ID
+	                      AND
+	                     	A.FORMCONTID = B.FORMCONTID ) TBA 
+		                  LEFT JOIN 
+		                  	( SELECT 
+		                  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) DINGCNT,
+                                TENANT_ID  
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = 'A02001'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              AND 
+                              	STARTDATE >= #startDate#
+                              AND 
+                              	STARTDATE < #endDate#
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID ) TBB   
+                          ON 
+                          	TBA.TENANT_ID = TBB.TENANT_ID
+                          AND
+                          	TBA.FORMID = TBB.FORMIDA
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = 'A02011'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              AND 
+                              	STARTDATE >= #startDate#
+                              AND 
+                              	STARTDATE < #endDate#
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID ) TBB2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBB2.TENANT_ID
+                          AND
+                      	  	TBA.FORMID = TBB2.FORMIDA
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                IFNULL(COUNT(*) , 0) DENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) DENDTIME  ,
+                                TENANT_ID
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = 'A02001'
+                              AND 
+                              	ENDDATE >= #startDate#
+                              AND 
+                              	ENDDATE < #endDate#
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID ) TBC 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC.TENANT_ID
+                          AND
+                      	  	TBA.FORMID = TBC.FORMIDB
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                IFNULL(COUNT(*) , 0) SENDCNT  ,
+                                ROUND(AVG(ENDDATE - STARTDATE), 2) SENDTIME,
+                                TENANT_ID
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = 'A02011'
+                              AND 
+                              	ENDDATE >= #startDate#
+                              AND 
+                              	ENDDATE < #endDate#
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID ) TBC2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC2.TENANT_ID
+                          AND
+                      	  	TBA.FORMID = TBC2.FORMIDB
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	FUNCTIONTYPE = 'A04004'
+                              AND
+                              	STARTDATE IS NOT NULL 
+                              AND 
+                              	STARTDATE >= #startDate#
+                              AND 
+                              	STARTDATE < #endDate#
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID ) TBD   
+                          ON 
+                          	TBA.TENANT_ID = TBD.TENANT_ID
+                          AND
+                            TBA.FORMID = TBD.FORMIDA ) AA )
+		]]>
+	</insert>
+	<delete id="EzStatisticsAdminDAO.deleteDailyDocCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			DELETE FROM TBL_DAILYDOCCOUNTLOG
+			WHERE
+				regdate = #today#
+		]]>
+	</delete>
+	
+	<delete id="EzStatisticsAdminDAO.deleteDailyFormCountLog" parameterClass="StatApprVO">
+		<![CDATA[
+			DELETE FROM TBL_DAILYFORMCOUNTLOG
+			WHERE
+				regdate = #today#
+		]]>
+	</delete>
 </sqlMap>

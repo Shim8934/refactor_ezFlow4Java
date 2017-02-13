@@ -25,7 +25,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	@Resource(name="EzStatisticsAdminDAO")
 	private EzStatisticsAdminDAO ezStatisticsAdminDAO;
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EzStatisticsAdminServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsAdminServiceImpl.class);
 	
 	@Override
 	public String getTimeList(StatApprVO statApprVO) {
@@ -55,7 +55,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			
 			rtnValue = sb.toString();
 		} catch (Exception e) {
-			LOGGER.error("EzStatisticsAdminDAO :: getTimeList :: " + e.getMessage());
+			logger.error("EzStatisticsAdminDAO :: getTimeList :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		
@@ -90,7 +90,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			
 			rtnValue = sb.toString();
 		} catch (Exception e) {
-			LOGGER.error("EzStatisticsAdminDAO :: getCountList :: " + e.getMessage());
+			logger.error("EzStatisticsAdminDAO :: getCountList :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		
@@ -132,7 +132,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			
 			rtnValue = memberlist2.toString();
 		} catch (Exception e) {
-			LOGGER.error("EzStatisticsAdminDAO :: getFormInfo :: " + e.getMessage());
+			logger.error("EzStatisticsAdminDAO :: getFormInfo :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		
@@ -164,7 +164,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			
 			rtnValue = sb.toString();
 		} catch (Exception e) {
-			LOGGER.error("EzStatisticsAdminDAO :: getSearchList :: " + e.getMessage());
+			logger.error("EzStatisticsAdminDAO :: getSearchList :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		
@@ -191,11 +191,32 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 			
 			rtnValue = sb.toString();
 		} catch (Exception e) {
-			LOGGER.error("EzStatisticsAdminDAO :: getMainList :: " + e.getMessage());
+			logger.error("EzStatisticsAdminDAO :: getMainList :: " + e.getMessage());
 			rtnValue = "ERROR";
 		}
 		
 		return rtnValue;
+	}
+
+	@Override
+	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception {
+		logger.debug("dailyDocCountLog started");
+
+		ezStatisticsAdminDAO.deleteDailyDocCountLog(statApprVO);
+		ezStatisticsAdminDAO.insertDailyDocCountLog(statApprVO);
+
+		logger.debug("dailyDocCountLog ended");
+	}
+
+	@Override
+	public void dailyFormCountLog(StatApprVO statApprVO) throws Exception {
+		logger.debug("dailyFormCountLog started");
+
+		ezStatisticsAdminDAO.deleteDailyFormCountLog(statApprVO);
+		ezStatisticsAdminDAO.insertDailyFormCountLog(statApprVO);
+
+		logger.debug("dailyFormCountLog ended");
+		
 	}
 	
 }

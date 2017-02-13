@@ -849,24 +849,24 @@ public class EzBoardController extends EgovFileMngUtil{
 	            int k = 0;
 	            int nlength = noticeList.size();
 	            
-	            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-	            resultXML.append("<PAGECNT>"+((int)noticeCount + (int)boardCount)+"</PAGECNT>");
-	            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-	            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-	            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-	            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-	            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-	            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-	            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-	            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+	            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+	            resultXML.append("<PAGECNT>" + ((int)noticeCount  +  (int)boardCount) + "</PAGECNT>");
+	            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+	            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+	            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+	            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+	            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+	            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+	            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+	            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
 	            resultXML.append("<LISTVIEWDATA>");
 	            resultXML.append("<HEADERS>");
 	            
 	            for (BoardListHeaderVO vo:headerList) {
 	            	resultXML.append("<HEADER>");
-	        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-	            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-	            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+	        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+	            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+	            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
 	            	resultXML.append("</HEADER>");
 	            }
 	            resultXML.append("</HEADERS>");

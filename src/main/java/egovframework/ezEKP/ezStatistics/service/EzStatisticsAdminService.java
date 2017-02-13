@@ -15,4 +15,8 @@ public interface EzStatisticsAdminService {
 
 	public String getMainList(StatApprVO statApprVO);
 
+	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception;
+
+	public void dailyFormCountLog(StatApprVO statApprVO) throws Exception;
+
 }

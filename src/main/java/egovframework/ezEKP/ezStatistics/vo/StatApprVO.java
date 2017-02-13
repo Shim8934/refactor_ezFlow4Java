@@ -19,6 +19,8 @@ public class StatApprVO {
 	private String searchList;
 	/** 언어*/
 	private String lang;
+	/** yyyy-MM-dd*/
+	private String today;
 	
 	public String getCompany() {
 		return company;
@@ -73,6 +75,12 @@ public class StatApprVO {
 	}
 	public void setLang(String lang) {
 		this.lang = lang;
+	}
+	public String getToday() {
+		return today;
+	}
+	public void setToday(String today) {
+		this.today = today;
 	}
 
 }

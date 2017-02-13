@@ -3,12 +3,12 @@
 
 <sqlMap namespace="ezPersonal">
 	<typeAlias  alias="PersonalSliderImageVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO"/>
-	<typeAlias  alias="PersonalLightPollVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
+	<typeAlias  alias="PersonalLightPollVO" 				    type="egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO"/>
 	<typeAlias  alias="PersonalApprovMailVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalApprovMailVO"/>
-	<typeAlias  alias="PersonalGetEmpOfMonthVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
-	<typeAlias  alias="PersonalGetPopUpListUserVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
-	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
-	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
+	<typeAlias  alias="PersonalGetEmpOfMonthVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO"/>
+	<typeAlias  alias="PersonalGetPopUpListUserVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO"/>
+	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 	type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
+	<typeAlias  alias="PersonalGetWebPartGroupVO" 		type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
 	
 	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
