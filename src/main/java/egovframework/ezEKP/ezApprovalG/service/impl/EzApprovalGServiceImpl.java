@@ -412,7 +412,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		}
 		catch (Exception e){
-			
 		}
 		
 		if (!rtnVal && mode.substring(2).equals("Y")) {
@@ -1073,6 +1072,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		return rtnVal;
@@ -1090,6 +1090,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.delUserFormInfo(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		return rtnVal;
@@ -1139,7 +1140,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		LOGGER.debug("setCabinetReject Started");
 
 		StringBuilder strSQL = new StringBuilder();
-
+		String rtnVal ="TRUE";
 		String sn = "";
 		String docSN = "";
 		String newDocID = "";
@@ -1179,7 +1180,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					Document xmlDom = commonUtil.convertStringToDocument(strXML);
 					
-					strSQL.append(updateSignInfo(xmlDom, companyID, "QUERY", tenantID));
+					rtnVal = updateSignInfo(xmlDom, companyID, "QUERY", tenantID);
+					
+					if(rtnVal.equals("FALSE")){
+						return "<RESULT>FALSE</RESULT>";
+					}
 				} else {
 					docNo = "";
 				}
@@ -1210,9 +1215,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName,
 				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + getDocDir(newDocID));
 		
-        strSQL.append("APRRejectEnd ('" + newDocID + "', '" + docID + "', '");
-        strSQL.append(endURL + "', '" + docState + "', '" + docNo + "', '" + docNumCode);
-        strSQL.append("', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), '" + containerID + "');\n");
+		map.put("v_NEWDOCID", newDocID);
+		map.put("v_DOCID", docID);
+		map.put("v_ENDURL", endURL);
+		map.put("v_DOCSTATE", docState);
+		map.put("v_DOCNO", docNo);
+		map.put("v_DOCNUMCODE", docNumCode);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_CONTAINERID", containerID);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			if(docNo.equals("")){
+				ezApprovalGDAO.insertRejectEndAprDocInfo(map);
+			} else {
+				ezApprovalGDAO.insertRejectEndAprDocInfo2(map);
+				ezApprovalGDAO.insertRejectEndAprLineInfo(map);
+				ezApprovalGDAO.insertRejectEndAttachInfo(map);
+				ezApprovalGDAO.insertRejectEndDocAttachInfo(map);
+				ezApprovalGDAO.insertRejectEndAprOpinionInfo(map);
+				ezApprovalGDAO.insertRejectEndReceiptPointInfo(map);
+				ezApprovalGDAO.insertRejectEndAprReceiptProcessInfo(map);
+				ezApprovalGDAO.insertRejectExpendAprDocInfo(map);
+				ezApprovalGDAO.insertRejectExpendAprLine(map);
+			} 
+		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
+			return "<RESULT>FALSE</RESULT>";
+		}
 		
         map.put("v_HESONGFLAG", hesongFlag.trim());
         
@@ -1240,10 +1271,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		numOfPage = "1";
         	}
         	
-        	strSQL.append(regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
+        	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
         			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
-        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet));
-        	
+        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet);
+
         } else {
         	if (!sn.trim().equals("")) {
         		rollbackCabinetNum(deptID, "", sn, companyID, "", lang, tenantID);
@@ -1252,30 +1283,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	return "<RESULT>FALSE</RESULT>";
         }
         
-        boolean rtn = false;
-        
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("companyID", companyID);
-		map1.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
 		
-		try {
-			ezApprovalGDAO.transactionSQL(map1);
-			
-			rtn = true;
-		} catch (Exception e) {
-				System.out.println(e.getMessage());
-			rtn = false;
-		}
-		
-		if (rtn) {
+		if (!rtnVal.equals("FALSE")) {
 			LOGGER.debug("setCabinetReject ended");
 			return "<RESULT>TRUE</RESULT>";
 		} else {
-        	if (!sn.trim().equals("")) {
-        		rollbackCabinetNum(deptID, "", sn, companyID, "", lang, tenantID);
-        	}
-        	
-        	return "<RESULT>FALSE</RESULT>";
+        	return "<RESULT>FALSE</RESULT>," + sn;
 		}
 	}
 
@@ -1967,6 +1980,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String strDocID = rowNode.item(0).getChildNodes().item(2).getTextContent();
 		String rtnVal = deleteReceiptInfo(strDocID, companyID, tenantID);
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
 		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
 			String receiptPointID = "";
 			int j = 1;
@@ -1975,29 +1990,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
 				
 				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
-					strSQL.append("INSERT INTO TBL_RECEIPTPOINTINFO (DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ");
-                    strSQL.append("ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ");
-                    strSQL.append("ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID) VALUES ('");
-					strSQL.append(strDocID + "', '" + rowNode.item(k).getChildNodes().item(3).getTextContent() + "', N'");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()) + "', N'");
-                    // ReceiptPointName2
-                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()) + "', '");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(4).getTextContent()) + "', '");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()) + "', '1', '");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()) + "', '");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()) + "', '");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()) + "', N'");
-                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()) + "', N'");
-                    // ReceiptMemberName2
-                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()) + "', '', N'");
-					strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()) + "', N'");
-                    // ReceiptMemberJobTitle2
-                    strSQL.append(makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()) + "', '");
-					strSQL.append(j + "',"+tenantID+")\n");
+					map.put("v_DOCID", strDocID);
+					map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
+					map.put("v_ReceiptPointName", makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()));
+					map.put("v_ReceiptPointName2", makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()));
+					map.put("v_ExtReceptYN", makeRightField(rowNode.item(k).getChildNodes().item(4).getTextContent()));
+					map.put("v_ProcessYN", makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()));
+					map.put("v_ProcessSN", "1");
+					map.put("v_CanEditYN", makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()));
+					map.put("v_ExtReceptEmail", makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()));
+					map.put("v_ReceiptMemberID", makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()));
+					map.put("v_ReceiptMemberName", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
+					map.put("v_ReceiptMemberName2", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
+					map.put("v_ProcessDate", "''");
+					map.put("v_ReceiptMemberJobTitle", makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()));
+					map.put("v_ReceiptMemberJobTitle2", makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()));
+					map.put("v_DeptMemberSN", j);
+					map.put("v_TENANTID", tenantID);
+					
+					try {
+						ezApprovalGDAO.insertReciptInfo(map);
+						rtnVal = "<RESULT>TRUE</RESULT>";
+					} catch (Exception e) {
+						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+						System.out.println(e.getMessage());
+						rtnVal = "<RESULT>FALSE</RESULT>";
+					}
 					
 					j += 1;
 				} else {
-					Map<String, Object> map = new HashMap<String, Object>();
 					map.put("v_MAINID", receiptPointID.substring(susinGroupIcon.length()));
 					map.put("v_TENANTID", tenantID);
 					
@@ -2015,31 +2036,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					int dlength = receiptGroupXML.getElementsByTagName("ROW").getLength();
 					
 					for (int p = 0; p < dlength; p++) {
-						strSQL.append("INSERT INTO TBL_RECEIPTPOINTINFO (DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ");
-						strSQL.append("ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ");
-                        strSQL.append("ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN,TENANT_ID) VALUES ('");
-						strSQL.append(strDocID + "', '" + receiptGroupXML.getElementsByTagName("DEPTID").item(p).getTextContent() + "', N'");
-						strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME").item(p).getTextContent()) + "', N'");
-                        strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME2").item(p).getTextContent()) + "', '");
-						strSQL.append("N', 'N', '1', 'N', '");
-						strSQL.append(makeRightField(receiptGroupXML.getElementsByTagName("COMPANYID").item(p).getTextContent()) + "', '");
-						strSQL.append("', N'', N'', NULL, N'', N'', '" + j + "',"+tenantID+")\n");
+						
+						map.put("v_DOCID", strDocID);
+						map.put("v_ReceiptPointID", receiptGroupXML.getElementsByTagName("DEPTID").item(p).getTextContent());
+						map.put("v_ReceiptPointName", makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME").item(p).getTextContent()));
+						map.put("v_ReceiptPointName2", makeRightField(receiptGroupXML.getElementsByTagName("DEPTNAME2").item(p).getTextContent()));
+						map.put("v_ExtReceptYN", "N");
+						map.put("v_ProcessYN", "N");
+						map.put("v_ProcessSN", "1");
+						map.put("v_CanEditYN", "N");
+						map.put("v_ExtReceptEmail", makeRightField(receiptGroupXML.getElementsByTagName("COMPANYID").item(p).getTextContent()));
+						map.put("v_ReceiptMemberID", "");
+						map.put("v_ReceiptMemberName", "");
+						map.put("v_ReceiptMemberName2", "");
+						map.put("v_ProcessDate", "NULL");
+						map.put("v_ReceiptMemberJobTitle", "");
+						map.put("v_ReceiptMemberJobTitle", "");
+						map.put("v_DeptMemberSN", j);
+						map.put("v_TENANTID", tenantID);
+						
+						try {
+							
+							ezApprovalGDAO.insertReciptInfo(map);
+							rtnVal = "<RESULT>TRUE</RESULT>";
+						} catch (Exception e) {
+							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+							System.out.println(e.getMessage());
+							rtnVal = "<RESULT>FALSE</RESULT>";
+						}
 
 						j += 1;
 					}
 				}
-			}
-			
-			try {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("sqlString", strSQL.toString());
-				map.put("companyID", companyID);
-				
-				ezApprovalGDAO.insertReceiptInfo(map);
-				
-				rtnVal = "<RESULT>TRUE</RESULT>";
-			} catch (Exception e) {
-				rtnVal = "<RESULT>FALSE</RESULT>";
 			}
 		}
 		
@@ -2319,7 +2347,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			ezApprovalGDAO.createNewDoc(map);
 			ezApprovalGDAO.createNewDoc2(map);
-
 			returnVal = tmpDocID.trim();
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -2344,7 +2371,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (delFlag.equals("Y") || mode.toUpperCase().equals("MUST")) {
 			try {
 				ezApprovalGDAO.aprDeleteDocInfo(map);
+				rtnVal="TRUE";
 			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				rtnVal = "FALSE";
 		}
 		} 
@@ -2373,7 +2402,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
 		NodeList rowNode = xmlDom.getElementsByTagName("ROW");
-		System.out.println(rowNode.getLength());
 		String strUserID = docNode.item(0).getChildNodes().item(0).getTextContent();
 		String strFormID = docNode.item(0).getChildNodes().item(1).getTextContent();
 		String strAprlineSN = docNode.item(0).getChildNodes().item(2).getTextContent();
@@ -2386,46 +2414,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			strSQL.append("INSERT INTO TBL_LINTEMPLET (UserID, FormID, AprLineSN, AprTempletName, TENANT_ID) ");
-            strSQL.append("VALUES ('" + strUserID + "', '" + strFormID + "', '" + strAprlineSN);
-			strSQL.append("', N'" + makeRightField(strAprTempletName) + "'," + tenantID +");\n");
+			
+			Map<String, Object> map	= new HashMap<>();
+			map.put("v_UserID", strUserID);
+			map.put("v_FormID", strFormID);
+			map.put("v_AprLineSN", strAprlineSN);
+			map.put("v_AprTempletName", makeRightField(strAprTempletName));
+			map.put("v_TENANTID", tenantID);
+			
+			try {
+				ezApprovalGDAO.insertLinTemplet(map);
+				rtnVal = "<RESULT>TRUE</RESULT>";
+			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return rtnVal = "<RESULT>FALSE</RESULT>";
+			}
 
 			int i = 0;
 
 			for (i = 0; i < rowNode.getLength(); i++) {
-				strSQL.append("INSERT INTO TBL_LINTEMPLETDETAIL (UserID, FormID, AprLineSN, ");
-				strSQL.append("AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, ");
-                strSQL.append("AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, MemberDeptName, MemberDeptName2,TENANT_ID)");
-				strSQL.append(" VALUES ('" + strUserID + "', '" + strFormID);
-				strSQL.append("', '" + strAprlineSN + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(0).getTextContent()) + "', '");
-				strSQL.append(getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim() + "', '");
-				LOGGER.debug("getName2Code ended.");
-				strSQL.append(getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim() + "', '");
-				LOGGER.debug("getName2Code ended.");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(9).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(10).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(18).getTextContent().trim()) + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(19).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(22).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(23).getTextContent().trim()) + "', '");
-				strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(11).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(20).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(rowNode.item(i).getChildNodes().item(21).getTextContent().trim()) + "'" + "," +tenantID +");\n");
+				
+				map.put("v_AprMemberSN", makeRightField(rowNode.item(i).getChildNodes().item(0).getTextContent()));
+				map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+				map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
+				map.put("v_AprMemberID", makeRightField(rowNode.item(i).getChildNodes().item(9).getTextContent().trim()));
+				map.put("v_AprMemberIsDeptYN", makeRightField(rowNode.item(i).getChildNodes().item(10).getTextContent().trim()));
+				map.put("v_AprMemberName", makeRightField(rowNode.item(i).getChildNodes().item(18).getTextContent().trim()));
+				map.put("v_AprMemberName2", makeRightField(rowNode.item(i).getChildNodes().item(19).getTextContent().trim()));
+				map.put("v_AprMemberJobTitle", makeRightField(rowNode.item(i).getChildNodes().item(22).getTextContent().trim()));
+				map.put("v_AprMemberJobTitle2", makeRightField(rowNode.item(i).getChildNodes().item(23).getTextContent().trim()));
+				map.put("v_AprMemberDeptID", makeRightField(rowNode.item(i).getChildNodes().item(11).getTextContent().trim()));
+				map.put("v_MemberDeptName", makeRightField(rowNode.item(i).getChildNodes().item(20).getTextContent().trim()));
+				map.put("v_MemberDeptName2", makeRightField(rowNode.item(i).getChildNodes().item(21).getTextContent().trim()));
+
+				try {
+					ezApprovalGDAO.insertLinTempletDetail(map);
+					rtnVal = "<RESULT>TRUE</RESULT>";
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					System.out.println(e.getMessage());
+					return rtnVal = "<RESULT>FALSE</RESULT>";
+				}
 			}
 		}
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-		
-		try {
-			ezApprovalGDAO.transactionSQL(map);
-			
-			rtnVal = "<RESULT>TRUE</RESULT>";
-		} catch (Exception e) {
-			rtnVal = "<RESULT>FALSE</RESULT>";
-		}
-		
 		return rtnVal;
 	}
 
@@ -2443,6 +2474,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.deleteLineTempletDetailInfo2(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -2917,6 +2949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			rtnValue = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = "<RESULT>FALSE</RESULT>";
 		}
 		return rtnValue;
@@ -2939,42 +2972,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			strSQL.append("INSERT INTO TBL_DEPTTEMPLET (UserID, FormID, AprDeptSN, AprDeptTempletName, TENANT_ID) ");
-            strSQL.append("VALUES ('" + strUserID + "', '" + strFormID + "', '" + strAprDeptSN);
-			strSQL.append("', N'" + makeRightField(strAprDeptTempletName) + "',"+ tenantID +");\n");
-
-			for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-                strSQL.append("INSERT INTO TBL_DEPTTEMPLETDETAIL (UserID, FormID, AprDeptSN, ");
-                strSQL.append("AprDeptMemberSN, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, ExtReceptYN, ");
-                strSQL.append("ProcessYN, CanEditYN, ExtReceptEmail, AprMemberID, AprMemberName, AprMemberName2, ");
-                strSQL.append("AprMemberJobTitle, AprMemberJobTitle2,TENANT_ID) VALUES ('" + strUserID + "', '" + strFormID);
-				strSQL.append("', '" + strAprDeptSN + "', '");
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()) + "', '");
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()) + "', N'"); 
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()) + "', '"); 
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent()) + "', '");  
-				strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent()) + "', N'"); 
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent()) + "', N'");
-                strSQL.append(makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent()) + "'," +tenantID+");\n");
-			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("companyID", companyID);
-			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-
+			map.put("v_UserID", strUserID);
+			map.put("v_FormID", strFormID);
+			map.put("v_AprDeptSN", strAprDeptSN);
+			map.put("v_AprDeptTempletName", makeRightField(strAprDeptTempletName));
+			map.put("v_TENANTID", tenantID);
+			
+			
 			try {
-				ezApprovalGDAO.transactionSQL(map);
-				
+				ezApprovalGDAO.insertDeptTemplet(map);
 				rtnVal = "<RESULT>TRUE</RESULT>";
 			} catch (Exception e) {
-				rtnVal = "<RESULT>FALSE</RESULT>";
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return rtnVal = "<RESULT>FALSE</RESULT>";
 			}
+
+			for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+				
+				map.put("v_AprDeptMemberSN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()));
+				map.put("v_AprMemberDeptID", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()));
+				map.put("v_AprMemberDeptName", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()));
+				map.put("v_AprMemberDeptName2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()));
+				map.put("v_ExtReceptYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent()));
+				map.put("v_ProcessYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent()));
+				map.put("v_CanEditYN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent()));
+				map.put("v_ExtReceptEmail", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent()));
+				map.put("v_AprMemberID", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent()));
+				map.put("v_AprMemberName", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()));
+				map.put("v_AprMemberName2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()));
+				map.put("v_AprMemberJobTitle", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent()));
+				map.put("v_AprMemberJobTitle2", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent()));
+
+				try {
+					ezApprovalGDAO.insertDeptTempletDetail(map);
+					rtnVal = "<RESULT>TRUE</RESULT>";
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return rtnVal = "<RESULT>FALSE</RESULT>";
+				}
+			}
+
 		}
 		
 		return rtnVal;
@@ -3974,6 +4013,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -7361,7 +7401,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID.trim());
 		LOGGER.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
 
+		try{
 		int aprCount = ezApprovalGDAO.doProcessCount(map);
+		
 		LOGGER.debug("doProcess value : aprCount =" + aprCount);
 		LOGGER.debug("doProcess aprState =" + aprState);
 
@@ -7375,9 +7417,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				break;
 				
@@ -7387,9 +7427,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				if (rtnVal) {
@@ -7397,9 +7435,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				break;
@@ -7410,9 +7446,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				if (rtnVal) {
@@ -7433,9 +7467,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				if (rtnVal) {
@@ -7443,9 +7475,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				break;
@@ -7456,9 +7486,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 
 				if (rtnVal) {
@@ -7466,13 +7494,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				break;
 			}
+		}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return result = "<RESULT>FALSE</RESULT>";
 		}
 		
 		chkDocDelete(docID, docID, rtnVal, userID, deptID, dirPath, companyID, userInfo.getTenantId());
@@ -7803,8 +7833,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateSignInfo(Document xmlDom, String companyID, String mode, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
-		String rtnVal = "";
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -7819,32 +7847,39 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < signLength; k++) {
 			maxAprSN = aprSN + k + 1;
 			
-			strSQL.append("INSERT INTO TBL_SIGNINFO (DocID, AprSN, SignType, SignName, Content, TENANT_ID) ");
-            strSQL.append("VALUES ('" + docID + "', '" + maxAprSN + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent().trim()) + "', N'");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent().trim()) + "', N'");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent().trim()) + "'," + tenantID +");\n");
-		}
-		
-		if (mode.toUpperCase().equals("QUERY")) {
-			return strSQL.toString();
-		} else {
+			map.put("v_MAXAPRSN", maxAprSN);
+			map.put("v_SIGNTYPE", makeRightField(xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent()));
+			map.put("v_SIGNNAME", makeRightField(xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent()));
+			map.put("v_CONTENT", makeRightField(xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent()));
+			
 			try {
-				Map<String, Object> map2 = new HashMap<String, Object>();
-				map2.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-				map2.put("companyID", companyID);
-				
-				ezApprovalGDAO.transactionSQL(map2);
-				
-				rtnVal = "<RESULT>TRUE</RESULT>";
+				ezApprovalGDAO.insertSignInfo(map);
 			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				System.out.println(e.getMessage());
-				rtnVal = "<RESULT>FALSE</RESULT>";
+				return "FALSE";
 			}
 		}
 		
+//		if (mode.toUpperCase().equals("QUERY")) {
+//			return strSQL.toString();
+//		} else {
+//			try {
+//				Map<String, Object> map2 = new HashMap<String, Object>();
+//				map2.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
+//				map2.put("companyID", companyID);
+//				
+//				ezApprovalGDAO.transactionSQL(map2);
+//				
+//				rtnVal = "<RESULT>TRUE</RESULT>";
+//			} catch (Exception e) {
+//				System.out.println(e.getMessage());
+//				rtnVal = "<RESULT>FALSE</RESULT>";
+//			}
+//		}
 		
-		return rtnVal;
+		
+		return "TRUE";
 	}
 
 	@Override
@@ -9385,6 +9420,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 ezApprovalGDAO.deleteSerialNo(map);
 		} else {
 			ezApprovalGDAO.updateSerialNo(map);
+			result = Integer.toString((Integer.parseInt(result) + 1));
 		}
 		
 		return result;
@@ -9722,40 +9758,64 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder appendSql = new StringBuilder();
 		//아직 테넌트 안함
 		if (updateFlag.equals("UPDATE")) {
-			strSQL = "EZSP_APRUPDATETMP ('" + docID + "', '" + makeRightField(userID) + "');\n";
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_USERID", userID);
+			map.put("v_TENANTID", tenantID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			
+			String sn = ezApprovalGDAO.maxTmpDocSn(map);
+			map.put("v_PSN", sn);
+			
+			try{
+				ezApprovalGDAO.deleteTmpReceiptPointInfo(map);
+				ezApprovalGDAO.deleteTmpAprOpinionInfo(map);
+				ezApprovalGDAO.deleteTmpAprDocAttachInfo(map);
+				ezApprovalGDAO.deleteTmpAttachInfo(map);
+				ezApprovalGDAO.deleteTmpExpAprLine(map);
+				ezApprovalGDAO.deleteTmpAprLineInfo(map);
+				ezApprovalGDAO.deleteTmpExpAprDocInfo(map);
+				ezApprovalGDAO.deleteTmpAprDocInfo(map);
+				
+				ezApprovalGDAO.insertTmpReceiptPointInfo(map);
+				ezApprovalGDAO.insertTmpAprOpinionInfo(map);
+				ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
+				ezApprovalGDAO.insertTmpAttachInfo(map);
+				ezApprovalGDAO.insertTmpExpAprLine(map);
+				ezApprovalGDAO.insertTmpAprLineInfo(map);
+				ezApprovalGDAO.insertTmpExpAprDocInfo(map);
+				ezApprovalGDAO.insertTmpAprDocInfo(map);
+			} catch(Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
+			}
+
 		} else {
 			String sn = getMaxTMPDocSN(userID, companyID, lang, tenantID);
 			
-			appendSql.append( "INSERT INTO TBL_TMPRECEIPTPOINTINFO "+
-				              "( SELECT '" + userID +"'," + sn +", RECEIPTPOINTID, RECEIPTPOINTNAME, EXTRECEPTYN, PROCESSYN, PROCESSSN, CANEDITYN, EXTRECEPTEMAIL ,  RECEIPTMEMBERID ,"+
-				              "RECEIPTMEMBERNAME , PROCESSDATE , RECEIPTMEMBERJOBTITLE , DEPTMEMBERSN , ReceiptPointName2 , ReceiptMemberJobTitle2 , ReceiptMemberName2 , RouteYN, TENANT_ID  FROM TBL_RECEIPTPOINTINFO "+
-								" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			
-			appendSql.append("INSERT INTO TBL_TMPAPROPINIONINFO" +
-							"( SELECT '" + userID +"'," + sn +", USERID , OPINIONGB , CONTENT , USERNAME , USERJOBTITLE , USERDEPTID , USERDEPTNAME , OPINIONSN , UserName2 ,  UserJobTitle2 , UserDeptName2, TENANT_ID   FROM TBL_APROPINIONINFO"+ 
-							" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append("INSERT INTO TBL_TMPAPRDOCATTACHINFO"+
-							 "(  SELECT '" + userID +"'," + sn +", ATTACHSN , ATTACHDOCNAME , ATTACHDOCURL , SUBATTACHYN , ATTACHUSERID , ATTACHUSERNAME , ATTACHUSERDEPTID , ATTACHUSERDEPTNAME , ATTACHUSERJOBTITLE , AttachUserName2 , AttachUserJobTitle2 , AttachUserDeptName2, TENANT_ID   FROM TBL_APRDOCATTACHINFO " +
-								" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append("INSERT INTO TBL_TMPATTACHINFO" +
-							 "( SELECT '" + userID +"'," + sn +", ATTACHFILESN , ATTACHFILENAME , ATTACHFILEHREF , ATTACHFILESIZE , ATTACHUSERID , ATTACHUSERNAME , ATTACHUSERJOBTITLE , ATTACHUSERDEPTID , ATTACHUSERDEPTNAME , PAGENUM , DISPLAYNAME , BODYATTACH , AttachUserName2 ,  AttachUserJobTitle2 , AttachUserDeptName2, TENANT_ID   FROM TBL_APRATTACHINFO "+
-								" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append("INSERT INTO TBL_TMPEXPAPRLINE"+
-							 "( SELECT '" + userID +"'," + sn +", APRMEMBERSN ,ORGUSERID ,PROXYUSERID ,PROXYUSERNAME ,PROXYUSERJOBTITLE ,PROXYUSERDEPTID , PROXYUSERDEPTNAME , proxyusername2 , proxyuserjobtitle2 , proxyuserdeptname2, TENANT_ID FROM TBL_EXPAPRLINE"+ 
-								" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append("INSERT INTO TBL_TMPAPRLINEINFO"+
-							"( SELECT '" + userID +"'," + sn +",  APRMEMBERSN ,   APRTYPE ,     APRSTATE ,  APRMEMBERID , APRMEMBERISDEPTYN , APRMEMBERNAME , APRMEMBERJOBTITLE , APRMEMBERDEPTID , APRMEMBERDEPTNAME ,APRMEMBERLDAPPATH ,RECEIVEDDATE ,PROCESSDATE ,REASONDONOTAPPROV ,ISPROPOSERYN ,ISBRIEFUSERYN ,AprMemberName2 ,AprMemberJobTitle2 ,AprMemberDeptName2, TENANT_ID  FROM TBL_APRLINEINFO "+
-							" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append("INSERT INTO TBL_TMPEXPAPRDOCINFO"+
-							"( SELECT '" + userID +"'," + sn +", SECURITYCODE , STORAGEPERIOD , KEYWORD , FORMNAME , COMPANYID , ITEMCODE , ITEMNAME , URGENTAPPROVAL , SECURITYAPPROVAL ,"+
-							"TEMPATTRIBUTE , STATUS , SPECIALRECORDCODE , PUBLICITYCODE , LIMITRANGE , PAGENUM , CABINETID , TASKCODE , DOCNUMCODE , ORGDOCNUMCODE , SEPERATEATTACHXML , SUMMARY , FormName2 , ItemName2, TENANT_ID  FROM TBL_EXPAPRDOCINFO"+ 
-							" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
-			appendSql.append(" INSERT INTO TBL_TMPAPRDOCINFO"+
-					"( SELECT '" + userID +"'," + sn +", FORMID , ORGDOCID , DOCTYPE , DOCSTATE , '000' , HREF , DOCTITLE , DOCNO , HASATTACHYN , HASOPINIONYN ,TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') , ENDDATE , WRITERID , WRITERNAME , WRITERJOBTITLE ,WRITERDEPTID , WRITERDEPTNAME ,ISPUBLIC , WriterName2 , WriterJobTitle2 , WriterDeptName2, TENANT_ID FROM TBL_APRDOCINFO"+ 
-					" WHERE  DOCID ='" + docID +"' AND 	TENANT_ID = "+tenantID+");\n");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("v_USERID", userID);
+			map.put("v_SN", sn);
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", tenantID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+			try{
+				ezApprovalGDAO.insertTmpReceiptPointInfo(map);
+				ezApprovalGDAO.insertTmpAprOpinionInfo(map);
+				ezApprovalGDAO.insertTmpAprDocAttachInfo(map);
+				ezApprovalGDAO.insertTmpAttachInfo(map);
+				ezApprovalGDAO.insertTmpExpAprLine(map);
+				ezApprovalGDAO.insertTmpAprLineInfo(map);
+				ezApprovalGDAO.insertTmpExpAprDocInfo(map);
+				ezApprovalGDAO.insertTmpAprDocInfo(map);
+			} catch(Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
+			}
 		}
 		
-		return appendSql.toString();
+		return "TRUE";
 	}
 
 	public String getMaxTMPDocSN(String userID, String companyID, String lang, int tenantID) throws Exception{
@@ -9773,16 +9833,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String doBoryu(String docID, String userID, String aprState, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
-		//?꾩쭅 ?뚮꼳???덊븿
-		strSQL.append("UPDATE TBL_APRLINEINFO SET AprState = '" + aprState + "', ProcessDate = TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
-        strSQL.append(" WHERE DocID = '");
-		strSQL.append(docID + "' AND AprMemberID = '" + userID + "' AND AprState = '" + staASJinHang + "' AND TENANT_ID=" + tenantID +";\n");
-
-		strSQL.append("UPDATE TBL_APRDOCINFO SET FunctionType = '" + aprState + "' WHERE DocID = '" + docID + "' AND TENANT_ID=" + tenantID +";\n");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_APRSTATE", aprState);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		map.put("v_DOCID", docID);
+		map.put("v_USERID", userID);
+		map.put("v_STAASJINHANG", staASJinHang);
+		map.put("v_TENANTID", tenantID);
+		
+		try{
+			ezApprovalGDAO.updateBoryuAprLineInfo(map);
+			ezApprovalGDAO.updateBoryuAprDocInfo(map);
+		} catch(Exception e){
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
+		}
 		
 		sendMsg(docID, "", "BOR", companyID, lang, tenantID);
 		
-		return strSQL.toString();
+		return "TRUE";
 	}
 
 	public String doBansong(String docID, String userID, String aprState, String dirPath, String companyID, String lang, LoginVO userInfo) throws Exception{
@@ -9868,7 +9938,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			updateAprLineInfo1.put("beforeAprMemberSN", beforeAprMemberSN);
 			updateAprLineInfo1.put("tenantID", userInfo.getTenantId());
 			
-			ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
+			try{
+				ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
+			} catch(Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
+			}
 		}
 		
 		if (!proxyUserID.equals(userID) && !proxyUserID.trim().equals("")) {
@@ -9879,11 +9954,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			LOGGER.debug("insertProxyUserInfo ended");
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-				
 				return "FALSE";
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 		}
 		
 		if (curAprType.equals(staATByungRyulHyubJo) || curAprType.equals(staATBuSeuByungRyulHyubJo)) {
@@ -9976,7 +10048,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.updateAprLineInfo2(map3);
 				} catch (Exception e) {
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 					return "FALSE";
 				}				
                 k += 1;				
@@ -9991,7 +10062,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						ezApprovalGDAO.updateAprLineInfo(map3);
 					} catch (Exception e) {
 						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 						return "FALSE";
 					}					
                     sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
@@ -10006,7 +10076,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						ezApprovalGDAO.updateAprLineInfo2(map3);
 					} catch (Exception e) {
 						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 						return "FALSE";
 					}					
 					k += 1;
@@ -10022,7 +10091,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.updateAprLineInfo2(map3);
 				} catch (Exception e) {
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 					return "FALSE";
 				}				
 				subSQL = doChamjo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), 
@@ -10055,7 +10123,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch (Exception e) {
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
 					return "FALSE";
 				}				
 				absentReason = getBujaeInfo(docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), userInfo.getTenantId());
@@ -10352,7 +10419,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (rtnVal) {
 			LOGGER.debug("doApprove return = " + strSQL.toString() );
 			LOGGER.debug("doApprove ended");
-			return strSQL.toString();
+			return "TRUE";
 		} else {
 			return "FALSE";
 		}
@@ -10433,9 +10500,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			} else {
 				String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
 				LOGGER.debug("getCode2Name ended.");
@@ -10462,9 +10527,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10489,9 +10552,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 			
 			if (rtnVal) {
 				strSQL.append("APRDeleteDocInfo( '" + docID + "', 'MUST');\n");
@@ -10505,9 +10566,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
@@ -10532,9 +10591,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10559,9 +10616,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
@@ -10586,9 +10641,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10596,9 +10649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
-				} else {
-					strSQL.append(subSQL);
-				}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10627,7 +10678,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rtnVal = false;
 					} else {
 						sendFlag = false;
-						strSQL.append(subSQL);
 					}
 				}
 				
@@ -10644,9 +10694,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				if (rtnVal) {
@@ -10837,9 +10885,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-			} else {
-				strSQL.append(subSQL);
-			}
+			} 
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
@@ -10868,7 +10914,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal) {
-			return strSQL.toString();
+			return "TRUE";
 		} else {
 			return "FALSE";
 		}
@@ -11389,7 +11435,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			Document seperateXML = commonUtil.convertStringToDocument(seperateAttachXML);
 			
 			for (int k = 0; k < seperateXML.getDocumentElement().getChildNodes().getLength(); k++) {
-				System.out.println(seperateXML.getDocumentElement().getChildNodes().item(k).getTextContent().trim());
 				resultXML.append("<SEPATTACH>");
 				resultXML.append("<CABINETID>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim() + "</CABINETID>");
 				resultXML.append("<TITLE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent().trim() + "</TITLE>");
@@ -11414,6 +11459,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		Document objParam = commonUtil.convertStringToDocument(strXML);
 		String subSQL = "";
+		String rtnVal = "TRUE";
 		
 		String companyID = objParam.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String cabID = objParam.getElementsByTagName("CABINETID").item(0).getTextContent();
@@ -11525,14 +11571,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCTYPE", makeRightField(docType));
 		map.put("v_TENANTID",  tenantID);
 		
-		ezApprovalGDAO.insertRecord(map);
+		try{
+			ezApprovalGDAO.insertRecord(map);
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
+		}
         
         subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
         
         if (subSQL.equals("FALSE")) {
         	return "FALSE";
         } else {
-        	strSQL.append(subSQL);
+        	rtnVal ="TRUE";
         }
         
         if (objParam.getElementsByTagName("SEPATTACH").getLength() > 0) {
@@ -11543,7 +11594,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		if (subSQL.equals("FALSE")) {
         			return "FALSE";
         		} else {
-        			strSQL.append(subSQL);
+        			rtnVal = "TRUE";
         		}
         	}
         }
@@ -11554,37 +11605,46 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	
         	if (subSQL.equals("FALSE")) {
         		return "FALSE";
-        	} else {
-        		strSQL.append(subSQL);
-        	}
+        	} 
         }
         
-		return strSQL.toString();
+		return rtnVal;
 	}
 
 	public String saveSpecialInfoRec(String recordID, String cabID, Document objParam, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		
-		strSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_REC (RecordID, SerialNo, SC1, ");
-        strSQL.append("SC2, SC3, TENANT_ID) (SELECT '" + makeRightField(recordID) + "', SerialNo, SC1, SC2, SC3, TENANT_ID ");
-        strSQL.append("FROM TBL_SPECIALCATALOGINFO_CAB INNER JOIN (Select CabinetClassNo ");
-        strSQL.append("From TBL_CABINET Where TBL_CABINET.CabinetID = '" + makeRightField(cabID));
-        strSQL.append("') TBL_CABINET ON TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo=TBL_CABINET.CabinetClassNo AND TBL_SPECIALCATALOGINFO_CAB.TENANT_ID=TBL_CABINET.TENANT_ID ");
-        strSQL.append(" Where SerialNo='000' AND TBL_CABINET.TENANT_ID= "+ tenantID +");\n");
-        
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_RECORDID",  makeRightField(recordID));
+		map.put("v_CABID",  makeRightField(cabID));
+		map.put("v_TENANTID",  tenantID);
+		
+		try {
+			ezApprovalGDAO.insertSpecialCatalogInfo_Rec(map);
+		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
+		}
+		
         NodeList nodeData = objParam.getElementsByTagName("SCDATA");
         if (nodeData.getLength() > 0) {
         	for (int k = 0; k < nodeData.getLength(); k++) {
-        		strSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_REC (RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) Values ('");
-                strSQL.append(makeRightField(recordID) + "', '");
-                strSQL.append(makeRightField(nodeData.item(k).getChildNodes().item(0).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(nodeData.item(k).getChildNodes().item(1).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(nodeData.item(k).getChildNodes().item(2).getTextContent().trim()) + "', N'");
-                strSQL.append(makeRightField(nodeData.item(k).getChildNodes().item(3).getTextContent().trim()) + "'," + tenantID +");\n");
+        		
+        		map.put("v_SERIALNO",  makeRightField(nodeData.item(k).getChildNodes().item(0).getTextContent().trim()));
+        		map.put("v_SC1",  makeRightField(nodeData.item(k).getChildNodes().item(1).getTextContent().trim()));
+        		map.put("v_SC2",  makeRightField(nodeData.item(k).getChildNodes().item(2).getTextContent().trim()));
+        		map.put("v_SC3",  makeRightField(nodeData.item(k).getChildNodes().item(3).getTextContent().trim()));
+
+        		try {
+        			ezApprovalGDAO.insertSpecialCatalogInfo_Rec2(map);
+        		} catch(Exception e) {
+        			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+        			return "FALSE";
+        		}
         	}
         }
         
-		return strSQL.toString();
+		return "TRUE";
 	}
 
 	private String formatSerialNum(String strValue) throws Exception{
@@ -11626,6 +11686,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 ezApprovalGDAO.deleteSerialNo(map);
 		} else {
 			ezApprovalGDAO.updateSerialNo(map);
+			result = Integer.toString((Integer.parseInt(result) + 1));
 		}
 		return String.valueOf(result);
 	}
@@ -11696,41 +11757,49 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);
 					strSQL.setLength(0);
+					
 					strSQL.append( " INSERT INTO TBL_ENDAPRLINEINFO ( DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )"+
 							"(SELECT '" + docID +"', AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID FROM TBL_APRLINEINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);
 					strSQL.setLength(0);
+					
 					strSQL.append( "INSERT INTO TBL_ENDATTACHINFO ( DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )"+
 							"(SELECT '" + docID +"', AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  FROM TBL_APRATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);		
 					strSQL.setLength(0);
+					
 					strSQL.append( "INSERT INTO TBL_ENDAPRDOCATTACHINFO ( DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID )"+
 							"(SELECT '" + docID +"', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID FROM TBL_APRDOCATTACHINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);	
 					strSQL.setLength(0);
+					
 					strSQL.append( "INSERT INTO TBL_ENDAPROPINIONINFO ( DocID, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID )" +
 							"(SELECT '" + docID +"', UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  FROM TBL_APROPINIONINFO  WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);			
 					strSQL.setLength(0);
+					
 					strSQL.append( " INSERT INTO TBL_ENDRECEIPTPOINTINFO ( DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID )"+
 							"(SELECT '" + docID +"', ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID FROM TBL_RECEIPTPOINTINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);
 					strSQL.setLength(0);
+					
 					strSQL.append( "INSERT INTO TBL_ENDRECEIPTPROCESSINFO ( DocID, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID )"+
 							"(SELECT '" + docID +"', ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   FROM TBL_APRRECEIPTPROCESSINFO     WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);
 					strSQL.setLength(0);
+					
 					strSQL.append( " INSERT INTO TBL_EXPENDAPRDOCINFO ( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )"+
 							" (SELECT '" + docID +"', SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   FROM TBL_EXPAPRDOCINFO   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
 					ezApprovalGDAO.insertStrSql(map);
 					strSQL.setLength(0);
+					
 					strSQL.append( "INSERT INTO TBL_EXPENDAPRLINE ( docid, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID )"+
 							"(SELECT '" + docID +"', aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   FROM TBL_EXPAPRLINE   WHERE  DOCID ='" + docID+"'"+ "AND TENANT_ID='" + tenantID +"')\n");
 					map.put("sqlString", strSQL.toString());
@@ -11742,7 +11811,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		if (rtnVal) {
-			return strSQL.toString();
+			return "TRUE";
 		} else {
 			return "FALSE";
 		}
@@ -12017,6 +12086,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     						strSQL.setLength(0);
 							} catch(Exception e){
 								TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+								return "FALSE";
 							}
 							if (!flag.equals("G")) {
 								strSQL.append("UPDATE TBL_APRDOCINFO SET DocState = '014' WHERE DocID = '" + docID + "'"+ "AND TENANT_ID="+ tenantID +";\n");
@@ -12062,7 +12132,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (rtnVal) {
-			return strSQL.toString();
+			return "TRUE";
 		} else {
 			return "FALSE";
 		}
@@ -12337,14 +12407,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		resultXML.append("</SIGNINFOS>");
 		
-		try {
-			updateSignInfo(resultXML, companyID, "QUERY", tenantID);
-		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-
-			return "FALSE";
-		}
-		return "TRUE";
+		
+			strSQL = updateSignInfo(resultXML, companyID, "QUERY", tenantID);
+		
+		return strSQL;
 	}
 
 	public String updateSignInfo(StringBuilder resultXML, String companyID, String mode, int tenantID) throws Exception{
@@ -12369,9 +12435,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SIGNNAME", makeRightField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent()));
 			map.put("v_CONTENT", makeRightField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent()));
 			try {
-				
-			ezApprovalGDAO.insertSignInfo(map);
-			
+				ezApprovalGDAO.insertSignInfo(map);
 			} catch (Exception e) {
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				System.out.println(e.getMessage());
@@ -12473,15 +12537,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 			map.put("v_TENANTID", tenantID);
 			
-			ezApprovalGDAO.insertCamjoAPrDocInfo(map);
+			try{
+				ezApprovalGDAO.insertCamjoAPrDocInfo(map);
+				ezApprovalGDAO.insertCamjoExAPrDocInfo(map);
+				ezApprovalGDAO.insertCamjoAprAttachInfo(map);
+				ezApprovalGDAO.insertCamjoAprDocAttachInfo(map);
+				ezApprovalGDAO.insertCamjoAprOpinionInfo(map);
+			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
+			}
 			
-			ezApprovalGDAO.insertCamjoExAPrDocInfo(map);
-
-			ezApprovalGDAO.insertCamjoAprAttachInfo(map);
-
-			ezApprovalGDAO.insertCamjoAprDocAttachInfo(map);
-			
-			ezApprovalGDAO.insertCamjoAprOpinionInfo(map);
 
 			if (deptYN.toUpperCase().equals("Y")) {
 				map.put("v_DEPTID", deptID);
@@ -12489,7 +12555,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_DEPTNAME2", deptName2);
 				map.put("v_STAASDOJAK", staASDoJak);
 				
-				ezApprovalGDAO.insertCamjoAprReceiptProcessInfo(map);
+				try{
+					ezApprovalGDAO.insertCamjoAprReceiptProcessInfo(map);
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return "FALSE";
+				}
 				
 			} else {
 				
@@ -12504,13 +12575,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_DEPTNAME2", deptName2);
 				map.put("v_PCOMPANYID", pCompanyID);
 				
-				ezApprovalGDAO.insertCamjoAprLineInfo(map);
-				
-				ezApprovalGDAO.insertCamjoExAprLine(map);
-				strSQL.append("INSERT INTO TBL_EXPAPRLINE (docid, aprmemberSN, orguserid, ");
-                strSQL.append("proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, ");
-                strSQL.append("proxyuserdeptname, proxyuserdeptname2, TENANT_ID) VALUES ('" + newID + "', 1, '" + userID);
-                strSQL.append("', '', '', '', '', '', '', '', '',  "+ tenantID +");\n");
+				try{
+					ezApprovalGDAO.insertCamjoAprLineInfo(map);
+					ezApprovalGDAO.insertCamjoExAprLine(map);
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return "FALSE";
+				}
 			}
 		} else {
 			return "FALSE";
@@ -12699,6 +12770,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			result = "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
 			result = "ERROR";
 		}
 		
@@ -12715,20 +12788,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			Document docXML = commonUtil.convertStringToDocument(rtnXML);
 			
 			if (docXML.getDocumentElement().getChildNodes().getLength() > 0) {
-				strSQL.append("UPDATE TBL_EXPAPRLINE SET proxyuserid = '" + proxyUserID);
-                strSQL.append("', proxyusername = N'" + docXML.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
-                strSQL.append("', proxyusername2 = N'" + docXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
-                strSQL.append("', proxyuserjobtitle = N'" + docXML.getElementsByTagName("TITLE").item(0).getTextContent());
-                strSQL.append("', proxyuserjobtitle2 = N'" + docXML.getElementsByTagName("TITLE2").item(0).getTextContent());
-				strSQL.append("', proxyuserdeptid = '" + docXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent());
-                strSQL.append("', proxyuserdeptname = N'" + docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
-                strSQL.append("', proxyuserdeptname2 = N'" + docXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
-				strSQL.append("' WHERE DocID = '" + docID + "' AND AprMemberSN = '");
-                strSQL.append(curAprMemberSN + "' and orguserid = '" + userID + "'"+ "AND TENANT_ID =" + tenantID +";\n");
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("v_PROXYUSERID", proxyUserID);
+				map.put("v_PROXYUSERNAME", docXML.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
+				map.put("v_PROXYUSERNAME2", docXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
+				map.put("v_PROXYUSERJOBTITLE", docXML.getElementsByTagName("TITLE").item(0).getTextContent());
+				map.put("v_PROXYUSERJOBTITLE2", docXML.getElementsByTagName("TITLE2").item(0).getTextContent());
+				map.put("v_PROXYUSERDEPTID", docXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent());
+				map.put("v_PROXYUSERDEPTNAME", docXML.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
+				map.put("v_PROXYUSERDEPTNAME2", docXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent());
+				map.put("v_DOCID", docID);
+				map.put("v_CURAPRMEMBERSN", curAprMemberSN);
+				map.put("v_USERID", userID);
+				map.put("v_TENANTID", tenantID);
+
+				try {
+					ezApprovalGDAO.updateProxyExpAprLine(map);
+				} catch (Exception e) {
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					return "FALSE";
+				}
 			}
 		}
 		
-		return strSQL.toString();
+		return "TRUE";
 	}
 
 	public String updateDocInfo(Document docXML, String userID, String companyID, String lang, int tenantID) throws Exception{
@@ -12738,7 +12822,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		LOGGER.debug("updateDocInfo started");
 		String docID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
 		String tempValue = "";
-		String rtnVal = "";
+		String rtnVal = "TRUE";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
@@ -12749,8 +12833,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DOCID", docID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_DOCTITLE", tempValue.trim());
-			
-			ezApprovalGDAO.updateDocInfoDocTitle(map);
+			try {
+				ezApprovalGDAO.updateDocInfoDocTitle(map);
+			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
+				return "FALSE";
+			}
 		}
 		
 		
@@ -13040,6 +13129,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
 			return rtnVal = "FALSE";
 		}
@@ -13313,18 +13403,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+
 			System.out.println(e.getMessage());
 			return rtnVal = "FALSE";
 		}
 		
 		if (rtnVal.equals("TRUE")) {
 			if (docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim().equals("DRAFT")) {
-				insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
-				insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+				rtnVal = insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+				if (rtnVal.equals("TRUE")) {
+					rtnVal = insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+				if (!rtnVal.equals("TRUE")) {
+					return rtnVal;
+				}
+				} else {
+					return rtnVal;
+				}
 			}
 			LOGGER.debug("updateDocInfo ended");
 
-			return strSQL.toString();
+			return rtnVal;
 		} else {
 			return rtnVal;
 		}
@@ -13352,7 +13451,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
             return "TRUE";
 		} else {
-			return "";
+			return "TRUE";
 		}
 	}
 
@@ -13378,13 +13477,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
             return "TRUE";
 		} else {
-			return "";
+			return "TRUE";
 		}
 	}
 
 	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
-		
+		String rtnVal = "TRUE";
 		String sepAttSN = tempSepAttSN;
 		
 		if (sepAttSN.trim().equals("")) {
@@ -13405,9 +13504,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		try{
-		ezApprovalGDAO.insertRegSeperateAttach(map);
-		
-		ezApprovalGDAO.insertRegRecRoleInfo(map);
+			ezApprovalGDAO.insertRegSeperateAttach(map);
+			ezApprovalGDAO.insertRegRecRoleInfo(map);
 		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
@@ -13417,12 +13515,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	String subSQL = saveAudioVisualExtraInfo(recID, sepAttSN, summary, recType, tenantID);
         	
         	if (subSQL.equals("FALSE")) {
-        		strSQL.delete(0, strSQL.length());
-        		strSQL.append("FALSE");
-        	} 
+        		rtnVal = "FALSE";
+        	} else {
+        		rtnVal = "TRUE";
+        	}
         }
         
-		return strSQL.toString();
+		return rtnVal;
 	}
 
 	public String saveAudioVisualExtraInfo(String recID, String sepAttSN, String summary, String recType, int tenantID) throws Exception{
@@ -13434,7 +13533,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		
 		try{
-		ezApprovalGDAO.insertRegAudioVisualExInfo(map);
+			ezApprovalGDAO.insertRegAudioVisualExInfo(map);
 		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "FALSE";
@@ -14817,6 +14916,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			return "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
@@ -16452,6 +16552,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_USERNAME2", UserName2);
 				map.put("v_TENANTID", tenantID);
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+				map.put("v_DATE", commonUtil.getTodayUTCTime("").substring(0, 10).replace("-", ""));
 				int newVersion = ezApprovalGDAO.newRecordVersion(map);
 				
 				if( newVersion < 2) {
@@ -16854,9 +16955,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (subSQL.equals("FALSE")){
         	return "<RESULT>FALSE</RESULT>";
         }
-		else{
-			strSQL.append(subSQL);
-		}
+		
         // 2011.04.04 수기등록시 첨부등록 추가
         
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
@@ -16907,10 +17006,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (specialCatalogFlag.equals("1") && nodeSL != null)
 		{
 			subSQL = saveSpecialInfoRec(recordID, cabID, xmlDom, tenantID);
-			if (subSQL == "FALSE")
+			if (subSQL == "FALSE"){
 				return "<RESULT>FALSE</RESULT>";
-			else
-				strSQL.append(subSQL);
+			}
 		}
 
 		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
@@ -18635,9 +18733,9 @@ private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, 
 						ezApprovalGDAO.aprGetNewID(map);
 						String newID = ezApprovalGDAO.selectAprGetNewID(map);
 						int tmplen=20;
-						int strlen = tmplen - newID.length();
+						int strlen = tmplen - newID.trim().length();
 						for(int k = 0; k< strlen; k++){
-							newID = "0" + newID;
+							newID = "0" + newID.trim();
 						}
 						
 						map.put("v_DOCID",docID);

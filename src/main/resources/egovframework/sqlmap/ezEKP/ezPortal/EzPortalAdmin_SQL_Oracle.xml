@@ -2211,12 +2211,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalAdminDAO.subMenuItemEdit1" resultClass="PortalTBLBuiltInParametersVO">
+	<select id="EzPortalAdminDAO.subMenuItemEdit1" parameterClass="Map" resultClass="PortalTBLBuiltInParametersVO" >
 		<![CDATA[
 			SELECT
 				* 
         	FROM
         		TBL_BUILTIN_PARAMETERS
+        	AND
+        		TENANT_ID = #tenantID#	
 		]]>
 	</select>
 	
@@ -2252,7 +2254,7 @@
 				*
 			FROM
 				TBL_SKIN_GENERAL
-            AND
+            WHERE
                 TENANT_ID = #tenantID#        
 		]]>
 	</select>
@@ -2265,7 +2267,7 @@
 				TBL_TOPMENU_ITEMS
 			WHERE
 				(NOT 
-					(UID_ IN (#pArrParam#)
+					(UID_ IN ($pArrParam$)
 					)
 				)
 			AND
@@ -2284,8 +2286,8 @@
 			FROM
 				TBL_PORTALPAGE_ITEMS
 			WHERE
-				(NOT 
-					(UID_ IN (#pArrParam#)
+				(NOT  
+					(UID_ IN ($pArrParam$)
 					)
 				)
 			AND
@@ -2433,7 +2435,7 @@
 			WHERE
 				 (NOT
 				 	(UID_
-				 		IN ( #strUIDList# )
+				 		IN ( $strUIDList$ )
 				 	)
 				 )
 			AND
@@ -2452,7 +2454,7 @@
 			WHERE
 				 (NOT
 				 	(UID_
-				 		IN ( #strUIDList# )
+				 		IN ( $strUIDList$ )
 				 	)
 				 )
 			AND
@@ -2566,6 +2568,40 @@
 				TENANT_ID = #tenantID#	  
 		]]>
 	</delete>
+	
+	<select id="EzPortalAdminDAO.saveDelPortletInfo_S" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				1
+      		FROM
+      			DUAL
+      		WHERE
+      			NOT EXISTS ( 	SELECT
+      									UID_ 
+                         			FROM
+                         				TBL_PORTALPAGE_ITEMS_CHANGE 
+                         			WHERE
+                         				UID_ = #v_pUID#
+                         			AND
+                         				PAGEUID = #v_pPAGEUID#
+                         			AND
+                         				OWNERPAGEUID = #v_pOWNERPAGEUID#
+                         			AND
+                         				CREATORID = #v_pCREATORID#
+                         			AND
+                         				TENANT_ID = #tenantID#	 )
+		]]>
+	</select>
+	
+	<insert id="EzPortalAdminDAO.saveDelPortletInfo_I" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO
+				TBL_PORTALPAGE_ITEMS_CHANGE
+      			( UID_, PAGEUID, OWNERPAGEUID, CREATORID, CREATORNAME, CHANGEFLAG, USERPAGEUID, TENANT_ID )
+      		VALUES 
+      			( #v_pUID#, #v_pPAGEUID#, #v_pOWNERPAGEUID#, #v_pCREATORID#, #v_pUSERNAME#, #v_pCHANGEFLAG#, #v_pUSERPAGEUID#, #tenantID# )
+		]]>
+	</insert>
 	
 	
 

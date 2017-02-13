@@ -488,7 +488,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public void deleteItem(String itemID, String boardID, int tenantID) throws Exception {
+	public void deleteItem(String mode, String itemID, String boardID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", itemID);
 		map.put("boardID", boardID);
@@ -498,6 +498,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.deleteBoardReply(map);
 		ezBoardDAO.deleteBoardItemRead2(map);
 		ezBoardDAO.deleteBoardItemAttach(map);
+		
+		if (mode != null && mode.equals("PHOTO")) {
+			BoardListVO boardListVO = new BoardListVO();
+			boardListVO.setItemID(itemID);
+			boardListVO.setTenantID(tenantID);
+			
+			ezBoardDAO.deleteImageItem(boardListVO);
+		}
+		
 		ezBoardDAO.insertDeleteReservedItem(map);
 	}
 
@@ -1317,7 +1326,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String deleteTempItem(String strItemID, int tenantID) throws Exception {
+	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", strItemID);
 		map.put("tenantID", tenantID);
@@ -1331,6 +1340,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteTempItem");
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "NO";
 		}
 	}
@@ -1640,6 +1650,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public void brdNewItemTempPhoto(BoardListVO boardListVO) throws Exception {
+		ezBoardDAO.deleteItemTempPhoto(boardListVO);
+		ezBoardDAO.deleteImageItem(boardListVO);
 		ezBoardDAO.brdNewItemTempPhoto(boardListVO);
 		photoSaveDB(boardListVO);
 		ezBoardDAO.newItem(boardListVO);
@@ -2254,11 +2266,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
 			
-			if (!mode.equals("copy")) {
+			if (mode.equals("copy")) {
+				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+			} else if (mode.equals("temp")) {
+				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
+				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
+			} else {
 				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-			} else {
-				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
 			}
 			
 			if (boardListVO.getParentWriteDate().equals("")) {
@@ -2352,7 +2367,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         	
         	for (int i = 0; i < strAttachments.split(";").length; i++) {
         		if (strType.equals("BOARD")) {
-        			
         			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath = strAttachments.split(";")[i];
         			} else {

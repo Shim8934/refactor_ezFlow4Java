@@ -326,7 +326,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	
 	@Override
 	public void removeMenuItem(String uID, String parentUID, String pageID, int tenantID) throws Exception {
+		logger.debug("removeMenuItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("v_UID", uID);
 		map.put("v_PARENTUID", parentUID);
 		map.put("v_OWNERPAGEID", pageID);
@@ -341,29 +344,42 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			ezPortalAdminDAO.removeMenuItem_D3(map);
 		}
 		
+		logger.debug("removeMenuItem ended");
 	}
 	
 	@Override
 	public void updateMenuItemSetOrder(int columnPos, String uID, String ownerPageID, int tenantID) throws Exception {
+		logger.debug("updateMenuItemSetOrder started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("columnPos", columnPos);
 		map.put("uID", uID);
 		map.put("ownerPageID", ownerPageID);
 		map.put("tenantID", tenantID);
+		
 		ezPortalAdminDAO.updateMenuItemSetOrder(map);
+
+		logger.debug("updateMenuItemSetOrder ended");
 	}
 	
 	@Override
 	public List<PortalMenuItemItemsMenuItemsSVO> loadSubMenuItems (String pParentUID, String pPageID, int tenantID) throws Exception {
+		logger.debug("loadSubMenuItems started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PPARENTMENUID", pParentUID);
 		map.put("v_POWNERPAGEID", pPageID);
 		map.put("tenantID", tenantID);
+
+		logger.debug("loadSubMenuItems ended");
 		return ezPortalAdminDAO.loadSubMenuItems(map);
 	}
 	
 	@Override
 	public void removeSubMenuItem(String uID, String parentUID, String pageID, int tenantID) throws Exception {
+		logger.debug("removeSubMenuItem started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", pageID);
 		map.put("v_PARENTUID", uID);
@@ -378,10 +394,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		} else {
 			ezPortalAdminDAO.removeSubMenuItem_D3(map);
 		}
+		
+		logger.debug("removeSubMenuItem ended");
 	}
 	
 	@Override
 	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID) throws Exception {
+		logger.debug("getPortletProperties started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID);
@@ -390,18 +409,22 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String temp = ezPortalAdminDAO.getPortletProperties_S1(map);
 		
 		if (temp != null && temp.equals("1")) {
+			logger.debug("getPortletProperties ended");
 			return ezPortalAdminDAO.getPortletProperties_S2(map);
 		} else {
 			PortalPortletGeneralVO portletGeneral = new PortalPortletGeneralVO();
 			portletGeneral.setWidth(0);
+			
+			logger.debug("getPortletProperties ended");
 			return portletGeneral;
 		}
-		
 	}
 	
 	@Override
-	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1() throws Exception {
-		return ezPortalAdminDAO.subMenuItemEdit1();
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1(int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		return ezPortalAdminDAO.subMenuItemEdit1(map);
 	}
 
 	public String getUniqueFileName (String dirPath, String fileName) throws Exception {
@@ -413,6 +436,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		int fileCount = 0;
 		
 		File file = new File(dirPath + fileName); 
+		
 		while (bExist) {
 			if (file.exists()) {
 				fileCount++;
@@ -431,6 +455,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_pPAGEUID", pUID);
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
+		
 		List<String> result = ezPortalAdminDAO.deleteTopPage(map);
 		if (result != null) {
 			for (int i=0; i<result.size(); i++) {
@@ -447,6 +472,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		ezPortalAdminDAO.deleteTopMenuItems(map);
 		ezPortalAdminDAO.deleteTopMenuGeneralUID(map);
 		ezPortalAdminDAO.deleteSkinItemsUID(map);
+		
 		return "OK";
 	}
 	
@@ -600,23 +626,14 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			
 			if (strUIDList == null || strUIDList.equals("")) {
-				strUIDList = "''";
+				strUIDList = "' '";
 			} else {
 				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
 			}
 			arr = strUIDList.split(",");
-			pArrParam = "";
-			
-			for (i =0; i<arr.length; i++) {
-				if (i == 0) {
-					pArrParam += ": v_" + String.valueOf(i);
-				} else {
-					pArrParam += ", : v_" + String.valueOf(i);
-				}
-			}
 			
 			Map<String, Object> map3 = new HashMap<String, Object>();
-			map3.put("pArrParam", pArrParam);
+			map3.put("pArrParam", strUIDList);
 			map3.put("pageUID", pPageID);
 			map3.put("parentPageUID", pParentPageID);
 			map3.put("tenantID", tenantID);
@@ -628,10 +645,10 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				ezPortalAdminDAO.deleteTopMenuGeneralUID(map3);
 			}
 			Map<String, Object> map4 = new HashMap<String, Object>();
-			map.put("strUIDList", strUIDList);
-			map.put("pageUID", pPageID);
-			map.put("parentPageUID", pParentPageID);
-			map.put("tenantID", tenantID);
+			map4.put("strUIDList", strUIDList);
+			map4.put("pageUID", pPageID);
+			map4.put("parentPageUID", pParentPageID);
+			map4.put("tenantID", tenantID);
 			ezPortalAdminDAO.deleteTopMenuItems2(map4);
 		} else {
 			width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
@@ -925,6 +942,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		saveMap.put("tenantID", tenantID);
 		int result = ezPortalAdminDAO.savePortalPage(saveMap);
 		logger.debug("savePortalPage="+String.valueOf(result));
+		
 		if (pType.equals("MYPORTAL")) {
 			logger.debug("myPortal일때");
 			width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
@@ -939,6 +957,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			pThemeUID = xmlDom.getElementsByTagName("THEMEINFO").item(0).getTextContent().trim();
 			pTableViewOption = xmlDom.getElementsByTagName("TABLEVIEWOPTION").item(0).getTextContent().trim();
 			logger.debug("width="+width);
+			
 			if (pParentPageID.toLowerCase().equals("top")) {
 				depth = 1;
 			} else {
@@ -999,7 +1018,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
-					portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
+					NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
+					portletHeight = nodesPortletHeight.item(j).getTextContent();
 					NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
 					portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
 					NodeList nodesPortletCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
@@ -1049,6 +1069,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		} else {
 			logger.debug("myPortal 아닐때");
+			
 			if (result > 0) {
 				logger.debug("result > 0일때");
 				width = xmlDom.getElementsByTagName("WIDTH").item(0).getTextContent().trim();
@@ -1083,24 +1104,28 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				ezPortalAdminDAO.updatePortalPageGeneral(map);
 				
 				XPath xpath = XPathFactory.newInstance().newXPath();
+				
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 					previousRowPos = 0;
-					//////////////////////////
 					NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
 					for (j=0; j<nodes.getLength(); j++) {
-						/////////
 						NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
 						portletType = nodesPortletType.item(j).getTextContent();
 						NodeList nodesPortletUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/UID", xmlDom, XPathConstants.NODESET);
 						portletUID = nodesPortletUID.item(j).getTextContent();
 						NodeList nodesPortletPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PAGEUID", xmlDom, XPathConstants.NODESET);
 						portletPageUID = nodesPortletPageUID.item(j).getTextContent();
-						portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+						NodeList nodesPortletDisplayName = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETDISPLAYNAME", xmlDom, XPathConstants.NODESET);
+						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
+						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 						
 						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
-						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
+						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
+						
+						portletHeight = nodesPortletHeight.item(j).getTextContent();
+						//portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
 						NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
 						portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
 						NodeList nodesPortletCanResize = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANRESIZE", xmlDom, XPathConstants.NODESET);
@@ -1111,8 +1136,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletOwnerPageUID = nodesPortletOwnerPageUID.item(j).getTextContent();
 						NodeList nodesPortletPrevPageID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PREVPAGEID", xmlDom, XPathConstants.NODESET);
 						portletPrevPageID = nodesPortletPrevPageID.item(j).getTextContent();
-						/////////
-						////////////////
+
 						if (portletPrevPageID != null && !portletPrevPageID.equals("") && !portletPrevPageID.equals("undefined")) {
 							Map<String, Object> map2 = new HashMap<String, Object>();
 							logger.debug("portletPrevPageID="+portletPrevPageID);
@@ -1139,6 +1163,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							for (int k=0; k<depth; k++) {
 								interval /= 10;
 							}
+							
 							rowPos = previousRowPos + interval * (j+1);
 							interval = 100000;
 							
@@ -1156,6 +1181,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 								map4.put("portletType", portletType);
 								map4.put("displayName", portletDisplayName);
 								map4.put("width", portletWidth);
+								
 								map4.put("height", portletHeight);
 								map4.put("rowPos", rowPos);
 								map4.put("columnPos", String.valueOf(i+1));
@@ -1202,38 +1228,31 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					} 
 				}
 				
-				if (strUIDList.equals("")) {
-					strUIDList = "'',";
-				}
-				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
-				arr = strUIDList.split(",");
-				pArrParam = "";
-				for (i = 0; i<arr.length; i++) {
-					if (i==0) {
-						pArrParam += "v_" + String.valueOf(i);
-					} else {
-						pArrParam += ", v_" + String.valueOf(i);
-					}
+				if (strUIDList == null || strUIDList.equals("")) {
+					strUIDList = "' ',";
 				}
 				
+				strUIDList = strUIDList.substring(0, strUIDList.length()-1);
+				logger.debug("strUIDList="+strUIDList);
+				arr = strUIDList.split(",");
+				
 				Map<String, Object> map7 = new HashMap<String, Object>();
-				map7.put("pArrParam", pArrParam);
+				map7.put("pArrParam", strUIDList);
 				map7.put("pageUID", pPageID);
 				map7.put("parentPageUID", pParentPageID);
 				map7.put("tenantID", tenantID);
 				List<String> resultXML = ezPortalAdminDAO.selectTblPortalPageItemsUID(map7);
-				for (i=0; i<arr.length; i++) {
-					temp = "v_" + String.valueOf(i);
-				}
 				
+				logger.debug("resultXMLSize="+resultXML.size());
 				for (i=0; i<resultXML.size(); i++) {
 					deleteSubPage(resultXML.get(i), tenantID);
+					logger.debug("pUID["+i+"]="+resultXML.get(i));
 					map7.put("pUID", resultXML.get(i));
 					ezPortalAdminDAO.deletePortalPageGeneralUID(map7);
 				}
 				
 				Map<String, Object> map8 = new HashMap<String, Object>();
-				map8.put("strUIDList", strUIDList.replace("'", ""));
+				map8.put("strUIDList", strUIDList);
 				map8.put("pageUID", pPageID);
 				map8.put("parentPageUID", pParentPageID);
 				map8.put("callingPageID", pCallingPageID);
@@ -1269,7 +1288,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 					columnSplit += xmlDom.getElementsByTagName("CELL").item(i).getChildNodes().item(0).getTextContent().trim() + ";";
 				}
-				//
+				
 				Map<String, Object> map9 = new HashMap<String, Object>();
 				map9.put("uID", pPageID);
 				map9.put("parentUID", pParentPageID);
@@ -1298,11 +1317,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 				ezPortalAdminDAO.insertTblPortalPageGeneral(map9);
 				
 				XPath xpath = XPathFactory.newInstance().newXPath();
+				
 				for (i=0; i<xmlDom.getElementsByTagName("CELL").getLength(); i++) {
 					NodeList nodes = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW", xmlDom, XPathConstants.NODESET);
 					logger.debug("nodesLength="+nodes.getLength());
 					for (j=0; j<nodes.getLength(); j++) {
-						//////
 						NodeList nodesPortletType = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/TYPE", xmlDom, XPathConstants.NODESET);
 						portletType = nodesPortletType.item(j).getTextContent();
 						
@@ -1319,7 +1338,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
-						portletHeight = xmlDom.getElementsByTagName("PORTLETHEIGHT").item(j).getTextContent().trim();
+						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
+						portletHeight = nodesPortletHeight.item(j).getTextContent();
 						logger.debug("portletHeight="+portletHeight);
 						NodeList nodesPortletCanRemove = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/CANREMOVE", xmlDom, XPathConstants.NODESET);
 						portletCanRemove = nodesPortletCanRemove.item(j).getTextContent();
@@ -1329,15 +1349,17 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						portletCanReplace = nodesPortletCanReplace.item(j).getTextContent();
 						NodeList nodesPortletOwnerPageUID = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/OWNERPAGEUID", xmlDom, XPathConstants.NODESET);
 						portletOwnerPageUID = nodesPortletOwnerPageUID.item(j).getTextContent();
-						//////
-						
+					
 						logger.debug("pPageID="+pPageID);
 						logger.debug("portletPageUID="+portletPageUID);
+						
 						if (pPageID.toLowerCase().trim().equals(portletPageUID.toLowerCase().trim()) || portletType.equals("1")) {
 							logger.debug("portletType=1 이거나 pPageID == portletPageUID 일때"+portletType);
+							
 							for (int k=0; k<depth; k++) {
 								interval /= 10;
 							}
+							
 							rowPos = previousRowPos + interval * (j + 1);
 							interval = 100000;
 
@@ -1370,11 +1392,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 							map2.put("tenantID", tenantID);
 							previousRowPos = ezPortalAdminDAO.savePortalPage8(map2);
 						}
-						
-						
 					}
 				}
-				//
 			}
 		}
 		logger.debug("savePortalPage End");
@@ -2058,7 +2077,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		return "OK";
 	}
 	
-	public String saveDelPortletInfo (String pUserID, String pUserName, String pXML) {
+	public String saveDelPortletInfo (String pUserID, String pUserName, String pXML, int tenantID) {
 		Document xmlDom = commonUtil.convertStringToDocument(pXML);
 		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
 			String pUID = xmlDom.getElementsByTagName("UID").item(i).getTextContent();
@@ -2075,8 +2094,15 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			map.put("v_pUSERNAME", pUserName);
 			map.put("v_pCHANGEFLAG", pChangeFlag);
 			map.put("v_pUSERPAGEUID", pUserPageUID);
-			ezPortalAdminDAO.saveDelPortletInfo(map);
+			map.put("tenantID", tenantID);
+			
+			String temp = ezPortalAdminDAO.saveDelPortletInfo_S(map);
+			
+			if (temp != null && temp.equals("1")) {
+				ezPortalAdminDAO.saveDelPortletInfo_I(map);
+			}
 		}
+		
 		return "OK";
 	}
 	

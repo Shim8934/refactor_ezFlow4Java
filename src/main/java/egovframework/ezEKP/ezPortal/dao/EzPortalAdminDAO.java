@@ -74,8 +74,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 () {
-		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.subMenuItemEdit1"); 
+	public List<PortalTBLBuiltInParametersVO> subMenuItemEdit1 (Map<String, Object> map) {
+		return (List<PortalTBLBuiltInParametersVO>) list("EzPortalAdminDAO.subMenuItemEdit1", map); 
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -157,6 +157,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	
 	public String setThemeInfo_S (Map<String, Object> map) {
 		return (String)select("EzPortalAdminDAO.setThemeInfo_S", map);
+	}
+	
+	public String saveDelPortletInfo_S (Map<String, Object> map) {
+		return (String)select("EzPortalAdminDAO.saveDelPortletInfo_S", map);
 	}
 	
 	public int savePortalPage (Map<String, Object> map) {
@@ -311,8 +315,8 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		insert("EzPortalAdminDAO.createNewMenuItem2", map);
 	}
 	
-	public void saveDelPortletInfo (Map<String, Object> map) {
-		insert("EzPortalAdminDAO.saveDelPortletInfo", map);
+	public void saveDelPortletInfo_I (Map<String, Object> map) {
+		insert("EzPortalAdminDAO.saveDelPortletInfo_I", map);
 	}
 	
 	public void saveMenuItemConfig_I1 (Map<String, Object> map) {

@@ -649,7 +649,7 @@
 		                }
 		                else {
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + arrList[0] + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + arrList[0] + ";", false);
 		                    xmlhttp.send();
 		
 		                    if (xmlhttp.responseText == "NO") {
@@ -678,6 +678,8 @@
 					if (ret)
 					    DeleteItem();
 				}
+		        
+		        leftCountRf();
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -688,7 +690,7 @@
 		        }
 		        else {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -697,20 +699,20 @@
 		            }
 		
 		            xmlhttp = null;
-		            alert('<spring:message code='ezBoard.t268'/>');
+		            alert("<spring:message code='ezBoard.t268'/>");
 		
-		                    if (CurPage == totalPage) {
-		                        var SelList = new ListView();
-		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1;
-		                        if (SelList.GetRowCount() == DeleteCount) {
-		                            CurPage = CurPage - 1;
-		                        }
-		                    }
-		                    if (CurPage == 0) CurPage = 1;
-		                    getBoardList();
-		                }
-		            }
+                    if (CurPage == totalPage) {
+                        var SelList = new ListView();
+                        SelList.LoadFromID("BoardList");
+                        var DeleteCount = strListInfo.split(';').length - 1;
+                        if (SelList.GetRowCount() == DeleteCount) {
+                            CurPage = CurPage - 1;
+                        }
+                    }
+                    if (CurPage == 0) CurPage = 1;
+                    getBoardList();
+                }
+            }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
@@ -724,7 +726,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=PHOTO&boardID=" + pBoardID + "&itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {

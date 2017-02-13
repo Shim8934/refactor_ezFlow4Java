@@ -9,7 +9,7 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 	    <style type="text/css">
 	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
-	     </style>
+	    </style>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -141,7 +141,7 @@
                     var fileContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i]);
                     var flag = getNodeText(xmldom.getElementsByTagName("FLAG")[i]);
 
-                    imgpath = imgpath.split('/')[5];
+                    imgpath = imgpath.split('/')[7];
                     
                     attachXml += "<ROW><CELL>";
                     attachXml += "<DATA1>" + imgpath + "</DATA1>";
@@ -441,7 +441,7 @@
 	            strXML += "<NODE>";
 	
 	            if (pMode != "modify") {
-	                strXML += "<ITEMID>" + strItemID + "</ITEMID>";
+	                strXML += "<ITEMID>" + newID + "</ITEMID>";
 	            } else {
 	                itemid = strItemID + ";"
 	                strXML += "<ITEMID>" + strItemID + "</ITEMID>";
@@ -461,7 +461,6 @@
 	            strXML += "<COMPANYID>" + SSCompanyID + "</COMPANYID>";
 	            strXML += "<COMPANYNAME>" + MakeXMLString(SSCompanyName) + "</COMPANYNAME>";
 	            strXML += "<COMPANYNAME2>" + MakeXMLString(SSCompanyName2) + "</COMPANYNAME2>";
-	
 	
 	            strXML += "<IMPORTANCE>" + importance + "</IMPORTANCE>";
 	            strXML += "<TITLE>" + MakeXMLString(txtTitle.value) + "</TITLE>";
@@ -501,7 +500,7 @@
 	            var imageid = "";
 	
 	            for (var i = 0; i < filecount ; i++) {
-	                var tmpId = "{" + GetGUID() + "} ";
+	                var tmpId = "{" + GetGUID() + "}";
 	                if (document.getElementsByName("mainFG")[i].checked)
 	                    mainImageID = tmpId;
 	
@@ -525,46 +524,42 @@
 	            xmlhttp.open("POST", "/ezBoard/saveItemPhoto.do?mode=" + pMode + "&guBun=" + gubun, false);
 	            xmlhttp.send(xmldom);
 	
-	            //var strItemID = "";
-	
 	            if (SelectSingleNodeValue(loadXMLString(xmlhttp.responseText), "RESULT") == "OK") {
 	                xmlhttp = null;
 	                xmldom = null;
 	                if (pMode != "temp") {
 	                    var xmlhttp = createXMLHttpRequest();
 	
-	                    xmlhttp.open("POST", "/ezBoard/deleteTempItem.do", false);
+	                    xmlhttp.open("POST", "/ezBoard/deleteTempItem.do?mode=PHOTO", false);
 	                    xmlhttp.send(strItemID);
-	                }
 	
-	                if (strItemID == "") {
-	                    xmlhttp = createXMLHttpRequest();
-	                    xmlhttp.open("POST", "interASP/SendPostNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + strItemID, false);
-	                    xmlhttp.send();
-	                    xmlhttp = null;
+		                if (strItemID == "") {
+		                	xmlhttp = createXMLHttpRequest();
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+							xmlhttp.send();		
+							xmlhttp = null;
+		                }
+		                if (pMode == "reply") {
+		                	xmlhttp = createXMLHttpRequest();
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.send();
+						    xmlhttp = null;
+		                }
+		                if ("${boardInfo.apprMail_FG}" == "Y") {
+		                	xmlhttp = createXMLHttpRequest();
+						    if (pMode != "modify") {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+						    } else {
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+						    }
+						    xmlhttp.send();
+						    xmlhttp = null;
+		                }
+		                
+		                alert("<spring:message code='ezBoard.t399'/>");
+	                } else {
+		                alert("<spring:message code='ezBoard.t10033'/>");
 	                }
-	                if (pMode == "reply") {
-	                    xmlhttp = createXMLHttpRequest();
-	                    xmlhttp.open("POST", "interASP/SendReplyNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + strItemID + "&ItemTreeID=" + strUpperItemIDTree, false);
-	                    xmlhttp.send();
-	                    xmlhttp = null;
-	                }
-	                if ("${boardInfo.apprMail_FG}" == "Y") {
-	                    xmlhttp = createXMLHttpRequest();
-	                    if (pMode != "modify") {
-	                        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID, false);
-	                    } else {
-	                        xmlhttp.open("POST", "interASP/SendApprnoticemail.aspx?BoardID=" + pBoardID + "&ItemID=" + strItemID, false);
-	                    }
-	                    xmlhttp.send();
-	                    var ResponseXML = xmlhttp.responseXML;
-	                    xmlhttp = createXMLHttpRequest();
-	                    xmlhttp.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
-	                    xmlhttp.send(ResponseXML);
-	                    xmlhttp = null;
-	                }
-	                alert("<spring:message code='ezBoard.t399'/>");
-	
 	
 	                try {
 	                    window.opener.location.reload(false);
@@ -797,15 +792,12 @@
 	        //사진삭제
 	        function btn_PhotoAttachDel() {
 	            var xmlhttp = createXMLHttpRequest();
-	            var xmldom = createXmlDom();
-	            var objNode;
-	
-	            createNodeInsert(xmldom, objNode, "DATA");
-	
+	            var uniqueIDs = "";
+	            var fd = new FormData();
 	            for (var i = document.getElementsByName('checkmenuSub').length - 1 ; i >= 0 ; i--) {
 	                if (document.getElementsByName('checkmenuSub')[i].checked) {
 	                    var obj = document.getElementById(document.getElementsByName('checkmenuSub')[i].value);
-	                    createNodeAndInsertText(xmldom, objNode, "UNIQUEID", obj.getAttribute('uniqueId'));
+	                    uniqueIDs += obj.getAttribute('uniqueID') + ";";
 	                    obj.parentNode.removeChild(obj);
 	                }
 	            }
@@ -815,8 +807,8 @@
 		    		return;	
 	            }
 	            
-	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID, false);
-	            xmlhttp.send(xmldom);
+	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+	            xmlhttp.send(fd);
 	
 	            document.getElementById("checkmenu").checked = false;
 	

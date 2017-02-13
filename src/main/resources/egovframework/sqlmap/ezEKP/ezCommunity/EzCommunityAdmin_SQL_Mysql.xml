@@ -25,7 +25,7 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -51,7 +51,7 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
 					A.tenant_id = #tenantID#
 				ORDER BY
@@ -116,11 +116,11 @@
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(c_clubno), 0)
+				IFNULL(COUNT(c_clubno), 0)
 			FROM
 				TBL_C_COMCLOSE
 			WHERE
-				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -128,7 +128,7 @@
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		SELECT
-			NVL(COUNT(c_clubno), 0)
+			IFNULL(COUNT(c_clubno), 0)
 		FROM
 			TBL_C_COMCLOSE
 		WHERE
@@ -156,7 +156,7 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
 					A.c_adminconfirm = 'N'
 				AND
@@ -183,7 +183,7 @@
 				AND
 					A.tenant_id = B.tenant_id
 				WHERE
-					$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 				AND
 					A.c_adminconfirm = 'N'
 				AND
@@ -253,11 +253,11 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select1"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(c_clubno), 0) 
+				IFNULL(COUNT(c_clubno), 0) 
 			FROM
 				TBL_C_CLUB
 			WHERE
-				$v_S_RADIO$ LIKE '%' || #v_KEYWORD# || '%'
+				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				c_adminconfirm = 'N'
 			AND
@@ -268,7 +268,7 @@
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(c_clubno), 0)
+				IFNULL(COUNT(c_clubno), 0)
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -284,26 +284,20 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				*
+				c_clubno,
+				c_clubname$v_USERINFO_LANG$ C_CLUBNAME,
+				c_sysopid,
+				c_clubdesc,
+				c_regdate
 			FROM
 				(SELECT
 					c_clubno,
-					c_clubname$v_USERINFO_LANG$ C_CLUBNAME,
+					c_clubname$v_USERINFO_LANG$ c_clubname,
 					c_sysopid,
 					c_clubdesc,
 					c_regdate
 				FROM
-					(SELECT
-						*
-					FROM
-						(SELECT
-							c_clubno,
-							c_clubname$v_USERINFO_LANG$ c_clubname,
-							c_sysopid,
-							c_clubdesc,
-							c_regdate
-						FROM
-							TBL_C_CLUB
+					TBL_C_CLUB
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -314,7 +308,7 @@
 								FROM
 									TBL_C_CLUB
 								WHERE
-									c_clubdesc LIKE '%' || #v_STRQUERY# || '%'
+									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
 								AND
 									tenant_id = #tenantID#)
 				AND
@@ -333,7 +327,7 @@
 									FROM
 										TBL_C_CLUB
 									WHERE
-										c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+										c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
 									AND
 										tenant_id = #tenantID#)
 					AND
@@ -354,14 +348,14 @@
 		</isNotEqual>
 		
 		<![CDATA[
-						ORDER BY
-							c_regdate ASC) A
-					WHERE
-						ROWNUM <= #v_IQUERYCOUNT#)                                 
+					ORDER BY
+						c_regdate ASC
+					LIMIT
+						#v_IQUERYCOUNT#) A
 				ORDER BY
-					c_regdate DESC)
-			WHERE
-				ROWNUM <=10
+					c_regdate DESC
+				LIMIT
+					10
 		]]>
 	</select>
 	
@@ -371,7 +365,7 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet2"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
-				NVL(COUNT(c_clubno), 0) 
+				IFNULL(COUNT(c_clubno), 0) 
 			FROM
 				TBL_C_CLUB
 		]]>
@@ -384,7 +378,7 @@
 								FROM
 									TBL_C_CLUB
 								WHERE
-									c_clubdesc LIKE '%' || #v_STRQUERY# || '%'
+									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
 								AND
 									tenant_id = #tenantID#)
 				AND
@@ -403,7 +397,7 @@
 									FROM
 										TBL_C_CLUB
 									WHERE
-										c_clubname$v_USERINFO_LANG$ LIKE '%' || #v_STRQUERY# || '%'
+										c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
 									AND
 										tenant_id = #tenantID#)
 					AND
@@ -555,7 +549,7 @@
 	</select>
 	<delete id="EzCommunityAdminDAO.aspCommAdmitOkSet1Delete"			parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
@@ -680,7 +674,7 @@
 <!-- 	</procedure> -->
 	<delete id="EzCommunityAdminDAO.aspCommCloseAllDel"					parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#

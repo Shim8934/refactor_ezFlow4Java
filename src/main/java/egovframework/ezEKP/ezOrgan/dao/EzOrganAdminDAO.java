@@ -1192,7 +1192,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
     private void updateDBData_deptForLocal(OrganDeptVO vo) throws Exception {
+        logger.debug("updateDBData_deptForLocal started. tenantId=" + vo.getTenantId() + ",deptId=" + vo.getCn());
+        
         update("EzOrganAdminDAO.updateDBData_dept", vo);
+        
+        logger.debug("updateDBData_deptForLocal ended.");
     }
     
     public void updateDeptMaster(Map<String, Object> map) throws Exception {
@@ -1922,8 +1926,13 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateProperty_U", map);
 	}
 	
-	public void updateProperty_U1 (Map<String, Object> map) throws Exception {
-		update("EzOrganAdminDAO.updateProperty_U1", map);
-	}
-	
+    public void updateUserDeptDisplayName(OrganDeptVO vo) throws Exception {
+        logger.debug("updateUserDeptDisplayName started.");
+        logger.debug("displayName=" + vo.getDisplayName() + ",displayName2=" + vo.getDisplayName2());
+        
+        update("EzOrganAdminDAO.updateUserDeptDisplayName", vo);
+        
+        logger.debug("updateUserDeptDisplayName ended.");
+    }	
+		
 }

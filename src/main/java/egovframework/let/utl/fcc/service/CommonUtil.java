@@ -421,23 +421,27 @@ public class CommonUtil {
 		}
 	}
 	
-	public String getQueryResult(Object vo) throws Exception{
+	// 객체의 필드 목록을 XML 형식으로 반환한다.
+	// 필드명을 태그명으로 필드값을 태그 사이의 값으로 구성한다.
+	public String getQueryResult(Object vo) throws Exception {
 		StringBuilder stb = new StringBuilder();		
 		
 		if (vo != null) {
 			stb.append("<ROW>");
 			
-			for(Field field : vo.getClass().getDeclaredFields()){
+			for (Field field : vo.getClass().getDeclaredFields()) {
 		        field.setAccessible(true);
 				String data = String.valueOf(field.get(vo));
 	
-				if(data == null || data.equals(null) || data.equals("null")){
+				if (data == null || data.equals(null) || data.equals("null")) {
 					data = "";
-				}				
+				}		
+				
 		        stb.append("<" + field.getName().toUpperCase() + ">");
 		        stb.append(cleanValue(data));
 		        stb.append("</" + field.getName().toUpperCase() + ">");		        
 		    }
+			
 			stb.append("</ROW>");
 		} else {
 			stb.append("");

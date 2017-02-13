@@ -551,6 +551,8 @@
             AND
             	B.DeptID = A.CN
        		WHERE  
+       			A.TENANT_ID = #tenantID#
+       		AND
        			REGDATE >= #startDate#
             AND 
             	REGDATE < #endDate#
