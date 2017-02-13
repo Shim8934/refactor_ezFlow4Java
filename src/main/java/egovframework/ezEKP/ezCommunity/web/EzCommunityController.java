@@ -958,15 +958,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String returnVal = "";
 		String guid = "";
-		String fileTitle = "";
 		String ext = "";
 		String prefix = "";
 		
 		if (request.getParameter("guid") != null) {
 			guid = request.getParameter("guid");
-		}
-		if (request.getParameter("name") != null) {
-			fileTitle = request.getParameter("name");
 		}
 		if (request.getParameter("ext") != null) {
 			ext = request.getParameter("ext");
@@ -1133,8 +1129,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("checkPassword started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String prm = egovFileScrty.getPrm();
-    	String pre = egovFileScrty.getPre();
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
@@ -1497,21 +1491,15 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("bbsList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String bName = "tbl_c_board", sRadio = "", type = "", userLevel = "", code = "", keyword = "";
+		String bName = "tbl_c_board", sRadio = "", code = "", keyword = "";
 		String titleName = "";
-		int curPage = 0, totalPage = 0, nowBlock = 0, myChoice = 0 , keywordCount = 0;
+		int curPage = 0, totalPage = 0, nowBlock = 0, keywordCount = 0;
 		int comNoPerPage = 17;
 		
 		bName = request.getParameter("bName").toLowerCase();
 		
 		if (request.getParameter("sRadio") != null) {
 			sRadio = request.getParameter("sRadio");
-		}
-		if (request.getParameter("type") != null) {
-			type = request.getParameter("type");
-		}
-		if (request.getParameter("userLevel") != null) {
-			userLevel = request.getParameter("userLevel");
 		}
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");
@@ -1566,25 +1554,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String bbsNewViewNew(@CookieValue("loginCookie")String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("bbsViewNew started.");
 		
-		String keyword = "", sRadio = "", pagec = "1";
+		String pagec = "1";
 		String strTitle = "", strWriteName = "", strWriterID = "";
 		int myStep = 0, myLevel = 0, grsRef = 0, readNo = 0, grsNo = 0;	
 		String previousItemID = "", nextItemID = "";
 		String strWriteDate = "";
-		int nowBlock = 0, adminCheck = 0;
+		int nowBlock = 0;
 	
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String bName = request.getParameter("bName").toLowerCase();
-		String mode = request.getParameter("mode");
+		/*String mode = request.getParameter("mode");*/
 		String no = request.getParameter("no");
-		
-		if (request.getParameter("keyword") != null) {
-			keyword = request.getParameter("keyword");
-		}
-		if (request.getParameter("sRadio") != null) {
-			sRadio = request.getParameter("sRadio");
-		}
+
 		if (request.getParameter("block") != null && !request.getParameter("block").equals("")) {
 			nowBlock = Integer.parseInt(request.getParameter("block"));
 		}
@@ -1592,11 +1574,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pagec = request.getParameter("pagec");
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") >= 0) {
-			adminCheck = 1;
-		}
-		
-		String fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());
+		/*String fileName = ezCommunityService.bbsEditGet1(bName, no, userInfo.getTenantId());*/
 		CommunityCBoardVO cBoardGet1 = ezCommunityService.bbsViewNewGet1(bName, no, userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (cBoardGet1 != null) {
@@ -1678,7 +1656,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("bbsEditNew started.");
 		
-		String code = "", sRadio = "", keyword = "", cID = "", no = "", fileName = "", title = "", grsUserName = "", writeFakerName = "";
+		String code = "", sRadio = "", keyword = "", no = "", fileName = "", grsUserName = "", writerFakeName = "";
 		int pagec = 0, block = 0;
 		String step = "", level = "", ref = "";
 		
@@ -1739,9 +1717,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 			 }
 			 
 			 if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("2")) {
-				 writeFakerName = cBoardVO.getUserName2();
+				 writerFakeName = cBoardVO.getUserName2();
 			 } else {
-				 writeFakerName = cBoardVO.getUserName();
+				 writerFakeName = cBoardVO.getUserName();
 			 }
 		} else { // 쓰기(mode :  "write")
 			if (userInfo.getLang().equals("2")) {
@@ -1761,13 +1739,14 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("code", code);
 		model.addAttribute("bName", bName);
 		model.addAttribute("grsUserName", grsUserName);
-		model.addAttribute("writerFakerName", writeFakerName);
+		model.addAttribute("writerFakeName", writerFakeName);
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("cBoard", cBoardVO);
 		model.addAttribute("step", step);
 		model.addAttribute("level", level);
 		model.addAttribute("gref", ref);
+		model.addAttribute("dirPath", commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()));
 		
 		logger.debug("bbsEditNew ended.");
 		
@@ -2141,7 +2120,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
 		String pollState = request.getParameter("pollState");
-		int tenantID = userInfo.getTenantId();
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
@@ -4268,9 +4246,6 @@ public class EzCommunityController extends EgovFileMngUtil{
         String gImageUrl = "", gWidth = "", gHeight = "";
         
 		String boardID = request.getParameter("boardID");
-		String boardName = request.getParameter("boardName");
-		String code = request.getParameter("code");
-		String offset = userInfo.getOffset();
 		
 		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
             useIE11Browser = "CK";
@@ -4309,7 +4284,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
-//			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), offset, false));
 			item.setWriteDate(item.getParentWriteDate());
 		}
 		

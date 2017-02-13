@@ -524,7 +524,6 @@ public class EzCommunityAdminController {
 		
 		String code = request.getParameter("code");
 		String pDivi = request.getParameter("pDivi");
-		String comName = request.getParameter("name");
 		
 		List<HashMap<String, Object>> recipientList = null;
 		
