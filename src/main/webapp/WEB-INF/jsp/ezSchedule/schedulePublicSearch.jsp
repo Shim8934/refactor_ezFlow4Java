@@ -10,7 +10,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />		
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
-		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>	    
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>		
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>

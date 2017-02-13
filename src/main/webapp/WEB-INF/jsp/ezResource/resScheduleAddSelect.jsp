@@ -101,7 +101,7 @@
 			function locationInfo(pBrdNm) {
 			    var idx = "7";
 
-			    navigation_info = "<a href='/ezResource/resMain.do' target='main' class='n'><spring:message code="ezResource.t334" /></a>"
+			    navigation_info = "<a href='/ezResource/resMain.do' target='main' class='n'><spring:message code='ezResource.t334' /></a>"
 
 			    if (pBrdNm != "") {
 		        navigation_info += " > " + pBrdNm + "</a>";
