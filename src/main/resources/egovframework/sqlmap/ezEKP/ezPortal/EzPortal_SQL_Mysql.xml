@@ -317,7 +317,7 @@
 			WHERE
 				UID_ = #v_pUID# 
 			AND
-				ROWNUM <= 1
+				LIMIT 1
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -332,7 +332,7 @@
 			WHERE
 				UID_ = #v_pUID# 
 			AND
-				ROWNUM <= 1
+				LIMIT 1
 			AND
 				TENANT_ID = #tenantID#	
 		]]>
@@ -752,8 +752,6 @@
 						UID_ = A.UID_
 					AND
 						TENANT_ID = #tenantID#	))
-			AND
-				ROWNUM <= #v_pENDROW#
 		]]>
 		<isNotEmpty property="v_pDISPLAYNAME">
 			<![CDATA[
@@ -786,6 +784,8 @@
 		<![CDATA[
 			ORDER BY
 				DISPLAYNAME ASC
+            LIMIT
+            	#v_pENDROW#        
 		]]>
 		
 	</select>
@@ -818,8 +818,6 @@
    						TENANT_ID = #tenantID#	 )
    				) 
    			AND
-   				ROWNUM <= #v_pENDROW# 
-   			AND
    				A.TENANT_ID = #tenantID#	
 		]]>
 		
@@ -847,6 +845,8 @@
 		<![CDATA[
 			ORDER BY
 				A.DISPLAYNAME ASC
+            LIMIT
+                #v_pENDROW# 
 		]]>
 	</select>
 	

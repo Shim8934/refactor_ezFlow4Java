@@ -496,7 +496,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_SETQUICKLINK_ACL_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_QUICKLINK_ACL
 	       WHERE
 	       		QUICKLINKID = #v_QUICKLINKID#
@@ -679,7 +679,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_EMPMONTH
 	  	    WHERE
 	  	    	TERM = #v_pTerm#
@@ -754,7 +754,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_DELETENOTICE" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			 DELETE FROM
 			 	TBL_PS_NOTICE
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
@@ -765,7 +765,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_LIGHTPOLL
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
@@ -776,7 +776,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOLL" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_LIGHTPOLLRESULT
 		    WHERE
 		    	ITEMSEQ = #v_pItemSeq#
@@ -787,7 +787,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_DELETEPOPUP" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_POPUP
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
@@ -798,7 +798,7 @@
 	
 	<delete id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_SLIDERIMAGE
    			WHERE
    				SLIDERID = #v_SLIDERID#
@@ -830,7 +830,7 @@
 	
 	<delete id="EzPersonalAdmin.delQuickLink_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_QUICKLINK_ACL
 		    WHERE
 		    	QUICKLINKID = #v_QUICKLINKID#
@@ -841,7 +841,7 @@
 	
 	<delete id="EzPersonalAdmin.delQuickLink" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_PS_QUICKLINK
 		    WHERE
 		    	QUICKLINKID = #v_QUICKLINKID#
@@ -852,7 +852,7 @@
 	
 	<delete id="EzPersonalAdmin.deleteQuickLinkID" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				 TBL_PS_QUICKLINK_ACL
 			WHERE
 				QUICKLINKID = #quickLinkID#

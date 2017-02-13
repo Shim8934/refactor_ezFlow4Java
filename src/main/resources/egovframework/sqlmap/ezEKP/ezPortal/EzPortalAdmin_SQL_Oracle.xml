@@ -129,7 +129,7 @@
 			UPDATE
 				TBL_TOPMENU_GENERAL
          	SET
-         		USEFLAG = ' '
+         		USEFLAG = NULL
        		WHERE  
        			UID_ = #v_pUID#
         	AND 

@@ -442,7 +442,7 @@
               ORDER BY 
               	WriteDate ASC
               LIMIT
-              	#v_pStartRow# - 1, #v_pEndRow#
+              	#v_pStartRow#, #rowCount#
 		]]>
 	</select>
 	
@@ -925,9 +925,9 @@
      							 AND 
      							 	S.READDATE > DATE_SUB(#nowDate#, INTERVAL 5 DAY)))
      			  ORDER BY 
-     					$iv_PORDERBYSUB$ ) T1 
+     					$iv_PORDERBYSUB$  
      			  LIMIT
-     					#v_PSTARTROW# - 1, #v_PENDROW#
+     					#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1029,7 +1029,7 @@
 			  ORDER BY
 			  	$iv_PORDERBYSUB$
 			  LIMIT
-			  	#startRow# - 1, #endRow#
+			  	#startRow#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getQnABoardListItem" parameterClass="Map" resultClass="HashMap">
@@ -1050,7 +1050,7 @@
   				A.ATTACHMENTS,
   				A.ITEMLEVEL,
   				A.ABSTRACT,
-  				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+  				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
   				A.EXTENSIONATTRIBUTE5,
   				A.WRITERNAME2,
   				A.WRITERDEPTNAME2,
@@ -1129,7 +1129,7 @@
 		  ORDER BY 
 		  	$iv_PORDERBYSUB$
 		  LIMIT
-	  		#startRow# - 1, #endRow#
+	  		#startRow#, #rowCount#
 	</select>
 
 	<select id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
@@ -1204,7 +1204,7 @@
         			A.WriteDate DESC
        		</isEmpty>
        		LIMIT
-       			#v_START# - 1, #v_END#
+       			#v_START#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getMyNoticePostItem" parameterClass="Map" resultClass="HashMap">
@@ -1268,7 +1268,7 @@
                  	A.ParentWriteDate, 
                  	A.WriteDate DESC 
                  LIMIT
-                 	#v_START# -1, #v_END#
+                 	#v_START#, #rowCount#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_TYPE" compareValue="Y">
@@ -1408,7 +1408,7 @@
    				  ORDER BY 
    				  	$iv_PORDERBYSUB$
    				  LIMIT
-   				  	#v_PSTARTROW# - 1, #v_PENDROW#
+   				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1481,7 +1481,7 @@
   				  ORDER BY 
   				  	$iv_PORDERBYSUB$
   				  LIMIT
-  				  	#v_PSTARTROW# - 1, #v_PENDROW#
+  				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1503,7 +1503,7 @@
 	   				A.ATTACHMENTS,
 	   				A.ITEMLEVEL,
 	   				A.ABSTRACT,
-	   				CASE WHEN D.TOTALCOUNT IS NULL THEN N'0' ELSE N'1' END READFLAG,
+	   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 	   				A.EXTENSIONATTRIBUTE5,
 	   				A.WRITERNAME2,
 	   				A.WRITERDEPTNAME2,
@@ -1564,7 +1564,7 @@
   				   ORDER BY 
   				   		$iv_PORDERBYSUB$
    				   LIMIT
-   				   		#v_PSTARTROW# - 1, #v_PENDROW#
+   				   		#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1678,7 +1678,7 @@
 			ORDER BY 
 				$iv_PORDERBYSUB$
 			LIMIT
-				#startRow# - 1, #endRow#
+				#startRow#, #rowCount#
 	</select>
 	
 	<select id="EzBoardDAO.getSearchThumbnailList" parameterClass="Map" resultMap="getThumbnailList">
@@ -1751,7 +1751,7 @@
    		      ORDER BY 
    		      	$iv_PORDERBYSUB$
 	   		  LIMIT
-	   		  	#v_PSTARTROW# - 1, #v_PENDROW#   
+	   		  	#v_PSTARTROW#, #rowCount#   
 		]]>
 	</select>
 	
@@ -1884,7 +1884,7 @@
  				  ORDER BY 
  				  	$iv_PORDERBYSUB$
  				  LIMIT
- 				  	#v_PSTARTROW# - 1, #v_PENDROW#
+ 				  	#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -1963,7 +1963,7 @@
   				ORDER BY 
   				 	$iv_PORDERBYSUB$
   				LIMIT
-  				  	#v_PSTARTROW# - 1, #v_PENDROW# 
+  				  	#v_PSTARTROW#, #rowCount# 
 		]]>
 	</select>
 	
@@ -2038,7 +2038,7 @@
    				ORDER BY 
    					$iv_PORDERBYSUB$
    				LIMIT
-   					#v_PSTARTROW# - 1, #v_PENDROW#
+   					#v_PSTARTROW#, #rowCount#
 		]]>
 	</select>
 	
@@ -2086,7 +2086,7 @@
 	
 	<delete id="EzBoardDAO.deleteOneLineReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
             WHERE
             	TENANT_ID = #v_TENANTID#
             AND  
@@ -2996,7 +2996,7 @@
 	
 	<delete id="EzBoardDAO.deletePhotoImageItem" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Photo_ImageItem
+			DELETE FROM TBL_Photo_ImageItem
 			WHERE  
 				TENANT_ID = #v_TENANTID#
 			AND
@@ -3105,7 +3105,7 @@
 	
 	<delete id="EzBoardDAO.set_ListOrder_D" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_MyBoards
+			DELETE FROM TBL_Board_MyBoards
 			WHERE  
 				TENANT_ID = #tenantID#
 			AND
@@ -3527,7 +3527,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead" parameterClass="BoardListVO">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3537,7 +3537,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemRead2" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Read
+			DELETE FROM TBL_Board_Item_Read
 			WHERE
 				TENANT_ID = #tenantID#
 			AND  
@@ -3547,7 +3547,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItem" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item
+			DELETE FROM TBL_Board_Item
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3557,7 +3557,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardReply" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_OneLineReply
+			DELETE FROM TBL_Board_OneLineReply
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3567,7 +3567,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_Attachments
+			DELETE FROM TBL_Board_Item_Attachments
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3588,7 +3588,7 @@
 	
 	<delete id="EzBoardDAO.deleteBoardItemTemp" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Board_Item_temp
+			DELETE FROM TBL_Board_Item_temp
       		WHERE  
       			TENANT_ID = #tenantID#
       		AND
@@ -3598,7 +3598,7 @@
 	
 	<delete id="EzBoardDAO.photoListDel" parameterClass="Map">
 		<![CDATA[
-			DELETE TBL_Photo_ImageItem
+			DELETE FROM TBL_Photo_ImageItem
         	WHERE  
         		TENANT_ID = #v_TENANTID#
         	AND
@@ -4118,6 +4118,26 @@
 	   		AND
 	   			itemid = #itemID#
    		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteItemTempPhoto" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_BOARD_ITEM_TEMP
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
+	</delete>
+	
+	<delete id="EzBoardDAO.deleteImageItem" parameterClass="BoardListVO">
+		<![CDATA[
+			DELETE FROM TBL_PHOTO_IMAGEITEM
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>
 	</delete>
 	
 </sqlMap>
