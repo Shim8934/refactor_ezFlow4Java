@@ -1691,6 +1691,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRegCabinetCalss", map);
 	}
 	
+	public void insertSetBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertSetBebuAprReceiptProcessInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1947,6 +1951,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateChangeCabExtCabinetClass", map);
 	}
 	
+	public void updateSetBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateSetBebuAprReceiptProcessInfo", map);
+	}
+	
+	public void updateSetBebuAprReceiptProcessInfo2(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateSetBebuAprReceiptProcessInfo2", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2123,6 +2135,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteChangeCabSpecialCatalogInfo_Cab", map);
 	}
 	
+	public void deleteSetBebuExpAprLine(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteSetBebuExpAprLine", map);
+	}
+	
+	public void deleteSetBebuAprLineInfo(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteSetBebuAprLineInfo", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
@@ -2147,5 +2167,4 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
-
 }

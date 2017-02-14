@@ -16925,4 +16925,75 @@
    		VALUES 
    		( #v_CabinetClassNo# , #v_ProductionYear#, #v_RegSerialNo#, #v_TerminateFlag#, #v_Title#, #v_Title2#, #v_RecTypeCode#, #v_ExpirationYear#, #v_KeepingMethod#, #v_KeepingPlace# , #v_DisplayEndDate#, #v_DisplayReason#, #v_OwnerName#, #v_OwnerName2#, #v_OwnerID#, #v_OldCabinetFlag#, '0',     #v_SpecialCatalogFlag#, #v_ConfirmFlag#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_KeepingPeriod#, #v_DisplayRecFlag#, #v_ProcessDeptCode#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_TaskCode#, #v_TaskName#, #v_TaskName2#, #v_TransDelayFlag#, #v_OwnerDeptID#, #v_OwnerTask#, #v_DelayEndYFlag#, #v_DelFlag#, #v_TENANTID#)
    	</insert>
+   	
+   	<insert id="EzApprovalG.insertSetBebuAprReceiptProcessInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		(	ReceiveSN,      DocID,      SentDeptID,     SentDeptName,    SentDeptName2,      ReceivedDeptID,      ReceivedDeptName,     ReceivedDeptName2, DocState, AprState,       ProcessDate,                                 ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+		(SELECT 
+			#v_ReceiveSN#, #v_DOCID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, DocState, #v_AprState#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'),  '1',       ProcessDocID,  NULL,         NULL,          NULL,               NULL,           NULL,            ParentsDocID, TENANT_ID
+		 FROM 
+            TBL_APRRECEIPTPROCESSINFO 
+         WHERE 
+         	DocID = #v_DOCID#
+		 AND 
+		 	ReceiveSN = #v_ReceiveSN# 
+		 AND 
+		 	ProcessYN = 'N' 
+		 AND 
+		 	TENANT_ID = #v_TENANTID#)
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateSetBebuAprReceiptProcessInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			ProcessYN = 'N'
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			ReceiveSN = #v_ReceiveSN# 
+		AND 
+			ProcessYN = '1' 
+		AND 
+			TENANT_ID = #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteSetBebuExpAprLine" parameterClass="Map">
+   		DELETE FROM 
+   			TBL_EXPAPRLINE 
+   		WHERE 
+   			DocID = #v_DOCID#  
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.deleteSetBebuAprLineInfo" parameterClass="Map">
+   	     DELETE FROM 
+   	     	TBL_APRLINEINFO 
+   	     WHERE 
+   	     	DocID = #v_DOCID#  
+   		 AND 
+   			TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<update id="EzApprovalG.updateSetBebuAprReceiptProcessInfo2" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 
+   			ReceivedDeptID = #v_ReceivedDeptID#, 
+   			ReceivedDeptName = #v_ReceivedDeptName#, 
+   			ReceivedDeptName2 = #v_ReceivedDeptName2# 
+   		WHERE 
+   			DocID = #v_DOCID#  
+   		AND 
+   			ReceiveSN = #v_ReceiveSN# 
+        AND 
+        	ReceivedDeptID IN ($v_ReceivedDeptID2$) 
+        AND 
+        	TENANT_ID = #v_TENANTID#
+   	</update>
+   	
 </sqlMap>
