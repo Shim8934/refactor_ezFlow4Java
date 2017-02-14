@@ -1135,7 +1135,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	 */
 	public String callGetItemSeq(String pBrdID, LoginVO loginVO) throws Exception {
 		int get_itemNo = -1;
-		
+		logger.debug("pBrdID = " + pBrdID);
+		logger.debug("tenantID = " + loginVO.getTenantId());
 		if(ezQuestionService.getItemSeq(pBrdID, loginVO.getTenantId()).equals("")) {
 			get_itemNo = 1;
 		} else {
@@ -2399,7 +2400,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         	vQuesNo="0";
         }
         /** EZSP_ANALYSISCOUNT*/
-        responNum = ezQuestionService.analysisCount(vItemNo,vQuesNo, loginVO.getTenantId());
+        responNum = ezQuestionService.analysisCount(vItemNo, vQuesNo, loginVO.getTenantId());
 
         Document resultXML =  commonUtil.convertStringToDocument("<ROWS></ROWS>");
         Node rNodes = resultXML.getFirstChild();
@@ -2478,8 +2479,10 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         	
         	if(questionNo.equals("0")){
         		nodeData.setTextContent(responNum + egovMessageSource.getMessage("ezQuestion.t53", locale));
+        		logger.debug("responNum=" +responNum);
         	}else{
         		nodeData.setTextContent(qCount + egovMessageSource.getMessage("ezQuestion.t53", locale));
+        		logger.debug("qCount=" + qCount);
         	}
         	
         	node.appendChild(nodeData);

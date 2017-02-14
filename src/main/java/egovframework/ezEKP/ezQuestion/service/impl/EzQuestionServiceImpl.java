@@ -851,11 +851,18 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	@Override
 	public String analysisCount(String vItemNo, String vQuesNo, int tenantID) throws Exception {
+		logger.debug("analysisCount started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemNo", vItemNo);
 		map.put("v_pQuesNo", vQuesNo);
 		map.put("tenantID", tenantID);
-		return ezQuestionDAO.analysisCount(map);
+		
+		String result = ezQuestionDAO.analysisCount(map);
+		
+		logger.debug("analysisCount ended. result = " + result);
+		
+		return result;
 	}
 
 	@Override
