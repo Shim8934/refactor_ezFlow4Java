@@ -1444,7 +1444,7 @@
 						TENANT_ID = #tenantID#	
 					GROUP BY
 						RESPONSEUSER_ID
-                     ) P
+                    ) P
 			]]>
 		</isEqual>
 		
@@ -1744,9 +1744,9 @@
 		<isNotEqual property="v_pDataCount" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_ITEM
-        			( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID )
+        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, DATE_FORMAT(#v_pPostDate#, '%Y-%m-%d %H:%i:%s'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, DATE_FORMAT(#v_pPostDate#, '%Y-%m-%d %H:%i:%s'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1780,9 +1780,9 @@
 		<isNotEqual property="v_PDATACOUNT" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_PERMISSION
-        			( BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID )
+        			(BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1825,9 +1825,9 @@
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_ITEMACL
-     				( BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1880,7 +1880,7 @@
 		<![CDATA[
 			INSERT INTO TBL_QS_ITEMSEQ
         	VALUES
-        		( #v_pstrBrdID#, '1', #tenantID# )
+        		(#v_pstrBrdID#, '1', #tenantID#)
 		]]>
 	</insert>
 	
@@ -1919,9 +1919,9 @@
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1940,7 +1940,7 @@
         		FROM
         			DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			USER_ID 
@@ -1953,16 +1953,16 @@
                                     	AND
                                     		USER_ID = #v_pGubunID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>
 		</selectKey>
 		
 		<isEqual property="v_temp" compareValue="1">
 			<![CDATA[
 				INSERT INTO TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID#)
 			]]>
 		</isEqual>
 		<![CDATA[
@@ -1971,16 +1971,16 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		<![CDATA[
-			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
 		]]>
 	</procedure> -->
 	
 	<insert id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_POLL_QUESTION
-        		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -1993,9 +1993,9 @@
 	<insert id="EzQuestionDAO.pollSaveAttach" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_POLL_ATTACH
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2008,9 +2008,9 @@
 	<insert id="EzQuestionDAO.insertAnswerAnswerContent" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_POLL_TABLE_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2023,9 +2023,9 @@
 	<insert id="EzQuestionDAO.insertAnswerContent" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_POLL_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2363,9 +2363,9 @@
 	<insert id="EzQuestionDAO.insertItemRead" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_POLL_ITEMREAD
-        		(BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID )
+        		(BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID)
         	VALUES
-        		(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2616,7 +2616,7 @@
                     AND
                     	A.TENANT_ID = #tenantID#	
                     AND
-                    	C.RESPONSE_RANGE = '0' ) CNT
+                    	C.RESPONSE_RANGE = '0') CNT
 		]]>
 	</select>
 	

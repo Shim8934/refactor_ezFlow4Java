@@ -947,9 +947,9 @@
 	          	GROUP BY
 	          		ROLLUP (R.question_no, R.answer_objectivity, R.responseuser_dept_name)
 	          	ORDER BY
-	          		R.question_no DESC,
-	                R.answer_objectivity DESC,
-	                R.responseuser_dept_name DESC
+	          		R.question_no ASC nulls first,
+	                R.answer_objectivity ASC nulls first,
+	                R.responseuser_dept_name ASC nulls first
 			]]>
 		</isEqual>
 		
@@ -984,11 +984,11 @@
                 AND
                 	TBL_POLL_ANSWER.tenant_id = R.tenant_id
           		WHERE
-          			(R.item_no = #v_item_num#  )
+          			(R.item_no = #v_item_num# )
                 AND
-                	(TBL_POLL_ANSWER.item_no = #v_item_num#  )
+                	(TBL_POLL_ANSWER.item_no = #v_item_num# )
                 AND
-                	(Q.question_no = #v_Que_num#  )
+                	(Q.question_no = #v_Que_num# )
                 AND
                 	R.tenant_id = #tenantID#
                 AND
@@ -996,9 +996,9 @@
           		GROUP BY
           			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_dept_name)
           		ORDER BY
-          			R.question_no DESC,
-                	R.answer_objectivity DESC,
-                	R.responseuser_dept_name DESC
+          			R.question_no ASC nulls first,
+                	R.answer_objectivity ASC nulls first,
+                	R.responseuser_dept_name ASC nulls first
 			]]>
 		</isNotEqual>
 		
@@ -1057,9 +1057,9 @@
            		GROUP BY
            			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_position)
            		ORDER BY
-           			R.question_no DESC,
-                    R.answer_objectivity DESC,
-                    R.responseuser_position DESC
+           			R.question_no ASC nulls first,
+                    R.answer_objectivity ASC nulls first,
+                    R.responseuser_position ASC nulls first
 			]]>
 		</isEqual>
 		
@@ -1110,11 +1110,11 @@
                 AND
                 	Q.tenant_id = #tenantID#		
            		GROUP BY
-           			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_position )
+           			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_position)
            		ORDER BY
-           			R.question_no DESC,
-                    R.answer_objectivity DESC,
-                    R.responseuser_position DESC
+           			R.question_no ASC nulls first,
+                    R.answer_objectivity ASC nulls first,
+                    R.responseuser_position ASC nulls first
 			]]>
 		</isNotEqual>
 		
@@ -1165,9 +1165,9 @@
           		GROUP BY
           			ROLLUP(r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
           		ORDER BY
-          			r.QUESTION_NO DESC,
-                  	r.ANSWER_OBJECTIVITY DESC,
-                  	r.RESPONSEUSER_JIKGUB2 DESC
+          			r.QUESTION_NO ASC nulls first,
+                  	r.ANSWER_OBJECTIVITY ASC nulls first,
+                  	r.RESPONSEUSER_JIKGUB2 ASC nulls first
 			]]>
 		</isEqual>
 		
@@ -1211,9 +1211,9 @@
            		GROUP BY
            			ROLLUP (r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
            		ORDER BY
-           			r.QUESTION_NO DESC,
-                    r.ANSWER_OBJECTIVITY DESC,
-                    r.RESPONSEUSER_JIKGUB2 DESC
+           			r.QUESTION_NO ASC nulls first,
+                    r.ANSWER_OBJECTIVITY ASC nulls first,
+                    r.RESPONSEUSER_JIKGUB2 ASC nulls first
 			]]>
 		</isNotEqual>
 	</select>
@@ -1335,7 +1335,7 @@
 		<![CDATA[
 			SELECT
 				COUNT(*) 
-			FROM ( SELECT
+			FROM (SELECT
 							BRD_ID, ITEM_NO, QUESTION_NO, RESPONSENO, ANSWER_OBJECTIVITY, ANSWER_SUBJECTIVITY, 
    							ANSWER_VIEWSELECT, RESPONSEUSER_ID, RESPONSEUSER_NAME$v_pLang$ AS RESPONSEUSER_NAME,
    							RESPONSEUSER_EMAIL, RESPONSEUSER_DEPT_ID, RESPONSEUSER_DEPT_NAME$v_pLang$ AS RESPONSEUSER_DEPT_NAME,
@@ -1414,7 +1414,7 @@
 			<![CDATA[
 				SELECT
 					COUNT(*) AS CNT 
-				FROM ( SELECT
+				FROM (SELECT
 								RESPONSEUSER_ID AS USER_ID, 
                         		MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
                         		MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
@@ -1435,7 +1435,7 @@
                         		TENANT_ID = #tenantID#	
                         	GROUP BY
                         		RESPONSEUSER_ID
-                      ) P
+                     ) P
 			]]>
 		</isEqual>
 		
@@ -1443,7 +1443,7 @@
 			<![CDATA[
 				SELECT
 					COUNT(*) AS CNT 
-				FROM ( SELECT
+				FROM (SELECT
 								USER_ID	AS USER_ID,
                       			USER_NM$v_pLang$ AS USER_NAME,
                       			USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
@@ -1731,9 +1731,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_ITEM
-        			( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID )
+        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1768,9 +1768,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_PERMISSION
-        			( BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID )
+        			(BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1790,7 +1790,7 @@
         		FROM
         			DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			GUBUN ,
@@ -1806,7 +1806,7 @@
                                     	AND
                                     		GUBUN_ID = #v_pGubunID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>	
 		</selectKey>
 		
@@ -1814,9 +1814,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_ITEMACL
-     				( BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1870,7 +1870,7 @@
 			INSERT INTO
 				TBL_QS_ITEMSEQ
         	VALUES
-        		( #v_pstrBrdID#, '1', #tenantID# )
+        		(#v_pstrBrdID#, '1', #tenantID#)
 		]]>
 	</insert>
 	
@@ -1888,7 +1888,7 @@
 		        FROM
 		        	DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			USER_ID 
@@ -1901,7 +1901,7 @@
                                     	AND
                                     		USER_ID = #v_pUserID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>
 		</selectKey>
 		
@@ -1909,9 +1909,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1930,7 +1930,7 @@
         		FROM
         			DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			USER_ID 
@@ -1943,7 +1943,7 @@
                                     	AND
                                     		USER_ID = #v_pGubunID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>
 		</selectKey>
 		
@@ -1951,9 +1951,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID#)
 			]]>
 		</isEqual>
 		<![CDATA[
@@ -1962,7 +1962,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		<![CDATA[
-			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
 		]]>
 	</procedure> -->
 	
@@ -1970,9 +1970,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_QUESTION
-        		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -1986,9 +1986,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ATTACH
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2002,9 +2002,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_TABLE_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2018,9 +2018,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2359,9 +2359,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ITEMREAD
-        		( BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID )
+        		(BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2548,72 +2548,71 @@
 			SELECT
 				COUNT(ITEM_NO)
         	FROM
-	        		( 	SELECT
-	        				A.ITEM_NO 
-	               		FROM
-	               			TBL_POLL_RESPONSEPERSON A
-	                    LEFT JOIN
-	                    	TBL_POLL_ITEM B
-	                    ON
-	                    	A.BRD_ID = B.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = B.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = B.TENANT_ID	
-	                	WHERE
-	                		A.USER_ID = #v_pUSERID#
-	                    AND
-	                    	A.TENANT_ID = #tenantID#
-	                    AND	
-	                    	#nowDate#
-	                    BETWEEN
-	                    	B.POLL_STARTDATE
-	                    AND
-	                    	B.POLL_ENDDATE
-	                    AND
-	                    	RESPONSE_DATE IS NULL
-	                    AND
-	                    	B.COMPLETE_FLAG = 'Y'
-               		UNION
-		            	SELECT
-		            		A.ITEM_NO 
-	               		FROM
-	               			TBL_POLL_ITEM A
-						LEFT JOIN
-							TBL_POLL_RESPONSE B
-						ON
-							A.BRD_ID = B.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = B.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = B.TENANT_ID	
-	                    AND
-	                    	B.RESPONSEUSER_ID = #v_pUSERID#
-	                    LEFT JOIN
-	                    	TBL_POLL_PERMISSION C 
-	                    ON
-	                    	A.BRD_ID = C.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = C.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = C.TENANT_ID	
-	                	WHERE
-	                		#nowDate#
-	                	BETWEEN
-	                		A.POLL_STARTDATE
-	                	AND
-	                		A.POLL_ENDDATE
-	                    AND
-	                    	B.RESPONSEUSER_NAME IS NULL
-	                    AND
-	                    	A.COMPLETE_FLAG = 'Y'
-	                    AND
-	                    	B.RESPONSEUSER_ID IS NULL
-	                    AND
-	                    	A.TENANT_ID = #tenantID#	
-	                    AND
-	                    	C.RESPONSE_RANGE = '0' ) CNT
-	                    	
+				(SELECT
+					A.ITEM_NO 
+				FROM
+					TBL_POLL_RESPONSEPERSON A
+				LEFT JOIN
+					TBL_POLL_ITEM B
+				ON
+					A.BRD_ID = B.BRD_ID
+				AND
+					A.ITEM_NO = B.ITEM_NO
+				AND
+					A.TENANT_ID = B.TENANT_ID	
+				WHERE
+					A.USER_ID = #v_pUSERID#
+				AND
+					A.TENANT_ID = #tenantID#
+				AND	
+					#nowDate#
+				BETWEEN
+					B.POLL_STARTDATE
+				AND
+					B.POLL_ENDDATE
+				AND
+					RESPONSE_DATE IS NULL
+				AND
+					B.COMPLETE_FLAG = 'Y'
+				UNION
+					SELECT
+						A.ITEM_NO 
+					FROM
+						TBL_POLL_ITEM A
+					LEFT JOIN
+						TBL_POLL_RESPONSE B
+					ON
+						A.BRD_ID = B.BRD_ID
+					AND
+						A.ITEM_NO = B.ITEM_NO
+					AND
+						A.TENANT_ID = B.TENANT_ID	
+					AND
+						B.RESPONSEUSER_ID = #v_pUSERID#
+					LEFT JOIN
+						TBL_POLL_PERMISSION C 
+					ON
+						A.BRD_ID = C.BRD_ID
+					AND
+						A.ITEM_NO = C.ITEM_NO
+					AND
+						A.TENANT_ID = C.TENANT_ID	
+					WHERE
+						#nowDate#
+					BETWEEN
+						A.POLL_STARTDATE
+					AND
+						A.POLL_ENDDATE
+					AND
+						B.RESPONSEUSER_NAME IS NULL
+					AND
+						A.COMPLETE_FLAG = 'Y'
+					AND
+						B.RESPONSEUSER_ID IS NULL
+					AND
+						A.TENANT_ID = #tenantID#	
+					AND
+						C.RESPONSE_RANGE = '0') CNT
 		]]>
 	</select>
 	
