@@ -89,9 +89,14 @@
 
 	        	var SDate, EDate;
 	        	if (m_dlgArgs["alldaycheck"] == "1") {
+	        		try {
+	                    var recurrenceDoc = loadXMLString(m_dlgArgs["recurrence"]);       
+	                    var endDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/endDateTime")[0]);
+	                    var startDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/startDateTime")[0]);     
+	                 } catch (e) { }
 		            try {
-		                SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
-	                	EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
+		                SDate = new Date(startDateTime.split(' ')[0].split('-')[0], parseInt(startDateTime.split(' ')[0].split('-')[1]) - 1, startDateTime.split(' ')[0].split('-')[2], startDateTime.split(' ')[1].split(':')[0], startDateTime.split(' ')[1].split(':')[1], 0, 0);
+	                	EDate = new Date(endDateTime.split(' ')[0].split('-')[0], parseInt(endDateTime.split(' ')[0].split('-')[1]) - 1, endDateTime.split(' ')[0].split('-')[2], endDateTime.split(' ')[1].split(':')[0], endDateTime.split(' ')[1].split(':')[1], 0, 0);
 	            	} catch (e) {
 		                SDate = new Date(m_dlgArgs["startTime"]);
 	                	EDate = new Date(m_dlgArgs["endTime"]);
@@ -169,7 +174,7 @@
       				<td>
       					<div>
           					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
-        					<label for="btnT1" accesskye="T"></label>
+        					<label for="btnT1" accesskey="T"></label>
         					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
         						<spring:message code="ezResource.t277"/></div></td>
     			</tr>
@@ -177,7 +182,7 @@
       				<th><spring:message code="ezResource.t278"/><u>N</u>)</th>
       				<td>
           				<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
-        				<label for="btnT2" accesskye="N"></label>
+        				<label for="btnT2" accesskey="N"></label>
       				</td>
     			</tr>
   			</table>

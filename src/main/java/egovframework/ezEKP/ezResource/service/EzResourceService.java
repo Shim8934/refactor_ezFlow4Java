@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.CookieValue;
+
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
@@ -111,7 +113,7 @@ public interface EzResourceService {
 	
 	public boolean modifyResData(String xmlStr, int tenantID) throws Exception;
 	
-	public boolean addResData(String xmlStr, int tenantID) throws Exception;
+	public boolean addResData(String xmlStr, int tenantID,Locale locale) throws Exception;
 	
 	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
@@ -135,7 +137,7 @@ public interface EzResourceService {
 	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception;
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation, 
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception;
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception;
 	
 	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate, int tenantID) throws Exception;
 	

@@ -745,7 +745,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callDelClsItem(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req, HttpServletResponse resp, Model model, @RequestBody String xmlDom) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+
 		String brdID = "";
 		StringBuilder strXML = new StringBuilder();
 		StringBuilder returnXML = new StringBuilder();
@@ -922,7 +922,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	@ResponseBody
 	public String callAddClsItem(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody String xmlStr) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		Locale locale = userInfo.getLocale();
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
@@ -954,7 +954,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data2);
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data3);
 		
-		boolean returnValue = ezResourceService.addResData(commonUtil.convertDocumentToString(xmlDom), userInfo.getTenantId());
+		boolean returnValue = ezResourceService.addResData(commonUtil.convertDocumentToString(xmlDom), userInfo.getTenantId(),locale);
 		
 		StringBuilder strXML = new StringBuilder();
 		strXML.append("<RTN>" + String.valueOf(returnValue) + "</RTN>");

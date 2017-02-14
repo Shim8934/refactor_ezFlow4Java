@@ -268,7 +268,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Override
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception {
 		logger.debug("addResData Start");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ClassGB", classGB);
@@ -289,7 +289,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_OwnerPos2", ownerPos2);
 		map.put("v_Brd_GB", "2");
 		map.put("v_Brd_ID", ezResourceDAO.addResData_S1());
+		map.put("v_Brd_Access", strBreAccess);
 		map.put("tenantID", tenantID);
+		
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -2638,7 +2640,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return true;
 	}
 
-	public boolean addResData(String xmlStr, int tenantID) throws Exception {
+	public boolean addResData(String xmlStr, int tenantID,Locale locale) throws Exception {
 		String strClassGB = "";
 		String strODeptID = "";
 		String strODeptNm = "";
@@ -2655,9 +2657,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strODeptNm2 = "";
 	    String strOwnerNm2 = "";
 	    String strOwnerPos2 = "";
+	    String strBreAccess = "";
 	    
-	    
-		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
 		strODeptID = xmlRes.getElementsByTagName("DATA").item(1).getTextContent().trim();
 		strODeptNm = xmlRes.getElementsByTagName("DATA").item(2).getTextContent().trim();
@@ -2674,8 +2676,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
 		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID);
 
 		return true;
 	}
