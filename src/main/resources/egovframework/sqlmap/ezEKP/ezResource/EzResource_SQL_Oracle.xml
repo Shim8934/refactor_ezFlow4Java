@@ -2003,7 +2003,7 @@
 			AND
 				OwnerID = #v_p_ownerID#
 			AND
-				reFlag = 0
+				reFlag = '0'
 			AND
 				Num <> (CASE
 								#v_p_cmd#
