@@ -18047,4 +18047,35 @@
    		VALUES 
    		(#v_gongRamDocID#, #v_AprMemberSN# , #v_OrgUserID#, '', '', '', '', '', '', '','', #v_TENANTID#)
    	</insert>
+   	
+   	<select id="EzApprovalG.signCheckCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(DOCID) 
+   		FROM 
+   			TBL_APRDOCINFO 
+   		WHERE 
+   			ORGDOCID= #v_DOCID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<update id="EzApprovalG.signCheckCount" parameterClass="Map" >
+   		 UPDATE 
+   		 	TBL_EXPENDAPRDOCINFO 
+   		 SET 
+   		 	SIGNCHECK = #v_signCheck#
+   		 WHERE 
+   		 	DocID = #v_DOCID#
+   		 AND
+   		 	TENANT_ID = #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteSignCheck" parameterClass="Map" >
+   	 	DELETE FROM 
+   	 		TBL_SIGNINFO 
+   	 	WHERE 
+   	 		DocID = #v_DOCID#
+   	 	 AND
+   		 	TENANT_ID = #v_TENANTID#
+   	</delete>
 </sqlMap>

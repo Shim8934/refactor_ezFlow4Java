@@ -1072,6 +1072,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.changeCabSpeacialCount", map);
 	}
 	
+	public int signCheckCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.signCheckCount", map);
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -2080,6 +2084,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateGongRamSaveAprDocInfo2", map);
 	}
 	
+	public void updateSignCheck(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateSignCheck", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2274,6 +2282,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	public void deleteGongRamSaveExpAprLine(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteGongRamSaveExpAprLine", map);
+	}
+	
+	public void deleteSignCheck(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteSignCheck", map);
 	}
 	
 	@SuppressWarnings("unchecked")

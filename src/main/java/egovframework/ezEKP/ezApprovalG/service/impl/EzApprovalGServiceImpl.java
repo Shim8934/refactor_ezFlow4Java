@@ -14295,18 +14295,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String updateSignCheck(String strSQL, String companyID) throws Exception {
-		String rtnVal = "";
+	public String updateSignCheck(String docID, String signCheck ,String companyID, int tenantID) throws Exception {
+		String rtnVal = "TRUE";
 		
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("sqlString", strSQL);
 			map.put("companyID", companyID);
+			map.put("v_signCheck", signCheck);
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", tenantID);
 			
-			ezApprovalGDAO.transactionSQL(map);
+			int count = ezApprovalGDAO.signCheckCount(map);
 			
-			rtnVal = "TRUE";
+				if (count == 0) {
+					ezApprovalGDAO.updateSignCheck(map);
+					ezApprovalGDAO.deleteSignCheck(map);
+				}
+			
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "FALSE";
 		}
 		
