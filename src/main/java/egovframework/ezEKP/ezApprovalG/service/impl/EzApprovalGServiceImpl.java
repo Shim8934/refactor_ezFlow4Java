@@ -1304,11 +1304,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(8).getTextContent().trim();
 		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		String rtnVal = "";
 		
+		try {
 		if (gongRamDocID == null || gongRamDocID.equals("") || gongRamDocID.equals("NONE")) {
 			gongRamDocID = getNewID(companyID, tenantID);
 			
-			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
 			map.put("v_DOCID", docID);
 			map.put("v_FLAG", "APR");
@@ -1324,61 +1326,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			copyFile(fileURL, target, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(gongRamDocID));
 			
-			strSQL.append("INSERT INTO TBL_APRDOCINFO (DocID, FormID, OrgDocID, DocType, ");
-			strSQL.append("DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, ");
-            strSQL.append("HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, ");
-            strSQL.append("WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) (SELECT '");
-			strSQL.append(gongRamDocID.trim() + "', FormID, '" + docID.trim());
-			strSQL.append("', DocType, '" + staDSGongRam + "', '" + staASJinHang + "', '");
-            strSQL.append(susinDocURL.trim() + "', DocTitle, DocNo, HasAttachYN, HasOpinionYN, ");
-            strSQL.append("TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'), NULL, WriterID, WriterName, WriterName2, ");
-            strSQL.append("WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID ");
-            strSQL.append("FROM TBL_APRDOCINFO WHERE DocID = '" + docID.trim() + "' AND TENANT_ID =" + tenantID + ");\n");
-
-			strSQL.append("INSERT INTO TBL_EXPAPRDOCINFO (DocID, SecurityCode, ");
-            strSQL.append("StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, ");
-			strSQL.append("UrgentApproval, TempAttribute, Status, SpecialRecordCode, ");
-			strSQL.append("PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, ");
-			strSQL.append("DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) (SELECT '");
-			strSQL.append(gongRamDocID.trim() + "', SecurityCode, StoragePeriod, KeyWord, ");
-            strSQL.append("FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, ");
-			strSQL.append("TempAttribute, Status, SpecialRecordCode, PublicityCode, ");
-			strSQL.append("LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, ");
-            strSQL.append("OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID FROM TBL_EXPAPRDOCINFO ");
-			strSQL.append("WHERE DocID = '" + docID.trim() + "' AND TENANT_ID = " + tenantID + ");\n");
-
-			strSQL.append("INSERT INTO TBL_APROPINIONINFO (DocID, UserID, OpinionGB, ");
-            strSQL.append("Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, ");
-			strSQL.append("OpinionSN, TENANT_ID) (SELECT '" + gongRamDocID.trim() + "', UserID, ");
-            strSQL.append("OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, ");
-            strSQL.append("UserDeptName, UserDeptName2, OpinionSN, TENANT_ID FROM TBL_APROPINIONINFO WHERE DocID = '");
-			strSQL.append(docID.trim() + "' AND TENANT_ID = " + tenantID + ");\n");
-
-			strSQL.append("INSERT INTO TBL_APRDOCATTACHINFO (DocID, AttachSN, ");
-            strSQL.append("AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, ");
-            strSQL.append("AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, ");
-            strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID) (SELECT '" + gongRamDocID.trim());
-			strSQL.append("', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, ");
-            strSQL.append("AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, ");
-            strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID FROM TBL_APRDOCATTACHINFO WHERE DocID = '");
-			strSQL.append(docID.trim() + "' AND TENANT_ID = " + tenantID + ");\n");
-
-			strSQL.append("INSERT INTO TBL_APRATTACHINFO (DocID, AttachFileSN, ");
-			strSQL.append("AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, ");
-            strSQL.append("AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, ");
-            strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID) (SELECT '");
-            strSQL.append(gongRamDocID.trim() + "', AttachFileSN, AttachFileName, ");
-            strSQL.append("AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, ");
-            strSQL.append("AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, ");
-            strSQL.append("PageNum, DisplayName, BodyAttach, TENANT_ID FROM TBL_APRATTACHINFO WHERE ");
-			strSQL.append("DocID = '" + docID.trim() + "' AND TENANT_ID = " + tenantID + ");\n");
+			
+			map.put("v_gongRamDocID", gongRamDocID.trim());
+			map.put("v_DOCID", docID.trim());
+			map.put("v_DocState", staDSGongRam);
+			map.put("v_FunctionType", staASJinHang);
+			map.put("v_Href", susinDocURL.trim());
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_TENANTID", tenantID);
+			
+			ezApprovalGDAO.insertGongRamSaveAprDocInfo(map);
+			ezApprovalGDAO.insertGongRamSaveExpAprDocInfo(map);
+			ezApprovalGDAO.insertGongRamSaveAprOpinionInfo(map);
+			ezApprovalGDAO.insertGongRamSaveAprDocAttachInfo(map);
+			ezApprovalGDAO.insertGongRamSaveAprAttachInfo(map);
 		}
 		
-		strSQL.append("UPDATE TBL_APRDOCINFO SET StartDate = EndDate WHERE DocID = '" + gongRamDocID.trim() + "' AND StartDate IS NULL AND TENANT_ID = " + tenantID + " ;\n");
-		strSQL.append("UPDATE TBL_APRDOCINFO SET EndDate = NULL WHERE DocID = '" + gongRamDocID.trim() + "' AND StartDate IS NOT NULL  AND TENANT_ID = " + tenantID + ";\n");
+		map.put("v_gongRamDocID", gongRamDocID.trim());
+		map.put("v_TENANTID", tenantID);
 
-		strSQL.append("DELETE FROM TBL_APRLINEINFO WHERE DocID = '" + gongRamDocID.trim() + "' AND TENANT_ID = " + tenantID + ";\n");
-		strSQL.append("DELETE FROM TBL_EXPAPRLINE WHERE DocID = '" + gongRamDocID.trim() + "' AND TENANT_ID = " + tenantID + ";\n");
+		ezApprovalGDAO.updateGongRamSaveAprDocInfo(map);
+		ezApprovalGDAO.updateGongRamSaveAprDocInfo2(map);
+
+		ezApprovalGDAO.deleteGongRamSaveAprLineInfo(map);
+		ezApprovalGDAO.deleteGongRamSaveExpAprLine(map);
 		
 		String recDate = "";
 		String processDate = "";
@@ -1396,49 +1367,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				processDate = "'" + makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim())) + "'";
 			}
 			
-			strSQL.append("INSERT INTO TBL_APRLINEINFO (DocID, AprMemberSN, AprType, ");
-            strSQL.append("AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, ");
-            strSQL.append("AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, ");
-			strSQL.append("AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, ");
-			strSQL.append("isProposerYN, isBriefUserYN, TENANT_ID) VALUES ('" + gongRamDocID + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent()) + "', '");
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(22).getTextContent()) + "', '");
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(23).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent()) + "', N'");
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(16).getTextContent()) + "', N'");
-            // AprMemberName2
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(17).getTextContent()) + "', N'");
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent()) + "', N'");
-            // AprMemberJobTitle2
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(21).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent()) + "', N'");
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(18).getTextContent()) + "', N'");
-            // AprMemberDeptName2
-            strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(19).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent()) + "', ");
-			strSQL.append(recDate + ", " + processDate + ", N'");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(12).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent()) + "'," +tenantID +"); \n");
-
-			strSQL.append("INSERT INTO TBL_EXPAPRLINE (DocID, AprMemberSN, OrgUserID, ");
-            strSQL.append("ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, ");
-            strSQL.append("proxyuserdeptname, proxyuserdeptname2, TENANT_ID) VALUES ('" + gongRamDocID.trim() + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent()) + "', '");
-			strSQL.append(makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent()));
-            strSQL.append("', '', '', '', '', '', '', '',''," + tenantID +");\n");
-		}
-		String rtnVal = "";
-		
-		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
-			map.put("companyID", companyID);
+			map.put("v_gongRamDocID", gongRamDocID);
+			map.put("v_AprMemberSN", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent()));
+			map.put("v_AprType", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(22).getTextContent()));
+			map.put("v_AprState", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(23).getTextContent()));
+			map.put("v_AprMemberID", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent()));
+			map.put("v_AprMemberIsDeptYN", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent()));
+			map.put("v_AprMemberName", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(16).getTextContent()));
+			map.put("v_AprMemberName2", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(17).getTextContent()));
+			map.put("v_AprMemberJobTitle", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(20).getTextContent()));
+			map.put("v_AprMemberJobTitle2", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(21).getTextContent()));
+			map.put("v_AprMemberDeptID", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(11).getTextContent()));
+			map.put("v_AprMemberDeptName", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(18).getTextContent()));
+			map.put("v_AprMemberDeptName2", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(19).getTextContent()));
+			map.put("v_AprMemberLDAPPath", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(15).getTextContent()));
+			map.put("v_ReceivedDate", recDate);
+			map.put("v_ProcessDate", processDate);
+			map.put("v_ReasonDoNotApprov", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(12).getTextContent()));
+			map.put("v_isProposerYN", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent()));
+			map.put("v_isBriefUserYN", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(14).getTextContent()));
+			map.put("v_TENANTID", tenantID);
 			
-			ezApprovalGDAO.transactionSQL(map);
+			ezApprovalGDAO.insertGongRamSaveAprLineInfo(map);
+			
+			map.put("v_AprMemberSN", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(0).getTextContent()));
+			map.put("v_OrgUserID", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent()));
+
+			ezApprovalGDAO.insertGongRamSaveExpAprLine(map);
+		}
 			
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -7479,9 +7438,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
-					} else {
-						strSQL.append(subSQL);
-					}
+					} 
 				}
 				
 				break;
