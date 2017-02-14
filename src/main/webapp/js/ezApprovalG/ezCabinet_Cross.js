@@ -885,7 +885,7 @@ function GetHearderXml() {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getLVHearderInfo.do",
+		url : "/ezApprovalG/getLVHeaderInfo.do",
 		data : {
 			companyID : CompanyID,
 			listFlag  : DocList_Flag,
