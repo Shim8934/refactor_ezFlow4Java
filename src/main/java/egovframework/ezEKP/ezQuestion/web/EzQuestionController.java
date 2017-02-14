@@ -1751,7 +1751,6 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
         if(pType.equals("QUESTION")){
             if (!pFileName.equals("")){
-                //pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+commonUtil.separator+pFileName;
             	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", loginVO.getTenantId())+commonUtil.separator+pFileName;
             }else{
             	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, loginVO.getTenantId());

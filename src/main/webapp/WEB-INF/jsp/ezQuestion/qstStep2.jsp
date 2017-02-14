@@ -469,7 +469,7 @@
         		            oTd.setAttribute("style", "padding:5px;");
                     		oTr.appendChild(oTd);
 		                    oImg = document.createElement("img");
-        		            oImg.setAttribute("src", "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&FILENAME=" + pFileName);
+        		            oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
                 		    oImg.setAttribute("style", "width:47px;height:31px");
                     		oTd.appendChild(oImg);
 		                    oTd = document.createElement("td");
@@ -506,7 +506,7 @@
         		                    oTd.setAttribute("style", "padding:5px;");
                 		            oTr.appendChild(oTd);
 		                            oImg = document.createElement("img");
-        		                    oImg.setAttribute("src", "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&FILENAME=" + pFileName);
+        		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
                 		            oImg.setAttribute("style", "width:47px;height:31px");
                         		    oTd.appendChild(oImg);
 		                            oTd = document.createElement("td");
@@ -563,7 +563,7 @@
                             		oTd.setAttribute("style", "padding:5px;");
                             		oTr.appendChild(oTd);
 		                            oImg = document.createElement("img");
-        		                    oImg.setAttribute("src", "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=QUESTION&FILENAME=" + pFileName);
+        		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
                 		            oImg.setAttribute("style", "width:47px;height:31px");
                         		    oTd.appendChild(oImg);
 		                            oTd = document.createElement("td");
