@@ -1621,6 +1621,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			if (file.exists()) {
 				FileUtils.moveFile(file, new File(upd + fileName));
+			} else {
+				file.mkdirs();
 			}
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
@@ -1710,7 +1712,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 헤더정보 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/getLVHearderInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getLVHearderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1718,7 +1720,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listFlag = request.getParameter("listFlag");
 		String listType = request.getParameter("listType");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang(),userInfo);
+		String result = ezApprovalGService.getListInfoXml(listFlag, listType, companyID, userInfo.getLang(), userInfo);
 		
 		return result;
 	}

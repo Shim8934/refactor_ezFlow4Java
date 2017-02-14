@@ -187,9 +187,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public String moveEntry(String parentCn, String cn, String type, int tenantID) throws Exception {
+	    logger.debug("moveEntry started");
+	    logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
+	    
 		String result = "";
 		
-		if(parentCn.equals(cn)){
+		if (parentCn.equals(cn)) {
 			result = "SAME";
 		}else{
 			// skyblue0o0
@@ -224,6 +227,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 		}
 		
+		logger.debug("moveEntry ended");
+		
 		return result;
 	}
 	
@@ -256,6 +261,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	public void moveDBData(String parentCn, String cn, String type, int tenantID) throws Exception {
+        logger.debug("moveDBData started");
+        logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",type=" + type + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -271,11 +279,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             ezOrganAdminDao.moveDBDataForJMocha(map);
             
         	if (type.toLowerCase().equals("group")) {
-        		logger.debug("moveDBData Start");
         		OrganDeptVO dept = ezOrganAdminDao.moveDBData_S(map);
         		OrganDeptVO dept1 = ezOrganAdminDao.moveDBData_S1(map);
-        		logger.debug("dept="+dept.toString());
-        		logger.debug("dept1="+dept1.toString());
+        		
+        		logger.debug("dept=" + dept.toString());
+        		logger.debug("dept1=" + dept1.toString());
+        		
         		map.put("v_COMPNM2", dept.getCompNm2());
         		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
         		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
@@ -287,16 +296,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		ezOrganAdminDao.moveDBData_U1(map);
         		ezOrganAdminDao.moveDBData_U2(map);
         		ezOrganAdminDao.moveDBData_U3(map);
-        		logger.debug("moveDBData End");
         	} else {
-        		OrganDeptVO dept = ezOrganAdminDao.moveGroupUser_S(map);
-    	    	map.put("v_DEPTNAME", dept.getDisplayName());
-    	    	map.put("v_DEPTNAME2", dept.getDisplayName2());
     	    	ezOrganAdminDao.moveGroupUser_U(map);
         	}
         }
 		
-		
+		logger.debug("moveDBData ended");
 	}
 
 	@Override
@@ -313,6 +318,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Override
 	public void retireEntry(String cn, int tenantID) throws Exception {
+	    logger.debug("retireEntry started");
+	    logger.debug("cn=" + cn + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_TENANT_ID", tenantID);
@@ -324,21 +332,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("nowDate", nowDate);
 		
-		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
-			 ezOrganAdminDao.retireDBData(map);
-	     } else {
-	    	 String temp = ezOrganAdminDao.retireDBData_S(map);
-	    	 
-	    	 if (temp != null && temp.equals("1")) {
-	    		 ezOrganAdminDao.retireDBData_I(map);
-	    	 } 
-	    	 ezOrganAdminDao.retireDBData(map);
-	    	 ezOrganAdminDao.retireDBData_D3(map);
-	    	 ezOrganAdminDao.retireDBData_U1(map);
-	    	 ezOrganAdminDao.retireDBData_U2(map);
-	     }       
+		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		    ezOrganAdminDao.retireDBData(map);
+		} else {
+		    ezOrganAdminDao.retireDBData_I(map);
+		    ezOrganAdminDao.retireDBData(map);
+		    ezOrganAdminDao.retireDBData_D3(map);
+		}       
 		
-		
+		logger.debug("retireEntry ended");
 	}	
 
 	@Override
@@ -726,6 +728,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     
 	@Override
 	public void restoreRetireEntry(String cn, String deptID, int tenantID) throws Exception {
+	    logger.debug("restoreRetireEntry started");
+	    logger.debug("cn=" + cn + ",deptID=" + deptID + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();		
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -741,36 +746,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
 			ezOrganAdminDao.restoreRetireEntry(map);
 	    } else {
-	    	String temp = ezOrganAdminDao.resotreRetireEntry_S(map);
-	    	
-	    	if (temp != null && temp.equals("1")) {
-	    		ezOrganAdminDao.restoreRetireEntry(map);
-	    	}
+	    	ezOrganAdminDao.restoreRetireEntry(map);
 	    	ezOrganAdminDao.restoreRetireEntry_D(map);
-	    	ezOrganAdminDao.updateUserMaster(map);
-	    	
-	    	OrganUserVO user = ezOrganAdminDao.updateUserMaster_S(map);
-	    	user.setCn(cn);
-	    	user.setTenantId(tenantID);
-	    	
-	    	if (user.getDisplayName2() == null || user.getDisplayName2().equals("")) {
-	    		ezOrganAdminDao.updateUserMaster_U(user);
-	    	}
-	    	
-	    	if (user.getTitle2() == null || user.getTitle2().equals("")) {
-	    		ezOrganAdminDao.updateUserMaster_U1(user);
-	    	}
-	    	
-	    	if (user.getExtensionAttribute102() == null || user.getExtensionAttribute102().equals("")) {
-	    		ezOrganAdminDao.updateUserMaster_U2(user);
-	    	}
-	    	
-	    	OrganDeptVO dept = ezOrganAdminDao.moveGroupUser_S(map);
-	    	map.put("v_DEPTNAME", dept.getDisplayName());
-	    	map.put("v_DEPTNAME2", dept.getDisplayName2());
-	    	ezOrganAdminDao.moveGroupUser_U(map);
-	    	
 	    }  
+		
+		logger.debug("restoreRetireEntry ended");		
 	}
 
 	// 지정된 부서에 속한 사원의 수를 반환한다.

@@ -1239,7 +1239,7 @@
         	VALUES ( #v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
         				,RTRIM(#v_P_OwnerCall#), RTRIM(#v_P_Brd_NM#), RTRIM(#v_P_ResLocation#), RTRIM(#v_P_Brd_Explain#), RTRIM(#v_P_CompanyID#), #v_Brd_ID#
         				,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
-        				,20, u'A00', u'', u'\c774 \bd84\b958\c5d0 \b300\d55c \c811\adfc \ad8c\d55c\c774 \c5c6\c2b5\b2c8\b2e4.', 365, 0, 0, RTRIM(#v_P_Approve#)
+        				,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
       					,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), #tenantID# )
 		]]>		
 	</insert>
@@ -1598,7 +1598,7 @@
 			UPDATE
 				TBL_RS_SCHEDULE
 			SET
-				REFLAG = u'4'
+				REFLAG = '4'
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1662,7 +1662,7 @@
 					AND
 						NUM = #v_P_pnum#
 					AND
-						REFLAG = u'1'
+						REFLAG = '1'
 					AND
 						TENANT_ID = #tenantID#	 )
 		]]>							
@@ -1772,7 +1772,7 @@
                        AND
                        	 PNUM = #v_P_num#
                        AND
-                       	 REFLAG >= 3
+                       	 REFLAG >= '3'
                        AND
                          TENANT_ID = #tenantID#	)
 		]]>
@@ -1852,7 +1852,7 @@
             AND 
             	PNUM = #v_P_num#
             AND 
-            	REFLAG >= 3
+            	REFLAG >= '3'
             AND
             	TENANT_ID = #tenantID#	
 		]]>
@@ -2003,7 +2003,7 @@
 			AND
 				OwnerID = #v_p_ownerID#
 			AND
-				reFlag = 0
+				reFlag = '0'
 			AND
 				Num <> (CASE
 								#v_p_cmd#
@@ -2121,7 +2121,7 @@
 			OR
 				( B.pnum = C.num
 			AND
-				B.reFlag = 4 ) )
+				B.reFlag = '4' ) )
 			WHERE
 				B.ownerID = #v_p_ownerID#
 			AND

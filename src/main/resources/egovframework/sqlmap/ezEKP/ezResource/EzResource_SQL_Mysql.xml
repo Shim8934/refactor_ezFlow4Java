@@ -1229,7 +1229,7 @@
 			)
         	VALUES ( 
         		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, #v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, 
-        		#v_Brd_ID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), 20, 'A00', '', u'\c774 \bd84\b958\c5d0 \b300\d55c \c811\adfc \ad8c\d55c\c774 \c5c6\c2b5\b2c8\b2e4.', 365, 0, 0, #v_P_Approve#,
+        		#v_Brd_ID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), 20, 'A00', '', #v_Brd_Access#, 365, 0, 0, #v_P_Approve#,
       			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #tenantID#
 			)
 		]]>		
