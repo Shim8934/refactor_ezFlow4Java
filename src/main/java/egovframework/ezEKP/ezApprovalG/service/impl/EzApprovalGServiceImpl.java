@@ -257,7 +257,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			LOGGER.debug("getName2Code ended.");
 		} else {
 			resultString = getCode2Name(code1, code2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
-			LOGGER.debug("getCode2Name ended.");
+			
 		}
 		LOGGER.debug("getOptionInfo Value: resultString= " +resultString);
 
@@ -316,7 +316,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				publicityCode = publicityCode.substring(0, 1);
 			}
 			publicityFlag = getCode2Name("A50", publicityCode, companyID, lang, tenantID);
-			LOGGER.debug("getCode2Name ended.");
+			
 
 			switch (publicityFlag) {
 			case "ALL":
@@ -622,10 +622,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String strLangFile = getCode2Name("L01", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String strLangDocument = getCode2Name("L01", "002", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String docList = getAttachInfoDB(docID, flag, commonUtil.getMultiData(lang, tenantID), strLangFile, strLangDocument, orderOption1, companyID, tenantID);
 		
@@ -876,7 +876,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String basicOrder = getCode2Name("A18", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
@@ -1151,7 +1151,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String docSN = "";
 		String newDocID = "";
 		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String docNo = "";
 		String orgDocNumCode = "";
@@ -1746,7 +1746,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (dlength <= 0) {
 			String isLastAprLine = getCode2Name("A44", "001", companyID, lang, tenantID);
-			LOGGER.debug("getCode2Name ended.");
+			
 
 			if (isLastAprLine.equals("1")) {
 				docList = getAprLineInfoDB(docID, "2", userID, formID, companyID, tenantID);
@@ -1930,10 +1930,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		Document docXML = commonUtil.convertStringToDocument(ret2);
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String susinGroupUseFlag = getCode2Name("A53", "002", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		
 		NodeList rowNode = docXML.getElementsByTagName("ROW");
 		
@@ -2121,7 +2121,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA2>");
 			resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("APRLINESN").item(k).getTextContent()) + "</DATA3>");
 			resultXML.append("<DATA4>" + getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, lang, tenantID) + "</DATA4>");
-			LOGGER.debug("getCode2Name ended.");
+			
 			resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA5>");
 			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent()) + "</DATA6>");
 			resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "</DATA7>");
@@ -2132,7 +2132,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, lang, tenantID)) + "</VALUE>");
-			LOGGER.debug("getCode2Name ended.");
+			
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			
@@ -2242,7 +2242,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         if (rtnXML.toString().trim().equals("<ROWS>") && !userID.trim().equals("")) {
         	String isUse = getCode2Name("A44", "002", companyID, lang, tenantID);
-			LOGGER.debug("getCode2Name ended.");
+			
 
         	if (isUse.equals("1")) {
         		docList = getFormRecvAprDB(formID, userID, "2", companyID, tenantID);
@@ -3982,7 +3982,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String basicOrderReverse = "desc";
 		
@@ -4192,7 +4192,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		boolean rtn = true;
 		String gFlag = getCode2Name("A35", "002", companyID, lang, userInfo.getTenantId()).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -5388,7 +5388,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private boolean gongRamActivate(String docID, String companyID, String lang, int tenantID) throws Exception{
 		String gongRamOption = getCode2Name("A56", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		boolean rtnVal = true;
 		
@@ -7524,7 +7524,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String chkDeptLines(Document resultXML, String companyID, String lang, LoginVO userInfo) throws Exception {
 		StringBuilder rtnVal = new StringBuilder();
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, userInfo.getTenantId());
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("<RESULT>");
 		
@@ -8009,7 +8009,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String basicOrderReverse = "desc";
 		
@@ -8278,19 +8278,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		rtnVal.append("</ATTACHINFO>");
 		rtnVal.append("<CONVDOCINFO>");
 		rtnVal.append("<HAPYUI>" + makeXMLString(getCode2Name("A36", "001", companyID, lang, tenantID)) + "</HAPYUI>");
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("<GAMSA>" + makeXMLString(getCode2Name("A36", "002", companyID, lang, tenantID)) + "</GAMSA>");
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("<RELAY>" + makeXMLString(getCode2Name("A36", "003", companyID, lang, tenantID)) + "</RELAY>");
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("<EXCHANGE>" + makeXMLString(getCode2Name("A36", "004", companyID, lang, tenantID)) + "</EXCHANGE>");
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("<RELAY2>" + makeXMLString(getCode2Name("A36", "005", companyID, lang, tenantID)) + "</RELAY2>");
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		rtnVal.append("</CONVDOCINFO><DELIVERYNO>");
         rtnVal.append(sn);
@@ -8316,7 +8316,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String setJijung(String docID, String receiveSN, String processorID, String processorName, String processorJobTitle, String receivedDeptID, String receivedDeptName, String docState,
 			String processorName2, String processorJobTitle2, String receivedDeptName2, String companyID, String lang, int tenantID) throws Exception {
 		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String result = "";
 		
@@ -8408,7 +8408,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getNextDocInfo(String docID, String userID, String userDeptID, String companyID, String lang, int tenantID, String offset) throws Exception {
 		String strXML = "";
 		String basicOrder = getCode2Name("A18", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String userIDs = "'" + makeRightField(userID) + "'";
 		String proxyOption = getIsUse("A23", "001", companyID, lang, tenantID);
@@ -8798,7 +8798,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String subSQL = "";
 		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		if (!gFlag.equals("G")) {
 			strSQL.append("INSERT INTO TBL_APRRECEIPTPROCESSINFO (ReceiveSN, DocID, ");
@@ -8952,7 +8952,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder strSQL = new StringBuilder();
 		
 		String deliveryOption = getCode2Name("A54", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		boolean duplicateFlag = false;
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -10429,7 +10429,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String flag = getCode2Name("A35", "002", companyID, lang, userInfo.getTenantId()).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 		
 		switch (docType) {
 		case "001":
@@ -10441,7 +10441,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			} else {
 				String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
-				LOGGER.debug("getCode2Name ended.");
+				
 
 				if (!autoDeptID.equals("")) {
 					int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
@@ -11807,10 +11807,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiptMemberJobTitle2 = "";
 		String receiptCompanyID = "";
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 
 		String orgDocID = docID;
 		String tempOrgDocID = "";
@@ -12052,7 +12052,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String updateProcessYN(String docID, String deptID, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PROCESSYN", processYN);
@@ -12517,7 +12517,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		LOGGER.debug("sendMsg started");
 
 		if (getCode2Name("A43", "001", companyID, lang, tenantID).equals("Y")) {
-			LOGGER.debug("getCode2Name ended.");
+			
 			notiFlag = true;
 		}
 		
@@ -12541,7 +12541,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (docTitle.trim().equals("")) {
 					docTitle = getCode2Name("L06", "001", companyID, lang, tenantID);
-					LOGGER.debug("getCode2Name ended.");
+					
 
 				} else {
 					if (nextUserID.trim().equals("")) {
@@ -12569,55 +12569,55 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			switch (mode.toUpperCase()) {
 			case "ING" :
                 notyStr = getCode2Name("L06", "002", companyID, lang, tenantID); //"문서도착";
-    			LOGGER.debug("getCode2Name ended.");
+    			
 				break;
 			case "END" :
                 notyStr = getCode2Name("L06", "003", companyID, lang, tenantID); //"문서완료";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "BAN" :
                 notyStr = getCode2Name("L06", "004", companyID, lang, tenantID); //"문서반송";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "BOR" :
                 notyStr = getCode2Name("L06", "005", companyID, lang, tenantID); //"문서보류";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "BAL" :
                 notyStr = getCode2Name("L06", "006", companyID, lang, tenantID); //"문서발송";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "SUSIN" :
                 notyStr = getCode2Name("L06", "007", companyID, lang, tenantID); //"수신문서";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "JIJUNG" :
                 notyStr = getCode2Name("L06", "008", companyID, lang, tenantID); //"지정문서";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "BEBU" :
                 notyStr = getCode2Name("L06", "012", companyID, lang, tenantID); //"배부문서"; //012
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "HESONG" :
                 notyStr = getCode2Name("L06", "009", companyID, lang, tenantID); //"회송문서";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "HESU" :
                 notyStr = getCode2Name("L06", "010", companyID, lang, tenantID); //"문서회수";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "REJIJUNG" :
                 notyStr = getCode2Name("L06", "013", companyID, lang, tenantID); //"재지정요청"; //013
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			case "REBEBU" :
                 notyStr = getCode2Name("L06", "014", companyID, lang, tenantID); //"재배부요청"; //014
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			default :
                 notyStr = getCode2Name("L06", "011", companyID, lang, tenantID); //"결재노티";
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 			}
 			try {
@@ -13327,7 +13327,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String insLastAprReceipt(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		String isUse = getCode2Name("A44", "002", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		if (isUse.equals("1")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -13353,7 +13353,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String insLastAprLine(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		String isUse = getCode2Name("A44", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		if (isUse.equals("1")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -13919,7 +13919,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String accountYear = todayTime.substring(0, 4);
 		int month = 0;
 		String accountLastMonth = getCode2Name("A30", "003", companyID, langType, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		/// 사립대나 특정회사에서는 회계년도를 1월~12월이 아닌 3월~익년2월인 경우가 있어서 회계년도를 반환
 		if (!accountLastMonth.equals("0") || !accountLastMonth.equals("")) {
 			accountLastMonth = "-" + accountLastMonth;
@@ -14026,7 +14026,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String subSQL = "";
 		boolean rtnVal = true;
 		String hesongType = getCode2Name("A25", "001", companyID, lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		String orgDocID = "";
 		String orgCompanyID = "";
 		
@@ -15020,7 +15020,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		String basicOrderReverse = "desc";
 		
 		if (basicOrder.toLowerCase().equals("desc")) {
@@ -15185,37 +15185,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		switch (fieldName) {
 			case "DOCTYPE" : 
 				rtnVal = getCode2Name("A01", fieldValue, companyID, userLang, tenantID);
-				LOGGER.debug("getCode2Name ended.");
+				
 				break;
 
 			case "DOCSTATE" :
                 rtnVal = getCode2Name("A02", fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "APRTYPE" :
                 rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "APRSTATE" :
                 rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "FUNCTIONTYPE" :
                 rtnVal = getCode2Name("A04", fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "PROCESSYN" :
                 rtnVal = getStatusName(fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "OPINIONGB" :
                 rtnVal = getCode2Name("A17", fieldValue, companyID, userLang, tenantID);
-                LOGGER.debug("getCode2Name ended.");
+                
 				break;
 
 			case "ATTACHFILESIZE" :
@@ -15589,7 +15589,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder rtnVal = new StringBuilder("");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String GFlag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 		map.put("v_DOCID", docID.trim());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
@@ -16960,7 +16960,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			case "7" :	// 폐기대상 기록물철
 
 				String DFlag = getCode2Name("A35", "003", companyID,  userInfo.getLang(), userInfo.getTenantId()).toUpperCase().trim();
-				LOGGER.debug("getCode2Name ended.");
+				
 				if (DFlag == "Y")
 				{
 					// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
@@ -18097,7 +18097,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String deptName2 = xmlDom.getElementsByTagName("SIMSAUSERDEPTNAME2").item(0).getTextContent();
 		String userJobTitle2 = xmlDom.getElementsByTagName("SIMSAUSERJOBTITLE2").item(0).getTextContent();
 		String gFlag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		LOGGER.debug("getCode2Name ended.");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", orgDocID);
 		map.put("companyID", companyID);
@@ -18328,7 +18328,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateProcessYN2(String docID, String deptID, String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception {
 		String gFlag = getCode2Name("A35", "002", companyID , lang, tenantID);
-		LOGGER.debug("getCode2Name ended.");
+		
 		Map<String , Object> map = new HashMap<String, Object>();
 		try{
 			if(!gFlag.equals("G")) {
@@ -18531,7 +18531,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		   String strReceiptMemberJobTitle2 = "";
 		   String strReceiptCompanyID = "";
 		   String SusinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		   LOGGER.debug("getCode2Name ended.");
+		   
 		   for(int j=0; j<docXML.getElementsByTagName("ROW").getLength(); j++) {
 			   strReceiptPointID = makeListField(docXML.getElementsByTagName("RECEIPTPOINTID").item(j).getTextContent());
                strReceiptPointName = makeListField(docXML.getElementsByTagName("RECEIPTPOINTNAME").item(j).getTextContent());
