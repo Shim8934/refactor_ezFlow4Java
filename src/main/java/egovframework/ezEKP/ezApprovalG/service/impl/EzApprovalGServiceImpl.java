@@ -8839,7 +8839,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
 		
 		String docID = xmlDom.getDocumentElement().getAttribute("DocID").trim();
 		String receiveSN = xmlDom.getDocumentElement().getAttribute("ReceiveSN").trim();
@@ -8887,7 +8886,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 					map.put("v_ReceiveSN", receiveSN);
 	 					map.put("v_DOCID", docID);
 	 					map.put("v_ReceivedDeptID", makeRightField(objRows.item(0).getTextContent()));
-	 					map.put("v_ReceivedDeptNameE", makeRightField(objRows.item(1).getTextContent()));
+	 					map.put("v_ReceivedDeptName", makeRightField(objRows.item(1).getTextContent()));
 	 					map.put("v_ReceivedDeptName2", makeRightField(objRows.item(2).getTextContent()));
 	 					map.put("v_AprState", staASBaeBu);
 	 					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
