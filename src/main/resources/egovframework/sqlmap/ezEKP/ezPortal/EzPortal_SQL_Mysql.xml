@@ -1623,10 +1623,11 @@
 				A.TENANT_ID = #tenantID#
 			AND
 				B.TENANT_ID = #tenantID#
+            ORDER BY
+                DISPLAYNAME ASC
             LIMIT
                 #v_pENDROW#		
-			ORDER BY
-				DISPLAYNAME ASC
+			
 		]]>
 	</select>
 	
@@ -1778,10 +1779,10 @@
                     A.COLUMNPOS ,
                     B.ACCESSID ,
                     B.VIEW_RIGHT ,
-                    INSTR CONCAT(',', #v_DEPTPATH#, ',' , ',', B.AccessID, ',') ORDERNUM ,
+                    INSTR(CONCAT(',' ,#v_DEPTPATH#, ','), CONCAT( ',' , B.AccessID , ',')) ORDERNUM ,
                       CASE 
                            WHEN B.ACCESSID = 'everyone' THEN '1'
-                           WHEN INSTR CONCAT(',', #v_DEPTPATH#, ',' , ',' ,B.AccessID, ',') > 0 THEN '1'
+                           WHEN INSTR(CONCAT(',' , #v_DEPTPATH# , ','), CONCAT(',' ,B.AccessID , ',')) > 0 THEN '1'
                       ELSE '0'
                          END FLAG  
                	  FROM
@@ -1980,10 +1981,10 @@
 		</isEmpty>
 		
 		<![CDATA[
-            LIMIT
-                #v_pENDROW#  
   			ORDER BY
 				DISPLAYNAME ASC
+            LIMIT
+                #v_pENDROW#
 		]]>
 	</select>
 	

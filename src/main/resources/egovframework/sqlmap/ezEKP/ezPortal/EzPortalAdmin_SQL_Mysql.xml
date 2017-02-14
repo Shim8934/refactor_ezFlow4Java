@@ -368,8 +368,42 @@
 	</select> 
 	
 	<select id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
-		<![CDATA[
-			$strSQL$
+        <![CDATA[
+			SELECT
+		       A.*
+            FROM
+		       TBL_PORTLET_GENERAL A
+            WHERE
+		       DISPLAYNAME like CONCAT('%', #pDisplayName# ,'%')
+		]]>
+      
+       <isNotEmpty property="pGubunFlag">
+          <![CDATA[
+	         AND
+                PORTLET_TYPE = #pGubunFlag#
+	 	  ]]>
+       </isNotEmpty>
+       
+        <isNotEmpty property="pPageGubunFlag">
+          <![CDATA[
+              AND
+                 GUBUNFLAG = #pPageGubunFlag#
+          ]]>
+       </isNotEmpty>
+       
+        <isNotEmpty property="pCompanyID">
+          <![CDATA[
+              AND
+                  COMPANYID = #pCompanyID#
+          ]]>
+       </isNotEmpty>
+        <![CDATA[
+	         AND
+                TENANT_ID=#tenantID# 
+             ORDER BY
+                 DISPLAYNAME ASC
+             LIMIT
+                 #startRow#,#pEndRow#
 		]]>
 	</select>
 	

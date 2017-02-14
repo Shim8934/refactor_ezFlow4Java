@@ -1399,65 +1399,67 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
 	}
 	
-	public String getImageHTML (String pCallingMenuID, String pUID, boolean pIncludeTD, String pContentsUID, LoginVO userInfo) {
-		try {
-			String pSkinNum = "";
-			String strHTML = "";
-			if (pContentsUID.equals("203")) {
-				pSkinNum = userInfo.getSkinNum();
-			} else {
-				pSkinNum = "1";
+	public String getImageHTML (String pCallingMenuID, String pUID, boolean pIncludeTD, String pContentsUID, LoginVO userInfo) throws Exception {
+		logger.debug("getImageHTML started");
+
+		String pSkinNum = "";
+		String strHTML = "";
+		
+		if (pContentsUID.equals("203")) {
+			pSkinNum = userInfo.getSkinNum();
+		} else {
+			pSkinNum = "1";
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
+		
+		if (result != null) {
+			String imageNormalImagePath = result.getNormalImagePath();
+			String imageOverImagePath = result.getOverImagePath();
+			int imageImageWidth = result.getImageWidth();
+			int imageImageHeight = result.getImageHeight();
+			String imageLinkURL = result.getLinkURL();
+			String imageLinkLocation = result.getLinkLocation();
+			String imageWindowOption = result.getWindowOption();
+			
+			logger.debug("imageNormalImagePath="+imageNormalImagePath);
+			
+			if (imageNormalImagePath != null) {
+				sb.append("<img src='" + imageNormalImagePath + "'");
+				if (imageOverImagePath != null) {
+					sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"" + " name=\'" + pContentsUID + "'");
+				}
+				if (imageLinkURL != null && !imageLinkURL.trim().equals("")) {
+					sb.append(" style='cursor:pointer'");
+					sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
+					sb.append(", \"" + imageLinkLocation + "\"");
+					sb.append(", \"" + imageWindowOption + "\")'");
+					
+				}
+				if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" width='" + imageImageWidth + "'");
+				if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" height='" + imageImageHeight + "'");
+				sb.append(">");
+				strHTML = sb.toString();
+				sb.delete(0, sb.length());
+				
+				if (pIncludeTD) {
+					if (imageImageWidth != 0) {
+						sb.append("<td width=\"" + imageImageWidth + "\">" + strHTML + "</td>");
+					} else {
+						sb.append("<td>" + strHTML + "</td>");
+					}
+				} else {
+					sb.append(strHTML);
+				}
 			}
 			
-			StringBuilder sb = new StringBuilder();
-			PortalMenuItemItemsImageVO result = getImageHtml(pUID, pCallingMenuID, Integer.parseInt(pSkinNum), userInfo.getTenantId());
-
-			if (result != null) {
-				String imageNormalImagePath = result.getNormalImagePath();
-				String imageOverImagePath = result.getOverImagePath();
-				int imageImageWidth = result.getImageWidth();
-				int imageImageHeight = result.getImageHeight();
-				String imageLinkURL = result.getLinkURL();
-				String imageLinkLocation = result.getLinkLocation();
-				String imageWindowOption = result.getWindowOption();
-				
-				if (imageNormalImagePath != null) {
-					sb.append("<img src='" + imageNormalImagePath + "'");
-					if (imageOverImagePath != null) {
-						sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"" + " name=\'" + pContentsUID + "'");
-					}
-					if (imageLinkURL != null && !imageLinkURL.trim().equals("")) {
-						sb.append(" style='cursor:pointer'");
-						sb.append(" onclick='OpenWindow(event, \"" + imageLinkURL + topLoadGetParameters(imageLinkURL, pUID, userInfo) + "\"");
-						sb.append(", \"" + imageLinkLocation + "\"");
-						sb.append(", \"" + imageWindowOption + "\")'");
-					
-					}
-					if (imageImageWidth != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" width='" + imageImageWidth + "'");
-                    if (imageImageHeight != 0 && userInfo.getTheme().equals("BASIC")) sb.append(" height='" + imageImageHeight + "'");
-					sb.append(">");
-					strHTML = sb.toString();
-					sb.delete(0, sb.length());
-					
-					if (pIncludeTD) {
-						if (imageImageWidth != 0) {
-							sb.append("<td width=\"" + imageImageWidth + "\">" + strHTML + "</td>");
-						} else {
-							sb.append("<td>" + strHTML + "</td>");
-						}
-					} else {
-						sb.append(strHTML);
-					}
-				}
-				
-			}
-
-			return sb.toString();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
 		}
+		
+
+		logger.debug("getImageHTML ended");
+
+		return sb.toString();
 	}
 	
 	public String topLoadGetParameters (String pURL, String pMenuItemID, LoginVO userInfo) throws Exception {
