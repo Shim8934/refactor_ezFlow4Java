@@ -41,8 +41,8 @@
 		        });
 		        $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
 		        if (getBirthDay == "") {
-		            var NowDate = new Date();
-		            $("#txtBirth").datepicker('setDate', NowDate);
+		            //var NowDate = new Date();
+		            //$("#txtBirth").datepicker('setDate', NowDate);
 		        }
 		        else
 		            $("#txtBirth").datepicker('setDate', getBirthDay);
