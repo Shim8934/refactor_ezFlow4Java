@@ -1850,35 +1850,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void restoreRetireEntry_D (Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.restoreRetireEntry_D", map);
 	}
-	
-	public void updateUserMaster (Map<String, Object> map) throws Exception {
-		update("EzOrganAdminDAO.updateUserMaster", map);
-	}
-	
-	public OrganUserVO updateUserMaster_S (Map<String, Object> map) throws Exception {
-		return (OrganUserVO)select("EzOrganAdminDAO.updateUserMaster_S", map);
-	}
-	
-	public void updateUserMaster_U (OrganUserVO user) throws Exception {
-		update("EzOrganAdminDAO.updateUserMaster_U", user);
-	}
-	
-	public void updateUserMaster_U1 (OrganUserVO user) throws Exception {
-		update("EzOrganAdminDAO.updateUserMaster_U1", user);
-	}
-	
-	public void updateUserMaster_U2 (OrganUserVO user) throws Exception {
-		update("EzOrganAdminDAO.updateUserMaster_U2", user);
-	}
-	
-	public String resotreRetireEntry_S (Map<String, Object> map) throws Exception {
-		return (String)select("EzOrganAdminDAO.restoreRetireEntry_S", map);
-	}
-	
-	public OrganDeptVO moveGroupUser_S (Map<String, Object> map) throws Exception {
-		return (OrganDeptVO)select("EzOrganAdminDAO.moveGroupUser_S", map);
-	}
-	
+							
 	public void moveGroupUser_U (Map<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.moveGroupUser_U", map);
 	}
@@ -1886,11 +1858,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void setAddJob_I (Map<String, Object> map) throws Exception {
 		insert("EzOrganAdminDAO.setAddJob_I", map);
 	}
-	
-	public String retireDBData_S (Map<String, Object> map) throws Exception {
-		return (String)select("EzOrganAdminDAO.retireDBData_S", map);
-	}
-	
+		
 	public void retireDBData_I (Map<String, Object> map) throws Exception {
 		insert("EzOrganAdminDAO.retireDBData_I", map);
 	}
@@ -1898,15 +1866,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void retireDBData_D3(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.retireDBData_D3", map);
     }
-	
-	public void retireDBData_U1(Map<String, Object> map) throws Exception {
-        update("EzOrganAdminDAO.retireDBData_U1", map);
-    }
-	
-	public void retireDBData_U2(Map<String, Object> map) throws Exception {
-        update("EzOrganAdminDAO.retireDBData_U2", map);
-    }
-	
+			
 	public void deleteDBData_D1(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D1", map);
     }
