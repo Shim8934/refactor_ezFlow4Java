@@ -6697,110 +6697,107 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true"> -->
-<!-- 		{CALL EZSP_GETACCESSYNG(#v_DOCID#, #v_FLAG#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="001">
-		<![CDATA[
-			SELECT 
-				PUBLICITYCODE 
-	        FROM 
-	        	TBL_EXPENDAPRDOCINFO 
-	        WHERE  
-	        	DOCID = #v_DOCID#
-	        AND
-				TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				SELECT 
+					PUBLICITYCODE 
+		        FROM 
+		        	TBL_EXPENDAPRDOCINFO 
+		        WHERE  
+		        	DOCID = #v_DOCID#
+		        AND
+					TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 		
 		<isEqual property="v_FLAG" compareValue="002">
-		<![CDATA[
-			 SELECT     
-			  		CASE 
-			  			WHEN NVL(COUNT(DocID), 0) > 0 THEN 'Y' 
-             			ELSE 
-             			'N'
-             		END AS RET
-			  FROM
-			  		TBL_ENDAPRLINEINFO 
-       		  WHERE  
-       				DocID = $v_DOCID$
-              AND 
-              		AprMemberID = #v_USERID#
-              AND
-					TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				 SELECT     
+				  		CASE 
+				  			WHEN NVL(COUNT(DocID), 0) > 0 
+				  			THEN 'Y' 
+	             			ELSE 'N'
+	             		END AS RET
+				  FROM
+				  		TBL_ENDAPRLINEINFO 
+	       		  WHERE  
+	       				DocID = #v_DOCID#
+	              AND 
+	              		AprMemberID = #v_USERID#
+	              AND
+						TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="003">
-		<![CDATA[
-		 	SELECT 
-		 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
-            FROM 
-            	TBL_RECORD 
-            JOIN 
-            	TBL_SEPERATEATTACH    
-           	ON 
-           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
-           	AND 
-           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
-            WHERE  
-            	TBL_RECORD.DocID = #v_DOCID#
-            AND
-				TBL_RECORD.TENANT_ID = #v_TENANTID#	
+			<![CDATA[
+			 	SELECT 
+			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_SEPERATEATTACH    
+	           	ON 
+	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
+	           	AND 
+	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+	            WHERE  
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#	
 			]]>	
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="004">
-		<![CDATA[
-			SELECT 
-				APRMEMBERID 
-            FROM 
-            	TBL_ENDAPRLINEINFO 
-            WHERE  
-            	( APRMEMBERSN = '1' )
-            AND 
-            	( APRMEMBERID = #v_USERID# )
-            AND 
-            	DOCID = #v_DOCID#
-            AND
-				TENANT_ID = #v_TENANTID#	 
-				]]>
+			<![CDATA[
+				SELECT 
+					APRMEMBERID 
+	            FROM 
+	            	TBL_ENDAPRLINEINFO 
+	            WHERE  
+	            	( APRMEMBERSN = '1' )
+	            AND 
+	            	( APRMEMBERID = #v_USERID# )
+	            AND 
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	 
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="005">
-		<![CDATA[
-			SELECT 
-				SECURITYCODE 
-            FROM 
-            	TBL_EXPENDAPRDOCINFO 
-            WHERE  
-            	DOCID = #v_DOCID#
-            AND
-				TENANT_ID = #v_TENANTID#	
-				]]>
+			<![CDATA[
+				SELECT 
+					SECURITYCODE 
+	            FROM 
+	            	TBL_EXPENDAPRDOCINFO 
+	            WHERE  
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="006">
-		<![CDATA[
-			SELECT 
-				COUNT(TBL_RECROLEINFO.UserRight)  
-            FROM 
-            	TBL_RECORD 
-            JOIN 
-            	TBL_RECROLEINFO    
-            ON 
-            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
-            AND
-            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
-            WHERE  
-            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
-            AND 
-            	( TBL_RECROLEINFO.UserID = #v_USERID# )
-            AND 
-            	( TBL_RECROLEINFO.UserRight = '1' )
-            AND 
-            	TBL_RECORD.DocID = #v_DOCID#
-            AND
-				TBL_RECORD.TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				SELECT 
+					COUNT(TBL_RECROLEINFO.UserRight)  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_RECROLEINFO    
+	            ON 
+	            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
+	            AND
+	            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
+	            WHERE  
+	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
+	            AND 
+	            	( TBL_RECROLEINFO.UserID = #v_USERID# )
+	            AND 
+	            	( TBL_RECROLEINFO.UserRight = '1' )
+	            AND 
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 	
 	</select>
