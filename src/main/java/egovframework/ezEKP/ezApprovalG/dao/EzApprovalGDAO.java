@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
@@ -534,8 +535,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGCabinetVO> getCabinetList(Map<String, Object> map) throws Exception{
-		return (List<ApprGCabinetVO>) list("EzApprovalG.getCabinetList", map);
+	public List<ApprGCabinetVO> getCabinetList(ApprGCabinetListVO cabinetListVO) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.getCabinetList", cabinetListVO);
 	}
 	@SuppressWarnings("unchecked")
 	public List<ApprGTaskVO> getCabinetDetailInfo(Map<String, Object> map) throws Exception{
@@ -967,8 +968,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)select("EzApprovalG.getDeliveryListCount", map);
 	}
 
-	public int getCabinetListCount(Map<String, Object> map1) throws Exception{
-		return (int)select("EzApprovalG.getCabinetListCount", map1);
+	public int getCabinetListCount(ApprGCabinetListVO cabinetListVO) throws Exception{
+		return (int)select("EzApprovalG.getCabinetListCount", cabinetListVO);
 	}
 
 	public int getReceiptInfo_receivesNm(Map<String, Object> map)throws Exception{

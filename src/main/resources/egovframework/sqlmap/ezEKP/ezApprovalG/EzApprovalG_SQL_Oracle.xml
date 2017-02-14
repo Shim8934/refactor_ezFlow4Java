@@ -24,6 +24,7 @@
 	<typeAlias  alias="ApprGListHeaderVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO"/>
 	<typeAlias  alias="ApprGReceiveDocVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO"/>
 	<typeAlias  alias="ApprGSecondApprVO"	 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO"/>
+	<typeAlias  alias="ApprGCabinetListVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO"/>
 	<typeAlias  alias="ApprGHistoryLineVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO"/>
 	<typeAlias  alias="ApprGLineTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO"/>
 	<typeAlias  alias="ApprGDeptTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO"/>
@@ -3685,7 +3686,21 @@
 					</isNotEqual>
 				</isEqual>
 			<isNotEmpty property="isDocPrint">
-				) N ) A 
+				<isEqual property="isDocPrint" compareValue="TRUE">
+					<isLessThan property="start" compareValue="0">
+						) N ) A 
+					</isLessThan>
+					<isGreaterEqual property="start" compareValue="0">
+						) N ) A 
+					WHERE 
+						ROWNUM_ BETWEEN #start# AND #end#
+					</isGreaterEqual>
+				</isEqual>
+				<isNotEqual property="isDocPrint" compareValue="TRUE">
+					) N ) A 
+				WHERE 
+					ROWNUM_ BETWEEN #start# AND #end#
+				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
 				) N ) A 
@@ -13417,17 +13432,594 @@
 				   		]]>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true"> -->
-<!-- 		{CALL SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	 -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
-	$sqlString$
+	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">
+		SELECT 
+			* 
+		FROM 
+			( SELECT 
+					ROW_NUMBER() OVER( $orderBy$ ) AS ROWNUM_, 
+					N.*  
+			  FROM 
+			  		( SELECT 
+			  				TBL_CABINET.CabinetID,
+			  				TBL_CABINETCLASS.RegSerialNo, 
+			  				TBL_CABINETCLASS.ProductionYear, 
+			  				TBL_CABINET.VolumeNo, 
+			  				TBL_CABINETCLASS.ModifyFlag, 
+			  				TBL_CABINET.CabinetTransferFlag, 
+			  				TBL_CABINETCLASS.ConfirmFlag, 
+			  				TBL_CABINETCLASS.TaskCode, 
+			  				TBL_CABINETCLASS.TaskName, 
+			  				TBL_CABINETCLASS.TaskName2, 
+			  				TBL_CABINETCLASS.ProcessDeptCode, 
+			  				TBL_CABINETCLASS.ProcessDeptName,
+			  				TBL_CABINETCLASS.ProcessDeptName2, 
+			  				TBL_CABINET.CabinetClassNo, 
+			  				TBL_CABINETCLASS.RecTypeCode as RecTypeCode, 
+			  				TBL_CABINETCLASS.CreateDate + $offsetMin$/(24*60) AS ClassCreateDate, 
+			  				TBL_CABINETCLASS.OwnerID, 
+			  				TBL_CABINETCLASS.SpecialCatalogFlag, 
+			  				TBL_CABINETCLASS.TerminateFlag, 
+			  				TBL_CABINETCLASS.OwnerDeptID, 
+			  				TBL_CABINETCLASS.OwnerTask, 
+			  				TBL_CABINETCLASS.TransDelayFlag 
+			  				$extraSelectClause$ 
+			  		  FROM  
+			  		  		TBL_CABINETCLASS  
+			  		  INNER JOIN 
+			  		  		TBL_CABINET  
+			  		  ON 
+			  		  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+			  		  AND 
+			  		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+		  		  	  WHERE 
+		  		  	  		TBL_CABINET.DelFlag = '0' 
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.DelFlag = '0' 
+		  		  <isEqual property="listFlag" compareValue="9">
+		  		  	  AND 
+		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
+		  		  	  AND 
+		  		  	  		( 
+		  		  	  			( OwnerDeptID = #deptCode#
+		  		  	  				AND
+		  		  	  			  ConfirmFlag = '0' ) 
+		  		  	  			OR 
+		  		  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+		  		  	  				AND 
+		  		  	  			  ConfirmFlag = '1') 
+		  		  	  		)
+		  		  </isEqual>
+		  		  <isNotEqual property="listFlag" compareValue="9">
+		  		  	  AND 
+		  		  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
+		  		  	  				AND 
+		  		  	  			 ConfirmFlag = '0')	
+	  		  	    <isNotEmpty property="deptCode">
+	  		  	      AND 
+	  		  	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	  		  	    </isNotEmpty>
+		  		  </isNotEqual>
+		  		  <isNotEmpty property="title">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.Title$multiLang$ Like CONCAT(CONCAT('%', #title#), '%')
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="taskCode">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="sProduceYear">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ProductionYear >= #sProduceYear# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="eProduceYear">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ProductionYear <= #eProduceYear# 
+					]]>
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="sExpYear">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ExpirationYear >= #sExpYear# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="eExpYear">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ExpirationYear <= #eExpYear#
+					]]>
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="recTypeCode">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.RecTypeCode = #recTypeCode# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepPeriod">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.KeepingPeriod = #keepPeriod# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepMethod">
+		  		      AND 
+		  		      		TBL_CABINETCLASS.KeepingMethod = #keepMethod#
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepPlace">
+		  		      AND 
+		  		      		TBL_CABINETCLASS.KeepingPlace = #keepPlace#
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="charger">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.CabinetClassNo IN ( SELECT 
+		  		  	  												A.CabinetClassNo 
+		  		  	  											 From 
+		  		  	  											 	TBL_CABROLEINFO A
+		  		  	  											 WHERE
+		  		  	  											 	A.TENANT_ID = #tenantID#
+		  		  	  											 AND 
+		  		  	  											 	A.User_ID IN ( #charger# ) )
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="transExpire">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		( 
+		  		  	  			TBL_CABINETCLASS.ConfirmFlag = '1'
+		  		  	  				AND
+		  		  	  		  ( 
+		  		  	  		  	TBL_CABINETCLASS.DisplayRecFlag = '2' 
+		  		  	  		  		AND 
+		  		  	  		  	TBL_CABINETCLASS.TransDelayFlag = '0' 
+		  		  	  		  		AND 
+		  		  	  		  	TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1
+		  		  	  		   )
+		  		  	  		 OR 
+		  		  	  		  (
+		  		  	  		 	 ( 
+		  		  	  		 		TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  	  		 			AND 
+		  		  	  		 		RTRIM(DISPLAYENDDATE) <> '' 
+		  		  	  		 			AND 
+		  		  	  		 		TBL_CABINETCLASS.DisplayEndDate < #transExpire#
+		  		  	  		 	 )
+		  		  	  		 	OR 
+		  		  	  		 	 ( 
+		  		  	  		 	 	TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  	  		 	 		AND 
+		  		  	  		 	 	TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
+		  		  	  		 	 ) 
+		  		  	  		 )
+                           )  
+                       AND 
+                       		TBL_CABINETCLASS.KeepingPlace = '1' 
+                       AND 
+                       		DocTransferFlag = '0'
+					]]>
+		  		  </isNotEmpty>
+		  		  <isEqual property="listFlag" compareValue="1">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.TerminateFlag = '1' 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0'
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="2">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmYear = #nowYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="3">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '1' 
+		  		  		AND 
+		  		  			( 
+		  		  				( 
+		  		  					TBL_CABINETCLASS.DisplayRecFlag = '2' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.TransDelayFlag = '0' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.ConfirmYear Between #nowYear# - '1' And #nowYear# 
+		  		  				) 
+		  		  			OR
+		  		  				( 
+		  		  					( 
+		  		  						TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  					AND 
+		  		  						TBL_CABINETCLASS.DisplayEndDate < CAST(#nowYear# AS char(4)) 
+		  		  					) 
+		  		  				OR 
+		  		  					( 
+		  		  						TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  					AND 
+		  		  						TBL_CABINETCLASS.ExTransYear = #nowYear# 
+		  		  					)
+		  		  				) 
+		  		  			) 
+		  		  		AND 
+		  		  			CatalogTransferFlag = '0'
+					]]>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="4">
+		  		  		AND 
+		  		  			CatalogTransferFlag = '1' 
+		  		  		AND 
+		  		  			DocTransferFlag = '0' 
+		  		  		AND 
+		  		  			CatalogTransferYear = ( SELECT 
+		  		  										MAX(CatalogTransferYear) 
+		  		  									From 
+		  		  										TBL_CABINET A
+		  		  									WHERE
+		  		  										TENANT_ID = #tenantID# )
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="5">
+		  		  		AND 
+		  		  			DocTransferFlag = '1'
+		  		  		AND 
+		  		  			DocTransferYear = #nowYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="6">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.KeepingPlace = '1' 
+		  		  		AND 
+		  		  			( 
+		  		  				(
+		  		  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.DisplayEndDate >= CAST(#nowYear# AS char(4)) 
+		  		  				) 
+		  		  			OR 
+		  		  				(
+		  		  					TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.ExTransYear > #nowYear# 
+		  		  				)
+		  		  			) 
+		  		  		AND 
+		  		  			( 
+		  		  				( 
+		  		  					TBL_CABINETCLASS.ConfirmYear = #nowYear#
+		  		  				) 
+		  		  				OR
+		  		  				( 
+		  		  					TBL_CABINETCLASS.ConfirmYear > ( SELECT 
+		  		  														MAX(DocTransferYear) 
+		  		  													From 
+		  		  														TBL_CABINET A
+		  		  													WHERE
+		  		  														TENANT_ID = #tenantID# ) 
+		  		  				) 
+		  		  			)
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="7">
+		  		  		<isEqual property="dFlag" compareValue="Y">
+		  		  			AND 
+		  		  				TBL_CABINETCLASS.TerminateFlag = '1' 
+		  		  			AND 
+		  		  				(#nowYear# - TBL_CABINETCLASS.ExpirationYear) > TBL_CABINETCLASS.KeepingPeriod
+		  		  		</isEqual>
+		  		  		<isNotEqual property="dFlag" compareValue="Y">
+		  		  			AND 
+		  		  				DocTransferFlag = '1'
+		  		  		</isNotEqual>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="8">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0'
+                    	AND 
+                    		TBL_CABINETCLASS.ExpirationYear < #accountYear#
+					]]>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="10">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="11">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
+						AND 
+							TBL_CABINETCLASS.TerminateFlag = '0' 
+						AND 
+							TBL_CABINETCLASS.ConfirmFlag = '0'
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="12">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0' 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ExpirationYear < #accountYear# 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.TerminateFlag = '0'
+					]]>
+		  		  </isEqual>
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.TENANT_ID = #tenantID#
+ 		  	<isNotEmpty property="isDocPrint">
+				<isEqual property="isDocPrint" compareValue="TRUE">
+					<isLessThan property="start" compareValue="0">
+						) N ) A 
+					</isLessThan>
+					<isGreaterEqual property="start" compareValue="0">
+						) N ) A 
+					WHERE 
+						ROWNUM_ BETWEEN #start# AND #end#
+					</isGreaterEqual>
+				</isEqual>
+				<isNotEqual property="isDocPrint" compareValue="TRUE">
+					) N ) A 
+				WHERE 
+					ROWNUM_ BETWEEN #start# AND #end#
+				</isNotEqual>
+			</isNotEmpty>
+			<isEmpty property="isDocPrint">
+				) N ) A 
+			WHERE 
+				ROWNUM_ BETWEEN #start# AND #end#
+			</isEmpty>
 	</select>
-<!-- 	<procedure id="EzApprovalG.getCabinetListCount" parameterClass="Map" resultClass="int"> -->
-<!-- 		{CALL SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	 -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalG.getCabinetListCount" parameterClass="Map" resultClass="int">
-	$sqlString$
+	<select id="EzApprovalG.getCabinetListCount" parameterClass="ApprGCabinetListVO" resultClass="int">
+		SELECT 
+			COUNT(*)
+		FROM  
+	  		TBL_CABINETCLASS  
+	  INNER JOIN 
+	  		TBL_CABINET  
+	  ON 
+	  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+	  AND 
+	  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+  	  WHERE 
+  	  		TBL_CABINET.DelFlag = '0' 
+  	  AND 
+  	  		TBL_CABINETCLASS.DelFlag = '0' 
+	  <isEqual property="listFlag" compareValue="9">
+	  	  AND 
+	  	  		TBL_CABINET.CabinetTransferFlag = '2'
+	  	  AND 
+	  	  		( 
+	  	  			( OwnerDeptID = #deptCode#
+	  	  				AND
+	  	  			  ConfirmFlag = '0' ) 
+	  	  			OR 
+	  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+	  	  				AND 
+	  	  			  ConfirmFlag = '1') 
+	  	  		)
+	  </isEqual>
+	  <isNotEqual property="listFlag" compareValue="9">
+	  	  AND 
+	  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
+	  	  				AND 
+	  	  			 ConfirmFlag = '0')	
+	 	    <isNotEmpty property="deptCode">
+	 	      AND 
+	 	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	 	    </isNotEmpty>
+	  </isNotEqual>
+	  <isNotEmpty property="title">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.Title$multiLang$ Like CONCAT(CONCAT('%', #title#), '%')
+	  </isNotEmpty>
+	  <isNotEmpty property="taskCode">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+	  </isNotEmpty>
+	  <isNotEmpty property="sProduceYear">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ProductionYear >= #sProduceYear# 
+	  </isNotEmpty>
+	  <isNotEmpty property="eProduceYear">
+	  	<![CDATA[
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ProductionYear <= #eProduceYear# 
+		]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="sExpYear">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ExpirationYear >= #sExpYear# 
+	  </isNotEmpty>
+	  <isNotEmpty property="eExpYear">
+	  	<![CDATA[
+  	  	AND 
+  	  		TBL_CABINETCLASS.ExpirationYear <= #eExpYear#
+		]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recTypeCode">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.RecTypeCode = #recTypeCode# 
+	  </isNotEmpty>
+	  <isNotEmpty property="keepPeriod">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.KeepingPeriod = #keepPeriod# 
+	  </isNotEmpty>
+	  <isNotEmpty property="keepMethod">
+	      AND 
+	      		TBL_CABINETCLASS.KeepingMethod = #keepMethod#
+	  </isNotEmpty>
+	  <isNotEmpty property="keepPlace">
+	      AND 
+	      		TBL_CABINETCLASS.KeepingPlace = #keepPlace#
+	  </isNotEmpty>
+	  <isNotEmpty property="charger">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.CabinetClassNo IN ( SELECT 
+	  	  												A.CabinetClassNo 
+	  	  											 From 
+	  	  											 	TBL_CABROLEINFO A
+	  	  											 WHERE
+	  	  											 	A.TENANT_ID = #tenantID#
+	  	  											 AND 
+	  	  											 	A.User_ID IN ( #charger# ) )
+	  </isNotEmpty>
+	  <isNotEmpty property="transExpire">
+	  	<![CDATA[
+  		  AND 
+  	  		( 
+  	  			TBL_CABINETCLASS.ConfirmFlag = '1'
+  	  				AND
+  	  		  ( 
+  	  		  	TBL_CABINETCLASS.DisplayRecFlag = '2' 
+  	  		  		AND 
+  	  		  	TBL_CABINETCLASS.TransDelayFlag = '0' 
+  	  		  		AND 
+  	  		  	TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1
+  	  		   )
+  	  		 OR 
+  	  		  (
+  	  		 	 ( 
+  	  		 		TBL_CABINETCLASS.DisplayRecFlag = '1' 
+  	  		 			AND 
+  	  		 		RTRIM(DISPLAYENDDATE) <> '' 
+  	  		 			AND 
+  	  		 		TBL_CABINETCLASS.DisplayEndDate < #transExpire#
+  	  		 	 )
+  	  		 	OR 
+  	  		 	 ( 
+  	  		 	 	TBL_CABINETCLASS.TransDelayFlag = '1' 
+  	  		 	 		AND 
+  	  		 	 	TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
+  	  		 	 ) 
+  	  		 )
+                     )  
+                 AND 
+                 		TBL_CABINETCLASS.KeepingPlace = '1' 
+                 AND 
+                 		DocTransferFlag = '0'
+		]]>
+	  </isNotEmpty>
+	  <isEqual property="listFlag" compareValue="1">
+	  		AND 
+	  			TBL_CABINETCLASS.TerminateFlag = '1' 
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmFlag = '0'
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="2">
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmYear = #nowYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="3">
+	  	<![CDATA[
+  		AND 
+  			TBL_CABINETCLASS.ConfirmFlag = '1' 
+  		AND 
+  			( 
+  				( 
+  					TBL_CABINETCLASS.DisplayRecFlag = '2' 
+  				AND 
+  					TBL_CABINETCLASS.TransDelayFlag = '0' 
+  				AND 
+  					TBL_CABINETCLASS.ConfirmYear Between #nowYear# - '1' And #nowYear# 
+  				) 
+  			OR
+  				( 
+  					( 
+  						TBL_CABINETCLASS.DisplayRecFlag = '1' 
+  					AND 
+  						TBL_CABINETCLASS.DisplayEndDate < CAST(#nowYear# AS char(4)) 
+  					) 
+  				OR 
+  					( 
+  						TBL_CABINETCLASS.TransDelayFlag = '1' 
+  					AND 
+  						TBL_CABINETCLASS.ExTransYear = #nowYear# 
+  					)
+  				) 
+  			) 
+  		AND 
+  			CatalogTransferFlag = '0'
+		]]>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="4">
+	  		AND 
+	  			CatalogTransferFlag = '1' 
+	  		AND 
+	  			DocTransferFlag = '0' 
+	  		AND 
+	  			CatalogTransferYear = ( SELECT 
+	  										MAX(CatalogTransferYear) 
+	  									From 
+	  										TBL_CABINET A
+	  									WHERE
+	  										TENANT_ID = #tenantID# )
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="5">
+	  		AND 
+	  			DocTransferFlag = '1'
+	  		AND 
+	  			DocTransferYear = #nowYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="6">
+	  		AND 
+	  			TBL_CABINETCLASS.KeepingPlace = '1' 
+	  		AND 
+	  			( 
+	  				(
+	  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
+	  				AND 
+	  					TBL_CABINETCLASS.DisplayEndDate >= CAST(#nowYear# AS char(4)) 
+	  				) 
+	  			OR 
+	  				(
+	  					TBL_CABINETCLASS.TransDelayFlag = '1' 
+	  				AND 
+	  					TBL_CABINETCLASS.ExTransYear > #nowYear# 
+	  				)
+	  			) 
+	  		AND 
+	  			( 
+	  				( 
+	  					TBL_CABINETCLASS.ConfirmYear = #nowYear#
+	  				) 
+	  				OR
+	  				( 
+	  					TBL_CABINETCLASS.ConfirmYear > ( SELECT 
+	  														MAX(DocTransferYear) 
+	  													From 
+	  														TBL_CABINET A
+	  													WHERE
+	  														TENANT_ID = #tenantID# ) 
+	  				) 
+	  			)
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="7">
+	  		<isEqual property="dFlag" compareValue="Y">
+	  			AND 
+	  				TBL_CABINETCLASS.TerminateFlag = '1' 
+	  			AND 
+	  				(#nowYear# - TBL_CABINETCLASS.ExpirationYear) > TBL_CABINETCLASS.KeepingPeriod
+	  		</isEqual>
+	  		<isNotEqual property="dFlag" compareValue="Y">
+	  			AND 
+	  				DocTransferFlag = '1'
+	  		</isNotEqual>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="8">
+	  	<![CDATA[
+  		AND 
+  			TBL_CABINETCLASS.ConfirmFlag = '0'
+       	AND 
+       		TBL_CABINETCLASS.ExpirationYear < #accountYear#
+		]]>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="10">
+	  		AND 
+	  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="11">
+	  		AND 
+	  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
+			AND 
+				TBL_CABINETCLASS.TerminateFlag = '0' 
+			AND 
+				TBL_CABINETCLASS.ConfirmFlag = '0'
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="12">
+	  	<![CDATA[
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmFlag = '0' 
+	  		AND 
+	  			TBL_CABINETCLASS.ExpirationYear < #accountYear# 
+	  		AND 
+	  			TBL_CABINETCLASS.TerminateFlag = '0'
+		]]>
+	  </isEqual>
+	  	  AND 
+	  	  		TBL_CABINETCLASS.TENANT_ID = #tenantID#
 	</select>
 	
 <!-- 	보류 -->
