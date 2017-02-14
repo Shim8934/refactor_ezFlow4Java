@@ -283,9 +283,6 @@
 			function openUserInfo(strEmail) {
 			    var compemail = strEmail
 			    compemail = compemail.toUpperCase();
-<%-- 			    var sDomain = ;<%=request.getServerName() %>; --%>
-// 			    sDomain = sDomain.toUpperCase();
-	
 			    var s_pos = compemail.indexOf("@")
 			    var parameter = compemail.slice(0, s_pos);  //보낸 사람 ID
 			    var heigth = window.screen.availHeight;
@@ -314,7 +311,7 @@
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t265" /></th>
-		    <td><a style="cursor:pointer" onclick='openUserInfo(<c:out value="${qstUserPollItemVO.userEmail}"/>)' ><c:out value="${qstUserPollItemVO.userNm}"/> (<c:out value="${qstUserPollItemVO.userEmail}"/> )</a></td>
+		    <td><a style="cursor:pointer" onclick='openUserInfo("<c:out value="${qstUserPollItemVO.userEmail}"/>")' ><c:out value="${qstUserPollItemVO.userNm}"/> (<c:out value="${qstUserPollItemVO.userEmail}"/> )</a></td>
 		  </tr>
 		  <tr>
 		    <th><spring:message code="ezQuestion.t216" /></th>
