@@ -1062,6 +1062,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.cabinetHistory", map);
 	}
 	
+	public int changeCabBsicInfoCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.changeCabBsicInfoCount", map);
+	}
+	
+	public int changeCabSpeacialCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.changeCabSpeacialCount", map);
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -1658,6 +1666,30 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertDosendAprDocAttachInfo", map);
 	}
 	
+	public void insertChangeCabCabinetHistory(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertChangeCabCabinetHistory", map);
+	}
+	
+	public void insertChangeCabScHistory_Cab(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertChangeCabScHistory_Cab", map);
+	}
+
+	public void insertChangeCabCabinetHistory2(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertChangeCabCabinetHistory2", map);
+	}
+	
+	public void insertChangeCabSpecialCatalogInfo_Cab(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertChangeCabSpecialCatalogInfo_Cab", map);
+	}
+	
+	public void insertChangeCabExtCabinetHistory(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertChangeCabExtCabinetHistory", map);
+	}
+	
+	public void insertRegCabinetCalss(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertRegCabinetCalss", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1906,6 +1938,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateDoSendExpAprDocInfo", map);
 	}
 	
+	public void updateChangeCabCabinetClass(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateChangeCabCabinetClass", map);
+	}
+	
+	public void updateChangeCabExtCabinetClass(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateChangeCabExtCabinetClass", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2078,6 +2118,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteDoSendAprDocAttachInfo", map);
 	}
 	
+	public void deleteChangeCabSpecialCatalogInfo_Cab(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteChangeCabSpecialCatalogInfo_Cab", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
@@ -2102,4 +2146,5 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+
 }
