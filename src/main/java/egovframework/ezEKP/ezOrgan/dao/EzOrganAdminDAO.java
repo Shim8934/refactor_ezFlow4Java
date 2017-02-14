@@ -1220,11 +1220,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         
         logger.debug("updateDBData_deptForLocal ended.");
     }
-    
-    public void updateDeptMaster(Map<String, Object> map) throws Exception {
-        update("EzOrganAdminDAO.updateDeptMaster", map);
-    }
-	
+    	
 	public void updateDBData_dept(OrganDeptVO vo) throws Exception {        
 	    updateDBData_deptForJMocha(vo);
 
@@ -1922,11 +1918,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteDBData_D5(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D5", map);
     }
-	
-	public void deleteDBData_U(Map<String, Object> map) throws Exception {
-        update("EzOrganAdminDAO.deleteDBData_U", map);
-    }
-	
+		
 	public OrganDeptVO moveDBData_S (Map<String, Object> map) throws Exception {
 		return (OrganDeptVO)select("EzOrganAdminDAO.moveDBData_S", map);
 	}
