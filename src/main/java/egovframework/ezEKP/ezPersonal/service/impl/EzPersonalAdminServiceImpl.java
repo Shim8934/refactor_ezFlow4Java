@@ -100,7 +100,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("companyID", companyID);
 		map.put("v_pTitle", title);
 		map.put("v_pTitle2", title2);
-		map.put("v_pContent", content);
+		map.put("v_pContent", content.replace("\"", "\'"));
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -127,7 +127,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTitle", title);
 		map.put("v_pTitle2", title2);
-		map.put("v_pContent", content);
+		map.put("v_pContent", content.replace("\"", "\'"));
 		map.put("v_pItemSeq", itemSeq);
 		map.put("tenantID", tenantID);
 		
