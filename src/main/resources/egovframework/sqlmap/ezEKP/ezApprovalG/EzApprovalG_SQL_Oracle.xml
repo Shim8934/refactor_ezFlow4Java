@@ -3330,7 +3330,7 @@
 						TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
-						TBL_SEPERATEATTACH.CreateDate + $offSetMin$/(24*60) as CreateDate,
+						TBL_SEPERATEATTACH.CreateDate + $offsetMin$/(24*60) as CreateDate,
 	                	TBL_ENDAPRDOCINFO.DocType, 
 	                	TBL_SEPERATEATTACH.RegisterType, 
 	                	TBL_ENDAPRDOCINFO.DocState,  
@@ -3344,7 +3344,7 @@
 						TBL_CABINET.CabinetClassNo, 
 						TBL_CABINET.ProcessDeptCode AS CabDeptCode, 
 						TBL_CABINET.OwnerDeptID, 
-	                	TBL_RECORD.RegisterDate + $offSetMin$/(24*60) as RegisterDate, 
+	                	TBL_RECORD.RegisterDate + $offsetMin$/(24*60) as RegisterDate, 
 	                	TBL_RECORD.AprMemberTitle$multiLang$ as AprMemberTitle, 
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
@@ -3490,7 +3490,7 @@
 					  	  			) 
 					  	  			OR 
 					  	  			( 
-					  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET WHERE TENANT_ID = #tenantID#) 
+					  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET A WHERE A.TENANT_ID = #tenantID#) 
 					  	  			) 
 					  	  		)
 					  </isEqual>
@@ -3499,11 +3499,11 @@
 					  	  		TBL_CABINETCLASS.CabinetClassNo IN ( Select 
 					  	  												CabinetClassNo 
 					  	  											 From 
-					  	  											 	TBL_CABROLEINFO 
+					  	  											 	TBL_CABROLEINFO A 
 					  	  											 Where 
-					  	  											 	TENANT_ID = #tenantID#
+					  	  											 	A.TENANT_ID = #tenantID#
 					  	  											 AND
-					  	  											 	User_ID IN (#charger#) )
+					  	  											 	A.User_ID IN (#charger#) )
 					  </isNotEmpty>
 					  <isNotEmpty property="transExpire">
 					  	<![CDATA[
@@ -3575,9 +3575,9 @@
 						DocTransferYear = ( SELECT 
 												MAX(DocTransferYear) 
 											FROM 
-												TBL_SEPERATEATTACH
+												TBL_SEPERATEATTACH A
 											WHERE
-												TENANT_ID = #tenantID# )
+												A.TENANT_ID = #tenantID# )
 				</isEqual>
 				<isEqual property="listFlag" compareValue="7">
 					<isEqual property="dFlag" compareValue="Y" prepend="AND">
@@ -3627,9 +3627,9 @@
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
 												FROM 
-													TBL_SPECIALCATALOGINFO_REC 
+													TBL_SPECIALCATALOGINFO_REC A 
 												Where
-													TENANT_ID = #tenantID#
+													A.TENANT_ID = #tenantID#
 												AND
 													(
 														SC1 Like CONCAT(CONCAT('%', #sc#), '%') 
@@ -3661,13 +3661,13 @@
 						  		0 < (   SELECT 
 						  					COUNT(DocID) 
 						  				FROM 
-						  					TBL_ENDAPRLINEINFO 
+						  					TBL_ENDAPRLINEINFO A 
 						  				WHERE  
-						  					TENANT_ID = #tenantID# 
+						  					A.TENANT_ID = #tenantID# 
 						  				AND 
-						  					DocID = TBL_RECORD.DocID  
+						  					A.DocID = TBL_RECORD.DocID  
 						  				AND 
-						  					AprMemberID = #userID# ) 
+						  					A.AprMemberID = #userID# ) 
 						  	OR 
 						  		TBL_RECORD.DocID = NULL 
 						  	) = 'Y'

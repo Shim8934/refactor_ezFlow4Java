@@ -5973,8 +5973,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String listType = "001";
 		recordListVO.setUsePublicFlag(false);
 //		boolean usePublicFlag = false;
-		String multiLang = commonUtil.getMultiData(lang, tenantID);
-		String offSetMin = commonUtil.getMinuteUTC(offset);
+		
+		recordListVO.setMultiLang(commonUtil.getMultiData(lang, tenantID));
+		recordListVO.setOffsetMin(commonUtil.getMinuteUTC(offset));
 
 		switch (recordListVO.getListFlag()) {
 		case "0" :	// 기록물 대장
@@ -6058,26 +6059,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
 		}
 		//다국어 추가 소스 수정
-//		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
-//                " SELECT TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate+ '" + offSetMin +"'/(24*60) as CreateDate, " +
-//                "TBL_ENDAPRDOCINFO.DocType, TBL_SEPERATEATTACH.RegisterType, TBL_ENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
-//                "TBL_SEPERATEATTACH.CabinetID, TBL_SEPERATEATTACH.SeperateAttachNo , " + 
-//				"TBL_ENDAPRDOCINFO.Href, TBL_ENDAPRDOCINFO.ContainerID, TBL_ENDAPRDOCINFO.FormID, " + 
-//				"TBL_ENDAPRDOCINFO.WriterID, TBL_CABINET.ConfirmFlag, TBL_CABINET.CabinetClassNo, " + 
-//				"TBL_CABINET.ProcessDeptCode AS CabDeptCode, TBL_CABINET.OwnerDeptID, " + 
-//                "TBL_RECORD.RegisterDate + '" + offSetMin +"'/(24*60) as RegisterDate, TBL_RECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBL_RECORD.DrafterName" + multiLang + " as DrafterName, TBL_RECORD.AttachFlag, " +
-//				"TBL_CABINET.OwnerTask, TBL_RECORD.RejectFlag , TBL_RECORD.ReceiptMemberName" + multiLang + " as ReceiptName ";
-//		
-//        fromClause = " FROM TBL_RECORD Left Join TBL_ENDAPRDOCINFO " + 
-//			"On TBL_RECORD.DocID=TBL_ENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_ENDAPRDOCINFO.TENANT_ID Inner Join TBL_SEPERATEATTACH " +
-//            "On TBL_RECORD.RecordID=TBL_SEPERATEATTACH.RecordID AND TBL_RECORD.TENANT_ID=TBL_SEPERATEATTACH.TENANT_ID ";
-//
-//		if (usePublicFlag) {
-//            fromClause += " Left Join TBL_EXPENDAPRDOCINFO " + 
-//				"On TBL_RECORD.DocID=TBL_EXPENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_EXPENDAPRDOCINFO.TENANT_ID";
-//
-//			selectClause += ", TBL_EXPENDAPRDOCINFO.SecurityApproval ";
-//		}
+		selectClause = "TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate as CreateDate, " +
+                "TBL_ENDAPRDOCINFO.DocType, TBL_SEPERATEATTACH.RegisterType, TBL_ENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
+                "TBL_SEPERATEATTACH.CabinetID, TBL_SEPERATEATTACH.SeperateAttachNo , " + 
+				"TBL_ENDAPRDOCINFO.Href, TBL_ENDAPRDOCINFO.ContainerID, TBL_ENDAPRDOCINFO.FormID, " + 
+				"TBL_ENDAPRDOCINFO.WriterID, TBL_CABINET.ConfirmFlag, TBL_CABINET.CabinetClassNo, " + 
+				"TBL_CABINET.ProcessDeptCode AS CabDeptCode, TBL_CABINET.OwnerDeptID, " + 
+                "TBL_RECORD.RegisterDate as RegisterDate, TBL_RECORD.AprMemberTitle as AprMemberTitle, TBL_RECORD.DrafterName as DrafterName, TBL_RECORD.AttachFlag, " +
+				"TBL_CABINET.OwnerTask, TBL_RECORD.RejectFlag , TBL_RECORD.ReceiptMemberName as ReceiptName ";
+		
+		if (recordListVO.isUsePublicFlag()) {
+			selectClause += ", TBL_EXPENDAPRDOCINFO.SecurityApproval ";
+		}
 		
 		String arrListInfo = getLVFieldInfo(listType, recordListVO.getCompanyID(), lang, tenantID);
 		Document arrList = commonUtil.convertStringToDocument(arrListInfo);
@@ -6096,7 +6089,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		recordListVO.setTempDeptCode(recordListVO.getDeptCode());
 
 		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
-			recordListVO.setTempDeptCode(doc.getElementsByTagName("DEPTCODE").item(0).getTextContent());
+			recordListVO.setTempDeptCode(doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().trim());
 		}
 		
 		String cabinetIDs = "";
@@ -6133,7 +6126,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //		cabJoinClause = getCabJoinClause(doc, deptCode, transFlag, listFlag, lang, companyID, tenantID);
 		
 		if (doc.getElementsByTagName("RECDEPTCODE").item(0) != null && doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().length() > 0) {
-			recordListVO.setRecDeptcode(makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()));
+			recordListVO.setRecDeptCode(makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()));
 //			strWhereClause += " AND TBL_RECORD.ProcessDeptCode = '" + makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().trim()) + "' ";
 		}
 

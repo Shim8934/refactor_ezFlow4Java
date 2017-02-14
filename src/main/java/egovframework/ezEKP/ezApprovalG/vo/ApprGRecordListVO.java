@@ -39,7 +39,7 @@ public class ApprGRecordListVO {
 	/** */
 	private String cabinetIDs;
 	/** */
-	private String recDeptcode;
+	private String recDeptCode;
 	/** */
 	private String title;
 	/** */
@@ -185,11 +185,11 @@ public class ApprGRecordListVO {
 	public void setCabinetIDs(String cabinetIDs) {
 		this.cabinetIDs = cabinetIDs;
 	}
-	public String getRecDeptcode() {
-		return recDeptcode;
+	public String getRecDeptCode() {
+		return recDeptCode;
 	}
-	public void setRecDeptcode(String recDeptcode) {
-		this.recDeptcode = recDeptcode;
+	public void setRecDeptCode(String recDeptCode) {
+		this.recDeptCode = recDeptCode;
 	}
 	public String getTitle() {
 		return title;
