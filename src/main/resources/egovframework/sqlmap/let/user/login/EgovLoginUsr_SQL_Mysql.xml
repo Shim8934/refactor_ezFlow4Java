@@ -107,7 +107,7 @@
                 lastlogin = #lastLogin#,
                 logincnt = logincnt + 1
             WHERE
-                cn = #id#                                   
+                cn = #id# AND tenant_id = #tenantId#                                  
         ]]>
     </update>
     
@@ -117,7 +117,7 @@
             SET
                 password = #password#               
             WHERE
-                cn = #id#                                   
+                cn = #id# AND tenant_id = #tenantId#                                  
         ]]>
     </update>
  

@@ -107,7 +107,7 @@
 				lastlogin = to_date(#lastLogin#, 'YYYY-MM-DD HH24:MI:SS'),
 				logincnt = logincnt + 1
 			WHERE
-				cn = #id#									
+				cn = #id# AND tenant_id = #tenantId#
 		]]>
 	</update>
 	
@@ -117,7 +117,7 @@
 			SET
 				password = #password#				
 			WHERE
-				cn = #id#									
+				cn = #id# AND tenant_id = #tenantId#
 		]]>
 	</update>
  

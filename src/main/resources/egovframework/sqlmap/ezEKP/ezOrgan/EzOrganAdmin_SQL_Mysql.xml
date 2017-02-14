@@ -113,39 +113,7 @@
                 )
 		]]>
 	</insert>
-	
-    <statement id="EzOrganAdminDAO.updateUserMaster" parameterClass="Map">
-        <![CDATA[
-            MERGE INTO
-                TBL_USERMASTER 
-            USING ( SELECT
-                            TBL_USERMASTER.ROWID ROW_ID, TBL_DEPTMASTER.DISPLAYNAME, TBL_DEPTMASTER.DISPLAYNAME2, 
-                            TBL_DEPTMASTER.EXTENSIONATTRIBUTE3, TBL_DEPTMASTER.COMPNM2, TBL_DEPTMASTER.EXTENSIONATTRIBUTE2
-                        FROM
-                            TBL_USERMASTER 
-                        JOIN
-                            TBL_DEPTMASTER
-                        ON
-                            TBL_USERMASTER.DEPARTMENT = TBL_DEPTMASTER.CN
-                        AND
-                            TBL_USERMASTER.TENANT_ID = TBL_DEPTMASTER.TENANT_ID  
-                        WHERE
-                            TBL_USERMASTER.CN = #v_CN#
-                        AND
-                            TBL_USERMASTER.TENANT_ID = #v_TENANT_ID#    ) src
-            ON ( TBL_USERMASTER.ROWID = src.row_id )
-            WHEN
-                MATCHED
-            THEN
-                UPDATE SET
-                    TBL_USERMASTER.DESCRIPTION = src.DisplayName,
-                    TBL_USERMASTER.DESCRIPTION2 = src.DisplayName2,
-                    TBL_USERMASTER.COMPANY = src.extensionAttribute3,
-                    TBL_USERMASTER.COMPANY2 = src.CompNm2,
-                    TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = src.extensionAttribute2
-        ]]>
-    </statement>
-    
+	    
 	<!-- <procedure id="EzOrganAdminDAO.deleteDBData" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_DELETEDBDATA(#v_CN#, #v_CLASS#)}
@@ -244,7 +212,7 @@
           		DEPTLEVEL = #v_DEPTLEVEL#,
           		EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
           		EXTENSIONATTRIBUTE1 = #v_PARENTCN#,
-          		DEPT_CD_PATH = #v_DEPT_CD_PATH# || ',' || CN
+          		DEPT_CD_PATH = CONCAT(#v_DEPT_CD_PATH#, ',', CN)
        		WHERE
        			CN = #v_CN#
        		AND
@@ -257,31 +225,26 @@
 			UPDATE
 				TBL_DEPTMASTER
       		SET
-      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#)
+      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, CONCAT(#v_DEPT_CD_PATH#, ',', #v_CN#))
       		WHERE
-      			DEPT_CD_PATH LIKE #v_DEPT_CD_PATH_OLD# || ',%'
+      			DEPT_CD_PATH LIKE CONCAT(#v_DEPT_CD_PATH_OLD#, ',%')
 		]]>
 	</update>
 	
-	<statement id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
-		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER B
-      		USING (	SELECT B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, COMPNM2, A.EXTENSIONATTRIBUTE2
-      					FROM TBL_DEPTMASTER A
-      					JOIN TBL_USERMASTER B   ON A.CN = B.DEPARTMENT AND A.TENANT_ID = B.TENANT_ID 
-      					WHERE A.CN = #v_CN#
-      					AND A.TENANT_ID = #v_TENANT_ID#) src
-      		ON ( B.ROWID = src.row_id )
-      		WHEN
-      			MATCHED
-      		THEN
-      			UPDATE SET
-      				COMPANY = src.EXTENSIONATTRIBUTE3,
-                    COMPANY2 = COMPNM2,
-                    PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
-		]]>
-	</statement>
+    <update id="EzOrganAdminDAO.moveDBData_U3" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                PHYSICALDELIVERYOFFICENAME = #v_EXTENSIONATTRIBUTE2#,
+                COMPANY = #v_EXTENSIONATTRIBUTE3#,
+                COMPANY2 = #v_COMPNM2#
+            WHERE
+                DEPARTMENT = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID#  
+        ]]>
+    </update>
 	
 	<!-- <procedure id="EzOrganAdminDAO.getUserInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
@@ -560,24 +523,6 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzOrganAdminDAO.retireDBData_S" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				1
-			FROM
-				DUAL
-            WHERE
-            	NOT EXISTS ( 	SELECT
-            							CN 
-                               		FROM
-                               			TBL_USERMASTER_RETIRE 
-                               		WHERE
-                               			CN = #v_CN#
-                               		AND
-                               			TENANT_ID = #v_TENANT_ID#	 )
-		]]>
-	</select>
-	
 	<insert id="EzOrganAdminDAO.retireDBData_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_USERMASTER_RETIRE
@@ -609,7 +554,7 @@
                     EXTENSIONATTRIBUTE1 ,
                     EXTENSIONATTRIBUTE2 ,
                     EXTENSIONATTRIBUTE3 ,
-                    EXTENSIONATTRIBUTE4 ,
+                    NULL ,
                     EXTENSIONATTRIBUTE5 ,
                     EXTENSIONATTRIBUTE6 ,
                     EXTENSIONATTRIBUTE7 ,
@@ -657,33 +602,7 @@
          		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-	
-	<update id="EzOrganAdminDAO.retireDBData_U1" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-         	SET
-         		EXTENSIONATTRIBUTE4 = NULL
-         	WHERE
-         		CN = #v_CN#
-         	AND
-         		TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</update>
-	
-	<update id="EzOrganAdminDAO.retireDBData_U2" parameterClass="Map">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER_RETIRE
-         	SET
-         		EXTENSIONATTRIBUTE4 = NULL
-         	WHERE
-         		CN = #v_CN#
-         	AND
-         		TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</update>
-	
+			
 <!-- 	<procedure id="EzOrganAdminDAO.getCompanyList" parameterClass="Map" resultClass="OrganDeptVO"> -->
 <!-- 		<![CDATA[ -->
 <!-- 			{CALL EZSP_GETCOMPANYLIST(#v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -1044,6 +963,7 @@
            		TBL_USERMASTER_RETIRE 
            WHERE
                 TENANT_ID = #v_TENANT_ID#
+           ORDER BY UPDATEDT DESC
            LIMIT #v_STARTROW#, #v_ROWPERPAGE#                	
 		]]>
 	</select>
@@ -1053,25 +973,7 @@
 			{CALL EZSP_DB_RESTORE_RETIREUSER(#v_CN#, #v_PARENTCN#)}
 		]]>
 	</procedure> -->
-	
-	<select id="EzOrganAdminDAO.restoreRetireEntry_S" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT
-				1
-           	FROM
-           		DUAL
-           	WHERE
-           		NOT EXISTS ( 	SELECT
-           								CN 
-                              		FROM
-                              			TBL_USERMASTER 
-                              		WHERE
-                              			CN = #v_CN#
-                              		AND
-                              			TENANT_ID = #v_TENANT_ID#	 )
-		]]>
-	</select>
-	
+		
 	<insert id="EzOrganAdminDAO.restoreRetireEntry" parameterClass="Map">
 		<![CDATA[
 			 INSERT INTO
@@ -1084,13 +986,13 @@
 	                    MAIL ,
 	                    MAILNICKNAME ,
 	                    UPNNAME ,
-	                    DEPARTMENT ,
-	                    DESCRIPTION ,
-	                    DESCRIPTION2 ,
+	                    #v_PARENTCN# ,
+	                    (SELECT DISPLAYNAME FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
 	                    DESCRIPTION3 ,
-	                    PHYSICALDELIVERYOFFICENAME ,
-	                    COMPANY ,
-	                    COMPANY2 ,
+	                    (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
+	                    (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) ,
 	                    TITLE ,
 	                    TITLE2 ,
 	                    TELEPHONENUMBER ,
@@ -1123,7 +1025,7 @@
 	                    MOBILE_PIN ,
 	                    SIPURI,
 	                    PASSWORD,
-	                    TENANT_ID
+	                    #v_TENANT_ID#
               			FROM
               				TBL_USERMASTER_RETIRE 
               			WHERE
@@ -1142,22 +1044,7 @@
    				TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-		
-	<select id="EzOrganAdminDAO.updateUserMaster_S" parameterClass="Map" resultClass="OrganUserVO">
-		<![CDATA[
-			SELECT
-				IFNULL(DISPLAYNAME2, ' ') as displayName2 ,
-          		IFNULL(TITLE2, ' ') as title2,
-          		IFNULL(EXTENSIONATTRIBUTE102, ' ') as extensionAttribute102 
-    		FROM
-    			TBL_USERMASTER 
-    		WHERE
-    			CN = #v_CN#
-    		AND
-    			TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</select>
-	
+			
     <update id="EzOrganAdminDAO.updateUserDeptDisplayName" parameterClass="OrganDeptVO">
         <![CDATA[
             UPDATE
@@ -1171,90 +1058,25 @@
                 TENANT_ID = #tenantId#  
         ]]>
     </update>
- 
-	<update id="EzOrganAdminDAO.updateUserMaster_U" parameterClass="OrganUserVO">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET	
-				DISPLAYNAME2 = DISPLAYNAME
-			WHERE
-				CN = #cn#
-			AND
-				TENANT_ID = #tenantId#	
-		]]>
-	</update>
-	
-	<update id="EzOrganAdminDAO.updateUserMaster_U1" parameterClass="OrganUserVO">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET	
-				TITLE2 = TITLE
-			WHERE
-				CN = #cn#
-			AND
-				TENANT_ID = #tenantId#	
-		]]>
-	</update>
-	
-	<update id="EzOrganAdminDAO.updateUserMaster_U2" parameterClass="OrganUserVO">
-		<![CDATA[
-			UPDATE
-				TBL_USERMASTER
-			SET	
-				EXTENSIONATTRIBUTE102 = EXTENSIONATTRIBUTE10
-			WHERE
-				CN = #cn#
-			AND
-				TENANT_ID = #tenantId#	
-		]]>
-	</update>
-	
-	<select id="EzOrganAdminDAO.moveGroupUser_S" parameterClass="Map" resultClass="OrganDeptVO">
-		<![CDATA[
-			SELECT
-				DISPLAYNAME as displayName,
-             	DISPLAYNAME2 as displayName2
-		    FROM
-		    	TBL_DEPTMASTER 
-      		WHERE
-      			CN = #v_PARENTCN#
-      		AND
-      			TENANT_ID = #v_TENANT_ID#	
-		]]>
-	</select>
-	
-	<statement id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map">
-		<![CDATA[
-			MERGE INTO
-				TBL_USERMASTER B
-      		USING
-      			(	SELECT
-      					B.ROWID ROW_ID, A.EXTENSIONATTRIBUTE3, A.COMPNM2, A.CN, A.DISPLAYNAME, A.DISPLAYNAME2, A.EXTENSIONATTRIBUTE2
-      				FROM
-      					TBL_DEPTMASTER A
-             		JOIN
-             			TBL_USERMASTER B   ON A.CN = #v_PARENTCN# AND A.TENANT_ID = B.TENANT_ID 
-       				WHERE
-       					B.CN = #v_CN#
-       				AND
-       					B.TENANT_ID = #v_TENANT_ID#	) src
-      		ON
-      			( B.ROWID = src.ROW_ID )
-      		WHEN
-      			MATCHED
-      		THEN
-      			UPDATE SET
-      				COMPANY = src.EXTENSIONATTRIBUTE3,
-                    COMPANY2 = src.COMPNM2,
-                    DEPARTMENT = #v_PARENTCN#,
-                    DESCRIPTION = #v_DEPTNAME#,
-                    DESCRIPTION2 = #v_DEPTNAME2#,
-                    PHYSICALDELIVERYOFFICENAME = src.EXTENSIONATTRIBUTE2
-		]]>
-	</statement>
-	
+ 				
+    <update id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map">
+        <![CDATA[
+            UPDATE
+                TBL_USERMASTER
+            SET 
+                DEPARTMENT = #v_PARENTCN#,
+                DESCRIPTION = (SELECT DISPLAYNAME FROM (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
+                DESCRIPTION2 = (SELECT DISPLAYNAME2 FROM (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
+                PHYSICALDELIVERYOFFICENAME = (SELECT EXTENSIONATTRIBUTE2 FROM (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
+                COMPANY = (SELECT EXTENSIONATTRIBUTE3 FROM (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
+                COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA)
+            WHERE
+                CN = #v_CN#
+            AND
+                TENANT_ID = #v_TENANT_ID#  
+        ]]>
+    </update>
+ 	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			{CALL EZSP_GETUSERINFO_RETIRE(#v_CN#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
