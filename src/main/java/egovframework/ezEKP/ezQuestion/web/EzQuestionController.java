@@ -1379,30 +1379,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			qstCompleteVO.setMultiSelect(multiSelect);
 			
 			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-	//		
-			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
-				int qstAttachCnt = doc.getElementsByTagName("ATTACH").item(0).getChildNodes().getLength();
-				for(int qa=0; qa < qstAttachCnt; qa++) {
-					String attachType = doc.getElementsByTagName("TYPE").item(qa).getTextContent();
-					String tmpAttachUrl = doc.getElementsByTagName("HREF").item(qa).getTextContent();
-					
-					if(attachType == "3" || attachType == "4" || attachType == "6" || attachType == "7") {
-						
-					}
-					QstCompleteVO qstCompleteVO3 = new QstCompleteVO();
-					qstCompleteVO3.setStrBrdID(Integer.parseInt(pBrdID));
-					qstCompleteVO3.setItemNo(Integer.parseInt(vItemID));
-					qstCompleteVO3.setQuesNo(v_quesNo);
-					qstCompleteVO3.setAnswerNo(0);
-					qstCompleteVO3.setAttachNo(qa);
-					qstCompleteVO3.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(qa).getTextContent());
-					qstCompleteVO3.setAttachURL(tmpAttachUrl);
-					qstCompleteVO3.setAttachType(attachType);
-					ezQuestionService.pollSaveAttach(qstCompleteVO3, loginVO.getTenantId());
-				}
-			}
-	//		
-			//////////////////////
+			
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
 			if(nodes1.getLength() > 0) {
@@ -1751,7 +1728,6 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
         if(pType.equals("QUESTION")){
             if (!pFileName.equals("")){
-                //pFilePath = config.getProperty("upload_board.UPLOADQUESTION")+commonUtil.separator+pFileName;
             	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", loginVO.getTenantId())+commonUtil.separator+pFileName;
             }else{
             	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, loginVO.getTenantId());

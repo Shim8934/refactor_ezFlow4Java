@@ -1268,7 +1268,7 @@
 	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete1"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_CONTAINERTODOCSTATE
         	WHERE
         		containertypeid = #v_CONTTYPEID#
@@ -1280,7 +1280,7 @@
 	<delete id="EzApprovalGAdmin.deleteContainerTypeDelete2"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_CONTAINERTYPE
         	WHERE
         		containertypeid = #v_CONTTYPEID#
@@ -1356,7 +1356,7 @@
 
 	<delete id="EzApprovalGAdmin.setFormDataDelete" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_FORMRECV
 			WHERE
 				formid = #v_PFORMID#
@@ -1742,7 +1742,7 @@
 	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteContainer1" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_CONTAINERUSEDEP
 			WHERE
 				containerid = #v_CONTID#
@@ -1753,7 +1753,7 @@
 
 	<delete id="EzApprovalGAdmin.deleteContainer2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_CONTAINER
 			WHERE
 				containerid = #v_CONTID#
@@ -1803,7 +1803,7 @@
 	<delete id="EzApprovalGAdmin.deleteReceiveGroupItemInfo"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_ADMINRECEIPTGROUP_SUB
 			WHERE
 				subid = #v_SUBID#
@@ -1867,7 +1867,7 @@
 	<delete id="EzApprovalGAdmin.deleteReceiveGroupInfo"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_ADMINRECEIPTGROUP_MAIN
 			WHERE
 				mainid = #v_MAINID#
@@ -2302,7 +2302,7 @@
 	<delete id="EzApprovalGAdmin.deleteFormContainer1"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_FORMCONTUSERGROUP
 			WHERE
 				formcontid = #v_FORMCONTID#
@@ -2313,7 +2313,7 @@
 	<delete id="EzApprovalGAdmin.deleteFormContainer2"
 		parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_FORMCONTAINER
 			WHERE
 				formcontid = #v_FORMCONTID#
@@ -2329,7 +2329,7 @@
 	<!-- </procedure> -->
 	<delete id="EzApprovalGAdmin.deleteForm1" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_FORMINFO
 			WHERE
 				formid = #v_FORMID#
@@ -2339,7 +2339,7 @@
 	</delete>
 	<delete id="EzApprovalGAdmin.deleteForm2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_FORMUSERINFO
 			WHERE
 				formid = #v_FORMID#
