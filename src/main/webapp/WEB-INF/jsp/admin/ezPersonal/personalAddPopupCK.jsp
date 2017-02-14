@@ -37,7 +37,7 @@
 	                idDatepicker_Temp = document.getElementById("idDatepickers").value;
 	                D2_Temp = document.getElementById("_D2").value;
 	            }
-alert("${personalPopupVO.content}");
+
 	            message.SetEditorContent("${personalPopupVO.content}");
 	            
 	            if (startdate != "") {

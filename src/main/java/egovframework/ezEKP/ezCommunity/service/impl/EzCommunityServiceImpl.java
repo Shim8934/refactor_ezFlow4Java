@@ -5095,6 +5095,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("num", num);
+		map.put("mariaNum", num -1);
 		map.put("tenantID", tenantID);
 		
 		String userID = ezCommunityDAO.todayCopGet2SelectUserID(map);
@@ -5107,13 +5108,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		int temp = ezCommunityDAO.todayCopGet2SelectTemp(map);
 		
 		map = new HashMap<String, Object>();
-		map.put("num", num);
 		map.put("temp", temp);
 		map.put("tenantID", tenantID);
 		
 		if (num > totalCount) {
 			num = totalCount;
 			map.put("num", num);
+			map.put("mariaNum", num -1);
 		}
 		
 		CommunityClubVO vo = ezCommunityDAO.todayCopGet2List(map);
@@ -5193,7 +5194,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("code", type);
 		map.put("cat", mode);
 		map.put("v_pStart", startRow);
+		map.put("mariaStart", startRow - 1);
 		map.put("v_pEnd", endRow);
+		map.put("mariaEnd", endRow - startRow);
 		map.put("tenantID", tenantID);
 		
 		List<CommunityClubVO> list = ezCommunityDAO.categoryListGet(map); 
@@ -5211,7 +5214,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_searchName", search);
 		map.put("v_searchValue", keyword);
 		map.put("v_pStart", startRow);
+		map.put("mariaStart", startRow - 1);
 		map.put("v_pEnd", endRow);
+		map.put("mariaEnd", endRow - startRow);
 		map.put("v_mode", mode);
 		map.put("tenantID", tenantID);
 		
@@ -5682,7 +5687,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
 		map.put("v_PSTART", pStart);
+		map.put("mariaStart", pStart - 1);
 		map.put("v_PEND", pEnd);
+		map.put("mariaEnd", pEnd - pStart);
 		map.put("v_MODE", mode);
 		map.put("tenantID", tenantID);
 		

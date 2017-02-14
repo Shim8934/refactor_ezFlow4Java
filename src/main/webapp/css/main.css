@@ -81,7 +81,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .quickmenu {float:right ;width:68px; margin:0px; padding:0px; list-style:none; background:#41484f; border-left:1px solid #2a2c32;border-right:1px solid #2a2c32; height:560px;font-family:Gulim, Dotum, Arial, Helvetica, sans-serif ;}
 .quickmenu li { display:block; cursor:pointer;width:68px; border-bottom:1px solid #2a2c32; text-align:center;}
 .quickmenu li .icon {display:block; margin:0 auto;}
-.quickmenu li .txt {display:block; width:65px ;text-align:center; color:#FFF; font-size:12px; height:30px;letter-spacing:0px; line-height:25px;overflow:hidden; margin:0 auto;}
+.quickmenu li .txt {display:block; width:65px ;text-align:center; color:#FFF; font-size:12px; height:30px;letter-spacing:0px; overflow:hidden; margin:0 auto; word-break: break-all;}
 .btn_quick { margin:0px; padding:0px; cursor:pointer; height:23px; }
 
 /*------------ personal ------------*/

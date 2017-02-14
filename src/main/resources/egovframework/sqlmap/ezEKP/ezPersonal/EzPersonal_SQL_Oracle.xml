@@ -579,10 +579,16 @@
             	TBL_PS_QUICKLINK_ACL B
             ON
             	A.QUICKLINKID = B.QUICKLINKID
+            AND
+                A.TENANT_ID = B.TENANT_ID  
        		WHERE
-       			( ACCESSID = #v_ACCESSID# )
+       			B.ACCESSID = #v_ACCESSID#
        		AND
-       			A.TENANT_ID = #tenantID#	
+       			A.TENANT_ID = #tenantID#
+            AND
+                B.TENANT_ID = #tenantID#
+            ORDER BY
+                A.REGDATE DESC    	
 		]]>
 	</select>
 	

@@ -269,7 +269,7 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	public void insertItemSeq(Map<String,Object> map) {
-		select("EzQuestionDAO.insertItemSeq", map);
+		insert("EzQuestionDAO.insertItemSeq", map);
 	}
 	
 	public void insertResponse(Map<String,Object> map) {

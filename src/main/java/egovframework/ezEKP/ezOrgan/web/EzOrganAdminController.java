@@ -154,7 +154,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveCompanyInfo.do", produces = "text/html;charset=utf-8")	
 	@ResponseBody
-	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveCompanyInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	    logger.debug("saveCompanyInfo started.");
 	    
 		String parentCn = request.getParameter("parentCn");
@@ -205,7 +205,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				
 				if (rc == 0) { // updateGroupAdd 성공
 					
-					//insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
+					// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 					try {
 						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID);
 						result = "OK";	
@@ -376,7 +376,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
-		logger.debug("tenantID=" + tenantID + ",domain=" + domain); 
+		logger.debug("tenantID=" + tenantID + ",domain=" + domain + ",parentCn=" + vo.getParentCn()); 
 		
 		String result = "";
 
@@ -420,7 +420,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 					if (rc == 0) { // updateGroupAdd 성공
 						vo.setMail(mailAddr);
 						
-						//insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제.
+						// insertDBData_dept 실패했을 경우 JMocha에서 부서 다시 삭제.
 						try {
 							ezOrganAdminService.insertDBData_dept(vo);
 							result = "OK";	
@@ -469,7 +469,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/movDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String movDept(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 	    logger.debug("movDept started.");
 	    
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -505,7 +505,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/saveOrderList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String saveOrderList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
         logger.debug("saveOrderList started.");
         
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -533,7 +533,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/userInfo.do")	
-	public String userInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String userInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	    logger.debug("userInfo started");
+	    
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		String lang = userInfo.getPrimary();		
@@ -550,6 +552,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
 		
+		logger.debug("userInfo ended");
+		
 		return "admin/ezOrgan/userInfo";
 	}
 	
@@ -557,7 +561,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 서명등록 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/configSignImage.do")	
-	public String configSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
+	public String configSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+	    logger.debug("configSignImage started");
+	    
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String userID = request.getParameter("id");
@@ -576,6 +582,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("signPath", sign);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
+		logger.debug("configSignImage ended");
+		
 		return "admin/ezOrgan/configSignImage";
 	}
 	
@@ -583,7 +592,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 전자결재 서명 이미지 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getApprovalSignInfo.do")
-	public void getSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void getSignImage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String type = request.getParameter("type");
@@ -604,7 +613,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 암호관리 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/inputPassword.do")
-	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public String inputPassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "admin/ezOrgan/inputPassword";
 	}
 	
@@ -771,16 +780,17 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
         int tenantID = userInfo.getTenantId();        
+        String cnList = request.getParameter("cn");
         
-        logger.debug("tenantID=" + tenantID);
+        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
 	    
-		String cn[] = request.getParameter("cn").split(",");
+		String cn[] = cnList.split(",");
 		
 		// dhlee
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		// dhlee - end
 				
-		for (int i=0; i < cn.length; i++) {
+		for (int i = 0; i < cn.length; i++) {
 			// dhlee
 			String mailAddr = cn[i] + "@" + domain;
 			
@@ -869,11 +879,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         String nowDate = date.format(new Date()); 
         vo.setNowDate(nowDate);
 	    
-	    logger.debug("tenantID=" + tenantID);
+	    logger.debug("tenantID=" + tenantID + ",parentCn=" + vo.getParentCn());
 	    
 		String result = "";		
-		
-		logger.debug("parentCn=" + vo.getParentCn());
 		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 empty string 이다.
 		if (vo.getParentCn().equals("")) {		
@@ -916,14 +924,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 						String pass = EgovFileScrty.encryptPassword(vo.getPassword(), cn);
 						vo.setPassword(pass);
 						
-						//insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
+						// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.
 						try {
 							// 로컬 시스템에 해당 User의 계정을 생성한다.
 							ezOrganAdminService.insertDBData_user(vo);
 							result = "OK";
-						} catch (Exception e) { // Exception이 발생하면 취소 처리를 하고 Exception을 발생시킨다.
+						} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
 							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 							ezEmailUserAdminService.removeUser(mailAddr);
+							
 							e.printStackTrace();
 							result = "EMAIL_ERROR";
 						}
@@ -949,10 +958,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 사진등록/변경 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/personPicture.do")
-	public String personPicture(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
+	public String personPicture(HttpServletRequest request, HttpServletResponse response,Model model) throws Exception {
+	    logger.debug("personPicture started");
+	    
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
+		logger.debug("personPicture ended");
+		
 		return "admin/ezOrgan/personPicture";
 	}
 	
@@ -960,14 +974,20 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 사원정보 사진이미지 파일 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/getPersonalInfo.do")
-	public void getPersonalInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public void getPersonalInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	    logger.debug("getPersonalInfo started");
+	    
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String fileName = request.getParameter("fileName");
 		String filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
 		
+		logger.debug("filePath=" + filePath);
+		
 		if (fileName != null && !fileName.equals("")) {
 			ezCommonService.responseAttach(filePath, fileName, false, request, response);
 		}
+		
+		logger.debug("getPersonalInfo ended");
 	}
 		
 	/**
@@ -975,7 +995,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	*/
 	@RequestMapping(value = "/admin/ezOrgan/signImageUploadIe9.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	public String signImangeUploadIe9(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	    logger.debug("signImangeUploadIe9 started");
+	    
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String returnVal = "";
 		String mode = request.getParameter("mode");
@@ -991,95 +1013,100 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		String tempPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator;
 		String thumbPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator;
 		
-				if (request.getParameter("guid") != null) {
-					guid = request.getParameter("guid");
-				}
-				if (request.getParameter("name") != null) {
-					fileTitle = request.getParameter("name");
-				}
-				if (request.getParameter("filedata") != null) {
-					sFileData = request.getParameter("filedata");
-				}
-				if (request.getParameter("ext") != null) {
-					sExt = request.getParameter("ext");
-				}
-				if (request.getParameter("dir") != null) {
-					sFolder = request.getParameter("dir");
-				}
-				if (request.getParameter("prefix") != null) {
-					userID = request.getParameter("prefix");
-				}
-			String fileName = sExt;
-			fileName = userID + "_" + guid + "." + fileName;
-		 
-			if (mode.equals("PICTURE")) {
-				serverPath = thumbPath;
-			} else if (mode.equals("TEMP")) {
-				serverPath = tempPath;
-			} else if (mode.equals("GLOGO")) {
-				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
-			} else {
-				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
+		if (request.getParameter("guid") != null) {
+			guid = request.getParameter("guid");
+		}
+		if (request.getParameter("name") != null) {
+			fileTitle = request.getParameter("name");
+		}
+		if (request.getParameter("filedata") != null) {
+			sFileData = request.getParameter("filedata");
+		}
+		if (request.getParameter("ext") != null) {
+			sExt = request.getParameter("ext");
+		}
+		if (request.getParameter("dir") != null) {
+			sFolder = request.getParameter("dir");
+		}
+		if (request.getParameter("prefix") != null) {
+			userID = request.getParameter("prefix");
+		}
+		
+		String fileName = sExt;
+		fileName = userID + "_" + guid + "." + fileName;
+	 
+		if (mode.equals("PICTURE")) {
+			serverPath = thumbPath;
+		} else if (mode.equals("TEMP")) {
+			serverPath = tempPath;
+		} else if (mode.equals("GLOGO")) {
+			serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
+		} else {
+			serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
+		}
+		
+		File file = new File(serverPath);
+			
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		if (!mode.equals("TEMP")) {
+			File file1 = new File(tempPath);
+			
+			if (!file1.exists()) {
+				file1.mkdirs();
 			}
+		}
+		
+		fileName = fileName.replace("+", "%2b");
+        fileName = fileName.replace(";", "%3b");
+        fileName = fileName.replace("~", "%7e");
+        fileName = fileName.replace("=", "%3d");
+        
+		InputStream stream = null;
+		OutputStream bos = null;         
+		
+		try {
+			stream = request.getInputStream();
+			bos = new FileOutputStream(serverPath+fileName);
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
 			
-			File file = new File(serverPath);
-			
-				if (!file.exists()) {
-					file.mkdirs();
-				}
-				
-				if (!mode.equals("TEMP")) {
-					File file1 = new File(tempPath);
-					
-					if (!file1.exists()) {
-						file1.mkdirs();
-					}
-				}
-				fileName = fileName.replace("+", "%2b");
-		        fileName = fileName.replace(";", "%3b");
-		        fileName = fileName.replace("~", "%7e");
-		        fileName = fileName.replace("=", "%3d");
-		        
-				InputStream stream = null;
-				OutputStream bos = null;         
-				
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		} catch (Exception e) {
+			throw e;                
+		} finally {
+			if (bos != null) {
 				try {
-					stream = request.getInputStream();
-					bos = new FileOutputStream(serverPath+fileName);
-//					long fileSize = 0;
-					int bytesRead = 0;
-					byte[] buffer = new byte[BUFF_SIZE];
-					
-					while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-						bos.write(buffer, 0, bytesRead);
-//						fileSize += bytesRead;
-					}
-				} catch (Exception e) {
-					throw e;                
-				} finally {
-					if (bos != null) {
-						try {
-							bos.close();
-						} catch (Exception ignore) {
-						}
-					}
-					if (stream != null) {
-						try {
-							stream.close();
-						} catch (Exception ignore) {
-						}
-					}
-					returnVal = "OK_"+ fileName;
+					bos.close();
+				} catch (Exception ignore) {
 				}
+			}
+			if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+				}
+			}
+			returnVal = "OK_"+ fileName;
+		}
 		        
+		logger.debug("signImangeUploadIe9 ended");
+				
 		return returnVal;
 	}
+	
 	/**
 	* 조직도관리 사원정보 사진이미지 임시 업로드 실행 함수
 	*/
 	@RequestMapping(value = "/admin/ezOrgan/signImageUpload.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String signImangeUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception{
+	public String signImangeUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	    logger.debug("signImangeUpload started");
+	    
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String mode = request.getParameter("mode");
 		String userID = request.getParameter("userID");
@@ -1094,7 +1121,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			userID = userInfo.getId();
 		}
 		
-		try{
+		try {
 			String fileName = multiFile.getOriginalFilename();
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
@@ -1135,9 +1162,13 @@ public class EzOrganAdminController extends EgovFileMngUtil{
             //임시 저장 파일 삭제
             deleteFile(tempPath + fileName + extension);
             
+            logger.debug("signImangeUpload ended");
+            
             return fileName + "png";
 			
-		}catch(Exception e) {
+		} catch (Exception e) {
+		    logger.debug("signImangeUpload failed");
+		    
 			return "UPLOAD_ERROR";
 		}		
 	}
@@ -1530,8 +1561,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 퇴직자관리 메뉴 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/retireUserManage.do")	
-	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String retireUserManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("retireUserManage started");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -1541,7 +1575,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         
         logger.debug("tenantID=" + tenantID);
 		
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+		String strLang = user.getPrimary();
 		int pPageRow = 20;
    		int pPage = 1;
    		
@@ -1579,6 +1613,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
    		model.addAttribute("pPage", pPage);
    		model.addAttribute("totalPage", totalPage);
 		
+   		logger.debug("retireUserManage ended");
+   		
 		return "admin/ezOrgan/retireUserManage";
 	}	
 	

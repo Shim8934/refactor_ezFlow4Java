@@ -128,92 +128,92 @@
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseVO">
-		<result property="brdID"								column="BRD_ID"								columnIndex="1"/>
-		<result property="itemNo"							column="ITEM_NO"								columnIndex="2"/>
-		<result property="questionNo"						column="QUESTION_NO"						columnIndex="3"/>
-		<result property="responseNo"						column="RESPONSENO"						columnIndex="4"/>
-		<result property="answerObjectivity"				column="ANSWER_OBJECTIVITY"			columnIndex="5" 	nullValue="0"/>
-		<result property="answerSubjectivity"				column="ANSWER_SUBJECTIVITY"			columnIndex="6"		javaType="String" jdbcType="CLOB"/>
-		<result property="answerViewSelect"				column="ANSWER_VIEWSELECT"			columnIndex="7"		nullValue="0"/>
-		<result property="responseUserID"					column="RESPONSEUSER_ID"				columnIndex="8"/>
-		<result property="responseUserName"				column="RESPONSEUSER_NAME"			columnIndex="9"/>
-		<result property="responseUserEmail"				column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
-		<result property="responseUserDeptID"			column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
-		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"	columnIndex="12"/>
-		<result property="responseUserPosition"			column="RESPONSEUSER_POSITION"		columnIndex="13"	nullValue=""/>
-		<result property="responseUserJikgub"			column="RESPONSEUSER_JIKGUB"			columnIndex="14"	nullValue="0"/>
-		<result property="responseUserGender"			column="RESPONSEUSER_GENDER"		columnIndex="15"/>
-		<result property="responseUserAge"				column="RESPONSEUSER_AGE"				columnIndex="16"	nullValue="0"/>
-		<result property="responseDate"					column="RESPONSE_DATE"					columnIndex="17"/>
-		<result property="responseUserIp"					column="RESPONSEUSER_IP"				columnIndex="18"/>
+		<result property="brdID"					column="BRD_ID"						columnIndex="1"/>
+		<result property="itemNo"					column="ITEM_NO"					columnIndex="2"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="3"/>
+		<result property="responseNo"				column="RESPONSENO"					columnIndex="4"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="5" 	nullValue="0"/>
+		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="6"		javaType="String" jdbcType="CLOB"/>
+		<result property="answerViewSelect"			column="ANSWER_VIEWSELECT"			columnIndex="7"		nullValue="0"/>
+		<result property="responseUserID"			column="RESPONSEUSER_ID"			columnIndex="8"/>
+		<result property="responseUserName"			column="RESPONSEUSER_NAME"			columnIndex="9"/>
+		<result property="responseUserEmail"		column="RESPONSEUSER_EMAIL"			columnIndex="10"/>
+		<result property="responseUserDeptID"		column="RESPONSEUSER_DEPT_ID"		columnIndex="11"/>
+		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="12"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="13"	nullValue=""/>
+		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="14"	nullValue="0"/>
+		<result property="responseUserGender"		column="RESPONSEUSER_GENDER"		columnIndex="15"/>
+		<result property="responseUserAge"			column="RESPONSEUSER_AGE"			columnIndex="16"	nullValue="0"/>
+		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="17"/>
+		<result property="responseUserIp"			column="RESPONSEUSER_IP"			columnIndex="18"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="responseDeptVO">
-		<result property="questionNo"					column="QUESTION_NO"						columnIndex="1"		nullValue="0"/>
-		<result property="answerObjectivity"			column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
-		<result property="responseUserDeptName"	column="RESPONSEUSER_DEPT_NAME"	columnIndex="3"/>
-		<result property="quesContent"					column="QUESCONTENT"						columnIndex="4"/>
-		<result property="answer"							column="ANSWER"								columnIndex="5"/>
-		<result property="qCount"						column="Q_COUNT"							columnIndex="6"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
+		<result property="responseUserDeptName"		column="RESPONSEUSER_DEPT_NAME"		columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
+		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="responsePositionVO">
-		<result property="questionNo"				column="QUESTION_NO"						columnIndex="1"		nullValue="0"/>
+		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
 		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
-		<result property="responseUserPosition"	column="RESPONSEUSER_POSITION"		columnIndex="3"/>
-		<result property="quesContent"				column="QUESCONTENT"						columnIndex="4"/>
-		<result property="answer"						column="ANSWER"								columnIndex="5"/>
-		<result property="qCount"					column="Q_COUNT"							columnIndex="6"/>
+		<result property="responseUserPosition"		column="RESPONSEUSER_POSITION"		columnIndex="3"/>
+		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
+		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="responseJikgubVO">
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"		nullValue="0"/>
-		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"	columnIndex="2" 	nullValue="0"/>
-		<result property="responseUserJikgub"	column="RESPONSEUSER_JIKGUB"	columnIndex="3"/>
+		<result property="answerObjectivity"		column="ANSWER_OBJECTIVITY"			columnIndex="2" 	nullValue="0"/>
+		<result property="responseUserJikgub"		column="RESPONSEUSER_JIKGUB"		columnIndex="3"/>
 		<result property="quesContent"				column="QUESCONTENT"				columnIndex="4"/>
-		<result property="answer"						column="ANSWER"						columnIndex="5"/>
+		<result property="answer"					column="ANSWER"						columnIndex="5"/>
 		<result property="qCount"					column="Q_COUNT"					columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="QstResponseVO" id="qstResponseList">
-		<result property="responseUserID"				column="USER_ID"					columnIndex="1"/>
-		<result property="responseUserName"			column="USER_NAME"				columnIndex="2"/>
-		<result property="responseUserEmail"			column="USER_EMAIL"				columnIndex="3"/>
-		<result property="responseUserDeptID"		column="USER_DEPT_ID"			columnIndex="4"/>
-		<result property="responseUserDeptName"	column="USER_DEPT_NAME"		columnIndex="5"/>
-		<result property="responseUserPosition"		column="USER_POSITION"		columnIndex="6"	 nullValue=""/>
-		<result property="responseUserJikgub"		column="USER_JIKGUB"			columnIndex="7"		nullValue="0"/>
-		<result property="responseUserGender"		column="USER_GENDER"			columnIndex="8"/>
-		<result property="responseUserAge"			column="USER_AGE"				columnIndex="9"		nullValue="0"/>
-		<result property="responseDate"				column="RESPONSE_DATE"		columnIndex="10"/>
+		<result property="responseUserID"			column="USER_ID"					columnIndex="1"/>
+		<result property="responseUserName"			column="USER_NAME"					columnIndex="2"/>
+		<result property="responseUserEmail"		column="USER_EMAIL"					columnIndex="3"/>
+		<result property="responseUserDeptID"		column="USER_DEPT_ID"				columnIndex="4"/>
+		<result property="responseUserDeptName"		column="USER_DEPT_NAME"				columnIndex="5"/>
+		<result property="responseUserPosition"		column="USER_POSITION"				columnIndex="6"	 nullValue=""/>
+		<result property="responseUserJikgub"		column="USER_JIKGUB"				columnIndex="7"		nullValue="0"/>
+		<result property="responseUserGender"		column="USER_GENDER"				columnIndex="8"/>
+		<result property="responseUserAge"			column="USER_AGE"					columnIndex="9"		nullValue="0"/>
+		<result property="responseDate"				column="RESPONSE_DATE"				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="QstVO" id="objQuestion">
 		<result property="questionNo"				column="QUESTION_NO"				columnIndex="1"/>
 		<result property="quesContent"				column="QUESCONTENT"				columnIndex="2"/>
-		<result property="answerType"				column="ANSWERTYPE"				columnIndex="3"/>
+		<result property="answerType"				column="ANSWERTYPE"					columnIndex="3"/>
 	</resultMap>
 	
 	<resultMap class="QstTempSaveVO" id="qstTempSaveVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
 		<result property="itemNo"				column="ITEM_NO"					columnIndex="2"/>
-		<result property="questionNo"			column="QUESTION_NO"			columnIndex="3"/>
-		<result property="quesContent"			column="QUESCONTENT"			columnIndex="4"/>
-		<result property="answerType"			column="ANSWERTYPE"			columnIndex="5"/>
-		<result property="answerViewType"	column="ANSWERVIEWTYPE"	columnIndex="6"   nullValue="0"/>
-		<result property="multiSelect"			column="MULTISELECT"			columnIndex="7"/>
+		<result property="questionNo"			column="QUESTION_NO"				columnIndex="3"/>
+		<result property="quesContent"			column="QUESCONTENT"				columnIndex="4"/>
+		<result property="answerType"			column="ANSWERTYPE"					columnIndex="5"/>
+		<result property="answerViewType"		column="ANSWERVIEWTYPE"				columnIndex="6"   nullValue="0"/>
+		<result property="multiSelect"			column="MULTISELECT"				columnIndex="7"/>
 		<result property="quesSN"				column="QUES_SN"					columnIndex="8"/>
-		<result property="answerNo"				column="ANSWERNO"				columnIndex="9"/>
-		<result property="answerContent"		column="ANSWERCONTENT"	columnIndex="10"/>
+		<result property="answerNo"				column="ANSWERNO"					columnIndex="9"/>
+		<result property="answerContent"		column="ANSWERCONTENT"				columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="String" id="responserAnswerCLOB">
-		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"		columnIndex="1"		javaType="String" jdbcType="CLOB"/>
+		<result property="answerSubjectivity"		column="ANSWER_SUBJECTIVITY"	columnIndex="1"		javaType="String" jdbcType="CLOB"/>
 	</resultMap>
 	
 	<resultMap class="QstDeleteAttachUrlVO" id="qstDeleteAttachUrlVO">
-		<result property="attachUrl"				column="ATTACHURL"		columnIndex="1"	/>
-		<result property="attachType"			column="ATTACHTYPE"		columnIndex="2"	/>
+		<result property="attachUrl"			column="ATTACHURL"					columnIndex="1"	/>
+		<result property="attachType"			column="ATTACHTYPE"					columnIndex="2"	/>
 	</resultMap>
 	
 	<!-- <procedure id="EzQuestionDAO.getQstList" parameterClass="Map" resultMap="qstListVO">
@@ -411,11 +411,11 @@
     		FROM
       			TBL_POLL_ITEM
     		WHERE
-      			BRD_ID = #v_pstrBrdID# 
+      			brd_id = #v_pstrBrdID#
       		AND
-      			ITEM_NO = #v_pItemNo#
+      			item_no = #v_pItemNo#
       		AND
-      			TENANT_ID = #tenantID#	
+      			tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -432,11 +432,11 @@
         	FROM
         		TBL_POLL_PERMISSION 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
 			AND
-				TENANT_ID = #tenantID#	
+				tenant_id = #tenantID#	
 		]]>
 	</select>
 	
@@ -449,22 +449,22 @@
 	<select id="EzQuestionDAO.getAttachInfo" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
 			SELECT
-				ATTACHNO ,
-             	ATTACHNAME ,
-             	ATTACHURL ,
-             	ATTACHTYPE 
+				attachno,
+             	attachname,
+             	attachurl,
+             	attachtype
         	FROM
         		TBL_POLL_ATTACH 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
             AND
-            	QUESTION_NO = #v_pQuesNo#
+            	question_no = #v_pQuesNo#
             AND
-            	ANSWERNO = #v_pAnswerNo#
+            	answerno = #v_pAnswerNo#
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -477,20 +477,20 @@
 	<select id="EzQuestionDAO.getAttachInfo3" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
 			SELECT
-				ATTACHNO ,
-             	ATTACHNAME ,
-             	ATTACHURL ,
-             	ATTACHTYPE 
+				attachno,
+             	attachname,
+             	attachurl,
+             	attachtype
         	FROM
         		TBL_POLL_ATTACH 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
 			AND
-				QUESTION_NO = #v_pQuesNo#
+				question_no = #v_pQuesNo#
 			AND
-				TENANT_ID = #tenantID#	
+				tenant_id = #tenantID#	
 		]]>
 	</select>
 	
@@ -532,16 +532,17 @@
         	FROM
         		TBL_POLL_QUESTION 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
             AND
-            	QUESTION_NO = #v_pQuesNo#
+            	question_no = #v_pQuesNo#
             AND
-            	QUES_SN IS NOT NULL
+            	ques_sn IS NOT NULL
             AND
             	TENANT_ID = #tenantID#	
-        	ORDER BY QUES_SN
+        	ORDER BY
+        		ques_sn
 		]]>
 	</select>
 	
@@ -558,14 +559,15 @@
         	FROM
         		TBL_POLL_TABLE_ANSWER 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
             AND
-            	QUESTION_NO = #v_pQuesNo#
+            	question_no = #v_pQuesNo#
             AND
-            	TENANT_ID = #tenantID#	
-        	ORDER BY QUESTION_NO
+            	tenant_id = #tenantID#	
+        	ORDER BY
+        		question_no
 		]]>
 	</select>
 	
@@ -582,15 +584,15 @@
         	FROM
         		TBL_POLL_ANSWER 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
             AND
-            	ITEM_NO = #v_pItemNo#
+            	item_no = #v_pItemNo#
             AND
-            	QUESTION_NO = #v_pQuesNo#
+            	question_no = #v_pQuesNo#
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#	
         	ORDER BY
-        		QUESTION_NO
+        		question_no
 		]]>
 	</select>
 	
@@ -603,16 +605,16 @@
 	<select id="EzQuestionDAO.getResponseRange" parameterClass="Map" resultMap="qstResponsePermissionVO">
 		<![CDATA[
 			SELECT
-				PUBLIC_FLG ,
-             	RESPONSE_RANGE 
+				public_flg ,
+             	response_range 
         	FROM
         		TBL_POLL_PERMISSION 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
             AND
-            	ITEM_NO = #v_pItemNo#
+            	item_no = #v_pItemNo#
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#
 		]]>
 	</select>
 	
@@ -625,18 +627,18 @@
 	<select id="EzQuestionDAO.getResponsePerson" parameterClass="Map" resultMap="qstResponsePersonVO">
 		<![CDATA[
 			SELECT
-				USER_ID ,
-             	RESPONSE_DATE 
+				user_id,
+             	response_date
         	FROM
         		TBL_POLL_RESPONSEPERSON 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
             AND
-            	ITEM_NO = #v_pItemNo#
+            	item_no = #v_pItemNo#
             AND
-            	USER_ID = #v_pUserID#
+            	user_id = #v_pUserID#
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#	
 		]]>
 	</select>
 	
@@ -649,24 +651,24 @@
 	<select id="EzQuestionDAO.getAttachInfo2" parameterClass="Map" resultMap="qstAttachVO">
 		<![CDATA[
 			SELECT
-				ATTACHNO ,
-             	ATTACHNAME ,
-             	ATTACHURL ,
-             	ATTACHTYPE 
+				attachno,
+             	attachname,
+             	attachurl,
+             	attachtype
         	FROM
         		TBL_POLL_ATTACH 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
 			AND
-				ITEM_NO = #v_pItemNo#
+				item_no = #v_pItemNo#
             AND
-            	QUESTION_NO = #v_pQuesNo#
+            	question_no = #v_pQuesNo#
             AND
-            	ANSWERNO = #v_pAnswerNo#
+            	answerno = #v_pAnswerNo#
             AND
-            	ATTACHNO = #v_pAttachNo#
+            	attachno = #v_pAttachNo#
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#	
 		]]>
 	</select>
 	
@@ -680,26 +682,51 @@
 		<![CDATA[
 			SELECT
 				*
-			FROM  (  SELECT
-							  *
-						  FROM  ( SELECT
-						  					BRD_ID, ITEM_NO, QUESTION_NO, RESPONSENO, ANSWER_OBJECTIVITY, ANSWER_SUBJECTIVITY, 
-              								ANSWER_VIEWSELECT, RESPONSEUSER_ID, RESPONSEUSER_NAME$v_pLang$ AS RESPONSEUSER_NAME,
-              								RESPONSEUSER_EMAIL, RESPONSEUSER_DEPT_ID, RESPONSEUSER_DEPT_NAME$v_pLang$ AS RESPONSEUSER_DEPT_NAME,
-              								RESPONSEUSER_POSITION$v_pLang$ AS RESPONSEUSER_POSITION, RESPONSEUSER_JIKGUB$v_pLang$ AS RESPONSEUSER_JIKGUB,
-              								RESPONSEUSER_GENDER, RESPONSEUSER_AGE, RESPONSE_DATE, RESPONSEUSER_IP 
-              						  FROM
-              						  	TBL_POLL_RESPONSE  
-              						  WHERE
-              						  	BRD_ID = #v_pstrBrdID# AND ITEM_NO = #v_pItemNo# AND QUESTION_NO=#v_pQuesNo# AND ANSWER_SUBJECTIVITY IS NOT NULL  AND TENANT_ID = #tenantID# 
-          							) P 
-          				WHERE
-          					ROWNUM < $v_pTotalCnt$+1 ORDER BY P.RESPONSENO DESC
-   						) K
+			FROM
+				(SELECT
+					*
+				FROM
+					(SELECT
+						brd_id,
+						item_no,
+						question_no,
+						responseno,
+						answer_objectivity,
+						answer_subjectivity,
+						answer_viewselect,
+						responseuser_id,
+						responseuser_name$v_pLang$ AS responseuser_name,
+						responseuser_email,
+						responseuser_dept_id,
+						responseuser_dept_name$v_pLang$ AS responseuser_dept_name,
+						responseuser_position$v_pLang$ AS responseuser_position,
+						responseuser_jikgub$v_pLang$ AS responseuser_jikgub,
+						responseuser_gender,
+						responseuser_age,
+						response_date,
+						responseuser_ip 
+					FROM
+						TBL_POLL_RESPONSE  
+					WHERE
+						brd_id = #v_pstrBrdID#
+					AND
+						item_no = #v_pItemNo#
+					AND
+						question_no = #v_pQuesNo#
+					AND
+						answer_subjectivity IS NOT NULL
+					AND
+						tenant_id = #tenantID# 
+					) P 
+				WHERE
+					ROWNUM <= $v_pTotalCnt$
+				ORDER BY
+					P.responseno DESC
+				) K
    			WHERE
-   				ROWNUM < $v_pPageSize$+1 
+   				ROWNUM <= #v_pPageSize# 
    			ORDER BY
-   				K.RESPONSENO ASC
+   				K.responseno ASC
 		]]>
 	</select>
 	
@@ -714,35 +741,41 @@
 			<![CDATA[
 				SELECT
 					*
-				FROM ( SELECT
-							  *
-							FROM ( SELECT
-											RESPONSEUSER_ID AS USER_ID, 
-                							MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
-							                MAX(RESPONSEUSER_EMAIL) AS USER_EMAIL,
-							                MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
-							                MAX(RESPONSEUSER_DEPT_NAME$v_pLang$) AS USER_DEPT_NAME,
-							                MAX(RESPONSEUSER_POSITION$v_pLang$) AS USER_POSITION, 
-							                MAX(RESPONSEUSER_JIKGUB$v_pLang$) AS USER_JIKGUB,
-							                MAX(RESPONSEUSER_GENDER) AS USER_GENDER,
-							                MAX(RESPONSEUSER_AGE) AS USER_AGE,
-							                MAX(RESPONSE_DATE) AS RESPONSE_DATE 
-                						FROM
-                							TBL_POLL_RESPONSE  
-                						WHERE
-                							BRD_ID=#v_pstrBrdID# AND ITEM_NO=#v_pItemNo# AND TENANT_ID = #tenantID# 
-                						GROUP BY
-                							RESPONSEUSER_ID
-                					) P
-                			WHERE
-                				ROWNUM < $v_pTotalCnt$ +1 
-                			ORDER BY
-                				P.RESPONSE_DATE DESC
-                		) K
-               WHERE
-					ROWNUM < $v_pPageSize$ +1 
+				FROM
+					(SELECT
+						*
+					FROM
+						(SELECT
+							responseuser_id AS user_id, 
+                			MAX(responseuser_name$v_pLang$) AS user_name,
+							MAX(responseuser_email) AS user_email,
+							MAX(responseuser_dept_id) AS user_dept_id, 
+							MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
+							MAX(responseuser_position$v_pLang$) AS user_position, 
+							MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
+							MAX(responseuser_gender) AS user_gender,
+							MAX(responseuser_age) AS user_age,
+							MAX(response_date) AS RESPONSE_DATE 
+                		FROM
+                			TBL_POLL_RESPONSE  
+                		WHERE
+                			brd_id = #v_pstrBrdID#
+                		AND
+                			item_no = #v_pItemNo#
+                		AND
+                			tenant_id = #tenantID#
+						GROUP BY
+							responseuser_id
+                		) P
+					WHERE
+                		ROWNUM <= #v_pTotalCnt# 
+					ORDER BY
+						P.response_date DESC
+					) K
+				WHERE
+					ROWNUM <= #v_pPageSize# 
 				ORDER BY
-					K.RESPONSE_DATE ASC
+					K.response_date ASC
 			]]>
 		</isEqual>
 		
@@ -750,33 +783,41 @@
 			<![CDATA[
 				SELECT
 					*
-				FROM ( SELECT
-								*
-							FROM ( SELECT
-											USER_ID	AS USER_ID,
-                        					USER_NM$v_pLang$ AS USER_NAME,
-                        					USER_EMAIL AS USER_EMAIL,
-                        					USER_DEPT_ID AS USER_DEPT_ID,	
-                        					USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
-					                        USER_POS$v_pLang$ AS USER_POSITION,
-					                        USER_JIKGUB$v_pLang$ AS USER_JIKGUB,
-					                        USER_GENDER AS USER_GENDER,
-					                        USER_AGE AS USER_AGE,
-					                        RESPONSE_DATE AS RESPONSE_DATE
-                        				FROM
-                        					TBL_POLL_RESPONSEPERSON 
-                        				WHERE
-                        					BRD_ID = #v_pstrBrdID# AND ITEM_NO = #v_pItemNo# AND RESPONSE_DATE IS NULL	AND	TENANT_ID = #tenantID#      
-                						) P
-                			WHERE
-                				ROWNUM < $v_pPageSize$ +1
-                			ORDER BY
-                				P.USER_ID DESC
-                		) K
-               WHERE
-               		ROWNUM < $v_pTotalCnt$ +1 
-               ORDER BY
-               		K.USER_ID ASC
+				FROM
+					(SELECT
+						*
+					FROM
+						(SELECT
+							user_id,
+                        	user_nm$v_pLang$ AS user_name,
+                        	user_email,
+                        	user_dept_id,	
+                        	user_dept_nm$v_pLang$ AS user_dept_name,
+					        user_pos$v_pLang$ AS user_position,
+					        user_jikgub$v_pLang$ AS user_jikgub,
+					        user_gender,
+					        user_age,
+					        response_date
+                        FROM
+                        	TBL_POLL_RESPONSEPERSON 
+                        WHERE
+                        	brd_id = #v_pstrBrdID#
+                        AND
+                        	item_no = #v_pItemNo#
+                        AND
+                        	response_date IS NULL
+                        AND
+                        	tenant_id = #tenantID#
+						) P
+					WHERE
+                		ROWNUM <= #v_pPageSize#
+					ORDER BY
+                		P.user_id DESC
+                	) K
+				WHERE
+               		ROWNUM <= #v_pTotalCnt# 
+				ORDER BY
+					K.user_id ASC
 			]]>
 		</isNotEqual>
 		
@@ -791,21 +832,21 @@
 	<select id="EzQuestionDAO.getObjQuestion" parameterClass="Map" resultMap="objQuestion">
 		<![CDATA[
 			SELECT
-				QUESTION_NO ,
-             	QUESCONTENT ,
-             	ANSWERTYPE 
+				question_no,
+             	quescontent,
+             	answertype
         	FROM
         		TBL_POLL_QUESTION 
        		WHERE
-       			BRD_ID = #v_pstrBrdID#
+       			brd_id = #v_pstrBrdID#
             AND
-            	ITEM_NO = #v_pItemNo#
+            	item_no = #v_pItemNo#
             AND
-            	QUES_SN IS NOT NULL
+            	ques_sn IS NOT NULL
             AND
-            	TENANT_ID = #tenantID#	
+            	tenant_id = #tenantID#	
         	ORDER BY
-        		QUES_SN
+        		ques_sn
 		]]>
 	</select>
 	
@@ -823,15 +864,15 @@
         		FROM
         			TBL_POLL_QUESTION 
        			WHERE
-       				BRD_ID = #v_pstrBrdID#
+       				brd_id = #v_pstrBrdID#
                 AND
-                	ITEM_NO = #v_pItemNo#
+                	item_no = #v_pItemNo#
                 AND 
-					ANSWERTYPE = '1'
+					answertype = '1'
 				AND
-					TENANT_ID = #tenantID#	
+					tenant_id = #tenantID#	
         		ORDER BY
-        			QUES_SN
+        			ques_sn
 			]]>
 		</isEqual>
 		
@@ -842,17 +883,17 @@
            		FROM
            			TBL_POLL_QUESTION 
           		WHERE
-          			BRD_ID = #v_pstrBrdID#
+          			brd_id = #v_pstrBrdID#
 				AND
-					ITEM_NO = #v_pItemNo#
+					item_no = #v_pItemNo#
 				AND
-					QUESTION_NO = #v_pQuesNo#
+					question_no = #v_pQuesNo#
 				AND
-					ANSWERTYPE = '1'
+					answertype = '1'
 				AND
-					TENANT_ID = #tenantID#	
+					tenant_id = #tenantID#	
            		ORDER BY
-           			QUES_SN
+           			ques_sn
 			]]>
 		</isNotEqual>
 		
@@ -868,96 +909,96 @@
 		<isEqual property="v_Que_num" compareValue="0">
 			<![CDATA[
 				SELECT
-					NVL(r.QUESTION_NO, NULL) as question_no,
-                	NVL(r.ANSWER_OBJECTIVITY, NULL) as answer_objectivity,
-                	NVL(r.RESPONSEUSER_DEPT_NAME, NULL) as responseUser_dept_name,
-                	/* NVL(r.RESPONSEUSER_DEPT_NAME2, 'NULL') responseUser_dept_name2, */  
-                	MAX(Q.QUESCONTENT) as quescontent  ,
-                	MAX(TBL_POLL_ANSWER.ANSWERCONTENT) as answer  ,
-                	COUNT(*) as Q_count  
+					NVL(R.question_no, NULL) as question_no,
+                	NVL(R.answer_objectivity, NULL) as answer_objectivity,
+                	NVL(R.responseuser_dept_name, NULL) as responseUser_dept_name,
+                	/* NVL(R.responseuser_dept_name2, 'NULL') responseUser_dept_name2, */  
+                	MAX(Q.quescontent) as quescontent,
+                	MAX(TBL_POLL_ANSWER.answercontent) as answer,
+                	COUNT(*) as q_count  
 	           	FROM
-	           		TBL_POLL_RESPONSE r
+	           		TBL_POLL_RESPONSE R
 				INNER JOIN
 					TBL_POLL_QUESTION Q
 				ON
-					r.QUESTION_NO = Q.QUESTION_NO
+					R.question_no = Q.question_no
 				AND
-					r.ITEM_NO = Q.ITEM_NO
+					R.item_no = Q.item_no
 				AND
-					r.TENANT_ID = Q.TENANT_ID	
+					R.tenant_id = Q.tenant_id	
 				INNER JOIN
 					TBL_POLL_ANSWER
 				ON
-					TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+					TBL_POLL_ANSWER.item_no = R.item_no
 				AND
-					r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+					R.answer_objectivity = TBL_POLL_ANSWER.answerno
 				AND
-					TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+					TBL_POLL_ANSWER.question_no = R.question_no
 				AND
-					TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
+					TBL_POLL_ANSWER.tenant_id = R.tenant_id	
 	          	WHERE
-	          		( r.ITEM_NO = #v_item_num#  )
+	          		(R.item_no = #v_item_num#)
 				AND
-					( TBL_POLL_ANSWER.ITEM_NO = #v_item_num#  )
+					(TBL_POLL_ANSWER.item_no = #v_item_num#)
 				AND
-					r.TENANT_ID = #tenantID#
+					R.tenant_id = #tenantID#
 				AND
-					TBL_POLL_ANSWER.TENANT_ID = #tenantID#		
+					TBL_POLL_ANSWER.tenant_id = #tenantID#		
 	          	GROUP BY
-	          		ROLLUP (r.QUESTION_NO, r.ANSWER_OBJECTIVITY, r.RESPONSEUSER_DEPT_NAME)
+	          		ROLLUP (R.question_no, R.answer_objectivity, R.responseuser_dept_name)
 	          	ORDER BY
-	          		r.QUESTION_NO DESC,
-	                r.ANSWER_OBJECTIVITY DESC,
-	                r.RESPONSEUSER_DEPT_NAME DESC
+	          		R.question_no ASC nulls first,
+	                R.answer_objectivity ASC nulls first,
+	                R.responseuser_dept_name ASC nulls first
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_Que_num" compareValue="0">
 			<![CDATA[
 				SELECT
-					NVL(r.question_no, NULL) as question_no,
-                	NVL(r.answer_objectivity, NULL) as answer_objectivity,
-                	NVL(r.responseUser_dept_name, NULL) as responseUser_dept_name,
-                	-- NVL(r.responseUser_dept_name2, 'NULL') responseUser_dept_name2,
+					NVL(R.question_no, NULL) as question_no,
+                	NVL(R.answer_objectivity, NULL) as answer_objectivity,
+                	NVL(R.responseUser_dept_name, NULL) as responseUser_dept_name,
+                	-- NVL(R.responseUser_dept_name2, 'NULL') responseUser_dept_name2,
                 	MAX(Q.quescontent) as quescontent  ,
-                	MAX(TBL_POLL_ANSWER.AnswerContent) as answer  ,
-                	COUNT(*) as Q_count  
+                	MAX(TBL_POLL_ANSWER.answercontent) as answer  ,
+                	COUNT(*) as q_count  
            		FROM
-           			TBL_POLL_RESPONSE r
+           			TBL_POLL_RESPONSE R
                	INNER JOIN
                		TBL_POLL_QUESTION Q 
                	ON
-               		r.QUESTION_NO = Q.QUESTION_NO
+               		R.question_no = Q.question_no
                 AND
-                	r.ITEM_NO = Q.ITEM_NO
+                	R.item_no = Q.item_no
                 AND
-                	r.TENANT_ID = Q.TENANT_ID	
+                	R.tenant_id = Q.tenant_id	
                	INNER JOIN
                		TBL_POLL_ANSWER
                	ON
-               		TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+               		TBL_POLL_ANSWER.item_no = R.ITEM_NO
                 AND
-                	r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+                	R.answer_objectivity = TBL_POLL_ANSWER.answerno
                 AND
-                	TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBL_POLL_ANSWER.question_no = R.question_no
                 AND
-                	TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID
+                	TBL_POLL_ANSWER.tenant_id = R.tenant_id
           		WHERE
-          			( r.ITEM_NO = #v_item_num#  )
+          			(R.item_no = #v_item_num# )
                 AND
-                	( TBL_POLL_ANSWER.ITEM_NO = #v_item_num#  )
+                	(TBL_POLL_ANSWER.item_no = #v_item_num# )
                 AND
-                	( Q.QUESTION_NO = #v_Que_num#  )
+                	(Q.question_no = #v_Que_num# )
                 AND
-                	r.TENANT_ID = #tenantID#
+                	R.tenant_id = #tenantID#
                 AND
-                	TBL_POLL_ANSWER.TENANT_ID = #tenantID#		
+                	TBL_POLL_ANSWER.tenant_id = #tenantID#		
           		GROUP BY
-          			ROLLUP(r.QUESTION_NO, r.ANSWER_OBJECTIVITY, r.RESPONSEUSER_DEPT_NAME)
+          			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_dept_name)
           		ORDER BY
-          			r.QUESTION_NO DESC,
-                	r.ANSWER_OBJECTIVITY DESC,
-                	r.RESPONSEUSER_DEPT_NAME DESC
+          			R.question_no ASC nulls first,
+                	R.answer_objectivity ASC nulls first,
+                	R.responseuser_dept_name ASC nulls first
 			]]>
 		</isNotEqual>
 		
@@ -973,107 +1014,107 @@
 		<isEqual property="v_Que_num" compareValue="0">
 			<![CDATA[
 				SELECT
-					NVL(r.QUESTION_NO, NULL) question_no ,
-                	r.ANSWER_OBJECTIVITY ,
+					NVL(R.question_no, NULL) question_no ,
+                	R.answer_objectivity ,
                 	/* 수정(2005.06.28) : 직급이 없는 경우 ' ' 반환하여 빈공백과 구별되도록 수정 */ 
                 	CASE 
-                		r.RESPONSEUSER_POSITION
+                		R.responseuser_position
 					WHEN
 						u'' THEN u' '
-                	ELSE r.RESPONSEUSER_POSITION
-                   	END RESPONSEUSER_POSITION  ,
-                	MAX(Q.QUESCONTENT)  quescontent  ,
-                	MAX(TBL_POLL_ANSWER.ANSWERCONTENT)  answer  ,
-                	COUNT(*)  Q_count  
+                	ELSE R.responseuser_position
+                   	END responseuser_position,
+                	MAX(Q.quescontent) quescontent,
+                	MAX(TBL_POLL_ANSWER.answercontent) answer,
+                	COUNT(*) q_count
            		FROM
-           			TBL_POLL_RESPONSE r
+           			TBL_POLL_RESPONSE R
 				JOIN
 					TBL_POLL_QUESTION Q
 				ON
-					r.QUESTION_NO = Q.QUESTION_NO
+					R.question_no = Q.question_no
 				AND
-					r.ITEM_NO = Q.ITEM_NO
+					R.item_no = Q.item_no
 				AND
-					r.TENANT_ID = Q.TENANT_ID	
+					R.tenant_id = Q.tenant_id
 				JOIN
 					TBL_POLL_ANSWER
 				ON
-					TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+					TBL_POLL_ANSWER.item_no = R.item_no
 				AND
-					r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+					R.answer_objectivity = TBL_POLL_ANSWER.answerno
 				AND
-					TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+					TBL_POLL_ANSWER.question_no = R.question_no
 				AND
-					TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
+					TBL_POLL_ANSWER.tenant_id = R.tenant_id	
           		WHERE
-          			( r.ITEM_NO = #v_item_num# )
+          			(R.item_no = #v_item_num#)
 				AND
-					( TBL_POLL_ANSWER.ITEM_NO = #v_item_num# )
+					(TBL_POLL_ANSWER.item_no = #v_item_num#)
 				AND
-					r.TENANT_ID = #tenantID#
+					R.tenant_id = #tenantID#
 				AND
-					TBL_POLL_ANSWER.TENANT_ID = #tenantID#		
+					TBL_POLL_ANSWER.tenant_id = #tenantID#		
            		GROUP BY
-           			ROLLUP( r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_POSITION )
+           			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_position)
            		ORDER BY
-           			r.QUESTION_NO DESC,
-                    r.ANSWER_OBJECTIVITY DESC,
-                    r.RESPONSEUSER_POSITION DESC
+           			R.question_no ASC nulls first,
+                    R.answer_objectivity ASC nulls first,
+                    R.responseuser_position ASC nulls first
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_Que_num" compareValue="0">
 			<![CDATA[
 				SELECT
-					NVL(r.question_no,NULL) question_no ,
-                	r.ANSWER_OBJECTIVITY ,
+					NVL(R.question_no,NULL) question_no ,
+                	R.answer_objectivity ,
                 	CASE
-                		r.RESPONSEUSER_POSITION
+                		R.responseuser_position
                     WHEN
                     	u'' THEN u' '
                 	ELSE
-                		r.RESPONSEUSER_POSITION
+                		R.responseuser_position
                    	END
-                   		RESPONSEUSER_POSITION  ,
-                	MAX(Q.QUESCONTENT)  quescontent  ,
-                	MAX(TBL_POLL_ANSWER.ANSWERCONTENT)  answer  ,
-                	COUNT(*)  Q_count  
+                   		responseuser_position  ,
+                	MAX(Q.quescontent)  quescontent  ,
+                	MAX(TBL_POLL_ANSWER.answercontent)  answer  ,
+                	COUNT(*) q_count  
            		FROM
-           			TBL_POLL_RESPONSE r
+           			TBL_POLL_RESPONSE R
                	JOIN
                		TBL_POLL_QUESTION Q
                	ON
-               		r.QUESTION_NO = Q.QUESTION_NO
+               		R.question_no = Q.question_no
                	AND
-               		r.ITEM_NO = Q.ITEM_NO
+               		R.item_no = Q.item_no
                	AND
-               		r.TENANT_ID = Q.TENANT_ID	
+               		R.tenant_id = Q.tenant_id	
                	JOIN
                		TBL_POLL_ANSWER
                	ON
-               		TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+               		TBL_POLL_ANSWER.item_no = R.item_no
                	AND
-               		r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+               		R.answer_objectivity = TBL_POLL_ANSWER.answerno
                 AND
-                	TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+                	TBL_POLL_ANSWER.question_no = R.question_no
                 AND
-                	TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
+                	TBL_POLL_ANSWER.tenant_id = R.tenant_id	
           		WHERE
-          			( r.ITEM_NO = #v_item_num# )
+          			(R.item_no = #v_item_num#)
                 AND
-                	( TBL_POLL_ANSWER.ITEM_NO = #v_item_num# )
+                	(TBL_POLL_ANSWER.item_no = #v_item_num#)
                 AND
-                	( Q.QUESTION_NO = #v_Que_num# )
+                	(Q.question_no = #v_Que_num#)
                 AND
-                	TBL_POLL_ANSWER.TENANT_ID = #tenantID#
+                	TBL_POLL_ANSWER.tenant_id = #tenantID#
                 AND
-                	Q.TENANT_ID = #tenantID#		
+                	Q.tenant_id = #tenantID#		
            		GROUP BY
-           			ROLLUP( r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_POSITION )
+           			ROLLUP(R.question_no, R.answer_objectivity, R.responseuser_position)
            		ORDER BY
-           			r.QUESTION_NO DESC,
-                    r.ANSWER_OBJECTIVITY DESC,
-                    r.RESPONSEUSER_POSITION DESC
+           			R.question_no ASC nulls first,
+                    R.answer_objectivity ASC nulls first,
+                    R.responseuser_position ASC nulls first
 			]]>
 		</isNotEqual>
 		
@@ -1124,9 +1165,9 @@
           		GROUP BY
           			ROLLUP(r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
           		ORDER BY
-          			r.QUESTION_NO DESC,
-                  	r.ANSWER_OBJECTIVITY DESC,
-                  	r.RESPONSEUSER_JIKGUB2 DESC
+          			r.QUESTION_NO ASC nulls first,
+                  	r.ANSWER_OBJECTIVITY ASC nulls first,
+                  	r.RESPONSEUSER_JIKGUB2 ASC nulls first
 			]]>
 		</isEqual>
 		
@@ -1170,9 +1211,9 @@
            		GROUP BY
            			ROLLUP (r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2)
            		ORDER BY
-           			r.QUESTION_NO DESC,
-                    r.ANSWER_OBJECTIVITY DESC,
-                    r.RESPONSEUSER_JIKGUB2 DESC
+           			r.QUESTION_NO ASC nulls first,
+                    r.ANSWER_OBJECTIVITY ASC nulls first,
+                    r.RESPONSEUSER_JIKGUB2 ASC nulls first
 			]]>
 		</isNotEqual>
 	</select>
@@ -1250,7 +1291,7 @@
 	</procedure> -->
 	
 	<select id="EzQuestionDAO.analysisCount" parameterClass="Map" resultClass="String">
-		<isEqual property="v_PQUESNO" compareValue="0">
+		<isEqual property="v_pQuesNo" compareValue="0">
 			<![CDATA[
 				SELECT
 					COUNT(DISTINCT RESPONSEUSER_ID)  
@@ -1265,7 +1306,7 @@
 			]]>
 		</isEqual>
 		
-		<isNotEqual property="v_PQUESNO" compareValue="0">
+		<isNotEqual property="v_pQuesNo" compareValue="0">
 			<![CDATA[
 				SELECT
 					COUNT(DISTINCT RESPONSEUSER_ID)  
@@ -1294,7 +1335,7 @@
 		<![CDATA[
 			SELECT
 				COUNT(*) 
-			FROM ( SELECT
+			FROM (SELECT
 							BRD_ID, ITEM_NO, QUESTION_NO, RESPONSENO, ANSWER_OBJECTIVITY, ANSWER_SUBJECTIVITY, 
    							ANSWER_VIEWSELECT, RESPONSEUSER_ID, RESPONSEUSER_NAME$v_pLang$ AS RESPONSEUSER_NAME,
    							RESPONSEUSER_EMAIL, RESPONSEUSER_DEPT_ID, RESPONSEUSER_DEPT_NAME$v_pLang$ AS RESPONSEUSER_DEPT_NAME,
@@ -1373,7 +1414,7 @@
 			<![CDATA[
 				SELECT
 					COUNT(*) AS CNT 
-				FROM ( SELECT
+				FROM (SELECT
 								RESPONSEUSER_ID AS USER_ID, 
                         		MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
                         		MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
@@ -1394,7 +1435,7 @@
                         		TENANT_ID = #tenantID#	
                         	GROUP BY
                         		RESPONSEUSER_ID
-                      ) P
+                     ) P
 			]]>
 		</isEqual>
 		
@@ -1402,7 +1443,7 @@
 			<![CDATA[
 				SELECT
 					COUNT(*) AS CNT 
-				FROM ( SELECT
+				FROM (SELECT
 								USER_ID	AS USER_ID,
                       			USER_NM$v_pLang$ AS USER_NAME,
                       			USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
@@ -1690,9 +1731,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_ITEM
-        			( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID )
+        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1727,9 +1768,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_PERMISSION
-        			( BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID )
+        			(BRD_ID, ITEM_NO, PUBLIC_RESULT_FLG, PUBLIC_FLG, MULTI_RESPONSE_FLG, RESPONSE_RANGE, TENANT_ID)
         		VALUES
-        			( #v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID# )
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_PRESULTFLG#, #v_PPUBLICFLG#, #v_PMULTIFLG#, #v_PRESRANGE#, #tenantID#)
 			]]>
 		</isNotEqual>
 		
@@ -1749,7 +1790,7 @@
         		FROM
         			DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			GUBUN ,
@@ -1765,7 +1806,7 @@
                                     	AND
                                     		GUBUN_ID = #v_pGubunID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>	
 		</selectKey>
 		
@@ -1773,9 +1814,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_ITEMACL
-     				( BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, GUBUN, GUBUN_ID, GUBUN_NM, GUBUN_NM2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunFg#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1829,7 +1870,7 @@
 			INSERT INTO
 				TBL_QS_ITEMSEQ
         	VALUES
-        		( #v_pstrBrdID#, '1', #tenantID# )
+        		(#v_pstrBrdID#, '1', #tenantID#)
 		]]>
 	</insert>
 	
@@ -1847,7 +1888,7 @@
 		        FROM
 		        	DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			USER_ID 
@@ -1860,7 +1901,7 @@
                                     	AND
                                     		USER_ID = #v_pUserID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>
 		</selectKey>
 		
@@ -1868,9 +1909,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID#)
 			]]>
 		</isEqual>
 	</insert>
@@ -1889,7 +1930,7 @@
         		FROM
         			DUAL
        			WHERE
-       				NOT EXISTS ( SELECT
+       				NOT EXISTS (SELECT
        										BRD_ID ,
                                  			ITEM_NO ,
                                  			USER_ID 
@@ -1902,7 +1943,7 @@
                                     	AND
                                     		USER_ID = #v_pGubunID#
                                     	AND
-                                    		TENANT_ID = #tenantID#	 )
+                                    		TENANT_ID = #tenantID#	)
 			]]>
 		</selectKey>
 		
@@ -1910,9 +1951,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_RESPONSEPERSON
-     				( BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID )
+     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, USER_GENDER, USER_AGE, TENANT_ID)
      			VALUES
-     				( #v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID# )
+     				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID#)
 			]]>
 		</isEqual>
 		<![CDATA[
@@ -1921,7 +1962,7 @@
 	
 	<!-- <procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">
 		<![CDATA[
-			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect# )}
+			{CALL EZSP_INSERTQUESTION(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#)}
 		]]>
 	</procedure> -->
 	
@@ -1929,9 +1970,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_QUESTION
-        		( BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, QUESCONTENT, ANSWERTYPE, MULTISELECT, QUES_SN, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pQuesContent#, #v_pAnswerType#, #v_pmultiselect#, #v_pQuesNo#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -1945,9 +1986,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ATTACH
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ATTACHNO, ATTACHNAME, ATTACHURL, ATTACHTYPE, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAttachNo#, #v_pAttachName#, #v_pAttachURL#, #v_pAttachType#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -1961,9 +2002,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_TABLE_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWER_ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswer_AnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -1977,9 +2018,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ANSWER
-        		( BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID )
+        		(BRD_ID, ITEM_NO, QUESTION_NO, ANSWERNO, ANSWERCONTENT, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pQuesNo#, #v_pAnswerNo#, #v_pAnswerContent#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2048,7 +2089,7 @@
 	
 	<delete id="EzQuestionDAO.callDeleteItemSeq" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ITEMACL
           	WHERE
           		BRD_ID = #v_pstrBrdID#
@@ -2067,7 +2108,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D1" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_RESPONSE
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2080,7 +2121,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ANSWER
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2093,7 +2134,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D3" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_QUESTION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2106,7 +2147,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D4" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_PERMISSION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2119,7 +2160,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D5" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ITEM
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2132,7 +2173,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D6" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ITEMREAD
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2145,7 +2186,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem_D7" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ITEMACL
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2158,7 +2199,7 @@
 	
 	<delete id="EzQuestionDAO.deleteItem" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_RESPONSEPERSON
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2177,7 +2218,7 @@
 	
 	<delete id="EzQuestionDAO.deletePermission_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_PERMISSION
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2190,7 +2231,7 @@
 	
 	<delete id="EzQuestionDAO.deletePermission" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ITEM
 		    WHERE
 		    	BRD_ID = #v_pstrBrdID#
@@ -2209,7 +2250,7 @@
 	
 	<delete id="EzQuestionDAO.callDeletePollResponseper" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_RESPONSEPERSON
 	       WHERE
 				BRD_ID = #v_pstrBrdID#
@@ -2318,9 +2359,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_POLL_ITEMREAD
-        		( BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID )
+        		(BRD_ID, ITEM_NO, USER_ID, READ_DATE, USER_NM, USER_NM2, USER_DEPTID, USER_DEPTNM, USER_DEPTNM2, USER_POSNM, USER_POSNM2, TENANT_ID)
         	VALUES
-        		( #v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID# )
+        		(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pReadDate#, #v_pUserNM#, #v_pUserNM2#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPosNM#, #v_pUserPosNM2#, #tenantID#)
 		]]>
 	</insert>
 	
@@ -2410,7 +2451,7 @@
 	
 	<delete id="EzQuestionDAO.questionDelete2_D" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ANSWER
    			WHERE
    				BRD_ID = #v_pstrBrdID#
@@ -2423,7 +2464,7 @@
 	
 	<delete id="EzQuestionDAO.questionDelete2" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_QUESTION
             WHERE
             	BRD_ID = #v_pstrBrdID#
@@ -2442,7 +2483,7 @@
 	
 	<delete id="EzQuestionDAO.questionDelete1" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_QUESTION
           	WHERE
           		BRD_ID = #v_pstrBrdID#
@@ -2485,7 +2526,7 @@
 	
 	<delete id="EzQuestionDAO.deletePollAttach" parameterClass="Map">
 		<![CDATA[
-			DELETE
+			DELETE FROM
 				TBL_POLL_ATTACH
 	       WHERE
 				BRD_ID = #v_pstrBrdID#
@@ -2507,72 +2548,71 @@
 			SELECT
 				COUNT(ITEM_NO)
         	FROM
-	        		( 	SELECT
-	        				A.ITEM_NO 
-	               		FROM
-	               			TBL_POLL_RESPONSEPERSON A
-	                    LEFT JOIN
-	                    	TBL_POLL_ITEM B
-	                    ON
-	                    	A.BRD_ID = B.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = B.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = B.TENANT_ID	
-	                	WHERE
-	                		A.USER_ID = #v_pUSERID#
-	                    AND
-	                    	A.TENANT_ID = #tenantID#
-	                    AND	
-	                    	#nowDate#
-	                    BETWEEN
-	                    	B.POLL_STARTDATE
-	                    AND
-	                    	B.POLL_ENDDATE
-	                    AND
-	                    	RESPONSE_DATE IS NULL
-	                    AND
-	                    	B.COMPLETE_FLAG = 'Y'
-               		UNION
-		            	SELECT
-		            		A.ITEM_NO 
-	               		FROM
-	               			TBL_POLL_ITEM A
-						LEFT JOIN
-							TBL_POLL_RESPONSE B
-						ON
-							A.BRD_ID = B.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = B.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = B.TENANT_ID	
-	                    AND
-	                    	B.RESPONSEUSER_ID = #v_pUSERID#
-	                    LEFT JOIN
-	                    	TBL_POLL_PERMISSION C 
-	                    ON
-	                    	A.BRD_ID = C.BRD_ID
-	                    AND
-	                    	A.ITEM_NO = C.ITEM_NO
-	                    AND
-	                    	A.TENANT_ID = C.TENANT_ID	
-	                	WHERE
-	                		#nowDate#
-	                	BETWEEN
-	                		A.POLL_STARTDATE
-	                	AND
-	                		A.POLL_ENDDATE
-	                    AND
-	                    	B.RESPONSEUSER_NAME IS NULL
-	                    AND
-	                    	A.COMPLETE_FLAG = 'Y'
-	                    AND
-	                    	B.RESPONSEUSER_ID IS NULL
-	                    AND
-	                    	A.TENANT_ID = #tenantID#	
-	                    AND
-	                    	C.RESPONSE_RANGE = '0' ) CNT
-	                    	
+				(SELECT
+					A.ITEM_NO 
+				FROM
+					TBL_POLL_RESPONSEPERSON A
+				LEFT JOIN
+					TBL_POLL_ITEM B
+				ON
+					A.BRD_ID = B.BRD_ID
+				AND
+					A.ITEM_NO = B.ITEM_NO
+				AND
+					A.TENANT_ID = B.TENANT_ID	
+				WHERE
+					A.USER_ID = #v_pUSERID#
+				AND
+					A.TENANT_ID = #tenantID#
+				AND	
+					#nowDate#
+				BETWEEN
+					B.POLL_STARTDATE
+				AND
+					B.POLL_ENDDATE
+				AND
+					RESPONSE_DATE IS NULL
+				AND
+					B.COMPLETE_FLAG = 'Y'
+				UNION
+					SELECT
+						A.ITEM_NO 
+					FROM
+						TBL_POLL_ITEM A
+					LEFT JOIN
+						TBL_POLL_RESPONSE B
+					ON
+						A.BRD_ID = B.BRD_ID
+					AND
+						A.ITEM_NO = B.ITEM_NO
+					AND
+						A.TENANT_ID = B.TENANT_ID	
+					AND
+						B.RESPONSEUSER_ID = #v_pUSERID#
+					LEFT JOIN
+						TBL_POLL_PERMISSION C 
+					ON
+						A.BRD_ID = C.BRD_ID
+					AND
+						A.ITEM_NO = C.ITEM_NO
+					AND
+						A.TENANT_ID = C.TENANT_ID	
+					WHERE
+						#nowDate#
+					BETWEEN
+						A.POLL_STARTDATE
+					AND
+						A.POLL_ENDDATE
+					AND
+						B.RESPONSEUSER_NAME IS NULL
+					AND
+						A.COMPLETE_FLAG = 'Y'
+					AND
+						B.RESPONSEUSER_ID IS NULL
+					AND
+						A.TENANT_ID = #tenantID#	
+					AND
+						C.RESPONSE_RANGE = '0') CNT
 		]]>
 	</select>
 	
@@ -2804,11 +2844,9 @@
 	
 	<insert id="EzQuestionDAO.insertItemSeq" parameterClass="Map">
 		<![CDATA[
-			INSERT INTO TBL_QS_ITEMSEQ (
-			) 
-			VALUES(
-				#v_pstrBrdID#, '1', #tenantID#
-			) 
+			INSERT INTO TBL_QS_ITEMSEQ
+			VALUES
+				(#v_pstrBrdID#, '1', #tenantID#)
 		]]>
 	</insert>
 			
@@ -2841,7 +2879,7 @@
 			SET 
 				ITEM_NO = #v_pItemNo#
 			WHERE
-				 BRD_ID = #v_pstrBrdID#  
+				BRD_ID = #v_pstrBrdID#  
 			AND
 				TENANT_ID = #tenantID#	 
 		]]>
@@ -2854,7 +2892,7 @@
 			SET 
 				POLL_ENDDATE = #endDate#
 			WHERE
-				 BRD_ID = #brdID#
+				BRD_ID = #brdID#
 			AND
 				ITEM_NO = #itemNo#
 			AND
@@ -2869,7 +2907,7 @@
 			SET 
 				END_FLG = #endFlag#
 			WHERE
-				 BRD_ID = #brdID#
+				BRD_ID = #brdID#
 			AND
 				ITEM_NO = #itemNo#	   
 			AND

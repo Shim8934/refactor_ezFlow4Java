@@ -19,12 +19,18 @@ function window_onload() {
         m_dlgArgs = parent.schedule_repetition_cross_dialogArguments[0];
         ReturnFunction = parent.schedule_repetition_cross_dialogArguments[1];
     } catch (e) { }
-
+ 
     try {
+    	try {
+            var recurrenceDoc = loadXMLString(m_dlgArgs["recurrence"]);       
+            var endDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/endDateTime")[0]);
+            var startDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/startDateTime")[0]);
+            
+         } catch (e) { }
         if (m_dlgArgs["alldaycheck"] == "1") {
             try {
-                m_objStartTime = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
-                m_objEndTime = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
+                m_objStartTime = new Date(startDateTime.split(' ')[0].split('-')[0], parseInt(startDateTime.split(' ')[0].split('-')[1]) - 1, startDateTime.split(' ')[0].split('-')[2], startDateTime.split(' ')[1].split(':')[0], startDateTime.split(' ')[1].split(':')[1], 0, 0);
+                m_objEndTime = new Date(endDateTime.split(' ')[0].split('-')[0], parseInt(endDateTime.split(' ')[0].split('-')[1]) - 1, endDateTime.split(' ')[0].split('-')[2], endDateTime.split(' ')[1].split(':')[0], endDateTime.split(' ')[1].split(':')[1], 0, 0);
             } catch (e) {
                 m_objStartTime = new Date(m_dlgArgs["startTime"]);
                 m_objEndTime = new Date(m_dlgArgs["endTime"]);

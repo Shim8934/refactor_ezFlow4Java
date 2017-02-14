@@ -17795,21 +17795,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
  		String changeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent();
 		
-		if(changeType.equals("0")){ // 기본등록사항 변경 시
+		if(changeType.equals("0")) { // 기본등록사항 변경 시
 			strSQL = ChangeCabBasicInfo(xmlDom, tenantID);
 		}
-		else{
+		else {
 			strSQL = ChangeCabExtraInfo(xmlDom);
 		}
-		if(strSQL.equals("FALSE")){
+		
+		if(strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
 		}
+		
 		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
 		
-		if(result){
+		if(result) {
 			return "<RESULT>TRUE</RESULT>";
 		}
-		else{
+		else {
 			return "<RESULT>FALSE</RESULT>";
 		}
 	}
@@ -18105,7 +18107,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String idList = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
 		String nameList = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
 		String nameList2 = xmlDom.getElementsByTagName("USERNAME2").item(0).getTextContent();
-		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
 		try {
 			Map<String,Object> map = new HashMap<String, Object>();
@@ -18169,7 +18170,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String doSendOffer(Document xmlDom, String dirPath,	String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder("");
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
 		String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
@@ -18206,205 +18206,162 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String sentDeptName="";
 		String sentDeptName2="";
 		
-		if(signXML.getDocumentElement().getChildNodes().getLength()>0){
-			if(docTitle.trim().equals("")){
-				docTitle = makeListField(signXML.getElementsByTagName("DOCTITLE").item(0).getTextContent());
+		try {
+			if(signXML.getDocumentElement().getChildNodes().getLength()>0) {
+				if(docTitle.trim().equals("")){
+					docTitle = makeListField(signXML.getElementsByTagName("DOCTITLE").item(0).getTextContent());
+				}
+				
+				String startDate = ezApprovalGDAO.getStartDateTime(map);
+	            String endDate = ezApprovalGDAO.getEndDateTime(map);
+	            
+				map.put("v_OrgDocID", makeRightField(orgDocID));
+				map.put("v_DOCID", docID);
+				map.put("v_DocType", makeRightField(makeListField(signXML.getElementsByTagName("DOCTYPE").item(0).getTextContent())));
+				map.put("v_DocState", staDSSimSa);
+				map.put("v_FunctionType", staASJinHang);
+				map.put("v_Href", makeRightField(href));
+				map.put("v_DocTitle", makeRightField(docTitle));
+				map.put("v_DocNo", makeRightField(makeListField(signXML.getElementsByTagName("DOCNO").item(0).getTextContent())));
+				map.put("v_HasAttachYN", makeRightField(makeListField(signXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent())));
+				map.put("v_StartDate", startDate.substring(0, startDate.length()-2));
+				map.put("v_EndDate", endDate.substring(0, endDate.length()-2));
+				map.put("v_WriterID", makeRightField(makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent())));
+				map.put("v_WriterName", makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent())));
+				map.put("v_WriterName2", makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())));
+				map.put("v_WriterJobTitle", makeRightField(makeListField(signXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent())));
+				map.put("v_WriterJobTitle2", makeRightField(makeListField(signXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())));
+				map.put("v_WriterDeptID", makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent())));
+				map.put("v_WriterDeptName", makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent())));
+				map.put("v_WriterDeptName2", makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())));
+				map.put("v_isPublic", makeListField(signXML.getElementsByTagName("ISPUBLIC").item(0).getTextContent().trim()));
+		        
+				ezApprovalGDAO.updateDoSendAprDocInfo(map);
+				
+	         	sentDeptID = makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent());
+	            sentDeptName = makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent());
+	            sentDeptName2 = makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent());
 			}
-			 strSQL.append("UPDATE TBL_APRDOCINFO SET OrgDocID = '" + makeRightField(orgDocID));
-             strSQL.append("', DocType = '" + makeRightField(makeListField(signXML.getElementsByTagName("DOCTYPE").item(0).getTextContent())));
-             strSQL.append("', DocState = '" + staDSSimSa + "', FunctionType = '" + staASJinHang);
-             strSQL.append("', Href = '" + makeRightField(href));
-             strSQL.append("', DocTitle = N'" + makeRightField(docTitle));
-             strSQL.append("', DocNo = N'" + makeRightField(makeListField(signXML.getElementsByTagName("DOCNO").item(0).getTextContent())));
-             strSQL.append("', HasAttachYN = '" + makeRightField(makeListField(signXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent())));
-             strSQL.append("', HasOpinionYN = 'N");
-             
-             String startDate = ezApprovalGDAO.getStartDateTime(map);
-             String endDate = ezApprovalGDAO.getEndDateTime(map);
-             
-             
-             strSQL.append("', StartDate = TO_Date('" + startDate.substring(0, startDate.length()-2) + "', 'YYYY-MM-DD HH24:MI:SS'), EndDate = TO_DATE('" + endDate.substring(0, endDate.length()-2) + "', 'YYYY-MM-DD HH24:MI:SS')");
-             strSQL.append(", WriterID = '" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent())));
-             strSQL.append("', WriterName = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent())));
-             strSQL.append("', WriterName2 = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent())));
-             strSQL.append("', WriterJobTitle = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent())));
-             strSQL.append("', WriterJobTitle2 = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent())));
-             strSQL.append("', WriterDeptID = '" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent())));
-             strSQL.append("', WriterDeptName = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent())));
-             strSQL.append("', WriterDeptName2 = N'" + makeRightField(makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent())));
-             
-             if(makeListField(signXML.getElementsByTagName("ISPUBLIC").item(0).getTextContent().trim()).equals("")){
-            	 strSQL.append("' WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID +";\n");
-             }
-             else{
-            	   strSQL.append("', isPublic = '" + makeRightField(makeListField(signXML.getElementsByTagName("ISPUBLIC").item(0).getTextContent())));
-                   strSQL.append("' WHERE DocID = '" + docID + "' AND TENANT_ID = " + tenantID +";\n");
-             }
-         	sentDeptID = makeListField(signXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent());
-            sentDeptName = makeListField(signXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent());
-            sentDeptName2 = makeListField(signXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent());
-		}
+		
+			List<ApprGDocListVO> signList2 = ezApprovalGDAO.doSendOffer_expendDocInfo(map);
+			StringBuffer sb2 = new StringBuffer();
+	        sb2.append("<DATA>");
+	        
+	        for (int i = 0; i < signList2.size(); i++) {
+				sb2.append(commonUtil.getQueryResult(signList2.get(i)));
+			}
+			sb2.append("</DATA>");
+			
+			Document signXML2 = commonUtil.convertStringToDocument(sb2.toString());
+			
+			if(signXML2.getDocumentElement().getChildNodes().getLength()>0){
+				
+				map.put("v_FormName", makeRightField(makeListField(signXML2.getElementsByTagName("FORMNAME").item(0).getTextContent())));
+				map.put("v_FormName2", makeRightField(makeListField(signXML2.getElementsByTagName("FORMNAME2").item(0).getTextContent())));
+				map.put("v_SecurityCode", makeListField(signXML2.getElementsByTagName("SECURITYCODE").item(0).getTextContent()).trim());
+				map.put("v_StoragePeriod", makeListField(signXML2.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent()).trim());
+				map.put("v_KeyWord", makeListField(signXML2.getElementsByTagName("KEYWORD").item(0).getTextContent()).trim());
+				map.put("v_companyID", makeListField(signXML2.getElementsByTagName("COMPANYID").item(0).getTextContent()).trim());
+				map.put("v_ItemCode", makeListField(signXML2.getElementsByTagName("ITEMCODE").item(0).getTextContent()).trim());
+				map.put("v_ItemName", makeListField(signXML2.getElementsByTagName("ITEMNAME").item(0).getTextContent()).trim());
+				map.put("v_ItemName2", makeListField(signXML2.getElementsByTagName("ITEMNAME2").item(0).getTextContent()).trim());
+				map.put("v_UrgentApproval", makeListField(signXML2.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent()).trim());
+				map.put("v_TempAttribute", makeListField(signXML2.getElementsByTagName("TEMPATTRIBUTE").item(0).getTextContent()).trim());
+				map.put("v_Status", makeListField(signXML2.getElementsByTagName("STATUS").item(0).getTextContent()).trim());
+				map.put("v_SpecialRecordCode", makeListField(signXML2.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()).trim());
+				map.put("v_PublicityCode", makeListField(signXML2.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()).trim());
+				map.put("v_LimitRange", makeListField(signXML2.getElementsByTagName("LIMITRANGE").item(0).getTextContent()).trim());
+				map.put("v_PageNum", makeListField(signXML2.getElementsByTagName("PAGENUM").item(0).getTextContent()).trim());
+				map.put("v_CabinetID", makeListField(signXML2.getElementsByTagName("CABINETID").item(0).getTextContent()).trim());
+				map.put("v_TaskCode", makeListField(signXML2.getElementsByTagName("TASKCODE").item(0).getTextContent()).trim());
+				map.put("v_DocNumCode", makeListField(signXML2.getElementsByTagName("DOCNUMCODE").item(0).getTextContent()).trim());
+				map.put("v_OrgDocNumCode", makeListField(signXML2.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent()).trim());
+				map.put("v_SeperateAttachXML", makeListField(signXML2.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent()).trim());
+				map.put("v_Summary", makeListField(signXML2.getElementsByTagName("SUMMARY").item(0).getTextContent()).trim());
+				map.put("v_SecurityApproval", makeListField(signXML2.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent()).trim());
+				map.put("v_DOCID", docID);
+				map.put("v_TENANTID", tenantID);
 	
-		List<ApprGDocListVO> signList2 = ezApprovalGDAO.doSendOffer_expendDocInfo(map);
-		StringBuffer sb2 = new StringBuffer();
-        sb2.append("<DATA>");
-        
-        for (int i = 0; i < signList2.size(); i++) {
-			sb2.append(commonUtil.getQueryResult(signList2.get(i)));
-		}
-		sb2.append("</DATA>");
-		
-		Document signXML2 = commonUtil.convertStringToDocument(sb2.toString());
-		
-		if(signXML2.getDocumentElement().getChildNodes().getLength()>0){
-			strSQL.append("UPDATE TBL_EXPAPRDOCINFO SET FormName = N'");
-			strSQL.append(makeRightField(makeListField(signXML2.getElementsByTagName("FORMNAME").item(0).getTextContent())) + "', FormName2 = N'");
-            strSQL.append(makeRightField(makeListField(signXML2.getElementsByTagName("FORMNAME2").item(0).getTextContent())) + "' ");
-
-			if (!makeListField(signXML2.getElementsByTagName("SECURITYCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", SecurityCode = '" + makeRightField(makeListField(signXML2.getElementsByTagName("SECURITYCODE").item(0).getTextContent())) + "' ");
+				ezApprovalGDAO.updateDoSendExpAprDocInfo(map);
 			}
-			if (!makeListField(signXML2.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", StoragePeriod = '" + makeRightField(makeListField(signXML2.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("KEYWORD").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", KeyWord = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("KEYWORD").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("COMPANYID").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", companyID = '" + makeRightField(makeListField(signXML2.getElementsByTagName("COMPANYID").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("ITEMCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", ItemCode = '" + makeRightField(makeListField(signXML2.getElementsByTagName("ITEMCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("ITEMNAME").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", ItemName = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("ITEMNAME").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("ITEMNAME2").item(0).getTextContent()).trim().equals("")){
-                strSQL.append(", ItemName = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("ITEMNAME2").item(0).getTextContent())) + "' ");
-            }
-            if (!makeListField(signXML2.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", UrgentApproval = '" + makeRightField(makeListField(signXML2.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent())) + "' ");
-            }
-			if (!makeListField(signXML2.getElementsByTagName("TEMPATTRIBUTE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", TempAttribute = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("TEMPATTRIBUTE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("STATUS").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", Status = '" + makeRightField(makeListField(signXML2.getElementsByTagName("STATUS").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", SpecialRecordCode = '" + makeRightField(makeListField(signXML2.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", PublicityCode = '" + makeRightField(makeListField(signXML2.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("LIMITRANGE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", LimitRange = '" + makeRightField(makeListField(signXML2.getElementsByTagName("LIMITRANGE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("PAGENUM").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", PageNum = '" + makeRightField(makeListField(signXML2.getElementsByTagName("PAGENUM").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("CABINETID").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", CabinetID = '" + makeRightField(makeListField(signXML2.getElementsByTagName("CABINETID").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("TASKCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", TaskCode = '" + makeRightField(makeListField(signXML2.getElementsByTagName("TASKCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("DOCNUMCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", DocNumCode = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("DOCNUMCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", OrgDocNumCode = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", SeperateAttachXML =N'" + makeRightField(makeListField(signXML2.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent())) + "' ");
-			}
-			if (!makeListField(signXML2.getElementsByTagName("SUMMARY").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", Summary = N'" + makeRightField(makeListField(signXML2.getElementsByTagName("SUMMARY").item(0).getTextContent())) + "' ");
-			}
-			// 수정(2005.09.29) : 보안결재 필드 추가
-			if (!makeListField(signXML2.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent()).trim().equals("")){
-				strSQL.append(", SecurityApproval = '" + makeRightField(makeListField(signXML2.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent())) + "' ");
-			}
-			strSQL.append(" WHERE DocID = '" + docID + "'  AND TENANT_ID = " + tenantID +";\n");
-		}
-
-		   int receivedSn = ezApprovalGDAO.getReceiptInfo_receivesNm(map);
-		   receivedSn += 1;
-		   if(!gFlag.equals("G")){
-			   receivedSn = 0;
-		   }
-		   
-		   strSQL.append("INSERT INTO TBL_APRRECEIPTPROCESSINFO (ReceiveSN, DocID, SentDeptID, ");
-           strSQL.append("SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ");
-           strSQL.append("ProcessYN, ProcessDocID, ProcessorID, ProcessorName,ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) ");
-           strSQL.append("VALUES (" + Integer.toString(receivedSn) + ", '" + docID + "', '" + sentDeptID + "', N'");
-           strSQL.append(sentDeptName + "', N'" + sentDeptName2 + "', '" + deptID + "', N'" + deptName + "', N'" + deptName2 + "', '" + staDSSimSa);
-           strSQL.append("', '" + staASJinHang + "', TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
-           strSQL.append(", 'N', NULL, '" + userID + "', N'" + userName + "', N'" + userName2 + "', N'" + userJobTitle + "', N'" + userJobTitle2);
-           strSQL.append("', '" + orgDocID + "'," + tenantID +");\n");
-           
-       	   map.put("v_DOCID", docID);
-       	   map.put("companyID", companyID);
-       	   map.put("v_TENANTID", tenantID);
-       	   
-       	   List<ApprGReceiptVO> signList3 = ezApprovalGDAO.doSendOffer_receiptId(map);
-		   StringBuffer sb3 = new StringBuffer();
-           sb3.append("<DATA>");
-        
-           for (int i = 0; i < signList3.size(); i++) {
-        	   sb3.append(commonUtil.getQueryResult(signList3.get(i)));
-		   }
-		   sb3.append("</DATA>");
-		
-		   Document signXML3 = commonUtil.convertStringToDocument(sb3.toString());
-		   String subSQL="";
-		   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++){
-			   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "0" , "QUERY", companyID, lang, tenantID );
-			   if(subSQL.equals("FALSE")){
-				   return "<RESULT>FALSE</RESULT>";
+			   int receivedSn = ezApprovalGDAO.getReceiptInfo_receivesNm(map);
+			   receivedSn += 1;
+			   if(!gFlag.equals("G")){
+				   receivedSn = 0;
 			   }
 			   
-		   }
-		   if(gFlag.equals("G")){
-			   strSQL.append("DELETE FROM TBL_APRATTACHINFO WHERE DocID = '" + docID + "' AND TENANT_ID =" + tenantID +";\n");
-		       strSQL.append("INSERT INTO TBL_APRATTACHINFO (DocID, AttachFileSN, ");
-               strSQL.append("AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, ");
-               strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID) SELECT '" + docID);
-			   strSQL.append("', AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, ");
-               strSQL.append("AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID FROM ");
-               strSQL.append("TBL_ENDATTACHINFO WHERE DocID = '" + orgDocID + "' AND TENANT_ID ="+ tenantID +";\n");
-			   strSQL.append("DELETE FROM TBL_APRDOCATTACHINFO WHERE DocID = '" + docID + "' AND TENANT_ID ="+ tenantID +";\n");
-			   strSQL.append("INSERT INTO TBL_APRDOCATTACHINFO (DocID, AttachSN, ");
-               strSQL.append("AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, ");
-               strSQL.append("AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) SELECT '" + docID);
-			   strSQL.append("', AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, ");
-               strSQL.append("AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID FROM ");
-               strSQL.append("TBL_ENDAPRDOCATTACHINFO WHERE DocID = '" + orgDocID + "' AND TENANT_ID= " +tenantID+";\n");
-		   }
-		   
-			Boolean result = ExecuteTransactionSQL(strSQL, companyID);
-			if(result){
-				return "<RESULT>TRUE</RESULT>";
-			}
-			else{
-				return "<RESULT>FALSE</RESULT>";
-			}
+			   map.put("v_ReceiveSN", Integer.toString(receivedSn));
+			   map.put("v_DOCID", docID);
+			   map.put("v_SentDeptID", sentDeptID);
+			   map.put("v_sentDeptName", sentDeptName);
+			   map.put("v_sentDeptName2", sentDeptName2);
+			   map.put("v_deptID", deptID);
+			   map.put("v_deptName", deptName);
+			   map.put("v_deptName2", deptName2);
+			   map.put("v_DocState", staDSSimSa);
+			   map.put("v_AprState", staASJinHang);
+			   map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			   map.put("v_ProcessorID", userID);
+			   map.put("v_ProcessorName", userName);
+			   map.put("v_ProcessorName2", userName2);
+			   map.put("v_ProcessorJobTitle", userJobTitle);
+			   map.put("v_ProcessorJobTitle2", userJobTitle2);
+			   map.put("v_ORGDOCID", orgDocID);
+			   map.put("v_TENANTID", tenantID);
+	
+			   ezApprovalGDAO.insertDosendAprReceiptProcessInfo(map);
+			   
+	       	   map.put("v_DOCID", docID);
+	       	   map.put("companyID", companyID);
+	       	   map.put("v_TENANTID", tenantID);
+	       	   
+	       	   List<ApprGReceiptVO> signList3 = ezApprovalGDAO.doSendOffer_receiptId(map);
+			   StringBuffer sb3 = new StringBuffer();
+	           sb3.append("<DATA>");
+	        
+	           for (int i = 0; i < signList3.size(); i++) {
+	        	   sb3.append(commonUtil.getQueryResult(signList3.get(i)));
+			   }
+			   sb3.append("</DATA>");
+			
+			   Document signXML3 = commonUtil.convertStringToDocument(sb3.toString());
+			   String subSQL="";
+			   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++){
+				   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "0" , "QUERY", companyID, lang, tenantID );
+				   if(subSQL.equals("FALSE")){
+					   return "<RESULT>FALSE</RESULT>";
+				   }
+				   
+			   }
+			   if(gFlag.equals("G")) {
+				   map.put("v_DOCID", docID);
+				   map.put("v_TENANTID", tenantID);
+				   map.put("v_ORGDOCID", orgDocID);
+	
+				   ezApprovalGDAO.deleteDoSendAprAttachInfo(map);
+				   ezApprovalGDAO.insertDoSendAprAttachInfo(map);
+				   ezApprovalGDAO.deleteDoSendAprDocAttachInfo(map);
+				   ezApprovalGDAO.insertDosendAprDocAttachInfo(map);
+			   }
+			   return "<RESULT>TRUE</RESULT>";
+		} catch(Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
+			return "<RESULT>FALSE</RESULT>";
+		}
 	}
 
 	@Override
 	public String addBebu(Document xmlDom, String dirpath, String companyID, String lang, int tenantID) throws Exception {
- 		StringBuilder strSQL = new StringBuilder("");
 		String docID = xmlDom.getDocumentElement().getAttribute("DocID").trim();
-		String receiveSN = xmlDom.getDocumentElement().getAttribute("ReceiveSN").trim();
 		String sentDeptID = xmlDom.getDocumentElement().getAttribute("SendDeptID").trim();
 		String receiveDeptID = xmlDom.getDocumentElement().getAttribute("ReceivedDeptID").trim();
-		NodeList objRows = xmlDom.getDocumentElement().getChildNodes().item(0).getChildNodes();
 		String subSQL ="";
 		
-		for(int i = 0; i<xmlDom.getDocumentElement().getChildNodes().getLength(); i++){
+		for(int i = 0; i<xmlDom.getDocumentElement().getChildNodes().getLength(); i++) {
 			subSQL = doBebuDoc(docID, xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(0).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(1).getTextContent(),xmlDom.getDocumentElement().getChildNodes().item(i).getChildNodes().item(2).getTextContent(),dirpath,sentDeptID,companyID,lang, tenantID);
 		
-			if(subSQL.toUpperCase().equals("FALSE")){
+			if(subSQL.toUpperCase().equals("FALSE")) {
 				return "<RESULT>FALSE</RESULT>";
 			} else {
 				sendRecvMsg(receiveDeptID,docID, "BEBU", companyID, lang, tenantID);
