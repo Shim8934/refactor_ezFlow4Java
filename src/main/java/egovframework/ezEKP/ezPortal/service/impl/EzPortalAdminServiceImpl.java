@@ -1540,40 +1540,15 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		logger.debug("searchPortlet Start");
 		Map<String, Object> map = new HashMap<String, Object>();
 		if (pGubunFlag != null && !pGubunFlag.equals("")) {
-			map.put("v_pGUBUNFLAG", Integer.parseInt(pGubunFlag));
-		} else {
-			map.put("v_pGUBUNFLAG", 100);
+			map.put("pGubunFlag", Integer.parseInt(pGubunFlag));
 		}
-		map.put("v_pPAGEGUBUNFLAG", pPageGubunFlag);
-		map.put("v_pDISPLAYNAME", pDisplayName);
-		map.put("v_pCOMPANYID", pCompanyID);
-		map.put("v_pSTARTROW", pStartRow);
-		map.put("v_pENDROW", pEndRow);
-		
-		String strSQL = "";
-		
-		strSQL += "SELECT * FROM ("
-   					+"SELECT A.*, ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM FROM TBL_PORTLET_GENERAL A "  
-   					+"WHERE DISPLAYNAME like '%"+pDisplayName+"%'";
-		
-		if (pGubunFlag != null && !pGubunFlag.equals("")) {
-			strSQL  += " AND PORTLET_TYPE="+ pGubunFlag;
-		}
-		
-		if (pPageGubunFlag != null && !pPageGubunFlag.equals("")) {
-			strSQL  += " AND GUBUNFLAG='"+pPageGubunFlag+"'";
-		}
-		
-		if (pCompanyID != null && !pCompanyID.equals("")) {
-			strSQL  += " AND COMPANYID='"+ pCompanyID+"'";
-		}
-		
-		strSQL += " AND TENANT_ID="+tenantID;
-		
-		strSQL += ") WHERE RNUM BETWEEN '"+pStartRow+ "' AND "+"'"+pEndRow+"'";
-		
-		logger.debug("strSQL="+strSQL);
-		map.put("strSQL", strSQL);
+		map.put("pPageGubunFlag", pPageGubunFlag);
+		map.put("pDisplayName", pDisplayName);
+		map.put("pCompanyID", pCompanyID);
+		map.put("pStartRow", pStartRow);
+		map.put("pEndRow", pEndRow-pStartRow+1);
+		map.put("tenantID", tenantID);
+		map.put("startRow", pStartRow-1);
 		
 		List<PortalSearchPortlet2VO> list = ezPortalAdminDAO.searchPortlet2(map);
 		String result = "<DATA>";

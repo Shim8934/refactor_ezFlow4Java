@@ -207,7 +207,7 @@
               				EXTENSIONATTRIBUTE1 = #v_CN#
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
-        	ORDER BY A.EXTENSIONATTRIBUTE15
+        	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select> 
 		
@@ -239,7 +239,7 @@
                			AND
                				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY
-        		A.EXTENSIONATTRIBUTE15
+        		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select> 
 		
@@ -320,7 +320,7 @@
                    	AND
                    		TENANT_ID = #v_TENANT_ID#	
                     ORDER BY
-                    	EXTENSIONATTRIBUTE15
+                    	EXTENSIONATTRIBUTE15, DISPLAYNAME
 				]]>
 			</isEqual>
 			<isNotEqual property="v_CLASS" compareValue="group">
@@ -486,7 +486,7 @@
                 AND
                 	TENANT_ID = #v_TENANT_ID#	
 				ORDER BY
-					EXTENSIONATTRIBUTE15
+					EXTENSIONATTRIBUTE15, DISPLAYNAME
 			]]>
 		</isEqual>
 		

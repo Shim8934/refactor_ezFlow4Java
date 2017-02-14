@@ -390,7 +390,9 @@
             WHERE
                 Q.TENANT_ID = #tenantID#
             AND
-                U.TENANT_ID = #tenantID#      	
+                U.TENANT_ID = #tenantID#
+            ORDER BY
+                Q.REGDATE DESC          	
 		]]>
 	</select>
 	
