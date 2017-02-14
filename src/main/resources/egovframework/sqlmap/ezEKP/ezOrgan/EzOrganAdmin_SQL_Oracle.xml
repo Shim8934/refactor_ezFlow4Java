@@ -226,9 +226,14 @@
 			UPDATE
 				TBL_DEPTMASTER
       		SET
-      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#)
+      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, #v_DEPT_CD_PATH# || ',' || #v_CN#),
+                EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
+                EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
+                COMPNM2 = #v_COMPNM2#         
       		WHERE
       			DEPT_CD_PATH LIKE #v_DEPT_CD_PATH_OLD# || ',%'
+            AND
+                TENANT_ID = #v_TENANT_ID#         
 		]]>
 	</update>
 	
@@ -638,11 +643,11 @@
                	  WHERE
                	  	TENANT_ID = #tenantID#
                	  AND  
-               	  	DEPTLEVEL = 1
+               	  	(DEPTLEVEL = 1
                	  OR 
-               	  	CN = 'top' ) A
+               	  	CN = 'Top') ) A
            	ORDER BY 
-        		A.CN
+        		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select>
 	
@@ -838,7 +843,7 @@
 	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(EXTENSIONATTRIBUTE1 )
+				COUNT(EXTENSIONATTRIBUTE1)
 	 		FROM
 	 			TBL_USERMASTER
    			WHERE
