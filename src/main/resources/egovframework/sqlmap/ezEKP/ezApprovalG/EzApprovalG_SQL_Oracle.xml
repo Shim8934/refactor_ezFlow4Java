@@ -15774,4 +15774,133 @@
 		 AND
 			TENANT_ID = #v_TENANTID#
 	</delete>
+	
+	<insert id="EzApprovalG.insertBebuAprDocInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_APRDOCINFO 
+		(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
+		(SELECT 
+			#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+		  FROM 
+		  	TBL_APRDOCINFO 
+		  WHERE 
+		  	DocID = #v_DOCID# 
+		  AND 
+		  	TENANT_ID = #v_TENANTID#)
+
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuExpAprDocInfo" parameterClass="Map">
+			INSERT INTO 
+				TBL_EXPAPRDOCINFO 
+			(     DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+            (SELECT 
+            	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+             FROM 
+             	TBL_EXPAPRDOCINFO 
+			 WHERE 
+			 	DocID = #v_DOCID# 
+			 AND 
+			 	TENANT_ID = #v_TENANTID#)
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprAttachInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_APRATTACHINFO 
+		(    DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID) 
+		(SELECT 
+			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
+		 FROM 
+            TBL_APRATTACHINFO 
+         WHERE 
+         	DocID = #v_DOCID# 
+         AND 
+         	TENANT_ID = #v_TENANTID#)
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprDocAttachInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_APRDOCATTACHINFO 
+		(	DocID,     AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) 
+		(SELECT 
+			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
+		 FROM 
+            TBL_APRDOCATTACHINFO 
+         WHERE 
+         	DocID = #v_DOCID#  
+         AND 
+         	TENANT_ID = #v_TENANTID#)
+
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprOpinionInfo" parameterClass="Map">
+		INSERT INTO 
+			TBL_APROPINIONINFO 
+		(	DocID,     UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID) 
+		(SELECT 
+			#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
+		 FROM 
+		 	TBL_APROPINIONINFO  
+		 WHERE 
+		 	DocID = #v_DOCID# 
+		 AND 
+		 	TENANT_ID = #v_TENANTID#)
+	
+	</insert>
+	
+	<insert id="EzApprovalG.insertBebuAprReceiptProcessInfo" parameterClass="Map">
+	 	INSERT INTO 
+	 		TBL_APRRECEIPTPROCESSINFO 
+	 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+	 	(SELECT 	
+	 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',         '',              '',             '',                '',               DocID, TENANT_ID 
+	 	 FROM 
+	 	 	TBL_APRDOCINFO 
+	 	 WHERE 
+	 	 	DocID = #v_DOCID# 
+	 	 AND 
+	 	 	TENANT_ID = #v_TENANTID#)
+	</insert>
+	
+	<update id="EzApprovalG.updateBebuDocDeivery" parameterClass="Map">
+		UPDATE 
+			TBL_DOCDELIVERY 
+		SET 
+			OrganID = #v_OrganID#, 
+			Organ = #v_Organ#, 
+			Organ2 = #v_Organ2#, 
+			ManageDeptID = #v_ManageDeptID#,
+			ManageDept = #v_ManageDept#,
+            ManageDept2 = #v_ManageDept2#,
+			ChargeID = #v_ChargeID#,
+            ChargeName = #v_ChargeName#,
+            ChargeName2 = #v_ChargeName2#,
+			Remark = #v_Remark#
+        WHERE 
+        	DocID = #v_DOCID# 
+        AND 
+        	DeptID = #v_DEPTID# 
+        AND 
+        	TENANT_ID = #v_TENANTID#
+	</update>
+	
+	<insert id="EzApprovalG.insertBebuDocDelivery" parameterClass="Map">
+		INSERT INTO 
+			TBL_DOCDELIVERY 
+		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID) 
+		(SELECT 
+			#v_maxSN#, a.DocID, a.Href, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID 
+         FROM 
+         	TBL_APRDOCINFO a 
+         INNER JOIN 
+         	TBL_EXPAPRDOCINFO b 
+         ON 
+         	a.DocID = b.DocID 
+         AND 
+         	a.TENANT_ID = b.TENANT_ID 
+         WHERE 
+         	a.DocID = #v_DOCID# 
+         AND 
+         	a.TENANT_ID = #v_TENANTID# )
+    </insert>
 </sqlMap>

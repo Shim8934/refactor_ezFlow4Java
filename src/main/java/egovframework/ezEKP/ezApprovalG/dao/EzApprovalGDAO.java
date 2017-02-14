@@ -1618,6 +1618,34 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRegEndAttachInfo", map);
 	}
 	
+	public void insertBebuAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuAprDocInfo", map);
+	}
+	
+	public void insertBebuExpAprDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuExpAprDocInfo", map);
+	}
+
+	public void insertBebuAprAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuAprAttachInfo", map);
+	}
+
+	public void insertBebuAprDocAttachInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuAprDocAttachInfo", map);
+	}
+
+	public void insertBebuAprOpinionInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuAprOpinionInfo", map);
+	}
+
+	public void insertBebuAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuAprReceiptProcessInfo", map);
+	}
+	
+	public void insertBebuDocDelivery(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertBebuDocDelivery", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1852,6 +1880,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateGianAprDocInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateGianAprDocInfo", map);
+	}
+	
+	public void updateBebuDocDeivery(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateBebuDocDeivery", map);
 	}
 	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
