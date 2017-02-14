@@ -41,8 +41,8 @@
 		        });
 		        $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
 		        if (getBirthDay == "") {
-		            var NowDate = new Date();
-		            $("#txtBirth").datepicker('setDate', NowDate);
+		            //var NowDate = new Date();
+		            //$("#txtBirth").datepicker('setDate', NowDate);
 		        }
 		        else
 		            $("#txtBirth").datepicker('setDate', getBirthDay);
@@ -382,7 +382,7 @@
         </tr>
         <tr> 
             <th><spring:message code='ezPersonal.t182'/></th> 
-            <td colspan="3"><textarea id="txtInfo" style="WIDTH:100%;HEIGHT:80px">${txtInfo}</textarea></td> 
+            <td colspan="3"><textarea id="txtInfo" style="WIDTH:100%;HEIGHT:80px" maxlength="450">${txtInfo}</textarea></td> 
         </tr> 
     </table> 
     <div class="btnposition">

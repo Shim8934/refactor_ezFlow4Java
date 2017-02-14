@@ -344,11 +344,11 @@
         	    <td style="height: 20px">
             	    <div id="menu">
                 	    <ul>
-                        	<c:if test="${adminFg eq 'Y' || writerID eq userID}">
+                        	<c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
                         		<li id="btn_modify"><span onclick="btn_modify()"><spring:message code="ezResource.t54" /></span></li>
                         	</c:if>
 	                        <li><span onclick="print_onClick2( false )"><spring:message code="ezResource.t186" /></span></li>
-	                        <c:if test="${adminFg eq 'Y' || writerID eq userID}">
+	                        <c:if test="${adminFg eq 'Y' || writerID eq userInfo.id}">
                         		<li id="deletebtbn"><span onclick="delSchedule_onClick('${num}','${ownerID}')"><spring:message code="ezResource.t65" /></span></li>
                         	</c:if>
 							

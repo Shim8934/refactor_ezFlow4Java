@@ -653,6 +653,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ownerID", ownerID);
+		if (pNum == null || pNum.equals("")) {
+			pNum = "0";
+		}
 		map.put("v_P_pnum", pNum);
 		map.put("v_P_companyID", companyID);
 		map.put("v_P_writerID", writerID);
