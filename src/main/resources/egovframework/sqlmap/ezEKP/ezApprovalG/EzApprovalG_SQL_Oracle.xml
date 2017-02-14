@@ -3187,9 +3187,7 @@
         AND
         		TENANT_ID = #v_TENANTID#
 	</select>
-<!-- 	<procedure id="EzApprovalG.getListInfo" parameterClass="Map" resultClass="ApprGListInfoVO"> -->
-<!-- 		{CALL EZSP_GETLISTINFO(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
+	
 	<select id="EzApprovalG.getListInfo" parameterClass="Map" resultClass="ApprGListInfoVO">
 		<isEqual property="v_LANGTYPE" compareValue="1">
 			SELECT 
