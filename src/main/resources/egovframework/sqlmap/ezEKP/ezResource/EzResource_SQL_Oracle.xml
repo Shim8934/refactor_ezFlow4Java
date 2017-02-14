@@ -1598,7 +1598,7 @@
 			UPDATE
 				TBL_RS_SCHEDULE
 			SET
-				REFLAG = u'4'
+				REFLAG = '4'
 			WHERE
 				COMPANYID = #v_P_companyID#
 			AND
@@ -1662,7 +1662,7 @@
 					AND
 						NUM = #v_P_pnum#
 					AND
-						REFLAG = u'1'
+						REFLAG = '1'
 					AND
 						TENANT_ID = #tenantID#	 )
 		]]>							
@@ -1772,7 +1772,7 @@
                        AND
                        	 PNUM = #v_P_num#
                        AND
-                       	 REFLAG >= 3
+                       	 REFLAG >= '3'
                        AND
                          TENANT_ID = #tenantID#	)
 		]]>
@@ -1852,7 +1852,7 @@
             AND 
             	PNUM = #v_P_num#
             AND 
-            	REFLAG >= 3
+            	REFLAG >= '3'
             AND
             	TENANT_ID = #tenantID#	
 		]]>
@@ -2121,7 +2121,7 @@
 			OR
 				( B.pnum = C.num
 			AND
-				B.reFlag = 4 ) )
+				B.reFlag = '4' ) )
 			WHERE
 				B.ownerID = #v_p_ownerID#
 			AND
