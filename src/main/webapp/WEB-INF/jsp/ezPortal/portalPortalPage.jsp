@@ -203,11 +203,10 @@
 		                    var _span2 = document.createElement("span");
 		                    _span2.className = "txt";
 		                    var QuickLang = lang == "1" ? "" : lang;
-                            if(CrossYN())
+                             if(CrossYN())
                                 _span2.textContent = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
 		                    else
-                                _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang);
-
+                                _span2.innerText = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME" + QuickLang); 
 		                    _li.appendChild(_span1);
 		                    _li.appendChild(_span2);
 		                    document.getElementById("QuickUl").appendChild(_li);

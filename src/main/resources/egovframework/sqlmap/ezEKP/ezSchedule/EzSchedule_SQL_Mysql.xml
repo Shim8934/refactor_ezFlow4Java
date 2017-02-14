@@ -520,10 +520,10 @@
 	                HOLIDAYNAME,
 	                HOLIDAYNAME2,
 	                HOLIDAYDATE,
-	                NVL(ISSOLAR, '0') ISSOLAR,
-	                NVL(ISREPEAT, '0') ISREPEAT,
-	                NVL(ISUSE, '0') ISUSE,
-	                NVL(ISREST, '0') ISREST,
+	                IFNULL(ISSOLAR, '0') ISSOLAR,
+	                IFNULL(ISREPEAT, '0') ISREPEAT,
+	                IFNULL(ISUSE, '0') ISUSE,
+	                IFNULL(ISREST, '0') ISREST,
 	                USECOMPANY
 	           	FROM 
 					TBL_HOLIDAYLIST
@@ -539,10 +539,10 @@
 		                HOLIDAYNAME,
 		                HOLIDAYNAME2,
 		                HOLIDAYDATE,
-		                NVL(ISSOLAR, '0') ISSOLAR,
-		                NVL(ISREPEAT, '0') ISREPEAT,
-		                NVL(ISUSE, '0') ISUSE,
-		                NVL(ISREST, '0') ISREST,
+		                IFNULL(ISSOLAR, '0') ISSOLAR,
+		                IFNULL(ISREPEAT, '0') ISREPEAT,
+		                IFNULL(ISUSE, '0') ISUSE,
+		                IFNULL(ISREST, '0') ISREST,
 		                USECOMPANY
 		           	FROM 
 		           		TBL_HOLIDAYLIST 
@@ -559,10 +559,10 @@
 		                HOLIDAYNAME,
 		                HOLIDAYNAME2,
 		                HOLIDAYDATE,
-		                NVL(ISSOLAR, '0') ISSOLAR,
-		                NVL(ISREPEAT, '0') ISREPEAT,
-		                NVL(ISUSE, '0') ISUSE,
-		                NVL(ISREST, '0') ISREST,
+		                IFNULL(ISSOLAR, '0') ISSOLAR,
+		                IFNULL(ISREPEAT, '0') ISREPEAT,
+		                IFNULL(ISUSE, '0') ISUSE,
+		                IFNULL(ISREST, '0') ISREST,
 		                USECOMPANY
 					FROM 
 						TBL_HOLIDAYLIST 

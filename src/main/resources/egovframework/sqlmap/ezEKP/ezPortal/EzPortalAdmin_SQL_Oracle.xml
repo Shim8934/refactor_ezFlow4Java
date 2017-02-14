@@ -472,7 +472,43 @@
 	
 	<select id="EzPortalAdminDAO.searchPortlet2" parameterClass="Map" resultClass="PortalSearchPortlet2VO" remapResults="true">
 		<![CDATA[
-			$strSQL$
+			SELECT
+                *
+            FROM (SELECT
+		                A.*,
+                        ROW_NUMBER() OVER(ORDER BY DISPLAYNAME ASC) AS RNUM
+                      FROM
+		                TBL_PORTLET_GENERAL A
+                      WHERE
+		                 DISPLAYNAME like '%' || #pDisplayName# || '%'
+                      
+		]]>
+      
+       <isNotEmpty property="pGubunFlag">
+          <![CDATA[
+	         AND
+                PORTLET_TYPE = #pGubunFlag#
+	 	  ]]>
+       </isNotEmpty>
+       
+        <isNotEmpty property="pPageGubunFlag">
+          <![CDATA[
+              AND
+                 GUBUNFLAG = #pPageGubunFlag#
+          ]]>
+       </isNotEmpty>
+       
+        <isNotEmpty property="pCompanyID">
+          <![CDATA[
+              AND
+                  COMPANYID = #pCompanyID#
+          ]]>
+       </isNotEmpty>
+        <![CDATA[
+	         AND
+                TENANT_ID=#tenantID#) 
+           WHERE
+                RNUM BETWEEN #pStartRow# AND #pEndRow#
 		]]>
 	</select>
 	

@@ -1464,43 +1464,53 @@ public class EzEmailUtil {
 		String result = null;
 		
 		URL url = new URL(urlString);
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		
-		// POST 방식으로 요청한다.
-		conn.setDoOutput(true);
-		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");	
-		
-		// 입력 패러메터값이 있는 경우엔 HTTP Body로 출력한다.
-		if (inputParams != null) {
-			OutputStream os = conn.getOutputStream();
-			// UTF-8로 인코딩한다.
-			os.write(inputParams.getBytes("UTF-8"));
-			os.flush();
-		}
-		
-		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-			// Response Body를 UTF-8로서 디코딩한다.			
-			BufferedReader br = new BufferedReader(
-										new InputStreamReader(conn.getInputStream(),"UTF-8")
-										);
-
-			StringBuilder sb = new StringBuilder();
-			String output;
-
-			while ((output = br.readLine()) != null) {
-				sb.append(output);
+		HttpURLConnection conn = null;
+				
+		try {
+			conn = (HttpURLConnection) url.openConnection();
+			
+			// POST 방식으로 요청한다.
+			conn.setDoOutput(true);
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");	
+			
+			// 입력 패러메터값이 있는 경우엔 HTTP Body로 출력한다.
+			if (inputParams != null) {
+				OutputStream os = conn.getOutputStream();
+				// UTF-8로 인코딩한다.
+				os.write(inputParams.getBytes("UTF-8"));
+				os.flush();
 			}
 			
-			result = sb.toString();
-			
-			conn.disconnect();							
+			if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				// Response Body를 UTF-8로서 디코딩한다.			
+				BufferedReader br = new BufferedReader(
+											new InputStreamReader(conn.getInputStream(),"UTF-8")
+											);
+	
+				StringBuilder sb = new StringBuilder();
+				String output;
+	
+				while ((output = br.readLine()) != null) {
+					sb.append(output);
+				}
+				
+				result = sb.toString();
+				
+				conn.disconnect();		
+				conn = null;
+			}
+			else {
+				Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
+				
+				throw e;
+			} 
+		} finally {
+			if (conn != null) {
+				conn.disconnect();
+				conn = null;
+			}
 		}
-		else {
-			Exception e = new RuntimeException("Failed : HTTP error code : " + conn.getResponseCode());			
-			
-			throw e;
-		} 
 		
 		return result;
 	}    

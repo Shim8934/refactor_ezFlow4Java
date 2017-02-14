@@ -484,15 +484,7 @@ public class CommonUtil {
 		
 		return stb.toString();
 	}
-	
-	public String convertLangCode(String lang){   
-		if (lang != "2") {
-            return "1";
-        } else {
-            return "2";
-        }        
-    }
-	
+		
 	public String getMultiData(String lang, int tenantID) throws Exception{
 		if (!lang.equals(ezCommonService.getTenantConfig("PrimaryLang", tenantID))) {
 			return "2";

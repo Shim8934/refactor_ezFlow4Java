@@ -676,30 +676,33 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						response.addHeader("content-disposition", "attachment; filename=\"" + filename + "\"");
 						logger.debug("content-disposition=" + "attachment; filename=\"" + filename + "\"");
 						
-						InputStream input = part.getInputStream();
-						OutputStream output = response.getOutputStream();
-						byte[] buffer = new byte[4096];
-						int byteRead;
+						InputStream input = null;
+						OutputStream output = null;
 						
-						try{
+						try {
+							input = part.getInputStream();
+							output = response.getOutputStream();
+							
+							byte[] buffer = new byte[4096];
+							int byteRead;
+							
 							while ((byteRead = input.read(buffer)) != -1) {
 								output.write(buffer, 0, byteRead);
 							}
-						} catch(IOException e){
-							try {
-								output.close();
-							} catch (IOException e1) {
-							}
-							
+						} catch(IOException e) {
+						} finally {
 							if (ia != null) {
 								ia.close();
 							}
-							
-							return;
+							if (input != null) {
+								try { input.close(); } catch (IOException e1) {}
+							}
+							if (output != null) {
+								try { output.flush(); } catch (IOException e1) {}
+								try { output.close(); } catch (IOException e1) {}
+							}
 						}
 						
-						output.flush();
-						output.close();
 					}
 				}
 			}
