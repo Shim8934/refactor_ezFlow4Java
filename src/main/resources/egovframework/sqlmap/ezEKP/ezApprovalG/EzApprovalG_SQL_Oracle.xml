@@ -13161,7 +13161,7 @@
                  NULL ,
                  NULL ,
                  '0' ,
-                 TENANT_ID
+                 TBL_SEPERATEATTACH.TENANT_ID
           FROM 
           		TBL_SEPERATEATTACH 
           JOIN 	 
@@ -13200,7 +13200,7 @@
 		                 #v_USERNAME# ,
 		                 #v_USERNAME2# ,
 		                 '0' ,
-		                 TENANT_ID
+		                 TBL_SEPERATEATTACH.TENANT_ID
 		          FROM 
 		          		 TBL_SEPERATEATTACH 
 		          JOIN 
@@ -15215,15 +15215,16 @@
    			TBL_SPECIALCATALOGINFO_REC 
    		(RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) 
    		(SELECT 
-   			#v_RECORDID#, SerialNo, SC1, SC2, SC3, TENANT_ID 
+   			#v_RECORDID#, SerialNo, SC1, SC2, SC3, TBL_SPECIALCATALOGINFO_CAB.TENANT_ID 
    		 FROM 
    		 	TBL_SPECIALCATALOGINFO_CAB 
    		 INNER JOIN 
-   		 	(Select 
-   		 		CabinetClassNo
-   		 	 From 
+   		 	(SELECT 
+   		 		TBL_CABINET.CabinetClassNo,
+   		 		TBL_CABINET.TENANT_ID
+   		 	 FROM 
    		 	 	TBL_CABINET 
-   		 	 Where 
+   		 	 WHERE 
    		 	 	TBL_CABINET.CabinetID = #v_CABID#) TBL_CABINET 
    		  ON 
    		  	TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo = TBL_CABINET.CabinetClassNo 
@@ -15240,7 +15241,7 @@
    			TBL_SPECIALCATALOGINFO_REC 
    		(RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) 
    		Values 
-   		(#v_RECORDID#, #v_SERIALNO#, #SC1#, #SC2#, #SC3#, #v_TENANTID#)
+   		(#v_RECORDID#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertTmpReceiptPointInfo" parameterClass="Map">
@@ -16783,5 +16784,145 @@
    		 	DocID = #v_ORGDOCID# 
    		 AND 
    		 	TENANT_ID = #v_TENANTID#)
+   	</insert>
+   	
+   	<select id="EzApprovalG.changeCabBsicInfoCount" parameterClass="Map" resultClass="int">
+   		 SELECT 
+		 		CASE WHEN VERSION IS NULL THEN 0
+		 		ELSE VERSION + 1
+		 		END
+		 FROM (
+		   		SELECT 
+		   			max(Version)  VERSION
+		   		FROM 
+		   			TBL_CABINETHISTORY  
+				WHERE 
+					CABINETCLASSNO = #v_CabinetClassNo#
+				AND
+					TENANT_ID = #v_TENANTID# )
+   	</select>
+   	
+   	<insert id="EzApprovalG.insertChangeCabCabinetHistory" parameterClass="Map" >
+   		INSERT INTO 
+   			TBL_CABINETHISTORY 
+   		(Version, CabinetClassNo, Title, RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID) 
+   		(Select 
+   			#v_NewVersion#, CabinetClassNo, Title, RecTypeCode, TO_CHAR(CreateDate,'YYYYMMDD'), KeepingPeriod, DisplayEndDate, DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, #v_ModifyFlag#, '0', TENANT_ID 
+   		 From 
+   		 	TBL_CABINETCLASS  
+   		 Where 
+   		 	TBL_CABINETCLASS.CabinetClassNo = #v_CabinetClassNo#
+   		 AND 
+   		 	TENANT_ID = #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertChangeCabScHistory_Cab" parameterClass="Map" >
+   		INSERT INTO 
+   			TBL_SCHISTORY_CAB 
+   		(Version, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID) 
+   		(Select 
+   			#v_NewVersion#, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID 
+   		 From 
+   		 	TBL_SPECIALCATALOGINFO_CAB  
+   		 WHERE 
+   		 	CabinetClassNo = #v_CabinetClassNo#
+   		 AND 
+   		 	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateChangeCabCabinetClass" parameterClass="Map" >
+   		UPDATE 
+   			TBL_CABINETCLASS 
+   		SET 
+   			Title = #v_Title#, 
+   			RecTypeCode = #v_RecTypeCode#, 
+   			ModifyFlag = #v_ModifyFlag#
+		WHERE 
+			CabinetClassNo = #v_CabinetClassNo#
+   		 AND 
+   		 	TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<insert id="EzApprovalG.insertChangeCabCabinetHistory2" parameterClass="Map" >
+   		INSERT INTO 
+   			TBL_CABINETHISTORY 
+   		(Version, CabinetClassNo, Title, RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID) 
+   		(Select 
+        	(SELECT 
+		 		CASE WHEN VERSION IS NULL THEN 0
+		 		ELSE VERSION + 1
+		 		END
+		 	 FROM (
+		   		SELECT 
+		   			max(Version)  VERSION
+		   		FROM 
+		   			TBL_CABINETHISTORY  
+				WHERE 
+					CABINETCLASSNO = #v_CabinetClassNo#
+				AND
+					TENANT_ID = #v_TENANTID# )), CabinetClassNo, Title, RecTypeCode, TO_CHAR(TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDD'), KeepingPeriod, DisplayEndDate, DisplayReason, #v_REASON# , #v_USERID#, #v_USERNAME# , #v_USENAME2#, #v_ModifyFlag#, '0' , TENANT_ID 
+           From 
+           		TBL_CABINETCLASS  
+           Where 
+           		TBL_CABINETCLASS.CabinetClassNo =  #v_CabinetClassNo#
+           AND 
+           		TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<delete id="EzApprovalG.deleteChangeCabSpecialCatalogInfo_Cab" parameterClass="Map" >
+   		 DELETE FROM 
+   		 		TBL_SPECIALCATALOGINFO_CAB 
+   		 WHERE 
+   		 		CabinetClassNo = #v_CabinetClassNo#
+   		 AND 
+   		 		SerialNo != '000' 
+   		 AND 
+   		 		TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<insert id="EzApprovalG.insertChangeCabSpecialCatalogInfo_Cab" parameterClass="Map" >
+   		INSERT INTO 
+   				TBL_SPECIALCATALOGINFO_CAB 
+   		(CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID) 
+   		Values 
+   		(#v_CabinetClassNo#, #v_SerialNo#, #v_SC1#, #v_SC2#, #v_SC3#, #v_TENANTID#)
+   	</insert>
+   	
+   	<select id="EzApprovalG.changeCabSpeacialCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+		 		CASE WHEN VERSION IS NULL THEN 0
+		 		ELSE VERSION 
+		 		END
+		FROM (
+		   		SELECT 
+		   			max(Version)  VERSION
+		   		FROM 
+		   			TBL_CABINETHISTORY  
+				WHERE 
+					CABINETCLASSNO = #v_CabinetClassNo#
+				AND
+					TENANT_ID = #v_TENANTID# )
+   	</select>
+   	
+   	<update id="EzApprovalG.updateChangeCabExtCabinetClass" parameterClass="Map">
+   		UPDATE 
+   			TBL_CABINETCLASS 
+   		Set 
+   			KeepingPeriod = #v_KeepingPeriod#,
+			DisplayEndDate = #v_DisplayEndDate#,
+			DisplayReason= #v_REASON#,
+			ModifyFlag = #v_ModifyFlag#
+		WHERE 
+			CABINETCLASSNO = #v_CabinetClassNo#
+		AND
+			TENANT_ID = #v_TENANTID# 
+   	</update>
+   	
+   	<insert id="EzApprovalG.insertRegCabinetCalss" parameterClass="Map">
+   		INSERT INTO 
+   				TBL_CABINETCLASS 
+   		( CabinetClassNo,        ProductionYear,      RegSerialNo,   TerminateFlag,      Title,      Title2,   RecTypeCode,     ExpirationYear,    KeepingMethod,     KeepingPlace,      DisplayEndDate,     DisplayReason,     OwnerName,     OwnerName2,      OwnerID,    OldCabinetFlag, ModifyFlag, SpecialCatalogFlag, ConfirmFlag,         CreateDate,                                   KeepingPeriod,       DisplayRecFlag,    ProcessDeptCode,      ProcessDeptName,      ProcessDeptName2, TaskCode, TaskName, TaskName2, TransDelayFlag, OwnerDeptID, OwnerTask, DelayEndYFlag, DelFlag, TENANT_ID) 
+   		VALUES 
+   		( #v_CabinetClassNo# , #v_ProductionYear#, #v_RegSerialNo#, #v_TerminateFlag#, #v_Title#, #v_Title2#, #v_RecTypeCode#, #v_ExpirationYear#, #v_KeepingMethod#, #v_KeepingPlace# , #v_DisplayEndDate#, #v_DisplayReason#, #v_OwnerName#, #v_OwnerName2#, #v_OwnerID#, #v_OldCabinetFlag#, '0',     #v_SpecialCatalogFlag#, #v_ConfirmFlag#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_KeepingPeriod#, #v_DisplayRecFlag#, #v_ProcessDeptCode#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_TaskCode#, #v_TaskName#, #v_TaskName2#, #v_TransDelayFlag#, #v_OwnerDeptID#, #v_OwnerTask#, #v_DelayEndYFlag#, #v_DelFlag#, #v_TENANTID#)
    	</insert>
 </sqlMap>

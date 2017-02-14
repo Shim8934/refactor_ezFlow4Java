@@ -8559,53 +8559,53 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String produceY = getAccountingYear(createDate, companyID, strLang,tenantID);
 		String cabinetClassNO = deptCode + taskCode + produceY + regSN;
 		String specialFlag = xmlDom.getElementsByTagName("SPECIALFLAG").item(0).getTextContent();
-		
-		strSQL.append("Insert Into TBL_CABINETCLASS (CabinetClassNo, ProductionYear, ");
-        strSQL.append("RegSerialNo, TerminateFlag, Title, Title2, RecTypeCode, ExpirationYear, ");
-        strSQL.append("KeepingMethod, KeepingPlace, DisplayEndDate, DisplayReason, OwnerName, OwnerName2, ");
-		strSQL.append("OwnerID, OldCabinetFlag, ModifyFlag, SpecialCatalogFlag, ConfirmFlag, ");
-        strSQL.append("CreateDate, KeepingPeriod, DisplayRecFlag, ProcessDeptCode, ProcessDeptName, ProcessDeptName2, ");
-        strSQL.append("TaskCode, TaskName, TaskName2, TransDelayFlag, OwnerDeptID, OwnerTask, DelayEndYFlag, ");
-		strSQL.append("DelFlag, TENANT_ID) VALUES ('" + makeRightField(cabinetClassNO) + "', '" + makeRightField(produceY));
-		strSQL.append("', '" + makeRightField(regSN) + "', '" + makeRightField("0"));
-		strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent()));
-        strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("TITLE2").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("RECTYPE").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(produceY));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("KEEPMETHOD").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("KEEPPLACE").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("DISPLAYREASON").item(0).getTextContent()));
-		strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("OWNERNAME").item(0).getTextContent()));
-        strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("OWNERNAME2").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField("1") + "', '0', '" + makeRightField(specialFlag));
-		strSQL.append("', '" + makeRightField("0") + "', " + "TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')");
-		strSQL.append(", '" + makeRightField(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(xmlDom.getElementsByTagName("DISPLAYFLAG").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(deptCode));
-		strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("DEPTNAME").item(0).getTextContent()));
-        strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("DEPTNAME2").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField(taskCode));
-		strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("TASKNAME").item(0).getTextContent()));
-        strSQL.append("', N'" + makeRightField(xmlDom.getElementsByTagName("TASKNAME2").item(0).getTextContent()));
-		strSQL.append("', '" + makeRightField("0") + "', '" + makeRightField(deptCode));
-		strSQL.append("', '" + makeRightField(taskCode) +	"', '" + makeRightField("N"));
-		strSQL.append("', '" + makeRightField("0") + "'," +tenantID +");\n");
-		
+	
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
+			map.put("v_CabinetClassNo", makeRightField(cabinetClassNO));
+			map.put("v_ProductionYear", makeRightField(produceY));
+			map.put("v_RegSerialNo", makeRightField(regSN));
+			map.put("v_TerminateFlag", makeRightField("0"));
+			map.put("v_Title", makeRightField(xmlDom.getElementsByTagName("TITLE").item(0).getTextContent()));
+			map.put("v_Title2", makeRightField(xmlDom.getElementsByTagName("TITLE2").item(0).getTextContent()));
+			map.put("v_RecTypeCode", makeRightField(xmlDom.getElementsByTagName("RECTYPE").item(0).getTextContent()));
+			map.put("v_ExpirationYear", makeRightField(produceY));
+			map.put("v_KeepingMethod", makeRightField(xmlDom.getElementsByTagName("KEEPMETHOD").item(0).getTextContent()));
+			map.put("v_KeepingPlace", makeRightField(xmlDom.getElementsByTagName("KEEPPLACE").item(0).getTextContent()));
+			map.put("v_DisplayEndDate", makeRightField(xmlDom.getElementsByTagName("DISPLAYENDDATE").item(0).getTextContent()));
+			map.put("v_DisplayReason", makeRightField(xmlDom.getElementsByTagName("DISPLAYREASON").item(0).getTextContent()));
+			map.put("v_OwnerName", makeRightField(xmlDom.getElementsByTagName("OWNERNAME").item(0).getTextContent()));
+			map.put("v_OwnerName2", makeRightField(xmlDom.getElementsByTagName("OWNERNAME2").item(0).getTextContent()));
+			map.put("v_OwnerID", makeRightField(xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent()));
+			map.put("v_OldCabinetFlag", "1");
+			map.put("v_SpecialCatalogFlag", makeRightField(specialFlag));
+			map.put("v_ConfirmFlag", makeRightField("0"));
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_KeepingPeriod", makeRightField(xmlDom.getElementsByTagName("KEEPPERIOD").item(0).getTextContent()));
+			map.put("v_DisplayRecFlag", makeRightField(xmlDom.getElementsByTagName("DISPLAYFLAG").item(0).getTextContent()));
+			map.put("v_ProcessDeptCode", makeRightField(deptCode));
+			map.put("v_ProcessDeptName", makeRightField(xmlDom.getElementsByTagName("DEPTNAME").item(0).getTextContent()));
+			map.put("v_ProcessDeptName2", makeRightField(xmlDom.getElementsByTagName("DEPTNAME2").item(0).getTextContent()));
+			map.put("v_TaskCode", makeRightField(taskCode));
+			map.put("v_TaskName", makeRightField(xmlDom.getElementsByTagName("TASKNAME").item(0).getTextContent()));
+			map.put("v_TaskName2", makeRightField(xmlDom.getElementsByTagName("TASKNAME2").item(0).getTextContent()));
+			map.put("v_TransDelayFlag", makeRightField("0"));
+			map.put("v_OwnerDeptID", makeRightField(deptCode));
+			map.put("v_OwnerTask", makeRightField(taskCode));
+			map.put("v_DelayEndYFlag", makeRightField("N"));
+			map.put("v_DelFlag", makeRightField("0"));
+			map.put("v_TENANTID", tenantID);
+
+			ezApprovalGDAO.insertRegCabinetCalss(map);
+		
 			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("sqlString", "BEGIN " + strSQL.toString() + " END; ");
 			map1.put("v_CABINETCLASSNO",  makeRightField(cabinetClassNO));
 			map1.put("v_DeptMID",  makeRightField(xmlDom.getElementsByTagName("OWNERID").item(0).getTextContent()));
 			map1.put("v_DeptMName",  makeRightField(xmlDom.getElementsByTagName("OWNERNAME").item(0).getTextContent()));
 			map1.put("v_DeptMName2",  makeRightField(xmlDom.getElementsByTagName("OWNERNAME2").item(0).getTextContent()));
 			map1.put("v_TENANTID",  tenantID);
 			map1.put("v_SYSDATE",commonUtil.getTodayUTCTime(""));
-
 			map1.put("companyID", companyID);
-			
-			ezApprovalGDAO.transactionSQL(map1);
 			
 			ezApprovalGDAO.trigerTbCabinet(map1);
 			ezApprovalGDAO.trigerTbCabRoleInfo(map1);
@@ -8621,6 +8621,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>" + cabinetClassNO + "001" + "</RESULT>";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			rollbackSN("001", deptCode, taskCode, regSN, companyID, strLang, tenantID);
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -9141,6 +9142,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.spRollbackSN(map);
 			result = "TRUE";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "FALSE";
 		}
 		
@@ -9180,7 +9182,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			 	LOGGER.debug("insertTbSpecialCatalogInfo_Cab2 param = v_CABINETCLASSNO =" + makeRightField(cabinetClassNO) + "v_SERIALNO=" + makeRightField(nodeList.item(k).getChildNodes().item(0).getTextContent().trim())+ "v_SC1=" + makeRightField(nodeList.item(k).getChildNodes().item(1).getTextContent().trim()) + "v_SC2=" + makeRightField(nodeList.item(k).getChildNodes().item(2).getTextContent().trim()) + "v_SC3=" + makeRightField(nodeList.item(k).getChildNodes().item(3).getTextContent().trim()) +"v_TENANTID ="+tenantID);
 
 				ezApprovalGDAO.insertTbSpecialCatalogInfo_Cab2(map);
-
 			}
 		}
  		rtn = "TURE";
@@ -9757,9 +9758,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String makeTmpDocInfo(String userID, String docID, String updateFlag, String companyID, String lang, int tenantID) throws Exception{
-		String strSQL = "";
-		StringBuilder appendSql = new StringBuilder();
-		//아직 테넌트 안함
 		if (updateFlag.equals("UPDATE")) {
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -10493,7 +10491,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String flag = getCode2Name("A35", "002", companyID, lang, userInfo.getTenantId()).toUpperCase().trim();
 		
-		
 		switch (docType) {
 		case "001":
 			if (!realDocType.equals("001")) {
@@ -10504,7 +10501,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			} else {
 				String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
-				
 
 				if (!autoDeptID.equals("")) {
 					int addressCount = ezApprovalGDAO.doDocCompleteReceiptCnt(map);
@@ -10545,8 +10541,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnVal = false;
 				} 
 			}
-			
-		
 			
 			break;
 			
@@ -10666,8 +10660,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-		
-			
 			break;
 			
 		case "014":
@@ -10745,8 +10737,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rtnVal = false;
 					} 
 				}
-				
-			
 			}
 			
 			break;
@@ -10882,7 +10872,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
 				} 
-
 			}
 			
 			break;
@@ -10896,7 +10885,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String updateChamjoResult(String orgDocID, String deptID, String userID, String orgCompanyID, int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SYSDATE",  commonUtil.getTodayUTCTime(""));
 		map.put("v_APRSTATE",  staASSungIn);
@@ -10918,7 +10906,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String updateGamsaResult(String docID, String companyID, String orgDocID, String orgCompanyID, String aprLinersDeptID, String aprLinersDeptName, String aprLinersDeptName2, String mode,
 			String lang, LoginVO userInfo) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		String subSQL = "";
 		
 		subSQL = setLastOpinionToOrgDoc(docID, orgDocID, companyID, orgCompanyID, "QUERY", lang, userInfo.getTenantId());
@@ -11254,7 +11241,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String updateSusinResult(String orgDocID, String deptID, String userID, String mode, String userName, String userName2, String companyID, int tenantID) throws Exception{
-		String strSQL = "";
 		String processFlag = mode.toUpperCase();
 		
 		if (!userID.trim().equals("")) {
@@ -11429,7 +11415,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String registerRecordOfQuery(String strXML, int tenantID, String offSet) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		Document objParam = commonUtil.convertStringToDocument(strXML);
 		String subSQL = "";
 		String rtnVal = "TRUE";
@@ -11585,8 +11570,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String saveSpecialInfoRec(String recordID, String cabID, Document objParam, int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_RECORDID",  makeRightField(recordID));
 		map.put("v_CABID",  makeRightField(cabID));
@@ -11596,18 +11579,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertSpecialCatalogInfo_Rec(map);
 		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			return "FALSE";
 		}
 		
         NodeList nodeData = objParam.getElementsByTagName("SCDATA");
         if (nodeData.getLength() > 0) {
         	for (int k = 0; k < nodeData.getLength(); k++) {
-        		
         		map.put("v_SERIALNO",  makeRightField(nodeData.item(k).getChildNodes().item(0).getTextContent().trim()));
         		map.put("v_SC1",  makeRightField(nodeData.item(k).getChildNodes().item(1).getTextContent().trim()));
         		map.put("v_SC2",  makeRightField(nodeData.item(k).getChildNodes().item(2).getTextContent().trim()));
         		map.put("v_SC3",  makeRightField(nodeData.item(k).getChildNodes().item(3).getTextContent().trim()));
-
         		try {
         			ezApprovalGDAO.insertSpecialCatalogInfo_Rec2(map);
         		} catch(Exception e) {
@@ -13440,7 +13422,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		String rtnVal = "TRUE";
 		String sepAttSN = tempSepAttSN;
 		
@@ -16457,7 +16438,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String changeRecordInfo(Document xmlDom, String lang, int tenantID) throws Exception {
 		String pChangeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent().trim();
-		StringBuilder strSQL = new StringBuilder("");
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		if(pChangeType.equals("0")){
 			try{
@@ -16523,6 +16503,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			catch(Exception e){
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				System.out.println(e.getMessage());
 				return  "<RESULT>FALSE</RESULT>";
 			}
 			return "<RESULT>TRUE</RESULT>";
@@ -16582,7 +16563,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertHistory2(map);
 
 			if(SCFlag.equals("2")){
-				String result= ChangeSpecialInfo_Rec(RecID,xmlDom, tenantID);
+				String result = ChangeSpecialInfo_Rec(RecID,xmlDom, tenantID);
 			
 				if (result == "FALSE"){
 					 return "<RESULT>FALSE</RESULT>";
@@ -16620,22 +16601,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String ChangeSpecialInfo_Rec(String RecID, Document xmlDom, int tenantID) {
 		try{
-			StringBuilder subSQL = new StringBuilder();
 			String result ="TURE";
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_RECID", RecID);
 			map.put("v_TENANTID", tenantID);
 
 			ezApprovalGDAO.deleteTbSpecialCatalogInfo(map);
+			
 			if(xmlDom.getElementsByTagName("SCDATA").getLength() >0){
 				for(int i=0; i<xmlDom.getElementsByTagName("SCDATA").getLength(); i++){
-					subSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_REC (RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID) VALUES ('");
-					subSQL.append(makeRightField(RecID) + "', '");
-					subSQL.append(makeRightField(xmlDom.getElementsByTagName("SN").item(0).getTextContent().trim()) + "', '");
-					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST1").item(0).getTextContent().trim()) + "', '");
-					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST2").item(0).getTextContent().trim()) + "', '");
-					subSQL.append(makeRightField(xmlDom.getElementsByTagName("LIST3").item(0).getTextContent().trim()) + "'," + tenantID +")\n");
-					map.put("sqlString", subSQL.toString());
 					ezApprovalGDAO.insertTbSpecialCatalogInfoRec(map);
 				}
 			}
@@ -16924,7 +16898,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // 2011.04.04 수기등록시 첨부등록 추가
         
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
-        if (manualFlag == "1") {
+        if (manualFlag.equals("1")) {
             if (docID != "") {
             	map.put("v_DOCID", docID);
             	map.put("v_TENANTID", tenantID);
@@ -17331,7 +17305,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					switch(arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()){
 					
 						case "dtSerialNum" :
-       							System.out.println(docXML.getTextContent());
 							resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
 						break;
 							
@@ -17784,33 +17757,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String changeCabinetInfo(Document xmlDom, int tenantID) throws Exception {
- 		StringBuilder strSQL = new StringBuilder();
-		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+		String strSQL = "";
  		String changeType = xmlDom.getElementsByTagName("MODIFYFLAG").item(0).getTextContent();
 		
 		if(changeType.equals("0")) { // 기본등록사항 변경 시
 			strSQL = ChangeCabBasicInfo(xmlDom, tenantID);
 		}
 		else {
-			strSQL = ChangeCabExtraInfo(xmlDom);
+			strSQL = ChangeCabExtraInfo(xmlDom, tenantID);
 		}
 		
 		if(strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
-		}
-		
-		Boolean result = ExecuteTransactionSQL(strSQL, companyID);
-		
-		if(result) {
+		} else {
 			return "<RESULT>TRUE</RESULT>";
-		}
-		else {
-			return "<RESULT>FALSE</RESULT>";
 		}
 	}
 
-	private StringBuilder ChangeCabExtraInfo(Document xmlDom) {
-		StringBuilder strSQL = new StringBuilder();
+	private String ChangeCabExtraInfo(Document xmlDom, int tenantID) throws Exception {
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent();
 		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent();
@@ -17822,48 +17786,43 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		NodeList nodeSC = xmlDom.getElementsByTagName("SCINFO");
 		
-		 strSQL.append("Declare v_NewVersion Number := 0;\n BEGIN \n ");
-         strSQL.append("Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBL_CABINETHISTORY  ");
-		 strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
-		 strSQL.append("IF v_NewVersion < 2 THEN\n");
-		 strSQL.append("BEGIN \n ");
-		 strSQL.append("Insert Into TBL_CABINETHISTORY (Version, CabinetClassNo, Title, RecTypeCode, ");
-		 strSQL.append("ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ");
-		 
-         // 2010.08.02 다국어 
-         strSQL.append("ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) ");
-		 strSQL.append("Select v_NewVersion, CabinetClassNo, Title, RecTypeCode, ");
-         strSQL.append("UTILS.CONVERT_TO_CHAR(CreateDate,8,p_style=>112), KeepingPeriod, DisplayEndDate, ");
-         // 2010.08.02 다국어 
-         strSQL.append("DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, '1', '0' ");
-         strSQL.append("From TBL_CABINETCLASS  Where TBL_CABINETCLASS.CabinetClassNo = '");
-		 strSQL.append(makeRightField(cabClassNo) + "'; \n END; \n END IF; \n");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CabinetClassNo",makeRightField(cabClassNo));
+		map.put("v_TENANTID", tenantID);
+		
+		int newVersion = ezApprovalGDAO.changeCabBsicInfoCount(map);
 
+		try {
+			if(newVersion < 2) {
+				map.put("v_NewVersion", newVersion);
+				map.put("v_ModifyFlag", "1");
+				ezApprovalGDAO.insertChangeCabCabinetHistory(map);
+			}
 			// '기록물철 분류정보 테이블을 업데이트 한다.
-		strSQL.append("Update TBL_CABINETCLASS Set KeepingPeriod = '");
-		strSQL.append(makeRightField(keepPeriod) + "', DisplayEndDate = '");
-		strSQL.append(makeRightField(displayEndDate) + "', DisplayReason='");
-		strSQL.append(makeRightField(displayReason) + "', ModifyFlag = '1' ");
-		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n ");
-
-		strSQL.append("Insert Into TBL_CABINETHISTORY (Version, CabinetClassNo, Title, ");
-		strSQL.append("RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ");
-        strSQL.append("ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag) Select ");
-        strSQL.append("(Select NVL(MAX(version), 0)+1 From TBL_CABINETHISTORY  Where ");
-		strSQL.append("CabinetClassNo = '" + makeRightField(cabClassNo) + "'), CabinetClassNo, ");
-        strSQL.append("Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), KeepingPeriod, ");
-		strSQL.append("DisplayEndDate, DisplayReason, N'" + makeRightField(changeReason) + "', '");
-        // 2010.08.02 다국어 
-        strSQL.append(makeRightField(userID) + "', N'" + makeRightField(usreName) + "', N'" + makeRightField(usreName2));
-        strSQL.append("', '1', '0' From TBL_CABINETCLASS  Where TBL_CABINETCLASS.CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n END; \n ");
 			
-         return strSQL;
+			map.put("v_KeepingPeriod", makeRightField(keepPeriod));
+			map.put("v_DisplayEndDate", makeRightField(displayEndDate));
+			map.put("v_REASON", makeRightField(changeReason));
+			map.put("v_ModifyFlag", "1");
+			map.put("v_CabinetClassNo", makeRightField(cabClassNo));
+			map.put("v_TENANTID", tenantID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_USERID", makeRightField(userID));
+			map.put("v_USERNAME", makeRightField(usreName));
+			map.put("v_USERNAME2", makeRightField(usreName2));
+			
+			ezApprovalGDAO.updateChangeCabExtCabinetClass(map);
+			ezApprovalGDAO.insertChangeCabCabinetHistory2(map);
+
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			 return "FALSE";
+		}
+		return "TRUE";
 	}
 
-	private StringBuilder ChangeCabBasicInfo(Document xmlDom, int tenantID) {
-		
-		StringBuilder strSQL = new StringBuilder();
-		StringBuilder subSQL = new StringBuilder();
+	private String ChangeCabBasicInfo(Document xmlDom, int tenantID) throws Exception {
+		String rtnVal = "";
 		String cabClassNo = xmlDom.getElementsByTagName("CABCLASSNO").item(0).getTextContent();
 		String userID = xmlDom.getElementsByTagName("USERID").item(0).getTextContent().trim();
 		String usreName = xmlDom.getElementsByTagName("USERNAME").item(0).getTextContent().trim();
@@ -17873,64 +17832,61 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String changeReason = xmlDom.getElementsByTagName("CHANGEREASON").item(0).getTextContent();
 		String SCFlag = xmlDom.getElementsByTagName("SCFLAG").item(0).getTextContent().trim();
 		
-		strSQL.append("Declare v_NewVersion Number := 0; \n BEGIN \n");
-        strSQL.append("Select NVL(max(Version), 0)+1 INTO v_NewVersion From TBL_CABINETHISTORY  ");
-		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
-		strSQL.append("IF v_NewVersion < 2 THEN\n");
-		strSQL.append("BEGIN \n");
-		strSQL.append("Insert Into TBL_CABINETHISTORY (Version, CabinetClassNo, Title, RecTypeCode, ");
-		strSQL.append("ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ");
-        strSQL.append("ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID) Select v_NewVersion, ");
-        strSQL.append("CabinetClassNo, Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(CreateDate,8,p_style=>112), ");
-        // 2010.08.02 다국어 
-        strSQL.append("KeepingPeriod, DisplayEndDate, DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, ");
-        strSQL.append("'0','0',TENANT_ID From TBL_CABINETCLASS  Where TBL_CABINETCLASS.CabinetClassNo = '");
-		strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID =" +tenantID +"; \n");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CabinetClassNo",makeRightField(cabClassNo));
+		map.put("v_TENANTID", tenantID);
+		
+		int newVersion = ezApprovalGDAO.changeCabBsicInfoCount(map);
 
-		if (SCFlag.equals("1"))
-        {
-			strSQL.append("Insert Into TBL_SCHISTORY_CAB (Version, CabinetClassNo, SerialNo, ");
-			strSQL.append("SC1, SC2, SC3, TENANT_ID) Select v_NewVersion, CabinetClassNo, SerialNo, SC1, ");
-            strSQL.append("SC2, SC3, TENANT_ID From TBL_SPECIALCATALOGINFO_CAB  Where CabinetClassNo = '"  );
-			strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID="+tenantID +";\n ");
-        }
-
-		strSQL.append("END; \n END IF; \n");
-
-		strSQL.append("Update TBL_CABINETCLASS Set Title = '" + makeRightField(title));
-		strSQL.append("', RecTypeCode = '" + makeRightField(recTypeCode) + "', ModifyFlag = '1' ");
-		strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "' AND TENANT_ID =" + tenantID +" ;\n");
-
-		strSQL.append("Insert Into TBL_CABINETHISTORY (Version, CabinetClassNo, Title, ");
-		strSQL.append("RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ");
-        strSQL.append("ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID) Select ");
-        strSQL.append("(Select NVL(MAX(version), 0)+1 From TBL_CABINETHISTORY  Where ");
-		strSQL.append("CabinetClassNo = '" + makeRightField(cabClassNo) + "'), CabinetClassNo, ");
-        strSQL.append("Title, RecTypeCode, UTILS.CONVERT_TO_CHAR(SYSDATE,8,p_style=>112), KeepingPeriod, ");
-		strSQL.append("DisplayEndDate, DisplayReason, N'" + makeRightField(changeReason) + "', '");
-        // 2010.08.02 다국어 
-        strSQL.append(makeRightField(userID) + "', N'" + makeRightField(usreName) + "', N'" + makeRightField(usreName2));
-        strSQL.append("', '0', '0' , TENANT_ID From TBL_CABINETCLASS  Where TBL_CABINETCLASS.CabinetClassNo = '" );
-		strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID = " + tenantID+";\n  END;");
-
-		subSQL = ChangeSpecialInfo_Cab(cabClassNo, xmlDom, tenantID);
-
-		if (subSQL.equals("FALSE")){
-			return subSQL;
+		try {
+			if(newVersion < 2) {
+				map.put("v_NewVersion", newVersion);
+				map.put("v_ModifyFlag", "0");
+				ezApprovalGDAO.insertChangeCabCabinetHistory(map);
+			}
+			
+			if (SCFlag.equals("1"))
+	        {
+				ezApprovalGDAO.insertChangeCabScHistory_Cab(map);
+	        }
+	
+			map.put("v_Title", makeRightField(title));
+			map.put("v_RecTypeCode", makeRightField(recTypeCode));
+			map.put("v_ModifyFlag", "1");
+			map.put("v_CabinetClassNo", makeRightField(cabClassNo));
+			map.put("v_TENANTID", tenantID);
+			map.put("v_REASON", makeRightField(changeReason));
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_USERID", makeRightField(userID));
+			map.put("v_USERNAME", makeRightField(usreName));
+			map.put("v_USERNAME2", makeRightField(usreName2));
+	
+			ezApprovalGDAO.updateChangeCabCabinetClass(map);
+			ezApprovalGDAO.insertChangeCabCabinetHistory2(map);
+			
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
 		}
-		else{
-			strSQL.append(subSQL);
+			rtnVal = ChangeSpecialInfo_Cab(cabClassNo, xmlDom, tenantID);
+		
+		if (rtnVal.equals("FALSE")) {
+			return "FALSE";
 		}
 
-		return strSQL;
+		return "TRUE";
 	}
 
-	private StringBuilder ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, int tenantID) {
-		StringBuilder strSQL = new StringBuilder();
+	private String ChangeSpecialInfo_Cab(String cabClassNo, Document xmlDom, int tenantID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CabinetClassNo", makeRightField(cabClassNo));
+		map.put("v_TENANTID", tenantID);
+		
+		try {
 		// '## 기존의 특수목록을 모두 지운다.
-	    strSQL.append("Delete From TBL_SPECIALCATALOGINFO_CAB Where CabinetClassNo = '");
-		strSQL.append(makeRightField(cabClassNo) + "' And SerialNo != '000' AND TENANT_ID = " + tenantID +";\n");
-	
+		ezApprovalGDAO.deleteChangeCabSpecialCatalogInfo_Cab(map);
+		
 		// '## 특수목록 데이터 입력
 		NodeList nodesData = xmlDom.getElementsByTagName("SCDATA");
 	
@@ -17938,22 +17894,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		{
 			for (int i=0; i<nodesData.getLength(); i++)
 			{
-				strSQL.append("INSERT INTO TBL_SPECIALCATALOGINFO_CAB (CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID) Values ('");
-				strSQL.append(makeRightField(cabClassNo) + "', '");
-				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(0).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(1).getTextContent().trim()) + "', N'");
-				strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(2).getTextContent().trim()) + "', N'");
-	            strSQL.append(makeRightField(nodesData.item(i).getChildNodes().item(3).getTextContent().trim()) + "'," + tenantID +");\n");
+				map.put("v_SerialNo", makeRightField(nodesData.item(i).getChildNodes().item(0).getTextContent().trim()));
+				map.put("v_SC1", makeRightField(nodesData.item(i).getChildNodes().item(1).getTextContent().trim()));
+				map.put("v_SC2", makeRightField(nodesData.item(i).getChildNodes().item(2).getTextContent().trim()));
+				map.put("v_SC3", makeRightField(nodesData.item(i).getChildNodes().item(3).getTextContent().trim()));
+				
+				ezApprovalGDAO.insertChangeCabSpecialCatalogInfo_Cab(map);
 			}
 		}
-		  strSQL.append("Declare v_NewVersion2 Number :=0; \n BEGIN \n");
-	      strSQL.append("Select NVL(max(Version), 0) INTO v_NewVersion2 From TBL_CABINETHISTORY ");
-		  strSQL.append("Where CabinetClassNo = '" + makeRightField(cabClassNo) + "';\n");
-		  strSQL.append("Insert Into TBL_SCHISTORY_CAB (Version, CabinetClassNo, SerialNo, SC1, SC2, SC3 ,TENANT_ID) ");
-		  strSQL.append("Select v_NewVersion2, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID ");
-	      strSQL.append("From TBL_SPECIALCATALOGINFO_CAB  Where CabinetClassNo = '" );
-	      strSQL.append(makeRightField(cabClassNo) + "' AND TENANT_ID = " + tenantID +";\n END; \n ");
-	      return strSQL;
+			int newVersion2 = ezApprovalGDAO.changeCabSpeacialCount(map);
+			
+			map.put("v_NewVersion", newVersion2);
+			ezApprovalGDAO.insertChangeCabScHistory_Cab(map);
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "FALSE";
+		}
+	      return "TRUE";
 	}
 
 	@Override
@@ -18279,7 +18236,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			   int receivedSn = ezApprovalGDAO.getReceiptInfo_receivesNm(map);
 			   receivedSn += 1;
-			   if(!gFlag.equals("G")){
+			   if(!gFlag.equals("G")) {
 				   receivedSn = 0;
 			   }
 			   
@@ -18319,7 +18276,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			   Document signXML3 = commonUtil.convertStringToDocument(sb3.toString());
 			   String subSQL="";
-			   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++){
+			   for(int k=0; k<signXML3.getElementsByTagName("RECEIPTPOINTID").getLength(); k++) {
 				   subSQL = updateProcessYN(orgDocID, signXML3.getElementsByTagName("RECEIPTPOINTID").item(k).getTextContent().toString() , "0" , "QUERY", companyID, lang, tenantID );
 				   if(subSQL.equals("FALSE")){
 					   return "<RESULT>FALSE</RESULT>";
@@ -18452,7 +18409,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String doReSendDoc(Document xmlDom, String dirPath, String lang, int tenantID)	throws Exception {
-		String strSQL="";
+		String strSQL = "";
 
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String deptID = xmlDom.getElementsByTagName("DEPTID").item(0).getTextContent();

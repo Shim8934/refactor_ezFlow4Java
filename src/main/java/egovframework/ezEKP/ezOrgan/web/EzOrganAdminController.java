@@ -1821,11 +1821,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 				}
 			}
 			
-			if (mailList.size() > 0) {
-				returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
-			} else {
-				returnValue = "OK";
-			}
+			returnValue = ezEmailService.setIndividualAlias(userId, tenantID, primaryMail, mailList);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
