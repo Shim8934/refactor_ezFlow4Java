@@ -288,7 +288,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		map.put("v_COMPNM2", dept.getCompNm2());
         		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
         		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
-        		map.put("v_DEPTLEVEL", dept.getDeptLevel());
+        		
+        		if (dept.getDeptLevel() != null) {
+        		    try {
+            		    int deptLevel = Integer.parseInt(dept.getDeptLevel()) + 1;
+            		    map.put("v_DEPTLEVEL", deptLevel);
+        		    } catch (NumberFormatException e) {
+        		        map.put("v_DEPTLEVEL", null);
+        		    }
+        		} else {
+        		    map.put("v_DEPTLEVEL", null);
+        		}
+        		
         		map.put("v_EXTENSIONATTRIBUTE3", dept.getExtensionAttribute3());
         		map.put("v_DEPT_CD_PATH", dept.getDept_Cd_Path());
         		map.put("v_DEPT_CD_PATH_OLD", dept1.getDept_Cd_Path());
