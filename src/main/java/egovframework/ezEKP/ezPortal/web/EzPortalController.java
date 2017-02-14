@@ -1791,6 +1791,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		pEndRow = intPage * listPageSize;
 		
 		searchNewMyPortalPageList = ezPortalService.searchMyPortal(userInfo.getId(), gubunFlag, pStartRow, pEndRow, userInfo.getCompanyID(), userInfo.getTenantId());
+		logger.debug("searchNewMyPortalPageList="+searchNewMyPortalPageList);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(searchNewMyPortalPageList);
 		
@@ -1817,6 +1818,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
+		logger.debug("resultHTML="+resultHTML);
 		model.addAttribute("searchNewMyPortalPageList", searchNewMyPortalPageList);
 		model.addAttribute("resultHTML", resultHTML);
 		model.addAttribute("intPage", intPage);
