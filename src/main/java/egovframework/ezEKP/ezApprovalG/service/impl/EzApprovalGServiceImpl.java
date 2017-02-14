@@ -3926,6 +3926,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_DEPTCODE", deptID);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime("yyyy"));
 		
 		try {
 			ezApprovalGDAO.confirmClassify(map);
