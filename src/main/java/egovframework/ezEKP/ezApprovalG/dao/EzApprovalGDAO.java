@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
@@ -232,8 +233,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGRecordVO> getRecordList(Map<String, Object> map) throws Exception{
-		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordList", map);
+	public List<ApprGRecordVO> getRecordList(ApprGRecordListVO recordListVO) throws Exception{
+		return (List<ApprGRecordVO>) list("EzApprovalG.getRecordList", recordListVO);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -849,8 +850,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int)select("EzApprovalG.getReceiptTempletSN", map);
 	}
 	
-	public int getRecordListCount(Map<String, Object> map1) throws Exception{
-		return (int)select("EzApprovalG.getRecordListCount", map1);
+	public int getRecordListCount(ApprGRecordListVO recordListVO) throws Exception{
+		return (int)select("EzApprovalG.getRecordListCount", recordListVO);
 	}
 	
 	public int updateHistoryForAttach_M(Map<String, Object> map) throws Exception{

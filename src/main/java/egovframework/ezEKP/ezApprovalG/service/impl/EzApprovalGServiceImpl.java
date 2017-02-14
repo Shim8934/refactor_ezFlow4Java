@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-import org.stringtemplate.v4.compiler.STParser.mapExpr_return;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -63,6 +62,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
@@ -5942,31 +5942,44 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getRecordList(Document doc, String lang, int tenantID, String offset) throws Exception {
 		LOGGER.debug("getRecordList started.");
 
+		ApprGRecordListVO recordListVO = new ApprGRecordListVO();
 		StringBuilder strSQL = new StringBuilder();
 		StringBuilder strSQLCnt = new StringBuilder();
 		StringBuilder resultXML = new StringBuilder();
-		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
-		String deptCode = doc.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim();
-		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
-		String transFlag = doc.getElementsByTagName("TRANSFLAG").item(0).getTextContent().trim();
-		String listFlag = doc.getElementsByTagName("LISTFLAG").item(0).getTextContent().trim();
-		String orderBy = doc.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
-		String pageSize = doc.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim();
-		String pageNo = doc.getElementsByTagName("PAGENO").item(0).getTextContent().trim();
+		
+		recordListVO.setTenantID(tenantID);
+		recordListVO.setLang(lang);
+		recordListVO.setCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
+//		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
+		recordListVO.setDeptCode(doc.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent());
+//		String deptCode = doc.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent().trim();
+		recordListVO.setUserID(doc.getElementsByTagName("USERID").item(0).getTextContent());
+//		String userID = doc.getElementsByTagName("USERID").item(0).getTextContent().trim();
+		recordListVO.setTransFlag(doc.getElementsByTagName("TRANSFLAG").item(0).getTextContent());
+//		String transFlag = doc.getElementsByTagName("TRANSFLAG").item(0).getTextContent().trim();
+		recordListVO.setListFlag(doc.getElementsByTagName("LISTFLAG").item(0).getTextContent());
+//		String listFlag = doc.getElementsByTagName("LISTFLAG").item(0).getTextContent().trim();
+		recordListVO.setOrderBy(doc.getElementsByTagName("ORDERBY").item(0).getTextContent());
+//		String orderBy = doc.getElementsByTagName("ORDERBY").item(0).getTextContent().trim();
+		recordListVO.setPageSize(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent());
+//		String pageSize = doc.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim();
+		recordListVO.setPageNO(doc.getElementsByTagName("PAGENO").item(0).getTextContent());
+//		String pageNo = doc.getElementsByTagName("PAGENO").item(0).getTextContent().trim();
 		String selectClause = "";
 		String extraSelectClause = "";
 		String fromClause = "";
 		String cabJoinClause = "";
 		String strWhereClause = "";
 		String listType = "001";
-		boolean usePublicFlag = false;
+		recordListVO.setUsePublicFlag(false);
+//		boolean usePublicFlag = false;
 		String multiLang = commonUtil.getMultiData(lang, tenantID);
 		String offSetMin = commonUtil.getMinuteUTC(offset);
 
-		switch (listFlag) {
+		switch (recordListVO.getListFlag()) {
 		case "0" :	// 기록물 대장
-			listType = "001";
-			usePublicFlag = true;
+			recordListVO.setListType("001");
+			recordListVO.setUsePublicFlag(true);
 			break;
 
 		case "1" :	// 편철확정대상 기록물
@@ -5983,15 +5996,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		case "4" :	// 파일이관 대상
 			listType = "005";
-			strWhereClause = " And CatalogTransferFlag='1' And " + 
-				"(DocTransferFlag='0' OR DocTransferFlag IS NULL) " + 
-				"And TBL_RECORD.DocID IS NOT NULL And SeperateAttachNo='00' ";
+//			strWhereClause = " And CatalogTransferFlag='1' And " + 
+//				"(DocTransferFlag='0' OR DocTransferFlag IS NULL) " + 
+//				"And TBL_RECORD.DocID IS NOT NULL And SeperateAttachNo='00' ";
 			break;
 
 		case "5" :	// 이관목록
 			listType = "005";
-			strWhereClause = " And DocTransferFlag='1' And " +
-                "DocTransferYear=(Select Max(DocTransferYear) From TBL_SEPERATEATTACH)  ";
+//			strWhereClause = " And DocTransferFlag='1' And " +
+//                "DocTransferYear=(Select Max(DocTransferYear) From TBL_SEPERATEATTACH)  ";
 			break;
 
 		case "6" :	// 연기신청목록
@@ -6001,165 +6014,222 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "7" :	// 폐기대상 기록물
 			listType = "001";
 
-			String DFlag = getCode2Name("A35", "003", companyID, lang, tenantID).toUpperCase().trim();
-
-			if (DFlag == "Y") {
-				// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
-				strWhereClause = " AND TBL_CABINET.TerminateFlag = '1' AND " + 
-						commonUtil.getTodayUTCTime("yyyy") + " - TBL_CABINET.ExpirationYear > TBL_CABINET.KeepingPeriod ";
-			} else {
-				// 일반 G버전. 폐기 대상은 이관된 기록물.
-				strWhereClause = " And DocTransferFlag='1' ";
-			}
+			String dFlag = getCode2Name("A35", "003", recordListVO.getCompanyID(), lang, tenantID).toUpperCase().trim();
+			
+			recordListVO.setdFlag(dFlag);
+//			if (dFlag == "Y") {
+//				// 사학 G버전. 폐기 대상은 완료 연도부터 보존기간 경과한 기록물.
+//				strWhereClause = " AND TBL_CABINET.TerminateFlag = '1' AND " + 
+//						commonUtil.getTodayUTCTime("yyyy") + " - TBL_CABINET.ExpirationYear > TBL_CABINET.KeepingPeriod ";
+//			} else {
+//				// 일반 G버전. 폐기 대상은 이관된 기록물.
+//				strWhereClause = " And DocTransferFlag='1' ";
+//			}
 			break;
 
 		case "9" :	// 첨부대상 기록물
 			listType = "001";
-			usePublicFlag = true;
-			strWhereClause = " And (TBL_RECORD.DocID IS NOT NULL And TBL_CABINET.OwnerDeptID='" +
-				deptCode + "' And SeperateAttachNo='00') ";
+			recordListVO.setUsePublicFlag(true);
+//			strWhereClause = " And (TBL_RECORD.DocID IS NOT NULL And TBL_CABINET.OwnerDeptID='" +
+//				deptCode + "' And SeperateAttachNo='00') ";
 			break;
 
 		case "10" :	// 접수목록
 			listType = "001";
-			usePublicFlag = true;
-			strWhereClause = " And (TBL_ENDAPRDOCINFO.DocState='011' OR TBL_RECORD.DocType ='2') ";
+			recordListVO.setUsePublicFlag(true);
+//			strWhereClause = " And (TBL_ENDAPRDOCINFO.DocState='011' OR TBL_RECORD.DocType ='2') ";
 			break;
 
 		case "11" :	// 발송목록
 			listType = "001";
-			usePublicFlag = true;
-			strWhereClause = " And (TBL_ENDAPRDOCINFO.DocState='014' OR TBL_RECORD.DocType ='1') ";
+			recordListVO.setUsePublicFlag(true);
+//			strWhereClause = " And (TBL_ENDAPRDOCINFO.DocState='014' OR TBL_RECORD.DocType ='1') ";
 			break;
 		}
 		
-		if (usePublicFlag) {
-			if (getIsUse("A22", "001", companyID, lang, tenantID).equals("1")) {
-				usePublicFlag = true; //보안등급 사용여부
+		if (recordListVO.isUsePublicFlag()) {
+			if (getIsUse("A22", "001", recordListVO.getCompanyID(), lang, tenantID).equals("1")) {
+				recordListVO.setUsePublicFlag(true); //보안등급 사용여부
 			} else {
-				usePublicFlag = false;
+				recordListVO.setUsePublicFlag(false);
 			}
 		}
-		if (orderBy.equals("")) {
-			orderBy = " Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ";
+		if (recordListVO.getOrderBy().equals("")) {
+			recordListVO.setOrderBy(" Order By CreateDate DESC, RecordID DESC, SEPERATEATTACHNO ASC ");
 		}
 		//다국어 추가 소스 수정
-		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
-                " SELECT TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate+ '" + offSetMin +"'/(24*60) as CreateDate, " +
-                "TBL_ENDAPRDOCINFO.DocType, TBL_SEPERATEATTACH.RegisterType, TBL_ENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
-                "TBL_SEPERATEATTACH.CabinetID, TBL_SEPERATEATTACH.SeperateAttachNo , " + 
-				"TBL_ENDAPRDOCINFO.Href, TBL_ENDAPRDOCINFO.ContainerID, TBL_ENDAPRDOCINFO.FormID, " + 
-				"TBL_ENDAPRDOCINFO.WriterID, TBL_CABINET.ConfirmFlag, TBL_CABINET.CabinetClassNo, " + 
-				"TBL_CABINET.ProcessDeptCode AS CabDeptCode, TBL_CABINET.OwnerDeptID, " + 
-                "TBL_RECORD.RegisterDate + '" + offSetMin +"'/(24*60) as RegisterDate, TBL_RECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBL_RECORD.DrafterName" + multiLang + " as DrafterName, TBL_RECORD.AttachFlag, " +
-				"TBL_CABINET.OwnerTask, TBL_RECORD.RejectFlag , TBL_RECORD.ReceiptMemberName" + multiLang + " as ReceiptName ";
+//		selectClause = "SELECT ROW_NUMBER() OVER( " + orderBy + " ) AS ROWNUM_,  N.* FROM ( "+
+//                " SELECT TBL_RECORD.RecordID, TBL_RECORD.DocID, TBL_RECORD.RegisterNo, TBL_SEPERATEATTACH.CreateDate+ '" + offSetMin +"'/(24*60) as CreateDate, " +
+//                "TBL_ENDAPRDOCINFO.DocType, TBL_SEPERATEATTACH.RegisterType, TBL_ENDAPRDOCINFO.DocState," +   // 2011.04.06 수신문서 공람지정할수 있도록 DocState 추가
+//                "TBL_SEPERATEATTACH.CabinetID, TBL_SEPERATEATTACH.SeperateAttachNo , " + 
+//				"TBL_ENDAPRDOCINFO.Href, TBL_ENDAPRDOCINFO.ContainerID, TBL_ENDAPRDOCINFO.FormID, " + 
+//				"TBL_ENDAPRDOCINFO.WriterID, TBL_CABINET.ConfirmFlag, TBL_CABINET.CabinetClassNo, " + 
+//				"TBL_CABINET.ProcessDeptCode AS CabDeptCode, TBL_CABINET.OwnerDeptID, " + 
+//                "TBL_RECORD.RegisterDate + '" + offSetMin +"'/(24*60) as RegisterDate, TBL_RECORD.AprMemberTitle" + multiLang + " as AprMemberTitle, TBL_RECORD.DrafterName" + multiLang + " as DrafterName, TBL_RECORD.AttachFlag, " +
+//				"TBL_CABINET.OwnerTask, TBL_RECORD.RejectFlag , TBL_RECORD.ReceiptMemberName" + multiLang + " as ReceiptName ";
+//		
+//        fromClause = " FROM TBL_RECORD Left Join TBL_ENDAPRDOCINFO " + 
+//			"On TBL_RECORD.DocID=TBL_ENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_ENDAPRDOCINFO.TENANT_ID Inner Join TBL_SEPERATEATTACH " +
+//            "On TBL_RECORD.RecordID=TBL_SEPERATEATTACH.RecordID AND TBL_RECORD.TENANT_ID=TBL_SEPERATEATTACH.TENANT_ID ";
+//
+//		if (usePublicFlag) {
+//            fromClause += " Left Join TBL_EXPENDAPRDOCINFO " + 
+//				"On TBL_RECORD.DocID=TBL_EXPENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_EXPENDAPRDOCINFO.TENANT_ID";
+//
+//			selectClause += ", TBL_EXPENDAPRDOCINFO.SecurityApproval ";
+//		}
 		
-        fromClause = " FROM TBL_RECORD Left Join TBL_ENDAPRDOCINFO " + 
-			"On TBL_RECORD.DocID=TBL_ENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_ENDAPRDOCINFO.TENANT_ID Inner Join TBL_SEPERATEATTACH " +
-            "On TBL_RECORD.RecordID=TBL_SEPERATEATTACH.RecordID AND TBL_RECORD.TENANT_ID=TBL_SEPERATEATTACH.TENANT_ID ";
-
-		if (usePublicFlag) {
-            fromClause += " Left Join TBL_EXPENDAPRDOCINFO " + 
-				"On TBL_RECORD.DocID=TBL_EXPENDAPRDOCINFO.DocID AND TBL_RECORD.TENANT_ID=TBL_EXPENDAPRDOCINFO.TENANT_ID";
-
-			selectClause += ", TBL_EXPENDAPRDOCINFO.SecurityApproval ";
-		}
-		
-		String arrListInfo = getLVFieldInfo(listType, companyID, lang, tenantID);
+		String arrListInfo = getLVFieldInfo(listType, recordListVO.getCompanyID(), lang, tenantID);
 		Document arrList = commonUtil.convertStringToDocument(arrListInfo);
 		
 		for (int k = 0; k < arrList.getElementsByTagName("SELECTFIELD").getLength(); k++) {
 			if (!makeListField(arrList.getElementsByTagName("COLNAME").item(k).getTextContent()).equals("")) {
 				if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLNAME").item(k).getTextContent().toUpperCase().trim()) < 0) {
-					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent().trim();
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent();
 				} else if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLALIAS").item(k).getTextContent().toUpperCase().trim()) < 0) {
-					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent().trim();
+					extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(k).getTextContent();
 				}
 			}
 		}
 		
-		cabJoinClause = getCabJoinClause(doc, deptCode, transFlag, listFlag, companyID, tenantID);
+		recordListVO.setExtraSelectClause(extraSelectClause);
+		recordListVO.setTempDeptCode(recordListVO.getDeptCode());
+
+		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
+			recordListVO.setTempDeptCode(doc.getElementsByTagName("DEPTCODE").item(0).getTextContent());
+		}
+		
+		String cabinetIDs = "";
+		
+		for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
+			if (k == 0) {
+				cabinetIDs += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent() + "'";
+			} else {
+				cabinetIDs += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent() + "'";
+			}
+		}
+		recordListVO.setCabinetIDs(cabinetIDs);
+
+        if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
+        	recordListVO.setCharger(doc.getElementsByTagName("CHARGER").item(0).getTextContent());
+        }
+
+        String transExpire = "";
+        
+		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
+			String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), recordListVO.getCompanyID(), lang, tenantID);
+			
+			if (accountingYear != null && !accountingYear.equals("")) {
+				transExpire = accountingYear;
+			} else {
+				transExpire = commonUtil.getTodayUTCTime("").substring(0, 4);
+			}
+		}
+		recordListVO.setTransExpire(transExpire);
+		
+		if (doc.getElementsByTagName("CABTITLE").item(0) != null && doc.getElementsByTagName("CABTITLE").item(0).getTextContent().length() > 0) {
+			recordListVO.setCabTitle(makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent()));
+		}
+//		cabJoinClause = getCabJoinClause(doc, deptCode, transFlag, listFlag, lang, companyID, tenantID);
 		
 		if (doc.getElementsByTagName("RECDEPTCODE").item(0) != null && doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().length() > 0) {
-			strWhereClause += " AND TBL_RECORD.ProcessDeptCode = '" + makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().trim()) + "' ";
+			recordListVO.setRecDeptcode(makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent()));
+//			strWhereClause += " AND TBL_RECORD.ProcessDeptCode = '" + makeRightField(doc.getElementsByTagName("RECDEPTCODE").item(0).getTextContent().trim()) + "' ";
 		}
 
 		if (doc.getElementsByTagName("TITLE").item(0) != null && doc.getElementsByTagName("TITLE").item(0).getTextContent().length() > 0) {
-			strWhereClause += " AND TBL_SEPERATEATTACH.Title Like N'%" + makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().trim()) + "%' ";
+			recordListVO.setTitle(makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent()));
+//			strWhereClause += " AND TBL_SEPERATEATTACH.Title Like N'%" + makeSearchField(doc.getElementsByTagName("TITLE").item(0).getTextContent().trim()) + "%' ";
 		}
 
 		if (doc.getElementsByTagName("REGTYPE").item(0) != null && doc.getElementsByTagName("REGTYPE").item(0).getTextContent().length() > 0) {
-			strWhereClause += " AND TBL_SEPERATEATTACH.RegisterType = '" + makeRightField(doc.getElementsByTagName("REGTYPE").item(0).getTextContent().trim()) + "' ";
+			recordListVO.setRegType(makeRightField(doc.getElementsByTagName("REGTYPE").item(0).getTextContent()));
+//			strWhereClause += " AND TBL_SEPERATEATTACH.RegisterType = '" + makeRightField(doc.getElementsByTagName("REGTYPE").item(0).getTextContent().trim()) + "' ";
 		}
 		if (doc.getElementsByTagName("SREGDATE").item(0) != null && doc.getElementsByTagName("SREGDATE").item(0).getTextContent().length() > 0) {
-            strWhereClause += " AND TBL_RECORD.RegisterDate >= TO_DATE('" + commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent().trim().substring(0, 19)), offset , false) + "','YYYY.MM.DD HH24:MI:SS') ";
+			recordListVO.setRegStartDate(commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent().substring(0, 19)), offset , false));
+//            strWhereClause += " AND TBL_RECORD.RegisterDate >= TO_DATE('" + commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent().trim().substring(0, 19)), offset , false) + "','YYYY.MM.DD HH24:MI:SS') ";
 		}
 		
 		if (doc.getElementsByTagName("EREGDATE").item(0) != null && doc.getElementsByTagName("EREGDATE").item(0).getTextContent().length() > 0) {
-            strWhereClause += " AND TBL_RECORD.RegisterDate <= TO_DATE('" + commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent().trim().substring(0, 19)), offset , false) + "','YYYY.MM.DD HH24:MI:SS') ";
+			recordListVO.setRegEndDate(commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent().substring(0, 19)), offset , false));
+//            strWhereClause += " AND TBL_RECORD.RegisterDate <= TO_DATE('" + commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent().trim().substring(0, 19)), offset , false) + "','YYYY.MM.DD HH24:MI:SS') ";
 		}
 		
 		if (doc.getElementsByTagName("SC").item(0) != null && doc.getElementsByTagName("SC").item(0).getTextContent().length() > 0) {
-			strWhereClause += " AND TBL_RECORD.RecordID IN (Select RecordID " +
-                "From TBL_SPECIALCATALOGINFO_REC Where SC1 Like N'%" +
-				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC2 Like N'%" +
-				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC3 Like N'%" + 
-				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%') ";
+			recordListVO.setSc(makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent()));
+//			strWhereClause += " AND TBL_RECORD.RecordID IN (Select RecordID " +
+//                "From TBL_SPECIALCATALOGINFO_REC Where SC1 Like N'%" +
+//				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC2 Like N'%" +
+//				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%' OR SC3 Like N'%" + 
+//				makeSearchField(doc.getElementsByTagName("SC").item(0).getTextContent().trim()) + "%') ";
 		}
 		
         if (doc.getElementsByTagName("DRAFTER").item(0) != null && doc.getElementsByTagName("DRAFTER").item(0).getTextContent().length() > 0) {
-            strWhereClause += " AND (TBL_RECORD.DrafterName Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%' ";
-            strWhereClause += " OR TBL_RECORD.DrafterName2 Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%') ";
+        	recordListVO.setDrafter(makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent()));
+//            strWhereClause += " AND (TBL_RECORD.DrafterName Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%' ";
+//            strWhereClause += " OR TBL_RECORD.DrafterName2 Like N'%" + makeSearchField(doc.getElementsByTagName("DRAFTER").item(0).getTextContent().trim()) + "%') ";
         }
         
-        if (usePublicFlag) {
-        	String userSecurityCode = ezOrganService.getPropertyValue(userID, "extensionAttribute6", tenantID);
+        if (recordListVO.isUsePublicFlag()) {
+        	String userSecurityCode = ezOrganService.getPropertyValue(recordListVO.getUserID(), "extensionAttribute6", tenantID);
         	
         	if (userSecurityCode == null || userSecurityCode.equals(" ") || userSecurityCode.equals("")) {
         		userSecurityCode = "0";
         	}
+        	recordListVO.setUserSecurityCode(userSecurityCode);
         	
-        	if (getIsUse("A22", "005", companyID, lang, tenantID).equals("1")) {
-        		strWhereClause += " AND (TBL_EXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL or ( SELECT 'Y' FROM DUAL WHERE 0 < (" +
-                                 "SELECT COUNT(DocID) FROM TBL_ENDAPRLINEINFO WHERE  DocID = TBL_RECORD.DocID  AND AprMemberID = '"+ userID +"' AND TENANT_ID = "+tenantID+") OR TBL_RECORD.DocID = NULL ) = 'Y') AND TBL_RECORD.TENANT_ID= "+ tenantID;
-        	} else {
-        		strWhereClause += " AND (TBL_EXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL) AND TBL_RECORD.TENANT_ID= "+ tenantID;
-        	}
+        	String tempIsUse = getIsUse("A22", "005", recordListVO.getCompanyID(), lang, tenantID);
+        	
+        	recordListVO.setIsUse(tempIsUse);
+        	
+//        	if (getIsUse("A22", "005", recordListVO.getCompanyID(), lang, tenantID).equals("1")) {
+//        		strWhereClause += " AND (TBL_EXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL or ( SELECT 'Y' FROM DUAL WHERE 0 < (" +
+//                                 "SELECT COUNT(DocID) FROM TBL_ENDAPRLINEINFO WHERE  DocID = TBL_RECORD.DocID  AND AprMemberID = '"+ userID +"' AND TENANT_ID = "+tenantID+") OR TBL_RECORD.DocID = NULL ) = 'Y') AND TBL_RECORD.TENANT_ID= "+ tenantID;
+//        	} else {
+//        		strWhereClause += " AND (TBL_EXPENDAPRDOCINFO.SecurityCode >= '" + userSecurityCode + "' OR TBL_EXPENDAPRDOCINFO.SecurityCode IS NULL) AND TBL_RECORD.TENANT_ID= "+ tenantID;
+//        	}
         }
         
-        strSQL.append(selectClause);
-        strSQL.append(extraSelectClause);
-        strSQL.append(fromClause);
-        strSQL.append(cabJoinClause);
-        strSQL.append(" Where TBL_RECORD.DelFlag='0' AND TBL_SEPERATEATTACH.DelFlag='0' AND TBL_RECORD.TENANT_ID =" + tenantID);
-        strSQL.append(strWhereClause);
+//        strSQL.append(selectClause);
+//        strSQL.append(extraSelectClause);
+//        strSQL.append(fromClause);
+//        strSQL.append(cabJoinClause);
+//        strSQL.append(" Where TBL_RECORD.DelFlag='0' AND TBL_SEPERATEATTACH.DelFlag='0' AND TBL_RECORD.TENANT_ID =" + tenantID);
+//        strSQL.append(strWhereClause);
         
         int start = 0, end = 0;
         
         if (doc.getElementsByTagName("ISDOCPRINT").item(0) != null && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().length() > 0 && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().trim().equals("TRUE")) {
-        	end = Integer.parseInt(doc.getElementsByTagName("PAGENO").item(0).getTextContent().trim());
-        	start = Integer.parseInt(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent().trim());
+        	end = Integer.parseInt(doc.getElementsByTagName("PAGENO").item(0).getTextContent());
+        	start = Integer.parseInt(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent());
         } else {
-        	end = Integer.parseInt(pageSize) * Integer.parseInt(pageNo);
-        	start = end - Integer.parseInt(pageSize) + 1;
+        	end = Integer.parseInt(recordListVO.getPageSize()) * Integer.parseInt(recordListVO.getPageNO());
+        	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
         }
+        recordListVO.setEnd(end);
+        recordListVO.setStart(start);
+        recordListVO.setLimit(start - 1);
+        recordListVO.setRowCount(end - (start - 1));
         
         if (doc.getElementsByTagName("ISDOCPRINT").item(0) != null && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().length() > 0 && doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent().trim().equals("TRUE") && start < 0) {
-        	strSQL.append(" ) N ) A ");
-        } else {
-        	strSQL.append(" ) N ) A WHERE ROWNUM_ BETWEEN " + start + " AND " + end);
-        }
+        	recordListVO.setIsDocPrint(doc.getElementsByTagName("ISDOCPRINT").item(0).getTextContent());
+//        	strSQL.append(" ) N ) A ");
+        } 
+//        else {
+//        	strSQL.append(" ) N ) A WHERE ROWNUM_ BETWEEN " + start + " AND " + end);
+//        }
         
-        strSQLCnt.append(fromClause);
-        strSQLCnt.append(cabJoinClause);
-        strSQLCnt.append(" Where TBL_RECORD.DelFlag='0' AND TBL_SEPERATEATTACH.DelFlag='0' AND TBL_RECORD.TENANT_ID =" + tenantID);
-        strSQLCnt.append(strWhereClause);
+//        strSQLCnt.append(fromClause);
+//        strSQLCnt.append(cabJoinClause);
+//        strSQLCnt.append(" Where TBL_RECORD.DelFlag='0' AND TBL_SEPERATEATTACH.DelFlag='0' AND TBL_RECORD.TENANT_ID =" + tenantID);
+//        strSQLCnt.append(strWhereClause);
         
-        Map<String, Object> map = new HashMap<String, Object>();
-		map.put("sqlString", strSQL.toString());
-		map.put("companyID", companyID);
+//        Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("sqlString", strSQL.toString());
+//		map.put("companyID", companyID);
 
-        List<ApprGRecordVO> apprGRecordVOList = ezApprovalGDAO.getRecordList(map);
+        List<ApprGRecordVO> apprGRecordVOList = ezApprovalGDAO.getRecordList(recordListVO);
         
         StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -6171,11 +6241,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("sqlString", strSQLCnt.toString());
-		map1.put("companyID", companyID);
-		
-		int docCnt = ezApprovalGDAO.getRecordListCount(map1);
+//		Map<String, Object> map1 = new HashMap<String, Object>();
+//		map1.put("sqlString", strSQLCnt.toString());
+//		map1.put("companyID", companyID);
+//		
+		int docCnt = ezApprovalGDAO.getRecordListCount(recordListVO);
 		
 		resultXML.append("<DOCLIST>");
 		resultXML.append("<TOTALDOCCOUNT>" + docCnt + "</TOTALDOCCOUNT>");
@@ -6229,7 +6299,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					break;
 
 				case "dtRegisterType" :						// 등록구분
-					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), companyID, commonUtil.getPrimaryData(lang, tenantID), tenantID));
+					resultXML.append(getRegTypeString(makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()), recordListVO.getCompanyID(), commonUtil.getPrimaryData(lang, tenantID), tenantID));
 					break;
 
 				case "dtBool" :								// Y/N 형식의 데이터 타입
@@ -6271,7 +6341,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "</DATA12>");
 					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent()) + "</DATA13>");
 					
-					if (usePublicFlag) {
+					if (recordListVO.isUsePublicFlag()) {
 						resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "</DATA14>");
 					}
 					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "</DATA15>");
@@ -13464,89 +13534,107 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return strDeptCode + "-" + strTaskCode + "-" + strPYear + "-" + strRegSerialNo + "(" + strVolNo + ")";
 	}
 
-	public String getCabJoinClause(Document doc, String deptCode, String transFlag, String listFlag, String companyID, int tenantID) throws Exception{
+	public String getCabJoinClause(Document doc, String deptCode, String transFlag, String listFlag, String lang, String companyID, int tenantID) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
-		String cabWhere = "";
+//		String cabWhere = "";
 		String tempDeptCode = deptCode;
-		String g_Const_CabinetWhereClause = " Where TBL_CABINET.DelFlag = '0' " + 
-				"AND TBL_CABINETCLASS.DelFlag = '0' AND NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') ";
+//		String g_Const_CabinetWhereClause = " Where TBL_CABINET.DelFlag = '0' " + 
+//				"AND TBL_CABINETCLASS.DelFlag = '0' AND NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') ";
 
 		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
 			tempDeptCode = doc.getElementsByTagName("DEPTCODE").item(0).getTextContent();
 		}
 		
-		strSQL.append(" Inner Join ( Select ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, ");
-        strSQL.append("TaskName, TaskName2, VolumeNo, CabinetID, TCabinetID, TBL_CABINET.CabinetClassNo, ");
-		strSQL.append("DisplayEndDate, DisplayReason, ConfirmFlag, ProductionYear, RegSerialNo, ");
-		strSQL.append("DisplayRecFlag, ExTransYear, TransDelayReason, TransDelayFlag, OwnerDeptID, ");
-        strSQL.append("OwnerTask, TerminateFlag, ExpirationYear, KeepingPeriod ,TBL_CABINETCLASS.TENANT_ID" + " From TBL_CABINETCLASS  Inner Join " +
-                "TBL_CABINET  On TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo AND TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID ");
+//		strSQL.append(" Inner Join ( Select ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, ");
+//        strSQL.append("TaskName, TaskName2, VolumeNo, CabinetID, TCabinetID, TBL_CABINET.CabinetClassNo, ");
+//		strSQL.append("DisplayEndDate, DisplayReason, ConfirmFlag, ProductionYear, RegSerialNo, ");
+//		strSQL.append("DisplayRecFlag, ExTransYear, TransDelayReason, TransDelayFlag, OwnerDeptID, ");
+//        strSQL.append("OwnerTask, TerminateFlag, ExpirationYear, KeepingPeriod ,TBL_CABINETCLASS.TENANT_ID" + " From TBL_CABINETCLASS  Inner Join " +
+//                "TBL_CABINET  On TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo AND TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID ");
         
-        switch (listFlag) {
-		case "0" :		// 기록물 대장
-			if (doc.getElementsByTagName("CABINETID").item(0) != null && doc.getElementsByTagName("CABINETID").getLength() > 0) {
-				cabWhere = "WHERE CabinetID IN (";
-				for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
-					if (k == 0) {
-						cabWhere += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-					} else {
-						cabWhere += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-					}
-				}
-				cabWhere += ")";
+		String cabinetIDs = "";
+		
+		for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
+			if (k == 0) {
+				cabinetIDs += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
 			} else {
-				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
+				cabinetIDs += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
 			}
-			break;
-
-		case "1" :		// 편철확정대상 기록물
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.TerminateFlag='1' And TBL_CABINETCLASS.ConfirmFlag='0'";
-			break;
-
-		case "2" :		// 기록물 생산 현황
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'))";
-			break;
-
-		case "3" :		// 목록이관 대상
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmFlag='1' " + 
-					"And ( ( TBL_CABINETCLASS.DisplayRecFlag='2' And TBL_CABINETCLASS.TransDelayFlag='0' " +
-		            " And TBL_CABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) " +
-		            ") OR( ( TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
-		            " OR ( TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " + 
-					") ) And CatalogTransferFlag='0' ";
-			break;
-
-		case "6" :		// 연기신청목록
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + "And TBL_CABINETCLASS.KeepingPlace='1' " +
-		            "And ( (TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
-		            " OR (TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear>EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " +
-		            " ) And ( ( TBL_CABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) OR " +
-		            " ( TBL_CABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBL_CABINET ) ) ) ";
-			break;
-
-		default : 
-			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
-			break;
-		}
-
-        if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
-        	cabWhere += "AND TBL_CABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
-        			"From TBL_CABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
-        }
-
-		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
-			cabWhere += g_Const_TransExpCabConst_Function(companyID, tenantID);
-		}
-
-		if (doc.getElementsByTagName("CABTITLE").item(0) != null && doc.getElementsByTagName("CABTITLE").item(0).getTextContent().length() > 0) {
-			cabWhere += "AND TBL_CABINETCLASS.Title Like N'%" + makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent().trim()) + "%' ";
 		}
 		
-		strSQL.append(cabWhere + ") TBL_CABINET On TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.CabinetID  AND  TBL_SEPERATEATTACH.TENANT_ID=TBL_CABINET.TENANT_ID ");
+//        switch (listFlag) {
+//		case "0" :		// 기록물 대장
+//			if (doc.getElementsByTagName("CABINETID").item(0) != null && doc.getElementsByTagName("CABINETID").getLength() > 0) {
+////				cabWhere = "WHERE CabinetID IN (";
+////				cabWhere += ")";
+//			} else {
+//				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
+//			}
+//			break;
 
-		if (transFlag.equals("1")) {
-			strSQL.append("OR TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.TCabinetID ");
+//		case "1" :		// 편철확정대상 기록물
+//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.TerminateFlag='1' And TBL_CABINETCLASS.ConfirmFlag='0'";
+//			break;
+
+//		case "2" :		// 기록물 생산 현황
+//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'))";
+//			break;
+
+//		case "3" :		// 목록이관 대상
+//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmFlag='1' " + 
+//					"And ( ( TBL_CABINETCLASS.DisplayRecFlag='2' And TBL_CABINETCLASS.TransDelayFlag='0' " +
+//		            " And TBL_CABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) " +
+//		            ") OR( ( TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+//		            " OR ( TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " + 
+//					") ) And CatalogTransferFlag='0' ";
+//			break;
+
+//		case "6" :		// 연기신청목록
+//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + "And TBL_CABINETCLASS.KeepingPlace='1' " +
+//		            "And ( (TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
+//		            " OR (TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear>EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " +
+//		            " ) And ( ( TBL_CABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) OR " +
+//		            " ( TBL_CABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBL_CABINET ) ) ) ";
+//			break;
+
+//		default : 
+//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
+//			break;
+//		}
+
+        String charger = "";
+        
+        if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
+        	charger = doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim();
+//        	cabWhere += "AND TBL_CABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
+//        			"From TBL_CABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
+        }
+
+        String transExpire = "";
+        
+		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
+//			cabWhere += g_Const_TransExpCabConst_Function(companyID, tenantID);
+			String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, lang, tenantID);
+			
+			if (accountingYear != null && !accountingYear.trim().equals("")) {
+				transExpire = accountingYear;
+			} else {
+				transExpire = commonUtil.getTodayUTCTime("").substring(0, 4);
+			}
 		}
+
+		String cabTitle = "";
+		
+		if (doc.getElementsByTagName("CABTITLE").item(0) != null && doc.getElementsByTagName("CABTITLE").item(0).getTextContent().length() > 0) {
+//			cabWhere += "AND TBL_CABINETCLASS.Title Like N'%" + makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent().trim()) + "%' ";
+			cabTitle = makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent().trim());
+		}
+		
+//		strSQL.append(cabWhere + ") TBL_CABINET On TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.CabinetID  AND  TBL_SEPERATEATTACH.TENANT_ID=TBL_CABINET.TENANT_ID ");
+
+//		if (transFlag.equals("1")) {
+//			strSQL.append("OR TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.TCabinetID ");
+//		}
 
 		return strSQL.toString();
 	}
