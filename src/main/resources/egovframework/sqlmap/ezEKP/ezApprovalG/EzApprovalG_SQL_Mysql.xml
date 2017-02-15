@@ -3190,7 +3190,7 @@
 <!-- 	<procedure id="EzApprovalG.updateHistoryForAttach_I" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
 <!-- 		{CALL EZSP_UPDATEHISTORYFORATTACH_IN(#v_DOCID#, #v_ATTACHFILESN#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select  id="EzApprovalG.updateHistoryForAttach_I" parameterClass="Map" resultClass="ApprGAttachInfoVO">
+	<select id="EzApprovalG.updateHistoryForAttach_I" parameterClass="Map" resultClass="ApprGAttachInfoVO">
 		SELECT 
 				ATTACHFILENAME ,
              	DISPLAYNAME ,
@@ -7154,7 +7154,7 @@
 	   		TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	<delete id="EzApprovalG.deleteTmpDocInfo2" parameterClass="Map" >
 		 	DELETE FROM 
 		 			TBL_TMPRECEIPTPOINTINFO
 		    WHERE  
@@ -7162,10 +7162,10 @@
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
+		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	<delete id="EzApprovalG.deleteTmpDocInfo3" parameterClass="Map" >
 	 	DELETE FROM 
 		   			TBL_TMPAPROPINIONINFO
 		    WHERE  
@@ -7173,55 +7173,67 @@
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
+		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo4" parameterClass="Map" >
+			DELETE FROM 
 		   			TBL_TMPAPRDOCATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		   
-		    DELETE FROM 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo5" parameterClass="Map" >
+	  		DELETE FROM 
 		    		TBL_TMPATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
+		    		TENANT_ID = #v_TENANTID#
 		   
-		    DELETE FROM 
+		   
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo6" parameterClass="Map" >
+	 		DELETE FROM 
 		    		TBL_TMPEXPAPRLINE
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		    DELETE FROM 	
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo7" parameterClass="Map" >
+	   		DELETE FROM 	
 		    		TBL_TMPAPRLINEINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		    DELETE FROM 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo8" parameterClass="Map" >
+			DELETE FROM 
 		    		TBL_TMPEXPAPRDOCINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		   
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo9" parameterClass="Map">
 		    DELETE FROM 
 		    		TBL_TMPAPRDOCINFO
 		    WHERE  
@@ -7229,27 +7241,9 @@
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    END;
+		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
-	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
-	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
-	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
-	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
-	
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-	</delete>
 <!-- 	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -9593,7 +9587,7 @@
          		SELECT 
          			DEPARTMENT DEPTID  , TENANT_ID
                 FROM 
-                	TBL_LUSERMASTER
+                	TBL_USERMASTER
                 WHERE  
                 	CN = #v_UserID#
                 AND
@@ -9604,7 +9598,7 @@
                 SELECT 
                 	DEPTID DEPTID  , TENANT_ID
                 FROM 
-                	TBL_LAddJobMaster
+                	TBL_AddJobMaster
                 WHERE  
                 	CN = #v_UserID#
                 AND
@@ -9959,6 +9953,8 @@
 		 	max(ItemSeq) 
 		 FROM 
 		 	TBL_NOTIFICATION
+		 WHERE
+		 	TENANT_ID = #v_TENANTID#
 	</select>
 <!-- 	<procedure id="EzApprovalG.addNewVolume" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)} -->
@@ -10343,8 +10339,8 @@
 	            	Type2 = ( #v_DDeptCode#	)
 	            AND 
 	            	Type3 = ( 
-	    						SELECT CASE WHEN ISUsed = 0 THEN 0
-	    							   ELSE $v_numRows$
+	    						SELECT CASE WHEN ISUsed = 0 THEN '0'
+	    							   ELSE #v_numRows#
 	    							   END 
 	    						FROM (
 			    						SELECT 
@@ -10455,7 +10451,7 @@
 			UPDATE 
 				TBL_SERIALNUMGEN
 			SET 
-				RegSerialNo = $v_RtnSN$ + $v_numRows$
+				RegSerialNo = #v_RtnSN# + #v_numRows#
 			WHERE  
 				Type1 = (
 						  SELECT 
@@ -10653,7 +10649,7 @@
               #v_CABINETCLASSNO#  ,
               #v_DeptMName#, 
               #v_DeptMName2#,
-              $v_TENANTID$
+              #v_TENANTID#
           FROM 
           		DUAL 
           WHERE  
@@ -11780,19 +11776,19 @@
 		                #v_COMPANYID# ,
 		                 'N' ,
 		                 999 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
+		                 NULL ,
+		                 NULL ,
+		                 NULL ,
 		                 0 ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' ,
-		                 ' ' , 
+		                 NULL ,
+		                 NULL ,
+		                 NULL ,
+		                 NULL ,
+		                 NULL ,
+		                 NULL , 
 		                 TENANT_ID
 			         FROM 
-			          	TBL_FormInfo 
+			          	TBL_FORMINFO 
 			         WHERE  
 		           		FORMID = #v_FORMID#
 		           	 AND 
@@ -12061,7 +12057,7 @@
 	    					  WHERE  
 	    					  		DocID = #v_DocID#
 	    					  AND
-	    					  		TENANT_ID = #v_TENANTID#)), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, SYSDATE)
+	    					  		TENANT_ID = #v_TENANTID#)), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_SYSDATE#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.setMytaskCode" parameterClass="Map"> -->
@@ -12113,7 +12109,7 @@
 		 			TBL_HISTORYLINEINFO
         			( DOCID,   APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, MODIFYDATE, MODIFYSN, MODIFYUSERID, MODIFYUSERNAME, MODIFYUSERNAME2, MODIFYUSERJOBTITLE, MODIFYUSERJOBTITLE2, MODIFYUSERDEPTID, MODIFYUSERDEPTNAME, MODIFYUSERDEPTNAME2, CHKFLAG , TENANT_ID)
         ( SELECT 
-        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, SYSDATE, (
+        			#v_DOCID#, APRMEMBERSN, APRTYPE, APRSTATE, APRMEMBERID, APRMEMBERISDEPTYN, APRMEMBERNAME, APRMEMBERNAME2, APRMEMBERJOBTITLE, APRMEMBERJOBTITLE2, APRMEMBERDEPTID, APRMEMBERDEPTNAME, APRMEMBERDEPTNAME2, APRMEMBERLDAPPATH, ISPROPOSERYN, ISBRIEFUSERYN, #v_SYSDATE#, (
         																																																																				SELECT 
         																																																																					IFNULL(MAX(MODIFYSN),0) + 1 
 																																																																					    FROM 
@@ -12300,7 +12296,7 @@
 		 		TBL_APRLINEINFO
          	SET 
          		APRSTATE = '010',
-                PROCESSDATE = SYSDATE
+                PROCESSDATE = #v_SYSDATE#
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -12611,10 +12607,6 @@
         AND 
         	 APRMEMBERSN >= #v_APRMEMBERSN#
 	</update>
-	
-	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">
-		{CALL TRANSACTIONSQL(#sqlString#)}
-	</procedure>
 	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_MOVERECORD(#v_RECORDID#, #v_SEPATTNO#, #v_CABINETID# ,#v_FLAG#)} -->
@@ -13035,39 +13027,6 @@
          AND
          	TENANT_ID = #v_TENANTID#
 	</select>
-	
-<!-- 	사용하지 않는 SQL문 같음(호출하는 부분이 없음) -->
-	<delete id="EzApprovalG.deleteRoleInfo" parameterClass="Map">
-		<![CDATA[
-			DELETE FROM
-        		TBL_RECROLEINFO
-        	WHERE
-        		recordid = #v_RECORDID#	
-        	AND
-        	    SeperateAttachNo =#v_SEPATTNO#
-        	    
-	     ]]> 
-	</delete>
-<!-- 	사용하지 않는 SQL문 같음(호출하는 부분이 없음) -->
-	<insert id ="EzApprovalG.insertRoleInfo" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO	TBL_RECROLEINFO  (
-			  RecordID, SeperateAttachNo, UserRight, UserID , UserName, UserName2
-			)Values( 
-			  #v_RECORDID#, #v_SEPATTNO# , #userRight#, 'All_User',  '모든 이용자', 'All User'
-			)
-	     ]]> 
-	</insert>
-<!-- 	사용하지 않는 SQL문 같음(호출하는 부분이 없음) -->
-	<insert id ="EzApprovalG.insertMultiRoleInfo" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO	TBL_RECROLEINFO  (
-			  RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, UserTitle2, DeptCode, DeptName, DeptName2
-			)Values( 
-			  #v_RECORDID#, #v_SEPATTNO# , 'All_User', #userRight# , '모든 이용자, 'All User' , 'a','a','A','b'
-			)
-	     ]]> 
-	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getRecordHistory" parameterClass="Map" resultClass="ApprGRecordVO" remapResults="true"> -->
 <!-- 		{CALL EZSP_GETRECORDHISTORY(#v_RECORDID#, #v_SEPATTNO#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -14398,121 +14357,7 @@
 	 	Values 
 	 		(#v_CABINETCLASSNO#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#, #v_TENANTID#)
 	</insert>
-	
-<!-- 	<delete id="EzApprovalG.deleteTbSpecialCatalogInfo_Cab" parameterClass="Map" >  -->
-<!-- 	 	DELETE FROM  -->
-<!-- 	 		TBSPECIALCATALOGINFO_CAB  -->
-<!-- 	 	WHERE  -->
-<!-- 	 		CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 	 	AND  -->
-<!-- 	 		SerialNo = #v_SERIALNO# -->
-<!-- 	 	AND -->
-<!-- 	 	 	TENANT_ID = #v_TENANTID# -->
-	
-<!-- 	</delete> -->
-	
-<!-- 	<select id="EzApprovalG.cabinetHistory" parameterClass="Map" resultClass="int"> -->
-<!-- 		SELECT  -->
-<!--  			CASE WHEN VERSION IS NULL THEN 1 -->
-<!--  				 ELSE VERSION + 1 -->
-<!--  			END -->
-<!--    		FROM( -->
-<!-- 			Select  -->
-<!-- 				max(Version) VERSION -->
-<!-- 			From  -->
-<!-- 				TBCABINETHISTORY  -->
-<!-- 			Where  -->
-<!-- 				CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 			AND -->
-<!-- 		 	 	TENANT_ID = #v_TENANTID#) -->
-<!-- 	</select> -->
-	
-<!-- 	<insert id="EzApprovalG.insertCabinetHistory" parameterClass="Map"> -->
-<!-- 		INSERT INTO  -->
-<!-- 			TBCABINETHISTORY  -->
-<!-- 			(Version, 		CabinetClassNo, Title, RecTypeCode, 	ModifyDate, 				KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID)  -->
-<!-- 		(Select  -->
-<!-- 			#v_NewVersion#, CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(CreateDate,'%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, 		NULL, 	 OwnerID, 	 OwnerName, 	OwnerName2, 	#v_MODIFYFLAG#, 	   '0' ,  TENANT_ID  -->
-<!-- 		FROM  -->
-<!-- 			TBCABINETCLASS   -->
-<!-- 		WHERE  -->
-<!-- 			TBCABINETCLASS.CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 		AND -->
-<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
-<!-- 	</insert> -->
-	
-<!-- 	<insert id="EzApprovalG.insertCabinetHistory2" parameterClass="Map"> -->
-<!-- 		INSERT INTO  -->
-<!-- 			TBCABINETHISTORY  -->
-<!-- 			(Version, 								CabinetClassNo, Title, RecTypeCode, ModifyDate, KeepingPeriod, DisplayEndDate, DisplayReason, ModifyReason, ModifierID, ModifierName, ModifierName2, ModifyFlag, DelFlag, TENANT_ID)  -->
-<!-- 		(SELECT -->
-<!--         	( -->
-<!--         	  SELECT  -->
-<!-- 	 			CASE WHEN VERSION IS NULL THEN 1 -->
-<!-- 	 				 ELSE VERSION + 1 -->
-<!-- 	 			END -->
-<!--    			  FROM( -->
-<!-- 					SELECT  -->
-<!-- 						max(Version) VERSION -->
-<!-- 					FROM  -->
-<!-- 						TBCABINETHISTORY  -->
-<!-- 					WHERE  -->
-<!-- 						CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 					AND -->
-<!-- 				 	 	TENANT_ID = #v_TENANTID#)), CabinetClassNo,  Title, RecTypeCode, #v_SYSDATE#, KeepingPeriod, DisplayEndDate, DisplayReason, #v_changeReason#, #v_userID# , #v_usreName#, #v_usreName2#, #v_MODIFYFLAG#, '0' , TENANT_ID  -->
-<!-- 		 FROM  -->
-<!-- 		 	TBCABINETCLASS   -->
-<!-- 		 WHERE  -->
-<!-- 		 	TBCABINETCLASS.CabinetClassNo = #v_CABINETCLASSNO# -->
-<!-- 		 AND -->
-<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
-		
-
-<!-- 	</insert> -->
-	
-<!-- 	<insert id="EzApprovalG.insertCabinetHistory_CAB" parameterClass="Map"> -->
-<!-- 		INSERT INTO  -->
-<!-- 			TBSCHISTORY_CAB  -->
-<!-- 			(Version, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID)  -->
-<!-- 		(Select  -->
-<!-- 			#v_NewVersion#, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID  -->
-<!-- 		 From  -->
-<!-- 		 	TBSPECIALCATALOGINFO_CAB   -->
-<!-- 		 WHERE  -->
-<!-- 			TBSPECIALCATALOGINFO_CAB.CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 		 AND -->
-<!-- 		 	TBCABINETCLASS.TENANT_ID = #v_TENANTID#) -->
-<!-- 	</insert> -->
-	
-<!-- 	<update id="EzApprovalG.updateCabinetClass" parameterClass="Map"> -->
-<!-- 		UPDATE  -->
-<!-- 			TBCABINETCLASS  -->
-<!-- 		SET  -->
-<!-- 			TITLE = #v_TITLE#, -->
-<!-- 			RECTYPECODE =#v_RECTYPECODE# , -->
-<!-- 			MODIFYFLAG = '1'  -->
-<!-- 	   WHERE  -->
-<!-- 			CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 		AND -->
-<!-- 		 	TENANT_ID = #v_TENANTID# -->
-	
-<!-- 	</update> -->
-	
-<!-- 	<update id="EzApprovalG.updateCabinetClass2" parameterClass="Map"> -->
-<!-- 		UPDATE  -->
-<!-- 			TBCABINETCLASS  -->
-<!-- 		SET  -->
-<!-- 			KeepingPeriod = #v_KEEPPERIOD#, -->
-<!-- 			DisplayEndDate = #v_ENDDATE# , -->
-<!-- 			DisplayReason = #v_REASON# , -->
-<!-- 			MODIFYFLAG = '1'  -->
-<!-- 	   WHERE  -->
-<!-- 			CABINETCLASSNO = #v_CABINETCLASSNO# -->
-<!-- 		AND -->
-<!-- 		 	TENANT_ID = #v_TENANTID# -->
-<!-- 	</update> -->
-	
-	
+			
 <!-- 		<procedure id="EzApprovalG.doSendOffer_endDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
 <!-- 		{CALL EZSP_DOSENDOFFER_ENDDOCINFO(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>  -->
@@ -15772,14 +15617,6 @@
    		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID) 
    		Values 
    		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', #v_SYSDATE#, '0',             '0',                 '0',    #v_TENANTID#)
-   </insert>
-   
-   <insert id="EzApprovalG.insertRegRecRoleInfo" parameterClass="Map">
-   		INSERT INTO 
-   			TBL_RECROLEINFO  
-   		( RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID )
-   		Values
-        (#v_RECID#, #v_SEPATTSN# ,   'All_User' , 1 ,   '모든 이용자' , 'All User' ,#v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
@@ -17611,7 +17448,7 @@
    				TBL_RECROLEINFO 
    		(RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID) 
    		 VALUES 
-   		(#v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, '모든 이용자', 'All User', #v_TENANTID#)
+   		(#v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, #v_UserName2#, 'All User', #v_TENANTID#)
    	</insert>
    	
    	<insert id="EzApprovalG.insertRecRoleInfo2" parameterClass="Map">
