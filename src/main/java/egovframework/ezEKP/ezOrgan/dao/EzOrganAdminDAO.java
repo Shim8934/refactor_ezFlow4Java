@@ -989,7 +989,17 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         insertDBData_companyForJMocha(map);
 
         if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
-            insertDBData_companyForLocal(map);
+            try {
+                insertDBData_companyForLocal(map);
+            // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                map.put("v_CLASS", "group");
+                deleteDBDataForJMocha(map);
+                
+                throw e;
+            }
         }
 	}
 
@@ -1067,8 +1077,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertDBData_dept(Map<String, Object> map) throws Exception {
 	    insertDBData_deptForJMocha(map);
 
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            insertDBData_deptForLocal(map);               
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
+	        try {
+	            insertDBData_deptForLocal(map);
+	        // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+	        } catch (Exception e) {
+                e.printStackTrace();
+                
+                map.put("v_CLASS", "group");
+                deleteDBDataForJMocha(map);
+                
+                throw e;	            
+	        }
 	    }
 	}
 
@@ -1165,8 +1185,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void insertDBData_user(Map<String, Object> map) throws Exception {
 	    insertDBData_userForJMocha(map);
 
-	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	    
-            insertDBData_userForLocal(map);       
+	    if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {	   
+	        try {
+	            insertDBData_userForLocal(map);
+            // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
+            } catch (Exception e) {
+                e.printStackTrace();
+                
+                map.put("v_CLASS", "user");
+                deleteDBDataForJMocha(map);
+                
+                throw e;                
+            }            
 	    }
 	}
 	

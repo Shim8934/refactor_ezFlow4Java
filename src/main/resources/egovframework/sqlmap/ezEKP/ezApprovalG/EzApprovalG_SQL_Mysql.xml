@@ -128,7 +128,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)C LIMIT #v_PAGESIZE#) A 
+							LIMIT #v_PAGESIZE#
+							)C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -152,7 +153,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
@@ -210,7 +212,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-								) C LIMIT #v_PAGESIZE#) A 
+							LIMIT #v_PAGESIZE#
+								) C ) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -234,7 +237,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
@@ -311,7 +315,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)C LIMIT #v_PAGESIZE#) A
+							LIMIT #v_PAGESIZE#
+							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -335,7 +340,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="99">
@@ -387,7 +393,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)C LIMIT #v_PAGESIZE#) A
+							LIMIT #v_PAGESIZE#
+							)C ) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -411,7 +418,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="10">
@@ -513,7 +521,8 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						)C LIMIT #v_PAGESIZE#) A 
+						LIMIT #v_PAGESIZE#
+						)C ) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -537,7 +546,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="21">
@@ -620,7 +630,8 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						)C LIMIT #v_PAGESIZE#) A
+						LIMIT #v_PAGESIZE#
+						)C ) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -644,7 +655,8 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)D LIMIT #v_PAGESIZE2#
+							LIMIT #v_PAGESIZE2#
+							)D 
 							]]>
 			</isEqual>
 			<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -699,7 +711,8 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													)C LIMIT #v_PAGESIZE#) A
+													LIMIT #v_PAGESIZE#
+													)C ) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
 														<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -723,7 +736,8 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														)D LIMIT #v_PAGESIZE2#
+														LIMIT #v_PAGESIZE2#
+														)D 
 														]]>
                      			</isNotEqual>
                      		</isNotEqual>
@@ -746,8 +760,6 @@
 						WHERE 
 							TENANT_ID = #v_TENANTID#
 			<![CDATA[
-						AND
-							rownum <= #v_PQUERYSIZESUB# 
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$)  
 						AND 
@@ -758,15 +770,14 @@
 	    				#v_PSUBQUERY#
 	  		</isGreaterThan>
 	    			$v_PORDERBYSUB$
-							) A 
-				<![CDATA[
-						LIMIT #v_PQUERYSIZEMAIN# 
-				]]>
+	    			LIMIT #v_PQUERYSIZESUB#
+							) B 
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 				
 		</isEqual>
 		
@@ -780,8 +791,6 @@
 							VAPRWILLDOCLIST A  
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
-						 AND 
-						 	rownum <= #v_PQUERYSIZESUB# 
 						 AND 
 						 	APRMEMBERID = #v_PUSERID# 
 						 AND 
@@ -798,58 +807,55 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
-						LIMIT #v_PQUERYSIZEMAIN# 
+						
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="3">
 		    <![CDATA[
 		     SELECT * 		
 	   				FROM (
-						 SELECT 
-						 	* 
-						 FROM (
-						 		SELECT 
-						 		 	DISTINCT A.DOCID,
-						 		 			 A.FORMID,
-						 		 			 A.ORGDOCID,
-		                      				 A.DOCTYPE,
-		                      				 A.DOCSTATE,
-		                      				 A.FUNCTIONTYPE,
-		                      				 A.HREF,
-		                      				 A.DOCTITLE,
-		                      				 A.DOCNO,
-		                      				 A.HASATTACHYN, 
-		                      				 A.HASOPINIONYN,
-		                      				 A.STARTDATE,
-		                      				 A.ENDDATE,
-		                      				 A.WRITERID,
-		                      				 A.WRITERNAME,
-		                      				 A.WRITERNAME2,
-		                      				 A.WRITERJOBTITLE,
-		                      				 A.WRITERJOBTITLE2,
-		                      				 A.WRITERDEPTID,
-		                      				 A.WRITERDEPTNAME,
-		                      				 A.WRITERDEPTNAME2,
-		                      				 A.ISPUBLIC,
-		                      				 A.FORMNAME, 
-		                      				 A.FORMNAME2, 
-		                      				 A.URGENTAPPROVAL, 
-		                      				 A.KEYWORD
-		                      	FROM 
-		                      		VAPRWILLDOCLIST A  
-		                      	WHERE 
-		                      		TENANT_ID = #v_TENANTID#
-		                      	AND
-		                      		APRMEMBERID = #v_PUSERID#) 
-		                  WHERE 
-		                  		rownum <= #v_PQUERYSIZESUB#   
+				 		SELECT 
+				 		 	DISTINCT A.DOCID,
+				 		 			 A.FORMID,
+				 		 			 A.ORGDOCID,
+                      				 A.DOCTYPE,
+                      				 A.DOCSTATE,
+                      				 A.FUNCTIONTYPE,
+                      				 A.HREF,
+                      				 A.DOCTITLE,
+                      				 A.DOCNO,
+                      				 A.HASATTACHYN, 
+                      				 A.HASOPINIONYN,
+                      				 A.STARTDATE,
+                      				 A.ENDDATE,
+                      				 A.WRITERID,
+                      				 A.WRITERNAME,
+                      				 A.WRITERNAME2,
+                      				 A.WRITERJOBTITLE,
+                      				 A.WRITERJOBTITLE2,
+                      				 A.WRITERDEPTID,
+                      				 A.WRITERDEPTNAME,
+                      				 A.WRITERDEPTNAME2,
+                      				 A.ISPUBLIC,
+                      				 A.FORMNAME, 
+                      				 A.FORMNAME2, 
+                      				 A.URGENTAPPROVAL, 
+                      				 A.KEYWORD
+                      	FROM 
+                      		VAPRWILLDOCLIST A  
+                      	WHERE 
+                      		TENANT_ID = #v_TENANTID#
+                      	AND
+                      		APRMEMBERID = #v_PUSERID# 
 		    ]]>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
@@ -858,14 +864,15 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
-						LIMIT #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+			  		LIMIT #v_PQUERYSIZEMAIN# 
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="4">
@@ -878,8 +885,6 @@
 							VAPRDOINGDOCLIST A  
 						WHERE 
 		                    TENANT_ID = #v_TENANTID#
-		                AND
-							rownum <= #v_PQUERYSIZESUB# 
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$) 
 						AND 
@@ -892,14 +897,15 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
-						LIMIT <= #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 		</isEqual>
 		
 		<isNotEqual property="v_PLISTTYPE" compareValue="1">
@@ -915,8 +921,6 @@
 									VAPRDOINGDOCLIST A  
 								WHERE 
 		                      		TENANT_ID = #v_TENANTID#
-		                      	AND
-									rownum <= #v_PQUERYSIZESUB# 
 								AND 
 									APRMEMBERID IN ($v_PUSERIDS$)  
 						]]>
@@ -927,14 +931,15 @@
 				  		</isGreaterThan>
 				  			<![CDATA[
 						  		$v_PORDERBYSUB$
+						  		LIMIT #v_PQUERYSIZESUB#
 										) A 
-									LIMIT <= #v_PQUERYSIZEMAIN# 
 							]]>
 						<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 							<![CDATA[
 				    			$v_PORDERBYMAIN$
 				    		]]>
 			  			</isGreaterThan>
+				  			LIMIT  #v_PQUERYSIZEMAIN# 
 					</isNotEqual>
 				</isNotEqual>
 			</isNotEqual>
@@ -2121,9 +2126,9 @@
       			TENANT_ID = #v_TENANTID#
       		AND
       			APRMEMBERID IN ($v_USERIDS$) 
-      			LIMIT #v_LISTCOUNT#
       		ORDER BY 
       			STARTDATE $v_BASICORDER$
+      		LIMIT #v_LISTCOUNT#
       			]]>
 		</isEqual>
 		<isEqual property="v_LISTTYPE" compareValue="2">
@@ -2145,9 +2150,9 @@
          		APRMEMBERSN = 1  
          	AND 
          		APRTYPE <> '015' 
-         	LIMIT #v_LISTCOUNT#
          	ORDER BY 
          		STARTDATE $v_BASICORDER$
+         	LIMIT #v_LISTCOUNT#
          ]]>
 		</isEqual>
 		<isEqual property="v_LISTTYPE" compareValue="3">
@@ -2166,9 +2171,9 @@
             	TENANT_ID = #v_TENANTID#
       		AND
             	APRMEMBERID = #v_USERID# 
-            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	STARTDATE $v_BASICORDER$
+            LIMIT #v_LISTCOUNT#
           ]]>
 		</isEqual>
 		<isEqual property="v_LISTTYPE" compareValue="4">
@@ -2202,8 +2207,6 @@
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
             AND 
-            	ROWNUM <= #v_LISTCOUNT#
-            AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
             	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
@@ -2214,7 +2217,10 @@
              OR 
              	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($ v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
             </isEqual>
-            	 ) ORDER BY PROCESSDATE $v_BASICORDER$
+            	 ) 
+             ORDER BY PROCESSDATE $v_BASICORDER$
+             LIMIT #v_LISTCOUNT#
+           
 		</isEqual>
 		<isEqual property="v_LISTTYPE" compareValue="5">
 			<![CDATA[
@@ -2250,9 +2256,9 @@
             	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '004')
             AND 
             	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
-            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	PROCESSDATE $v_BASICORDER$
+            LIMIT #v_LISTCOUNT#
             ]]>
 		</isEqual>
 		
@@ -2282,9 +2288,9 @@
             	TENANT_ID = #v_TENANTID#
             AND
             	APRMEMBERID IN ($v_USERIDS$) 
-            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	STARTDATE $v_BASICORDER$
+             LIMIT #v_LISTCOUNT#
             	]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -3325,11 +3331,7 @@
 	</select>
 	
 	<select id="EzApprovalG.getRecordList" parameterClass="ApprGRecordListVO" resultClass="ApprGRecordVO" remapResults="true">
-		SELECT 
-			 * 
-		FROM (
 			SELECT 
-				ROW_NUMBER() OVER($orderBy$) AS ROWNUM_,
 				N.* 
 			FROM ( SELECT 
 						TBL_RECORD.RecordID, 
@@ -3692,24 +3694,24 @@
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
-						) N ) A 
+						) N $orderBy$ 
 					</isLessThan>
 					<isGreaterEqual property="start" compareValue="0">
-						) N ) A 
-					WHERE 
-						ROWNUM_ BETWEEN #start# AND #end#
+						) N $orderBy$
+					LIMIT
+						#limit#, #rowCount# 
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
-					) N ) A 
-				WHERE 
-					ROWNUM_ BETWEEN #start# AND #end#
+					) N $orderBy$
+				LIMIT
+					#limit#, #rowCount#
 				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
-				) N ) A 
-			WHERE 
-				ROWNUM_ BETWEEN #start# AND #end#
+				) N $orderBy$ 
+			LIMIT
+				#limit#, #rowCount#
 			</isEmpty>
 	</select>
 	
@@ -5070,8 +5072,9 @@
 						PROCESSDATE $v_BASICORDER$
 			</isEmpty>
 			<![CDATA[
+			LIMIT #v_PAGESIZE#
 			) C
-			 LIMIT #v_PAGESIZE#) A 
+			 ) A 
 			]]>
 			<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">
@@ -5094,7 +5097,8 @@
 							PROCESSDATE $v_BASICORDER2$
 			</isEmpty>
 			<![CDATA[
-			) B LIMIT  #v_PAGESIZE2#
+			LIMIT  #v_PAGESIZE2#
+			) B 
 			]]>
 	</select>
 	
@@ -5742,8 +5746,9 @@
 							   				ENDDATE DESC
 							   	</isEmpty>
 							   	<![CDATA[
+							   	LIMIT #v_PAGESIZE#
 							   	 ) A 
-							   	 	LIMIT #v_PAGESIZE#) B
+							   	 	) B
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -5892,34 +5897,39 @@
 											ENDDATE DESC
 									</isEmpty>
 									 <![CDATA[
-									  )  LIMIT  #v_PAGESIZE#) A
+									 LIMIT  #v_PAGESIZE#
+									  )  ) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$)  LIMIT  #v_PAGESIZE2#
+								$v_ORDEROPTION2$  
+							LIMIT  #v_PAGESIZE2# )  
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE )LIMIT #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE  
+							LIMIT #v_PAGESIZE2# )
 						]]>
 						</isNotEqual>
 						</isGreaterEqual>
 						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<![CDATA[	
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE)	LIMIT #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE 
+							LIMIT #v_PAGESIZE2# )	
 						]]>
 						</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
 						<![CDATA[	
 							ORDER BY 
-								ENDDATE ) LIMIT #v_PAGESIZE2#
+								ENDDATE 
+							LIMIT #v_PAGESIZE2#) 
 						]]>
 						</isEmpty>
 		   			
@@ -6155,8 +6165,6 @@
 		   	AND
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
 		   	WHERE 
-		   		ROWNUM <= #v_PAGESIZE# 
-		   	AND 
 		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
 		   	AND
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
@@ -6202,7 +6210,6 @@
 		   	</isEmpty>
 		   	<![CDATA[
 		   	)A 
-		   		LIMIT #v_PAGESIZE#
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -6224,6 +6231,7 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	LIMIT #v_PAGESIZE#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->
@@ -6393,8 +6401,7 @@
        				  DOCID = #v_DOCID#
         		ORDER BY 
         			  RECEIVESN DESC )
-        WHERE 
-        	ROWNUM <= 1 
+        LIMIT 1 
         	]]>
 	</select>
 	
@@ -7139,7 +7146,6 @@
 	</select>
 	
 	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-			DECLARE BEGIN
 		 	DELETE FROM 
 		 			TBL_TMPRECEIPTPOINTINFO
 		    WHERE  
@@ -7148,8 +7154,10 @@
 		    		SN = #v_PSN#
 		    AND
 		    		TENANT_ID = #v_TENANTID#;
-		    
-		   	DELETE FROM 
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	 	DELETE FROM 
 		   			TBL_TMPAPROPINIONINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7157,8 +7165,10 @@
 		    		SN = #v_PSN#
 		    AND
 		    		TENANT_ID = #v_TENANTID#;
-		    
-		   	DELETE FROM 
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	DELETE FROM 
 		   			TBL_TMPAPRDOCATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7212,6 +7222,24 @@
 		    AND
 		    		TENANT_ID = #v_TENANTID#;
 		    END;
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
 	</delete>
 <!-- 	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8511,8 +8539,8 @@
 		      AND 
 		      			TimeSep =    (
 		      							SELECT 
-		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-		            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear# 
+		            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
 		     							FROM (
 		     									SELECT 
 		     											Code ,
@@ -8591,7 +8619,7 @@
    						 	(
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8668,7 +8696,7 @@
 		    		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8743,7 +8771,7 @@
 	     		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8820,7 +8848,7 @@
 	     		TimeSep = (
   							SELECT 
   								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-        								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+        								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
  							FROM (
  									SELECT 
  											Code ,
@@ -9384,7 +9412,9 @@
 	   	ON 
 	   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
 	   	WHERE 
-	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL AND TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
+	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+	   	AND 
+	   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
 	   	NOT
 	   	</isEqual>
@@ -9549,7 +9579,7 @@
 		 SELECT 
 		 	COUNT(RecordID)  
          FROM 
-         	ezApprovalG_S907000.TBL_RECORD 
+         	TBL_RECORD 
          JOIN ( 
          		SELECT 
          			DEPARTMENT DEPTID  , TENANT_ID
@@ -16590,10 +16620,7 @@
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		 (select 
-   		 * 
-   		 from 
-	   		 (SELECT 
+	   	(SELECT 
 	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
@@ -16604,7 +16631,7 @@
 	   		 AND 
 	   		 	TENANT_ID = #v_TENANTID# 
 	   		 order by ProcessDate desc	
-	   		 ) LIMIT 1 )
+	   		  LIMIT 1 )
    		 	]]>
    </insert>
    
@@ -16716,10 +16743,7 @@
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		( select 
-   		 	* 
-   		 from  
-	   		 (SELECT 
+   		( SELECT 
 	   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
@@ -16729,8 +16753,9 @@
 	   		 	ReceiveSN = #v_RECEIVESN# 
 	   		 AND 
 	   		 	TENANT_ID= #v_TENANTID# 
-	   		 	order by ProcessDate desc
-	   		 ) LIMIT 1 ) 
+	   		 order by ProcessDate desc
+	   		 
+	   		 LIMIT 1 ) 
    		 ]]>
    </insert>
    
