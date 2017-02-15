@@ -2168,6 +2168,36 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteTmpDocInfo", map);
 	}
 	
+	public void deleteTmpDocInfo2(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo2", map);
+	}
+	
+	public void deleteTmpDocInfo3(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo3", map);
+	}
+	
+	public void deleteTmpDocInfo4(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo4", map);
+	}
+	public void deleteTmpDocInfo5(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo5", map);
+	}
+	public void deleteTmpDocInfo6(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo6", map);
+	}
+	
+	public void deleteTmpDocInfo7(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo7", map);
+	}
+	
+	public void deleteTmpDocInfo8(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo8", map);
+	}
+	
+	public void deleteTmpDocInfo9(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.deleteTmpDocInfo9", map);
+	}
+	
 	public void deleteTbAprAttachInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTbAprAttachInfo", map);
 	}
