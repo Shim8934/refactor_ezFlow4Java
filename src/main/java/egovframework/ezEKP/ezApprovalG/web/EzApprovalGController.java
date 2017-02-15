@@ -3172,7 +3172,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             	if (!dbType.equals("mysql")) {
             		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
             	} else {
-            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_STR_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
             	}
             }
             
@@ -3180,7 +3180,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
             	if (!dbType.equals("mysql")) {
             		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
             	} else {
-            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_STR_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' , '%Y-%m-%d %H:%i:%s') "; 
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' , '%Y-%m-%d %H:%i:%s') "; 
 
             	}
             }
