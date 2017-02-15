@@ -248,8 +248,10 @@
         		if( index != -1 ) {
             		var tmpArr = Ques_Answer.input_Ans[index].AnsInfo;
             		if( tmpArr != null ) {
-                		for( var k = 0 ; k < tmpArr.type.length ; k++ ) {
-                    		if( tmpArr.type[k] == "1" || tmpArr.type[k] == "2" )
+            			//여기 confirm 추가해야할듯 디자인필요한가
+            			tmpArr = loadXMLString(tmpArr);
+                		for( var k = 0 ; k < tmpArr.getElementsByName("TYPE").length ; k++ ) {
+                    		if( tmpArr.getElementsByName("TYPE")[k] == "1" || tmpArr.getElementsByName("TYPE")[k] == "2" )
                         		g_DelAttachList += tmpArr.href[k] + ";";
                 		}
             		}		
