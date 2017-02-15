@@ -286,7 +286,7 @@
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
-                  				TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                  				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
@@ -403,14 +403,12 @@
 	<select id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
-				SELECT
-					* 
-                FROM ( 	SELECT
+                            SELECT
                                	CN ,
                                	DISPLAYNAME ,
                                	EXTENSIONATTRIBUTE15 ,
                                	TYPE 
-                        	FROM ( 	SELECT
+                        	FROM ( 	    SELECT
                         					CN ,
                                       		CASE #v_LANGDATA#
                                             WHEN
@@ -451,15 +449,11 @@
                               			WHERE
                               				B.DEPTID = #v_CN#
                               			AND
-                              				B.TENANT_ID = #v_TENANT_ID#	 ) AA ) BB
-                  			WHERE
-                  				ROWNUM_ >= #v_STARTROW#
-                  			AND
-                  				ROWNUM_ < #v_ENDROW#
-                  			ORDER BY
-                  				EXTENSIONATTRIBUTE15 ASC,
-                           		DISPLAYNAME ASC
-                            LIMIT #v_STARTROW#,#v_ENDROW# 
+                              				B.TENANT_ID = #v_TENANT_ID#	 
+                                  ) AA
+                     		ORDER BY 
+                                EXTENSIONATTRIBUTE15, DISPLAYNAME
+                            LIMIT #v_STARTROWForMySQL#, #v_COUNT# 
 			]]>
 		</isEqual>
 	
@@ -487,6 +481,7 @@
                 	TENANT_ID = #v_TENANT_ID#	
 				ORDER BY
 					EXTENSIONATTRIBUTE15, DISPLAYNAME
+                LIMIT #v_STARTROWForMySQL#, #v_COUNT#
 			]]>
 		</isEqual>
 		
@@ -557,11 +552,13 @@
                             WHERE
                             	EXTENSIONATTRIBUTE1 = #v_CN#
                             AND
-                            	TENANT_ID = #v_TENANT_ID#	 ) AA
-                  ORDER BY
-                  	TYPE DESC,
+                            	TENANT_ID = #v_TENANT_ID#	 
+                    ) AA
+                ORDER BY
+                    TYPE DESC,
                     EXTENSIONATTRIBUTE15,
-                    DISPLAYNAME ASC
+                    DISPLAYNAME
+                LIMIT #v_STARTROWForMySQL#, #v_COUNT#
 			]]>
 		</isEqual>	
 	
@@ -590,7 +587,8 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #tenantID#	 ) AA
+              			B.TENANT_ID = #v_TENANT_ID#	 
+                ) AA
 		]]>
 	</select>
 		
@@ -1102,7 +1100,8 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		TBL_USERMASTER A $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A 
+            $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
             $strSizeForMySQL$
 	    		 
 	      	UNION ALL
@@ -1114,7 +1113,7 @@
 	      		'user' as type
 	      	FROM	
 				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strSQLForMySQL$
+            $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
             $strSizeForMySQL$
 				
 			<isEqual property="class" compareValue="all">
@@ -1126,7 +1125,8 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					TBL_DEPTMASTER $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER 
+                $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#	
                 $strSizeForMySQL$
 			</isEqual>	      				
 	    </isEqual>
@@ -1137,18 +1137,16 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		TBL_DEPTMASTER $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER 
+            $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
             $strSizeForMySQL$
 	    </isEqual>
 	</select>
+ 
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
 			<![CDATA[
-				 SELECT 
-				 	* 
-				 FROM
-				 	(SELECT 
-					 	ROW_NUMBER() OVER(order by CN) as RNUM, 
+				 	  SELECT  
 						cn, 
 						displayName,
 						extensionAttribute15, 
@@ -1160,49 +1158,58 @@
 			                '' as extensionAttribute15,
 			                'user' as type 
 			             FROM  
-			             	TBL_USERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+			             	TBL_USERMASTER A 
+                         $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 			       
-			       UNION ALL
+			             UNION ALL
 			            
-			        SELECT
-			        	a.cn  , 
-			            deptid as displayName , 
-			            '' as extensionAttribute15,
-			            'user' as type  
-			         FROM 
-			         	TBL_USERMASTER b   
-			         INNER JOIN 
-			         	TBL_ADDJOBMASTER A  
-			         ON  
-			         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
-	              	B where RNUM >= $startRow$ and RNUM < $endRow$
+       			         SELECT
+       			        	a.cn  , 
+       			            deptid as displayName , 
+       			            '' as extensionAttribute15,
+       			            'user' as type  
+       			         FROM 
+       			         	TBL_USERMASTER b   
+       			         INNER JOIN 
+       			         	TBL_ADDJOBMASTER A  
+       			         ON  
+       			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
+                         $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                        )  AA
+                      LIMIT #startRowForMySQL#, #count#
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
           	<![CDATA[
-				SELECT 
+            SELECT
+            *
+            FROM
+                (
+			    SELECT 
 				cn,
 				department as displayName,
 				'' as extensionAttribute15,
 				'user' as type				
-			FROM 
-	    		TBL_USERMASTER A $strSQL$ $strSize$ AND A.TENANT_ID = #v_TENANT_ID#
-	    		 
-	      	UNION ALL
-	      		      	
-	      	SELECT 
-	      		A.cn,
-	      		deptid as displayName,
-	      		'' as extensionAttribute15,
-	      		'user' as type
-	      	FROM	
-				TBL_USERMASTER B 
-			INNER JOIN 
-				TBL_ADDJOBMASTER A 
-			ON 
-				A.CN = B.CN $strSQL$ AND A.TENANT_ID = B.TENANT_ID
-				
-			UNION ALL
+     			FROM 
+     	    		TBL_USERMASTER A 
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+     	    		 
+     	      	UNION ALL
+     	      		      	
+     	      	SELECT 
+     	      		A.cn,
+     	      		deptid as displayName,
+     	      		'' as extensionAttribute15,
+     	      		'user' as type
+     	      	FROM	
+     				TBL_USERMASTER B 
+     			INNER JOIN 
+     				TBL_ADDJOBMASTER A 
+     			ON 
+     				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+     				
+     			UNION ALL
 				
 				SELECT
 					CN,
@@ -1210,43 +1217,53 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					TBL_DEPTMASTER $strSize$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER A	
+                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                ) AA
+            LIMIT #startRowForMySQL#, #count#
 			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
 		  	<![CDATA[
-				SELECT
+			SELECT
 	    		cn,
 	    		'' as displayName,
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		TBL_DEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER A
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            LIMIT #startRowForMySQL#, #count#
 			]]>
 	      </isEqual>
 	</select>
+ 
 	<select id="EzOrganDAO.getSearchListCount" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				COUNT(*) AS TOTALCOUNT 
 			FROM (
-			SELECT 
-				CN 
-			FROM  
-				TBL_USERMASTER  A  $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
-            
-            UNION ALL 
-            
-            SELECT 
-            	A.CN  
-            FROM 
-            	TBL_USERMASTER B   
-            INNER JOIN  TBL_ADDJOBMASTER A   
-            ON 
-            	a.cn = b.cn $strSQL$ and a.tenant_id = b.tenant_id) A
+        			SELECT 
+        				CN 
+        			FROM  
+        				TBL_USERMASTER  A  
+                    $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                    
+                    UNION ALL 
+                    
+                    SELECT 
+                    	A.CN  
+                    FROM 
+                    	TBL_USERMASTER B   
+                    INNER JOIN  TBL_ADDJOBMASTER A   
+                    ON 
+                    	a.cn = b.cn and a.tenant_id = b.tenant_id
+                    $strSQL$ AND A.TENANT_ID = #v_TENANT_ID# 
+                 ) A
 		]]>
 			
 	</select>
+ 
 	<select id="EzOrganDAO.deptSubDeptCnt" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
