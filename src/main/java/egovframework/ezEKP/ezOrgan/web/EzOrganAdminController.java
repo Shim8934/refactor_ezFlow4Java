@@ -1440,7 +1440,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			OrganDeptVO vo = list.get(i);			
 			
 			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j, vo);
+				resultList.add(j++, vo);
 			}
 		}
 		        	
@@ -1475,11 +1475,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
-        
-        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
-                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow);
-        
+                
         int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang, tenantID);
+
+        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
+                + ",totalCount=" + cnt);
         
         List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow, tenantID);
         
