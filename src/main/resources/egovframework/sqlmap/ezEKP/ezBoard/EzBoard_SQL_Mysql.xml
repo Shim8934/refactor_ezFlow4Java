@@ -213,11 +213,11 @@
 		<isEqual property="v_MODE" compareValue="USE">
 			<![CDATA[
 				SELECT 
-					A.BoardID ,
-                    A.BoardName ,
-                    A.BoardName2 ,
+					A.BOARDID ,
+                    A.BOARDNAME ,
+                    A.BOARDNAME2 ,
                     TABUSED ,
-                    B.Gubun 
+                    B.GUBUN 
                 FROM 
                 	TBL_Board_MyBoards A
                 JOIN 
@@ -348,7 +348,7 @@
 	<select id="EzBoardDAO.getListOptionBoardID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				distinct boardID
+				DISTINCT BOARDID
 			FROM 
 				TBL_Board_Item_ListOption_Boar 
             WHERE
@@ -423,12 +423,12 @@
 	<select id="EzBoardDAO.photoViewDB" parameterClass="Map" resultMap="photoViewDB">
 		<![CDATA[
     		  SELECT 
-                COUNT(*) imagecount  ,
-                ImageID ,
-                FilePath ,
-                FileContent ,
-                main_Flag FLAG  ,
-                ImageName 
+                COUNT(*) IMAGECOUNT  ,
+                IMAGEID ,
+                FILEPATH ,
+                FILECONTENT ,
+                MAIN_FLAG FLAG  ,
+                IMAGENAME 
            	  FROM 
            	  	TBL_Photo_ImageItem 
               WHERE  
@@ -447,11 +447,11 @@
 	<select id="EzBoardDAO.photoViewDBAll" parameterClass="Map" resultMap="photoViewDBAll">
 		<![CDATA[
 			SELECT 
-				ImageID ,
-	            FilePath ,
-	            FileContent ,
-	            imagename ,
-	            main_Flag FLAG  
+				IMAGEID ,
+	            FILEPATH ,
+	            FILECONTENT ,
+	            IMAGENAME ,
+	            MAIN_FLAG FLAG  
 	        FROM 
 	        	TBL_Photo_ImageItem 
 	       	WHERE  
@@ -469,17 +469,17 @@
 		<isEmpty property="v_PSORTBY">
 			<![CDATA[
            			   SELECT 
-           					A.ItemID ,
-                         	A.StartDate ,
-                         	A.EndDate ,
-                         	A.Title ,
-                         	A.Attachments ,
-                         	A.Importance ,
+           					A.ITEMID ,
+                         	A.STARTDATE ,
+                         	A.ENDDATE ,
+                         	A.TITLE ,
+                         	A.ATTACHMENTS ,
+                         	A.IMPORTANCE ,
                          	B.BOARDID ,
                          	B.BOARDNAME ,
                          	B.BOARDNAME2 ,
-                         	A.Abstract ,
-                         	A.DocNo 
+                         	A.ABSTRACT ,
+                         	A.DOCNO 
            			   FROM 
            			   		TBL_Board_Item A
                   	   JOIN 
@@ -555,13 +555,13 @@
 	<select id="EzBoardDAO.getNewItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(A.ItemID) cnt
+				COUNT(A.ITEMID) CNT
         	FROM 
         		TBL_Board_Item A
             JOIN 
             	( SELECT 
-            		boardid,
-            		tenant_id
+            		BOARDID,
+            		TENANT_ID
                   FROM 
                   	TBL_Board_MyBoards 
                   WHERE  
@@ -580,7 +580,7 @@
            		P.BoardID = B.boardid
        		WHERE  
        			( NOT EXISTS ( SELECT 
-       								userid 
+       								USERID
                                FROM 
                                		TBL_Board_Item_Read 
                                WHERE
@@ -644,12 +644,12 @@
 		<isNotEmpty property="tempString">
 			<![CDATA[
 				SELECT 
-					A.Title Title ,
+					A.TITLE TITLE ,
                     GUBUN ,
-                    A.BoardID BoardID  ,
+                    A.BOARDID BOARDID  ,
                     BOARDNAME ,
-                    A.WriterName,
-                    A.WriterName2,
+                    A.WRITERNAME,
+                    A.WRITERNAME2,
                     A.CONTENTLOCATION
                 FROM 
                 	TBL_Board_Item A
@@ -683,12 +683,12 @@
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
 		<![CDATA[
 			SELECT  
-				UserID, 
-				UserName$lang$ AS UserName, 
-				UserDeptName$lang$ AS UserDeptName, 
-				UserCompanyName$lang$ AS UserCompanyName, 
-				UserTitle$lang$ AS UserTitle, 
-				ReadDate 
+				USERID, 
+				USERNAME$lang$ AS USERNAME, 
+				USERDEPTNAME$lang$ AS USERDEPTNAME, 
+				USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
+				USERTITLE$lang$ AS USERTITLE, 
+				READDATE 
 		   	FROM 
 		   		TBL_Board_Item_Read 
 		   	WHERE 
@@ -1133,26 +1133,26 @@
 	<select id="EzBoardDAO.getNoticePostItem" parameterClass="Map" resultClass="HashMap">
         <![CDATA[
         	  SELECT 
-              	A.BoardID ,
-                A.ItemID ,
-                A.WriterID ,
-                A.WriterName ,
-                A.WriterDeptName ,
-                A.WriterCompanyName ,
-                A.StartDate ,
-                A.WriteDate ,
-                A.ParentWriteDate ,
-                A.Importance ,
-                A.Title ,
-                A.ReadCount ,
-                A.Attachments ,
-                A.ItemLevel ,
-                A.Abstract ,
+              	A.BOARDID ,
+                A.ITEMID ,
+                A.WRITERID ,
+                A.WRITERNAME ,
+                A.WRITERDEPTNAME ,
+                A.WRITERCOMPANYNAME ,
+                A.STARTDATE ,
+                A.WRITEDATE ,
+                A.PARENTWRITEDATE ,
+                A.IMPORTANCE ,
+                A.TITLE ,
+                A.READCOUNT ,
+                A.ATTACHMENTS ,
+                A.ITEMLEVEL ,
+                A.ABSTRACT ,
                 '0' READFLAG  ,
-                A.extensionAttribute5 ,
-                A.WriterName2 ,
-                A.WriterDeptName2 ,
-                A.WriterCompanyName2 ,
+                A.EXTENSIONATTRIBUTE5 ,
+                A.WRITERNAME2 ,
+                A.WRITERDEPTNAME2 ,
+                A.WRITERCOMPANYNAME2 ,
                 (SELECT 
                 	COUNT(*)  
     				FROM 
@@ -1160,17 +1160,17 @@
    				WHERE  
    					TENANT_ID = A.TENANT_ID
    				AND
-   					ITEMID = A.ItemID) ONELINECNT  ,
-                A.UpperItemIDTree ,
-                A.DocNo ,
-                A.extensionAttribute2 NOTICE  ,
-                A.NotiNo ,
-                A.MainContent ,
-                A.extensionAttribute6 ,
-                A.extensionAttribute7 ,
-                A.extensionAttribute8 ,
-                A.extensionAttribute9 ,
-                A.extensionAttribute10 
+   					ITEMID = A.ITEMID) ONELINECNT  ,
+                A.UPPERITEMIDTREE ,
+                A.DOCNO ,
+                A.EXTENSIONATTRIBUTE2 NOTICE  ,
+                A.NOTINO ,
+                A.MAINCONTENT ,
+                A.EXTENSIONATTRIBUTE6 ,
+                A.EXTENSIONATTRIBUTE7 ,
+                A.EXTENSIONATTRIBUTE8 ,
+                A.EXTENSIONATTRIBUTE9 ,
+                A.EXTENSIONATTRIBUTE10 
               FROM 
               	TBL_Board_Item A
               WHERE  
@@ -1209,26 +1209,26 @@
 		<isEqual property="v_TYPE" compareValue="Y">
 			<![CDATA[
 				  SELECT 
-                    A.BoardID ,
-                    A.ItemID ,
-                    A.WriterID ,
-                    A.WriterName ,
-                    A.WriterDeptName ,
-                    A.WriterCompanyName ,
-                    A.StartDate ,
-                    A.WriteDate ,
-                    A.ParentWriteDate ,
-                    A.Importance ,
-                    A.Title ,
-                    A.ReadCount ,
-                    A.Attachments ,
-                    A.ItemLevel ,
-                    A.Abstract ,
+                    A.BOARDID ,
+                    A.ITEMID ,
+                    A.WRITERID ,
+                    A.WRITERNAME ,
+                    A.WRITERDEPTNAME ,
+                    A.WRITERCOMPANYNAME ,
+                    A.STARTDATE ,
+                    A.WRITEDATE ,
+                    A.PARENTWRITEDATE ,
+                    A.IMPORTANCE ,
+                    A.TITLE ,
+                    A.READCOUNT ,
+                    A.ATTACHMENTS ,
+                    A.ITEMLEVEL ,
+                    A.ABSTRACT ,
                     '0' READFLAG  ,
-                    A.extensionAttribute5 ,
-                    A.WriterName2 ,
-                    A.WriterDeptName2 ,
-                    A.WriterCompanyName2 ,
+                    A.EXTENSIONATTRIBUTE5 ,
+                    A.WRITERNAME2 ,
+                    A.WRITERDEPTNAME2 ,
+                    A.WRITERCOMPANYNAME2 ,
                     (SELECT 
 	                	COUNT(*)  
      				FROM 
@@ -1237,10 +1237,10 @@
     					TENANT_ID = A.TENANT_ID
     				AND
     					ITEMID = A.ItemID) ONELINECNT  ,
-                    A.UpperItemIDTree ,
-                    A.DocNo ,
-                    A.extensionAttribute2 NOTICE  ,
-                    B.BoardName BoardName  ,
+                    A.UPPERITEMIDTREE ,
+                    A.DOCNO ,
+                    A.EXTENSIONATTRIBUTE2 NOTICE  ,
+                    B.BOARDNAME BOARDNAME  ,
                     A.APPRFLAG APPRFLAG  
             	 FROM 
             	 	TBL_Board_Item A
@@ -1272,26 +1272,26 @@
 		<isNotEqual property="v_TYPE" compareValue="Y">
 			<![CDATA[
 				SELECT 
-					A.BoardID ,
-                    A.ItemID ,
-                    A.WriterID ,
-                    A.WriterName ,
-                    A.WriterDeptName ,
-                    A.WriterCompanyName ,
-                    A.StartDate ,
-                    A.WriteDate ,
-                    A.ParentWriteDate ,
-                    A.Importance ,
-                    A.Title ,
-                    A.ReadCount ,
-                    A.Attachments ,
-                    A.ItemLevel ,
-                    A.Abstract ,
+					A.BOARDID ,
+                    A.ITEMID ,
+                    A.WRITERID ,
+                    A.WRITERNAME ,
+                    A.WRITERDEPTNAME ,
+                    A.WRITERCOMPANYNAME ,
+                    A.STARTDATE ,
+                    A.WRITEDATE ,
+                    A.PARENTWRITEDATE ,
+                    A.IMPORTANCE ,
+                    A.TITLE ,
+                    A.READCOUNT ,
+                    A.ATTACHMENTS ,
+                    A.ITEMLEVEL ,
+                    A.ABSTRACT ,
                     '0' READFLAG  ,
-                    A.extensionAttribute5 ,
-                    A.WriterName2 ,
-                    A.WriterDeptName2 ,
-                    A.WriterCompanyName2 ,
+                    A.EXTENSIONATTRIBUTE5 ,
+                    A.WRITERNAME2 ,
+                    A.WRITERDEPTNAME2 ,
+                    A.WRITERCOMPANYNAME2 ,
                     (SELECT 
 	                	COUNT(*)  
      				FROM 
@@ -1300,10 +1300,10 @@
     					TENANT_ID = A.TENANT_ID
     				AND
     					ITEMID = A.ItemID) ONELINECNT  ,
-                    A.UpperItemIDTree ,
-                    A.DocNo ,
-                    A.extensionAttribute2 NOTICE  ,
-                    B.BoardName BoardName  ,
+                    A.UPPERITEMIDTREE ,
+                    A.DOCNO ,
+                    A.EXTENSIONATTRIBUTE2 NOTICE  ,
+                    B.BOARDNAME BOARDNAME  ,
                     A.APPRFLAG APPRFLAG  
                 FROM 
                 	TBL_Board_Item A
@@ -1756,26 +1756,26 @@
 	<select id="EzBoardDAO.getNoticePostItemAll" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
-				A.BoardID ,
-                A.ItemID ,
-                A.WriterID ,
-                A.WriterName ,
-                A.WriterDeptName ,
-                A.WriterCompanyName ,
-                A.StartDate ,
-                A.WriteDate ,
-                A.ParentWriteDate ,
-                A.Importance ,
-                A.Title ,
-                A.ReadCount ,
-                A.Attachments ,
-                A.ItemLevel ,
-                A.Abstract ,
+				A.BOARDID ,
+                A.ITEMID ,
+                A.WRITERID ,
+                A.WRITERNAME ,
+                A.WRITERDEPTNAME ,
+                A.WRITERCOMPANYNAME ,
+                A.STARTDATE ,
+                A.WRITEDATE ,
+                A.PARENTWRITEDATE ,
+                A.IMPORTANCE ,
+                A.TITLE ,
+                A.READCOUNT ,
+                A.ATTACHMENTS ,
+                A.ITEMLEVEL ,
+                A.ABSTRACT ,
                 '0' READFLAG  ,
-                A.extensionAttribute5 ,
-                A.WriterName2 ,
-                A.WriterDeptName2 ,
-                A.WriterCompanyName2 ,
+                A.EXTENSIONATTRIBUTE5 ,
+                A.WRITERNAME2 ,
+                A.WRITERDEPTNAME2 ,
+                A.WRITERCOMPANYNAME2 ,
                 (SELECT 
                 	COUNT(*)  
     			FROM 
@@ -1784,9 +1784,9 @@
    					TENANT_ID = A.TENANT_ID
    				AND
    					ITEMID = A.ItemID) ONELINECNT,
-                A.UpperItemIDTree ,
-                A.DocNo , 
-                A.extensionAttribute2 NOTICE  
+                A.UPPERITEMIDTREE ,
+                A.DOCNO , 
+                A.EXTENSIONATTRIBUTE2 NOTICE  
            	FROM 
            		TBL_Board_Item A
           	WHERE  
@@ -2123,13 +2123,13 @@
 	            EXTENSIONATTRIBUTE5 ,
 	            MAINCONTENT ,
 	            A.APPRFLAG  ,
-	            B.Gubun ,
-	            extensionAttribute6 ,
-	            extensionAttribute7 ,
-	            extensionAttribute8 ,
-	            extensionAttribute9 ,
-	            extensionAttribute10 ,
-	            A.BoardID 
+	            B.GUBUN ,
+	            EXTENSIONATTRIBUTE6 ,
+	            EXTENSIONATTRIBUTE7 ,
+	            EXTENSIONATTRIBUTE8 ,
+	            EXTENSIONATTRIBUTE9 ,
+	            EXTENSIONATTRIBUTE10 ,
+	            A.BOARDID 
 	        FROM 
 	        	TBL_Board_Item A
             JOIN 
@@ -2148,38 +2148,38 @@
 	<select id="EzBoardDAO.getBrdGetItemInfoTemp" parameterClass="Map" resultMap="getBrdGetItemInfoTemp">
 		<![CDATA[
 			SELECT 
-				ItemID ,
-	            WriterID ,
-	            WriterName ,
-	            WriterName2 ,
-	            WriterDeptName ,
-	            WriterDeptName2 ,
-	            WriterCompanyName ,
-	            WriterCompanyName2 ,
-	            WriteDate ,
-	            ParentWriteDate ,
-	            Importance ,
-	            Title ,
-	            ContentLocation ,
-	            StartDate ,
-	            EndDate ,
-	            Abstract ,
-	            Attachments ,
-	            UpperItemIDTree ,
-	            ItemLevel ,
-	            copiedItem ,
-	            ExtensionAttribute1 ,
-	            ExtensionAttribute2 ,
-	            ExtensionAttribute3 ,
-	            ExtensionAttribute32 ,
-	            ExtensionAttribute4 ,
-	            ExtensionAttribute5 ,
-	            MainContent ,
-	            extensionAttribute6 ,
-	            extensionAttribute7 ,
-	            extensionAttribute8 ,
-	            extensionAttribute9 ,
-	            extensionAttribute10 
+				ITEMID ,
+	            WRITERID ,
+	            WRITERNAME ,
+	            WRITERNAME2 ,
+	            WRITERDEPTNAME ,
+	            WRITERDEPTNAME2 ,
+	            WRITERCOMPANYNAME ,
+	            WRITERCOMPANYNAME2 ,
+	            WRITEDATE ,
+	            PARENTWRITEDATE ,
+	            IMPORTANCE ,
+	            TITLE ,
+	            CONTENTLOCATION ,
+	            STARTDATE ,
+	            ENDDATE ,
+	            ABSTRACT ,
+	            ATTACHMENTS ,
+	            UPPERITEMIDTREE ,
+	            ITEMLEVEL ,
+	            COPIEDITEM ,
+	            EXTENSIONATTRIBUTE1 ,
+	            EXTENSIONATTRIBUTE2 ,
+	            EXTENSIONATTRIBUTE3 ,
+	            EXTENSIONATTRIBUTE32 ,
+	            EXTENSIONATTRIBUTE4 ,
+	            EXTENSIONATTRIBUTE5 ,
+	            MAINCONTENT ,
+	            EXTENSIONATTRIBUTE6 ,
+	            EXTENSIONATTRIBUTE7 ,
+	            EXTENSIONATTRIBUTE8 ,
+	            EXTENSIONATTRIBUTE9 ,
+	            EXTENSIONATTRIBUTE10 
 	        FROM 
 	        	TBL_Board_Item_temp 
        		WHERE
@@ -2192,12 +2192,12 @@
 	<select id="EzBoardDAO.getBrdNewItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(A.ItemID) cnt
+				COUNT(A.ITEMID) CNT
 			FROM 
 				TBL_Board_Item A
 			JOIN 
 				( SELECT 
-					boardid 
+					BOARDID 
                   FROM 
                   	TBL_Board_MyBoards
                   WHERE
@@ -2216,7 +2216,7 @@
             	P.BoardID = B.boardid
        		WHERE  
        			( NOT EXISTS ( SELECT 
-       								userid
+       								USERID
        						   FROM 
        						   		TBL_Board_Item_Read 
                                WHERE
@@ -2242,7 +2242,7 @@
 	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="MyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
-				distinct B.boardid
+				DISTINCT B.BOARDID
             FROM 
             	TBL_Board_ApprList A
             JOIN 
@@ -2282,7 +2282,7 @@
 		<isEqual property="v_PTYPE" compareValue="2">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 	FROM 
                 		TBL_Board_Item A
                    LEFT JOIN 
@@ -2412,7 +2412,7 @@
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
                 	TBL_Board_Item A
                 LEFT JOIN 
@@ -2487,7 +2487,7 @@
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
                 	TBL_Board_Item A
                 LEFT JOIN 
@@ -2572,7 +2572,7 @@
 	<select id="EzBoardDAO.getBoardApprList" parameterClass="MyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
-       			distinct B.BOARDID
+       			DISTINCT B.BOARDID
        		FROM 
        		 	TBL_Board_ApprList A
             JOIN 
@@ -2592,7 +2592,7 @@
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT 
+					COUNT(A.ITEMID)  TOTALCOUNT 
               	FROM 
               		TBL_Board_Item A
                 JOIN 
@@ -2618,7 +2618,7 @@
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
                 	TBL_Board_Item A
                 JOIN 
@@ -2665,7 +2665,7 @@
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
 				FROM 
 					TBL_Board_Item A
 				JOIN 
@@ -2689,7 +2689,7 @@
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
                 	TBL_Board_Item A
                 JOIN 
@@ -2731,7 +2731,7 @@
 		<isEqual property="type" compareValue="4">
 			<![CDATA[
 				SELECT 
-					COUNT(A.ItemID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
               	FROM 
               		TBL_Board_Item A
                 JOIN 
@@ -2813,7 +2813,7 @@
 	<select id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(ITEMID)  cnt
+				COUNT(ITEMID)  CNT
 			FROM 
 				TBL_Board_Item 
        		WHERE  
@@ -2872,7 +2872,7 @@
       				DUAL
       			WHERE 
       				NOT EXISTS ( SELECT 
-      								ItemID 
+      								ITEMID 
       							 FROM 
       							 	TBL_Board_Item_Read 
                         		 WHERE  
@@ -2883,7 +2883,7 @@
                                  	UserID = #v_pUserID#
                                  AND 
                                  	BoardID = ( SELECT 
-                                 					BoardID 
+                                 					BOARDID 
                                  				FROM 
                                  					TBL_Board_Item
                                  				WHERE
@@ -2900,7 +2900,7 @@
       				DUAL
       			WHERE 
       				NOT EXISTS ( SELECT 
-      								ItemID 
+      								ITEMID
       							 FROM 
       							 	TBL_Board_Item_Read 
                         		 WHERE  
@@ -2918,7 +2918,7 @@
 	<select id="EzBoardDAO.getWriterID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				WriterID
+				WRITERID
 			FROM 
 				TBL_Board_Item 
        		WHERE  
@@ -2984,7 +2984,7 @@
 	<select id="EzBoardDAO.getApprFlag" parameterClass="BoardListVO" resultClass="String">
 		<![CDATA[
 			SELECT
-				apprflag
+				APPRFLAG
 			FROM 
 				TBL_Board_BoardInfo
 			WHERE 
@@ -3023,12 +3023,12 @@
 	<select id="EzBoardDAO.getBoardList_Config"  resultClass="BoardConfigVO">
 		<![CDATA[
 			SELECT 
-				listcount , 
-			    preview , 
-			    previewwlist ,
-			 	previewwcontent ,
-			 	previewhlist ,
-              	previewhcontent 
+				LISTCOUNT , 
+			    PREVIEW , 
+			    PREVIEWWLIST ,
+			 	PREVIEWWCONTENT ,
+			 	PREVIEWHLIST ,
+              	PREVIEWHCONTENT 
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -3054,7 +3054,7 @@
 	<select id="EzBoardDAO.getAdjacentItems1" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
-				itemid ,title 
+				ITEMID ,TITLE 
 	        FROM 
 	        	TBL_BOARD_ITEM 
 	        WHERE  
@@ -3078,8 +3078,8 @@
 	<select id="EzBoardDAO.getAdjacentItems2" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
         	 SELECT 
-        		itemid ,
-                title 
+        		ITEMID ,
+                TITLE 
         	 FROM 
         	 	TBL_BOARD_ITEM 
         	 WHERE  
@@ -3104,8 +3104,8 @@
 	<select id="EzBoardDAO.getAdjacentItems2Photo" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
         	 SELECT 
-        		itemid,
-        		title 
+        		ITEMID,
+        		TITLE
              FROM 
              	TBL_BOARD_ITEM 
         	 WHERE  
@@ -3131,8 +3131,8 @@
 	<select id="EzBoardDAO.getAdjacentItems3Photo" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
     		  SELECT 
-    			 itemid ,
-                 title 
+    			 ITEMID ,
+                 TITLE 
     		  FROM 
     		  	 TBL_BOARD_ITEM 
    			  WHERE
@@ -3158,7 +3158,7 @@
 	<select id="EzBoardDAO.getNoticePostItemCount" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(itemid) cnt  
+				COUNT(ITEMID) CNT  
 	        FROM 
 	        	TBL_BOARD_ITEM 
 	        WHERE  
@@ -3179,7 +3179,7 @@
 	<select id="EzBoardDAO.getCheckApprUserList" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(B.appruserid) AS cnt
+				COUNT(B.APPRUSERID) AS CNT
 	        FROM 
 	        	TBL_BOARD_ITEM A
 	        JOIN 
@@ -3200,7 +3200,7 @@
 	<select id="EzBoardDAO.checkBackGroundImage" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(boardid)
+				COUNT(BOARDID)
 	        FROM 
 	        	TBL_BOARD_BOARDINFO 
 	        WHERE  
@@ -3215,11 +3215,11 @@
 	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
 		<![CDATA[
 			SELECT 
-				replyid, 
-				$v_UserName$ as username, 
-				userid, 
-				content, 
-				writedate
+				REPLYID, 
+				$v_UserName$ AS USERNAME, 
+				USERID, 
+				CONTENT, 
+				WRITEDATE
 	        FROM 
 	        	TBL_BOARD_ONELINEREPLY 
 	        WHERE  
@@ -3236,7 +3236,7 @@
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(replyid)
+				COUNT(REPLYID)
 	        FROM 
 	        	TBL_BOARD_ONELINEREPLY 
 	        WHERE  
@@ -3251,7 +3251,7 @@
 	<select id="EzBoardDAO.checkApprUserList" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(B.appruserid)
+				COUNT(B.APPRUSERID)
         	FROM 
         		TBL_BOARD_ITEM A
 	        JOIN 
@@ -3272,7 +3272,7 @@
 	<select id="EzBoardDAO.getParentBoardID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				parentboardid 
+				PARENTBOARDID
         	FROM 
         		TBL_BOARD_BOARDINFO 
         	WHERE  
@@ -3285,7 +3285,7 @@
 	<select id="EzBoardDAO.getDocPassWord" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				docpassword 
+				DOCPASSWORD 
 			FROM 
 				TBL_BOARD_ITEM 
 			WHERE 
@@ -3298,7 +3298,7 @@
 	<select id="EzBoardDAO.getReservedItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(itemid)
+				COUNT(ITEMID)
 	        FROM 
 	        	TBL_BOARD_ITEM 
 	        WHERE  
@@ -3338,8 +3338,8 @@
 	<select id="EzBoardDAO.getReplyNoticeMail" parameterClass="Map" resultClass="BoardListVO">
 		<![CDATA[
 			SELECT 
-				DISTINCT WriterID, 
-				WriterName$lang$ AS WriterName, 
+				DISTINCT WRITERID, 
+				WRITERNAME$lang$ AS WRITERNAME, 
 				TUM.MAIL 
 			FROM 
 				TBL_Board_Item TBI
@@ -3361,7 +3361,7 @@
 	<select id="EzBoardDAO.getSendApprMailList" parameterClass="Map" resultClass="userInfo">
 		<![CDATA[
 			SELECT 
-				A.APPRUSERID AS id, 
+				A.APPRUSERID AS ID, 
 				B.MAIL AS EMAIL, 
 				B.DisplayName$lang$ AS DISPLAYNAME, 
    			FROM 
@@ -3383,8 +3383,8 @@
 		<isEqual property="primary" compareValue="1">
 			<![CDATA[
 				SELECT
-					accessid,
-					accessname
+					ACCESSID,
+					ACCESSNAME
 				FROM
 					TBL_BOARD_BOARDMANAGE
 				WHERE
@@ -3400,8 +3400,8 @@
 		<isNotEqual property="primary" compareValue="1">
 			<![CDATA[
 				SELECT
-					accessid,
-					accessname2 AS accessname
+					ACCESSID,
+					ACCESSNAME2 AS ACCESSNAME
 				FROM
 					TBL_BOARD_BOARDMANAGE
 				WHERE
@@ -3467,7 +3467,7 @@
 		
 	<select id="EzBoardDAO.setMainImageID2" parameterClass="Map" resultClass="String">
 		SELECT
-			main_flag
+			MAIN_FLAG
 		FROM
 			TBL_Photo_ImageItem
 		WHERE
