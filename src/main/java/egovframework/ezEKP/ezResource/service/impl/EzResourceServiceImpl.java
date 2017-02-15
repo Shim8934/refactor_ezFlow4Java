@@ -904,9 +904,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String todayStartStr = eDate + " 23:59:59";
 		String todayEndStr = sDate + " 00:00:01";
 		
-System.out.println("todayStartStr=" + todayStartStr);
-System.out.println("todayEndStr=" + todayEndStr);
-		
 		String returnSchedule = "";
 			
 		if (pType.equals("")) {

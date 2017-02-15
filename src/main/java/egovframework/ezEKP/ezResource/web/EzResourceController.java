@@ -2229,8 +2229,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	public String sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMail started");
 		
-		System.out.println("xmlStr=" + xmlStr);
-		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
