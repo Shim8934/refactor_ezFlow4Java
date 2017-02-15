@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezResource.service.impl;
 
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -20,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 
@@ -30,6 +28,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
@@ -50,7 +49,6 @@ import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
 import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
 import egovframework.ezEKP.ezResource.vo.ResRecParamVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
-import egovframework.ezEKP.ezResource.web.EzResourceController;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -747,7 +745,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResBrdVO getResourceAdminInfo(String brdID, int tenantID) throws Exception {
+	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_BRD_ID", brdID);
 		map.put("tenantID", tenantID);
@@ -1240,7 +1238,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}
@@ -1251,7 +1249,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 						
@@ -1268,7 +1266,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					}
 				}
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 			} else {
 				if (endRecurType.equals("0")) {
@@ -1278,7 +1275,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}
@@ -1289,7 +1286,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 							
@@ -1304,7 +1301,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}

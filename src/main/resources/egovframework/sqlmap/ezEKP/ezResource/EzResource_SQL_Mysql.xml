@@ -3,21 +3,22 @@
 
 <sqlMap namespace="ezResource">
 	<typeAlias  alias="ResGetAdmSubClsTreeVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO"/>
-	<typeAlias  alias="ResGetAdminFlagVO" 							type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
-	<typeAlias  alias="ResGetItemListVO" 								type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
-	<typeAlias  alias="ResGetScheduleVO" 							type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
-	<typeAlias  alias="ResGetScheduleListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
+	<typeAlias  alias="ResGetAdminFlagVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
+	<typeAlias  alias="ResGetItemListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
+	<typeAlias  alias="ResGetScheduleVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
+	<typeAlias  alias="ResGetScheduleListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
 	<typeAlias  alias="ResGetScheduleListMainVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO"/>
-	<typeAlias  alias="ResGetRepDateTimesVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
+	<typeAlias  alias="ResGetRepDateTimesVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
 	<typeAlias  alias="ResGetScheduleListTermVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
 	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
-	<typeAlias  alias="ResBrdListVO" 									type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
-	<typeAlias  alias="ResBrdVO" 										type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
-	<typeAlias  alias="ResSelectFormIDVO" 							type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
+	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
+	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
+	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
 	<typeAlias  alias="ResGetScheduleListRepetitionVO" 			type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO"/>
-	<typeAlias  alias="ResGetRepResourceVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
+	<typeAlias  alias="ResGetRepResourceVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
 	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
-    <typeAlias  alias="ResGetSendMailToUserVO"         type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
+    <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
+    <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -2152,15 +2153,15 @@
 		]]>
 	</select>
   
-    <select id="EzResourceDAO.getResourceAdminInfo" parameterClass="Map" resultMap="resBrdVO">
+    <select id="EzResourceDAO.getResourceAdminInfo" parameterClass="Map" resultClass="ResAdminVO">
         <![CDATA[
 	       SELECT
-               BRD_NM ,
+               BRD_NM BRDNM ,
                OWNERID ,
                OWNERNM ,
                HR.MAIL MAILADDRESS  
             FROM
-               TBLBRD RES
+               TBL_RS_BRD RES
             JOIN
                 TBL_USERMASTER HR
             ON
