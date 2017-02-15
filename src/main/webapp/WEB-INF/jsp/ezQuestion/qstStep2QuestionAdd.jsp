@@ -260,6 +260,8 @@
         		        Ques_Answer.input_Ans.length = 1;
             		index = -1;
             		Ques_Answer.txtAnswer.value = "";
+        		} else {
+        			alert("<spring:message code='ezQuestion.t496' />");
         		}
     		}
     		function AnsOrder_Up() {
