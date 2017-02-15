@@ -1209,7 +1209,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			OrganDeptVO vo = list.get(i);			
 			
 			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j, vo);
+				resultList.add(j++, vo);
 			}
 		}
 		
@@ -1323,7 +1323,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);
-	    
+	    logger.debug("data=" + data);
+        
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -1365,7 +1366,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do")	
-	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("addJobConfig started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -1392,6 +1395,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("userInfo", user);
 		
+		logger.debug("addJobConfig ended.");
+		
 		return "admin/ezOrgan/addJobConfig";
 	}
 	
@@ -1399,7 +1404,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 겸직관리 겸직등록 대상부서 선택 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addjobAdd.do")	
-	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("addjobAdd started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
@@ -1407,8 +1414,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			companyID = "Top";
 		}
 		
+		logger.debug("companyID=" + companyID);
+		        
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("userInfo", user);
+		
+		logger.debug("addjobAdd ended.");
 		
 		return "admin/ezOrgan/addJobAdd";
 	}
