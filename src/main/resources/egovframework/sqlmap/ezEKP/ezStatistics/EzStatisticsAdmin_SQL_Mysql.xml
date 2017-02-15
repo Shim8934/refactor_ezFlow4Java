@@ -614,7 +614,7 @@
                             FROM 
                             	TBL_APRDOCINFO 
                             WHERE  
-                            	DOCSTATE = 'A02001'
+                            	DOCSTATE = '001'
                             AND 
                             	STARTDATE IS NOT NULL
                             AND 
@@ -638,7 +638,7 @@
                             FROM 
                             	TBL_APRDOCINFO 
                             WHERE  
-                            	DOCSTATE = 'A02011'
+                            	DOCSTATE = '011'
                             AND 
                             	STARTDATE IS NOT NULL
                             AND 
@@ -663,7 +663,7 @@
                             FROM 
                             	TBL_ENDAPRDOCINFO
                             WHERE  
-                            	DOCSTATE = 'A02001'
+                            	DOCSTATE = '001'
                             AND 
                             	ENDDATE >= #startDate#
                             AND 
@@ -687,7 +687,7 @@
                             FROM 
                             	TBL_ENDAPRDOCINFO 
                             WHERE  
-                            	DOCSTATE = 'A02011'
+                            	DOCSTATE = '011'
                             AND 
                             	ENDDATE >= #startDate#
                             AND 
@@ -709,7 +709,7 @@
                             FROM 
                             	TBL_APRDOCINFO 
                             WHERE  
-                            	FUNCTIONTYPE = 'A04004'
+                            	FUNCTIONTYPE = '004'
                             AND 
                             	STARTDATE IS NOT NULL
                             AND 
@@ -784,7 +784,7 @@
                               FROM 
                               	TBL_APRDOCINFO 
                               WHERE  
-                              	DOCSTATE = 'A02001'
+                              	DOCSTATE = '001'
                               AND 
                               	STARTDATE IS NOT NULL
                               AND 
@@ -806,7 +806,7 @@
                               FROM 
                               	TBL_APRDOCINFO 
                               WHERE  
-                              	DOCSTATE = 'A02011'
+                              	DOCSTATE = '011'
                               AND 
                               	STARTDATE IS NOT NULL
                               AND 
@@ -829,7 +829,7 @@
                               FROM 
                               	TBL_ENDAPRDOCINFO 
                               WHERE  
-                              	DOCSTATE = 'A02001'
+                              	DOCSTATE = '001'
                               AND 
                               	ENDDATE >= #startDate#
                               AND 
@@ -850,7 +850,7 @@
                               FROM 
                               	TBL_ENDAPRDOCINFO 
                               WHERE  
-                              	DOCSTATE = 'A02011'
+                              	DOCSTATE = '011'
                               AND 
                               	ENDDATE >= #startDate#
                               AND 
@@ -870,7 +870,7 @@
                               FROM 
                               	TBL_APRDOCINFO 
                               WHERE  
-                              	FUNCTIONTYPE = 'A04004'
+                              	FUNCTIONTYPE = '004'
                               AND
                               	STARTDATE IS NOT NULL 
                               AND 
