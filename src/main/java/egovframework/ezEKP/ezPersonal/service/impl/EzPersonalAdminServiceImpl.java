@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -34,6 +35,9 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 @Service("EzPersonalAdminService")
 public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implements EzPersonalAdminService {
 	private static final Logger logger = LoggerFactory.getLogger(EzPersonalAdminServiceImpl.class);
+	
+	@Autowired
+	private Properties globals;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -590,7 +594,20 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_SLIDERID", sliderID);
 		map.put("tenantID", tenantID);
 		ezPersonalAdminDAO.delSliderImage_D(map);
-		ezPersonalAdminDAO.delSliderImage();
+		
+		if (globals.getProperty("Globals.DbType").equals("oracle")) {
+			ezPersonalAdminDAO.delSliderImage();
+		} else if (globals.getProperty("Globals.DbType").equals("mysql")) {
+			List<PersonalSliderImageVO> list = ezPersonalAdminDAO.delSliderImage_S(map);
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			
+			for (int i=0; i<list.size(); i++) {
+				map1.put("sliderID", list.get(i).getSliderID());
+				map1.put("sn", list.get(i).getSn());
+				map1.put("tenantID", tenantID);
+				ezPersonalAdminDAO.delSliderImage_U(map1);
+			}
+		}
 	}
 	
 	@Override

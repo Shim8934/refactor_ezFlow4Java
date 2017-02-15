@@ -829,6 +829,38 @@
       			MATCHED THEN UPDATE SET SN = src.SN		
 		]]>
 	</statement>
+  
+    <select id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_S" parameterClass="Map" resultClass="PersonalSliderImageVO">
+      <![CDATA[
+	       SELECT
+                TBL_PS_SLIDERIMAGE.SLIDERID, TEMPTABLE.rNum as sn
+            FROM
+                TBL_PS_SLIDERIMAGE 
+            JOIN (  SELECT
+                          SLIDERID, @rownum := @rownum +1 as rNum
+                      FROM
+                          TBL_PS_SLIDERIMAGE, (select @rownum := 0) as R
+                      WHERE
+                           TENANT_ID = #tenantID#    
+                      ORDER BY SN   
+                    ) TEMPTABLE 
+            ON
+                TBL_PS_SLIDERIMAGE.SliderID = TEMPTABLE.SLIDERID
+		]]>
+    </select>
+    
+    <update id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE_U">
+        <![CDATA[
+	         UPDATE
+                  TBL_PS_SLIDERIMAGE
+             SET
+                  SN = #sn#
+             WHERE
+                  SLIDERID = #sliderID#
+             AND
+                  TENANT_ID = #tenantID#     
+		]]>
+    </update>
 	
 	<delete id="EzPersonalAdmin.delQuickLink_D" parameterClass="Map">
 		<![CDATA[
