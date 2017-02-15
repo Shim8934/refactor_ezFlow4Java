@@ -15,7 +15,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
-import org.apache.poi.ss.formula.functions.IDStarAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,18 +30,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import antlr.MakeGrammar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
-import egovframework.ezEKP.ezBoard.vo.BoardListVO;
-import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezPortal.web.EzPortalController;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -2242,10 +2236,13 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 승인 후 알림 발송 실행 함수
 	 */
-	@RequestMapping(value = "/ezResource/sendMail.do")
-	public void sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+	@RequestMapping(value = "/ezResource/sendMail.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMail started");
-
+		
+		System.out.println("xmlStr=" + xmlStr);
+		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -2255,9 +2252,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTime = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 		String endDateTime = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 		
+		startDateTime = commonUtil.getDateStringInUTC(startDateTime, userInfo.getOffset(), false);
+		endDateTime = commonUtil.getDateStringInUTC(endDateTime, userInfo.getOffset(), false);
+		
 		logger.debug("ownerID=" + ownerID + ",title=" + title + ",startDateTime=" + startDateTime + ",endDateTime=" + endDateTime);
 		
-		ResBrdVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
+		ResAdminVO resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId());
         
         StringBuilder bodyContent = new StringBuilder();
 
@@ -2280,8 +2280,8 @@ public class EzResourceController extends EgovFileMngUtil {
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
     	from.setAddress(userInfo.getEmail());
     	
-    	String emailAddress = xmlDom.getElementsByTagName("MAILADDRESS").item(0).getTextContent().trim(); 
-    	String accessName = xmlDom.getElementsByTagName("OWNERNM").item(0).getTextContent(); 
+    	String emailAddress = resInfo.getMailAddress();
+    	String accessName = resInfo.getOwnerNm();
     	
     	if (accessName.indexOf("(") > -1) {
     		accessName = accessName.split("(")[0];
@@ -2295,6 +2295,8 @@ public class EzResourceController extends EgovFileMngUtil {
         ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         
         logger.debug("sendMail ended");
+        
+        return "OK";
 	}
 	
 	/**
