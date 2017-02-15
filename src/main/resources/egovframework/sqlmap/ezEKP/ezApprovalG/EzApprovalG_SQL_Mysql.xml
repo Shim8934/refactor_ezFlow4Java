@@ -554,7 +554,7 @@
 							(
 								SELECT  
 									A.SN, 
-									A.OWNERID || '@'|| CAST(A.SN AS VARCHAR(10)) AS DOCID ,
+									CONCAT(A.OWNERID, '@', A.SN) AS DOCID ,
 									A.FORMID,
 									A.ORGDOCID, 
 		                     		A.DOCTYPE,
@@ -754,13 +754,13 @@
 							APRTYPE <> '015' 
 		    ]]>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
-	    			AND #v_PSUBQUERY#
+	    			AND 
+	    				#v_PSUBQUERY#
 	  		</isGreaterThan>
 	    			$v_PORDERBYSUB$
 							) A 
 				<![CDATA[
-						WHERE 
-							rownum <= #v_PQUERYSIZEMAIN# 
+						LIMIT #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -799,8 +799,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 							) A 
-						WHERE 
-							rownum <= #v_PQUERYSIZEMAIN# 
+						LIMIT #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -1140,7 +1139,8 @@
            		TBL_APRLINEINFO.DocID = #v_DOCID#
            AND 
            		TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#
-           ORDER BY TBL_APRLINEINFO.AprMemberSN DESC 
+           ORDER BY 
+           		TBL_APRLINEINFO.AprMemberSN DESC 
            ]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="2">
@@ -1155,7 +1155,8 @@
              	FORMID = #v_FORMID#
              AND 
              	TENANT_ID = #v_TENANTID#
-             ORDER BY APRMEMBERSN DESC 
+             ORDER BY 
+             	APRMEMBERSN DESC 
              ]]>
 		</isEqual>
 	</select>
@@ -1211,18 +1212,22 @@
             <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_APRLINEINFO.$v_ORDEROPTION$ 
+		              	ORDER BY 
+		              		TBL_APRLINEINFO.$v_ORDEROPTION$ 
 		          </isEqual>
 		          <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	 ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+		              	 ORDER BY 
+		              	 	$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 		          </isNotEqual>
 	           </isGreaterEqual>
 	           <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 	           </isLessThan>
            </isNotEmpty>
            <isEmpty property="v_ORDEROPTION">
-				 ORDER BY TBL_APRLINEINFO.APRMEMBERSN DESC             
+				 ORDER BY 
+				 	TBL_APRLINEINFO.APRMEMBERSN DESC             
 			</isEmpty>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="END">
@@ -1272,18 +1277,22 @@
               <isNotEmpty property="v_ORDEROPTION">
 	              <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		              <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_ENDAPRLINEINFO.$v_ORDEROPTION$   
+		              	ORDER BY 
+		              		TBL_ENDAPRLINEINFO.$v_ORDEROPTION$   
 		              </isEqual>
 		              <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY $v_ORDEROPTION$ , TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+		              	ORDER BY 
+		              		$v_ORDEROPTION$ , TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
 		              </isNotEqual>
 	              </isGreaterEqual>
 	              <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC 
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC 
 	              </isLessThan>
               </isNotEmpty>
               <isEmpty property="v_ORDEROPTION">
-              	 ORDER BY TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+              	 ORDER BY 
+              	 	TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
               </isEmpty>
               	  
 		</isEqual>
@@ -1334,18 +1343,22 @@
              <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	ORDER BY TBL_APRLINEINFO.$v_ORDEROPTION$ 
+		              	ORDER BY 
+		              		TBL_APRLINEINFO.$v_ORDEROPTION$ 
 		          </isEqual>
 		          <isNotEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
-		              	 ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+		              	 ORDER BY 
+		              	 	$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 		          </isNotEqual>
 	           </isGreaterEqual>
 	           <isLessThan property="v_ORDEROPTIONLENGTH"  compareValue="10" >
-	               	ORDER BY $v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
+	               	ORDER BY 
+	               		$v_ORDEROPTION$, TBL_APRLINEINFO.APRMEMBERSN DESC
 	           </isLessThan>
            </isNotEmpty>
            <isEmpty property="v_ORDEROPTION">
-				 ORDER BY TBL_APRLINEINFO.APRMEMBERSN DESC             
+				 ORDER BY 
+				 	TBL_APRLINEINFO.APRMEMBERSN DESC             
 			</isEmpty>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="TMP">
@@ -1353,7 +1366,7 @@
 				A.* 
 			FROM ( 
 					SELECT 
-						A.OWNERID || '@' || CAST(A.SN AS VARCHAR(20)) AS DOCID, 
+						CONCAT(A.OWNERID ,'@' ,A.SN AS DOCID, 
 						A.APRMEMBERSN,
                    	 	A.APRTYPE, 
                    	 	A.APRSTATE, 
@@ -1582,7 +1595,7 @@
             	ATTACHUSERNAME, 
             	ATTACHUSERJOBTITLE, 
             	ATTACHUSERDEPTNAME, 
-            	OWNERID || '@' || CAST(SN AS VARCHAR(20)) AS DOCID, 
+            	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHFILENAME AS REALATTACHNAME,
             	TENANT_ID
             FROM 
@@ -1598,7 +1611,7 @@
             	ATTACHUSERNAME, 
             	ATTACHUSERJOBTITLE, 
             	ATTACHUSERDEPTNAME, 
-            	OWNERID || '@'|| CAST(SN AS VARCHAR(20)) AS DOCID, 
+            	CONCAT(OWNERID ,'@' ,SN ) AS DOCID, 
             	ATTACHDOCNAME AS REALATTACHNAME,
             	TENANT_ID
             FROM 
@@ -1829,13 +1842,13 @@
 		<isEqual property="v_PMODE" compareValue="TMP">
 		<![CDATA[
 		    SELECT 
-		    		OWNERID || '@' || SN DOCID  ,
+		    		CONCAT(OWNERID ,'@' ,SN ) DOCID  ,
                     'NULL' PROCESSORID  ,
                     'NULL' RECEIVEDDEPTID  
             FROM 
             		TBL_TMPAPRLINEINFO 
             WHERE  
-            		OWNERID || '@' || SN = #v_PDOCID#
+            		CONCAT(OWNERID ,'@' ,SN ) = #v_PDOCID#
             AND 
             		APRMEMBERID = #v_PAPRUSERID#
             AND
@@ -1951,7 +1964,7 @@
 				(
 					SELECT 
 						TBL_TMPRECEIPTPOINTINFO.*, 
-						OWNERID || '@' || CAST(SN AS VARCHAR(20)) AS DOCID	   
+						CONCAT(OWNERID ,'@' ,SN ) AS DOCID	   
             		FROM 
             			TBL_TMPRECEIPTPOINTINFO) TMP 
             WHERE 
@@ -2040,7 +2053,7 @@
 			FROM 
 				(
 					SELECT 
-						OWNERID || '@' || CAST(SN AS VARCHAR(20)) AS DOCID,
+						CONCAT(OWNERID ,'@' ,SN ) AS DOCID,
 						TBL_TMPAPROPINIONINFO.* 
 					FROM 
 						TBL_TMPAPROPINIONINFO) TMP 
@@ -2114,8 +2127,7 @@
       			TENANT_ID = #v_TENANTID#
       		AND
       			APRMEMBERID IN ($v_USERIDS$) 
-      		AND 
-      			ROWNUM <= #v_LISTCOUNT#
+      			LIMIT #v_LISTCOUNT#
       		ORDER BY 
       			STARTDATE $v_BASICORDER$
       			]]>
@@ -2139,8 +2151,7 @@
          		APRMEMBERSN = 1  
          	AND 
          		APRTYPE <> '015' 
-         	AND 
-         		ROWNUM <= #v_LISTCOUNT#
+         	LIMIT #v_LISTCOUNT#
          	ORDER BY 
          		STARTDATE $v_BASICORDER$
          ]]>
@@ -2161,8 +2172,7 @@
             	TENANT_ID = #v_TENANTID#
       		AND
             	APRMEMBERID = #v_USERID# 
-            AND 
-            	ROWNUM <= #v_LISTCOUNT#
+            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	STARTDATE $v_BASICORDER$
           ]]>
@@ -2246,8 +2256,7 @@
             	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '002' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '004')
             AND 
             	TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y' 
-            AND 
-            	ROWNUM <= #v_LISTCOUNT# 
+            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	PROCESSDATE $v_BASICORDER$
             ]]>
@@ -2279,8 +2288,7 @@
             	TENANT_ID = #v_TENANTID#
             AND
             	APRMEMBERID IN ($v_USERIDS$) 
-            AND 
-            	ROWNUM <= #v_LISTCOUNT#
+            LIMIT #v_LISTCOUNT#
             ORDER BY 
             	STARTDATE $v_BASICORDER$
             	]]>
@@ -3238,7 +3246,7 @@
 					COLNAME, 
 					COLALIAS, 
 					DTYPE, 
-					COLNAME || ' AS ' || COLALIAS AS SELECTFIELD
+					CONCAT(COLNAME , ' AS ' , COLALIAS) AS SELECTFIELD
 	        FROM 
 	        		TBL_LISTINFO 
 	      	WHERE 
@@ -3255,7 +3263,7 @@
 						COLNAME, 
 						COLALIAS, 
 						DTYPE, 
-						COLNAME || ' AS ' || COLALIAS AS SELECTFIELD
+						CONCAT(COLNAME , ' AS ' , COLALIAS) AS SELECTFIELD
 		        FROM 
 		        		TBL_LISTINFO 
 		      	WHERE 
@@ -3617,11 +3625,11 @@
 						TBL_SEPERATEATTACH.RegisterType = #regType#
 				</isNotEmpty>
 				<isNotEmpty property="regStartDate" prepend="AND">
-						TBL_RECORD.RegisterDate >= STR_STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
+						TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
 				</isNotEmpty>
 				<isNotEmpty property="regEndDate" prepend="AND">
 					<![CDATA[
-						TBL_RECORD.RegisterDate <= STR_STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
+						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="sc" prepend="AND">
@@ -4445,9 +4453,8 @@
         AND
         		A.TENANT_ID = #v_TENANTID#
         ORDER BY 
-        		C.AprMemberSN DESC )
-        WHERE 
-        		ROWNUM <= 1 
+        		C.AprMemberSN DESC ) A
+        LIMIT 1
         ]]>
 	</select>
 <!-- 	<procedure id="EzApprovalG.setCabinetRecvList" parameterClass="Map" resultClass="ApprGCabinetRecVO"> -->
@@ -4484,16 +4491,15 @@
 	        	 A.TENANT_ID = B.TENANT_ID
 	        LEFT JOIN 
 	        	 TBL_DOCDELIVERY C   
-	         ON 
+	        ON 
 	         	 A.DocID = C.DocID
-	         AND
+	        AND
 	         	 A.TENANT_ID = C.TENANT_ID
-	         WHERE  
+	        WHERE  
 	       		 A.DocID = #v_DOCID#
-	       	 AND
+	       	AND
 	       	 	 A.TENANT_ID = #v_TENANTID# 
-	       	 AND 
-	       	 	 ROWNUM <= 1
+	       	LIMIT 1
 	       	 	 ]]> 
 	</select>
 <!-- 	<procedure id="EzApprovalG.setLastOpinionToOrgDoc" parameterClass="Map" resultClass="ApprGOpinionVO"> -->
@@ -4521,9 +4527,8 @@
 				AND
 					TBL_APROPINIONINFO.TENANT_ID = #v_TENANTID#
 				ORDER BY 
-					TBL_APRLINEINFO.AprMemberSN DESC )
-		 WHERE 
-				ROWNUM <= 1
+					TBL_APRLINEINFO.AprMemberSN DESC ) A
+		 LIMIT 1
 			]]>
 	</select>
 	
@@ -4547,8 +4552,7 @@
                 	  SIGNNAME LIKE 'sign%'
         		ORDER BY 
         			  SIGNNAME DESC )
-        WHERE 
-        	ROWNUM <= 1
+      LIMIT 1
         ]]>
 	</select>
 	
@@ -4677,8 +4681,7 @@
        			 	  TENANT_ID = #v_TENANTID#
         		 ORDER BY 
         		 	  READDATE DESC )
-        WHERE 
-        	ROWNUM <= 100 
+        LIMIT 100
         	]]>
 	</select>
 	
@@ -4740,8 +4743,7 @@
           		DOCID = #v_DOCID#
           AND
           		TENANT_ID = #v_TENANTID#
-          AND 
-          		ROWNUM <= 1 
+        LIMIT 1
          ]]>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO"> -->
@@ -4791,18 +4793,16 @@
                                                       		TENANT_ID = #v_TENANTID#
                                                       ORDER BY 
                                                             APRMEMBERSN DESC )
-                                              WHERE 
-                                                    ROWNUM <= 1
+                                               LIMIT 1
                                                AND
-                                                    TENANT_ID = #v_TENANTID# ) )
+                                                    TENANT_ID = #v_TENANTID# )A )
                     AND 
                           ( DOCID = #v_DOCID# )
                     AND
                           TENANT_ID = #v_TENANTID#
                     ORDER BY 
-                           APRMEMBERSN )
-              WHERE 
-                     ROWNUM <= 2 
+                           APRMEMBERSN ) B
+               LIMIT 2
 
                      ]]>
 	</select>
@@ -4837,10 +4837,9 @@
 		                                         		TENANT_ID = #v_TENANTID#
 		                                         ORDER BY 
 		                                                APRMEMBERSN DESC )
-		                                  WHERE 
-		                                         ROWNUM <= 1 
+		                                  	LIMIT 1
 		                                  AND
-		                                         TENANT_ID = #v_TENANTID#) )
+		                                         TENANT_ID = #v_TENANTID#)A )
 		       AND 
 		            ( DOCID = #v_DOCID# )
 		       AND
@@ -5076,8 +5075,7 @@
 			</isEmpty>
 			<![CDATA[
 			)
-			WHERE 
-				ROWNUM <= #v_PAGESIZE#) A 
+			 LIMIT #v_PAGESIZE#) A 
 			]]>
 			<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">
@@ -5100,8 +5098,7 @@
 							PROCESSDATE $v_BASICORDER2$
 			</isEmpty>
 			<![CDATA[
-			) WHERE 
-					ROWNUM <= #v_PAGESIZE2#
+			)  LIMIT  <= #v_PAGESIZE2#
 			]]>
 	</select>
 	
@@ -5161,9 +5158,8 @@
 						             AND
 						             		TBL_DOCDELIVERY.TENANT_ID = #v_TENANTID#
 						             ORDER BY 
-						            		TBL_DOCDELIVERY.RECEIPTDATE DESC )
-					            WHERE 
-					            	  ROWNUM <= 1 ) SN  
+						            		TBL_DOCDELIVERY.RECEIPTDATE DESC ) A
+					             LIMIT 1 ) SN  
 		        		FROM 
 		        			  TBL_APRDOCINFO 
 		        
@@ -5178,8 +5174,8 @@
 		       			AND
 		       				  TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
 		        		ORDER BY 
-		        			  PROCESSYN )
-		        WHERE ROWNUM <= 1
+		        			  PROCESSYN ) B
+		         LIMIT 1
 		       ]]>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getNextDocInfo" parameterClass="Map" resultClass="ApprGDocListVO"> -->
@@ -5504,8 +5500,7 @@
                      		B.OrgDocID = #v_DOCID#
                      AND
                      		A.TENANT_ID = #v_TENANTID# 
-                     AND 
-                     		ROWNUM <= 1
+                     LIMIT 1
                      
                      UNION ALL 
                      
@@ -5534,8 +5529,7 @@
 	                       			A.TENANT_ID = #v_TENANTID#
 	                        ORDER BY 
 	                       			FLAG DESC, DOCID DESC )
-            WHERE 
-            		ROWNUM <= 1 ) C 
+            LIMIT 1 ) C 
          ]]>
 		</isNotEqual>
 		</isNotEqual>
@@ -5549,7 +5543,6 @@
 			* 
 		FROM(
 				SELECT 
-					row_number() over($v_tmp$) as rnum, 
 					A.* FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -5618,17 +5611,17 @@
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE1">
 							   	 	 AND 
-							   	 	 	   STARTDATE >= STR_STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), '%Y-%m-%d %H:%i:%s')
+							   	 	 	   STARTDATE >= STR_TO_DATE(SUBSTR(#v_STARTDATE1#,1,10), '%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_STARTDATE2">
 							   	<![CDATA[
 							   	 	 AND 
-							   	 		   STARTDATE <= STR_STR_TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 		   STARTDATE <= STR_TO_DATE(SUBSTR(#v_STARTDATE2#,1,10),'%Y-%m-%d %H:%i:%s')
 							   	 ]]>
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE1">
 							   	 	 AND 
-							   	 	       ENDDATE >= STR_STR_TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
+							   	 	       ENDDATE >= STR_TO_DATE(SUBSTR(#v_ENDDATE1#,1,10),'%Y-%m-%d %H:%i:%s')
 							   	</isNotEmpty>
 							   	<isNotEmpty property="v_ENDDATE2">
 							   	<![CDATA[
@@ -5755,10 +5748,7 @@
 							   	</isEmpty>
 							   	<![CDATA[
 							   	 ) A 
-							   	 	WHERE 
-							   	 		ROWNUM <= #v_PAGESIZE#) 
-							   		 WHERE 
-							   		 	rnum <= #v_PAGESIZE2#
+							   	 	LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -5907,35 +5897,34 @@
 											ENDDATE DESC
 									</isEmpty>
 									 <![CDATA[
-									  ) WHERE 
-									  		ROWNUM <= #v_PAGESIZE#) A
+									  )  LIMIT  #v_PAGESIZE#) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$) WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$)  LIMIT  #v_PAGESIZE2#
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE )LIMIT #v_PAGESIZE2#
 						]]>
 						</isNotEqual>
 						</isGreaterEqual>
 						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
 						<![CDATA[	
 							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE)	WHERE ROWNUM <= #v_PAGESIZE2#
+								$v_ORDEROPTION2$, ENDDATE)	LIMIT #v_PAGESIZE2#
 						]]>
 						</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
 						<![CDATA[	
 							ORDER BY 
-								ENDDATE ) WHERE ROWNUM <= #v_PAGESIZE2#
+								ENDDATE ) LIMIT #v_PAGESIZE2#
 						]]>
 						</isEmpty>
 		   			
@@ -6039,7 +6028,7 @@
 			 	DOCTITLE 
              FROM ( 
              		SELECT 
-             			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+             			CONCAT(OWNERID , '@' ,SN ) DOCID  ,
                          DOCTITLE 
                     FROM 
                     	TBL_TMPAPRDOCINFO
@@ -6059,7 +6048,7 @@
                         ATTACHFILESIZE ATTACHFILESIZE  
                     FROM ( 
                     		SELECT 
-                    			(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+                    			ONCAT(OWNERID , '@' ,SN ) DOCID  ,
                                  ATTACHFILENAME ,
                                  ATTACHFILEHREF ,
                                  ATTACHFILESIZE 
@@ -6078,7 +6067,7 @@
                         TO_BINARY_FLOAT(NULL) ATTACHFILESIZE  
                    FROM ( 
                    			SELECT 
-                   				(CAST(OWNERID AS VARCHAR2(200)) || '@' || CAST(SN AS VARCHAR2(200))) DOCID  ,
+                   				ONCAT(OWNERID , '@' ,SN ) DOCID  ,
                                 ATTACHDOCNAME ,
                                 ATTACHDOCURL 
                            FROM 
@@ -6112,8 +6101,7 @@
                 	  APRSTATE = '001'
         		ORDER BY 
         			  APRMEMBERSN )
-        WHERE 
-        		ROWNUM <= 1
+        LIMIT 1
         	]]>
 	</select>
 	
@@ -6123,7 +6111,9 @@
 <!--  민원인 주소 여러개 추가 가능하도록 처리 -->
 	<select id="EzApprovalG.getSendOutDocList" parameterClass="Map" resultClass="ApprGDocListVO">
 		<![CDATA[
-		SELECT * FROM (
+		SELECT 
+			* 
+		FROM (
 			SELECT 
 				TBL_ENDAPRDOCINFO.DOCID,
 		   		TBL_ENDAPRDOCINFO.ORGDOCID, 
@@ -6474,8 +6464,7 @@
            		A.TENANT_ID = #v_TENANTID#
            AND
            		A.DocID = #v_DOCID# 
-           AND 
-           		ROWNUM <= 1
+           LIMIT 1
            ]]>
 		</isNotEmpty>
 		<isEmpty property="v_HESONGFLAG">
@@ -7382,7 +7371,7 @@
 	
 	<select id="EzApprovalG.returnContainerID3" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 	#v_CONTAINERID# || ':' || #v_CONTAINERTYPEID# CONTAINERID  
+		 	CONCAT(#v_CONTAINERID# , ':' , #v_CONTAINERTYPEID#) CONTAINERID  
 	     FROM 
 	     	DUAL  
 	</select>
@@ -7400,7 +7389,7 @@
 	
 	<select id="EzApprovalG.makeContainer" parameterClass="Map" resultClass="String">
 		SELECT  
-     		SUBSTR('0000000000' || ((CASE WHEN MAX(CONTAINERID) IS NULL THEN '0000000000'  ELSE MAX(CONTAINERID)  END) + 1 ), -10, 10)
+     		SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(CONTAINERID) IS NULL THEN '0000000000'  ELSE MAX(CONTAINERID)  END) + 1 )), -10, 10)
      	  FROM 
      	  		TBL_Container
      	  WHERE 
@@ -7476,8 +7465,7 @@
             		TENANT_ID = #v_TENANTID#
             ORDER BY 
             		APRMEMBERSN )
-     WHERE 
-     		ROWNUM <= 1
+  	LIMIT 1
      	]]>
 	</select>
 	
@@ -7715,7 +7703,7 @@
          AND
          		A.TENANT_ID = B.TENANT_ID
          WHERE
-         		A.TENANT_ID=#v_TENANTID#
+         		A.TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAprDocListCount" parameterClass="Map" resultClass="int"> -->
@@ -7959,17 +7947,17 @@
 			COUNT(TBL_RECORD.RecordID)
 		FROM 
 	   		TBL_RECORD 
-	   Left Join 
+	    Left Join 
 	   		TBL_ENDAPRDOCINFO 
-	   On 
-	   		TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
-	   AND 
+	    On 
+	    	TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID 
+	    AND 
 	   		TBL_RECORD.DocID = TBL_ENDAPRDOCINFO.DocID 
-	   Inner Join 
+	    Inner Join 
 	   		TBL_SEPERATEATTACH 
-	   On 
+	    On 
 	   		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID 
-	   AND 
+	    AND 
 	   		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID 
   <isEqual property="usePublicFlag" compareValue="true">
 	   Left Join 
@@ -8020,9 +8008,7 @@
 			  AND 
 			   		TBL_CABINETCLASS.DelFlag = '0' 
 			  AND 
-			   		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
-			   				And 
-			   			ConfirmFlag = '0')
+			   		NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0')
 			  AND 
 			  		OwnerDeptID = #tempDeptCode#
 			</isEmpty> 
@@ -14324,10 +14310,6 @@
 		</isNotEqual>
 	</select>
 	
-	<procedure id="EzApprovalG.getSearchList" parameterClass="Map" resultClass="String">
-		{CALL SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
-	</procedure>
-	
 <!-- 		<procedure id="EzApprovalG.updateReceiptOffer" parameterClass="Map" > -->
 <!-- 		{CALL EZSP_UPDATERECEIPTOFFER(#v_DOCID#,#v_ORGDOCID#)}	 -->
 <!-- 	</procedure> -->
@@ -14362,14 +14344,6 @@
            AND
            		 TENANT_ID = #v_TENANTID#
          )
-	</insert>
-	
-	<insert id="EzApprovalG.insertReceiptInfo" parameterClass="Map">
-		$sqlString$
-	</insert>
-	
-	<insert id="EzApprovalG.insertSignInfoAprSN" parameterClass="Map">
-		$sqlString$
 	</insert>
 	
 	<insert id="EzApprovalG.insertTbSpecialCatalogInfo_Cab" parameterClass="Map">
@@ -14944,7 +14918,11 @@
    </delete>
    
    <insert id ="EzApprovalG.insertTbSpecialCatalogInfoRec" parameterClass="map">
-   		$sqlString$
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_REC 
+   		(RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID) 
+   		VALUES 
+   		(#v_RECID#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#,  #v_TENANTID#)
    </insert>
    
    <delete id ="EzApprovalG.deleteTbCabRoleInfo" parameterClass="map">
@@ -16599,19 +16577,21 @@
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, #v_SYSDATE#, 'N',           NULL,           NULL,           NULL,            NULL,              NULL,               NULL,               DocID, TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO A 
-   		 WHERE 
-   		 	ROWNUM <= 1 
-   		 AND 
-   		 	DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN#
-   		 AND 
-   		 	TENANT_ID = #v_TENANTID# 
-   		 )
+   		 (select 
+   		 * 
+   		 from 
+	   		 (SELECT 
+	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN#
+	   		 AND 
+	   		 	TENANT_ID = #v_TENANTID# 
+	   		 order by ProcessDate desc	
+	   		 ) LIMIT 1 )
    		 	]]>
    </insert>
    
@@ -16718,26 +16698,28 @@
          	TENANT_ID = #v_TENANTID#)
    </insert>
    
-   <update id="EzApprovalG.updateHesongAprReceiptProcessInfo3" parameterClass="Map">
+   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo3" parameterClass="Map">
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, #v_SYSDATE#, 'N',       NULL,          NULL,             NULL,         NULL,               NULL,                NULL,                 DocID , TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO A
-   		 WHERE 
-   		 	ROWNUM <= 1 
-   		 AND 
-   		 	DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN# 
-   		 AND 
-   		 	TENANT_ID= #v_TENANTID# 
-   		 )
+   		( select 
+   		 	* 
+   		 from  
+	   		 (SELECT 
+	   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN# 
+	   		 AND 
+	   		 	TENANT_ID= #v_TENANTID# 
+	   		 	order by ProcessDate desc
+	   		 ) LIMIT 1 ) 
    		 ]]>
-   </update>
+   </insert>
    
    <update id="EzApprovalG.updateRejectAprReceiptProcessInfo" parameterClass="Map">
    		UPDATE 

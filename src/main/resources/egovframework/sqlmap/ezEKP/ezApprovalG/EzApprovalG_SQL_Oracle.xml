@@ -14332,10 +14332,6 @@
 		</isNotEqual>
 	</select>
 	
-	<procedure id="EzApprovalG.getSearchList" parameterClass="Map" resultClass="String">
-		{CALL SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
-	</procedure>
-	
 <!-- 		<procedure id="EzApprovalG.updateReceiptOffer" parameterClass="Map" > -->
 <!-- 		{CALL EZSP_UPDATERECEIPTOFFER(#v_DOCID#,#v_ORGDOCID#)}	 -->
 <!-- 	</procedure> -->
@@ -14370,14 +14366,6 @@
            AND
            		 TENANT_ID = #v_TENANTID#
          )
-	</insert>
-	
-	<insert id="EzApprovalG.insertReceiptInfo" parameterClass="Map">
-		$sqlString$
-	</insert>
-	
-	<insert id="EzApprovalG.insertSignInfoAprSN" parameterClass="Map">
-		$sqlString$
 	</insert>
 	
 	<insert id="EzApprovalG.insertTbSpecialCatalogInfo_Cab" parameterClass="Map">
@@ -14953,7 +14941,11 @@
    </delete>
    
    <insert id ="EzApprovalG.insertTbSpecialCatalogInfoRec" parameterClass="map">
-   		$sqlString$
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_REC 
+   		(RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID) 
+   		VALUES 
+   		(#v_RECID#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#,  #v_TENANTID#)
    </insert>
    
    <delete id ="EzApprovalG.deleteTbCabRoleInfo" parameterClass="map">
@@ -16608,17 +16600,20 @@
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
-   		 WHERE 
-   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN#
-   		 AND 
-   		 	TENANT_ID = #v_TENANTID# 
-   		 )
+   		(select 
+   			* 
+   		 from 
+	   		(SELECT 
+	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN#
+	   		 AND 
+	   		 	TENANT_ID = #v_TENANTID# 
+	   		 ) where ROWNUM <= 1 )
    		 	]]>
    </insert>
    
@@ -16725,26 +16720,26 @@
          	TENANT_ID = #v_TENANTID#)
    </insert>
    
-   <update id="EzApprovalG.updateHesongAprReceiptProcessInfo3" parameterClass="Map">
+   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo3" parameterClass="Map">
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
-   		 WHERE 
-   		 	ROWNUM <= 1 
-   		 AND 
-   		 	DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN# 
-   		 AND 
-   		 	TENANT_ID= #v_TENANTID# 
-   		 )
+   		 (select 
+   		 	* 
+   		 from (SELECT 
+	   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN# 
+	   		 AND 
+	   		 	TENANT_ID= #v_TENANTID# 
+	   		 ) where ROWNUM <= 1)
    		 ]]>
-   </update>
+   </insert>
    
    <update id="EzApprovalG.updateRejectAprReceiptProcessInfo" parameterClass="Map">
    		UPDATE 
