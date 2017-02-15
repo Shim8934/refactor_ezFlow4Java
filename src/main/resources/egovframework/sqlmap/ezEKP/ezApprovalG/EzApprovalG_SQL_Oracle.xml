@@ -24,6 +24,7 @@
 	<typeAlias  alias="ApprGListHeaderVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO"/>
 	<typeAlias  alias="ApprGReceiveDocVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO"/>
 	<typeAlias  alias="ApprGSecondApprVO"	 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO"/>
+	<typeAlias  alias="ApprGCabinetListVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO"/>
 	<typeAlias  alias="ApprGHistoryLineVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryLineVO"/>
 	<typeAlias  alias="ApprGLineTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO"/>
 	<typeAlias  alias="ApprGDeptTempletVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO"/>
@@ -3330,7 +3331,7 @@
 						TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
-						TBL_SEPERATEATTACH.CreateDate + $offSetMin$/(24*60) as CreateDate,
+						TBL_SEPERATEATTACH.CreateDate + $offsetMin$/(24*60) as CreateDate,
 	                	TBL_ENDAPRDOCINFO.DocType, 
 	                	TBL_SEPERATEATTACH.RegisterType, 
 	                	TBL_ENDAPRDOCINFO.DocState,  
@@ -3344,7 +3345,7 @@
 						TBL_CABINET.CabinetClassNo, 
 						TBL_CABINET.ProcessDeptCode AS CabDeptCode, 
 						TBL_CABINET.OwnerDeptID, 
-	                	TBL_RECORD.RegisterDate + $offSetMin$/(24*60) as RegisterDate, 
+	                	TBL_RECORD.RegisterDate + $offsetMin$/(24*60) as RegisterDate, 
 	                	TBL_RECORD.AprMemberTitle$multiLang$ as AprMemberTitle, 
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
@@ -3490,7 +3491,7 @@
 					  	  			) 
 					  	  			OR 
 					  	  			( 
-					  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET WHERE TENANT_ID = #tenantID#) 
+					  	  				TBL_CABINETCLASS.ConfirmYear > (SELECT Max(DocTransferYear) FROM TBL_CABINET A WHERE A.TENANT_ID = #tenantID#) 
 					  	  			) 
 					  	  		)
 					  </isEqual>
@@ -3499,11 +3500,11 @@
 					  	  		TBL_CABINETCLASS.CabinetClassNo IN ( Select 
 					  	  												CabinetClassNo 
 					  	  											 From 
-					  	  											 	TBL_CABROLEINFO 
+					  	  											 	TBL_CABROLEINFO A 
 					  	  											 Where 
-					  	  											 	TENANT_ID = #tenantID#
+					  	  											 	A.TENANT_ID = #tenantID#
 					  	  											 AND
-					  	  											 	User_ID IN (#charger#) )
+					  	  											 	A.User_ID IN (#charger#) )
 					  </isNotEmpty>
 					  <isNotEmpty property="transExpire">
 					  	<![CDATA[
@@ -3575,9 +3576,9 @@
 						DocTransferYear = ( SELECT 
 												MAX(DocTransferYear) 
 											FROM 
-												TBL_SEPERATEATTACH
+												TBL_SEPERATEATTACH A
 											WHERE
-												TENANT_ID = #tenantID# )
+												A.TENANT_ID = #tenantID# )
 				</isEqual>
 				<isEqual property="listFlag" compareValue="7">
 					<isEqual property="dFlag" compareValue="Y" prepend="AND">
@@ -3627,9 +3628,9 @@
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
 												FROM 
-													TBL_SPECIALCATALOGINFO_REC 
+													TBL_SPECIALCATALOGINFO_REC A 
 												Where
-													TENANT_ID = #tenantID#
+													A.TENANT_ID = #tenantID#
 												AND
 													(
 														SC1 Like CONCAT(CONCAT('%', #sc#), '%') 
@@ -3661,13 +3662,13 @@
 						  		0 < (   SELECT 
 						  					COUNT(DocID) 
 						  				FROM 
-						  					TBL_ENDAPRLINEINFO 
+						  					TBL_ENDAPRLINEINFO A 
 						  				WHERE  
-						  					TENANT_ID = #tenantID# 
+						  					A.TENANT_ID = #tenantID# 
 						  				AND 
-						  					DocID = TBL_RECORD.DocID  
+						  					A.DocID = TBL_RECORD.DocID  
 						  				AND 
-						  					AprMemberID = #userID# ) 
+						  					A.AprMemberID = #userID# ) 
 						  	OR 
 						  		TBL_RECORD.DocID = NULL 
 						  	) = 'Y'
@@ -3685,7 +3686,21 @@
 					</isNotEqual>
 				</isEqual>
 			<isNotEmpty property="isDocPrint">
-				) N ) A 
+				<isEqual property="isDocPrint" compareValue="TRUE">
+					<isLessThan property="start" compareValue="0">
+						) N ) A 
+					</isLessThan>
+					<isGreaterEqual property="start" compareValue="0">
+						) N ) A 
+					WHERE 
+						ROWNUM_ BETWEEN #start# AND #end#
+					</isGreaterEqual>
+				</isEqual>
+				<isNotEqual property="isDocPrint" compareValue="TRUE">
+					) N ) A 
+				WHERE 
+					ROWNUM_ BETWEEN #start# AND #end#
+				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
 				) N ) A 
@@ -6682,110 +6697,107 @@
 		</isNotEqual>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true"> -->
-<!-- 		{CALL EZSP_GETACCESSYNG(#v_DOCID#, #v_FLAG#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
 	<select id ="EzApprovalG.getAccessYNG" parameterClass="Map" resultClass="String" remapResults="true">
 		<isEqual property="v_FLAG" compareValue="001">
-		<![CDATA[
-			SELECT 
-				PUBLICITYCODE 
-	        FROM 
-	        	TBL_EXPENDAPRDOCINFO 
-	        WHERE  
-	        	DOCID = #v_DOCID#
-	        AND
-				TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				SELECT 
+					PUBLICITYCODE 
+		        FROM 
+		        	TBL_EXPENDAPRDOCINFO 
+		        WHERE  
+		        	DOCID = #v_DOCID#
+		        AND
+					TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 		
 		<isEqual property="v_FLAG" compareValue="002">
-		<![CDATA[
-			 SELECT     
-			  		CASE 
-			  			WHEN NVL(COUNT(DocID), 0) > 0 THEN 'Y' 
-             			ELSE 
-             			'N'
-             		END AS RET
-			  FROM
-			  		TBL_ENDAPRLINEINFO 
-       		  WHERE  
-       				DocID = $v_DOCID$
-              AND 
-              		AprMemberID = #v_USERID#
-              AND
-					TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				 SELECT     
+				  		CASE 
+				  			WHEN NVL(COUNT(DocID), 0) > 0 
+				  			THEN 'Y' 
+	             			ELSE 'N'
+	             		END AS RET
+				  FROM
+				  		TBL_ENDAPRLINEINFO 
+	       		  WHERE  
+	       				DocID = #v_DOCID#
+	              AND 
+	              		AprMemberID = #v_USERID#
+	              AND
+						TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="003">
-		<![CDATA[
-		 	SELECT 
-		 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
-            FROM 
-            	TBL_RECORD 
-            JOIN 
-            	TBL_SEPERATEATTACH    
-           	ON 
-           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
-           	AND 
-           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
-            WHERE  
-            	TBL_RECORD.DocID = #v_DOCID#
-            AND
-				TBL_RECORD.TENANT_ID = #v_TENANTID#	
+			<![CDATA[
+			 	SELECT 
+			 		DISTINCT SUBSTR(TBL_SEPERATEATTACH.CabinetID, 1, 7) AprMemberDeptID  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_SEPERATEATTACH    
+	           	ON 
+	           		TBL_RECORD.RecordID = TBL_SEPERATEATTACH.RecordID
+	           	AND 
+	           		TBL_RECORD.TENANT_ID = TBL_SEPERATEATTACH.TENANT_ID
+	            WHERE  
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#	
 			]]>	
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="004">
-		<![CDATA[
-			SELECT 
-				APRMEMBERID 
-            FROM 
-            	TBL_ENDAPRLINEINFO 
-            WHERE  
-            	( APRMEMBERSN = '1' )
-            AND 
-            	( APRMEMBERID = #v_USERID# )
-            AND 
-            	DOCID = #v_DOCID#
-            AND
-				TENANT_ID = #v_TENANTID#	 
-				]]>
+			<![CDATA[
+				SELECT 
+					APRMEMBERID 
+	            FROM 
+	            	TBL_ENDAPRLINEINFO 
+	            WHERE  
+	            	( APRMEMBERSN = '1' )
+	            AND 
+	            	( APRMEMBERID = #v_USERID# )
+	            AND 
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	 
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="005">
-		<![CDATA[
-			SELECT 
-				SECURITYCODE 
-            FROM 
-            	TBL_EXPENDAPRDOCINFO 
-            WHERE  
-            	DOCID = #v_DOCID#
-            AND
-				TENANT_ID = #v_TENANTID#	
-				]]>
+			<![CDATA[
+				SELECT 
+					SECURITYCODE 
+	            FROM 
+	            	TBL_EXPENDAPRDOCINFO 
+	            WHERE  
+	            	DOCID = #v_DOCID#
+	            AND
+					TENANT_ID = #v_TENANTID#	
+			]]>
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="006">
-		<![CDATA[
-			SELECT 
-				COUNT(TBL_RECROLEINFO.UserRight)  
-            FROM 
-            	TBL_RECORD 
-            JOIN 
-            	TBL_RECROLEINFO    
-            ON 
-            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
-            AND
-            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
-            WHERE  
-            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
-            AND 
-            	( TBL_RECROLEINFO.UserID = #v_USERID# )
-            AND 
-            	( TBL_RECROLEINFO.UserRight = '1' )
-            AND 
-            	TBL_RECORD.DocID = #v_DOCID#
-            AND
-				TBL_RECORD.TENANT_ID = #v_TENANTID#
-		]]>
+			<![CDATA[
+				SELECT 
+					COUNT(TBL_RECROLEINFO.UserRight)  
+	            FROM 
+	            	TBL_RECORD 
+	            JOIN 
+	            	TBL_RECROLEINFO    
+	            ON 
+	            	TBL_RECORD.RecordID = TBL_RECROLEINFO.RecordID
+	            AND
+	            	TBL_RECORD.TENANT_ID = TBL_RECROLEINFO.TENANT_ID
+	            WHERE  
+	            	( TBL_RECROLEINFO.SeperateAttachNo = '00' )
+	            AND 
+	            	( TBL_RECROLEINFO.UserID = #v_USERID# )
+	            AND 
+	            	( TBL_RECROLEINFO.UserRight = '1' )
+	            AND 
+	            	TBL_RECORD.DocID = #v_DOCID#
+	            AND
+					TBL_RECORD.TENANT_ID = #v_TENANTID#
+			]]>
 		</isEqual>
 	
 	</select>
@@ -6804,9 +6816,9 @@
 	   		AND 
 	   			APRTYPE <> '015' 
 	   		AND 
-	   			 STARTDATE >= $v_STARTDATE$ 
+	   			 STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    			]]>
@@ -6822,9 +6834,9 @@
 	   		AND 
 	   			AprType <> '015'  
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$  
+	   			STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')  
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    		]]>
@@ -6844,9 +6856,9 @@
 	   		AND 
 	   			DocState <> '017'
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$
+	   			STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6888,9 +6900,9 @@
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
-	   		 		PROCESSDATE >= $v_STARTDATE$ 
+	   		 		PROCESSDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		 	AND 
-	   		 		PROCESSDATE <= $v_ENDDATE$ 
+	   		 		PROCESSDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		 ]]>
@@ -6917,9 +6929,9 @@
    			AND 
    				TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
    			AND 
-   		 		PROCESSDATE >= $v_STARTDATE$ 
+   		 		PROCESSDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
    		 	AND 
-   		 		PROCESSDATE <= $v_ENDDATE$
+   		 		PROCESSDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
    		 	AND	
 	   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6948,9 +6960,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6977,9 +6989,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -6995,9 +7007,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7011,9 +7023,9 @@
    			WHERE 
    				OWNERID IN ($v_USERIDS$) 
    			AND 
-   				STARTDATE >= $v_STARTDATE$ 
+   				STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <=  $v_ENDDATE$ 
+	   			STARTDATE <=   TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]> 
@@ -11960,8 +11972,8 @@
 	 		TBL_CABINETCLASS 
         SET 
         	CONFIRMFLAG = '1', 
-            CONFIRMYEAR = TO_CHAR(SYSDATE,'YYYY'), 
-            EXPIRATIONYEAR = TO_CHAR(add_months(sysdate, -12),'YYYY')
+            CONFIRMYEAR = #v_SYSDATE#, 
+            EXPIRATIONYEAR = #v_SYSDATE# -1
         WHERE 
         	CABINETCLASSNO IN (
         						SELECT 
@@ -12583,10 +12595,6 @@
 	<procedure id="EzApprovalG.transactionSQL" parameterClass="Map">
 		{CALL TRANSACTIONSQL(#sqlString#)}
 	</procedure>
-	
-	<insert id="EzApprovalG.insertStringSql" parameterClass="Map">
-		$sqlString$
-	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.moveRecord" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_MOVERECORD(#v_RECORDID#, #v_SEPATTNO#, #v_CABINETID# ,#v_FLAG#)} -->
@@ -13417,17 +13425,594 @@
 				   		]]>
 	</select>
 	
-<!-- 	<procedure id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true"> -->
-<!-- 		{CALL SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	 -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalG.getCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO" remapResults="true">
-	$sqlString$
+	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">
+		SELECT 
+			* 
+		FROM 
+			( SELECT 
+					ROW_NUMBER() OVER( $orderBy$ ) AS ROWNUM_, 
+					N.*  
+			  FROM 
+			  		( SELECT 
+			  				TBL_CABINET.CabinetID,
+			  				TBL_CABINETCLASS.RegSerialNo, 
+			  				TBL_CABINETCLASS.ProductionYear, 
+			  				TBL_CABINET.VolumeNo, 
+			  				TBL_CABINETCLASS.ModifyFlag, 
+			  				TBL_CABINET.CabinetTransferFlag, 
+			  				TBL_CABINETCLASS.ConfirmFlag, 
+			  				TBL_CABINETCLASS.TaskCode, 
+			  				TBL_CABINETCLASS.TaskName, 
+			  				TBL_CABINETCLASS.TaskName2, 
+			  				TBL_CABINETCLASS.ProcessDeptCode, 
+			  				TBL_CABINETCLASS.ProcessDeptName,
+			  				TBL_CABINETCLASS.ProcessDeptName2, 
+			  				TBL_CABINET.CabinetClassNo, 
+			  				TBL_CABINETCLASS.RecTypeCode as RecTypeCode, 
+			  				TBL_CABINETCLASS.CreateDate + $offsetMin$/(24*60) AS ClassCreateDate, 
+			  				TBL_CABINETCLASS.OwnerID, 
+			  				TBL_CABINETCLASS.SpecialCatalogFlag, 
+			  				TBL_CABINETCLASS.TerminateFlag, 
+			  				TBL_CABINETCLASS.OwnerDeptID, 
+			  				TBL_CABINETCLASS.OwnerTask, 
+			  				TBL_CABINETCLASS.TransDelayFlag 
+			  				$extraSelectClause$ 
+			  		  FROM  
+			  		  		TBL_CABINETCLASS  
+			  		  INNER JOIN 
+			  		  		TBL_CABINET  
+			  		  ON 
+			  		  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+			  		  AND 
+			  		  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+		  		  	  WHERE 
+		  		  	  		TBL_CABINET.DelFlag = '0' 
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.DelFlag = '0' 
+		  		  <isEqual property="listFlag" compareValue="9">
+		  		  	  AND 
+		  		  	  		TBL_CABINET.CabinetTransferFlag = '2'
+		  		  	  AND 
+		  		  	  		( 
+		  		  	  			( OwnerDeptID = #deptCode#
+		  		  	  				AND
+		  		  	  			  ConfirmFlag = '0' ) 
+		  		  	  			OR 
+		  		  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+		  		  	  				AND 
+		  		  	  			  ConfirmFlag = '1') 
+		  		  	  		)
+		  		  </isEqual>
+		  		  <isNotEqual property="listFlag" compareValue="9">
+		  		  	  AND 
+		  		  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
+		  		  	  				AND 
+		  		  	  			 ConfirmFlag = '0')	
+	  		  	    <isNotEmpty property="deptCode">
+	  		  	      AND 
+	  		  	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	  		  	    </isNotEmpty>
+		  		  </isNotEqual>
+		  		  <isNotEmpty property="title">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.Title$multiLang$ Like CONCAT(CONCAT('%', #title#), '%')
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="taskCode">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="sProduceYear">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ProductionYear >= #sProduceYear# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="eProduceYear">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ProductionYear <= #eProduceYear# 
+					]]>
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="sExpYear">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ExpirationYear >= #sExpYear# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="eExpYear">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.ExpirationYear <= #eExpYear#
+					]]>
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="recTypeCode">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.RecTypeCode = #recTypeCode# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepPeriod">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.KeepingPeriod = #keepPeriod# 
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepMethod">
+		  		      AND 
+		  		      		TBL_CABINETCLASS.KeepingMethod = #keepMethod#
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="keepPlace">
+		  		      AND 
+		  		      		TBL_CABINETCLASS.KeepingPlace = #keepPlace#
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="charger">
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.CabinetClassNo IN ( SELECT 
+		  		  	  												A.CabinetClassNo 
+		  		  	  											 From 
+		  		  	  											 	TBL_CABROLEINFO A
+		  		  	  											 WHERE
+		  		  	  											 	A.TENANT_ID = #tenantID#
+		  		  	  											 AND 
+		  		  	  											 	A.User_ID IN ( #charger# ) )
+		  		  </isNotEmpty>
+		  		  <isNotEmpty property="transExpire">
+		  		  	<![CDATA[
+		  		  	  AND 
+		  		  	  		( 
+		  		  	  			TBL_CABINETCLASS.ConfirmFlag = '1'
+		  		  	  				AND
+		  		  	  		  ( 
+		  		  	  		  	TBL_CABINETCLASS.DisplayRecFlag = '2' 
+		  		  	  		  		AND 
+		  		  	  		  	TBL_CABINETCLASS.TransDelayFlag = '0' 
+		  		  	  		  		AND 
+		  		  	  		  	TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1
+		  		  	  		   )
+		  		  	  		 OR 
+		  		  	  		  (
+		  		  	  		 	 ( 
+		  		  	  		 		TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  	  		 			AND 
+		  		  	  		 		RTRIM(DISPLAYENDDATE) <> '' 
+		  		  	  		 			AND 
+		  		  	  		 		TBL_CABINETCLASS.DisplayEndDate < #transExpire#
+		  		  	  		 	 )
+		  		  	  		 	OR 
+		  		  	  		 	 ( 
+		  		  	  		 	 	TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  	  		 	 		AND 
+		  		  	  		 	 	TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
+		  		  	  		 	 ) 
+		  		  	  		 )
+                           )  
+                       AND 
+                       		TBL_CABINETCLASS.KeepingPlace = '1' 
+                       AND 
+                       		DocTransferFlag = '0'
+					]]>
+		  		  </isNotEmpty>
+		  		  <isEqual property="listFlag" compareValue="1">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.TerminateFlag = '1' 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0'
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="2">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmYear = #nowYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="3">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '1' 
+		  		  		AND 
+		  		  			( 
+		  		  				( 
+		  		  					TBL_CABINETCLASS.DisplayRecFlag = '2' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.TransDelayFlag = '0' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.ConfirmYear Between #nowYear# - '1' And #nowYear# 
+		  		  				) 
+		  		  			OR
+		  		  				( 
+		  		  					( 
+		  		  						TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  					AND 
+		  		  						TBL_CABINETCLASS.DisplayEndDate < CAST(#nowYear# AS char(4)) 
+		  		  					) 
+		  		  				OR 
+		  		  					( 
+		  		  						TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  					AND 
+		  		  						TBL_CABINETCLASS.ExTransYear = #nowYear# 
+		  		  					)
+		  		  				) 
+		  		  			) 
+		  		  		AND 
+		  		  			CatalogTransferFlag = '0'
+					]]>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="4">
+		  		  		AND 
+		  		  			CatalogTransferFlag = '1' 
+		  		  		AND 
+		  		  			DocTransferFlag = '0' 
+		  		  		AND 
+		  		  			CatalogTransferYear = ( SELECT 
+		  		  										MAX(CatalogTransferYear) 
+		  		  									From 
+		  		  										TBL_CABINET A
+		  		  									WHERE
+		  		  										TENANT_ID = #tenantID# )
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="5">
+		  		  		AND 
+		  		  			DocTransferFlag = '1'
+		  		  		AND 
+		  		  			DocTransferYear = #nowYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="6">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.KeepingPlace = '1' 
+		  		  		AND 
+		  		  			( 
+		  		  				(
+		  		  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.DisplayEndDate >= CAST(#nowYear# AS char(4)) 
+		  		  				) 
+		  		  			OR 
+		  		  				(
+		  		  					TBL_CABINETCLASS.TransDelayFlag = '1' 
+		  		  				AND 
+		  		  					TBL_CABINETCLASS.ExTransYear > #nowYear# 
+		  		  				)
+		  		  			) 
+		  		  		AND 
+		  		  			( 
+		  		  				( 
+		  		  					TBL_CABINETCLASS.ConfirmYear = #nowYear#
+		  		  				) 
+		  		  				OR
+		  		  				( 
+		  		  					TBL_CABINETCLASS.ConfirmYear > ( SELECT 
+		  		  														MAX(DocTransferYear) 
+		  		  													From 
+		  		  														TBL_CABINET A
+		  		  													WHERE
+		  		  														TENANT_ID = #tenantID# ) 
+		  		  				) 
+		  		  			)
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="7">
+		  		  		<isEqual property="dFlag" compareValue="Y">
+		  		  			AND 
+		  		  				TBL_CABINETCLASS.TerminateFlag = '1' 
+		  		  			AND 
+		  		  				(#nowYear# - TBL_CABINETCLASS.ExpirationYear) > TBL_CABINETCLASS.KeepingPeriod
+		  		  		</isEqual>
+		  		  		<isNotEqual property="dFlag" compareValue="Y">
+		  		  			AND 
+		  		  				DocTransferFlag = '1'
+		  		  		</isNotEqual>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="8">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0'
+                    	AND 
+                    		TBL_CABINETCLASS.ExpirationYear < #accountYear#
+					]]>
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="10">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="11">
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
+						AND 
+							TBL_CABINETCLASS.TerminateFlag = '0' 
+						AND 
+							TBL_CABINETCLASS.ConfirmFlag = '0'
+		  		  </isEqual>
+		  		  <isEqual property="listFlag" compareValue="12">
+		  		  	<![CDATA[
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ConfirmFlag = '0' 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.ExpirationYear < #accountYear# 
+		  		  		AND 
+		  		  			TBL_CABINETCLASS.TerminateFlag = '0'
+					]]>
+		  		  </isEqual>
+		  		  	  AND 
+		  		  	  		TBL_CABINETCLASS.TENANT_ID = #tenantID#
+ 		  	<isNotEmpty property="isDocPrint">
+				<isEqual property="isDocPrint" compareValue="TRUE">
+					<isLessThan property="start" compareValue="0">
+						) N ) A 
+					</isLessThan>
+					<isGreaterEqual property="start" compareValue="0">
+						) N ) A 
+					WHERE 
+						ROWNUM_ BETWEEN #start# AND #end#
+					</isGreaterEqual>
+				</isEqual>
+				<isNotEqual property="isDocPrint" compareValue="TRUE">
+					) N ) A 
+				WHERE 
+					ROWNUM_ BETWEEN #start# AND #end#
+				</isNotEqual>
+			</isNotEmpty>
+			<isEmpty property="isDocPrint">
+				) N ) A 
+			WHERE 
+				ROWNUM_ BETWEEN #start# AND #end#
+			</isEmpty>
 	</select>
-<!-- 	<procedure id="EzApprovalG.getCabinetListCount" parameterClass="Map" resultClass="int"> -->
-<!-- 		{CALL SELECTCOUNTSQL(#sqlString#, #v_pCount,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}	 -->
-<!-- 	</procedure> -->
-	<select id="EzApprovalG.getCabinetListCount" parameterClass="Map" resultClass="int">
-	$sqlString$
+	<select id="EzApprovalG.getCabinetListCount" parameterClass="ApprGCabinetListVO" resultClass="int">
+		SELECT 
+			COUNT(*)
+		FROM  
+	  		TBL_CABINETCLASS  
+	  INNER JOIN 
+	  		TBL_CABINET  
+	  ON 
+	  		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+	  AND 
+	  		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+  	  WHERE 
+  	  		TBL_CABINET.DelFlag = '0' 
+  	  AND 
+  	  		TBL_CABINETCLASS.DelFlag = '0' 
+	  <isEqual property="listFlag" compareValue="9">
+	  	  AND 
+	  	  		TBL_CABINET.CabinetTransferFlag = '2'
+	  	  AND 
+	  	  		( 
+	  	  			( OwnerDeptID = #deptCode#
+	  	  				AND
+	  	  			  ConfirmFlag = '0' ) 
+	  	  			OR 
+	  	  			( TBL_CABINETCLASS.ProcessDeptCode = #deptCode# 
+	  	  				AND 
+	  	  			  ConfirmFlag = '1') 
+	  	  		)
+	  </isEqual>
+	  <isNotEqual property="listFlag" compareValue="9">
+	  	  AND 
+	  	  		NOT (TBL_CABINET.CabinetTransferFlag = '2' 
+	  	  				AND 
+	  	  			 ConfirmFlag = '0')	
+	 	    <isNotEmpty property="deptCode">
+	 	      AND 
+	 	      		TBL_CABINETCLASS.OwnerDeptID = #deptCode# 
+	 	    </isNotEmpty>
+	  </isNotEqual>
+	  <isNotEmpty property="title">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.Title$multiLang$ Like CONCAT(CONCAT('%', #title#), '%')
+	  </isNotEmpty>
+	  <isNotEmpty property="taskCode">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.TaskCode IN ( #taskCode# )
+	  </isNotEmpty>
+	  <isNotEmpty property="sProduceYear">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ProductionYear >= #sProduceYear# 
+	  </isNotEmpty>
+	  <isNotEmpty property="eProduceYear">
+	  	<![CDATA[
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ProductionYear <= #eProduceYear# 
+		]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="sExpYear">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.ExpirationYear >= #sExpYear# 
+	  </isNotEmpty>
+	  <isNotEmpty property="eExpYear">
+	  	<![CDATA[
+  	  	AND 
+  	  		TBL_CABINETCLASS.ExpirationYear <= #eExpYear#
+		]]>
+	  </isNotEmpty>
+	  <isNotEmpty property="recTypeCode">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.RecTypeCode = #recTypeCode# 
+	  </isNotEmpty>
+	  <isNotEmpty property="keepPeriod">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.KeepingPeriod = #keepPeriod# 
+	  </isNotEmpty>
+	  <isNotEmpty property="keepMethod">
+	      AND 
+	      		TBL_CABINETCLASS.KeepingMethod = #keepMethod#
+	  </isNotEmpty>
+	  <isNotEmpty property="keepPlace">
+	      AND 
+	      		TBL_CABINETCLASS.KeepingPlace = #keepPlace#
+	  </isNotEmpty>
+	  <isNotEmpty property="charger">
+	  	  AND 
+	  	  		TBL_CABINETCLASS.CabinetClassNo IN ( SELECT 
+	  	  												A.CabinetClassNo 
+	  	  											 From 
+	  	  											 	TBL_CABROLEINFO A
+	  	  											 WHERE
+	  	  											 	A.TENANT_ID = #tenantID#
+	  	  											 AND 
+	  	  											 	A.User_ID IN ( #charger# ) )
+	  </isNotEmpty>
+	  <isNotEmpty property="transExpire">
+	  	<![CDATA[
+  		  AND 
+  	  		( 
+  	  			TBL_CABINETCLASS.ConfirmFlag = '1'
+  	  				AND
+  	  		  ( 
+  	  		  	TBL_CABINETCLASS.DisplayRecFlag = '2' 
+  	  		  		AND 
+  	  		  	TBL_CABINETCLASS.TransDelayFlag = '0' 
+  	  		  		AND 
+  	  		  	TBL_CABINETCLASS.ConfirmYear < #transExpire# - 1
+  	  		   )
+  	  		 OR 
+  	  		  (
+  	  		 	 ( 
+  	  		 		TBL_CABINETCLASS.DisplayRecFlag = '1' 
+  	  		 			AND 
+  	  		 		RTRIM(DISPLAYENDDATE) <> '' 
+  	  		 			AND 
+  	  		 		TBL_CABINETCLASS.DisplayEndDate < #transExpire#
+  	  		 	 )
+  	  		 	OR 
+  	  		 	 ( 
+  	  		 	 	TBL_CABINETCLASS.TransDelayFlag = '1' 
+  	  		 	 		AND 
+  	  		 	 	TBL_CABINETCLASS.ExTransYear < #transExpire# - 1
+  	  		 	 ) 
+  	  		 )
+                     )  
+                 AND 
+                 		TBL_CABINETCLASS.KeepingPlace = '1' 
+                 AND 
+                 		DocTransferFlag = '0'
+		]]>
+	  </isNotEmpty>
+	  <isEqual property="listFlag" compareValue="1">
+	  		AND 
+	  			TBL_CABINETCLASS.TerminateFlag = '1' 
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmFlag = '0'
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="2">
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmYear = #nowYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="3">
+	  	<![CDATA[
+  		AND 
+  			TBL_CABINETCLASS.ConfirmFlag = '1' 
+  		AND 
+  			( 
+  				( 
+  					TBL_CABINETCLASS.DisplayRecFlag = '2' 
+  				AND 
+  					TBL_CABINETCLASS.TransDelayFlag = '0' 
+  				AND 
+  					TBL_CABINETCLASS.ConfirmYear Between #nowYear# - '1' And #nowYear# 
+  				) 
+  			OR
+  				( 
+  					( 
+  						TBL_CABINETCLASS.DisplayRecFlag = '1' 
+  					AND 
+  						TBL_CABINETCLASS.DisplayEndDate < CAST(#nowYear# AS char(4)) 
+  					) 
+  				OR 
+  					( 
+  						TBL_CABINETCLASS.TransDelayFlag = '1' 
+  					AND 
+  						TBL_CABINETCLASS.ExTransYear = #nowYear# 
+  					)
+  				) 
+  			) 
+  		AND 
+  			CatalogTransferFlag = '0'
+		]]>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="4">
+	  		AND 
+	  			CatalogTransferFlag = '1' 
+	  		AND 
+	  			DocTransferFlag = '0' 
+	  		AND 
+	  			CatalogTransferYear = ( SELECT 
+	  										MAX(CatalogTransferYear) 
+	  									From 
+	  										TBL_CABINET A
+	  									WHERE
+	  										TENANT_ID = #tenantID# )
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="5">
+	  		AND 
+	  			DocTransferFlag = '1'
+	  		AND 
+	  			DocTransferYear = #nowYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="6">
+	  		AND 
+	  			TBL_CABINETCLASS.KeepingPlace = '1' 
+	  		AND 
+	  			( 
+	  				(
+	  					TBL_CABINETCLASS.DisplayRecFlag = '1' 
+	  				AND 
+	  					TBL_CABINETCLASS.DisplayEndDate >= CAST(#nowYear# AS char(4)) 
+	  				) 
+	  			OR 
+	  				(
+	  					TBL_CABINETCLASS.TransDelayFlag = '1' 
+	  				AND 
+	  					TBL_CABINETCLASS.ExTransYear > #nowYear# 
+	  				)
+	  			) 
+	  		AND 
+	  			( 
+	  				( 
+	  					TBL_CABINETCLASS.ConfirmYear = #nowYear#
+	  				) 
+	  				OR
+	  				( 
+	  					TBL_CABINETCLASS.ConfirmYear > ( SELECT 
+	  														MAX(DocTransferYear) 
+	  													From 
+	  														TBL_CABINET A
+	  													WHERE
+	  														TENANT_ID = #tenantID# ) 
+	  				) 
+	  			)
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="7">
+	  		<isEqual property="dFlag" compareValue="Y">
+	  			AND 
+	  				TBL_CABINETCLASS.TerminateFlag = '1' 
+	  			AND 
+	  				(#nowYear# - TBL_CABINETCLASS.ExpirationYear) > TBL_CABINETCLASS.KeepingPeriod
+	  		</isEqual>
+	  		<isNotEqual property="dFlag" compareValue="Y">
+	  			AND 
+	  				DocTransferFlag = '1'
+	  		</isNotEqual>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="8">
+	  	<![CDATA[
+  		AND 
+  			TBL_CABINETCLASS.ConfirmFlag = '0'
+       	AND 
+       		TBL_CABINETCLASS.ExpirationYear < #accountYear#
+		]]>
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="10">
+	  		AND 
+	  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="11">
+	  		AND 
+	  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
+			AND 
+				TBL_CABINETCLASS.TerminateFlag = '0' 
+			AND 
+				TBL_CABINETCLASS.ConfirmFlag = '0'
+	  </isEqual>
+	  <isEqual property="listFlag" compareValue="12">
+	  	<![CDATA[
+	  		AND 
+	  			TBL_CABINETCLASS.ConfirmFlag = '0' 
+	  		AND 
+	  			TBL_CABINETCLASS.ExpirationYear < #accountYear# 
+	  		AND 
+	  			TBL_CABINETCLASS.TerminateFlag = '0'
+		]]>
+	  </isEqual>
+	  	  AND 
+	  	  		TBL_CABINETCLASS.TENANT_ID = #tenantID#
 	</select>
 	
 <!-- 	보류 -->
@@ -13747,10 +14332,6 @@
 		</isNotEqual>
 	</select>
 	
-	<procedure id="EzApprovalG.getSearchList" parameterClass="Map" resultClass="String">
-		{CALL SELECTSQL(#sqlString#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	
-	</procedure>
-	
 <!-- 		<procedure id="EzApprovalG.updateReceiptOffer" parameterClass="Map" > -->
 <!-- 		{CALL EZSP_UPDATERECEIPTOFFER(#v_DOCID#,#v_ORGDOCID#)}	 -->
 <!-- 	</procedure> -->
@@ -13785,14 +14366,6 @@
            AND
            		 TENANT_ID = #v_TENANTID#
          )
-	</insert>
-	
-	<insert id="EzApprovalG.insertReceiptInfo" parameterClass="Map">
-		$sqlString$
-	</insert>
-	
-	<insert id="EzApprovalG.insertSignInfoAprSN" parameterClass="Map">
-		$sqlString$
 	</insert>
 	
 	<insert id="EzApprovalG.insertTbSpecialCatalogInfo_Cab" parameterClass="Map">
@@ -14368,7 +14941,11 @@
    </delete>
    
    <insert id ="EzApprovalG.insertTbSpecialCatalogInfoRec" parameterClass="map">
-   		$sqlString$
+   		INSERT INTO 
+   			TBL_SPECIALCATALOGINFO_REC 
+   		(RECORDID, SERIALNO, SC1, SC2, SC3, TENANT_ID) 
+   		VALUES 
+   		(#v_RECID#, #v_SERIALNO#, #v_SC1#, #v_SC2#, #v_SC3#,  #v_TENANTID#)
    </insert>
    
    <delete id ="EzApprovalG.deleteTbCabRoleInfo" parameterClass="map">
@@ -14386,10 +14963,6 @@
    			 (User_ID,           UserName,         UserName2,        CabinetClassNo, TENANT_ID)
    		VALUES
    			 (#v_ArrayString#, #v_ArrayString1#, #v_ArrayString2#, #v_CABCLASSNO# , #v_TENANTID#)
-   </insert>
-   
-   <insert id ="EzApprovalG.insertStrSql" parameterClass="map">
-    	$sqlString$
    </insert>
    
    <!-- 기안문 제일 처음 작성시 DOCID 초기 설정 -->
@@ -16027,17 +16600,20 @@
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
-   		 WHERE 
-   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN#
-   		 AND 
-   		 	TENANT_ID = #v_TENANTID# 
-   		 )
+   		(select 
+   			* 
+   		 from 
+	   		(SELECT 
+	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN#
+	   		 AND 
+	   		 	TENANT_ID = #v_TENANTID# 
+	   		 ) where ROWNUM <= 1 )
    		 	]]>
    </insert>
    
@@ -16144,26 +16720,26 @@
          	TENANT_ID = #v_TENANTID#)
    </insert>
    
-   <update id="EzApprovalG.updateHesongAprReceiptProcessInfo3" parameterClass="Map">
+   <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo3" parameterClass="Map">
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
-   		(SELECT 
-   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
-   		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
-   		 WHERE 
-   		 	ROWNUM <= 1 
-   		 AND 
-   		 	DocID = #v_DOCID#
-   		 AND 
-   		 	ReceiveSN = #v_RECEIVESN# 
-   		 AND 
-   		 	TENANT_ID= #v_TENANTID# 
-   		 )
+   		 (select 
+   		 	* 
+   		 from (SELECT 
+	   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
+	   		 FROM 
+	   		 	TBL_APRRECEIPTPROCESSINFO 
+	   		 WHERE 
+	   		 	DocID = #v_DOCID#
+	   		 AND 
+	   		 	ReceiveSN = #v_RECEIVESN# 
+	   		 AND 
+	   		 	TENANT_ID= #v_TENANTID# 
+	   		 ) where ROWNUM <= 1)
    		 ]]>
-   </update>
+   </insert>
    
    <update id="EzApprovalG.updateRejectAprReceiptProcessInfo" parameterClass="Map">
    		UPDATE 
@@ -16925,4 +17501,576 @@
    		VALUES 
    		( #v_CabinetClassNo# , #v_ProductionYear#, #v_RegSerialNo#, #v_TerminateFlag#, #v_Title#, #v_Title2#, #v_RecTypeCode#, #v_ExpirationYear#, #v_KeepingMethod#, #v_KeepingPlace# , #v_DisplayEndDate#, #v_DisplayReason#, #v_OwnerName#, #v_OwnerName2#, #v_OwnerID#, #v_OldCabinetFlag#, '0',     #v_SpecialCatalogFlag#, #v_ConfirmFlag#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), #v_KeepingPeriod#, #v_DisplayRecFlag#, #v_ProcessDeptCode#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_TaskCode#, #v_TaskName#, #v_TaskName2#, #v_TransDelayFlag#, #v_OwnerDeptID#, #v_OwnerTask#, #v_DelayEndYFlag#, #v_DelFlag#, #v_TENANTID#)
    	</insert>
+   	
+   	<insert id="EzApprovalG.insertSetBebuAprReceiptProcessInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		(	ReceiveSN,      DocID,      SentDeptID,     SentDeptName,    SentDeptName2,      ReceivedDeptID,      ReceivedDeptName,     ReceivedDeptName2, DocState, AprState,       ProcessDate,                                 ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+		(SELECT 
+			#v_ReceiveSN#, #v_DOCID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, DocState, #v_AprState#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'),  '1',       ProcessDocID,  NULL,         NULL,          NULL,               NULL,           NULL,            ParentsDocID, TENANT_ID
+		 FROM 
+            TBL_APRRECEIPTPROCESSINFO 
+         WHERE 
+         	DocID = #v_DOCID#
+		 AND 
+		 	ReceiveSN = #v_ReceiveSN# 
+		 AND 
+		 	ProcessYN = 'N' 
+		 AND 
+		 	TENANT_ID = #v_TENANTID#)
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateSetBebuAprReceiptProcessInfo" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			ProcessYN = 'N'
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			ReceiveSN = #v_ReceiveSN# 
+		AND 
+			ProcessYN = '1' 
+		AND 
+			TENANT_ID = #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteSetBebuExpAprLine" parameterClass="Map">
+   		DELETE FROM 
+   			TBL_EXPAPRLINE 
+   		WHERE 
+   			DocID = #v_DOCID#  
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.deleteSetBebuAprLineInfo" parameterClass="Map">
+   	     DELETE FROM 
+   	     	TBL_APRLINEINFO 
+   	     WHERE 
+   	     	DocID = #v_DOCID#  
+   		 AND 
+   			TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<update id="EzApprovalG.updateSetBebuAprReceiptProcessInfo2" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 
+   			ReceivedDeptID = #v_ReceivedDeptID#, 
+   			ReceivedDeptName = #v_ReceivedDeptName#, 
+   			ReceivedDeptName2 = #v_ReceivedDeptName2# 
+   		WHERE 
+   			DocID = #v_DOCID#  
+   		AND 
+   			ReceiveSN = #v_ReceiveSN# 
+        AND 
+        	ReceivedDeptID IN ($v_ReceivedDeptID2$) 
+        AND 
+        	TENANT_ID = #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteRecRoleInfo" parameterClass="Map">
+   		DELETE 
+   			TBL_RECROLEINFO 
+   		WHERE 
+   			RecordID = #v_RecordID#
+        And 
+        	SeperateAttachNo = #v_SepAttachNo# 
+        AND 
+        	TENANT_ID = #v_TENANTID#
+   	</delete>
+   	
+   	<insert id="EzApprovalG.insertRecRoleInfo" parameterClass="Map">
+   		INSERT INTO 
+   				TBL_RECROLEINFO 
+   		(RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, TENANT_ID) 
+   		 VALUES 
+   		(#v_RecordID#, #v_SepAttachNo# , 'All_User', #v_UserRight#, '모든 이용자', 'All User', #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertRecRoleInfo2" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_RECROLEINFO 
+   		(RecordID, SeperateAttachNo, UserID, UserRight, UserName, UserName2, UserTitle, UserTitle2, DeptCode, DeptName, DeptName2, TENANT_ID) 
+   		Values 
+   		(#v_RecordID#, #v_SepAttachNo# , #v_UserID# , 1, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndAprDocInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDAPRDOCINFO 
+   		(     DocID,   FormID, OrgDocID, DocType, DocState, FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                     WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )
+		( SELECT 
+			#v_DOCID#, FormID, OrgDocID, DocType, DocState,  '003',    #v_endURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ContainerID#, isPublic, TENANT_ID  
+		  FROM 
+		  	TBL_APRDOCINFO  
+		  WHERE  
+		  	DocID = #v_DOCID# 
+		  AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndAprLineInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDAPRLINEINFO 
+   		(    DocID,     AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApproval, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID )
+		(SELECT 
+			 #v_DOCID#, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID 
+		  FROM 
+		  	 TBL_APRLINEINFO  
+		  WHERE  
+		  	 DOCID = #v_DOCID# 
+		  AND 
+		  	 TENANT_ID= #v_TENANTID#)
+   	</insert>
+	
+   	<insert id="EzApprovalG.insertApprovEndAttachInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDATTACHINFO 
+   		(   DocID,     AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  
+		 FROM 
+		 	TBL_APRATTACHINFO  
+		 WHERE  
+		 	DOCID = #v_DOCID# 
+		 AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndAprDocAttachInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDAPRDOCATTACHINFO 
+   		(     DocID,   AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
+		 FROM 
+		 	TBL_APRDOCATTACHINFO  
+		 WHERE  
+		 	DOCID = #v_DOCID# 
+		 AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndAprOpinionInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDAPROPINIONINFO 
+   		(     DocID, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  
+		 FROM 
+		 	TBL_APROPINIONINFO 
+		 WHERE  
+		 	DOCID = #v_DOCID# 
+		 AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndReceiptPointInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_ENDRECEIPTPOINTINFO 
+   		(     DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID 
+		 FROM 
+		 	TBL_RECEIPTPOINTINFO   
+		 WHERE  
+			DOCID = #v_DOCID# 
+		 AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovEndReceiptProcessInfo" parameterClass="Map">
+   		INSERT INTO 
+   				TBL_ENDRECEIPTPROCESSINFO 
+   		( DocID, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   
+		 FROM 
+		 	TBL_APRRECEIPTPROCESSINFO     
+		 WHERE  
+		 	DOCID = #v_DOCID# 
+		 AND 
+		  	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovExpEndAprDocInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPENDAPRDOCINFO 
+   		( DocID, SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   
+		 FROM 
+		 	TBL_EXPAPRDOCINFO   
+		 WHERE  
+		 	DOCID = #v_DOCID#
+		 AND 
+		 	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertApprovExpEndAprLine" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPENDAPRLINE 
+   		( docid, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID )
+		(SELECT 
+			#v_DOCID#, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   
+		 FROM 
+		 	TBL_EXPAPRLINE  
+		 WHERE  
+		 	DOCID = #v_DOCID#
+		 AND 
+		 	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertDoSendAprDocInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRDOCINFO 
+   		(    DocID,     FormID, OrgDocID,     DocType, DocState,      FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRDOCINFO 
+   		 WHERE 
+   		 	DOCID = #v_DOCID#
+		 AND 
+		 	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertDoSendExpAprDocInfo" parameterClass="Map">
+   	     INSERT INTO 
+   	     		TBL_EXPAPRDOCINFO 
+   	     (      DocID,      SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID)
+         (SELECT 
+         		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
+          FROM 
+          		TBL_EXPAPRDOCINFO 
+          WHERE 
+          		DOCID = #v_DOCID#
+		  AND 
+		 		TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertDocSendAprAttachInfo" parameterClass="Map">
+   		INSERT INTO
+   				TBL_APRATTACHINFO 
+   		(     DocID,    AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID) 
+   		(SELECT 
+   			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
+   		 FROM 
+             TBL_APRATTACHINFO 
+         WHERE 
+         	 DOCID = #v_DOCID#
+		 AND 
+		 	 TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertDocSendAprDocAttachInfo" parameterClass="Map">
+   		 INSERT INTO 
+   		 	TBL_APRDOCATTACHINFO 
+   		 (  DocID,    AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID) 
+   		 (SELECT 
+   		 	#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
+   		  FROM 
+   		  	TBL_APRDOCATTACHINFO 
+   		  WHERE 
+   		  	DOCID = #v_DOCID#
+		  AND 
+		 	 TENANT_ID= #v_TENANTID#)
+                            
+   	</insert>
+   	<insert id="EzApprovalG.insertDocSendAprReceiptProcessInfo" parameterClass="Map">
+   	     INSERT INTO 
+   	     	TBL_APRRECEIPTPROCESSINFO 
+   	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+   	     (SELECT 
+   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID 
+   	      FROM 
+   	      	TBL_APRDOCINFO 
+		  WHERE 
+		   	DOCID = #v_DOCID#
+		  AND 
+		 	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateDoSendAprDocInfo2" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			DocState = '014' 
+   		WHERE 
+   			DOCID = #v_DOCID#
+		  AND 
+		 	TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateDelayCabinetClass" parameterClass="Map">
+   		<isEqual property="v_flag" compareValue="1">
+	   		UPDATE 
+	   			TBL_CABINETCLASS 
+	   		SET 
+	   			DelayEndYFlag = 'N', 
+				ExpirationYear = ExpirationYear + 1 
+			WHERE 
+				OwnerDeptID = #v_OwnerDeptID# 
+			And 
+				TBL_CABINETCLASS.DelayEndYFlag = 'Y'  
+			And 
+				TBL_CABINETCLASS.TerminateFlag = '0' 
+			And 
+				TBL_CABINETCLASS.ConfirmFlag = '0'
+			AND 
+				TENANT_ID= #v_TENANTID#
+   		</isEqual>
+   		
+   		<isEqual property="v_flag" compareValue="0">
+   			UPDATE 
+   				TBL_CABINETCLASS 
+   			SET 
+   				DelayEndYFlag = 'N',
+			    ExpirationYear = ExpirationYear + 1 
+			Where 
+				CabinetClassNo IN ($v_CabinetClassNo$) 
+			AND 
+				TENANT_ID= #v_TENANTID#
+   		</isEqual>
+   		
+   		<isEqual property="v_flag" compareValue="2">
+   			UPDATE 
+   				TBL_CABINETCLASS 
+   			SET 
+   				DelayEndYFlag = 'N' 
+   			Where 
+   				CabinetClassNo IN ($v_CabinetClassNo$)
+   			AND 
+   				TENANT_ID= #v_TENANTID#
+   		</isEqual>
+   	</update>
+   	
+   	<update id="EzApprovalG.updateEndCabCabinetClass" parameterClass="Map">
+   		UPDATE 
+   			TBL_CABINETCLASS 
+   		SET 
+   			TerminateFlag = #v_TerminateFlag# 
+   		Where 
+   			ConfirmFlag = '0' 
+   		And 
+   			CabinetClassNo IN ($v_CabinetClassNo$) 
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateReqDelayCabinetClass" parameterClass="Map">
+   		UPDATE 
+   			TBL_CABINETCLASS 
+   		SET 
+   			DelayEndYFlag = #v_DelayEndYFlag#
+		WHERE 
+			TBL_CABINETCLASS.CabinetClassNo IN ($v_CabinetClassNo$)  
+		AND 
+			TBL_CABINETCLASS.TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateBanSongAprLineInfo" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRLINEINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
+		WHERE 
+			DocID = #v_DOCID# 
+		AND 
+			AprMemberID = #v_AprMemberID# 
+		AND 
+			(AprState = #v_AprState2# OR AprState = #v_AprState3#) 
+		AND 
+			TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateBanSongAprDocInfo" parameterClass="Map"> 
+   	    UPDATE 
+   	    	TBL_APRDOCINFO 
+   	    SET 
+   	    	FunctionType = #v_AprState# 
+   	    WHERE 
+   	    	DocID =  #v_DOCID#  
+   	    AND 
+   	    	TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateBanSongAprLineInfo2" parameterClass="Map"> 
+       UPDATE 
+       		TBL_APRLINEINFO 
+       SET 
+       		AprState = #v_AprState2#
+       WHERE 
+       		DocID = #v_DOCID#   
+       AND 
+       		AprMemberSN = '1' 
+       AND 
+       		TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveAprDocInfo" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_APRDOCINFO 
+   		(DocID, FormID, OrgDocID, DocType, DocState, FunctionType, Href, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
+   		(SELECT 
+			#v_gongRamDocID#, FormID, #v_DOCID#, DocType, #v_DocType#, #v_DocState#, #v_FunctionType#, #v_Href#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+         FROM 
+         	TBL_APRDOCINFO 
+         WHERE 
+         	DocID = #v_DOCID#   
+         AND 
+         	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveExpAprDocInfo" parameterClass="Map"> 
+   		INSERT INTO
+   			 TBL_EXPAPRDOCINFO 
+   		(DocID, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID) 
+   		(SELECT 
+			#v_gongRamDocID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID
+		 FROM 
+		 	TBL_EXPAPRDOCINFO 
+		 WHERE 
+		 	DocID = #v_DOCID#   
+         AND 
+         	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveAprOpinionInfo" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_APROPINIONINFO 
+   		(DocID, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID) 
+   		(SELECT 
+   			#v_gongRamDocID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
+   		 FROM 
+   		 	TBL_APROPINIONINFO 
+   		 WHERE 
+   		 	DocID = #v_DOCID#   
+         AND 
+         	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveAprDocAttachInfo" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_APRDOCATTACHINFO 
+   		(DocID, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID) 
+   		(SELECT 
+   			#v_gongRamDocID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
+   		 FROM 
+   		 	TBL_APRDOCATTACHINFO 
+   		 WHERE
+   		 	DocID = #v_DOCID#   
+         AND 
+         	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveAprAttachInfo" parameterClass="Map"> 
+   		INSERT INTO 
+   			TBL_APRATTACHINFO 
+   		(DocID, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID) 
+   		(SELECT 
+            #v_gongRamDocID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID 
+         FROM 
+         	TBL_APRATTACHINFO 
+         WHERE 
+			DocID = #v_DOCID#   
+         AND 
+         	TENANT_ID= #v_TENANTID#)
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateGongRamSaveAprDocInfo" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			StartDate = EndDate 
+   		WHERE 
+   			DocID = #v_gongRamDocID#
+   		AND 
+   		 	StartDate IS NULL 
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateGongRamSaveAprDocInfo2" parameterClass="Map"> 
+   		UPDATE 
+   			TBL_APRDOCINFO 
+   		SET 
+   			EndDate = NULL 
+   		WHERE 
+   			DocID = #v_gongRamDocID#
+   		AND 
+   			StartDate IS NOT NULL  
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteGongRamSaveAprLineInfo" parameterClass="Map"> 
+   		DELETE FROM 
+   			TBL_APRLINEINFO 
+   		WHERE 
+   			DocID = #v_gongRamDocID# 
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.deleteGongRamSaveExpAprLine" parameterClass="Map"> 
+   		DELETE FROM 
+   			TBL_EXPAPRLINE 
+   		WHERE 
+   			DocID = #v_gongRamDocID# 
+   		AND 
+   			TENANT_ID= #v_TENANTID#
+   	</delete>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveAprLineInfo" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRLINEINFO 
+   		(DocID, 	       AprMemberSN,      AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,      AprMemberName,    AprMemberName2,     AprMemberJobTitle,   AprMemberJobTitle2,      AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,    AprMemberLDAPPath,   ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
+   		VALUES 
+   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, TO_DATE($v_RECEIVEDDATE$, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE($v_PROCESSDATE$, 'YYYY-MM-DD HH24:MI:SS'), #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#)
+   	</insert>
+   	
+   	<insert id="EzApprovalG.insertGongRamSaveExpAprLine" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPAPRLINE 
+   		(DocID, AprMemberSN, OrgUserID, ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID) 
+   		VALUES 
+   		(#v_gongRamDocID#, #v_AprMemberSN# , #v_OrgUserID#, '', '', '', '', '', '', '','', #v_TENANTID#)
+   	</insert>
+   	
+   	<select id="EzApprovalG.signCheckCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(DOCID) 
+   		FROM 
+   			TBL_APRDOCINFO 
+   		WHERE 
+   			ORGDOCID= #v_DOCID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<update id="EzApprovalG.updateSignCheck" parameterClass="Map" >
+   		 UPDATE 
+   		 	TBL_EXPENDAPRDOCINFO 
+   		 SET 
+   		 	SIGNCHECK = #v_signCheck#
+   		 WHERE 
+   		 	DocID = #v_DOCID#
+   		 AND
+   		 	TENANT_ID = #v_TENANTID#
+   	</update>
+   	
+   	<delete id="EzApprovalG.deleteSignCheck" parameterClass="Map" >
+   	 	DELETE FROM 
+   	 		TBL_SIGNINFO 
+   	 	WHERE 
+   	 		DocID = #v_DOCID#
+   	 	 AND
+   		 	TENANT_ID = #v_TENANTID#
+   	</delete>
 </sqlMap>

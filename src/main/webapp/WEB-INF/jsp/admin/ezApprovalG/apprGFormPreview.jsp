@@ -20,6 +20,7 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		
 		<script type="text/javascript">
 			var pDocHref = "<c:out value = '${docHref}' />";
 			
@@ -81,7 +82,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td style="vertical-align: top; height: 100%;text-align:center">
+	            <td style="vertical-align: top; height: 880px;text-align:center">
 	                <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox" src="/ezApprovalG/approvUIcontent.do" name="message" frameborder="0" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
 	            </td>
 	        </tr>

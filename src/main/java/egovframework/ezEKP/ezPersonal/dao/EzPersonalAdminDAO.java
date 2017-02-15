@@ -55,6 +55,11 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 		return (List<PersonalLightPollVO>) list("EzPersonalAdmin.EZSP_GETPOLLRESULT", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalSliderImageVO> delSliderImage_S(Map<String, Object> map) throws Exception {
+		return (List<PersonalSliderImageVO>) list("EzPersonalAdmin.EZSP_DELSLIDERIMAGE_S", map);
+	}
+	
 	public PersonalNoticeVO getNoticeInfo(Map<String, Object> map) throws Exception {
 		return (PersonalNoticeVO) select("EzPersonalAdmin.EZSP_GETNOTICEINFO", map);
 	}
@@ -70,7 +75,7 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	public PersonalPopupVO getPopupInfo(Map<String, Object> map) throws Exception {
 		return (PersonalPopupVO) select("EzPersonalAdmin.EZSP_GETPOPUPINFO", map);
 	}
-
+	
 	public int getNoticeCount(Map<String, Object> map) throws Exception {
 		return (int)select("EzPersonalAdmin.EZSP_GETNOTICECOUNT", map);
 	}
@@ -161,6 +166,10 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO{
 	
 	public void insertPoll_U2(Map<String, Object> map) throws Exception {
 		update("EzPersonalAdmin.EZSP_INSERTPOLL_U2", map);
+	}
+	
+	public void delSliderImage_U(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_DELSLIDERIMAGE_U", map);
 	}
 
 	public void deleteNotice(Map<String, Object> map) throws Exception {

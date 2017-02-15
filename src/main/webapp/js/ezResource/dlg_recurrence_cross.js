@@ -300,9 +300,9 @@ function CheckBeforeSave()
 		
 		if( !CheckStartDateTime() )
 		{
-			alert("" + strLang101 + "");
-			
-			return false;
+//			alert("" + strLang101 + "");
+//			
+//			return false;
 		}
 	}
 	else

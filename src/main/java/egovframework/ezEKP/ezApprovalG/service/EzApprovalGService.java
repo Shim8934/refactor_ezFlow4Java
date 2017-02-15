@@ -251,7 +251,7 @@ public interface EzApprovalGService {
 			String apprToDAY, String myApprFromYEAR, String myApprFromMONTH, String myApprFromDAY, String myApprToYEAR, String myApprToMONTH, String myApprToDAY, String draftDeptName,
 			String docState, String aprFlag, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, String approvUser, int tenantID, String offset) throws Exception;
 	
-	public String updateSignCheck(String strSQL, String companyID) throws Exception;
+	public String updateSignCheck(String docID, String signCheck, String companyID, int tenantID) throws Exception;
 	
 	public String aprAttachMail(String docID, String flag, String companyID, int tenantID) throws Exception;
 	

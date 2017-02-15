@@ -452,15 +452,20 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 부서이동 팝업 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/selectDept.do")	
-	public String selectDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{		
+	public String selectDept(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {	    
 		String companyID = request.getParameter("companyID");
 		
+        logger.debug("selectDept started. companyID=" + companyID);
+
+       
 		if (companyID == null || companyID.equals("")) {
 			companyID = "Top";
 		}
 		
 		model.addAttribute("companyID", companyID);
 		
+        logger.debug("selectDept ended.");
+        
 		return "admin/ezOrgan/selectDept";
 	}
 	
@@ -686,9 +691,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
         int tenantID = userInfo.getTenantId();        
         
-        logger.debug("tenantID=" + tenantID);
-	    
-		String cn[] = request.getParameter("cn").split(",");
+        String cnList = request.getParameter("cn");
+        
+        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
+        	    
+		String cn[] = cnList.split(",");
 		
 		// dhlee
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1202,7 +1209,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			OrganDeptVO vo = list.get(i);			
 			
 			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j, vo);
+				resultList.add(j++, vo);
 			}
 		}
 		
@@ -1316,7 +1323,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         int tenantID = userInfo.getTenantId();        
         
         logger.debug("tenantID=" + tenantID);
-	    
+	    logger.debug("data=" + data);
+        
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String userID = doc.getElementsByTagName("CN").item(0).getTextContent();
@@ -1358,7 +1366,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addJobConfig.do")	
-	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String addJobConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("addJobConfig started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -1385,6 +1395,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("userInfo", user);
 		
+		logger.debug("addJobConfig ended.");
+		
 		return "admin/ezOrgan/addJobConfig";
 	}
 	
@@ -1392,7 +1404,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 겸직관리 겸직등록 대상부서 선택 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/addjobAdd.do")	
-	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String addjobAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("addjobAdd started.");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
@@ -1400,8 +1414,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			companyID = "Top";
 		}
 		
+		logger.debug("companyID=" + companyID);
+		        
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("userInfo", user);
+		
+		logger.debug("addjobAdd ended.");
 		
 		return "admin/ezOrgan/addJobAdd";
 	}
@@ -1433,7 +1451,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			OrganDeptVO vo = list.get(i);			
 			
 			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
-				resultList.add(j, vo);
+				resultList.add(j++, vo);
 			}
 		}
 		        	
@@ -1468,11 +1486,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
         int endRow = pageSize * pageNum;
-        
-        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
-                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow);
-        
+                
         int cnt = ezOrganAdminService.getPermissionListCount(companyID, type, strLang, tenantID);
+
+        logger.debug("companyID=" + companyID + ",type=" + type + ",strLang=" + strLang + ",pageNum=" + pageNum
+                + ",pageSize=" + pageSize + ",startRow=" + startRow + ",endRow=" + endRow
+                + ",totalCount=" + cnt);
         
         List<OrganUserVO> list = ezOrganAdminService.getPermissionList(companyID, type, strLang, startRow, endRow, tenantID);
         
@@ -1590,12 +1609,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
    		
 		if (totalCount > 0) {
 			if (totalCount > pPageRow) {
-				String cnt = Double.toString((double)totalCount/(double)pPageRow);
+				totalPage = totalCount / pPageRow;
 				
-				if (cnt.indexOf(".") >= 0) {
-					totalPage = Integer.parseInt(cnt.split(".")[0]) + 1;
-				} else {
-					totalPage = Integer.parseInt(cnt);
+				if (totalCount % pPageRow != 0) {
+				    totalPage++;
 				}
 			} else {
 				totalPage = 1;
@@ -1628,10 +1645,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
         int tenantID = userInfo.getTenantId();        
         
-        logger.debug("tenantID=" + tenantID);
+        String cnList = request.getParameter("cn");
+        
+        logger.debug("tenantID=" + tenantID + ",cnList=" + cnList);
 	    
 		String deptID = request.getParameter("deptID");
-		String[] cn = request.getParameter("cn").split(",");
+		String[] cn = cnList.split(",");
 		
 		logger.debug("deptID=" + deptID);
 		
@@ -1683,7 +1702,9 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	 * 조직도관리 퇴직자관리 퇴직사원 상세정보 창 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/retireUserInfo.do")
-	public String retireUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+	public String retireUserInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	    logger.debug("retireUserInfo started");
+	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
@@ -1703,6 +1724,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);		
 		model.addAttribute("userID", id);
+		
+		logger.debug("retireUserInfo ended");
 		
 		return "admin/ezOrgan/retireUserInfo";
 	}	
@@ -1802,6 +1825,8 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 			if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 				return returnValue;
 			}
+			
+			logger.debug("bodyData=" + bodyData);
 			
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
 			String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();

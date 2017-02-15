@@ -5,6 +5,7 @@ public class ApprGRecordListVO {
 	private int tenantID;
 	/** */
 	private String listType;
+	/** */
 	private String companyID;
 	/** */
 	private String lang;
@@ -39,7 +40,7 @@ public class ApprGRecordListVO {
 	/** */
 	private String cabinetIDs;
 	/** */
-	private String recDeptcode;
+	private String recDeptCode;
 	/** */
 	private String title;
 	/** */
@@ -70,6 +71,8 @@ public class ApprGRecordListVO {
 	private int rowCount;
 	/** */
 	private String isDocPrint;
+	/** */
+	private String nowDate;
 	
 	public int getTenantID() {
 		return tenantID;
@@ -185,11 +188,11 @@ public class ApprGRecordListVO {
 	public void setCabinetIDs(String cabinetIDs) {
 		this.cabinetIDs = cabinetIDs;
 	}
-	public String getRecDeptcode() {
-		return recDeptcode;
+	public String getRecDeptCode() {
+		return recDeptCode;
 	}
-	public void setRecDeptcode(String recDeptcode) {
-		this.recDeptcode = recDeptcode;
+	public void setRecDeptCode(String recDeptCode) {
+		this.recDeptCode = recDeptCode;
 	}
 	public String getTitle() {
 		return title;
@@ -280,6 +283,12 @@ public class ApprGRecordListVO {
 	}
 	public void setIsDocPrint(String isDocPrint) {
 		this.isDocPrint = isDocPrint;
+	}
+	public String getNowDate() {
+		return nowDate;
+	}
+	public void setNowDate(String nowDate) {
+		this.nowDate = nowDate;
 	}
 	
 }

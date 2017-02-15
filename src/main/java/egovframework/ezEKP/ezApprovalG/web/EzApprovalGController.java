@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -22,14 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -40,7 +38,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -97,6 +94,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@Autowired
 	private EgovMessageSource messageSource;
 
+	@Value("#{globals['Globals.DbType']}")
+	private String dbType;
 	/**
 	 * 전자결재G 메인화면 호출 Method
 	 */
@@ -360,17 +359,34 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
                 if (listType.equals("10")) {
-                	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	if (!dbType.equals("mysql")) {
+                    	returnQuery += " AND RECEIVEDDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                    	returnQuery += " AND RECEIVEDDATE >= STR_TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','%Y-%m-%d %H:%i:%s') ";
+                	}
                 } else {
-                	returnQuery += " AND STARTDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND STARTDATE >= TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND STARTDATE >= STR_TO_DATE('" + domSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01','%Y-%m-%d %H:%i:%s') ";
+
+                	}
                 }
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
                 if (listType.equals("10")){
-                	returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND RECEIVEDDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND RECEIVEDDATE <= STR_TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','%Y-%m-%d %H:%i:%s') ";
+                	}
                 } else {
-                	returnQuery += " AND STARTDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	if (!dbType.equals("mysql")) {
+                		returnQuery += " AND STARTDATE <= TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','YYYY-MM-DD HH24:MI:SS') ";
+                	} else {
+                		returnQuery += " AND STARTDATE <= STR_TO_DATE('" + domSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59','%Y-%m-%d %H:%i:%s') ";
+                	}
                 }
             }
             
@@ -1621,6 +1637,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			if (file.exists()) {
 				FileUtils.moveFile(file, new File(upd + fileName));
+			} else {
+				file.mkdirs();
 			}
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
@@ -1712,7 +1730,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getLVHearderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String getLVHeaderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String listFlag = request.getParameter("listFlag");
@@ -3151,11 +3169,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
             
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_STR_DATE('" + xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            	}
             }
             
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
-            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' ,'YYYY-MM-DD HH24:MI:SS') "; 
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_STR_DATE('" + xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59' , '%Y-%m-%d %H:%i:%s') "; 
+
+            	}
             }
             
             if (tempQuery.indexOf("FORMID;") != -1) {
@@ -3992,10 +4019,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 
             if (tempQuery.indexOf("APRSTARTDATE;") != -1) {
-                returnQuery += " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), false)+"','YYYY-MM-DD HH24:MI:SS') ";
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND STARTDATE >= TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), false)+"','YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND STARTDATE >= STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRSTARTDATE").item(0).getTextContent() + " 00:00:01", userInfo.getOffset(), false)+"', '%Y-%m-%d %H:%i:%s') ";
+            	}
             }
             if (tempQuery.indexOf("APRENDDATE;") != -1) {
-                returnQuery += " AND STARTDATE <=  TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false)+"','YYYY-MM-DD HH24:MI:SS') ";
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND STARTDATE <=  TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false)+"','YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND STARTDATE <=  STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmlDomSub.getElementsByTagName("APRENDDATE").item(0).getTextContent() + " 23:59:59", userInfo.getOffset(), false)+"','%Y-%m-%d %H:%i:%s') ";
+            	}
             }
             if (tempQuery.indexOf("FORMID;") != -1) {
                 returnQuery += " AND FormID = '" + xmlDomSub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
@@ -4342,16 +4377,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String signCheck = request.getParameter("signCheck");
-		StringBuilder sqlStr = new StringBuilder();
-		
-		sqlStr.append("BEGIN \n DECLARE v_pCount Number := 0; \n BEGIN SELECT COUNT(DOCID) INTO v_pCount FROM TBAPRDOCINFO WHERE ORGDOCID= '" + docID + "';\n");
-        sqlStr.append("IF v_pCount = 0 THEN \n");
-        sqlStr.append("BEGIN \n");
-        sqlStr.append("    UPDATE TBL_EXPENDAPRDOCINFO SET SIGNCHECK = '" + signCheck + "' WHERE DocID = '" + docID + "'; \n");
-        sqlStr.append("    DELETE FROM TBL_SIGNINFO WHERE DocID = '" + docID + "'; \n");
-        sqlStr.append("END; END IF; END; END;\n");
-        
-        String result = ezApprovalGService.updateSignCheck(sqlStr.toString(), userInfo.getCompanyID());
+        String result = ezApprovalGService.updateSignCheck(docID, signCheck, userInfo.getCompanyID(), userInfo.getTenantId());
         
 		return result;
 	}
