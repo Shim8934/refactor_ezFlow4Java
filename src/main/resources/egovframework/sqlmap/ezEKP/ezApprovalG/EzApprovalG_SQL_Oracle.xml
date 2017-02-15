@@ -6816,9 +6816,9 @@
 	   		AND 
 	   			APRTYPE <> '015' 
 	   		AND 
-	   			 STARTDATE >= $v_STARTDATE$ 
+	   			 STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    			]]>
@@ -6834,9 +6834,9 @@
 	   		AND 
 	   			AprType <> '015'  
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$  
+	   			STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')  
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    		]]>
@@ -6856,9 +6856,9 @@
 	   		AND 
 	   			DocState <> '017'
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$
+	   			STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6900,9 +6900,9 @@
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
-	   		 		PROCESSDATE >= $v_STARTDATE$ 
+	   		 		PROCESSDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		 	AND 
-	   		 		PROCESSDATE <= $v_ENDDATE$ 
+	   		 		PROCESSDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		 ]]>
@@ -6929,9 +6929,9 @@
    			AND 
    				TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
    			AND 
-   		 		PROCESSDATE >= $v_STARTDATE$ 
+   		 		PROCESSDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
    		 	AND 
-   		 		PROCESSDATE <= $v_ENDDATE$
+   		 		PROCESSDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
    		 	AND	
 	   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6960,9 +6960,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6989,9 +6989,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7007,9 +7007,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7023,9 +7023,9 @@
    			WHERE 
    				OWNERID IN ($v_USERIDS$) 
    			AND 
-   				STARTDATE >= $v_STARTDATE$ 
+   				STARTDATE >= TO_DATE(#v_STARTDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND 
-	   			STARTDATE <=  $v_ENDDATE$ 
+	   			STARTDATE <=   TO_DATE(#v_ENDDATE#, 'YYYY.MM.DD HH24:MI:SS')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]> 
@@ -18059,7 +18059,7 @@
    			TENANT_ID = #v_TENANTID#
    	</select>
    	
-   	<update id="EzApprovalG.signCheckCount" parameterClass="Map" >
+   	<update id="EzApprovalG.updateSignCheck" parameterClass="Map" >
    		 UPDATE 
    		 	TBL_EXPENDAPRDOCINFO 
    		 SET 

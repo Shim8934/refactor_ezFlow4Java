@@ -56,6 +56,10 @@
 		        TreeViewinitialize("", P_companyID, "extensionAttribute2;extensionAttribute3", "<c:out value='${serverName}'/>");
 		        getDocType();
 		        
+		        $("#btnAppdept").closest("a").hide();
+	            $("#btnDeldept").closest("a").hide();
+	            document.getElementById("selUseDept").disabled = true;
+		        
 		        if (gState == "U") {
 		            initVal(RetValue);
 		        }
@@ -133,12 +137,12 @@
 		    
 		    function chkUseDept_onclick() {
 		        if (document.getElementById("chkUseDept").checked) {
-		            document.getElementById("btnAppdept").disabled = false;
-		            document.getElementById("btnDeldept").disabled = false;
+		            $("#btnAppdept").closest("a").show();
+		            $("#btnDeldept").closest("a").show();
 		            document.getElementById("selUseDept").disabled = false;
 		        } else {
-		            document.getElementById("btnAppdept").disabled = true;
-		            document.getElementById("btnDeldept").disabled = true;
+		            $("#btnAppdept").closest("a").hide();
+		            $("#btnDeldept").closest("a").hide();
 		            document.getElementById("selUseDept").disabled = true;
 		        }
 		    }

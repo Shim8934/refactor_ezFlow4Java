@@ -702,7 +702,7 @@
         	FROM
         		TBL_USERMASTER 
 			WHERE
-				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
+				NULLIF(EXTENSIONATTRIBUTE4, '') IS NOT NULL
        		AND
        			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
        		AND
@@ -744,7 +744,7 @@
              	A.DEPTID ,
              	A.POSITIONCD ,
              	CASE
-             		'1'
+             		#v_LANGDATA#
                 WHEN
                 	'1'
                 THEN
@@ -842,7 +842,7 @@
 	 		FROM
 	 			TBL_USERMASTER
    			WHERE
-   				NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL 
+   				NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL 
       		AND
       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
       		AND
@@ -908,7 +908,7 @@
         				FROM
         					TBL_USERMASTER 
         				WHERE
-        					NULLIF(EXTENSIONATTRIBUTE1, NULL) IS NOT NULL
+        					NULLIF(EXTENSIONATTRIBUTE1, '') IS NOT NULL
         				AND
         					PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# 
         				AND

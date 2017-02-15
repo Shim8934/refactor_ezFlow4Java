@@ -749,7 +749,7 @@
              	A.DEPTID ,
              	A.POSITIONCD ,
              	CASE
-             		'1'
+             		#v_LANGDATA#
                 WHEN
                 	'1'
                 THEN

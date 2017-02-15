@@ -80,24 +80,38 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Override
 	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception {
+	    logger.debug("getAddJobList started");
+	    logger.debug("companyID=" + companyID + ",strLang=" + strLang + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_LANGDATA", strLang);
 		
-		return ezOrganAdminDao.getAddJobList(map);
+		List<OrganUserVO> addJobList = ezOrganAdminDao.getAddJobList(map);
+		
+		logger.debug("getAddJobList ended");
+		
+		return addJobList;
 	}
 
 	@Override
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception {
+	    logger.debug("getUserAddJobList started");
+	    logger.debug("cn=" + cn + ",strLang=" + strLang + ",tenantID=" + tenantID);
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", strLang);
 		
-		return ezOrganAdminDao.getUserAddJobList(map);
+		List<OrganUserVO> userAddJobList = ezOrganAdminDao.getUserAddJobList(map);
+		
+		logger.debug("getUserAddJobList ended");
+		
+		return userAddJobList;
 	}
 	
 	@Override
@@ -642,6 +656,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 
 	@Override
 	public void addJob(String userID, String titleInfo, int tenantID) throws Exception {
+	    logger.debug("addJob started");
+	    logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
+	    
 		String sTitle1 = "";
         String sTitle2 = "";
         String delFlag = "1";
@@ -689,7 +706,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             				ezOrganAdminDao.setAddJob(map);
             			} else {
 
-            				if (delFlag !=null && delFlag.equals("1")) {
+            				if (delFlag != null && delFlag.equals("1")) {
             					ezOrganAdminDao.setAddJob(map);
             				}
 
@@ -705,10 +722,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 }
             }
         }
+        
+        logger.debug("addJob ended");
 	}
 
     @Override
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception {
+        logger.debug("deleteJob started");
+        logger.debug("userID=" + userID + ",titleInfo=" + titleInfo + ",tenantID=" + tenantID);
+        
         String pDeptID = "";
         
         if (!titleInfo.equals("")) {
@@ -728,7 +750,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 
                 logger.debug("updateGroupDel rc=" + rc);
                 
-                if (rc == 0) { // updateGroupDel 성공
+                if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식 주소를 찾지 못해도 성공으로 봄.)
                     Map<String, Object> map = new HashMap<String, Object>();        
                     
                     map.put("v_TENANT_ID", tenantID);
@@ -743,6 +765,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 }
             }
         }       
+        
+        logger.debug("deleteJob ended");
     }
     
 	@Override
