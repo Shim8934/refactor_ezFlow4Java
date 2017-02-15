@@ -8552,8 +8552,8 @@
 		      AND 
 		      			TimeSep =    (
 		      							SELECT 
-		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-		            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+		      								   CASE WHEN ISUsed ='1' THEN #v_AccountYear# 
+		            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
 		     							FROM (
 		     									SELECT 
 		     											Code ,
@@ -8632,7 +8632,7 @@
    						 	(
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8709,7 +8709,7 @@
 		    		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8784,7 +8784,7 @@
 	     		TimeSep = (
       							SELECT 
       								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-            								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+            								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
      							FROM (
      									SELECT 
      											Code ,
@@ -8861,7 +8861,7 @@
 	     		TimeSep = (
   							SELECT 
   								   CASE WHEN ISUsed ='1' THEN #v_AccountYear#
-        								WHEN ISUsed ='2' THEN  (SELECT EXTRACT(YEAR FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'))||REPLACE(EXTRACT(MONTH FROM STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')), ' ', '0') FROM DUAL) end 
+        								WHEN ISUsed ='2' THEN  (SELECT CONCAT(SUBSTR(#v_SYSDATE#, 1, 4), SUBSTR(#v_SYSDATE#, 6, 2)) FROM DUAL) end  
  							FROM (
  									SELECT 
  											Code ,
