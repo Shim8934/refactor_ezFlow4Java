@@ -859,8 +859,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 							) A 
-						WHERE 
-							rownum <= #v_PQUERYSIZEMAIN# 
+						LIMIT #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -894,8 +893,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 							) A 
-						WHERE 
-							rownum <= #v_PQUERYSIZEMAIN# 
+						LIMIT <= #v_PQUERYSIZEMAIN# 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -930,8 +928,7 @@
 				  			<![CDATA[
 						  		$v_PORDERBYSUB$
 										) A 
-									WHERE 
-										rownum <= #v_PQUERYSIZEMAIN# 
+									LIMIT <= #v_PQUERYSIZEMAIN# 
 							]]>
 						<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 							<![CDATA[
@@ -1208,7 +1205,7 @@
             WHERE 
             	TBL_APRLINEINFO.DOCID = #v_DOCID#  
             AND
-            	TBL_APRLINEINFO.TENANT_ID =#v_TENANTID#   
+            	TBL_APRLINEINFO.TENANT_ID = #v_TENANTID#   
             <isNotEmpty property="v_ORDEROPTION">
 	           <isGreaterEqual property="v_ORDEROPTIONLENGTH"  compareValue="10" >
 		          <isEqual property="v_ORDEROPTIONVALUE" compareValue="aprmembersn">
@@ -1366,7 +1363,7 @@
 				A.* 
 			FROM ( 
 					SELECT 
-						CONCAT(A.OWNERID ,'@' ,A.SN AS DOCID, 
+						CONCAT(A.OWNERID ,'@' ,A.SN) AS DOCID, 
 						A.APRMEMBERSN,
                    	 	A.APRTYPE, 
                    	 	A.APRSTATE, 
@@ -1682,9 +1679,6 @@
 		<isLessEqual property="v_ORDERBYLENGTH" compareValue="0">
 				 ORDER BY ATTACHTYPE DESC
 		</isLessEqual>
-		
-		
-			
 	</select>
 <!-- 	<procedure id="EzApprovalG.checkPermission" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETAPRUSERAPPLINEINFO(#v_PDOCID#, #v_PAPRUSERID#, #v_PDEPTID#, #v_PMODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -2412,7 +2406,9 @@
          									FROM 
          										 TBL_USERMASTER
          									WHERE 
-         										CN=#v_USERID#))
+         										CN= #v_USERID# 
+         									AND 
+         										TENANT_ID = #v_TENANTID#))
 		</isEqual>
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
@@ -2768,7 +2764,7 @@
 		     AND 
 		     		APRDEPTSN = #v_APRDEPTSN#
 		     AND
-		     		TENANT_ID =#v_TENANTID#
+		     		TENANT_ID = #v_TENANTID#
 		     ORDER BY 
 		     		APRDEPTMEMBERSN DESC
 	</select>
@@ -5074,7 +5070,7 @@
 						PROCESSDATE $v_BASICORDER$
 			</isEmpty>
 			<![CDATA[
-			)
+			) C
 			 LIMIT #v_PAGESIZE#) A 
 			]]>
 			<isNotEmpty property="v_ORDEROPTION2">
@@ -5098,7 +5094,7 @@
 							PROCESSDATE $v_BASICORDER2$
 			</isEmpty>
 			<![CDATA[
-			)  LIMIT  <= #v_PAGESIZE2#
+			) B LIMIT  #v_PAGESIZE2#
 			]]>
 	</select>
 	
@@ -5723,8 +5719,7 @@
 							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
 							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 							   	</isNotEmpty>
-							   	<isNotEmpty>
-							   	</isNotEmpty>
+						
 							   	
 							   	<isNotEmpty property="v_ORDEROPTION">
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -5748,7 +5743,7 @@
 							   	</isEmpty>
 							   	<![CDATA[
 							   	 ) A 
-							   	 	LIMIT #v_PAGESIZE#, #v_PAGESIZE2#
+							   	 	LIMIT #v_PAGESIZE#) B
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
 				<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -7028,12 +7023,15 @@
 			TBL_LastDocID
       	SET 
       		lastDocID = (
-   					        SELECT 
-   								(max(lastDocID) +1)
-  							FROM 
-  								TBL_LastDocID
-  							WHERE	
-  								TENANT_ID = #v_TENANTID# )
+      						SELECT 
+      						*
+      						FROM(
+		   					        SELECT 
+		   								(max(lastDocID) +1)
+		  							FROM 
+		  								TBL_LastDocID
+		  							WHERE	
+		  								TENANT_ID = #v_TENANTID#)A )
      ]]>
 	</update>
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
@@ -14694,71 +14692,86 @@
        									TENANT_ID = #v_TENANTID#) C) B) A
        		]]>
    </select>
+   
    <delete id="EzApprovalG.aprDeleteDocInfo" parameterClass="map">
-     DECLARE BEGIN
 	      DELETE FROM 
 	       		TBL_EXPAPRLINE
 	      WHERE  
 	       		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-	       
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo2" parameterClass="map">
+   	 DELETE FROM 
 	      		TBL_APRLINEINFO
 	      WHERE  
 	       		DOCID =#v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-       			
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo3" parameterClass="map">
+    	  DELETE FROM 
 	      		TBL_APRRECEIPTPROCESSINFO
 	      WHERE  
 	       		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#; 		
-	       
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#	
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo4" parameterClass="map">
+   		  DELETE FROM 
 	      		TBL_RECEIPTPOINTINFO
 	      WHERE  
 	       		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-       			 
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo5" parameterClass="map">
+   		  DELETE FROM 
 	      		TBL_APRATTACHINFO
 	      WHERE  
 	       		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-       			 
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo6" parameterClass="map">
+   		  DELETE FROM 
 	      		TBL_APRDOCATTACHINFO
 	      WHERE  
 	      		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-       			 
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo7" parameterClass="map">
+    	   DELETE FROM 
 	      		TBL_APROPINIONINFO
 	       WHERE  
 	       		DOCID = #v_DocID#
 	       AND
-       			TENANT_ID = #v_TENANTID#;		
-	       
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#		
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo8" parameterClass="map">
+    	  DELETE FROM 
 	      		TBL_EXPAPRDOCINFO
 	       WHERE  
 	       		DOCID = #v_DocID#
 	       AND
-       			TENANT_ID = #v_TENANTID#;		
-	
-	      DELETE FROM 
+       			TENANT_ID = #v_TENANTID#		
+   </delete>
+   
+   <delete id="EzApprovalG.aprDeleteDocInfo9" parameterClass="map">
+     	  DELETE FROM 
 	      		TBL_APRDOCINFO
 	      WHERE  
 	       		DOCID = #v_DocID#
 	      AND
-       			TENANT_ID = #v_TENANTID#;
-  	END;
+       			TENANT_ID = #v_TENANTID#
    </delete>
    
    <select id="EzApprovalG.selectHistoryCnt" parameterClass="map" resultClass="int">
