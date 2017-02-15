@@ -84,9 +84,9 @@
 		            document.getElementById("tbCateCode").disabled = true;
 		            //document.getElementById("btnDuplicate").disabled = true;
 		        }
-
+		        
 		        if (CateLevel == "1") {
-		            document.getElementById("btnSelPCode").disabled = true;
+		            $("#btnSelPCode").closest("a").hide();
 		        }
 		    });
 		    
