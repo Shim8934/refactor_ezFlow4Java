@@ -18059,7 +18059,7 @@
    			TENANT_ID = #v_TENANTID#
    	</select>
    	
-   	<update id="EzApprovalG.signCheckCount" parameterClass="Map" >
+   	<update id="EzApprovalG.updateSignCheck" parameterClass="Map" >
    		 UPDATE 
    		 	TBL_EXPENDAPRDOCINFO 
    		 SET 
