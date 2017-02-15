@@ -1094,7 +1094,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if(!selType.equals("2")){
 					for(int i=1; i <= Integer.parseInt(selRes); i++) {
-						sb.append(i + ". <input type= \"text\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1102,7 +1102,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					selectedNo = 9;
 					
 					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
-						sb.append(i + ". <input type= \"text\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1112,7 +1112,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				if (selType.equals("3")) {
 					answerCount = 1;
 					selectedNo = 10;
-					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input type = \"text\" name = \"selJU\">");
+					sb.append(egovMessageSource.getMessage("ezCommunity.t654", userInfo.getLocale()) + "<input type = \"text\" size=\"80\" name = \"selJU\">");
 				}
 			}
 		}
