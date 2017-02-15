@@ -13311,137 +13311,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return strDeptCode + "-" + strTaskCode + "-" + strPYear + "-" + strRegSerialNo + "(" + strVolNo + ")";
 	}
 
-	public String getCabJoinClause(Document doc, String deptCode, String transFlag, String listFlag, String lang, String companyID, int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
-//		String cabWhere = "";
-		String tempDeptCode = deptCode;
-//		String g_Const_CabinetWhereClause = " Where TBL_CABINET.DelFlag = '0' " + 
-//				"AND TBL_CABINETCLASS.DelFlag = '0' AND NOT (TBL_CABINET.CabinetTransferFlag = '2' And ConfirmFlag = '0') ";
-
-		if (doc.getElementsByTagName("DEPTCODE").item(0) != null && doc.getElementsByTagName("DEPTCODE").item(0).getTextContent().length() > 0) {
-			tempDeptCode = doc.getElementsByTagName("DEPTCODE").item(0).getTextContent();
-		}
-		
-//		strSQL.append(" Inner Join ( Select ProcessDeptCode, ProcessDeptName, ProcessDeptName2, TaskCode, ");
-//        strSQL.append("TaskName, TaskName2, VolumeNo, CabinetID, TCabinetID, TBL_CABINET.CabinetClassNo, ");
-//		strSQL.append("DisplayEndDate, DisplayReason, ConfirmFlag, ProductionYear, RegSerialNo, ");
-//		strSQL.append("DisplayRecFlag, ExTransYear, TransDelayReason, TransDelayFlag, OwnerDeptID, ");
-//        strSQL.append("OwnerTask, TerminateFlag, ExpirationYear, KeepingPeriod ,TBL_CABINETCLASS.TENANT_ID" + " From TBL_CABINETCLASS  Inner Join " +
-//                "TBL_CABINET  On TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo AND TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID ");
-        
-		String cabinetIDs = "";
-		
-		for (int k = 0; k < doc.getElementsByTagName("CABINETID").getLength(); k++) {
-			if (k == 0) {
-				cabinetIDs += "'" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-			} else {
-				cabinetIDs += ", '" + doc.getElementsByTagName("CABINETID").item(k).getTextContent().trim() + "'";
-			}
-		}
-		
-//        switch (listFlag) {
-//		case "0" :		// 기록물 대장
-//			if (doc.getElementsByTagName("CABINETID").item(0) != null && doc.getElementsByTagName("CABINETID").getLength() > 0) {
-////				cabWhere = "WHERE CabinetID IN (";
-////				cabWhere += ")";
-//			} else {
-//				cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
-//			}
-//			break;
-
-//		case "1" :		// 편철확정대상 기록물
-//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.TerminateFlag='1' And TBL_CABINETCLASS.ConfirmFlag='0'";
-//			break;
-
-//		case "2" :		// 기록물 생산 현황
-//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS'))";
-//			break;
-
-//		case "3" :		// 목록이관 대상
-//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + " And TBL_CABINETCLASS.ConfirmFlag='1' " + 
-//					"And ( ( TBL_CABINETCLASS.DisplayRecFlag='2' And TBL_CABINETCLASS.TransDelayFlag='0' " +
-//		            " And TBL_CABINETCLASS.ConfirmYear Between EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) And EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) " +
-//		            ") OR( ( TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
-//		            " OR ( TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear=EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " + 
-//					") ) And CatalogTransferFlag='0' ";
-//			break;
-
-//		case "6" :		// 연기신청목록
-//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' " + "And TBL_CABINETCLASS.KeepingPlace='1' " +
-//		            "And ( (TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate>=CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
-//		            " OR (TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear>EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) " +
-//		            " ) And ( ( TBL_CABINETCLASS.ConfirmYear = EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) ) OR " +
-//		            " ( TBL_CABINETCLASS.ConfirmYear > (Select Max(DocTransferYear) From TBL_CABINET ) ) ) ";
-//			break;
-
-//		default : 
-//			cabWhere = g_Const_CabinetWhereClause + "And OwnerDeptID= '" + tempDeptCode + "' ";
-//			break;
-//		}
-
-        String charger = "";
-        
-        if (doc.getElementsByTagName("CHARGER").item(0) != null && doc.getElementsByTagName("CHARGER").item(0).getTextContent().length() > 0) {
-        	charger = doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim();
-//        	cabWhere += "AND TBL_CABINETCLASS.CabinetClassNo IN ( Select CabinetClassNo " + 
-//        			"From TBL_CABROLEINFO Where User_ID IN (" + doc.getElementsByTagName("CHARGER").item(0).getTextContent().trim() + ") ) ";	
-        }
-
-        String transExpire = "";
-        
-		if (doc.getElementsByTagName("TRANSEXPIRE").item(0) != null && doc.getElementsByTagName("TRANSEXPIRE").item(0).getTextContent().length() > 0) {
-//			cabWhere += g_Const_TransExpCabConst_Function(companyID, tenantID);
-			String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, lang, tenantID);
-			
-			if (accountingYear != null && !accountingYear.trim().equals("")) {
-				transExpire = accountingYear;
-			} else {
-				transExpire = commonUtil.getTodayUTCTime("").substring(0, 4);
-			}
-		}
-
-		String cabTitle = "";
-		
-		if (doc.getElementsByTagName("CABTITLE").item(0) != null && doc.getElementsByTagName("CABTITLE").item(0).getTextContent().length() > 0) {
-//			cabWhere += "AND TBL_CABINETCLASS.Title Like N'%" + makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent().trim()) + "%' ";
-			cabTitle = makeSearchField(doc.getElementsByTagName("CABTITLE").item(0).getTextContent().trim());
-		}
-		
-//		strSQL.append(cabWhere + ") TBL_CABINET On TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.CabinetID  AND  TBL_SEPERATEATTACH.TENANT_ID=TBL_CABINET.TENANT_ID ");
-
-//		if (transFlag.equals("1")) {
-//			strSQL.append("OR TBL_SEPERATEATTACH.CabinetID=TBL_CABINET.TCabinetID ");
-//		}
-
-		return strSQL.toString();
-	}
-
 	public String makeSearchField(String orgStr) {
 		return orgStr.replace("'", "''").replace("\0", "").replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-	}
-
-	public String g_Const_TransExpCabConst_Function(String companyID, int tenantID) throws Exception{
-		String strSQL = "";
-		String accountingYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, "1", tenantID);
-		
-		if (!accountingYear.trim().equals("")) {
-			strSQL = " And ( TBL_CABINETCLASS.ConfirmFlag='1' And " +
-                    "( TBL_CABINETCLASS.DisplayRecFlag='2' And TBL_CABINETCLASS.TransDelayFlag='0' " +
-                    " And TBL_CABINETCLASS.ConfirmYear < '" + (Integer.parseInt(accountingYear) - 1) + "'" +
-                    " ) OR ( ( TBL_CABINETCLASS.DisplayRecFlag='1' And RTRIM(DISPLAYENDDATE) <> '' AND TBL_CABINETCLASS.DisplayEndDate<'" + accountingYear + "') " +
-                    " OR ( TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear<'" + (Integer.parseInt(accountingYear) - 1) + "') " +
-                    " ) ) And TBL_CABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
-	    } else {
-	        strSQL = " And ( TBL_CABINETCLASS.ConfirmFlag='1' And " +
-	                "( TBL_CABINETCLASS.DisplayRecFlag='2' And TBL_CABINETCLASS.TransDelayFlag='0' " +
-	                " And TBL_CABINETCLASS.ConfirmYear < EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')-(INTERVAL '1' YEAR)) " +
-	                " ) OR ( ( TBL_CABINETCLASS.DisplayRecFlag='1' And TBL_CABINETCLASS.DisplayEndDate<CAST(EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS')) AS char(4)) ) " +
-	                " OR ( TBL_CABINETCLASS.TransDelayFlag='1' And TBL_CABINETCLASS.ExTransYear<EXTRACT(YEAR FROM TO_DATE('"+ commonUtil.getTodayUTCTime("") +"','YYYY-MM-DD HH24:MI:SS') - (INTERVAL '1' YEAR)) ) " +
-	                " ) ) And TBL_CABINETCLASS.KeepingPlace='1' And DocTransferFlag='0'";
-	
-	    }
-		
-		return strSQL;
 	}
 
 	public String getLVFieldInfo(String listType, String companyID, String lang, int tenantID) throws Exception{
@@ -16899,6 +16770,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 }
  		 cabinetListVO.setStart(start);
  		 cabinetListVO.setEnd(end);
+ 		 cabinetListVO.setLimit(start - 1);
+ 		 cabinetListVO.setRowCount(end - (start - 1));
 		 
 		 if (xmlDom.getElementsByTagName("ISDOCPRINT").item(0) != null) {
 			 cabinetListVO.setIsDocPrint(xmlDom.getElementsByTagName("ISDOCPRINT").item(0).getTextContent());

@@ -12338,7 +12338,7 @@
 				TBL_APRLINEINFO
          	SET 
          		APRSTATE = '002',
-             	RECEIVEDDATE = STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')
+             	RECEIVEDDATE = #v_SYSDATE#
        		WHERE  
        			TENANT_ID = #v_TENANTID#
        		AND
@@ -12351,7 +12351,7 @@
 				TBL_APRLINEINFO
 	         SET 
 	         	 APRSTATE = '002',
-	             RECEIVEDDATE = STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s')
+	             RECEIVEDDATE = #v_SYSDATE#
 	       	 WHERE  
 	       	 	 TENANT_ID = #v_TENANTID#
        		 AND
@@ -12531,25 +12531,22 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.selectDoCallBack" parameterClass="Map" resultClass="int">
 	<![CDATA[
-	 	SELECT 
-	 		*
-     	FROM ( 
-     			SELECT 
-     				APRMEMBERSN 
-     			FROM 
-     				TBL_APRLINEINFO 
-    			WHERE  
-    				TENANT_ID = #v_TENANTID#
-    			AND
-    				DOCID = #v_DOCID#
-             	AND 
-             		APRMEMBERID = #v_USERID#
-             	AND 
-             		APRSTATE = '003'
-     			ORDER BY 
-     				APRMEMBERSN DESC )
-     	WHERE 
-     		ROWNUM <= 1
+   			SELECT 
+   				APRMEMBERSN 
+   			FROM 
+   				TBL_APRLINEINFO 
+  			WHERE  
+  				TENANT_ID = #v_TENANTID#
+  			AND
+  				DOCID = #v_DOCID#
+           	AND 
+           		APRMEMBERID = #v_USERID#
+           	AND 
+           		APRSTATE = '003'
+   			ORDER BY 
+   				APRMEMBERSN DESC 
+   			LIMIT
+   				1
      ]]>
 	</select>
 	
@@ -12839,7 +12836,7 @@
         ]]>
 	</select>
 	
-	<select id="EzApprovalG.getDocInfoDState" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getDocInfoDState" parameterClass="Map" resultClass="String" remapResults="true">
 		<![CDATA[
 			SELECT
 				 $v_COL$ 
@@ -13068,7 +13065,7 @@
              EXECUTEDATE ,
              RECEIPTMEMBERNAME ,
              RECEIPTMEMBERNAME2 ,
-             STR_TO_DATE(MODIFYDATE) MODIFYDATE  ,
+             STR_TO_DATE(MODIFYDATE, '%Y-%m-%d %H:%i:%s') MODIFYDATE  ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -13316,11 +13313,8 @@
 <!-- 		{CALL EZSP_GETDELIVERYLIST(#v_DEPTID#,#v_SUBQUERY#,#iv_PAGESIZE#,#iv_PAGESIZE2#,#v_ORDEROPTION#,#v_ORDEROPTION2#,#v_MANAGEDEPTID#,#v_ORGANID#,#v_DOCTITLE#,#v_CHARGENAME#,#v_SREGDATE#,#v_EREGDATE#,#v_ISDOCPRINT# ,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}	 -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDeliveryList" parameterClass="Map" resultClass="ApprGDeliveryListVO"> 
-		SELECT 
-			B.* 
-		FROM(
 				SELECT  
-					ROW_NUMBER() OVER (ORDER BY RECEIPTDATE , SN ) AS ROWNUM_,A.* 
+					A.* 
 				FROM ( 
 						SELECT  
 							SN, 
@@ -13399,7 +13393,8 @@
 				   				RECEIPTDATE DESC, SN DESC
 				   		</isEmpty>
 				   		<![CDATA[	
-				   		) A WHERE ROWNUM <= #v_PAGESIZE# 
+				   		LIMIT #v_PAGESIZE#
+				   		)
 				   		]]>
 				   		<isNotEmpty property="v_ORDEROPTION2">
 				   			<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">
@@ -13422,16 +13417,13 @@
 				   				RECEIPTDATE DESC, SN 
 				   		</isEmpty>
 				   		<![CDATA[
-				   		) B WHERE ROWNUM_ <= #v_PAGESIZE2# 
+				   		LIMIT
+				   			#v_PAGESIZE2#
 				   		]]>
 	</select>
 	
 	<select id="EzApprovalG.getCabinetList" parameterClass="ApprGCabinetListVO" resultClass="ApprGCabinetVO" remapResults="true">
-		SELECT 
-			* 
-		FROM 
-			( SELECT 
-					ROW_NUMBER() OVER( $orderBy$ ) AS ROWNUM_, 
+			 SELECT 
 					N.*  
 			  FROM 
 			  		( SELECT 
@@ -13726,24 +13718,24 @@
  		  	<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
-						) N ) A 
+						) N $orderBy$ 
 					</isLessThan>
 					<isGreaterEqual property="start" compareValue="0">
-						) N ) A 
-					WHERE 
-						ROWNUM_ BETWEEN #start# AND #end#
+						) N $orderBy$ 
+					LIMIT 
+						#limit#, #rowCount#
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
-					) N ) A 
-				WHERE 
-					ROWNUM_ BETWEEN #start# AND #end#
+					) N $orderBy$ 
+				LIMIT 
+					#limit#, #rowCount#
 				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
-				) N ) A 
-			WHERE 
-				ROWNUM_ BETWEEN #start# AND #end#
+				) N $orderBy$ 
+			LIMIT 
+				#limit#, #rowCount#
 			</isEmpty>
 	</select>
 	<select id="EzApprovalG.getCabinetListCount" parameterClass="ApprGCabinetListVO" resultClass="int">
@@ -14275,7 +14267,7 @@
              CABINETCLASSNO ,
              TITLE ,
              RECTYPECODE ,
-             STR_TO_DATE(MODIFYDATE) MODIFYDATE ,
+             STR_TO_DATE(MODIFYDATE, '%Y-%m-%d %H:%i:%s') MODIFYDATE ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -14597,7 +14589,7 @@
 		        WHERE  
 		        	DOCID = #v_DOCID#
 		        AND
-		        	TENANT_ID = #v_TENANTID# )
+		        	TENANT_ID = #v_TENANTID# ) A
 	</select>
 <!-- 	<procedure id="EzApprovalG.doSendOffer_receiptId" parameterClass="Map" resultClass="ApprGReceiptVO"> -->
 <!-- 		{CALL EZSP_DOSENDOFFER_RECEIPTID(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -14725,7 +14717,7 @@
        								WHERE  
        									DocID =#v_DocID# 
        								AND
-       									TENANT_ID = #v_TENANTID#)))
+       									TENANT_ID = #v_TENANTID#) C) B) A
        		]]>
    </select>
    <delete id="EzApprovalG.aprDeleteDocInfo" parameterClass="map">
@@ -14873,7 +14865,7 @@
 			ExecuteDate, 
 			ReceiptMemberName, 
 			ReceiptMemberName2, 
-            STR_TO_DATE(#v_SYSDATE# ,'%Y-%m-%d %H:%i:%s'), 
+            #v_SYSDATE#, 
             #v_CHANGEREASON#, 
             #v_USERID#, 
             #v_USERNAME#, 
@@ -14933,7 +14925,7 @@
         				SELECT 
         					DOCID
         				FROM 
-        					TBL_RECORD 
+        					TBL_RECORD A
         				WHERE 
         					RECORDID = #v_RECORDID#
         				AND
@@ -15023,7 +15015,7 @@
    			   TBL_APRLINEINFO 
    			(DocID, 	AprMemberSN,   AprType,      AprState,   AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2,     AprMemberDeptID,      AprMemberDeptName,    AprMemberDeptName2,     AprMemberLDAPPath,      ReceivedDate, 								ProcessDate, 										ReasonDoNotApprov, 		isProposerYN, 	isBriefUserYN, 		TENANT_ID) 
    		VALUES 
-   			(#v_DOCID#, #v_APRMEMSN#, #v_APRTYPE#, #v_APRSTATE#, #v_APRMEMID#, #v_APRMEMDEPTYN#,  #v_APRMEMNM#, #v_APRMEMNM2#,  #v_APRMEMJOBTITLE#,	#v_APRMEMJOBTITLE2# , #v_APRMEMBERDEPTID#, #v_APRMEMBERDEPTNAME#, #v_APRMEMBERDEPTNAME2#, #v_APRMEMBERLDAPPATH#,  STR_TO_DATE($v_RECEIVEDDATE$, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE($v_PROCESSDATE$, '%Y-%m-%d %H:%i:%s'), #v_REASONDONOTAPPROV#, #v_ISPROPOSERYN#, #v_ISBRIEFUSERYN#, #v_TENANTID#)
+   			(#v_DOCID#, #v_APRMEMSN#, #v_APRTYPE#, #v_APRSTATE#, #v_APRMEMID#, #v_APRMEMDEPTYN#,  #v_APRMEMNM#, #v_APRMEMNM2#,  #v_APRMEMJOBTITLE#,	#v_APRMEMJOBTITLE2# , #v_APRMEMBERDEPTID#, #v_APRMEMBERDEPTNAME#, #v_APRMEMBERDEPTNAME2#, #v_APRMEMBERLDAPPATH#, $v_RECEIVEDDATE$, $v_PROCESSDATE$, #v_REASONDONOTAPPROV#, #v_ISPROPOSERYN#, #v_ISBRIEFUSERYN#, #v_TENANTID#)
 			
    </insert>
    
@@ -15032,7 +15024,7 @@
    			    TBL_EXPAPRLINE 
    			(docid,       aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2,TENANT_ID) 		
    	    VALUES 
-   	    	(#v_DOCID#, #v_APRMEMSN#, #v_ORGUSERID#, '',            '',              '',            '',                '',                   '',            '',                 '',       #v_TENANTID#)
+   	    	(#v_DOCID#, #v_APRMEMSN#, #v_ORGUSERID#, NULL,            NULL,              NULL,            NULL,                NULL,                   NULL,            NULL,                 NULL,       #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertOptionInfo" parameterClass="map">
@@ -15169,10 +15161,10 @@
 		
 		<isNotEmpty property="v_STARTDATE">
 		<isEqual property="v_FIRSTFLAG11" compareValue="true">
-			StartDate = STR_TO_DATE(#v_STARTDATE#,'%Y-%m-%d %H:%i:%s')
+			StartDate = #v_STARTDATE#
 		</isEqual>
 		<isNotEqual property="v_FIRSTFLAG11" compareValue="true">
-			,StartDate = STR_TO_DATE(#v_STARTDATE#,'%Y-%m-%d %H:%i:%s')
+			,StartDate = #v_STARTDATE#
 		</isNotEqual>
 		</isNotEmpty>
 		
@@ -15449,9 +15441,9 @@
    		UPDATE TBL_APRLINEINFO 
    		SET 
    			AprState = #aprState#, 
-   			ProcessDate = STR_TO_DATE(#nowDate#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #nowDate#
 			<isEqual property="beforeAprMemberSN" compareValue="1">
-				, ReceivedDate = STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s')
+				, ReceivedDate = #nowDate#
 			</isEqual>
 		WHERE
 			TENANT_ID= #tenantID# 
@@ -15518,7 +15510,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_APRSTATE#,
-		    ReceivedDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+		    ReceivedDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_DOCID#
 		AND 
@@ -15532,8 +15524,8 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_APRSTATE#,
-			ReceivedDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),
-			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+			ReceivedDate = #v_SYSDATE#,
+			ProcessDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_DOCID#
 		AND 
@@ -15547,7 +15539,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_STAASSUNGIN#, 
-   		    ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),
+   		    ProcessDate = #v_SYSDATE#,
 			ReasonDoNotApprov = #v_REASONDONOTAPPROV#
 		WHERE 
 			DocID = #v_DOCID#
@@ -15562,7 +15554,7 @@
    			TBL_APRDOCINFO 
    		(   DocID,    FormID,  OrgDocID, DocType,   DocState,    FunctionType,  Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN,     StartDate,                               EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
    		(SELECT 
-   			#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_APRSTATE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s') , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+   			#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_APRSTATE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE# , NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
    		 FROM 
    		 	TBL_APRDOCINFO 
    		 WHERE 
@@ -15632,7 +15624,7 @@
    			TBL_APRRECEIPTPROCESSINFO 
    		(	ReceiveSN, DocID,  SentDeptID,     SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,     AprState,   ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
    		(SELECT 
-   				1,   #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,     #v_DEPTNAME2#,  #v_DOCSTATE#, #v_STAASDOJAK#, NULL,        'N',        '',            '',             '',            '',            '',                '',                 DocID, TENANT_ID 
+   				1,   #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,     #v_DEPTNAME2#,  #v_DOCSTATE#, #v_STAASDOJAK#, NULL,        'N',        NULL,            NULL,             NULL,            NULL,            NULL,                NULL,                 DocID, TENANT_ID 
    		 FROM 
    		 	TBL_APRDOCINFO 
 		 WHERE 
@@ -15646,7 +15638,7 @@
    			TBL_APRLINEINFO 
    		(DocID, AprMemberSN, AprType,   AprState,    AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath,      ReceivedDate,                      ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
    		VALUES
-   		(#v_NEWID#, 1,      #v_APRTYPE#, #v_APRSTATE#, #v_USERID#,        'N',        #v_USERNAME#,  #v_USERNAME2# , #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,     #v_DEPTNAME2#,     #v_PCOMPANYID# , STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL,         '',               'N',         'N', #v_TENANTID#)
+   		(#v_NEWID#, 1,      #v_APRTYPE#, #v_APRSTATE#, #v_USERID#,        'N',        #v_USERNAME#,  #v_USERNAME2# , #v_USERJOBTITLE#, #v_USERJOBTITLE2#,    #v_DEPTID#,        #v_DEPTNAME#,     #v_DEPTNAME2#,     #v_PCOMPANYID# , #v_SYSDATE#, NULL,         NULL,               'N',         'N', #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertCamjoExAprLine" parameterClass="Map">
@@ -15654,7 +15646,7 @@
    			TBL_EXPAPRLINE 
    		(docid, aprmemberSN, orguserid,   proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID) 
    		VALUES 
-   		(#v_NEWID#, 1,           #v_USERID#,   '',           '',              '',                '',             '',                '',                '',                  '',  #v_TENANTID#)
+   		(#v_NEWID#, 1,           #v_USERID#,   NULL,           NULL,              NULL,                NULL,             NULL,                NULL,                NULL,                  NULL,  #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertSignInfo" parameterClass="Map">
@@ -15672,7 +15664,7 @@
         (SELECT 
         	#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL# , DocTitle, DocNo, HasAttachYN,     'N',         NULL,     NULL,   WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic , TENANT_ID 
          FROM 
-         	TBL_APRDOCINFO 
+         	TBL_APRDOCINFO A 
          WHERE 
          	DocID = #v_DOCID# 
          AND
@@ -15686,7 +15678,7 @@
          (SELECT 
          	#v_NEWID#, SecurityCode, storagePeriod,   KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
           FROM 
-          	TBL_EXPAPRDOCINFO 
+          	TBL_EXPAPRDOCINFO A 
           WHERE 
           	DocID = #v_DOCID# 
           AND
@@ -15700,7 +15692,7 @@
         (SELECT 
         	#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID,  AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
          FROM 
-         	TBL_APRATTACHINFO 
+         	TBL_APRATTACHINFO A 
          WHERE 
           	DocID = #v_DOCID# 
       	 AND
@@ -15714,7 +15706,7 @@
          (SELECT 
          	#v_NEWID#, AttachSN,  AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
           FROM 
-          	TBL_APRDOCATTACHINFO 
+          	TBL_APRDOCATTACHINFO A 
           WHERE 
           	DocID = #v_DOCID# 
       	  AND
@@ -15726,9 +15718,9 @@
         	TBL_APRRECEIPTPROCESSINFO 
         ( ReceiveSN, DocID,   SentDeptID,    SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,       AprState,     ProcessDate,                             ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
         (SELECT  
-        	1,     #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,       #v_DEPTNAME2#, #v_DOCSTATE#, #v_STAASDOJAK#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',     '',              '',         '',              '',              '',                '',                DocID, TENANT_ID 
+        	1,     #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#,    #v_DEPTNAME#,       #v_DEPTNAME2#, #v_DOCSTATE#, #v_STAASDOJAK#, #v_SYSDATE#, 'N',     NULL,              NULL,         NULL,              NULL,              NULL,                NULL,                DocID, TENANT_ID 
          FROM 
-         	TBL_APRDOCINFO
+         	TBL_APRDOCINFO A
          WHERE 
             DocID = #v_DOCID# 
       	  AND
@@ -15741,8 +15733,8 @@
    		(RecordID,     DocID,     ProcessDeptName, ProcessDeptName2, ProcessDeptCode, RegisterYear,       RegisterDate,                             RegisterNo,     AprMemberTitle,    AprMemberTitle2,        DrafterName,     DrafterName2,           ExecuteDate,                              
    		 ReceiptMemberName, ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo, ElectronicRecFlag, SpecialRecordCode, PublicityCode,    LimitRange,   OldRecordFlag, DeleteDate,  DelFlag,     SpecialCatalogFlag,      AttachFlag,      CreateDate,                                 RejectFlag,    ManualRegFlag, DocType,TENANT_ID) 
    		VALUES 
-   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, STR_TO_DATE(#v_EXECUTEDATE#,'%Y-%m-%d %H:%i:%s'),  
-   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#)
+   		(#v_RECORDID#, #v_DOCID#,  #v_DEPTNAME#,     #v_DEPTNAME2#,   #v_DEPTCODE#,    #v_REGYEAR#, #v_SYSDATE#, #v_REGISTERSN#, #v_APRMEMBERTITLE#, #v_APRMEMBERTITLE2#,  #v_DRAFTERNAME#, #v_DRAFTERNAME2#, #v_EXECUTEDATE#,  
+   		#v_RECEIPTMEMBER#, #v_RECEIPTMEMBER2#,      NULL,                 NULL,      #v_DELIVERYNO#, #v_ORIGINREGSN#, #v_ELECTRONICRECFLAG#, #v_SPECIALREC#, #v_PUBLICCODE#, #v_LIMITRANGE#, #v_OLDFLAG#,    NULL,     #v_DELFLAG#,  #v_SPECIALCATALOGFLAG#, #v_ATTACHFLAG#, #v_SYSDATE#, #v_REJECTFLAG#, #v_MANUALFLAG#, #v_DOCTYPE#, #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertRegSeperateAttach" parameterClass="Map">
@@ -15750,7 +15742,7 @@
    			TBL_SEPERATEATTACH 
    		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID) 
    		Values 
-   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), '0',             '0',                 '0',    #v_TENANTID#)
+   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', #v_SYSDATE#, '0',             '0',                 '0',    #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertRegRecRoleInfo" parameterClass="Map">
@@ -15798,13 +15790,13 @@
    		(SELECT 
    			#v_RECORDID#, SerialNo, SC1, SC2, SC3, TBL_SPECIALCATALOGINFO_CAB.TENANT_ID 
    		 FROM 
-   		 	TBL_SPECIALCATALOGINFO_CAB 
+   		 	TBL_SPECIALCATALOGINFO_CAB A 
    		 INNER JOIN 
    		 	(SELECT 
    		 		TBL_CABINET.CabinetClassNo,
    		 		TBL_CABINET.TENANT_ID
    		 	 FROM 
-   		 	 	TBL_CABINET 
+   		 	 	TBL_CABINET B
    		 	 WHERE 
    		 	 	TBL_CABINET.CabinetID = #v_CABID#) TBL_CABINET 
    		  ON 
@@ -15849,7 +15841,7 @@
 	   			RouteYN, 
 	   			TENANT_ID  
    		  FROM 
-   		  	TBL_RECEIPTPOINTINFO 
+   		  	TBL_RECEIPTPOINTINFO A 
 		  WHERE  
 		  	DOCID = #v_DOCID#
 		  AND 	
@@ -15875,7 +15867,7 @@
 				UserDeptName2, 
 				TENANT_ID   
 		 FROM 
-		 	TBL_APROPINIONINFO 
+		 	TBL_APROPINIONINFO A
 		 WHERE  
 		 	DOCID = #v_DOCID# 
 		 AND 	
@@ -15902,7 +15894,7 @@
         		AttachUserDeptName2, 
         		TENANT_ID   
            FROM 
-           		TBL_APRDOCATTACHINFO 
+           		TBL_APRDOCATTACHINFO A 
 		   WHERE  
 		   		DOCID = #v_DOCID# 
 		   AND 	
@@ -15932,7 +15924,7 @@
 	    		AttachUserDeptName2, 
 	    		TENANT_ID   
 	      FROM 
-	      		TBL_APRATTACHINFO 
+	      		TBL_APRATTACHINFO A 
 	      WHERE  
 	      		DOCID = #v_DOCID# 
 		  AND 	
@@ -15957,7 +15949,7 @@
 				proxyuserdeptname2, 
 				TENANT_ID 
 		   FROM 
-		   		TBL_EXPAPRLINE 
+		   		TBL_EXPAPRLINE A 
 		   WHERE  
 		   		DOCID = #v_DOCID# 
 		   AND 	
@@ -15990,7 +15982,7 @@
 			AprMemberDeptName2, 
 			TENANT_ID  
 		  FROM 
-		  	TBL_APRLINEINFO 
+		  	TBL_APRLINEINFO A
 		  WHERE  
 		  	DOCID = #v_DOCID# 
 		  AND 	
@@ -16028,7 +16020,7 @@
 			ItemName2, 
 			TENANT_ID  
 		  FROM 
-		  	TBL_EXPAPRDOCINFO
+		  	TBL_EXPAPRDOCINFO A
 		  WHERE  
 		  	DOCID = #v_DOCID# 
 		  AND 	
@@ -16051,7 +16043,7 @@
 			DOCNO , 
 			HASATTACHYN ,
 			HASOPINIONYN ,
-			STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s') , 
+			#v_SYSDATE#, 
 			ENDDATE , 
 			WRITERID , 
 			WRITERNAME , 
@@ -16064,7 +16056,7 @@
 			WriterDeptName2, 
 			TENANT_ID 
 		  FROM 
-		  	TBL_APRDOCINFO 
+		  	TBL_APRDOCINFO A 
 		  WHERE  
 		  	DOCID = #v_DOCID# 
 		  AND 	
@@ -16175,9 +16167,9 @@
    		 	TBL_ENDAPRDOCINFO 
         ( 	   DocID,     FormID, OrgDocID,    DocType, DocState,  FunctionType, Href,      DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                      WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName,    WriterDeptName2,     ContainerID, isPublic, TENANT_ID )
         ( SELECT 
-        	#v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID 
+        	#v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID 
           FROM 
-          	TBL_APRDOCINFO 
+          	TBL_APRDOCINFO A 
           WHERE  
           	DocID = #v_DOCID#
           AND
@@ -16189,9 +16181,9 @@
    		 	TBL_ENDAPRDOCINFO 
         ( 	   DocID,     FormID, OrgDocID,    DocType, DocState,  FunctionType, Href,      DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                      WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName,    WriterDeptName2,     ContainerID, isPublic, TENANT_ID )
         ( SELECT 
-        	#v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, #v_DOCNO#, HasAttachYN, HasOpinionYN, StartDate, WriterID, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID 
+        	#v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, #v_DOCNO#, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID 
           FROM 
-          	TBL_APRDOCINFO 
+          	TBL_APRDOCINFO A 
           WHERE  
           	DocID = #v_DOCID#
           AND
@@ -16205,7 +16197,7 @@
      	( SELECT 
      		#v_NEWDOCID#, AprMemberSN ,AprType , AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov,  ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID 
        	FROM 
-       		TBL_APRLINEINFO 
+       		TBL_APRLINEINFO A 
         WHERE  
           	DocID = #v_DOCID#
         AND
@@ -16219,7 +16211,7 @@
 	     ( SELECT 
 	     		#v_NEWDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
 	       FROM 
-	       		TBL_APRATTACHINFO 
+	       		TBL_APRATTACHINFO A 
 	       WHERE  
 	       		DOCID = #v_DOCID#
 	       AND
@@ -16233,7 +16225,7 @@
      	( SELECT 
      		  #v_NEWDOCID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2 , AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
        	  FROM 
-       	  	  TBL_APRDOCATTACHINFO 
+       	  	  TBL_APRDOCATTACHINFO A 
           WHERE  
           	  DOCID = #v_DOCID#
           AND
@@ -16247,7 +16239,7 @@
      	( SELECT 
      		  #v_NEWDOCID#, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
        	  FROM 
-       		  TBL_APROPINIONINFO 
+       		  TBL_APROPINIONINFO A 
           WHERE  
           	  DOCID = #v_DOCID#
           AND
@@ -16261,7 +16253,7 @@
      	( SELECT 
      		  #v_NEWDOCID#, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID 
           FROM 
-          	   TBL_RECEIPTPOINTINFO 
+          	   TBL_RECEIPTPOINTINFO A 
           WHERE  
           	  DOCID = #v_DOCID#
           AND
@@ -16275,7 +16267,7 @@
      	( SELECT 
      		  #v_NEWDOCID#, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN , ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID 
           FROM 
-          	   TBL_APRRECEIPTPROCESSINFO 
+          	   TBL_APRRECEIPTPROCESSINFO A 
           WHERE  
           	  DOCID = #v_DOCID#
           AND
@@ -16289,7 +16281,7 @@
 	     ( SELECT 
 	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
 	       FROM 
-	       		TBL_EXPAPRDOCINFO 
+	       		TBL_EXPAPRDOCINFO A
 	       WHERE  
 	          	DOCID = #v_DOCID#
 	       AND
@@ -16303,7 +16295,7 @@
         ( SELECT 
         	  #v_NEWDOCID#, aprmemberSN , orguserid , proxyuserid , proxyusername , proxyusername2 , proxyuserjobtitle , proxyuserjobtitle2 , proxyuserdeptid , proxyuserdeptname , proxyuserdeptname2, TENANT_ID
           FROM 
-          	   TBL_EXPAPRLINE 
+          	   TBL_EXPAPRLINE A 
           WHERE  
           	DOCID = #v_DOCID#
           AND
@@ -16355,7 +16347,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_APRSTATE#, 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #v_SYSDATE#
         WHERE 
         	DocID = #v_DOCID#
         AND 
@@ -16391,7 +16383,7 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		(DOCID,        RECEIPTPOINTID,     RECEIPTPOINTNAME,   RECEIPTPOINTNAME2,     EXTRECEPTYN,      PROCESSYN,     PROCESSSN,    CANEDITYN,      EXTRECEPTEMAIL,     RECEIPTMEMBERID,     RECEIPTMEMBERNAME,    RECEIPTMEMBERNAME2,     PROCESSDATE,                                    RECEIPTMEMBERJOBTITLE,      RECEIPTMEMBERJOBTITLE2, DEPTMEMBERSN,    TENANT_ID) 
    		VALUES 
-   		(#v_DOCID#, #v_RECEIPTPOINTID# , #v_RECEIPTPOINTNAME#, #v_RECEIPTPOINTNAME#, #v_EXTRECEPTYN#, #v_PROCESSYN#, #v_PROCESSSN#, #v_CANEDITYN#, #v_EXTRECEPTEMAIL#, #v_RECEIPTMEMBERID#, #v_RECEIPTMEMBERNAME#, #v_RECEIPTMEMBERNAME2#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_RECEIPTMEMBERJOBTITLE#, #v_RECEIPTMEMBERJOBTITLE2#, #v_DEPTMEMBERSN#, #v_TENANTID#) 
+   		(#v_DOCID#, #v_RECEIPTPOINTID# , #v_RECEIPTPOINTNAME#, #v_RECEIPTPOINTNAME#, #v_EXTRECEPTYN#, #v_PROCESSYN#, #v_PROCESSSN#, #v_CANEDITYN#, #v_EXTRECEPTEMAIL#, #v_RECEIPTMEMBERID#, #v_RECEIPTMEMBERNAME#, #v_RECEIPTMEMBERNAME2#, #v_SYSDATE#, #v_RECEIPTMEMBERJOBTITLE#, #v_RECEIPTMEMBERJOBTITLE2#, #v_DEPTMEMBERSN#, #v_TENANTID#) 
    </insert>
    
    <insert id="EzApprovalG.insertReSendAprDocInfo" parameterClass="Map">
@@ -16401,7 +16393,7 @@
    		  (SELECT 
    		  		#v_NEWID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_STAASDOJAK#, #v_URL#, DocTitle, DocNo,  HasAttachYN,   'N',             NULL, NULL,     WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
    		  	FROM 
-   		  		TBL_ENDAPRDOCINFO  
+   		  		TBL_ENDAPRDOCINFO A  
    		  	WHERE 
    		  		DocID = #v_DOCID# 
    		  	AND 
@@ -16415,7 +16407,7 @@
          (SELECT 
          		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, SecurityApproval, TempAttribute, SpecialRecordCode, PublicityCode, PageNum, TENANT_ID 
           FROM 
-          		TBL_EXPENDAPRDOCINFO 
+          		TBL_EXPENDAPRDOCINFO A 
           WHERE 
           		DocID = #v_DOCID# 
           AND 
@@ -16429,7 +16421,7 @@
    		 (SELECT 
    		 		#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
    		 FROM 
-   		 		TBL_ENDATTACHINFO  
+   		 		TBL_ENDATTACHINFO A  
    		 WHERE 
    		 		DocID = #v_DOCID# 
    		 AND 
@@ -16443,7 +16435,7 @@
    		(SELECT 
    			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2 , TENANT_ID
    		 FROM 
-   		 	TBL_ENDAPRDOCATTACHINFO 
+   		 	TBL_ENDAPRDOCATTACHINFO A 
    		 WHERE 
    		 	DocID = #v_DOCID#
    		 AND 
@@ -16455,9 +16447,9 @@
    				TBL_APRRECEIPTPROCESSINFO 
    		(	 ReceiveSN,     DocID,      SentDeptID, SentDeptName, ReceivedDeptID,         ReceivedDeptName,       DocState,      AprState,       ProcessDate,                              ProcessYN, ProcessDocID,    ProcessorID,    ProcessorName, ProcessorJobTitle, ParentsDocID, TENANT_ID) 
    		(SELECT 
-			#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, #v_ReceivedDeptID#, #v_strReceiptPointName#, #v_DocState# , #v_AprState#,  STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',        '',        #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorJobTitle#, DocID, TENANT_ID 
+			#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, #v_ReceivedDeptID#, #v_strReceiptPointName#, #v_DocState# , #v_AprState#,  #v_SYSDATE#, 'N',        NULL,        #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorJobTitle#, DocID, TENANT_ID 
 		FROM 
-			TBL_ENDAPRDOCINFO 
+			TBL_ENDAPRDOCINFO A
 		WHERE 
 			DocID = #v_DOCID#
 		AND 
@@ -16482,7 +16474,7 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSYN#, 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #v_SYSDATE#
         WHERE 
         	DocID = #v_DOCID#
         AND 
@@ -16496,7 +16488,7 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSYN#, 
-            ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+            ProcessDate = #v_SYSDATE#
         WHERE 
         	DocID = #v_DOCID# 
         AND 
@@ -16512,7 +16504,7 @@
         (SELECT 
         	DocID, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ProcessYN, ProcessDate, TENANT_ID 
          FROM 
-         	TBL_ENDRECEIPTPOINTINFO  
+         	TBL_ENDRECEIPTPOINTINFO  A
 	     WHERE 
 	     	DocID =  #v_DOCID# 
 	     AND 
@@ -16524,7 +16516,7 @@
      		TBL_HISTORYRECEIPTINFO 
      	(DocID, ReceiptDeptID, ReceiptDeptName, ReceiptDeptName2, Status, StatusDate,TENANT_ID) 
         VALUES 
-        (#v_DOCID# , #v_DEPTID#, #v_DEPTNAME#,  #v_DEPTNAME2#, #v_PROCESSYN# , STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_TENANTID#)
+        (#v_DOCID# , #v_DEPTID#, #v_DEPTNAME#,  #v_DEPTNAME2#, #v_PROCESSYN# , #v_SYSDATE#, #v_TENANTID#)
    </insert>
    
    <update id="EzApprovalG.updateProEndAprDocInfo" parameterClass="Map">
@@ -16554,7 +16546,7 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSFLAG# , 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s') 
+   			ProcessDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_ORGDOCID# 
 		AND 
@@ -16571,7 +16563,7 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSFLAG# , 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),
+   			ProcessDate = #v_SYSDATE#,
    			ReceiptMemberID = #v_USERID#, 
    			ReceiptMemberName = #v_USERNAME# , 
    			ReceiptMemberName2 = #v_USERNAME2# 
@@ -16592,7 +16584,7 @@
    		SET 
    			AprState = #v_APRSTATE#, 
    			ProcessYN = 'Y', 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 
@@ -16609,11 +16601,13 @@
    			TBL_APRRECEIPTPROCESSINFO 
    		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
    		(SELECT 
-   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
+   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, #v_SYSDATE#, 'N',           NULL,           NULL,           NULL,            NULL,              NULL,               NULL,               DocID, TENANT_ID 
    		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
+   		 	TBL_APRRECEIPTPROCESSINFO A 
    		 WHERE 
-   		 	ROWNUM <= 1 AND DocID = #v_DOCID#
+   		 	ROWNUM <= 1 
+   		 AND 
+   		 	DocID = #v_DOCID#
    		 AND 
    		 	ReceiveSN = #v_RECEIVESN#
    		 AND 
@@ -16646,9 +16640,9 @@
    			TBL_APRDOCINFO 
    		(	  DocID,   FormID, OrgDocID, DocType, DocState, FunctionType,     Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                   EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
    		(SELECT 
-   			#v_NEWID#, FormID, OrgDocID, DocType, DocState, #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+   			#v_NEWID#, FormID, OrgDocID, DocType, DocState, #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
    		 FROM 
-   		 	TBL_APRDOCINFO  
+   		 	TBL_APRDOCINFO A  
    		 WHERE 
    		 	DocID = #v_DOCID#
    		 AND 
@@ -16662,7 +16656,7 @@
         (SELECT 
         	#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
          FROM 
-         	TBL_EXPAPRDOCINFO  
+         	TBL_EXPAPRDOCINFO A  
          WHERE 
          	DocID = #v_DOCID# 
          AND 
@@ -16676,7 +16670,7 @@
 		(SELECT 
 			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach,TENANT_ID 
 		 FROM 
-            TBL_APRATTACHINFO  
+            TBL_APRATTACHINFO A  
          WHERE 
          	DocID = #v_DOCID# 
          AND 
@@ -16690,7 +16684,7 @@
    		(SELECT 
    			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
    		 FROM 
-   		 	TBL_APRDOCATTACHINFO  
+   		 	TBL_APRDOCATTACHINFO A 
    		 WHERE 
    		 	DocID = #v_DOCID#
    		 AND 
@@ -16703,7 +16697,7 @@
    		(SELECT 
    			#v_NEWID# , UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
    		 FROM 
-   		 	TBL_APROPINIONINFO  
+   		 	TBL_APROPINIONINFO A  
    		 WHERE 
    		 	DocID = #v_DOCID#
    		 AND 
@@ -16714,9 +16708,9 @@
    				TBL_APRRECEIPTPROCESSINFO 
    		(	ReceiveSN, DocID,      SentDeptID,      SentDeptName, SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,     AprState,    ProcessDate,                             ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
    		(SELECT 
-   			  '1',    #v_NEWID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,   SentDeptName,       SentDeptName2,     DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',         '',            '',          '',              '',           '',                  '',             DocID , TENANT_ID
+   			  '1',    #v_NEWID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,   SentDeptName,       SentDeptName2,     DocState, #v_APRSTATE#, #v_SYSDATE#, 'N',         NULL,            NULL,          NULL,              NULL,           NULL,                  NULL,             DocID , TENANT_ID
          FROM 
-         	TBL_APRRECEIPTPROCESSINFO  
+         	TBL_APRRECEIPTPROCESSINFO  A
          WHERE 
          	DocID = #v_DOCID# 
          AND 
@@ -16731,9 +16725,9 @@
    			TBL_APRRECEIPTPROCESSINFO 
    		(   ReceiveSN, DocID, SentDeptID,      SentDeptName,     SentDeptName2,    ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState,   AprState,      ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
    		(SELECT 
-   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',       '',          '',             '',         '',               '',                '',                 DocID , TENANT_ID 
+   			#v_PSN#,   DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, SentDeptID,       SentDeptName,    SentDeptName2,      DocState, #v_APRSTATE#, #v_SYSDATE#, 'N',       NULL,          NULL,             NULL,         NULL,               NULL,                NULL,                 DocID , TENANT_ID 
    		 FROM 
-   		 	TBL_APRRECEIPTPROCESSINFO 
+   		 	TBL_APRRECEIPTPROCESSINFO A
    		 WHERE 
    		 	ROWNUM <= 1 
    		 AND 
@@ -16750,7 +16744,7 @@
    		UPDATE 
    			TBL_APRRECEIPTPROCESSINFO 
    		SET 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 
+   			ProcessDate = #v_SYSDATE#, 
    			AprState = #v_APRSTATE#, 
    			ProcessYN = 'Y' 
    		WHERE 
@@ -16768,7 +16762,7 @@
    				TBL_APRRECEIPTPROCESSINFO 
    		(ReceiveSN,     DocID,       SentDeptID,      SentDeptName,    SentDeptName2, ReceivedDeptID,           ReceivedDeptName, ReceivedDeptName2,        DocState,    AprState,   ProcessDate,                                   ProcessYN, ProcessDocID, ProcessorID,       ProcessorName,      ProcessorName2,      ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
 		VALUES 
-		(#v_RECEIVESN#, #v_DOCID#, #v_SentDeptID# , #v_SentDeptName#, #v_SentDeptName2#, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, STR_TO_DATE(#v_SYSDATE#, '%Y-%m-%d %H:%i:%s'), 'N',              NULL, #v_ProcessorID#, #v_ProcessorName# , #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle#, #v_ParentsDocID# , #v_TENANTID#)
+		(#v_RECEIVESN#, #v_DOCID#, #v_SentDeptID# , #v_SentDeptName#, #v_SentDeptName2#, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, #v_SYSDATE#, 'N',              NULL, #v_ProcessorID#, #v_ProcessorName# , #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle#, #v_ParentsDocID# , #v_TENANTID#)
    </insert>
    
    <update id="EzApprovalG.updateProYnEndReceiptPointInfo" parameterClass="Map">
@@ -16776,12 +16770,13 @@
    			TBL_ENDRECEIPTPOINTINFO 
    		SET 
    			ProcessYN = #v_PROCESSYN#, 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #v_SYSDATE#
         WHERE 
         	DocID = #v_DOCID# 
         AND 
         	ReceiptPointID = #v_DEPTID#
-        AND TENANT_ID = #v_TENANTID#
+        AND 
+        	TENANT_ID = #v_TENANTID#
    </update>
    
    <insert id="EzApprovalG.insertGamsaAprOpinionInfo" parameterClass="Map">
@@ -16836,7 +16831,7 @@
    		UPDATE 
    			TBL_APRLINEINFO 
    		SET 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 
+   			ProcessDate = #v_SYSDATE#, 
    			AprState = #v_APRSTATE# 
    		WHERE 
    			DocID = #v_DOCID#
@@ -16854,7 +16849,7 @@
    		UPDATE 
    			TBL_ENDAPRLINEINFO 
    		SET 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 
+   			ProcessDate = #v_SYSDATE#, 
    			AprState = #v_APRSTATE# 
    		WHERE 
    			DocID = #v_DOCID#
@@ -16873,9 +16868,9 @@
    			TBL_APRDOCINFO 
    		(        DocID,       FormID, OrgDocID, DocType, DocState,        FunctionType,    Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle,WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
    		(SELECT 
-   			#v_GONGRAMDOCID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_FUNCTIONTYPE#, #v_HREF#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+   			#v_GONGRAMDOCID#, FormID, #v_DOCID#, DocType, #v_DOCSTATE#, #v_FUNCTIONTYPE#, #v_HREF#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
          FROM 
-         	TBL_ENDAPRDOCINFO 
+         	TBL_ENDAPRDOCINFO A 
          WHERE 
          	DocID = #v_DOCID# 
          AND 
@@ -16889,7 +16884,7 @@
    		    (SELECT 
    		    	#v_GONGRAMDOCID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
    		     FROM 
-   		     	TBL_EXPENDAPRDOCINFO 
+   		     	TBL_EXPENDAPRDOCINFO A 
              WHERE 
              	DocID = #v_DOCID# 
          	 AND 
@@ -16903,7 +16898,7 @@
    		(SELECT 
    			#v_GONGRAMDOCID#, UserID, OpinionGB, Content, UserName,  UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
    		FROM 
-   			TBL_ENDAPROPINIONINFO 
+   			TBL_ENDAPROPINIONINFO A 
    		WHERE 
    			DocID = #v_DOCID# 
         AND 
@@ -16917,7 +16912,7 @@
          (SELECT 
          	#v_GONGRAMDOCID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
          FROM 
-         	TBL_ENDAPRDOCATTACHINFO 
+         	TBL_ENDAPRDOCATTACHINFO A 
          WHERE 
    			DocID = #v_DOCID# 
          AND 
@@ -16931,7 +16926,7 @@
    			(SELECT 
             	#v_GONGRAMDOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName,AttachUserDeptName2,  AttachUserJobTitle,  AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID 
             FROM 
-            	TBL_ENDATTACHINFO 
+            	TBL_ENDATTACHINFO A 
             WHERE 
             	DocID = #v_DOCID# 
          	AND 
@@ -16947,7 +16942,8 @@
    				DocID = #v_GONGRAMDOCID#
    			AND 
    				StartDate IS NULL  
-   			AND TENANT_ID = #v_TENANTID#
+   			AND 
+   				TENANT_ID = #v_TENANTID#
    </update>
    
    <delete id="EzApprovalG.deleteGongRamAprLineInfo" parameterClass="Map">
@@ -16975,10 +16971,10 @@
    		(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName,  AprMemberName2, AprMemberJobTitle,  AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
    		VALUES 
    		(#v_GONGRAMDOCID#, #v_APRMEMBERSN#,  #v_APRTYPE#,  #v_APRSTATE#,  #v_APRMEMBERID#,  #v_APRMEMBERISDEPTYN#,  #v_APRMEMBERNAME#,   #v_APRMEMBERNAME2#,  #v_APRMEMBERJOBTITLE#,   #v_APRMEMBERJOBTITLE2#,  #v_APRMEMBERDEPTID#,  #v_APRMEMBERDEPTNAME#,  #v_APRMEMBERDEPTNAME2#,  #v_APRMEMBERLDAPPATH#,  
-   		<isEqual property="v_RECEIVEDDATE" compareValue="NULL">$v_RECEIVEDDATE$</isEqual> 
-   		<isNotEqual property="v_RECEIVEDDATE" compareValue="NULL">STR_TO_DATE(#v_RECEIVEDDATE#,'%Y-%m-%d %H:%i:%s')</isNotEqual>, 
-   		<isEqual property="v_PROCESSDATE" compareValue="NULL">$v_PROCESSDATE$</isEqual>
-   		<isNotEqual property="v_PROCESSDATE" compareValue="NULL">STR_TO_DATE(#v_PROCESSDATE#,'%Y-%m-%d %H:%i:%s')</isNotEqual> ,  #v_REASONDONOTAPPROV#,  #v_ISPROPOSERYN#,  #v_ISBRIEFUSERYN#,  #v_TENANTID#)
+   		<isEqual property="v_RECEIVEDDATE" compareValue="NULL">NULL</isEqual> 
+   		<isNotEqual property="v_RECEIVEDDATE" compareValue="NULL">#v_RECEIVEDDATE#</isNotEqual>, 
+   		<isEqual property="v_PROCESSDATE" compareValue="NULL">NULL</isEqual>
+   		<isNotEqual property="v_PROCESSDATE" compareValue="NULL">#v_PROCESSDATE#</isNotEqual> ,  #v_REASONDONOTAPPROV#,  #v_ISPROPOSERYN#,  #v_ISBRIEFUSERYN#,  #v_TENANTID#)
    </insert>
 
 	<insert id="EzApprovalG.insertGongRamExpAprLine" parameterClass="Map">
@@ -16986,7 +16982,7 @@
 			TBL_EXPAPRLINE 
 		(DocID,             AprMemberSN,        OrgUserID, ProxyUserID, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, TENANT_ID) 
 		VALUES 
-		(#v_GONGRAMDOCID#, #v_APRMEMBERSN# ,#v_APRMEMBERID# , '',             '',               '',             '',              '',                  '',            '',               '', #v_TENANTID#)
+		(#v_GONGRAMDOCID#, #v_APRMEMBERSN# ,#v_APRMEMBERID# , NULL,             NULL,               NULL,             NULL,              NULL,                  NULL,            NULL,               NULL, #v_TENANTID#)
 	</insert>
 	
 	<delete id="EzApprovalG.deleteRollBackSignInfo" parameterClass="Map">
@@ -17024,7 +17020,7 @@
 			TBL_RECORD
 		(RecordID,          DocID,  ProcessDeptName,      ProcessDeptName2,      ProcessDeptCode,    RegisterYear,    RegisterDate,                                    RegisterNo,    AprMemberTitle,     AprMemberTitle2,      DrafterName,      DrafterName2,     ExecuteDate,                                      ReceiptMemberName,          ReceiptMemberName2, SendingMemberName, SendingMemberName2, DeliveryNo,   ProduceDeptRegNo,         ElectronicRecFlag, SpecialRecordCode,        PublicityCode,     LimitRange,      OldRecordFlag, DeleteDate, DelFlag,       SpecialCatalogFlag, AttachFlag,         CreateDate,                                RejectFlag, ManualRegFlag, DocType, TENANT_ID)
 		VALUES 
-		(#v_RecordID# , #v_DocID#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_ProcessDeptCode#, #v_RegisterYear#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_RegisterNo#, #v_AprMemberTitle#, #v_AprMemberTitle2#,  #v_DrafterName#,  #v_DrafterName2#,  STR_TO_DATE(#v_ExecuteDate#,'%Y-%m-%d %H:%i:%s'),  #v_ReceiptMemberName#,  #v_ReceiptMemberName2#,  NULL,                NULL  ,         #v_DeliveryNo#, #v_ProduceDeptRegNo#, #v_ElectronicRecFlag#,  #v_SpecialRecordCode#, #v_PublicityCode#, #v_LimitRange#, #v_OldRecordFlag#, NULL,     #v_DelFlag#, #v_SpecialCatalogFlag#, #v_AttachFlag#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_RejectFlag#, #v_ManualRegFlag#, #v_DocType#, #v_TENANTID#)
+		(#v_RecordID# , #v_DocID#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_ProcessDeptCode#, #v_RegisterYear#, #v_SYSDATE#, #v_RegisterNo#, #v_AprMemberTitle#, #v_AprMemberTitle2#,  #v_DrafterName#,  #v_DrafterName2#,  STR_TO_DATE(#v_ExecuteDate#,'%Y-%m-%d %H:%i:%s'),  #v_ReceiptMemberName#,  #v_ReceiptMemberName2#,  NULL,                NULL  ,         #v_DeliveryNo#, #v_ProduceDeptRegNo#, #v_ElectronicRecFlag#,  #v_SpecialRecordCode#, #v_PublicityCode#, #v_LimitRange#, #v_OldRecordFlag#, NULL,     #v_DelFlag#, #v_SpecialCatalogFlag#, #v_AttachFlag#, #v_SYSDATE#, #v_RejectFlag#, #v_ManualRegFlag#, #v_DocType#, #v_TENANTID#)
 	</insert>
 	
 	<insert id="EzApprovalG.insertRegEndAttachInfo" parameterClass="Map">
@@ -17034,7 +17030,7 @@
         ( SELECT 
         		#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachFileSize ,AttachUserID , AttachUserName, AttachUserDeptID, AttachUserDeptName, PageNum, DisplayName, BodyAttach, AttachUserName2, AttachUserJobTitle2, AttachUserDeptName2, TENANT_ID
           FROM 
-          		TBL_APRATTACHINFO 
+          		TBL_APRATTACHINFO A 
           WHERE 
           		DocID = #v_DOCID#
 		  AND
@@ -17055,9 +17051,9 @@
 			TBL_APRDOCINFO 
 		(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID) 
 		(SELECT 
-			#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
+			#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
 		  FROM 
-		  	TBL_APRDOCINFO 
+		  	TBL_APRDOCINFO A 
 		  WHERE 
 		  	DocID = #v_DOCID# 
 		  AND 
@@ -17072,7 +17068,7 @@
             (SELECT 
             	#v_NEWID# , SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
              FROM 
-             	TBL_EXPAPRDOCINFO 
+             	TBL_EXPAPRDOCINFO A 
 			 WHERE 
 			 	DocID = #v_DOCID# 
 			 AND 
@@ -17086,7 +17082,7 @@
 		(SELECT 
 			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
 		 FROM 
-            TBL_APRATTACHINFO 
+            TBL_APRATTACHINFO A
          WHERE 
          	DocID = #v_DOCID# 
          AND 
@@ -17100,7 +17096,7 @@
 		(SELECT 
 			#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
 		 FROM 
-            TBL_APRDOCATTACHINFO 
+            TBL_APRDOCATTACHINFO A 
          WHERE 
          	DocID = #v_DOCID#  
          AND 
@@ -17115,7 +17111,7 @@
 		(SELECT 
 			#v_NEWID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
 		 FROM 
-		 	TBL_APROPINIONINFO  
+		 	TBL_APROPINIONINFO A
 		 WHERE 
 		 	DocID = #v_DOCID# 
 		 AND 
@@ -17128,9 +17124,9 @@
 	 		TBL_APRRECEIPTPROCESSINFO 
 	 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
 	 	(SELECT 	
-	 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',         '',              '',             '',                '',               DocID, TENANT_ID 
+	 		'1',      #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, #v_SYSDATE#, 'N',           NULL,           NULL,         NULL,              NULL,             NULL,                NULL,               DocID, TENANT_ID 
 	 	 FROM 
-	 	 	TBL_APRDOCINFO 
+	 	 	TBL_APRDOCINFO A
 	 	 WHERE 
 	 	 	DocID = #v_DOCID# 
 	 	 AND 
@@ -17164,7 +17160,7 @@
 			TBL_DOCDELIVERY 
 		(     sn,         DocID, Href, ReceiptDate,                                     OrganID,     Organ,     Organ2,  DocNumber, ManageDeptID,       ManageDept, ManageDept2,       ChargeID,       ChargeName, ChargeName2,     DeptID, Remark, OrgDocNumCode, DocTitle, TENANT_ID) 
 		(SELECT 
-			#v_maxSN#, a.DocID, a.Href, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID 
+			#v_maxSN#, a.DocID, a.Href, #v_SYSDATE#, #v_OrganID#, #v_Organ#, #v_Organ2#, a.DocNo, #v_ManageDeptID#, #v_ManageDept#, #v_ManageDept2#, #v_ChargeID#, #v_ChargeName#, #v_ChargeName2#, #v_DeptID#, #v_Remark#, b.DocNumCode, a.DocTitle , a.TENANT_ID 
          FROM 
          	TBL_APRDOCINFO a 
          INNER JOIN 
@@ -17192,8 +17188,8 @@
             DocNo = #v_DocNo#,
             HasAttachYN = #v_HasAttachYN#,
             HasOpinionYN = 'N',
-            StartDate = STR_TO_DATE(#v_StartDate#, '%Y-%m-%d %H:%i:%s'), 
-            EndDate = STR_TO_DATE(#v_EndDate#, '%Y-%m-%d %H:%i:%s'),
+            StartDate = #v_StartDate#, 
+            EndDate = #v_EndDate#,
             WriterID = #v_WriterID#,
             WriterName = #v_WriterName#,
             WriterName2 = #v_WriterName2#,
@@ -17202,19 +17198,13 @@
             WriterDeptID = #v_WriterDeptID#,
             WriterDeptName = #v_WriterDeptName#,
             WriterDeptName2 = #v_WriterDeptName2#
-     <isEmpty property="v_isPublic">
-        WHERE 
-        	DocID = #v_DOCID# 
-       	AND 
-       		TENANT_ID = #v_TENANTID#
-     </isEmpty>
      <isNotEmpty property="v_isPublic">
      		, isPublic = #v_isPublic#
-      WHERE 
+     </isNotEmpty>
+      	WHERE 
         	DocID = #v_DOCID# 
        	AND 
        		TENANT_ID = #v_TENANTID#
-     </isNotEmpty>
     </update>
     
     <update id="EzApprovalG.updateDoSendExpAprDocInfo" parameterClass="Map">
@@ -17318,7 +17308,7 @@
    		 	TBL_APRRECEIPTPROCESSINFO 
    		 (     ReceiveSN, DocID,      SentDeptID,     SentDeptName,         SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,      ProcessDate,                                 ProcessYN, ProcessDocID, ProcessorID, ProcessorName,ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
           VALUES 
-          (#v_ReceiveSN#, #v_DOCID#, #v_SentDeptID# , #v_sentDeptName# , #v_sentDeptName2# , #v_deptID# ,  #v_deptName# ,   #v_deptName2# , #v_DocState#,  #v_AprState# , STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',       NULL, #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2# , #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_ORGDOCID#, #v_TENANTID#)
+          (#v_ReceiveSN#, #v_DOCID#, #v_SentDeptID# , #v_sentDeptName# , #v_sentDeptName2# , #v_deptID# ,  #v_deptName# ,   #v_deptName2# , #v_DocState#,  #v_AprState# , #v_SYSDATE#, 'N',       NULL, #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2# , #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_ORGDOCID#, #v_TENANTID#)
    	</insert>
    	
    	<delete id="EzApprovalG.deleteDoSendAprAttachInfo" parameterClass="Map">
@@ -17346,7 +17336,7 @@
    		(SELECT 
    			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
    		 FROM 
-   			TBL_ENDATTACHINFO 
+   			TBL_ENDATTACHINFO A
    		 WHERE 
    		 	DocID = #v_ORGDOCID# 
    		 AND 
@@ -17360,7 +17350,7 @@
    		(SELECT 
    			#v_DOCID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
    		 FROM 
-   		 	TBL_ENDAPRDOCATTACHINFO 
+   		 	TBL_ENDAPRDOCATTACHINFO A
    		 WHERE 
    		 	DocID = #v_ORGDOCID# 
    		 AND 
@@ -17376,7 +17366,7 @@
 		   		SELECT 
 		   			max(Version)  VERSION
 		   		FROM 
-		   			TBL_CABINETHISTORY  
+		   			TBL_CABINETHISTORY A
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
@@ -17390,7 +17380,7 @@
    		(Select 
    			#v_NewVersion#, CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(CreateDate,'%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, NULL, OwnerID, OwnerName, OwnerName2, #v_ModifyFlag#, '0', TENANT_ID 
    		 From 
-   		 	TBL_CABINETCLASS  
+   		 	TBL_CABINETCLASS A
    		 Where 
    		 	TBL_CABINETCLASS.CabinetClassNo = #v_CabinetClassNo#
    		 AND 
@@ -17404,7 +17394,7 @@
    		(Select 
    			#v_NewVersion#, CabinetClassNo, SerialNo, SC1, SC2, SC3, TENANT_ID 
    		 From 
-   		 	TBL_SPECIALCATALOGINFO_CAB  
+   		 	TBL_SPECIALCATALOGINFO_CAB A
    		 WHERE 
    		 	CabinetClassNo = #v_CabinetClassNo#
    		 AND 
@@ -17441,7 +17431,7 @@
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
-					TENANT_ID = #v_TENANTID# )), CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),'%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, #v_REASON# , #v_USERID#, #v_USERNAME# , #v_USENAME2#, #v_ModifyFlag#, '0' , TENANT_ID 
+					TENANT_ID = #v_TENANTID# )), CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(#v_SYSDATE#, '%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, #v_REASON# , #v_USERID#, #v_USERNAME# , #v_USENAME2#, #v_ModifyFlag#, '0' , TENANT_ID 
            From 
            		TBL_CABINETCLASS  
            Where 
@@ -17504,7 +17494,7 @@
    				TBL_CABINETCLASS 
    		( CabinetClassNo,        ProductionYear,      RegSerialNo,   TerminateFlag,      Title,      Title2,   RecTypeCode,     ExpirationYear,    KeepingMethod,     KeepingPlace,      DisplayEndDate,     DisplayReason,     OwnerName,     OwnerName2,      OwnerID,    OldCabinetFlag, ModifyFlag, SpecialCatalogFlag, ConfirmFlag,         CreateDate,                                   KeepingPeriod,       DisplayRecFlag,    ProcessDeptCode,      ProcessDeptName,      ProcessDeptName2, TaskCode, TaskName, TaskName2, TransDelayFlag, OwnerDeptID, OwnerTask, DelayEndYFlag, DelFlag, TENANT_ID) 
    		VALUES 
-   		( #v_CabinetClassNo# , #v_ProductionYear#, #v_RegSerialNo#, #v_TerminateFlag#, #v_Title#, #v_Title2#, #v_RecTypeCode#, #v_ExpirationYear#, #v_KeepingMethod#, #v_KeepingPlace# , #v_DisplayEndDate#, #v_DisplayReason#, #v_OwnerName#, #v_OwnerName2#, #v_OwnerID#, #v_OldCabinetFlag#, '0',     #v_SpecialCatalogFlag#, #v_ConfirmFlag#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), #v_KeepingPeriod#, #v_DisplayRecFlag#, #v_ProcessDeptCode#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_TaskCode#, #v_TaskName#, #v_TaskName2#, #v_TransDelayFlag#, #v_OwnerDeptID#, #v_OwnerTask#, #v_DelayEndYFlag#, #v_DelFlag#, #v_TENANTID#)
+   		( #v_CabinetClassNo# , #v_ProductionYear#, #v_RegSerialNo#, #v_TerminateFlag#, #v_Title#, #v_Title2#, #v_RecTypeCode#, #v_ExpirationYear#, #v_KeepingMethod#, #v_KeepingPlace# , #v_DisplayEndDate#, #v_DisplayReason#, #v_OwnerName#, #v_OwnerName2#, #v_OwnerID#, #v_OldCabinetFlag#, '0',     #v_SpecialCatalogFlag#, #v_ConfirmFlag#, #v_SYSDATE#, #v_KeepingPeriod#, #v_DisplayRecFlag#, #v_ProcessDeptCode#, #v_ProcessDeptName#, #v_ProcessDeptName2#, #v_TaskCode#, #v_TaskName#, #v_TaskName2#, #v_TransDelayFlag#, #v_OwnerDeptID#, #v_OwnerTask#, #v_DelayEndYFlag#, #v_DelFlag#, #v_TENANTID#)
    	</insert>
    	
    	<insert id="EzApprovalG.insertSetBebuAprReceiptProcessInfo" parameterClass="Map">
@@ -17512,9 +17502,9 @@
    			TBL_APRRECEIPTPROCESSINFO 
    		(	ReceiveSN,      DocID,      SentDeptID,     SentDeptName,    SentDeptName2,      ReceivedDeptID,      ReceivedDeptName,     ReceivedDeptName2, DocState, AprState,       ProcessDate,                                 ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
 		(SELECT 
-			#v_ReceiveSN#, #v_DOCID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, DocState, #v_AprState#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'),  '1',       ProcessDocID,  NULL,         NULL,          NULL,               NULL,           NULL,            ParentsDocID, TENANT_ID
+			#v_ReceiveSN#, #v_DOCID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, DocState, #v_AprState#, #v_SYSDATE#,  '1',       ProcessDocID,  NULL,         NULL,          NULL,               NULL,           NULL,            ParentsDocID, TENANT_ID
 		 FROM 
-            TBL_APRRECEIPTPROCESSINFO 
+            TBL_APRRECEIPTPROCESSINFO A
          WHERE 
          	DocID = #v_DOCID#
 		 AND 
@@ -17563,7 +17553,7 @@
    			TBL_APRRECEIPTPROCESSINFO 
    		SET 
    			AprState = #v_AprState#, 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 
+   			ProcessDate = #v_SYSDATE#, 
    			ReceivedDeptID = #v_ReceivedDeptID#, 
    			ReceivedDeptName = #v_ReceivedDeptName#, 
    			ReceivedDeptName2 = #v_ReceivedDeptName2# 
@@ -17609,9 +17599,9 @@
    			TBL_ENDAPRDOCINFO 
    		(     DocID,   FormID, OrgDocID, DocType, DocState, FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                     WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID )
 		( SELECT 
-			#v_DOCID#, FormID, OrgDocID, DocType, DocState,  '003',    #v_endURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ContainerID#, isPublic, TENANT_ID  
+			#v_DOCID#, FormID, OrgDocID, DocType, DocState,  '003',    #v_endURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ContainerID#, isPublic, TENANT_ID  
 		  FROM 
-		  	TBL_APRDOCINFO  
+		  	TBL_APRDOCINFO A  
 		  WHERE  
 		  	DocID = #v_DOCID# 
 		  AND 
@@ -17625,7 +17615,7 @@
 		(SELECT 
 			 #v_DOCID#, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ReasonDoNotApprov, ProcessDate, isProposerYN, isBriefUserYN, TENANT_ID 
 		  FROM 
-		  	 TBL_APRLINEINFO  
+		  	 TBL_APRLINEINFO A  
 		  WHERE  
 		  	 DOCID = #v_DOCID# 
 		  AND 
@@ -17639,7 +17629,7 @@
 		(SELECT 
 			#v_DOCID#, AttachFileSN, AttachFileName, AttachFileHref, AttachUserJobTitle, AttachUserJobTitle2, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID  
 		 FROM 
-		 	TBL_APRATTACHINFO  
+		 	TBL_APRATTACHINFO A  
 		 WHERE  
 		 	DOCID = #v_DOCID# 
 		 AND 
@@ -17653,7 +17643,7 @@
 		(SELECT 
 			#v_DOCID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
 		 FROM 
-		 	TBL_APRDOCATTACHINFO  
+		 	TBL_APRDOCATTACHINFO A  
 		 WHERE  
 		 	DOCID = #v_DOCID# 
 		 AND 
@@ -17667,7 +17657,7 @@
 		(SELECT 
 			#v_DOCID#, UserID, OpinionGB, CONTENT, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID  
 		 FROM 
-		 	TBL_APROPINIONINFO 
+		 	TBL_APROPINIONINFO A 
 		 WHERE  
 		 	DOCID = #v_DOCID# 
 		 AND 
@@ -17681,7 +17671,7 @@
 		(SELECT 
 			#v_DOCID#, ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, DeptMemberSN, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, TENANT_ID 
 		 FROM 
-		 	TBL_RECEIPTPOINTINFO   
+		 	TBL_RECEIPTPOINTINFO A   
 		 WHERE  
 			DOCID = #v_DOCID# 
 		 AND 
@@ -17695,7 +17685,7 @@
 		(SELECT 
 			#v_DOCID#, ReceiveSN, SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState, ProcessDate, ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, TENANT_ID   
 		 FROM 
-		 	TBL_APRRECEIPTPROCESSINFO     
+		 	TBL_APRRECEIPTPROCESSINFO A     
 		 WHERE  
 		 	DOCID = #v_DOCID# 
 		 AND 
@@ -17709,7 +17699,7 @@
 		(SELECT 
 			#v_DOCID#, SecurityCode, storagePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID   
 		 FROM 
-		 	TBL_EXPAPRDOCINFO   
+		 	TBL_EXPAPRDOCINFO A   
 		 WHERE  
 		 	DOCID = #v_DOCID#
 		 AND 
@@ -17723,7 +17713,7 @@
 		(SELECT 
 			#v_DOCID#, aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2 , TENANT_ID   
 		 FROM 
-		 	TBL_EXPAPRLINE  
+		 	TBL_EXPAPRLINE A  
 		 WHERE  
 		 	DOCID = #v_DOCID#
 		 AND 
@@ -17737,7 +17727,7 @@
    		(SELECT 
    			#v_NEWID#, FormID, #v_orgDocID#, DocType, #v_DocState#, #v_FunctionType#, #v_URL#, DocTitle,   DocNo, HasAttachYN, 'N',            NULL,     NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
    		 FROM 
-   		 	TBL_APRDOCINFO 
+   		 	TBL_APRDOCINFO A 
    		 WHERE 
    		 	DOCID = #v_DOCID#
 		 AND 
@@ -17751,7 +17741,7 @@
          (SELECT 
          		#v_NEWID#, SecurityCode, storagePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, UrgentApproval, TempAttribute, SpecialRecordCode, PublicityCode, LimitRange, PageNum,  CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID 
           FROM 
-          		TBL_EXPAPRDOCINFO 
+          		TBL_EXPAPRDOCINFO A 
           WHERE 
           		DOCID = #v_DOCID#
 		  AND 
@@ -17765,7 +17755,7 @@
    		(SELECT 
    			#v_NEWID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, PageNum, DisplayName, BodyAttach, TENANT_ID 
    		 FROM 
-             TBL_APRATTACHINFO 
+             TBL_APRATTACHINFO A 
          WHERE 
          	 DOCID = #v_DOCID#
 		 AND 
@@ -17779,7 +17769,7 @@
    		 (SELECT 
    		 	#v_NEWID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserJobTitle, AttachUserJobTitle2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, TENANT_ID 
    		  FROM 
-   		  	TBL_APRDOCATTACHINFO 
+   		  	TBL_APRDOCATTACHINFO A 
    		  WHERE 
    		  	DOCID = #v_DOCID#
 		  AND 
@@ -17791,9 +17781,9 @@
    	     	TBL_APRRECEIPTPROCESSINFO 
    	     (  ReceiveSN,      DocID,      SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID,          ReceivedDeptName,    ReceivedDeptName2,          DocState, AprState,     ProcessDate,                            ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
    	     (SELECT 
-   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID 
+   	     	#v_ReceiveSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ReceivedDeptID#, #v_ReceivedDeptName#, #v_ReceivedDeptName2#, #v_DocState#, #v_AprState#, #v_SYSDATE#, 'N',      '',       #v_ProcessorID#, #v_ProcessorName#, #v_ProcessorName2#, #v_ProcessorJobTitle#, #v_ProcessorJobTitle2#, #v_orgDocID#, TENANT_ID 
    	      FROM 
-   	      	TBL_APRDOCINFO 
+   	      	TBL_APRDOCINFO A 
 		  WHERE 
 		   	DOCID = #v_DOCID#
 		  AND 
@@ -17817,7 +17807,7 @@
 	   			TBL_CABINETCLASS 
 	   		SET 
 	   			DelayEndYFlag = 'N', 
-				ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS chr(4)) 
+				ExpirationYear = ExpirationYear + 1 
 			WHERE 
 				OwnerDeptID = #v_OwnerDeptID# 
 			And 
@@ -17835,7 +17825,7 @@
    				TBL_CABINETCLASS 
    			SET 
    				DelayEndYFlag = 'N',
-			    ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS chr(4)) 
+			    ExpirationYear = ExpirationYear + 1 
 			Where 
 				CabinetClassNo IN ($v_CabinetClassNo$) 
 			AND 
@@ -17883,7 +17873,7 @@
    			TBL_APRLINEINFO 
    		SET 
    			AprState = #v_AprState#, 
-   			ProcessDate = STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s')
+   			ProcessDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_DOCID# 
 		AND 
@@ -17925,7 +17915,7 @@
    		(SELECT 
 			#v_gongRamDocID#, FormID, #v_DOCID#, DocType, #v_DocType#, #v_DocState#, #v_FunctionType#, #v_Href#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID 
          FROM 
-         	TBL_APRDOCINFO 
+         	TBL_APRDOCINFO A 
          WHERE 
          	DocID = #v_DOCID#   
          AND 
@@ -17939,7 +17929,7 @@
    		(SELECT 
 			#v_gongRamDocID#, SecurityCode, StoragePeriod, KeyWord, FormName, FormName2, companyID, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, Status, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, SecurityApproval, TENANT_ID
 		 FROM 
-		 	TBL_EXPAPRDOCINFO 
+		 	TBL_EXPAPRDOCINFO A
 		 WHERE 
 		 	DocID = #v_DOCID#   
          AND 
@@ -17953,7 +17943,7 @@
    		(SELECT 
    			#v_gongRamDocID#, UserID, OpinionGB, Content, UserName, UserName2, UserJobTitle, UserJobTitle2, UserDeptID, UserDeptName, UserDeptName2, OpinionSN, TENANT_ID 
    		 FROM 
-   		 	TBL_APROPINIONINFO 
+   		 	TBL_APROPINIONINFO A 
    		 WHERE 
    		 	DocID = #v_DOCID#   
          AND 
@@ -17967,7 +17957,7 @@
    		(SELECT 
    			#v_gongRamDocID#, AttachSN, AttachDocName, AttachDocURL, SubAttachYN, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, TENANT_ID 
    		 FROM 
-   		 	TBL_APRDOCATTACHINFO 
+   		 	TBL_APRDOCATTACHINFO A
    		 WHERE
    		 	DocID = #v_DOCID#   
          AND 
@@ -17981,7 +17971,7 @@
    		(SELECT 
             #v_gongRamDocID#, AttachFileSN, AttachFileName, AttachFileHref, AttachFileSize, AttachUserID, AttachUserName, AttachUserName2, AttachUserDeptID, AttachUserDeptName, AttachUserDeptName2, AttachUserJobTitle, AttachUserJobTitle2, PageNum, DisplayName, BodyAttach, TENANT_ID 
          FROM 
-         	TBL_APRATTACHINFO 
+         	TBL_APRATTACHINFO A 
          WHERE 
 			DocID = #v_DOCID#   
          AND 
@@ -18037,7 +18027,7 @@
    			TBL_APRLINEINFO 
    		(DocID, 	       AprMemberSN,      AprType,     AprState,     AprMemberID,     AprMemberIsDeptYN,      AprMemberName,    AprMemberName2,     AprMemberJobTitle,   AprMemberJobTitle2,      AprMemberDeptID,     AprMemberDeptName,     AprMemberDeptName2,    AprMemberLDAPPath,   ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, TENANT_ID) 
    		VALUES 
-   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, STR_TO_DATE($v_RECEIVEDDATE$, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE($v_PROCESSDATE$, '%Y-%m-%d %H:%i:%s'), #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#)
+   		(#v_gongRamDocID#, #v_AprMemberSN#, #v_AprType#, #v_AprState#, #v_AprMemberID#, #v_AprMemberIsDeptYN#, #v_AprMemberName#, #v_AprMemberName2#, #v_AprMemberJobTitle#, #v_AprMemberJobTitle2#, #v_AprMemberDeptID#, #v_AprMemberDeptName#, #v_AprMemberDeptName2#, #v_AprMemberLDAPPath#, $v_RECEIVEDDATE$, $v_PROCESSDATE$, #v_ReasonDoNotApprov#, #v_isProposerYN#, #v_isBriefUserYN#, #v_TENANTID#)
    	</insert>
    	
    	<insert id="EzApprovalG.insertGongRamSaveExpAprLine" parameterClass="Map">
