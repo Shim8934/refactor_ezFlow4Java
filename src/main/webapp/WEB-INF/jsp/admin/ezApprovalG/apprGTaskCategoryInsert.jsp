@@ -84,9 +84,9 @@
 		            document.getElementById("tbCateCode").disabled = true;
 		            //document.getElementById("btnDuplicate").disabled = true;
 		        }
-
+		        
 		        if (CateLevel == "1") {
-		            document.getElementById("btnSelPCode").disabled = true;
+		            $("#btnSelPCode").closest("a").hide();
 		        }
 		    });
 		    
@@ -302,7 +302,7 @@
 		    }
 		</script>
 	</head>
-	<body>
+	<body class="popup">
 		<h1><c:out value = '${title}' /></h1>
 		<span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
 		<table class="content">
@@ -318,28 +318,25 @@
 		  <tr>
 		    <th ><spring:message code = 'ezApprovalG.t729' /> <span style="color:red">*</span></th>
 		    <td><input type="text" id="tbCateCode" name="tbCateCode" style="WIDTH:206px" maxlength="8">
-		    <a class="imgbtn"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
-		
+		    	<a class="imgbtn"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
 		    </td>
 		  </tr>
 		  <tr>
 		    <th ><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateName" name="tbCateName" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/>
-		    </td>
+		    <td><input type="text" id="tbCateName" name="tbCateName" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
 		  </tr>
 		  <tr>
 		    <th ><spring:message code = 'ezApprovalG.t1762' /> <span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateName2" name="tbCateName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"/>
-		    </td>
+		    <td><input type="text" id="tbCateName2" name="tbCateName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"/></td>
 		  </tr>
 		  <tr>
 		    <th ><spring:message code = 'ezApprovalG.t732' /> <span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateDesc" name="tbCateDesc" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50">
-		    </td>
+		    <td><input type="text" id="tbCateDesc" name="tbCateDesc" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
 		  </tr>
 		  <tr>
 		    <th ><spring:message code = 'ezApprovalG.t733' /></th>
-		    <td><input type="text" id="tbPCateCode"  name="tbPCateCode" style="WIDTH:206px" readonly="true">
+		    <td>
+		    	<input type="text" id="tbPCateCode"  name="tbPCateCode" style="WIDTH:206px" readonly="true">
 		        <a class="imgbtn"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
 		    </td>
 		  </tr>

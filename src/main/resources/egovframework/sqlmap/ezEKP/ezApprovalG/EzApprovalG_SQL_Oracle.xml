@@ -17812,7 +17812,7 @@
 	   			TBL_CABINETCLASS 
 	   		SET 
 	   			DelayEndYFlag = 'N', 
-				ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS chr(4)) 
+				ExpirationYear = ExpirationYear + 1 
 			WHERE 
 				OwnerDeptID = #v_OwnerDeptID# 
 			And 
@@ -17830,7 +17830,7 @@
    				TBL_CABINETCLASS 
    			SET 
    				DelayEndYFlag = 'N',
-			    ExpirationYear = CAST((CAST(ExpirationYear AS int)+1) AS chr(4)) 
+			    ExpirationYear = ExpirationYear + 1 
 			Where 
 				CabinetClassNo IN ($v_CabinetClassNo$) 
 			AND 

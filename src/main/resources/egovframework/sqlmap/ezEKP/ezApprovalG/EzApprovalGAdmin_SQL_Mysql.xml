@@ -1843,17 +1843,10 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
-				(mainid,
-				mainname,
+				(mainname,
 				tenant_id)
 			VALUES
-				((SELECT
-					MAX(mainid) + 1
-				FROM
-					TBL_ADMINRECEIPTGROUP_MAIN AS T1
-				WHERE
-					tenant_ID = #tenantID#),
-				#v_MAINNAME#,
+				(#v_MAINNAME#,
 				#tenantID#)
 		]]>
 	</insert>
