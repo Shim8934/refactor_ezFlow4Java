@@ -8493,7 +8493,7 @@
 		   								WHERE  
 		   										CodeType = '007' 
 		   								AND
-		   										TENANT_ID =#v_TENANTID#)
+		   										TENANT_ID =#v_TENANTID#) A
 		    					WHERE  Code = '1')
 		     AND 
 		     		 Type2 =   (
@@ -8510,7 +8510,7 @@
 							   	 			WHERE  
 							   	 					CodeType = '007' 
 							   	 			AND
-		   										TENANT_ID =#v_TENANTID#)
+		   										TENANT_ID =#v_TENANTID#) B
 							       WHERE  Code = '2')
 		     AND 
 		     		 Type3 =  (
@@ -8527,7 +8527,7 @@
 		   	 								WHERE  
 		   	 										CodeType = '007' 
 		   	 								AND
-		   										TENANT_ID =#v_TENANTID#)
+		   										TENANT_ID =#v_TENANTID#) C
 		    						 WHERE  
 		    						 		Code = '3')
 		      AND 
@@ -8544,7 +8544,7 @@
 		   	 									WHERE  
 		   	 											CodeType = '007'
 		   	 									AND
-		   												TENANT_ID =#v_TENANTID# )
+		   												TENANT_ID =#v_TENANTID# ) D
 		   		 						WHERE  Code = '4')
 		   	AND 
 		   				TENANT_ID = #v_TENANTID#
@@ -8575,7 +8575,7 @@
    								WHERE  
    										CodeType = '007' 
    								AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) A
     					WHERE  Code = '1'), 
     					(
      		 			  SELECT 
@@ -8591,7 +8591,7 @@
 					   	 			WHERE  
 					   	 					CodeType = '007' 
 					   	 			AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) B
 					       WHERE  Code = '2'), 
 					       (
 	     		 			   SELECT 
@@ -8607,7 +8607,7 @@
 	   	 								WHERE  
 	   	 										CodeType = '007' 
 	   	 								AND
-	   										TENANT_ID =#v_TENANTID#)
+	   										TENANT_ID =#v_TENANTID#) C
 	    						 WHERE  
 	    						 		Code = '3'), 
    						 	(
@@ -8623,7 +8623,7 @@
    	 									WHERE  
    	 											CodeType = '007'
    	 									AND
-   												TENANT_ID =#v_TENANTID# )
+   												TENANT_ID =#v_TENANTID# ) D
    		 						WHERE  Code = '4'), 
    		 						1, 
    		 						0,
@@ -8649,7 +8649,7 @@
    								WHERE  
    										CodeType = '007' 
    								AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) A
     					WHERE  Code = '1')
 		    AND 	
 		    		Type2 = (
@@ -8666,7 +8666,7 @@
 					   	 			WHERE  
 					   	 					CodeType = '007' 
 					   	 			AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) B
 					       WHERE  Code = '2')
 		    AND 
 		    		Type3 = (
@@ -8683,7 +8683,7 @@
 	   	 								WHERE  
 	   	 										CodeType = '007' 
 	   	 								AND
-	   										TENANT_ID =#v_TENANTID#)
+	   										TENANT_ID =#v_TENANTID#) C
 	    						 WHERE  
 	    						 		Code = '3')
 		    AND 
@@ -8700,7 +8700,7 @@
    	 									WHERE  
    	 											CodeType = '007'
    	 									AND
-   												TENANT_ID =#v_TENANTID# )
+   												TENANT_ID =#v_TENANTID# ) D
    		 						WHERE  Code = '4')
 		    AND 
 		    		RegSerialNo = #v_CurSN#
@@ -8725,7 +8725,7 @@
    								WHERE  
    										CodeType = '007' 
    								AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) A
     					WHERE  Code = '1')
 	     AND 
 	     		Type2 = (SELECT 
@@ -8741,8 +8741,8 @@
 					   	 			WHERE  
 					   	 					CodeType = '007' 
 					   	 			AND
-   										TENANT_ID =#v_TENANTID#)
-					       WHERE  Code = '2')
+   										TENANT_ID =#v_TENANTID#) B
+					       WHERE  Code = '2') 
 	     AND 
 	     		Type3 = (
 	     		 			   SELECT 
@@ -8758,7 +8758,7 @@
 	   	 								WHERE  
 	   	 										CodeType = '007' 
 	   	 								AND
-	   										TENANT_ID =#v_TENANTID#)
+	   										TENANT_ID =#v_TENANTID#) C
 	    						 WHERE  
 	    						 		Code = '3')
 	     AND 
@@ -8775,7 +8775,7 @@
    	 									WHERE  
    	 											CodeType = '007'
    	 									AND
-   												TENANT_ID =#v_TENANTID# )
+   												TENANT_ID =#v_TENANTID# )D 
    		 						WHERE  Code = '4')
 	     AND 
 	     		RegSerialNo = #v_CurSN#
@@ -8802,7 +8802,7 @@
    								WHERE  
    										CodeType = '007' 
    								AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#) A
     					WHERE  Code = '1')
 	     AND 
 	     		Type2 = (SELECT 
@@ -8818,7 +8818,7 @@
 					   	 			WHERE  
 					   	 					CodeType = '007' 
 					   	 			AND
-   										TENANT_ID =#v_TENANTID#)
+   										TENANT_ID =#v_TENANTID#)B
 					       WHERE  Code = '2')
 	     AND 
    				Type3 = (
@@ -8835,7 +8835,7 @@
 		 								WHERE  
 		 										CodeType = '007' 
 		 								AND
-											TENANT_ID =#v_TENANTID#)
+											TENANT_ID =#v_TENANTID#)C
 	 						 WHERE  
 	 						 		Code = '3')
 	     AND 
@@ -8852,7 +8852,7 @@
  									WHERE  
  											CodeType = '007'
  									AND
-											TENANT_ID =#v_TENANTID# )
+											TENANT_ID =#v_TENANTID# )D
 	 						WHERE  Code = '4')
 	     AND 
 	     		RegSerialNo = #v_CurSN#
