@@ -657,7 +657,7 @@
 		]]>
 	</select>
 	
-	<select id="EzPersonalDAO.getPassword" parameterClass="String" resultClass="String">
+	<select id="EzPersonalDAO.getPassword" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
 				PASSWORD

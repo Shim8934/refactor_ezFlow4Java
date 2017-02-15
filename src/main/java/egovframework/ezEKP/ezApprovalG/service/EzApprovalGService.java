@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -160,7 +161,7 @@ public interface EzApprovalGService {
 	
 	public String getCabinetInfo(String cabinetID, String companyID, String strType, int tenantID) throws Exception;
 	
-	public String registerSepAttach(Document doc, int tenantID) throws Exception;
+	public String registerSepAttach(Document doc, int tenantID, Locale locale) throws Exception;
 	
 	public String getHistoryForDoc(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
@@ -296,7 +297,7 @@ public interface EzApprovalGService {
 	
 	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet) throws Exception;
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
 	
 	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -318,7 +319,7 @@ public interface EzApprovalGService {
 
 	public String getRecViewer(Document xmlDom,String lang, int tenantID)throws Exception;
 
-	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID)throws Exception;
+	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale)throws Exception;
 
 	public String getRecReadHistory(Document xmlDom, int tenantID) throws Exception;
 
@@ -338,7 +339,7 @@ public interface EzApprovalGService {
 
 	public String getNewID(String companyID, int tenantID) throws Exception;
 
-	public String registerRecord(Document xmlDom, int tenantID, String offset)throws Exception;
+	public String registerRecord(Document xmlDom, int tenantID, String offset, Locale locale)throws Exception;
 
 	public String getCabinetList(Document xmlDom, LoginVO userInfo)throws Exception;
 

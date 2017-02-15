@@ -2074,7 +2074,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
 		Document doc = commonUtil.convertStringToDocument(para);
-		String result = ezApprovalGService.registerSepAttach(doc, userInfo.getTenantId());
+		String result = ezApprovalGService.registerSepAttach(doc, userInfo.getTenantId(), userInfo.getLocale());
 		logger.debug("regSepAttach result = " + result);
 		logger.debug("regSepAttach ended");
 
@@ -5197,7 +5197,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String flag = request.getParameter("flag");
 		String dirPath = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 		
 		if(result.indexOf("FALSE") > -1) {
 			if (!result.split(",")[1].trim().equals("")) {
