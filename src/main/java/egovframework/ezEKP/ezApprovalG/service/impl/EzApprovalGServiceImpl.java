@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
@@ -1143,7 +1144,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet) throws Exception {
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
 		LOGGER.debug("setCabinetReject Started");
 
 		StringBuilder strSQL = new StringBuilder();
@@ -1280,7 +1281,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	
         	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
         			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
-        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet);
+        			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
 
         } else {
         	if (!sn.trim().equals("")) {
@@ -3788,6 +3789,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID);
 		map.put("v_USERID", userID);
 		map.put("v_FLAG", "1");
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		map.put("v_TENANTID", tenantID);
 		boolean rtnVal = false;
 		
@@ -6733,11 +6735,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DeptName", deptName);
 		map.put("v_DeptName2", deptName2);
 		map.put("v_TENANTID", tenantID);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		try {
 			ezApprovalGDAO.saveRecReadHist(map);
 			result = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -6819,6 +6823,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.setMyTaskCode(map);
 			result = "OK";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			result = "FALSE";
 		}
 		
@@ -6880,7 +6885,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerSepAttach(Document doc, int tenantID) throws Exception {
+	public String registerSepAttach(Document doc, int tenantID, Locale locale) throws Exception {
 		String strSQL = "";
 		
 		String recID = doc.getElementsByTagName("RECORDID").item(0).getTextContent();
@@ -6892,7 +6897,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String recType = doc.getElementsByTagName("AVTYPE").item(0).getTextContent();
 		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		
-		strSQL = registerSepAttachEx(recID, cabID, title, numOfPage, regType, summary, recType, companyID, "", tenantID);
+		strSQL = registerSepAttachEx(recID, cabID, title, numOfPage, regType, summary, recType, companyID, "", tenantID, locale);
 		
 		if (strSQL.equals("FALSE")) {
 			return "<RESULT>FALSE</RESULT>";
@@ -7522,11 +7527,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DEPTNAME", userDeptName.trim());
 			map.put("v_DEPTNAME2", userDeptName2.trim());
 			map.put("v_TENANTID", tenantID);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
 			try {
 				ezApprovalGDAO.updateHistoryForLine(map);
 				rtn = true;
 			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				rtn = false;
 			}
 		}
@@ -10373,7 +10380,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset());
+				subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -10436,7 +10443,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
+				subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -10491,7 +10498,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
+				subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 				
 				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
@@ -10533,7 +10540,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 
 				if (rtnVal) {
-					subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
+					subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -11023,7 +11030,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		return "<RESULT>TRUE</RESULT>";
 	}
-	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID, String lang, int tenantID, String offSet) throws Exception{
+	public String setCabinetRecv(String docID, String userID, String userName, String userName2, String deptID, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
 		String strSQL = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -11082,7 +11089,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
-					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet);
+					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
 		} else {
 			return "FALSE";
 		}
@@ -11136,7 +11143,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
-	public String setCabinetRec(String docID, String companyID, String lang, int tenantID, String offSet) throws Exception{
+	public String setCabinetRec(String docID, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
 		String strSQL = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -11195,7 +11202,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim(), 
-					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet);
+					"0", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale);
 		} else {
 			return "FALSE";
 		}
@@ -11205,7 +11212,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String regDocToCabinet(String manualFlag, String docID, String regSN, String cabinetID, String title, String deptCode, String deptName, String deptName2, String registerType, String aprMemberTitle, String aprMemberTitle2,
 			String drafterName, String drafterName2, String executeDate, String receiptMember, String receiptMember2, String deleveryNo, String electronic, String sourceDocID, String specialRec, String publicCode, String limitRange, String rejectFlag,
-			String numOfPage, String attachFlag, String seperateAttachXML, String companyID, String lang, int tenantID, String offSet) throws Exception{
+			String numOfPage, String attachFlag, String seperateAttachXML, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
 		String strSQL = "";
 		StringBuilder resultXML = new StringBuilder();
 		
@@ -11259,12 +11266,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<COMPANYID>" + companyID + "</COMPANYID>");
 		resultXML.append("</PARAMETERS>");
 		
-		strSQL = registerRecordOfQuery(resultXML.toString(), tenantID, offSet);
+		strSQL = registerRecordOfQuery(resultXML.toString(), tenantID, offSet, locale);
 		
 		return strSQL;
 	}
 
-	public String registerRecordOfQuery(String strXML, int tenantID, String offSet) throws Exception{
+	public String registerRecordOfQuery(String strXML, int tenantID, String offSet, Locale locale) throws Exception{
 		Document objParam = commonUtil.convertStringToDocument(strXML);
 		String subSQL = "";
 		String rtnVal = "TRUE";
@@ -11386,7 +11393,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "FALSE";
 		}
         
-        subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
+        subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale);
         
         if (subSQL.equals("FALSE")) {
         	return "FALSE";
@@ -11397,7 +11404,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         if (objParam.getElementsByTagName("SEPATTACH").getLength() > 0) {
         	for (int k = 0; k < objParam.getElementsByTagName("SEPATTACH").getLength(); k++) {
         		int tempValue = k + 1;
-        		subSQL = registerSepAttachEx(recordID, objParam.getElementsByTagName("CABINETID").item(k).getTextContent(), objParam.getElementsByTagName("TITLE").item(k).getTextContent(), objParam.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), objParam.getElementsByTagName("REGTYPE").item(k).getTextContent(), objParam.getElementsByTagName("SUMMARY").item(k).getTextContent(), objParam.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID);
+        		subSQL = registerSepAttachEx(recordID, objParam.getElementsByTagName("CABINETID").item(k).getTextContent(), objParam.getElementsByTagName("TITLE").item(k).getTextContent(), objParam.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), objParam.getElementsByTagName("REGTYPE").item(k).getTextContent(), objParam.getElementsByTagName("SUMMARY").item(k).getTextContent(), objParam.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID, locale);
         		
         		if (subSQL.equals("FALSE")) {
         			return "FALSE";
@@ -13211,7 +13218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
-	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID) throws Exception{
+	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID, Locale locale) throws Exception{
 		String rtnVal = "TRUE";
 		String sepAttSN = tempSepAttSN;
 		
@@ -13223,18 +13230,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_RECID", makeRightField(recID));
-		map.put("v_SEPATTSN", makeRightField(sepAttSN));
+		map.put("v_RecordID", makeRightField(recID));
+		map.put("v_SepAttachNo", makeRightField(sepAttSN));
 		map.put("v_CABID", makeRightField(cabID));
 		map.put("v_REGTYPE", makeRightField(regType));
 		map.put("v_TITLE", makeRightField(title));
 		map.put("v_NUMOFPAGE", makeRightField(numOfPage));
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		map.put("v_TENANTID", tenantID);
-		
+		map.put("v_UserRight", "1");
+		map.put("v_UserName2", messageSource.getMessage("ezApprovalG.t999935", locale));
+
 		try{
 			ezApprovalGDAO.insertRegSeperateAttach(map);
-			ezApprovalGDAO.insertRegRecRoleInfo(map);
+			ezApprovalGDAO.insertRecRoleInfo(map);
 		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			System.out.println(e.getMessage());
@@ -15549,8 +15558,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID) throws Exception {
-			StringBuilder strSQL = new StringBuilder();
+	public String saveRecUserRoleInfo(Document xmlDom, String lang, int tenantID, Locale locale) throws Exception {
 			String rtnVal = "<RESULT>TRUE</RESULT>";
 		    String Flag	= "0";
 			String SepAttachNo =xmlDom.getElementsByTagName("SEPATTNO").item(0).getTextContent().trim();
@@ -15561,6 +15569,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_RecordID", RecID);
 			map.put("v_SepAttachNo", SepAttachNo);
 			map.put("v_TENANTID", tenantID);
+			map.put("v_UserName2", messageSource.getMessage("ezApprovalG.t999935", locale));
 			try {
 				ezApprovalGDAO.deleteRecRoleInfo(map);
 				if(Flag.equals("0")){
@@ -16243,26 +16252,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 	}
 
-	private Boolean ExecuteTransactionSQL(StringBuilder strSQL, String companyID) {
-		StringBuilder pSQL = new StringBuilder("");
-		try
-		{
-            pSQL.append("BEGIN DECLARE CNT Number := 0; BEGIN  BEGIN " + strSQL + " EXCEPTION WHEN OTHERS THEN CNT := SQLCODE; END; IF CNT <> 0 THEN BEGIN ROLLBACK;  END; ELSE BEGIN COMMIT; END; END IF; CNT :=0; END; END;");
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("sqlString",pSQL.toString());
-			map.put("companyID", companyID);
-			
-			ezApprovalGDAO.transactionSQL(map);
-			
-			return true;
-		}
-		catch (Exception e)
-		{
-			System.out.println(e.getMessage());
-			return false;
-		}
-	}
-
 	private String ChangeSpecialInfo_Rec(String RecID, Document xmlDom, int tenantID) {
 		try{
 			String result ="TURE";
@@ -16425,7 +16414,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String registerRecord(Document xmlDom, int tenantID, String offset) throws Exception {
+	public String registerRecord(Document xmlDom, int tenantID, String offset, Locale locale) throws Exception {
 		String subSQL= "";
 		String companyID = xmlDom.getElementsByTagName("COMPANYID").item(0).getTextContent().trim();
 		String cabID = xmlDom.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
@@ -16556,7 +16545,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.insertRegRecord(map);
 		
         // '## 기록물 분리첨부 테이블에 저장
-		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID);
+		subSQL = registerSepAttachEx(recordID, cabID, title, numOfPage, registerType, visualAudioDesc, visualAudioType, companyID, formatSepSerialNum("00"), tenantID, locale);
 		
         if (subSQL.equals("FALSE")) {
         	return "<RESULT>FALSE</RESULT>";
@@ -16584,7 +16573,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	        if (xmlDom.getElementsByTagName("SEPATTACH").getLength() > 0) {
 	        	for (int k = 0; k < xmlDom.getElementsByTagName("SEPATTACH").getLength(); k++) {
 	        		int tempValue = k + 1;
-	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID);
+	        		subSQL = registerSepAttachEx(recordID, xmlDom.getElementsByTagName("CABINETID").item(k).getTextContent(), xmlDom.getElementsByTagName("TITLE").item(k).getTextContent(), xmlDom.getElementsByTagName("NUMOFPAGE").item(k).getTextContent(), xmlDom.getElementsByTagName("REGTYPE").item(k).getTextContent(), xmlDom.getElementsByTagName("SUMMARY").item(k).getTextContent(), xmlDom.getElementsByTagName("AVTYPE").item(k).getTextContent(), companyID, formatSepSerialNum(String.valueOf(tempValue)), tenantID, locale);
 	        		
 	        		if (subSQL.equals("FALSE")) {
 	        			return "FALSE";

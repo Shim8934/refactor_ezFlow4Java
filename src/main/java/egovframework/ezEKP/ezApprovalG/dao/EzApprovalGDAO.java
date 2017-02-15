@@ -1408,10 +1408,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertRegSeperateAttach", map);
 	}
 	
-	public void insertRegRecRoleInfo(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.insertRegRecRoleInfo", map);
-	}
-	
 	public void insertRegAudioVisualExInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertRegAudioVisualExInfo", map);
 	}
