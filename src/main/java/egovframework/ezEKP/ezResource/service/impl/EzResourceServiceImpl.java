@@ -1238,7 +1238,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}
@@ -1249,7 +1249,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 						
@@ -1266,7 +1266,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					}
 				}
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-				tmpEDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpEDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 			} else {
 				if (endRecurType.equals("0")) {
@@ -1276,7 +1275,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}
@@ -1287,7 +1286,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 							
@@ -1302,7 +1301,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
-							returnXML.append("<f_eDate>" + tmpDTStr + " " + tmpETime + "</f_eDate>");
+							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
 							returnXML.append("</ROW>");
 						}
 					}
