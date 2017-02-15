@@ -1784,6 +1784,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertGongRamSaveExpAprLine", map);
 	}
 	
+	public void insertHesongAprReceiptProcessInfo3(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHesongAprReceiptProcessInfo3", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -1978,10 +1982,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateHesongAprReceiptProcessInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateHesongAprReceiptProcessInfo", map);
-	}
-	
-	public void updateHesongAprReceiptProcessInfo3(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateHesongAprReceiptProcessInfo3", map);
 	}
 	
 	public void updateRejectAprReceiptProcessInfo(Map<String, Object> map) throws Exception{

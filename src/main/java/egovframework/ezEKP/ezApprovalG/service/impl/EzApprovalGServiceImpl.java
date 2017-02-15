@@ -1301,8 +1301,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
-		
 		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(8).getTextContent().trim();
 		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1413,8 +1411,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
-		
 		String docID = xmlDom.getElementsByTagName("ROW").item(0).getChildNodes().item(8).getTextContent().trim();
 		String gongRamDocID = gongRamDocInfo(docID, companyID, tenantID);
 		
@@ -1585,7 +1581,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getSusinSN(String docID, String companyID, int tenantID) throws Exception {
-		// TODO Auto-generated method stub
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_TENANTID", tenantID);
 		map.put("v_DOCID", docID);
@@ -1801,7 +1796,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	//수정하기
 	@Override
 	public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
 		Document docXML = commonUtil.convertStringToDocument(ret);
 		NodeList nList = docXML.getElementsByTagName("ROW");
 		String strDocID = nList.item(0).getChildNodes().item(8).getTextContent();
@@ -1887,7 +1881,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
 		Document docXML = commonUtil.convertStringToDocument(ret2);
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
 		
@@ -2132,7 +2125,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getFormRecvApr(String docID, String formID, String userID, String companyID, String lang, int tenantID) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
         StringBuilder rtnXML = new StringBuilder();
         String subSQL = "";
         String rtnVal = "";
@@ -2277,7 +2269,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception {
-		String strSQL = "";
 		String rtnVal = "";
 	//마리아 디비할때 프로시저 제거	
 		Map<String, Object> map	= new HashMap<>();
@@ -2316,7 +2307,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateLineTempletDetailInfo(Document xmlDom, String companyID, String lang, int tenantID) throws Exception {
-		StringBuffer strSQL = new StringBuffer();
 		String rtnVal = "<RESULT>TRUE</RESULT>";
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
@@ -13867,7 +13857,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID)
 			throws Exception {
-		StringBuilder strSQL = new StringBuilder();
 		
 		String subSQL = "";
 		boolean rtnVal = true;
@@ -13988,7 +13977,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             int pSN = Integer.parseInt(receiveSN) + 1;
             
             map.put("v_PSN", pSN);
-            ezApprovalGDAO.updateHesongAprReceiptProcessInfo3(map);
+            ezApprovalGDAO.insertHesongAprReceiptProcessInfo3(map);
             
 			map.put("v_DOCID", docID);
 
@@ -14471,7 +14460,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String doSendHesongDoc(String docID, String dirPath, String companyID, String orgCompanyID, int tenantID) throws Exception{
 		// TODO 테스트를 꼮 해봐야함
-		StringBuilder strSQL = new StringBuilder();
 		
 		String newID = getNewID(orgCompanyID, tenantID);
 		
@@ -16399,6 +16387,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if(xmlDom.getElementsByTagName("SCDATA").getLength() >0){
 				for(int i=0; i<xmlDom.getElementsByTagName("SCDATA").getLength(); i++){
+					map.put("v_SERIALNO", makeRightField(xmlDom.getElementsByTagName("SN").item(0).getTextContent().trim()));
+					map.put("v_SC1", makeRightField(xmlDom.getElementsByTagName("LIST1").item(0).getTextContent().trim()));
+					map.put("v_SC2", makeRightField(xmlDom.getElementsByTagName("LIST2").item(0).getTextContent().trim()));
+					map.put("v_SC3", makeRightField(xmlDom.getElementsByTagName("LIST3").item(0).getTextContent().trim()));
+					
 					ezApprovalGDAO.insertTbSpecialCatalogInfoRec(map);
 				}
 			}
