@@ -1995,9 +1995,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		String columnWidth = "*";
         		if (i == Integer.parseInt(pageColumnLength) - 1) {
         			if (i ==0) {
-        				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top>\n");
+        				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=top>\n");
         			} else {
-        				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+        				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=top");
         				if (pageColumnSplit != null && !pageColumnSplit.equals("")) {
             				if (pageColumnSplit.split(";")[i] != null && !pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
@@ -2042,9 +2042,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         		} else {
         			String columnWidth = "*";
             		if (i == Integer.parseInt(pageColumnLength) - 1) {
-           				sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' vAlign=top style=\"padding-left:20px;\">\n");
+           				sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" vAlign=top style=\"padding-left:20px;\">\n");
             		} else {
-            			sb.append("<TD id=td0"+UUID.randomUUID().toString().substring(0, 4) +"' valign=top");
+            			sb.append("<TD id=\"td0"+UUID.randomUUID().toString().substring(0, 4) +"\" valign=top");
             			if (!pageColumnSplit.equals("")) {
             				if (!pageColumnSplit.split(";")[i].equals("") && !pageColumnSplit.split(";")[i].equals("*")) {
             					columnWidth = pageColumnSplit.split(";")[i] + "px";
@@ -2160,10 +2160,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 				if (portletType == 0) {
 					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-						sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+						sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2220,7 +2220,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						if (portletType == 0) {
 							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
-								sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style='WIDTH: 100%; HEIGHT:" + portletHeight + " align=middle valign=top uid='" + portletUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "' style='padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "'><iframe width=100% height=100% border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe></TD>\n");
+								sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=middle valign=top\" uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 							}
 						} else {
 							sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));
@@ -2301,10 +2301,10 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				
 				if (portletType == 0) {
 					if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
+						sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' mandatory='" + portletMandatory + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'><B>" + portletDisplayName + "</B></TD>\n");
 					}
 				} else {
-					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
+					sb.append("<TD id=subtd" + UUID.randomUUID().toString().substring(0, 4) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +"\" align=middle uid='" + portletUID + "' pageuid='" + portletPageUID + "' ownerpageuid='" + portletOwnerPageUID + "' canremove='" + portletCanRemove + "' canresize='" + portletCanResize + "' canreplace='" + portletCanReplace + "'>" + getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "edit", userInfo) + "</TD>\n");
 				}
 				sb.append("</TR>\n");
 			} else {
@@ -2335,7 +2335,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 								sb.append("<iframe width=\"" + portletWidth + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 							
-							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + " align=\"middle\"\" valign=top uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
+							sb.append("<TD id=subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + " style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=\"middle\"\" valign=top uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 						}
 					} else {
 						sb.append(getRenderedPortalPageHTMLInsert(pPortalPageID, portletUID, "", "view", userInfo));

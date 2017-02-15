@@ -1998,7 +1998,7 @@
             WHERE
                 TENANT_ID = #tenantID#
             AND
-                DISPLAYNAME CONCAT('%' , #v_pDISPLAYNAME# , '%')         
+                DISPLAYNAME LIKE CONCAT('%' , #v_pDISPLAYNAME# , '%')         
             ORDER BY
                 DISPLAYNAME ASC
           	LIMIT

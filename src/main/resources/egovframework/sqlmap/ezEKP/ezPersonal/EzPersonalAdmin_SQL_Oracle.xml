@@ -818,7 +818,7 @@
    				TENANT_ID = #tenantID#	
 		]]>
 	</delete>
-	
+  
 	<statement id="EzPersonalAdmin.EZSP_DELSLIDERIMAGE">
 		<![CDATA[
 			MERGE INTO

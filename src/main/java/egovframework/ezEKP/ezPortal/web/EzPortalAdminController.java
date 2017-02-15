@@ -211,7 +211,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			themeTopHeight = result.getTopHeight();
 		}
 		
+		logger.debug("themeImage="+themeImage);
+		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		logger.debug("uploadPortalPath="+uploadPortalPath);
 		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("pKeyCode", pKeyCode);
@@ -262,17 +265,22 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPortal/saveThemeInfo.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String saveThemeinfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("saveThemeinfo started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		logger.debug("xmlStr="+xmlStr);
 		
 		String pThemeID = UUID.randomUUID().toString();
 		if (xmlDom.getElementsByTagName("THEMEID").getLength() != 0 && !xmlDom.getElementsByTagName("MODE").item(0).getTextContent().equals("NEW")) {
 			pThemeID = xmlDom.getElementsByTagName("THEMEID").item(0).getTextContent();
 		}
 		String pImageURL = xmlDom.getElementsByTagName("IMAGEPATH").item(0).getTextContent();
+		logger.debug("pImageURL="+pImageURL);
 		
 		ezPortalAdminService.setThemeInfo(pThemeID, xmlDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent(),xmlDom.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME3").item(0).getTextContent(), xmlDom.getElementsByTagName("DISPLAYNAME4").item(0).getTextContent(), pImageURL,xmlDom.getElementsByTagName("TOPURL").item(0).getTextContent(),xmlDom.getElementsByTagName("MAINURL").item(0).getTextContent(), userInfo.getCompanyID(), userInfo.getId(), userInfo.getDisplayName(), Integer.parseInt(xmlDom.getElementsByTagName("TOPHEIGHT").item(0).getTextContent()), userInfo.getTenantId());
-		
+
+		logger.debug("saveThemeinfo ended");
 		return "OK";
 	}
 	
@@ -322,6 +330,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 		
 		//String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
+		//2017-02-14 String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
 		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
 		
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + pBoardID;
@@ -2752,7 +2761,6 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String realPath = req.getServletContext().getRealPath("");
 		//String pDirPath = realPath+config.getProperty("upload_portal.ROOT");
 		String pDirPath = realPath+commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId());
-		
 		String pServerPath = pDirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode;
 		
 		String imageName = xmlDom.getElementsByTagName("FILENAME").item(0).getTextContent();

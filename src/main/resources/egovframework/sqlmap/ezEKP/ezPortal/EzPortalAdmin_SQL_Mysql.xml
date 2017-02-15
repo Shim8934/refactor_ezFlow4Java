@@ -86,7 +86,7 @@
 				TBL_THEME_GENERAL
         		( UID_, DISPLAYNAME, DISPLAYNAME2, DISPLAYNAME3, DISPLAYNAME4, IMAGEURL, TOPURL, MAINURL, COMPANAYID, CREATORID, CREATORNM, CREATEDATE, MODIFYDATE, TOPHEIGHT, TENANT_ID )
         	VALUES
-        		( #v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TOPHEIGHT#, #tenantID# )
+        		( #v_PUID#, #v_PDISNM1#, #v_PDISNM2#, #v_PDISNM3#, #v_PDISNM4#, #v_PIMAGEURL#, #v_PTOPURL#, #v_PMAINURL#, #v_PCOMPANYID#, #v_PCREATORID#, #v_PCREATORNM#, STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s'), STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s'), #v_TOPHEIGHT#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -1865,7 +1865,7 @@
 				*
 			FROM
 				TBL_SKIN_GENERAL
-            AND
+            WHERE
                 TENANT_ID = #tenantID#        
 		]]>
 	</select>
@@ -1956,7 +1956,7 @@
 					UID_, PARENTUID, DEPTH, DISPLAYNAME, DISPLAYNAME2, CREATORID, CREATORNAME, CREATEDATE, WIDTH, HEIGHT, ROWLENGTH, COLUMNLENGTH, ROWSPLIT, COLUMNSPLIT, GUBUNFLAG, COMPANYID, THEMEUID, TABLEVIEWOPTION, TENANT_ID
 					)
 			VALUES (
-				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #gubunFlag#,#companyID#, #themeUID#, #tableViewOption#, #tenantID#
+				#uID#, #parentUID#, #depth#, #displayName#, #displayName2#, #creatorID#, #creatorName#, STR_TO_DATE(#nowDate#, '%Y-%m-%d %H:%i:%s'), #width#, #height#, #rowLength#, #columnLength#, #rowSplit#, #columnSplit#, #gubunFlag#,#companyID#, #themeUID#, #tableViewOption#, #tenantID#
 			) 
 			 
 		]]>

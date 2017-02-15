@@ -1186,7 +1186,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 								map4.put("portletType", portletType);
 								map4.put("displayName", portletDisplayName);
 								map4.put("width", portletWidth);
-								
+								if (portletHeight == null || portletHeight.equals("")) {
+									portletHeight = "0";
+								}
 								map4.put("height", portletHeight);
 								map4.put("rowPos", rowPos);
 								map4.put("columnPos", String.valueOf(i+1));
@@ -1209,6 +1211,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 									map5.put("portletType", portletType);
 									map5.put("displayName", portletDisplayName);
 									map5.put("width", portletWidth);
+									if (portletHeight == null || portletHeight.equals("")) {
+										portletHeight = "0";
+									}
 									map5.put("height", portletHeight);
 									map5.put("rowPos", rowPos);
 									map5.put("columnPos", String.valueOf(i+1));
@@ -1377,6 +1382,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 								map2.put("portletType", portletType);
 								map2.put("displayName", portletDisplayName);
 								map2.put("width", portletWidth);
+								if (portletHeight == null || portletHeight.equals("")) {
+									portletHeight = "0";
+								}
 								map2.put("height", portletHeight);
 								map2.put("rowPos", rowPos);
 								map2.put("columnPos", String.valueOf(i + 1));
