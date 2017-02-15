@@ -716,11 +716,11 @@
 					) P 
 	          	ORDER BY
 	          		P.RESPONSENO DESC
-	          	WHERE
-	          		ROWNUM <= #v_pTotalCnt#
+	          	LIMIT
+	          		#v_pTotalCnt#
 				) K
-			WHERE
-   				ROWNUM <= #v_pPageSize# 
+			LIMIT
+   				#v_pPageSize# 
    			ORDER BY
    				K.RESPONSENO ASC
 		]]>
