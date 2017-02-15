@@ -356,7 +356,7 @@
 									<%-- cmdStr에 lowCase --%>
 								<c:if test="${approveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}">
 									<c:choose>
-										<c:when test="${savedApproveFlag eq '1'}">
+										<c:when test="${saveApproveFlag eq '1'}">
                                   			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 0)"> <spring:message code='ezResource.t190' /></span></li>
 										</c:when>
 										<c:otherwise>
