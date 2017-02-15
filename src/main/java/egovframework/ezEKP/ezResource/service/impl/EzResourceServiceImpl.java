@@ -773,7 +773,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			
-		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, commonUtil.getDateStringInUTC(sDate, offset, false), commonUtil.getDateStringInUTC(eDate, offset, false), pType, pWriterName, pWriterDept, tenantID, offset);
+		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept, tenantID, offset);
 		logger.debug("getScheduleList="+scheRs);
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 
@@ -901,32 +901,28 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String reNum = "";
 		
 		returnStr.append("<DATA>");
-		String todayStartStr = "";
-		String todayEndStr = "";
-		if (pType.equals("MAIN")) {
-			todayStartStr = eDate + " 23:59:59";
-			todayEndStr = sDate + " 00:00:01";
-		} else {
-			todayStartStr = eDate + " 00:00:01";
-			todayEndStr = sDate;
-		}
+		String todayStartStr = eDate + " 23:59:59";
+		String todayEndStr = sDate + " 00:00:01";
+		
 		String returnSchedule = "";
 			
 		if (pType.equals("")) {
-			List<ResGetScheduleListVO> getScheduleList = getScheduleList(ownerID, companyID, todayStartStr, todayEndStr, pWriterName, pWriterDept, tenantID);
+			List<ResGetScheduleListVO> getScheduleList = getScheduleList(ownerID, companyID, commonUtil.getDateStringInUTC(todayStartStr, offset, true), commonUtil.getDateStringInUTC(todayEndStr, offset, true), pWriterName, pWriterDept, tenantID);
 			returnSchedule += "<DATA>";
-			for (int i=0; i<getScheduleList.size(); i++) {
-				returnSchedule += commonUtil.getQueryResult(getScheduleList.get(i));
+			
+			for (ResGetScheduleListVO vo :  getScheduleList) {
+				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 			returnSchedule += "</DATA>";
 					
 		} else if (pType.equals("MAIN")) {
 	
-			List<ResGetScheduleListMainVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, todayStartStr, todayEndStr, tenantID);
+			List<ResGetScheduleListMainVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, commonUtil.getDateStringInUTC(todayStartStr, offset, true), commonUtil.getDateStringInUTC(todayEndStr, offset, true), tenantID);
 			returnSchedule += "<DATA>";
 			logger.debug("getScheduleListMainSize="+getScheduleListMain.size());
-			for (int i=0; i<getScheduleListMain.size(); i++) {
-				returnSchedule += commonUtil.getQueryResult(getScheduleListMain.get(i));
+			
+			for (ResGetScheduleListMainVO vo :  getScheduleListMain) {
+				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 			returnSchedule += "</DATA>";
 		}

@@ -313,28 +313,16 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (cmd.equals("get")) {
 			startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
 			endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-
+			
 			if (viewType.equals("list")) {
 				approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
 				writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 				writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
 			}
 			
-			if (type.equals("") || type == null) {
-				xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
-				xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
-			} else {
-				if (type.equals("MAIN")) {
-					xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
-					xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
-				} else {
-					String startDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDate.substring(0,10), -1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss","");
-					String endDate1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(endDate.substring(0,10), 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss","");
-
-					xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate1);
-					xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate1);
-				}
-			}
+			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
+			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
+			
 			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
 				
@@ -2240,8 +2228,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	@ResponseBody
 	public String sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMail started");
-		
-		System.out.println("xmlStr=" + xmlStr);
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
