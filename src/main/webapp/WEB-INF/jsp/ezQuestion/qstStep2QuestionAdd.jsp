@@ -105,7 +105,8 @@
                 		option.text = i;
                 		document.getElementById("vertical").appendChild(option);
             		}
-            		 if(document.getElementById("ResultTable") == null)
+            		
+					if(document.getElementById("ResultTable") == null)
                  		createTable(pDataXml);  
         		}
     		}
@@ -777,7 +778,7 @@
 		                } else if (i == 0 && j != 0) {
                     		oTh = document.createElement("TH");
                     		if (pXmlString != undefined) {
-                    			oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("TITLE")[j - 1]) + "' style='width:70px;' maxlength='50'/>";
+                    			oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='" + getNodeText(pDataXml.getElementsByTagName("ANSWERTITLE")[j - 1]) + "' style='width:70px;' maxlength='50'/>";
                     		} else {
                         		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910026' /> " + j + "' style='width:70px;' maxlength='50'/>";
                     		}
