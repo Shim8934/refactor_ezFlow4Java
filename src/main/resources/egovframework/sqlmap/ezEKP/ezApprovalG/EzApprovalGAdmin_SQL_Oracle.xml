@@ -1860,7 +1860,7 @@
 				tenant_id)
 			VALUES
 				((SELECT
-					MAX(mainid) + 1
+					NVL(MAX(mainid),0) + 1
 				FROM
 					TBL_ADMINRECEIPTGROUP_MAIN
 				WHERE
