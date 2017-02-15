@@ -306,7 +306,7 @@
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
-                  				TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                  				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
                   			WHERE
                   				B.DEPTID = #v_CN#
                   			AND
@@ -618,7 +618,7 @@
               		WHERE
               			B.DEPTID = #v_CN#
               		AND
-              			B.TENANT_ID = #tenantID#	 ) AA
+              			B.TENANT_ID = #v_TENANT_ID#	 ) AA
 		]]>
 	</select>
 	
@@ -1163,7 +1163,8 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		TBL_USERMASTER A $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A 
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -1173,7 +1174,8 @@
 	      		'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
-				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID $strSQL$
+				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -1184,7 +1186,8 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER 
+                $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
 			</isEqual>	      				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
@@ -1194,7 +1197,8 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER 
+            $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 	    </isEqual>
 	</select>
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">
@@ -1216,7 +1220,8 @@
 			                '' as extensionAttribute15,
 			                'user' as type 
 			             FROM  
-			             	TBL_USERMASTER A   $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+			             	TBL_USERMASTER A   
+                         $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 			       
 			       UNION ALL
 			            
@@ -1230,19 +1235,22 @@
 			         INNER JOIN 
 			         	TBL_ADDJOBMASTER A  
 			         ON  
-			         	a.cn = b.cn  $strSQL$ AND a.tenant_id = b.tenant_id)  A)  
-	              	B where RNUM >= $startRow$ and RNUM < $endRow$
+			         	a.cn = b.cn AND a.tenant_id = b.tenant_id
+                     $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                    )  A) B 
+                    where RNUM >= $startRow$ and RNUM < $endRow$
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
           	<![CDATA[
-				SELECT 
+			SELECT 
 				cn,
 				department as displayName,
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		TBL_USERMASTER A $strSQL$ $strSize$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A 
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
 	    		 
 	      	UNION ALL
 	      		      	
@@ -1271,13 +1279,14 @@
           </isEqual>
 		  <isEqual property="type" compareValue="G">
 		  	<![CDATA[
-				SELECT
+			SELECT
 	    		cn,
 	    		'' as displayName,
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		TBL_DEPTMASTER $strSQL$ $strSize$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER 
+            $strSQL$ AND TENANT_ID = #v_TENANT_ID#
 			]]>
 	      </isEqual>
 	</select>
@@ -1289,7 +1298,8 @@
 			SELECT 
 				CN 
 			FROM  
-				TBL_USERMASTER  A  $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+				TBL_USERMASTER  A  
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
             
             UNION ALL 
             
@@ -1299,7 +1309,9 @@
             	TBL_USERMASTER B   
             INNER JOIN  TBL_ADDJOBMASTER A   
             ON 
-            	a.cn = b.cn $strSQL$ and a.tenant_id = b.tenant_id) A
+            	a.cn = b.cn and a.tenant_id = b.tenant_id
+            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+             ) A
 		]]>
 			
 	</select>
