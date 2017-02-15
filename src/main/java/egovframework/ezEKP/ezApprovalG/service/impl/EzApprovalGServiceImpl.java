@@ -1468,13 +1468,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim().equals("")) {
 				recDate = "NULL";
 			} else {
-				recDate = "'" + makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim())) + "'";
+				recDate = makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim()));
 			}
 			
 			if (xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim().equals("")) {
 				processDate = "NULL";
 			} else {
-				processDate = "'" + makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim())) + "'";
+				processDate = makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim()));
 			}
 			
 			map.put("v_GONGRAMDOCID", gongRamDocID);
