@@ -4547,7 +4547,7 @@
                 AND 
                 	  SIGNNAME LIKE 'sign%'
         		ORDER BY 
-        			  SIGNNAME DESC )
+        			  SIGNNAME DESC ) A
       LIMIT 1
         ]]>
 	</select>
@@ -4676,7 +4676,7 @@
        			 AND
        			 	  TENANT_ID = #v_TENANTID#
         		 ORDER BY 
-        		 	  READDATE DESC )
+        		 	  READDATE DESC ) A
         LIMIT 100
         	]]>
 	</select>
@@ -4788,10 +4788,10 @@
                                                       AND
                                                       		TENANT_ID = #v_TENANTID#
                                                       ORDER BY 
-                                                            APRMEMBERSN DESC )
+                                                            APRMEMBERSN DESC ) A
                                                LIMIT 1
                                                AND
-                                                    TENANT_ID = #v_TENANTID# )A )
+                                                    A.TENANT_ID = #v_TENANTID# ) )
                     AND 
                           ( DOCID = #v_DOCID# )
                     AND
@@ -6202,8 +6202,7 @@
 		   	</isEmpty>
 		   	<![CDATA[
 		   	)A 
-		   		WHERE 
-		   			ROWNUM <= #v_PAGESIZE#
+		   		LIMIT #v_PAGESIZE#
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
 		   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
