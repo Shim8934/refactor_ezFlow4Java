@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezApprovalG.service.impl;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -1771,8 +1772,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		sb.append("</HEADERS><ROWS>");
 		
+		Calendar cal = Calendar.getInstance();
+		  
+		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
+		cal.set(Calendar.MONTH, Integer.parseInt(eMonth)-1);
+		
+		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
+		
 		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", offset, true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-01 00:00:00", offset, true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 00:00:00", offset, true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_MODE", pMode);
@@ -1874,8 +1882,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			break;
 		}
 		
+		Calendar cal = Calendar.getInstance();
+		  
+		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
+		cal.set(Calendar.MONTH, Integer.parseInt(eMonth)-1);
+		
+		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
+		
 		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", userInfo.getOffset(), true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-01 00:00:00", userInfo.getOffset(), true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 00:00:00", userInfo.getOffset(), true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
