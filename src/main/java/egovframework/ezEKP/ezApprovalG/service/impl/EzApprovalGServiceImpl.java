@@ -1468,13 +1468,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim().equals("")) {
 				recDate = "NULL";
 			} else {
-				recDate = "'" + makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim())) + "'";
+				recDate = makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(7).getTextContent().trim()));
 			}
 			
 			if (xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim().equals("")) {
 				processDate = "NULL";
 			} else {
-				processDate = "'" + makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim())) + "'";
+				processDate = makeRightField(makeListField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(6).getTextContent().trim()));
 			}
 			
 			map.put("v_GONGRAMDOCID", gongRamDocID);
@@ -7275,7 +7275,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 			String href = ezApprovalGDAO.selectHrefDocInfo(map); 
 			ezApprovalGDAO.deleteTmpDocInfo(map);
-			
+			ezApprovalGDAO.deleteTmpDocInfo2(map);
+			ezApprovalGDAO.deleteTmpDocInfo3(map);
+			ezApprovalGDAO.deleteTmpDocInfo4(map);
+			ezApprovalGDAO.deleteTmpDocInfo5(map);
+			ezApprovalGDAO.deleteTmpDocInfo6(map);
+			ezApprovalGDAO.deleteTmpDocInfo7(map);
+			ezApprovalGDAO.deleteTmpDocInfo8(map);
+			ezApprovalGDAO.deleteTmpDocInfo9(map);
+
 			File file = new File(path + href);
 			file.delete();
 			
