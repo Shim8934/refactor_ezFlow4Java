@@ -1102,7 +1102,8 @@
 				'' as extensionAttribute15,
 				'user' as type				
 			FROM 
-	    		TBL_USERMASTER A $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+	    		TBL_USERMASTER A $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            $strSizeForMySQL$
 	    		 
 	      	UNION ALL
 	      		      	
@@ -1112,7 +1113,9 @@
 	      		'' as extensionAttribute15,
 	      		'user' as type
 	      	FROM	
-				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID $strSQL$
+				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
+            $strSQLForMySQL$
+            $strSizeForMySQL$
 				
 			<isEqual property="class" compareValue="all">
 				UNION ALL
@@ -1123,7 +1126,8 @@
 					'' as extensionAttribute15,
 					'group' as type
 				FROM
-					TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#	
+					TBL_DEPTMASTER $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#	
+                $strSizeForMySQL$
 			</isEqual>	      				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
@@ -1133,7 +1137,8 @@
 	    		'' as extensionAttribute15,
 	    		'group' as type
 	    	FROM
-	    		TBL_DEPTMASTER $strSQL$ AND TENANT_ID = #v_TENANT_ID#
+	    		TBL_DEPTMASTER $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+            $strSizeForMySQL$
 	    </isEqual>
 	</select>
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfo">

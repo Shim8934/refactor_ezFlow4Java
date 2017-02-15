@@ -560,6 +560,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         String[] searchInfo;
         String listInfo = "";
         String strSize = "";
+        String strSizeForMySQL = "";
         String strSQL = "";        
         String type = "";        
         int i = 0;
@@ -570,6 +571,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                 strSize = " LIMIT " + pLimit;
             } else {
                 strSize = " AND ROWNUM <= " + pLimit;
+                strSizeForMySQL = " LIMIT " + pLimit;
             }
         }
         
@@ -650,11 +652,14 @@ public class EzOrganServiceImpl implements EzOrganService {
         }
         
         map.put("strSQL", strSQL + strSize);
+        map.put("strSQLForMySQL", strSQL);
+        map.put("strSizeForMySQL", strSizeForMySQL);
         map.put("type", type);
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
         
-        logger.debug("strSQL="+strSQL);
+        logger.debug("strSQL=" + strSQL);
+        
         List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
         
         StringBuilder memberlist2 = new StringBuilder("<LISTVIEWDATA><ROWS>");
