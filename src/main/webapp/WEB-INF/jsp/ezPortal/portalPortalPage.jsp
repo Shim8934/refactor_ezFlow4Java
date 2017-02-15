@@ -474,7 +474,7 @@ console.log("tdsub_item.uid="+tdsub_item.uid);
 		}
 
 		function save() {
-console.log("save Start");
+//console.log("save Start");
 			if (document.getElementById("txtDisplayName").value == "") {
 				alert("<spring:message code='ezPortal.t289' />");
 				document.getElementById("txtDisplayName").focus();
@@ -523,7 +523,7 @@ console.log("save Start");
 		}
 
 		function AttachEvents(pObject, pPageID) {
-console.log("AttachEvents Start");
+//console.log("AttachEvents Start");
 			var prevpageid = "";
 			var count = 0;
 			for (var i=0; i<pObject.getElementsByTagName("td").length; i++)
@@ -881,7 +881,7 @@ console.log("selectedSubCell="+selectedSubCell);
 				alert("<spring:message code='ezPortal.t362'/>");
 				return;
 			}
-alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
+//alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
 			if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 				alert("<spring:message code='ezPortal.t292'/>");
 				return;
@@ -1392,7 +1392,7 @@ alert("length="+eval(selectedCell).children.item(0).children.item(0).children.le
 				alert("<spring:message code='ezPortal.t312' />");
 				return;
 			}
-alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
+//alert("length="+eval(selectedCell).children.item(0).children.item(0).children.length);
 			if (eval(selectedCell).children.item(0).children.item(0).children.length > 9) {
 				alert("<spring:message code='ezPortal.t292' />");
 				return;
@@ -1400,25 +1400,25 @@ alert("length="+eval(selectedCell).children.item(0).children.item(0).children.le
 			
 			var strHTML = "<table id='main_table_" + GetGUID().substr(0,4) + "' border=1 cellpadding=0 cellspacing=0 width=100% height=110px style='table-layout:fixed;'>";
 			strHTML += "<tr id='main_row'>";
-alert("GetGUID="+GetGUID());
-alert("GetGUIDsub="+GetGUID().substr(0,3));
+//alert("GetGUID="+GetGUID());
+//alert("GetGUIDsub="+GetGUID().substr(0,3));
 			strHTML += "<TD id='td0" + GetGUID().substr(0,3) + "' vAlign=top><table border=1 cellpadding=0 cellspacing=0 width=100% valign=top>";
 			strHTML += "<TBODY><TR style='WIDTH: 100%; HEIGHT: 10px' onclick=\"selectcellTitle(event)\"><td align=center>*</td></TR></tbody>";
 			strHTML += "</table></td></tr></table>";
 			
 			if (CrossYN()) {
-alert("!!");
+//alert("!!");
 				var newrow = eval(selectedCell).children.item(0).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
 				newrow.style.width = "100%";
 				newrow.style.height = "100";
-alert("subGetId="+subGetId);
+//alert("subGetId="+subGetId);
 				var subGetId = "subtd" + GetID();
 				
 				var strInnerHTML = "<td id='" + subGetId + "' uid='"+GetGUID()+"' style='width:100%' pageuid='"+GetGUID()+"' ownerpageuid='"+pageid+"' align='center' onclick='selectsubcell(event)' ondblclick='dblclicknotice()' onkeydown='cellkeydown(event)' canremove='1'  canresize='1'  canreplace='1'>"+strHTML+"</td>";
 				newrow.innerHTML = strInnerHTML;
 				
 				document.getElementById(subGetId).focus();
-alert(document.getElementById(subGetId));
+//alert(document.getElementById(subGetId));
 				AttachEvents(document.getElementById(subGetId))
 			} else {
 				var newrow = eval(selectedCell).children.item(0).insertRow(eval(selectedCell).children[0].children[0].children.length);
@@ -1494,7 +1494,7 @@ alert(document.getElementById(subGetId));
 		
 		// 테이블 크기 조정
 		function resizeTable() {
-alert("resizeTable start");
+//alert("resizeTable start");
 			if (!bCanModify) {
 				alert("<spring:message code='ezPortal.t313' />");
 				return;
