@@ -1795,7 +1795,7 @@
 			VALUES 
 				(#v_MAINID#,
 				(SELECT
-					MAX(subid) + 1
+					NVL(MAX(subid), 0) + 1
 				FROM
 					TBL_ADMINRECEIPTGROUP_SUB),
 				#v_DEPTID#,

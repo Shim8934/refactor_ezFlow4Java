@@ -2281,6 +2281,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (delFlag.equals("Y") || mode.toUpperCase().equals("MUST")) {
 			try {
 				ezApprovalGDAO.aprDeleteDocInfo(map);
+				ezApprovalGDAO.aprDeleteDocInfo2(map);
+				ezApprovalGDAO.aprDeleteDocInfo3(map);
+				ezApprovalGDAO.aprDeleteDocInfo4(map);
+				ezApprovalGDAO.aprDeleteDocInfo5(map);
+				ezApprovalGDAO.aprDeleteDocInfo6(map);
+				ezApprovalGDAO.aprDeleteDocInfo7(map);
+				ezApprovalGDAO.aprDeleteDocInfo8(map);
+				ezApprovalGDAO.aprDeleteDocInfo9(map);
 				rtnVal="TRUE";
 			} catch (Exception e) {
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
