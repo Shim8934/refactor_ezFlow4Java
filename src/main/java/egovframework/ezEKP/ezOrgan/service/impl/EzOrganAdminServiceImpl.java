@@ -64,12 +64,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
+	    logger.debug("getCompanyList started");
+	    
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("lang", lang);
 		map.put("tenantID", tenantID);
 		
-		return ezOrganAdminDao.getCompanyList(map);
+		List<OrganDeptVO> companyList = ezOrganAdminDao.getCompanyList(map);
+		
+		logger.debug("getCompanyList ended");
+		
+		return companyList;
 	}
 	
 	@Override
@@ -104,6 +110,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_LANGDATA", strLang);
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
+        map.put("v_STARTNUM", startRow - 1);
+        map.put("v_COUNT", endRow - startRow + 1);
 		
 		return ezOrganAdminDao.getPermissionList(map);
 	}
@@ -288,7 +296,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         		map.put("v_COMPNM2", dept.getCompNm2());
         		map.put("v_EXTENSIONATTRIBUTE4", dept.getExtensionAttribute4());
         		map.put("v_EXTENSIONATTRIBUTE2", dept.getExtensionAttribute2());
-        		map.put("v_DEPTLEVEL", dept.getDeptLevel());
+        		
+        		if (dept.getDeptLevel() != null) {
+        		    try {
+            		    int deptLevel = Integer.parseInt(dept.getDeptLevel()) + 1;
+            		    map.put("v_DEPTLEVEL", deptLevel);
+        		    } catch (NumberFormatException e) {
+        		        map.put("v_DEPTLEVEL", null);
+        		    }
+        		} else {
+        		    map.put("v_DEPTLEVEL", null);
+        		}
+        		
         		map.put("v_EXTENSIONATTRIBUTE3", dept.getExtensionAttribute3());
         		map.put("v_DEPT_CD_PATH", dept.getDept_Cd_Path());
         		map.put("v_DEPT_CD_PATH_OLD", dept1.getDept_Cd_Path());

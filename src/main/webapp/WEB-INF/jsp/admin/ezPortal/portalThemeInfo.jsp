@@ -112,7 +112,7 @@
             createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME2", document.getElementById("Title2").value);
             createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME3", document.getElementById("Title3").value);
             createNodeAndInsertText(xmlpara, objNode, "DISPLAYNAME4", document.getElementById("Title4").value);
-            createNodeAndInsertText(xmlpara, objNode, "IMAGEPATH", document.getElementById("txtNormalImage").src);
+            createNodeAndInsertText(xmlpara, objNode, "IMAGEPATH", txtNormalImage.getAttribute('src'));
             createNodeAndInsertText(xmlpara, objNode, "TOPURL", document.getElementById("TopURL").value);
             createNodeAndInsertText(xmlpara, objNode, "MAINURL", document.getElementById("MainURL").value);
             createNodeAndInsertText(xmlpara, objNode, "TOPHEIGHT", document.getElementById("TopHeight")[document.getElementById("TopHeight").selectedIndex].value);

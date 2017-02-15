@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -22,9 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 import org.slf4j.Logger;
@@ -40,7 +37,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -1714,7 +1710,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getLVHeaderInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getLVHearderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+	public String getLVHeaderInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String listFlag = request.getParameter("listFlag");
@@ -4344,16 +4340,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String signCheck = request.getParameter("signCheck");
-		StringBuilder sqlStr = new StringBuilder();
-		
-		sqlStr.append("BEGIN \n DECLARE v_pCount Number := 0; \n BEGIN SELECT COUNT(DOCID) INTO v_pCount FROM TBAPRDOCINFO WHERE ORGDOCID= '" + docID + "';\n");
-        sqlStr.append("IF v_pCount = 0 THEN \n");
-        sqlStr.append("BEGIN \n");
-        sqlStr.append("    UPDATE TBL_EXPENDAPRDOCINFO SET SIGNCHECK = '" + signCheck + "' WHERE DocID = '" + docID + "'; \n");
-        sqlStr.append("    DELETE FROM TBL_SIGNINFO WHERE DocID = '" + docID + "'; \n");
-        sqlStr.append("END; END IF; END; END;\n");
-        
-        String result = ezApprovalGService.updateSignCheck(sqlStr.toString(), userInfo.getCompanyID());
+        String result = ezApprovalGService.updateSignCheck(docID, signCheck, userInfo.getCompanyID(), userInfo.getTenantId());
         
 		return result;
 	}

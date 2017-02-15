@@ -76,14 +76,15 @@
 			INSERT INTO
 				TBL_DEPTMASTER
     			(CN, DISPLAYNAME, DISPLAYNAME2, USEFLAG, MAIL, EXTENSIONATTRIBUTE1, EXTENSIONATTRIBUTE4, EXTENSIONATTRIBUTE5, EXTENSIONATTRIBUTE6, EXTENSIONATTRIBUTE8, EXTENSIONATTRIBUTE9, EXTENSIONATTRIBUTE10, EXTENSIONATTRIBUTE15, ADFLAG, ADSPATH, UPDATEDT, TENANT_ID,
-                    EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH
+                    EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL
                  )
      		VALUES
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #v_TENANT_ID#,
                     (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
                     (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    CONCAT((SELECT DEPT_CD_PATH FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#), ',', #v_CN#)
+                    CONCAT((SELECT DEPT_CD_PATH FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#), ',', #v_CN#),
+                    (SELECT DEPTLEVEL + 1 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
                  )
 		]]>
 	</insert>
@@ -176,7 +177,7 @@
 				COMPNM2 ,
              	EXTENSIONATTRIBUTE4 ,
              	EXTENSIONATTRIBUTE2 ,
-             	DEPTLEVEL + 1 ,
+             	DEPTLEVEL ,
              	EXTENSIONATTRIBUTE3 ,
              	DEPT_CD_PATH 
 	       	FROM
@@ -225,9 +226,14 @@
 			UPDATE
 				TBL_DEPTMASTER
       		SET
-      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, CONCAT(#v_DEPT_CD_PATH#, ',', #v_CN#))
+      			DEPT_CD_PATH = REPLACE(DEPT_CD_PATH, #v_DEPT_CD_PATH_OLD#, CONCAT(#v_DEPT_CD_PATH#, ',', #v_CN#)),
+                EXTENSIONATTRIBUTE2 = #v_EXTENSIONATTRIBUTE2#,
+                EXTENSIONATTRIBUTE3 = #v_EXTENSIONATTRIBUTE3#,
+                COMPNM2 = #v_COMPNM2#
       		WHERE
       			DEPT_CD_PATH LIKE CONCAT(#v_DEPT_CD_PATH_OLD#, ',%')
+            AND
+                TENANT_ID = #v_TENANT_ID#         
 		]]>
 	</update>
 	
@@ -632,11 +638,11 @@
                	  WHERE
                	  	TENANT_ID = #tenantID#
                	  AND  
-               	  	DEPTLEVEL = 1
+               	  	(DEPTLEVEL = 1
                	  OR 
-               	  	CN = 'top' ) A
+               	  	CN = 'Top') ) A
            	ORDER BY 
-        		A.CN
+        		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select>
 	
@@ -832,7 +838,7 @@
 	<select id="EzOrganAdminDAO.getPermissionListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(EXTENSIONATTRIBUTE1 )
+				COUNT(EXTENSIONATTRIBUTE1)
 	 		FROM
 	 			TBL_USERMASTER
    			WHERE
@@ -854,9 +860,7 @@
 	
 	<select id="EzOrganAdminDAO.getPermissionList" parameterClass="Map" resultMap="permissionList">
 		<![CDATA[
-			SELECT
-				*
-			FROM ( 	SELECT
+			            SELECT
 							CN, 
             				CASE
             					#v_LANGDATA#  
@@ -900,8 +904,7 @@
                   				COMPANY2
                   			END
                   				AS COMPANY,
-            				EXTENSIONATTRIBUTE1 ,
-            				ROW_NUMBER() OVER (ORDER BY DISPLAYNAME) AS ROWNUM_
+            				EXTENSIONATTRIBUTE1
         				FROM
         					TBL_USERMASTER 
         				WHERE
@@ -911,14 +914,9 @@
         				AND
         					EXTENSIONATTRIBUTE1 LIKE '%$v_TYPE$%'
         				AND
-        					TENANT_ID = #v_TENANT_ID#	
-      				) A
-      			WHERE
-      				ROWNUM_
-      			BETWEEN
-      				#v_PSTARTROW#
-      			AND
-      				#v_PENDROW#
+        					TENANT_ID = #v_TENANT_ID#
+                        ORDER BY DISPLAYNAME
+                        LIMIT #v_STARTNUM#, #v_COUNT#
 		]]>
 	</select>
 	
