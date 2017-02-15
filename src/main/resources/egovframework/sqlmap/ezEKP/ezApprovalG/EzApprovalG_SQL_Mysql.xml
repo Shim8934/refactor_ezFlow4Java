@@ -3325,11 +3325,7 @@
 	</select>
 	
 	<select id="EzApprovalG.getRecordList" parameterClass="ApprGRecordListVO" resultClass="ApprGRecordVO" remapResults="true">
-		SELECT 
-			 * 
-		FROM (
 			SELECT 
-				ROW_NUMBER() OVER($orderBy$) AS ROWNUM_,
 				N.* 
 			FROM ( SELECT 
 						TBL_RECORD.RecordID, 
@@ -3692,24 +3688,24 @@
 			<isNotEmpty property="isDocPrint">
 				<isEqual property="isDocPrint" compareValue="TRUE">
 					<isLessThan property="start" compareValue="0">
-						) N ) A 
+						) N $orderBy$ 
 					</isLessThan>
 					<isGreaterEqual property="start" compareValue="0">
-						) N ) A 
-					WHERE 
-						ROWNUM_ BETWEEN #start# AND #end#
+						) N $orderBy$
+					LIMIT
+						#limit#, #rowCount# 
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
-					) N ) A 
-				WHERE 
-					ROWNUM_ BETWEEN #start# AND #end#
+					) N $orderBy$
+				LIMIT
+					#limit#, #rowCount#
 				</isNotEqual>
 			</isNotEmpty>
 			<isEmpty property="isDocPrint">
-				) N ) A 
-			WHERE 
-				ROWNUM_ BETWEEN #start# AND #end#
+				) N $orderBy$ 
+			LIMIT
+				#limit#, #rowCount#
 			</isEmpty>
 	</select>
 	
@@ -9384,7 +9380,9 @@
 	   	ON 
 	   		TBL_ENDAPRDOCINFO.DOCID = TBL_ENDRECEIPTPOINTINFO.DOCID
 	   	WHERE 
-	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL AND TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
+	   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
+	   	AND 
+	   		TBL_ENDRECEIPTPOINTINFO.RECEIPTPOINTID
 	   	<isEqual property="v_MODELENGTH" compareValue="2">
 	   	NOT
 	   	</isEqual>
@@ -9549,7 +9547,7 @@
 		 SELECT 
 		 	COUNT(RecordID)  
          FROM 
-         	ezApprovalG_S907000.TBL_RECORD 
+         	TBL_RECORD 
          JOIN ( 
          		SELECT 
          			DEPARTMENT DEPTID  , TENANT_ID
