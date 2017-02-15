@@ -5109,6 +5109,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		map = new HashMap<String, Object>();
 		map.put("temp", temp);
+		map.put("num", num);
+		map.put("mariaNum", num -1);
 		map.put("tenantID", tenantID);
 		
 		if (num > totalCount) {
