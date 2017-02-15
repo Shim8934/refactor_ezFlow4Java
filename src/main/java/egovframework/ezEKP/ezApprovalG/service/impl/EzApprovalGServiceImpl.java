@@ -14717,8 +14717,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
 		map.put("companyID", companyID);
-		map.put("v_STARTDATE", "TO_DATE('" + Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01','YYYY-MM-DD HH24:MI:SS')"); 
-		map.put("v_ENDDATE", "TO_DATE('" + commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59','YYYY-MM-DD HH24:MI:SS') "); 
+		map.put("v_STARTDATE", Integer.toString(Integer.parseInt(commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(0,4))-1) + commonUtil.getTodayUTCTime("yyyy-MM-dd").substring(4,commonUtil.getTodayUTCTime("yyyy-MM-dd").length())  + " 00:00:01"); 
+		map.put("v_ENDDATE", commonUtil.getTodayUTCTime("yyyy-MM-dd") + " 23:59:59"); 
 
 		List<String> leftCounts = ezApprovalGDAO.getLeftDocCount(map);
 		

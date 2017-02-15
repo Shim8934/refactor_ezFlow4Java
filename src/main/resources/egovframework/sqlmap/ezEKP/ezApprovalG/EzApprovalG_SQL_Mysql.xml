@@ -128,7 +128,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE#) A 
+							)C LIMIT #v_PAGESIZE#) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -152,7 +152,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="2">
@@ -210,7 +210,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-								)WHERE ROWNUM <= #v_PAGESIZE#) A 
+								) C LIMIT #v_PAGESIZE#) A 
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -234,7 +234,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="3">
@@ -311,7 +311,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE#) A
+							)C LIMIT #v_PAGESIZE#) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -335,7 +335,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="99">
@@ -387,7 +387,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE#) A
+							)C LIMIT #v_PAGESIZE#) A
 							]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -411,7 +411,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="10">
@@ -513,7 +513,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						)WHERE ROWNUM <= #v_PAGESIZE#) A 
+						)C LIMIT #v_PAGESIZE#) A 
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -537,7 +537,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isEqual property="v_LISTTYPE" compareValue="21">
@@ -620,7 +620,7 @@
 							</isNotEqual>
 						</isEmpty>
 						<![CDATA[
-						)WHERE ROWNUM <= #v_PAGESIZE#) A
+						)C LIMIT #v_PAGESIZE#) A
 						]]>
 							<isNotEmpty property="v_ORDEROPTION2"> 
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -644,7 +644,7 @@
 								</isNotEqual>
 							</isEmpty>
 							<![CDATA[
-							)WHERE ROWNUM <= #v_PAGESIZE2#
+							)D LIMIT #v_PAGESIZE2#
 							]]>
 			</isEqual>
 			<isNotEqual property="v_LISTTYPE" compareValue="1">
@@ -699,7 +699,7 @@
 														</isNotEqual>
 													</isEmpty>
 													<![CDATA[
-													)WHERE ROWNUM <= #v_PAGESIZE#) A
+													)C LIMIT #v_PAGESIZE#) A
 													]]>
 														<isNotEmpty property="v_ORDEROPTION2"> 
 														<isGreaterEqual property="v_ORDEROPTION2LENGTH"  compareValue="9" >
@@ -723,7 +723,7 @@
 															</isNotEqual>
 														</isEmpty>
 														<![CDATA[
-														)WHERE ROWNUM <= #v_PAGESIZE2#
+														)D LIMIT #v_PAGESIZE2#
 														]]>
                      			</isNotEqual>
                      		</isNotEqual>
@@ -6296,13 +6296,12 @@
    		AND 
    				(A.StartDate >=  STR_TO_DATE(#v_pStartDate#,'%Y-%m-%d %H:%i:%s') AND A.StartDate <= STR_TO_DATE(#v_pEndDate#,'%Y-%m-%d %H:%i:%s')) 
    		WHERE 
-   				rownum <= 5 
-   		AND
    				A.TENANT_ID = #v_TENANTID#
    		GROUP BY 
    				D.DisplayName$v_pLang$, WRITERDEPTID, TOTALCOUNT2
    		ORDER BY 
    				DRAFTCOUNT DESC
+   		LIMIT 5
    		]]>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getDocAprLine" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
@@ -6805,7 +6804,7 @@
 <!-- 		{CALL EZSP_GETLEFTDOCCOUNT(#v_USERID#, #v_DEPTID#, #v_USERIDS#, #v_DEPTIDS#, #v_USERFLAG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id ="EzApprovalG.getLeftDocCount" parameterClass="Map" resultClass="String" >
-	<!--   결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
+		<!--   결재할 문서, 공람문서는 제외한다. AprType <> ''015'' -->
 		<![CDATA[
 			SELECT 
 				COUNT(DOCID) AS COUNT 
@@ -6816,9 +6815,9 @@
 	   		AND 
 	   			APRTYPE <> '015' 
 	   		AND 
-	   			 STARTDATE >= $v_STARTDATE$ 
+	   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    			]]>
@@ -6834,9 +6833,9 @@
 	   		AND 
 	   			AprType <> '015'  
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$  
+	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')  
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    		]]>
@@ -6856,9 +6855,9 @@
 	   		AND 
 	   			DocState <> '017'
 	   		AND 
-	   			STARTDATE >= $v_STARTDATE$
+	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$ 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6900,9 +6899,9 @@
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
-	   		 		PROCESSDATE >= $v_STARTDATE$ 
+	   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		 	AND 
-	   		 		PROCESSDATE <= $v_ENDDATE$ 
+	   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		 ]]>
@@ -6929,9 +6928,9 @@
    			AND 
    				TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
    			AND 
-   		 		PROCESSDATE >= $v_STARTDATE$ 
+   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
    		 	AND 
-   		 		PROCESSDATE <= $v_ENDDATE$
+   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
    		 	AND	
 	   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6960,9 +6959,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6989,9 +6988,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7007,9 +7006,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= $v_STARTDATE$  
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= $v_ENDDATE$
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7023,9 +7022,9 @@
    			WHERE 
    				OWNERID IN ($v_USERIDS$) 
    			AND 
-   				STARTDATE >= $v_STARTDATE$ 
+   				STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <=  $v_ENDDATE$ 
+	   			STARTDATE <=   STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]> 
