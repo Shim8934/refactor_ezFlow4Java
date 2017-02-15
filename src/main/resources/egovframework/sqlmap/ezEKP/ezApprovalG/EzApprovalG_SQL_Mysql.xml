@@ -808,7 +808,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 			  		LIMIT #v_PQUERYSIZESUB#
-							) A 
+							) B 
 						
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -865,7 +865,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 			  		LIMIT #v_PQUERYSIZESUB#
-							) A 
+							) B 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -898,7 +898,7 @@
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
 			  		LIMIT #v_PQUERYSIZESUB#
-							) A 
+							) B 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
@@ -932,7 +932,7 @@
 				  			<![CDATA[
 						  		$v_PORDERBYSUB$
 						  		LIMIT #v_PQUERYSIZESUB#
-										) A 
+										) B 
 							]]>
 						<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 							<![CDATA[

@@ -15776,13 +15776,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (pOrderByMain.substring(0, 9).toLowerCase().equals("STARTDATE")) {
 					pOrderByMain = "ORDER BY RTRIM(LTRIM(" + pOrderByMain + "))";
 				} else {
-					pOrderByMain =  "ORDER BY "+ pOrderByMain.trim() +", A.STARTDATE";
+					pOrderByMain =  "ORDER BY "+ pOrderByMain.trim() +", B.STARTDATE";
 				}
 			} else {
-				pOrderByMain= "ORDER BY "+ pOrderBySub.trim() +", A.STARTDATE ";  
+				pOrderByMain= "ORDER BY "+ pOrderBySub.trim() +", B.STARTDATE ";  
 			}
 		} else {
-			pOrderByMain= "ORDER BY A.STARTDATE";   
+			pOrderByMain= "ORDER BY B.STARTDATE";   
 		}
 				
 		map.put("v_PLISTTYPE", pListType.trim());
