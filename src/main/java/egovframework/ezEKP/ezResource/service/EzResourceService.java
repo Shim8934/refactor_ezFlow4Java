@@ -2,10 +2,8 @@ package egovframework.ezEKP.ezResource.service;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import org.springframework.web.bind.annotation.CookieValue;
-
+import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
@@ -63,7 +61,7 @@ public interface EzResourceService {
 	
 	public ResGetRepResourceVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception;
 	
-	public ResBrdVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
+	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
 	
 	public ResGetSendMailToUserVO getSendMailToUser(String resID, int num, int tenantID) throws Exception;
 	

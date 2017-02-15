@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
@@ -114,8 +115,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResGetRepResourceVO) select("EzResourceDAO.chkDeletedRepResource", map);
 	}
 	
-	public ResBrdVO getResourceAdminInfo(Map<String, Object> map) {
-		return (ResBrdVO) select("EzResourceDAO.getResourceAdminInfo", map);
+	public ResAdminVO getResourceAdminInfo(Map<String, Object> map) {
+		return (ResAdminVO) select("EzResourceDAO.getResourceAdminInfo", map);
 	}
 	
 	public ResGetSendMailToUserVO getSendMailToUser(Map<String, Object> map) {

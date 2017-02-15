@@ -760,8 +760,6 @@
 						WHERE 
 							TENANT_ID = #v_TENANTID#
 			<![CDATA[
-						AND
-							rownum <= #v_PQUERYSIZESUB# 
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$)  
 						AND 
@@ -772,13 +770,14 @@
 	    				#v_PSUBQUERY#
 	  		</isGreaterThan>
 	    			$v_PORDERBYSUB$
-	    			LIMIT #v_PQUERYSIZEMAIN# 
-							) A 
+	    			LIMIT #v_PQUERYSIZESUB#
+							) B 
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
 					<![CDATA[
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 				
 		</isEqual>
 		
@@ -792,8 +791,6 @@
 							VAPRWILLDOCLIST A  
 						 WHERE 
 							TENANT_ID = #v_TENANTID#
-						 AND 
-						 	rownum <= #v_PQUERYSIZESUB# 
 						 AND 
 						 	APRMEMBERID = #v_PUSERID# 
 						 AND 
@@ -810,7 +807,7 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
-			  		LIMIT #v_PQUERYSIZEMAIN# 
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
 						
 				]]>
@@ -819,50 +816,46 @@
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="3">
 		    <![CDATA[
 		     SELECT * 		
 	   				FROM (
-						 SELECT 
-						 	* 
-						 FROM (
-						 		SELECT 
-						 		 	DISTINCT A.DOCID,
-						 		 			 A.FORMID,
-						 		 			 A.ORGDOCID,
-		                      				 A.DOCTYPE,
-		                      				 A.DOCSTATE,
-		                      				 A.FUNCTIONTYPE,
-		                      				 A.HREF,
-		                      				 A.DOCTITLE,
-		                      				 A.DOCNO,
-		                      				 A.HASATTACHYN, 
-		                      				 A.HASOPINIONYN,
-		                      				 A.STARTDATE,
-		                      				 A.ENDDATE,
-		                      				 A.WRITERID,
-		                      				 A.WRITERNAME,
-		                      				 A.WRITERNAME2,
-		                      				 A.WRITERJOBTITLE,
-		                      				 A.WRITERJOBTITLE2,
-		                      				 A.WRITERDEPTID,
-		                      				 A.WRITERDEPTNAME,
-		                      				 A.WRITERDEPTNAME2,
-		                      				 A.ISPUBLIC,
-		                      				 A.FORMNAME, 
-		                      				 A.FORMNAME2, 
-		                      				 A.URGENTAPPROVAL, 
-		                      				 A.KEYWORD
-		                      	FROM 
-		                      		VAPRWILLDOCLIST A  
-		                      	WHERE 
-		                      		TENANT_ID = #v_TENANTID#
-		                      	AND
-		                      		APRMEMBERID = #v_PUSERID#) 
-		                  WHERE 
-		                  		rownum <= #v_PQUERYSIZESUB#   
+				 		SELECT 
+				 		 	DISTINCT A.DOCID,
+				 		 			 A.FORMID,
+				 		 			 A.ORGDOCID,
+                      				 A.DOCTYPE,
+                      				 A.DOCSTATE,
+                      				 A.FUNCTIONTYPE,
+                      				 A.HREF,
+                      				 A.DOCTITLE,
+                      				 A.DOCNO,
+                      				 A.HASATTACHYN, 
+                      				 A.HASOPINIONYN,
+                      				 A.STARTDATE,
+                      				 A.ENDDATE,
+                      				 A.WRITERID,
+                      				 A.WRITERNAME,
+                      				 A.WRITERNAME2,
+                      				 A.WRITERJOBTITLE,
+                      				 A.WRITERJOBTITLE2,
+                      				 A.WRITERDEPTID,
+                      				 A.WRITERDEPTNAME,
+                      				 A.WRITERDEPTNAME2,
+                      				 A.ISPUBLIC,
+                      				 A.FORMNAME, 
+                      				 A.FORMNAME2, 
+                      				 A.URGENTAPPROVAL, 
+                      				 A.KEYWORD
+                      	FROM 
+                      		VAPRWILLDOCLIST A  
+                      	WHERE 
+                      		TENANT_ID = #v_TENANTID#
+                      	AND
+                      		APRMEMBERID = #v_PUSERID# 
 		    ]]>
 		    <isGreaterThan property="v_PSUBQUERYLENGHT"  compareValue="0" >
 				<![CDATA[
@@ -871,7 +864,7 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
-			  		LIMIT #v_PQUERYSIZEMAIN# 
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -879,6 +872,7 @@
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+			  		LIMIT #v_PQUERYSIZEMAIN# 
 		</isEqual>
 		
 		<isEqual property="v_PLISTTYPE" compareValue="4">
@@ -891,8 +885,6 @@
 							VAPRDOINGDOCLIST A  
 						WHERE 
 		                    TENANT_ID = #v_TENANTID#
-		                AND
-							rownum <= #v_PQUERYSIZESUB# 
 						AND 
 							APRMEMBERID IN ($v_PUSERIDS$) 
 						AND 
@@ -905,7 +897,7 @@
 	  		</isGreaterThan>
 	  			<![CDATA[
 			  		$v_PORDERBYSUB$
-			  		LIMIT #v_PQUERYSIZEMAIN# 
+			  		LIMIT #v_PQUERYSIZESUB#
 							) A 
 				]]>
 			<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -913,6 +905,7 @@
 		    			$v_PORDERBYMAIN$
 		    		]]>
 	  		</isGreaterThan>
+		    			LIMIT #v_PQUERYSIZEMAIN#
 		</isEqual>
 		
 		<isNotEqual property="v_PLISTTYPE" compareValue="1">
@@ -928,8 +921,6 @@
 									VAPRDOINGDOCLIST A  
 								WHERE 
 		                      		TENANT_ID = #v_TENANTID#
-		                      	AND
-									rownum <= #v_PQUERYSIZESUB# 
 								AND 
 									APRMEMBERID IN ($v_PUSERIDS$)  
 						]]>
@@ -940,6 +931,7 @@
 				  		</isGreaterThan>
 				  			<![CDATA[
 						  		$v_PORDERBYSUB$
+						  		LIMIT #v_PQUERYSIZESUB#
 										) A 
 							]]>
 						<isGreaterThan property="v_PORDERBYMAINLENGHT"  compareValue="0" >
@@ -947,7 +939,7 @@
 				    			$v_PORDERBYMAIN$
 				    		]]>
 			  			</isGreaterThan>
-			  			LIMIT  #v_PQUERYSIZEMAIN# 
+				  			LIMIT  #v_PQUERYSIZEMAIN# 
 					</isNotEqual>
 				</isNotEqual>
 			</isNotEqual>
@@ -2215,8 +2207,6 @@
             AND
             	TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
             AND 
-            	ROWNUM <= #v_LISTCOUNT#
-            AND 
             	(((TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
             AND 
             	(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015'))
@@ -2227,7 +2217,10 @@
              OR 
              	(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN ($ v_DEPTIDS$) AND TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015')
             </isEqual>
-            	 ) ORDER BY PROCESSDATE $v_BASICORDER$
+            	 ) 
+             ORDER BY PROCESSDATE $v_BASICORDER$
+             LIMIT #v_LISTCOUNT#
+           
 		</isEqual>
 		<isEqual property="v_LISTTYPE" compareValue="5">
 			<![CDATA[
@@ -6172,8 +6165,6 @@
 		   	AND
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = TBL_ENDRECEIPTPOINTINFO.TENANT_ID
 		   	WHERE 
-		   		ROWNUM <= #v_PAGESIZE# 
-		   	AND 
 		   		TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 
 		   	AND
 		   		TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
@@ -6218,7 +6209,6 @@
 		   				ENDDATE $v_BASICORDER$
 		   	</isEmpty>
 		   	<![CDATA[
-		   	LIMIT #v_PAGESIZE#
 		   	)A 
 		   	]]>
 		   	<isNotEmpty property="v_ORDEROPTION">
@@ -6241,6 +6231,7 @@
 		   	 ORDER BY 
 		   	 	ENDDATE $v_BASICORDER2$
 		   	</isEmpty>
+		   	LIMIT #v_PAGESIZE#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getDeptStactics" parameterClass="Map" resultClass="ApprGgetDeptStacticsVO"> -->

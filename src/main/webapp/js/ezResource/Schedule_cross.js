@@ -885,14 +885,9 @@ function SaveSchedule_onClick( cmd , resItem) {
 	    if(cmd == "add" && objNode23 == "0")
 	    {
 	        xmlHttp = createXMLHttpRequest();
-			xmlHttp.open("POST", "/ezResource/sendmail.do", false);
+			xmlHttp.open("POST", "/ezResource/sendMail.do", false);
 			xmlHttp.send(xmlDoc);				        
-			var ResponseXML = xmlHttp.responseXML;
-			xmlHttp = createXMLHttpRequest();
-			xmlHttp.open("POST", "/ezEmail/remote/mailSendNoti.do", false);
-			xmlHttp.send(ResponseXML);
 			xmlHttp = null;
-
 
 			//var objNodes = SelectNodes(resultXML, "RTN_DATA")[0];
 			//p_num = getNodeText(GetChildNodes(objNodes)[0]);
