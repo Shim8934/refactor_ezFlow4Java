@@ -7413,6 +7413,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return result = "<RESULT>FALSE</RESULT>";
 		}
@@ -11828,6 +11829,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                            ezApprovalGDAO.insertDocSendAprReceiptProcessInfo(map);
 							
 							} catch(Exception e){
+								System.out.println(e.getMessage());
 								TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 								return "FALSE";
 							}
@@ -12462,20 +12464,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 
 				break;
 			}
-			try {
-				String itemSeq = ezApprovalGDAO.notifiCationSeq(map);
-				if(itemSeq == null){
-					itemSeq = "0";
-					map.put("v_itemSeq", itemSeq);
-
-					ezApprovalGDAO.insertNotifyItem(map);
-				} else {
 					insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID);
-				}
-			} catch (Exception e) {
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				return "FALSE";
-			}
 		}
 		LOGGER.debug("sendMsg ended");
 

@@ -7112,7 +7112,7 @@
      				WHERE  
      					DOCID = #v_PDOCID#
      				AND 
-           	 			TENANT_ID = #v_TENANTID#) 
+           	 			TENANT_ID = #v_TENANTID#) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->
@@ -7364,7 +7364,7 @@
 			     AND 
 			     	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
 			     AND
-			     	TBL_Container.TENANT_ID = #v_TENANTID# )
+			     	TBL_Container.TENANT_ID = #v_TENANTID# ) A
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID2" parameterClass="Map" resultClass="String">
@@ -7385,7 +7385,7 @@
 		         	TBL_CONTAINERTODOCSTATE.DocumentState = #v_DOCSTATE#
 		         AND
 		         	TBL_CONTAINERTODOCSTATE.TENANT_ID = #v_TENANTID#
-		)
+		) A
 	</select>
 	
 	<select id="EzApprovalG.returnContainerID3" parameterClass="Map" resultClass="String">
@@ -7483,7 +7483,7 @@
             AND
             		TENANT_ID = #v_TENANTID#
             ORDER BY 
-            		APRMEMBERSN )
+            		APRMEMBERSN ) A
   	LIMIT 1
      	]]>
 	</select>
@@ -7647,7 +7647,7 @@
 	                   							AND 
 	                   									RECEIVEDDEPTID = #v_DEPTID#
 	                   							AND
-	                   									TENANT_ID = #v_TENANTID#)
+	                   									TENANT_ID = #v_TENANTID#) 
 	       			ELSE  (
 	       					SELECT 
 	       							AprState 
@@ -8402,7 +8402,7 @@
          WHERE  
           		DOCID = #v_DOCID#
          AND
-         		TENANT_ID = #v_TENANTID#)
+         		TENANT_ID = #v_TENANTID#) A
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR"> 
 		SELECT 
@@ -8418,7 +8418,7 @@
          WHERE  
          		DOCID = #v_DOCID#
          AND
-         		TENANT_ID = #v_TENANTID#)
+         		TENANT_ID = #v_TENANTID#) A
 		</isNotEqual>
 	</select>
 	
@@ -15026,10 +15026,10 @@
 		
 		<isNotEmpty property="v_STARTDATE">
 		<isEqual property="v_FIRSTFLAG11" compareValue="true">
-			StartDate = #v_STARTDATE#
+			StartDate = STR_TO_DATE(#v_STARTDATE#,'%Y-%m-%d %H:%i:%s')
 		</isEqual>
 		<isNotEqual property="v_FIRSTFLAG11" compareValue="true">
-			,StartDate = #v_STARTDATE#
+			,StartDate = STR_TO_DATE(#v_STARTDATE#,'%Y-%m-%d %H:%i:%s')
 		</isNotEqual>
 		</isNotEmpty>
 		
@@ -15607,7 +15607,7 @@
    			TBL_SEPERATEATTACH 
    		(RecordID, SeperateAttachNo, CabinetID,   RegisterType, Title,     NumOfPage, DelFlag, CreateDate,                               ModifyFlag, CatalogTransferFlag, DocTransferFlag, TENANT_ID) 
    		Values 
-   		(#v_RECID#, #v_SEPATTSN#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', #v_SYSDATE#, '0',             '0',                 '0',    #v_TENANTID#)
+   		(#v_RecordID#, #v_SepAttachNo#,      #v_CABID# , #v_REGTYPE#, #v_TITLE#, #v_NUMOFPAGE#, '0', #v_SYSDATE#, '0',             '0',                 '0',    #v_TENANTID#)
    </insert>
    
    <insert id="EzApprovalG.insertRegAudioVisualExInfo" parameterClass="Map">
@@ -16164,7 +16164,7 @@
    			TBL_RECEIPTPOINTINFO 
    		(DocID,     ReceiptPointID,      ReceiptPointName,      ReceiptPointName2,     ExtReceptYN,      ProcessYN, ProcessSN,       CanEditYN,     ExtReceptEmail,     ReceiptMemberID,      ReceiptMemberName,   ReceiptMemberName2,        ProcessDate,   ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID) 
    		VALUES 
-   		(#v_DOCID# , #v_ReceiptPointID# , #v_ReceiptPointName#, #v_ReceiptPointName2#, #v_ExtReceptYN#, #v_ProcessYN#, #v_ProcessSN#, #v_CanEditYN#, #v_ExtReceptEmail#, #v_ReceiptMemberID# ,#v_ReceiptMemberName#, #v_ReceiptMemberName2# , $v_ProcessDate$, #v_ReceiptMemberJobTitle#, #v_ReceiptMemberJobTitle2#, #v_DeptMemberSN#, #v_TENANTID#) 
+   		(#v_DOCID# , #v_ReceiptPointID# , #v_ReceiptPointName#, #v_ReceiptPointName2#, #v_ExtReceptYN#, #v_ProcessYN#, #v_ProcessSN#, #v_CanEditYN#, #v_ExtReceptEmail#, #v_ReceiptMemberID# ,#v_ReceiptMemberName#, #v_ReceiptMemberName2# , STR_TO_DATE($v_ProcessDate$,'%Y-%m-%d %H:%i:%s'), #v_ReceiptMemberJobTitle#, #v_ReceiptMemberJobTitle2#, #v_DeptMemberSN#, #v_TENANTID#) 
    </insert>
    
    <insert id="EzApprovalG.insertLinTemplet" parameterClass="Map">
