@@ -51,7 +51,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
-import egovframework.ezEKP.ezPortal.service.impl.EzPortalAdminServiceImpl;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -140,11 +139,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(request.getParameter("responseRange") != null){
 			responseRange = request.getParameter("responseRange");
 		}
-		if(request.getParameter("pollStartDate") != null){
+		if(request.getParameter("pollStartDate") != null && !request.getParameter("pollStartDate").equals("")){
+logger.debug("pollStartDate=" + request.getParameter("pollStartDate"));
 			pollStartDate = request.getParameter("pollStartDate");
 			pollStartDate = commonUtil.makeDate(pollStartDate.substring(0,4), pollStartDate.substring(5,7), pollStartDate.substring(8,10), true);
 		}
-		if(request.getParameter("pollEndDate") != null){
+		if(request.getParameter("pollEndDate") != null && !request.getParameter("pollEndDate").equals("")){
 			pollEndDate = request.getParameter("pollEndDate");
 			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
@@ -517,9 +517,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		//Date sysDate=new Date();
 		//java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
+		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		if(readDateCnt > 0){
 			ezQuestionService.updateReadDate(qstUserPollItemVO, nowDate, userID, loginVO.getTenantId());
