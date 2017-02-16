@@ -6149,7 +6149,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				switch (arrList.getElementsByTagName("DTYPE").item(p).getTextContent().trim()) {
 				case "dtSerialNum" :						// 순번
-                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
+//                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
+					resultXML.append(k+1);
 					break;
 
 				case "dtCabClassNo" :						// 기록물철 분류번호
@@ -16807,7 +16808,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				 switch(arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()){
 				 case "dtSerialNum" :
-					 resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
+//					 resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
+					 resultXML.append(j+1);
 					 break;
 						
 				 case "dtCabClassNo" :

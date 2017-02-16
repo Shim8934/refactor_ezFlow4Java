@@ -3608,7 +3608,7 @@
 							OR 
 						  TBL_RECORD.DocType = '2')
 				</isEqual>
-				<isEqual property="listFlag" compareValue="11">
+				<isEqual property="listFlag" compareValue="11" prepend="AND">
 						( TBL_ENDAPRDOCINFO.DocState = '014' 
 							OR 
 						  TBL_RECORD.DocType = '1')
@@ -4792,8 +4792,7 @@
                                                       ORDER BY 
                                                             APRMEMBERSN DESC ) A
                                                LIMIT 1
-                                               AND
-                                                    A.TENANT_ID = #v_TENANTID# ) )
+                                                ) )
                     AND 
                           ( DOCID = #v_DOCID# )
                     AND
@@ -8208,7 +8207,7 @@
 				OR 
 			  TBL_RECORD.DocType = '2')
 	</isEqual>
-	<isEqual property="listFlag" compareValue="11">
+	<isEqual property="listFlag" compareValue="11" prepend="AND">
 			( TBL_ENDAPRDOCINFO.DocState = '014' 
 				OR 
 			  TBL_RECORD.DocType = '1')
@@ -8312,7 +8311,7 @@
 		         AND 
 		         		USER_ID = #v_UserID#
 		         AND	
-		         		TENANT_ID = #v_TENANTID# )
+		         		TENANT_ID = #v_TENANTID# ) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int"> -->
