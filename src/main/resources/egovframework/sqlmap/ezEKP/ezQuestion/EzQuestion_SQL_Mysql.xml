@@ -908,39 +908,39 @@
 					*
 				FROM
 					(SELECT
-						IFNULL(r.QUESTION_NO, NULL) as question_no,
-	                	IFNULL(r.ANSWER_OBJECTIVITY, NULL) as answer_objectivity,
-	                	IFNULL(r.RESPONSEUSER_DEPT_NAME, NULL) as responseUser_dept_name,
-	                	/* IFNULL(r.RESPONSEUSER_DEPT_NAME2, 'NULL') responseUser_dept_name2, */  
-	                	MAX(Q.QUESCONTENT) as quescontent  ,
-	                	MAX(TBL_POLL_ANSWER.ANSWERCONTENT) as answer  ,
+						IFNULL(R.QUESTION_NO, NULL) as question_no,
+	                	IFNULL(R.ANSWER_OBJECTIVITY, NULL) as answer_objectivity,
+	                	IFNULL(R.RESPONSEUSER_DEPT_NAME, NULL) as responseUser_dept_name,
+	                	/* IFNULL(R.RESPONSEUSER_DEPT_NAME2, 'NULL') responseUser_dept_name2, */  
+	                	MAX(Q.QUESCONTENT) as quescontent,
+	                	MAX(TBL_POLL_ANSWER.ANSWERCONTENT) as answer,
 	                	COUNT(*) as Q_count  
 		           	FROM
-		           		TBL_POLL_RESPONSE r
+		           		TBL_POLL_RESPONSE R
 					INNER JOIN
 						TBL_POLL_QUESTION Q
 					ON
-						r.QUESTION_NO = Q.QUESTION_NO
+						R.QUESTION_NO = Q.QUESTION_NO
 					AND
-						r.ITEM_NO = Q.ITEM_NO
+						R.ITEM_NO = Q.ITEM_NO
 					AND
-						r.TENANT_ID = Q.TENANT_ID	
+						R.TENANT_ID = Q.TENANT_ID	
 					INNER JOIN
 						TBL_POLL_ANSWER
 					ON
-						TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+						R.ITEM_NO = TBL_POLL_ANSWER.ITEM_NO 
 					AND
-						r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+						R.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
 					AND
-						TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+						R.QUESTION_NO = TBL_POLL_ANSWER.QUESTION_NO
 					AND
-						TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
+						R.TENANT_ID = TBL_POLL_ANSWER.TENANT_ID
 		          	WHERE
-		          		r.ITEM_NO = #v_item_num#
+		          		R.ITEM_NO = #v_item_num#
 					AND
-						r.TENANT_ID = #tenantID#
+						R.TENANT_ID = #tenantID#
 		          	GROUP BY
-		          			r.QUESTION_NO, r.ANSWER_OBJECTIVITY, r.RESPONSEUSER_DEPT_NAME WITH ROLLUP) T
+		          		R.QUESTION_NO, R.ANSWER_OBJECTIVITY, R.RESPONSEUSER_DEPT_NAME WITH ROLLUP) T
 	          	ORDER BY
 	          		QUESTION_NO ASC,
 	                ANSWER_OBJECTIVITY ASC,
@@ -954,10 +954,10 @@
 					*
 				FROM
 					(SELECT
-						IFNULL(r.question_no, NULL) as question_no,
-	                	IFNULL(r.answer_objectivity, NULL) as answer_objectivity,
-	                	IFNULL(r.responseUser_dept_name, NULL) as responseUser_dept_name,
-	                	-- IFNULL(r.responseUser_dept_name2, 'NULL') responseUser_dept_name2,
+						IFNULL(R.question_no, NULL) as question_no,
+	                	IFNULL(R.answer_objectivity, NULL) as answer_objectivity,
+	                	IFNULL(R.responseUser_dept_name, NULL) as responseUser_dept_name,
+	                	/* IFNULL(R.RESPONSEUSER_DEPT_NAME2, 'NULL') responseUser_dept_name2, */
 	                	MAX(Q.quescontent) as quescontent  ,
 	                	MAX(TBL_POLL_ANSWER.AnswerContent) as answer  ,
 	                	COUNT(*) as Q_count  
@@ -966,29 +966,29 @@
 	               	INNER JOIN
 	               		TBL_POLL_QUESTION Q 
 	               	ON
-	               		r.QUESTION_NO = Q.QUESTION_NO
+	               		R.QUESTION_NO = Q.QUESTION_NO
 	                AND
-	                	r.ITEM_NO = Q.ITEM_NO
+	                	R.ITEM_NO = Q.ITEM_NO
 	                AND
-	                	r.TENANT_ID = Q.TENANT_ID	
+	                	R.TENANT_ID = Q.TENANT_ID	
 	               	INNER JOIN
 	               		TBL_POLL_ANSWER
 	               	ON
-	               		TBL_POLL_ANSWER.ITEM_NO = r.ITEM_NO
+	               		R.ITEM_NO = TBL_POLL_ANSWER.ITEM_NO
 	                AND
-	                	r.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
+	                	R.ANSWER_OBJECTIVITY = TBL_POLL_ANSWER.ANSWERNO
 	                AND
-	                	TBL_POLL_ANSWER.QUESTION_NO = r.QUESTION_NO
+	                	R.QUESTION_NO = TBL_POLL_ANSWER.QUESTION_NO
 	                AND
-	                	TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID
+	                	R.TENANT_ID = TBL_POLL_ANSWER.TENANT_ID
 	          		WHERE
-	          			r.ITEM_NO = #v_item_num#
+	          			R.ITEM_NO = #v_item_num#
 	                AND
 	                	Q.QUESTION_NO = #v_Que_num#
 	                AND
-	                	r.TENANT_ID = #tenantID#
+	                	R.TENANT_ID = #tenantID#
 	          		GROUP BY
-	          			r.QUESTION_NO, r.ANSWER_OBJECTIVITY, r.RESPONSEUSER_DEPT_NAME WITH ROLLUP) T
+	          			R.QUESTION_NO, R.ANSWER_OBJECTIVITY, R.RESPONSEUSER_DEPT_NAME WITH ROLLUP) T
           		ORDER BY
           			QUESTION_NO ASC,
                 	ANSWER_OBJECTIVITY ASC,
@@ -1142,9 +1142,9 @@
                 AND
                 	TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
           		WHERE
-          			(r.ITEM_NO = #v_item_num#)
+          			r.ITEM_NO = #v_item_num#
                	AND
-               		(TBL_POLL_ANSWER.ITEM_NO = #v_item_num#)
+               		TBL_POLL_ANSWER.ITEM_NO = #v_item_num#
           		GROUP BY
           			r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2 WITH ROLLUP) T 
           		ORDER BY
@@ -1189,11 +1189,11 @@
 	                AND
 	                	TBL_POLL_ANSWER.TENANT_ID = r.TENANT_ID	
 	          		WHERE
-	          			(r.ITEM_NO = #v_item_num#)
+	          			r.ITEM_NO = #v_item_num#
 	                AND
-	                	(TBL_POLL_ANSWER.ITEM_NO = #v_item_num#)
+	                	TBL_POLL_ANSWER.ITEM_NO = #v_item_num#
 	                AND
-	                	(Q.QUESTION_NO = #v_Que_num#)
+	                	Q.QUESTION_NO = #v_Que_num#
 	           		GROUP BY
 	           			r.QUESTION_NO,r.ANSWER_OBJECTIVITY,r.RESPONSEUSER_JIKGUB2 WITH ROLLUP) T
            		ORDER BY

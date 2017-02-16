@@ -959,7 +959,7 @@
 					NVL(R.question_no, NULL) as question_no,
                 	NVL(R.answer_objectivity, NULL) as answer_objectivity,
                 	NVL(R.responseUser_dept_name, NULL) as responseUser_dept_name,
-                	-- NVL(R.responseUser_dept_name2, 'NULL') responseUser_dept_name2,
+                	/* NVL(R.responseuser_dept_name2, 'NULL') responseUser_dept_name2, */
                 	MAX(Q.quescontent) as quescontent  ,
                 	MAX(TBL_POLL_ANSWER.answercontent) as answer  ,
                 	COUNT(*) as q_count  
