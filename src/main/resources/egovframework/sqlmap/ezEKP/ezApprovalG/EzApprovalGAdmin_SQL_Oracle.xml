@@ -1735,7 +1735,7 @@
 				tenant_id)
 			VALUES 
 				((SELECT
-					NVL(MAX(CAST(containertypeid as NUMBER)) , '1000') + 10
+					NVL(CAST(TRIM(MAX(containertypeid)) as NUMBER) , 1000) + 10
 				FROM
 					TBL_CONTAINERTYPE
 				WHERE

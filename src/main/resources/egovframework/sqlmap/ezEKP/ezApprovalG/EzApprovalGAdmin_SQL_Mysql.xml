@@ -1723,11 +1723,14 @@
 				tenant_id)
 			VALUES 
 				((SELECT
-					IFNULL(MAX(CAST(containertypeid as INT)) , '1000') + 10
+					*
 				FROM
-					TBL_CONTAINERTYPE
-				WHERE
-					tenant_id = #tenantID#),
+					(SELECT
+						IFNULL(CAST(TRIM(MAX(containertypeid)) as INT) , 1000) + 10
+					FROM
+						TBL_CONTAINERTYPE
+					WHERE
+						tenant_id = #tenantID#) AS T1),
 				#v_CONTTYPENAME#,
 				#v_CONTTYPENAME2#,
 				#tenantID#)
