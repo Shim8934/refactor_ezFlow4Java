@@ -21,6 +21,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -93,6 +94,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (Map<String, Object> map) {
 		return (List<PersonalGetQuickLinkMenuVO>) list("EzPersonalDAO.getQuickLinkMenu", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PersonalNoticeVO> getNoticeListMain (Map<String, Object> map) {
+		return (List<PersonalNoticeVO>) list("EzPersonalDAO.getNoticeListMain", map);
 	}
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (Map<String, Object> map) {

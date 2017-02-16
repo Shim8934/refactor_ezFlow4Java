@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
@@ -8,6 +9,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 
 public interface EzPersonalService {
@@ -26,6 +28,8 @@ public interface EzPersonalService {
 	public List<PersonalGetWebPartVO> getUserWebPart (String pUserID, String pCompanyID, String pACL, int tenantID) throws Exception;
 	
 	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu (String accessID, int tenantID) throws Exception;
+	
+	public List<PersonalNoticeVO> getNoticeListMain (String companyID, int tenantID) throws Exception;
 	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, int tenantID) throws Exception;
 	

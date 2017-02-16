@@ -55,6 +55,7 @@ import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -1175,6 +1176,31 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String result = ezPersonalService.getApprovNotiConfig(userID, userInfo.getTenantId());
 		
 		return result;
+	}
+	
+	/**
+	 * 포탈 테마1 공지사항 리스트 가져오기 실행 함수
+	 */
+	@RequestMapping(value = "/ezPersonal/getNoticeList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getNoticeList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("getNoticeList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalNoticeVO> list = ezPersonalService.getNoticeListMain(userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		StringBuilder result = new StringBuilder("<DATA>");
+		
+		for (int i=0; i<list.size(); i++) {
+			result.append(commonUtil.getQueryResult(list.get(i)));
+		}
+		
+		result.append("</DATA>");
+		
+		logger.debug("result="+result.toString());
+		logger.debug("getNoticeList ended");
+		return result.toString();
 	}
 	
 }
