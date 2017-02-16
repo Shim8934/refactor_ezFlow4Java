@@ -403,7 +403,7 @@
              ORDER BY
                  DISPLAYNAME ASC
              LIMIT
-                 #startRow#,#pEndRow#
+                 #startRow#,#endRow#
 		]]>
 	</select>
 	
