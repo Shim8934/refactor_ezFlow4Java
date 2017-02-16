@@ -397,7 +397,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 		}
 		
-		if(loginVO.getRollInfo().indexOf("c=1") > -1 || loginVO.getRollInfo().indexOf("k=1") > -1 || loginVO.getRollInfo().indexOf("i=1") > -1){ 
+		if(loginVO.getRollInfo().indexOf("c=1") > -1 || loginVO.getRollInfo().indexOf("k=1") > -1 || loginVO.getRollInfo().indexOf("l=1") > -1){ 
 			adminYN = "Y";
 		}
 		
@@ -951,7 +951,10 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	 * 전자설문 설문생성 STEP1화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstStep1.do")
-	public String qstStep1(HttpServletRequest req,Model model)  {
+	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
+		logger.debug("qstStep1 started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = req.getParameter("brdID");
 		String brdNm = req.getParameter("brdNm");
 //		String brdPostterm = req.getParameter("brdPostterm");
@@ -959,6 +962,9 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
 //		model.addAttribute("brdPostterm", brdPostterm);
+		
+		logger.debug("qstStep1 ended.");
+		
 		return "/ezQuestion/qstStep1";
 	}
 	
