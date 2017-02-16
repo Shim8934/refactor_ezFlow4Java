@@ -1554,8 +1554,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("pDisplayName", pDisplayName);
 		map.put("pCompanyID", pCompanyID);
 		map.put("pStartRow", pStartRow);
-		map.put("pEndRow", pEndRow-pStartRow+1);
+		map.put("pEndRow", pEndRow);
 		map.put("tenantID", tenantID);
+		map.put("endRow", pEndRow-pStartRow+1);
 		map.put("startRow", pStartRow-1);
 		
 		List<PortalSearchPortlet2VO> list = ezPortalAdminDAO.searchPortlet2(map);
