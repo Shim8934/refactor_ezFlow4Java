@@ -4833,9 +4833,8 @@
 		                                         AND
 		                                         		TENANT_ID = #v_TENANTID#
 		                                         ORDER BY 
-		                                                APRMEMBERSN DESC ) A
-		                                  	LIMIT 1
-		                                  AND
+		                                                APRMEMBERSN DESC LIMIT 1) A
+		                                  WHERE
 		                                         TENANT_ID = #v_TENANTID#) )
 		       AND 
 		            ( DOCID = #v_DOCID# )
@@ -7940,7 +7939,7 @@
 		            AND 
 		            		USERID = #v_USERID#
 		            AND
-		            		TENANT_ID =#v_TENANTID# )
+		            		TENANT_ID =#v_TENANTID# ) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.updateHistoryForAttach_M" parameterClass="Map" resultClass="int"> -->
@@ -11769,16 +11768,16 @@
 		                #v_COMPANYID# ,
 		                 'N' ,
 		                 999 ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
 		                 0 ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL , 
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' , 
 		                 TENANT_ID
 			         FROM 
 			          	TBL_FORMINFO 
@@ -12751,7 +12750,7 @@
 	        INNER JOIN 
 	        	TBL_USERMASTER B  
 	        ON 
-	        	SUBSTR(A.extensionattribute5,0,INSTR(A.extensionattribute5,':') - 1) = B.cn
+	        	SUBSTR(A.extensionattribute5,1,INSTR(A.extensionattribute5,':') - 1) = B.cn
 	        AND
 	        	A.TENANT_ID = B.TENANT_ID
             WHERE 
@@ -14088,7 +14087,7 @@
     								 WHERE  
     								 	 CabinetID = #v_CABINETID#
     								 AND
-    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#))
+    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#) A)
     					+
     						(
     						  SELECT 
@@ -14115,7 +14114,7 @@
     								 WHERE  
     								 	TBL_SEPERATEATTACH.CabinetID = #v_CABINETID#
     								 AND
-    								 	TBL_RECORD.TENANT_ID = #v_TENANTID#) )) FROM DUAL) NUMOFPAGE  ,
+    								 	TBL_RECORD.TENANT_ID = #v_TENANTID#)B )) FROM DUAL) NUMOFPAGE  ,
 	             #v_cabID# NUMOFFILE  ,
 	             TBCABCLS.ConfirmFlag ,
 	             TBCABCLS.ConfirmYear ,
@@ -17228,7 +17227,7 @@
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
-					TENANT_ID = #v_TENANTID# )
+					TENANT_ID = #v_TENANTID# ) A
    	</select>
    	
    	<insert id="EzApprovalG.insertChangeCabCabinetHistory" parameterClass="Map" >
