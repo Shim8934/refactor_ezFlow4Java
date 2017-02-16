@@ -182,6 +182,11 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (List<String>) list("EzBoardDAO.getCopyItemAttach", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<BoardListVO> getUnreadItems(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("EzBoardDAO.getUnreadItems", map);
+	}
+	
 	public BoardListVO getBrdGetItemInfo(Map<String, Object> map) throws Exception{
 		return (BoardListVO) select("EzBoardDAO.getBrdGetItemInfo", map);
 	}
@@ -364,6 +369,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	
 	public int getApprBoardTotalItemCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.getApprBoardTotalItemCount", map);
+	}
+	
+	public int getUnreadItemsCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.boardListPortal", map);
 	}
 	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{
