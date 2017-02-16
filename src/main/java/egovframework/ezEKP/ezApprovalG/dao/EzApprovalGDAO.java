@@ -1076,6 +1076,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.signCheckCount", map);
 	}
 	
+	public int historyDocInfoCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.historyDocInfoCount", map);
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -1784,6 +1788,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertHesongAprReceiptProcessInfo3", map);
 	}
 	
+	public void insertHistoryDocInfo(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertHistoryDocInfo", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2175,9 +2183,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public void deleteTmpDocInfo4(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTmpDocInfo4", map);
 	}
+	
 	public void deleteTmpDocInfo5(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTmpDocInfo5", map);
 	}
+	
 	public void deleteTmpDocInfo6(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTmpDocInfo6", map);
 	}
@@ -2188,10 +2198,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void deleteTmpDocInfo8(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteTmpDocInfo8", map);
-	}
-	
-	public void deleteTmpDocInfo9(Map<String, Object> map) throws Exception{
-		delete("EzApprovalG.deleteTmpDocInfo9", map);
 	}
 	
 	public void deleteTbAprAttachInfo(Map<String, Object> map) throws Exception{

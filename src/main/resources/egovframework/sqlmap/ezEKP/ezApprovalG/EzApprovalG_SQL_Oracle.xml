@@ -7150,8 +7150,7 @@
 	   	AND
 	   		TENANT_ID = #v_TENANTID#
 	</select>
-	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
-			DECLARE BEGIN
+		<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
 		 	DELETE 
 		 			TBL_TMPRECEIPTPOINTINFO
 		    WHERE  
@@ -7159,62 +7158,76 @@
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		   	DELETE 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo2" parameterClass="Map" >
+		 	DELETE 
 		   			TBL_TMPAPROPINIONINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		   	DELETE 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo3" parameterClass="Map" >
+	 		DELETE 
 		   			TBL_TMPAPRDOCATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		   
-		    DELETE 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo4" parameterClass="Map" >
+			DELETE 
 		    		TBL_TMPATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		   
-		    DELETE 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo5" parameterClass="Map" >
+	  		DELETE 
 		    		TBL_TMPEXPAPRLINE
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		    DELETE 	
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo6" parameterClass="Map" >
+	 	    DELETE 	
 		    		TBL_TMPAPRLINEINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    
-		    DELETE 
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo7" parameterClass="Map" >
+	   		DELETE 
 		    		TBL_TMPEXPAPRDOCINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		   
+		    		TENANT_ID = #v_TENANTID#
+	</delete>
+	
+	<delete id="EzApprovalG.deleteTmpDocInfo8" parameterClass="Map" >
 		    DELETE 
 		    		TBL_TMPAPRDOCINFO
 		    WHERE  
@@ -7222,8 +7235,8 @@
 		    AND 
 		    		SN = #v_PSN#
 		    AND
-		    		TENANT_ID = #v_TENANTID#;
-		    END;
+		    		TENANT_ID = #v_TENANTID#
+		    END
 	</delete>
 <!-- 	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -18071,4 +18084,23 @@
    	 	 AND
    		 	TENANT_ID = #v_TENANTID#
    	</delete>
+   	
+   	   	<select id="EzApprovalG.historyDocInfoCount" parameterClass="Map" resultClass="int"> 
+   		SELECT 
+   			NVL(MAX(CHANGESN),0)+1
+   		FROM 
+   			TBL_HISTORYDOCINFO
+   		WHERE 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			DOCID = #v_DOCID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.insertHistoryDocInfo" parameterClass="Map" > 
+   	 	INSERT INTO 
+   	 		TBL_HISTORYDOCINFO
+        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG )
+        VALUES 
+        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDSATE#, ' ' );
+   	</insert>
 </sqlMap>

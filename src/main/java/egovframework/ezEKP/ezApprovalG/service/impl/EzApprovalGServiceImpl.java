@@ -6943,6 +6943,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("v_TENANTID", tenantID);
 		
 		if (orderOption1.length() > 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.toLowerCase().substring(0,10));
@@ -7033,6 +7034,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("v_TENANTID", tenantID);
+
 		
 		if(orderOption1.length() > 0 ) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.toLowerCase().substring(0,10));
@@ -7122,6 +7125,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCID", docID.trim());
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("v_TENANTID", tenantID);
 		
 		if(orderOption1.length() > 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.toLowerCase().substring(0, 10));
@@ -7288,13 +7292,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.deleteTmpDocInfo6(map);
 			ezApprovalGDAO.deleteTmpDocInfo7(map);
 			ezApprovalGDAO.deleteTmpDocInfo8(map);
-			ezApprovalGDAO.deleteTmpDocInfo9(map);
 
 			File file = new File(path + href);
 			file.delete();
 			
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -18382,6 +18386,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		return rtnVal;
+	}
+
+	@Override
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_TENANTID", userInfo.getTenantId());
+		
+		int sn = ezApprovalGDAO.historyDocInfoCount(map);
+		
+		map.put("v_SN", sn);
+		map.put("v_URL", url);
+		map.put("v_USERID", userID);
+		map.put("v_USERNAME", userName);
+		map.put("v_USERNAME2", userName2);
+		map.put("v_USERJOBTITLE", userJobTitle);
+		map.put("v_USERJOBTITLE2", userJobTitle2);
+		map.put("v_USERDEPTID", userDeptID);
+		map.put("v_USERDEPTNAME", userDeptName);
+		map.put("v_USERDEPTNAME2", userDeptName2);
+		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+		String rtn ="";
+		try {
+			ezApprovalGDAO.insertHistoryDocInfo(map);
+			rtn = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			rtn = "<RESULT>FALSE</RESULT>";
+		}
+		return rtn;
 	}
 
 

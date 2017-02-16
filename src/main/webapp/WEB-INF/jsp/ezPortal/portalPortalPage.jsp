@@ -11,13 +11,20 @@
 		String strHTML = (String)request.getAttribute("strHTML");
 		String parentPageID = (String)request.getAttribute("parentPageID");
 		String baseType = (String)request.getAttribute("baseType");
+		String tableViewOption = (String)request.getAttribute("tableViewOption");
 		
 		 if (!mode.equals("view")) {
 		 %>
 		 <!-- 관리자 -->
 		 <link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
 		 <%} else {%>	
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<!-- <link href="/css/main.css" rel="stylesheet" type="text/css"> -->
+		
+				 <% if(tableViewOption.equals("D")){ %>
+                	<link href="/css/main.css" rel="stylesheet" type="text/css">
+            	<% } else{ %>
+                	<link href="/css/theme01.css" rel="stylesheet" type="text/css">
+            <% } %>
 		<%} %>
 		
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
@@ -51,6 +58,7 @@
 			var MyPortalPageID = "${myPortalPageID}"; //
 			var g_BaseType = "${baseType}";  	  // 초기화 버튼 활성화 유무
 			var g_CompanyID = "${userInfo.companyID}";
+			var TableViewOption = "${tableViewOption}";
 			var lang = "${userInfo.lang}";
 		
 
@@ -1751,7 +1759,7 @@ console.log("selectedSubCell="+selectedSubCell);
 			<br><br>
 		</body>
 	<% } else { %>
-		<body class="mainbg" ID="_MainBody" runat="server">    
+		<body class="mainbg">    
 			<%= strHTML %>
     	</body>
 	<% } %>
