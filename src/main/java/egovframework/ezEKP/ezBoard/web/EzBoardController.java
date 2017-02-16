@@ -2200,22 +2200,22 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>"+boardConfigVO.getTotalCnt()+"</TOTALCNT>");
-        resultXML.append("<PAGECNT>"+boardConfigVO.getPageCnt()+"</PAGECNT>");
-        resultXML.append("<PERSONALCNT>"+boardConfigVO.getTotalCnt()+"</PERSONALCNT>");
-        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<TOTALCNT>" + boardConfigVO.getTotalCnt() + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + boardConfigVO.getPageCnt() + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + boardConfigVO.getTotalCnt() + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
         resultXML.append("</HEADERS>");
@@ -2251,7 +2251,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
 					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
-					resultXML.append("<DATA12>" + commonUtil.cleanValue(boardList.get(j).get("MAINCONTENT").toString()) + "</DATA12>");
+					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
                 }
                 resultXML.append("</CELL>");
             }
@@ -2447,6 +2447,7 @@ public class EzBoardController extends EgovFileMngUtil{
             startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount) + 1;
             endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
         }
+        
         List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type, userInfo.getTenantId());
 
         int dlength = boardListItem.size();
@@ -2493,20 +2494,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<DATA9>" + boardListItem.get(j).get("NOTICE") + "</DATA9>");
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11>" + boardListItem.get(j).get("ONELINECNT") + "</DATA11>");
-					
-					//2016-10-20 CLOB 데이터를 hashMap으로 받을때, clob을 string으로 바꾸는 작업 추가
-					StringBuffer strOut = new StringBuffer();
-					String str = "";
-					Clob clob = (Clob) boardListItem.get(j).get("MAINCONTENT");
-					if (clob != null) {
-						BufferedReader br = new BufferedReader(clob.getCharacterStream());
-						while ((str = br.readLine()) != null) {
-							strOut.append(str);
-						}
-					}
-					
-					//resultXML.append("<DATA12>" + boardListItem.get(j).get("MAINCONTENT") + "</DATA12>");
-					resultXML.append("<DATA12>" + strOut.toString() + "</DATA12>");
+					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardListItem.get(j).get("MAINCONTENT")) + "</DATA12>");
 					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardListItem.get(j).get("TITLE")) + "</TITLE>");
 					resultXML.append("<WRITERNAME>" + boardListItem.get(j).get("WRITERNAME") + "</WRITERNAME>");
 					resultXML.append("<WRITERNAME2>" + boardListItem.get(j).get("WRITERNAME2") + "</WRITERNAME2>");
@@ -4154,24 +4142,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/moveBoardItem.do")
 	public String moveBoardItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
-		String itemIDList = "";
-		String boardID = "";
-		
 		userInfo = commonUtil.userInfo(loginCookie);
-		itemIDList = request.getParameter("itemIDList");
-		boardID = request.getParameter("boardID");
+		String itemIDList = request.getParameter("itemIDList");
 		
-		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-		
-		if (!boardInfo.getRead_FG().equals("true")) {
-			return "main/warning";
-		}
-		
-		if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-			if (!boardInfo.getBoardGroupAdmin_FG().equals("true")) {
-				return "main/warning";
-			}
-		}
+		String boardID = request.getParameter("boardID");
 		
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardID);
