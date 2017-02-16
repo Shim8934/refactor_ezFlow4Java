@@ -231,6 +231,11 @@ public class EzBoardController extends EgovFileMngUtil{
         String resultXML = ezBoardService.getBoardTree(pRootBoardID, pUserID, pDeptID, pCompanyID, pMode, Integer.parseInt(pSubFlag), pSelectBy, pExcludeBoardID, commonUtil.getMultiData(strLang, userInfo.getTenantId()), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(resultXML);
 		int resultCount = doc.getElementsByTagName("NODE").getLength();
+		
+		String questionAdmin = "false";
+		if (userInfo.getRollInfo().toLowerCase().indexOf("l=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
+			questionAdmin = "true";
+		}
 
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
@@ -241,6 +246,7 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("redirectBoardID",redirectBoardID);
         modelMap.addAttribute("redirectBoardGroupID",redirectBoardGroupID);
         modelMap.addAttribute("applyFlag",applyFlag);
+        modelMap.addAttribute("questionAdmin", questionAdmin);
         
 		return "ezBoard/boardLeft";
 	}
