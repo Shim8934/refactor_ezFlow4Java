@@ -280,7 +280,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.title LIKE '%' ||#v_PTITLE# || '%'
+				AND A.title LIKE CONCAT('%', #v_PTITLE#, '%')
 			]]>
 		</isNotEmpty>
 		
@@ -353,7 +353,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.title LIKE '%' ||#v_PTITLE# || '%'
+				AND A.title LIKE CONCAT('%', #v_PTITLE#, '%')
 			]]>
 		</isNotEmpty>
 		
@@ -1561,7 +1561,7 @@
 		]]>
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.title LIKE '%' || #v_PTITLE# || '%'
+				AND A.title LIKE CONCAT('%', #v_PTITLE#, '%')
 			]]>
 		</isNotEmpty>
 		
@@ -1635,7 +1635,7 @@
 		
 		<isNotEmpty property="v_PTITLE">
 			<![CDATA[
-				AND A.title LIKE '%' || #v_PTITLE# || '%'
+				AND A.title LIKE CONCAT('%', #v_PTITLE#, '%')
 			]]>
 		</isNotEmpty>
 		
