@@ -2782,13 +2782,19 @@
 			SET
 				formcontid = #selContID#,
 				formorder = (SELECT
-								IFNULL(MAX(formorder), 0) + 1
+								*
 							FROM
-								TBL_FORMINFO AS T1
-							WHERE
-								formcontid = #selContID#
-							AND
-								tenant_id = #tenantID#)
+								(SELECT
+									IFNULL(MAX(formorder), 0) + 1
+								FROM
+									TBL_FORMINFO
+								WHERE
+									formcontid = #selContID#
+								AND
+									tenant_id = #tenantID#
+								)
+							AS T1
+							)
 			WHERE
 				formcontid = #contID#
 			AND
