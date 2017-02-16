@@ -45,12 +45,12 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezCommon.service.impl.EzCommonServiceImpl;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
@@ -93,6 +93,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
+	
+	@Resource(name = "EzPersonalAdminService")
+	private EzPersonalAdminService ezPersonalAdminService;
 	
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
@@ -1201,6 +1204,37 @@ public class EzPersonalController extends EgovFileMngUtil {
 		logger.debug("result="+result.toString());
 		logger.debug("getNoticeList ended");
 		return result.toString();
+	}
+	
+	/**
+	 * 포탈 테마1 공지사항 상세정보 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/showNotice.do")
+	public String showNotice(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemSeq = req.getParameter("itemSeq");
+		String title = "";
+		String postDate = "";
+		String content = "";
+		
+		PersonalNoticeVO result =  ezPersonalAdminService.getNoticeInfo(itemSeq, userInfo.getTenantId());
+		
+		if (userInfo.getPrimary().equals("2") && result.getTitle2() != null && !result.getTitle2().equals("")) {
+			title = result.getTitle2();
+		} else {
+			title = result.getTitle();
+		}
+		
+		postDate = commonUtil.getDateStringInUTC(result.getPostDate(), userInfo.getOffset(), false);
+		content = result.getContent().replace("<a ", "<a target=\"_blank\"").replace("<A ", "<A target=\"_blank\"");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("title", title);
+		model.addAttribute("postDate", postDate);
+		model.addAttribute("content", content);
+		
+		return "/ezPersonal/persShowNotice";
 	}
 	
 }
