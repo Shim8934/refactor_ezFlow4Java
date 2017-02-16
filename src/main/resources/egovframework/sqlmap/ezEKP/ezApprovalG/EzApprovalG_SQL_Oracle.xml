@@ -3602,7 +3602,7 @@
 							OR 
 						  TBL_RECORD.DocType = '2')
 				</isEqual>
-				<isEqual property="listFlag" compareValue="11">
+				<isEqual property="listFlag" compareValue="11" prepend="AND">
 						( TBL_ENDAPRDOCINFO.DocState = '014' 
 							OR 
 						  TBL_RECORD.DocType = '1')
@@ -8201,7 +8201,7 @@
 				OR 
 			  TBL_RECORD.DocType = '2')
 	</isEqual>
-	<isEqual property="listFlag" compareValue="11">
+	<isEqual property="listFlag" compareValue="11" prepend="AND">
 			( TBL_ENDAPRDOCINFO.DocState = '014' 
 				OR 
 			  TBL_RECORD.DocType = '1')

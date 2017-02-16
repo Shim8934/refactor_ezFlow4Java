@@ -2241,6 +2241,25 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return resultValue;
 	}
 	
+	@Override
+	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PMAXCOUNT", pMaxCount);
+		map.put("v_PUSERID", pUserID);
+		map.put("v_PBOARDID", pBoardID);
+		map.put("tenantID", tenantID);
+		return ezBoardDAO.getUnreadItems(map);
+	}
+	
+	@Override
+	public int getUnreadItemsCount(String userID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_PUSERID", userID);
+		map.put("v_PBOARDID", boardID);
+		map.put("tenantID", tenantID);
+		return ezBoardDAO.getUnreadItemsCount(map);
+	}
+
 	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception {
 		logger.debug("newItemPhoto started");
 		

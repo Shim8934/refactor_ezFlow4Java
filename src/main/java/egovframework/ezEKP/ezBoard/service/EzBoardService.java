@@ -54,6 +54,8 @@ public interface EzBoardService {
 	
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, int tenantID) throws Exception;
 	
+	public List<BoardListVO> getUnreadItems(String pUserID, String pBoardID, int pMaxCount, int tenantID) throws Exception;
+	
 	public List<HashMap<String, Object>> getNewItemList(BoardListVO boardListVO) throws Exception;
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
@@ -167,6 +169,8 @@ public interface EzBoardService {
 	public int getItemViewNew(String boardID, String itemID, int tenantID) throws Exception;
 	
 	public int getApprBoardTotalItemCount(LoginVO userInfo) throws Exception;
+	
+	public int getUnreadItemsCount(String userID, String boardID, int tenantID) throws Exception;
 	
 	public void brdNewItem(BoardListVO boardListVO) throws Exception;
 	

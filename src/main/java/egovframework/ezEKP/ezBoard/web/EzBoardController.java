@@ -6414,4 +6414,28 @@ public class EzBoardController extends EgovFileMngUtil{
         
 		logger.debug("sendApprnoticemail ended");
 	}
+	
+	/**
+	 * 게시판 boardListPortal 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezBoard/boardListPortal.do")
+	public String boardListPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemCount = request.getParameter("itemCount");
+		String itemFields = request.getParameter("itemFields");
+        
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		List<BoardListVO> list = ezBoardService.getUnreadItems(userInfo.getId(), boardID, Integer.parseInt(itemCount), userInfo.getTenantId());
+		
+		int totalCount = ezBoardService.getUnreadItemsCount(userInfo.getId(), boardID, userInfo.getTenantId());
+		
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("totalCount", totalCount);
+		
+		return "ezBoard/boardListPortal";
+	}
 }

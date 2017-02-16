@@ -3608,7 +3608,7 @@
 							OR 
 						  TBL_RECORD.DocType = '2')
 				</isEqual>
-				<isEqual property="listFlag" compareValue="11">
+				<isEqual property="listFlag" compareValue="11" prepend="AND">
 						( TBL_ENDAPRDOCINFO.DocState = '014' 
 							OR 
 						  TBL_RECORD.DocType = '1')
@@ -4792,8 +4792,7 @@
                                                       ORDER BY 
                                                             APRMEMBERSN DESC ) A
                                                LIMIT 1
-                                               AND
-                                                    A.TENANT_ID = #v_TENANTID# ) )
+                                                ) )
                     AND 
                           ( DOCID = #v_DOCID# )
                     AND
@@ -4834,10 +4833,10 @@
 		                                         AND
 		                                         		TENANT_ID = #v_TENANTID#
 		                                         ORDER BY 
-		                                                APRMEMBERSN DESC )
+		                                                APRMEMBERSN DESC ) A
 		                                  	LIMIT 1
 		                                  AND
-		                                         TENANT_ID = #v_TENANTID#)A )
+		                                         TENANT_ID = #v_TENANTID#) )
 		       AND 
 		            ( DOCID = #v_DOCID# )
 		       AND
@@ -5182,7 +5181,7 @@
 <!-- 		{CALL EZSP_GETNEXTDOCINFO(#v_USERIDS#, #v_BASICORDER#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getNextDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
-		<![CDATA[
+	
 		SELECT 
 			DOCID, 
 			APRMEMBERID, 
@@ -5196,8 +5195,10 @@
    			HREF
    		FROM 
    			VAPRDOINGDOCLIST 
+   			<![CDATA[
    		WHERE 
    			DOCSTATE <> '015' 
+   			]]>
    		AND
    			TENANT_ID = #v_TENANTID#
    		AND 
@@ -5206,8 +5207,9 @@
    			APRMEMBERID IN ($v_USERIDS$)
    		ORDER BY 
    			STARTDATE $v_BASICORDER$, DOCID DESC
-   			]]>
+   			
 	</select>
+	
 	
 <!-- 	<procedure id="EzApprovalG.getFindSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
 <!-- 		{CALL EZSP_GETCABINETSIMPLEINFO_FIND(#v_PDEPTCODE#, #v_PYEAR#, #v_SEARCHNAME#, #v_FLAG#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -8208,7 +8210,7 @@
 				OR 
 			  TBL_RECORD.DocType = '2')
 	</isEqual>
-	<isEqual property="listFlag" compareValue="11">
+	<isEqual property="listFlag" compareValue="11" prepend="AND">
 			( TBL_ENDAPRDOCINFO.DocState = '014' 
 				OR 
 			  TBL_RECORD.DocType = '1')
@@ -8312,7 +8314,7 @@
 		         AND 
 		         		USER_ID = #v_UserID#
 		         AND	
-		         		TENANT_ID = #v_TENANTID# )
+		         		TENANT_ID = #v_TENANTID# ) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.receiverChk" parameterClass="Map" resultClass="int"> -->
@@ -8945,7 +8947,7 @@
           			WHERE  
            				DOCID = #v_DOCID#
            			AND
-           				TENANT_ID = #v_TENANTID#)
+           				TENANT_ID = #v_TENANTID#) A
 		</isEqual>
 	</select>
 	
@@ -13366,7 +13368,7 @@
 				   		</isEmpty>
 				   		<![CDATA[	
 				   		LIMIT #v_PAGESIZE#
-				   		)
+				   		) A
 				   		]]>
 				   		<isNotEmpty property="v_ORDEROPTION2">
 				   			<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="11">

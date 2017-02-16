@@ -6149,7 +6149,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				switch (arrList.getElementsByTagName("DTYPE").item(p).getTextContent().trim()) {
 				case "dtSerialNum" :						// 순번
-                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
+//                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
+					resultXML.append(k+1);
 					break;
 
 				case "dtCabClassNo" :						// 기록물철 분류번호
@@ -7303,7 +7304,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String doProcess(String aprState, String docID, String userID, String userName, String userName2, String dirPath, String deptID, String html, Document strXML, String proxyUserID,
 			String companyID, String lang, LoginVO userInfo) throws Exception {
-		StringBuilder strSQL = new StringBuilder();
 		String subSQL = "";
 		String result = "";
 		boolean rtnVal = true;
@@ -8361,6 +8361,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_USERIDS", userIDs);
 		map.put("v_BASICORDER", basicOrder);
+		map.put("v_TENANTID", tenantID);
+
 		
 		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getNextDocInfo(map); 
 		
@@ -11804,6 +11806,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								map.put("v_URL", url);
 								map.put("v_DOCID", docID);
 								map.put("v_TENANTID", tenantID);
+								map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
 								
 								ezApprovalGDAO.insertDoSendAprDocInfo(map);
 								ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
@@ -16807,7 +16811,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				 switch(arrList.getElementsByTagName("DTYPE").item(k).getTextContent().trim()){
 				 case "dtSerialNum" :
-					 resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
+//					 resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(j).getTextContent());
+					 resultXML.append(j+1);
 					 break;
 						
 				 case "dtCabClassNo" :
