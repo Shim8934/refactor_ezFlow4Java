@@ -3337,7 +3337,7 @@
 						TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
-						TBL_SEPERATEATTACH.CreateDate + $offsetMin$/(24*60) as CreateDate,
+						DATE_ADD(DATE_FORMAT(TBL_SEPERATEATTACH.CreateDate ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as CreateDate,
 	                	TBL_ENDAPRDOCINFO.DocType, 
 	                	TBL_SEPERATEATTACH.RegisterType, 
 	                	TBL_ENDAPRDOCINFO.DocState,  
@@ -3351,7 +3351,7 @@
 						TBL_CABINET.CabinetClassNo, 
 						TBL_CABINET.ProcessDeptCode AS CabDeptCode, 
 						TBL_CABINET.OwnerDeptID, 
-	                	TBL_RECORD.RegisterDate + $offsetMin$/(24*60) as RegisterDate, 
+	                	DATE_ADD(DATE_FORMAT(TBL_RECORD.RegisterDate,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as RegisterDate, 
 	                	TBL_RECORD.AprMemberTitle$multiLang$ as AprMemberTitle, 
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
@@ -3623,11 +3623,11 @@
 						TBL_SEPERATEATTACH.RegisterType = #regType#
 				</isNotEmpty>
 				<isNotEmpty property="regStartDate" prepend="AND">
-						TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y.%m.%d %H:%i:%s')
+						TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
 				</isNotEmpty>
 				<isNotEmpty property="regEndDate" prepend="AND">
 					<![CDATA[
-						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y.%m.%d %H:%i:%s')
+						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
 				<isNotEmpty property="sc" prepend="AND">
@@ -6808,9 +6808,9 @@
 	   		AND 
 	   			APRTYPE <> '015' 
 	   		AND 
-	   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s') 
+	   			 STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s') 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    			]]>
@@ -6826,9 +6826,9 @@
 	   		AND 
 	   			AprType <> '015'  
 	   		AND 
-	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')  
+	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')  
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s') 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
    		]]>
@@ -6848,9 +6848,9 @@
 	   		AND 
 	   			DocState <> '017'
 	   		AND 
-	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s') 
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s') 
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6892,9 +6892,9 @@
    		 	 )
    		 	<![CDATA[
 	   		 	AND 
-	   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+	   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		 	AND 
-	   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		 	AND	
 		   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		 ]]>
@@ -6921,9 +6921,9 @@
    			AND 
    				TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'  
    			AND 
-   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   		 		PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
    		 	AND 
-   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+   		 		PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
    		 	AND	
 	   			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -6952,9 +6952,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'O' 
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
@@ -7015,9 +7015,9 @@
    			WHERE 
    				OWNERID IN ($v_USERIDS$) 
    			AND 
-   				STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   				STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <=   STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <=   STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]> 
