@@ -804,7 +804,7 @@ function chkBtnConfirm(para) {
 function getDocInfo() {
     try {
         xmldoc = document.getElementById("DOCINFO").dataSource;
-        var APRSTATE = GetElementsByTagName(xmldoc, "DOCSTATE");
+        var APRSTATE = GetElementsByTagName(xmldoc, "FUNCTIONTYPE");
         if (getNodeText(APRSTATE[0]) == strAprState5)
             setMenuBar("btnStay", false);
 
@@ -2328,7 +2328,7 @@ function UpdateDocHistory(pHtml) {
     createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "pHtml", ConvertHTMLtoMHT(pHtml));
 
-    xmlhttp2.open("POST", "../ezAPRHISTORY/aspx/UploadDocHistory.aspx", false);
+    xmlhttp2.open("POST", "/ezApprovalG/uploadDocHistory.do", false);
     xmlhttp2.send(xmlpara);
 
     var URL = xmlhttp2.responseText;
@@ -2348,9 +2348,9 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
 
-        xmlhttp.open("POST", "../ezAPRHISTORY/aspx/UpdateDocHistory.aspx", false);
+        xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
-
+        alert(xmlhttp.responseXML);
         var DataNodes = GetChildNodes(xmlhttp.responseXML);
         if (getNodeText(DataNodes[0]) == "TRUE") {
         }

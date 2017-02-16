@@ -3337,7 +3337,7 @@
 						TBL_RECORD.RecordID, 
 						TBL_RECORD.DocID, 
 						TBL_RECORD.RegisterNo, 
-						TBL_SEPERATEATTACH.CreateDate + $offsetMin$/(24*60) as CreateDate,
+						DATE_ADD(DATE_FORMAT(TBL_SEPERATEATTACH.CreateDate ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as CreateDate,
 	                	TBL_ENDAPRDOCINFO.DocType, 
 	                	TBL_SEPERATEATTACH.RegisterType, 
 	                	TBL_ENDAPRDOCINFO.DocState,  
@@ -3351,7 +3351,7 @@
 						TBL_CABINET.CabinetClassNo, 
 						TBL_CABINET.ProcessDeptCode AS CabDeptCode, 
 						TBL_CABINET.OwnerDeptID, 
-	                	TBL_RECORD.RegisterDate + $offsetMin$/(24*60) as RegisterDate, 
+	                	DATE_ADD(DATE_FORMAT(TBL_RECORD.RegisterDate,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) as RegisterDate, 
 	                	TBL_RECORD.AprMemberTitle$multiLang$ as AprMemberTitle, 
 	                	TBL_RECORD.DrafterName$multiLang$ as DrafterName, 
 	                	TBL_RECORD.AttachFlag,
@@ -4833,9 +4833,8 @@
 		                                         AND
 		                                         		TENANT_ID = #v_TENANTID#
 		                                         ORDER BY 
-		                                                APRMEMBERSN DESC ) A
-		                                  	LIMIT 1
-		                                  AND
+		                                                APRMEMBERSN DESC LIMIT 1) A
+		                                  WHERE
 		                                         TENANT_ID = #v_TENANTID#) )
 		       AND 
 		            ( DOCID = #v_DOCID# )
@@ -5750,6 +5749,7 @@
 							   	<![CDATA[
 							   	LIMIT #v_PAGESIZE#
 							   	 ) A 
+							   	 LIMIT #v_PAGESIZE2#
 							   	 	) B
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
@@ -6402,7 +6402,7 @@
        			AND
        				  DOCID = #v_DOCID#
         		ORDER BY 
-        			  RECEIVESN DESC )
+        			  RECEIVESN DESC ) A
         LIMIT 1 
         	]]>
 	</select>
@@ -6980,9 +6980,9 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -6998,9 +6998,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7147,8 +7147,8 @@
 	   		TENANT_ID = #v_TENANTID#
 	</select>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo2" parameterClass="Map" >
-		 	DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo" parameterClass="Map" >
+		 	DELETE FROM
 		 			TBL_TMPRECEIPTPOINTINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7158,8 +7158,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo3" parameterClass="Map" >
-	 	DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo2" parameterClass="Map" >
+		 	DELETE FROM
 		   			TBL_TMPAPROPINIONINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7169,8 +7169,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo4" parameterClass="Map" >
-			DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo3" parameterClass="Map" >
+	 		DELETE FROM
 		   			TBL_TMPAPRDOCATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7180,8 +7180,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo5" parameterClass="Map" >
-	  		DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo4" parameterClass="Map" >
+			DELETE FROM
 		    		TBL_TMPATTACHINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7189,12 +7189,10 @@
 		    		SN = #v_PSN#
 		    AND
 		    		TENANT_ID = #v_TENANTID#
-		   
-		   
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo6" parameterClass="Map" >
-	 		DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo5" parameterClass="Map" >
+	  		DELETE FROM
 		    		TBL_TMPEXPAPRLINE
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7204,8 +7202,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo7" parameterClass="Map" >
-	   		DELETE FROM 	
+	<delete id="EzApprovalG.deleteTmpDocInfo6" parameterClass="Map" >
+	 	    DELETE 	FROM
 		    		TBL_TMPAPRLINEINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7215,8 +7213,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo8" parameterClass="Map" >
-			DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo7" parameterClass="Map" >
+	   		DELETE FROM
 		    		TBL_TMPEXPAPRDOCINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7226,8 +7224,8 @@
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
 	
-	<delete id="EzApprovalG.deleteTmpDocInfo9" parameterClass="Map">
-		    DELETE FROM 
+	<delete id="EzApprovalG.deleteTmpDocInfo8" parameterClass="Map" >
+		    DELETE FROM
 		    		TBL_TMPAPRDOCINFO
 		    WHERE  
 		    		OWNERID = #v_PUSERID#
@@ -7236,6 +7234,7 @@
 		    AND
 		    		TENANT_ID = #v_TENANTID#
 	</delete>
+	
 	
 <!-- 	<procedure id="EzApprovalG.doApproveDocState" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_DOAPPROVE_DOCSTATE(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -7671,7 +7670,7 @@
 	                     AND 
 	                     		RECEIVEDDEPTID = #v_DEPTID# 
 	                     AND
-	                   			TENANT_ID = #v_TENANTID#) )
+	                   			TENANT_ID = #v_TENANTID#)B )A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
@@ -7940,7 +7939,7 @@
 		            AND 
 		            		USERID = #v_USERID#
 		            AND
-		            		TENANT_ID =#v_TENANTID# )
+		            		TENANT_ID =#v_TENANTID# ) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.updateHistoryForAttach_M" parameterClass="Map" resultClass="int"> -->
@@ -8225,11 +8224,11 @@
 			TBL_SEPERATEATTACH.RegisterType = #regType#
 	</isNotEmpty>
 	<isNotEmpty property="regStartDate" prepend="AND">
-			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
+			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y.%m.%d %H:%i:%s')
 	</isNotEmpty>
 	<isNotEmpty property="regEndDate" prepend="AND">
 		<![CDATA[
-			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
+			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y.%m.%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
 	<isNotEmpty property="sc" prepend="AND">
@@ -9059,7 +9058,7 @@
 		        WHERE  
 		        	DEPTID = #v_DEPTID#
 		        AND 
-		        	( DATE_FORMAT(RECEIPTDATE,'%Y')  = #v_YEAR# ) )
+		        	( DATE_FORMAT(RECEIPTDATE,'%Y')  = #v_YEAR# ) ) A
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSearchDocListCount" parameterClass="Map" resultClass="int"> -->
@@ -11769,16 +11768,16 @@
 		                #v_COMPANYID# ,
 		                 'N' ,
 		                 999 ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
 		                 0 ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL ,
-		                 NULL , 
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' ,
+		                 ' ' , 
 		                 TENANT_ID
 			         FROM 
 			          	TBL_FORMINFO 
@@ -12751,7 +12750,7 @@
 	        INNER JOIN 
 	        	TBL_USERMASTER B  
 	        ON 
-	        	SUBSTR(A.extensionattribute5,0,INSTR(A.extensionattribute5,':') - 1) = B.cn
+	        	SUBSTR(A.extensionattribute5,1,INSTR(A.extensionattribute5,':') - 1) = B.cn
 	        AND
 	        	A.TENANT_ID = B.TENANT_ID
             WHERE 
@@ -14088,7 +14087,7 @@
     								 WHERE  
     								 	 CabinetID = #v_CABINETID#
     								 AND
-    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#))
+    								 	TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#) A)
     					+
     						(
     						  SELECT 
@@ -14115,7 +14114,7 @@
     								 WHERE  
     								 	TBL_SEPERATEATTACH.CabinetID = #v_CABINETID#
     								 AND
-    								 	TBL_RECORD.TENANT_ID = #v_TENANTID#) )) FROM DUAL) NUMOFPAGE  ,
+    								 	TBL_RECORD.TENANT_ID = #v_TENANTID#)B )) FROM DUAL) NUMOFPAGE  ,
 	             #v_cabID# NUMOFFILE  ,
 	             TBCABCLS.ConfirmFlag ,
 	             TBCABCLS.ConfirmYear ,
@@ -17228,7 +17227,7 @@
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
-					TENANT_ID = #v_TENANTID# )
+					TENANT_ID = #v_TENANTID# ) A
    	</select>
    	
    	<insert id="EzApprovalG.insertChangeCabCabinetHistory" parameterClass="Map" >
@@ -17926,4 +17925,23 @@
    	 	 AND
    		 	TENANT_ID = #v_TENANTID#
    	</delete>
+   	
+   	<select id="EzApprovalG.historyDocInfoCount" parameterClass="Map" resultClass="int"> 
+   		SELECT 
+   			IFNULL(MAX(CHANGESN),0)+1
+   		FROM 
+   			TBL_HISTORYDOCINFO
+   		WHERE 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			DOCID = #v_DOCID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.insertHistoryDocInfo" parameterClass="Map" > 
+   	 	INSERT INTO 
+   	 		TBL_HISTORYDOCINFO
+        ( DOCID, CHANGESN, URL, CHANGEUSERID, CHANGEUSERNAME, CHANGEUSERNAME2, CHANGEUSERJOBTITLE, CHANGEUSERJOBTITLE2, CHANGEUSERDEPTID, CHANGEUSERDEPTNAME, CHANGEUSERDEPTNAME2, CHANGEDATE, CHKFLAG )
+        VALUES 
+        ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDSATE#, ' ' );
+   	</insert>
 </sqlMap>
