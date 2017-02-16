@@ -195,7 +195,7 @@
             	pReservationTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
             	var strSearch = "title=" + encodeURI((document.getElementById("txtSubject").value), "'", "'");
             	strSearch += "&responseRange=" + encodeURI($(":input:radio[name=setRange]:checked").val());
-            	strSearch += "&postDate=" + encodeURI(document.getElementById("hidStartDate").value);
+            	strSearch += "&pollStartDate=" + encodeURI(document.getElementById("hidStartDate").value);
             	strSearch += "&pollEndDate=" + encodeURI(document.getElementById("hidEndDate").value);
 
             	var szUrl = "";			    

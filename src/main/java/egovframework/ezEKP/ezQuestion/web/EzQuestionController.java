@@ -126,7 +126,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("qstList Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
-		String brdID = "5", title = "", responseRange = "", postDate = "", pollEndDate = "", lang = "";
+		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "", lang = "";
 		String currPage = "1";
 		int pageSize = 15;
 		qstListVO.setUserID(loginVO.getId());
@@ -140,11 +140,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(request.getParameter("responseRange") != null){
 			responseRange = request.getParameter("responseRange");
 		}
-		if(request.getParameter("postDate") != null){
-			postDate = request.getParameter("postDate");
+		if(request.getParameter("pollStartDate") != null){
+			pollStartDate = request.getParameter("pollStartDate");
+			pollStartDate = commonUtil.makeDate(pollStartDate.substring(0,4), pollStartDate.substring(5,7), pollStartDate.substring(8,10), true);
 		}
 		if(request.getParameter("pollEndDate") != null){
 			pollEndDate = request.getParameter("pollEndDate");
+			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
 		if(request.getParameter("lang") != null){
 			lang = request.getParameter("lang");
@@ -156,7 +158,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setBrdID(Integer.parseInt(brdID));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
-		qstListVO.setPostDate(commonUtil.getDateStringInUTC(postDate, loginVO.getOffset(), true));
+		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, loginVO.getOffset(), true));
 		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, loginVO.getOffset(), true));
 		qstListVO.setLang(lang);
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
@@ -165,7 +167,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String receve = "brdID=" + qstListVO.getBrdID() +
 						"&title=" + commonUtil.cleanValue(qstListVO.getTitle()) +
 		                "&responseRange=" + qstListVO.getResponseRange() +
-		                "&postDate=" + qstListVO.getPostDate() +
+		                "&pollStartDate=" + qstListVO.getPollStartDate() +
 		                "&pollEndDate=" + qstListVO.getPollEndDate() +
 		                "&currPage=" + qstListVO.getCurrPage();
 		
@@ -189,21 +191,17 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
-		Date startDate;
 		Date endDate;
 		Date sysDate;
 		sysDate = new Date();
-		int compareStart, compareEnd;
+		int compareEnd;
 		
 		for(QstListVO qst : list){
-			startDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPostDate(), loginVO.getOffset(), false));
 			endDate=formatter.parse(commonUtil.getDateStringInUTC(qst.getPollEndDate(), loginVO.getOffset(), false));
-			compareStart = startDate.compareTo(sysDate);
 			compareEnd = endDate.compareTo(sysDate);
 			strbuilder = new StringBuilder();
-			logger.debug("startDate="+String.valueOf(startDate));
-			logger.debug("endDate="+String.valueOf(endDate));
-			if(compareStart <= 0 && compareEnd >= 0){
+			
+			if(compareEnd >= 0){
 				strbuilder.append(egovMessageSource.getMessage("ezQuestion.t562", loginVO.getLocale()));
 				strbuilder.append(qst.getTitle()); 
 				qst.setTitle(strbuilder.toString());
@@ -233,7 +231,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				"&itemNo=" + request.getParameter("itemNo") +
 				"&title=" + commonUtil.cleanValue(request.getParameter("title")) +
 				"&responseRange=" + request.getParameter("responseRange") +
-				"&postDate=" + request.getParameter("postDate") +
+				"&pollStartDate=" + request.getParameter("pollStartDate") +
 				"&pollEndDate=" + request.getParameter("pollEndDate") +
 				"&currPage=" + request.getParameter("currPage");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
@@ -467,7 +465,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String receve = "brdID=" + request.getParameter("brdID") +
 		                "&title=" + request.getParameter("title") +
 		                "&responseRange=" + request.getParameter("responseRange") +
-		                "&postDate=" + request.getParameter("postDate") +
+		                "&pollStartDate=" + request.getParameter("pollStartDate") +
 		                "&pollEndDate=" + request.getParameter("pollEndDate") +
 		                "&currPage=" + request.getParameter("currPage");
 
@@ -848,7 +846,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstResult(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model, HttpServletRequest request, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
-		String brdID="5", brdNm="", itemNo="", title="", responseRange="", postDate="", pollEndDate="", currPage="";
+		String brdID="5", brdNm="", itemNo="", title="", responseRange="", pollStartDate="", pollEndDate="", currPage="";
 		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", endFlg = "";
 		int readCnt=0, resCnt=0;
 		int percent = 0;
@@ -863,8 +861,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			title = request.getParameter("title");
 		if(request.getParameter("responseRange")!=null)
 			responseRange = request.getParameter("responseRange");
-		if(request.getParameter("postDate")!=null)
-			postDate = request.getParameter("postDate");
+		if(request.getParameter("pollStartDate")!=null)
+			pollStartDate = request.getParameter("pollStartDate");
 		if(request.getParameter("pollEndDate")!=null)
 			pollEndDate = request.getParameter("pollEndDate");
 		if(request.getParameter("currPage")!=null)
@@ -874,7 +872,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						"&itemNo=" + request.getParameter("itemNo") +
 		                "&title=" + commonUtil.cleanValue(request.getParameter("title")) +
 		                "&responseRange=" + request.getParameter("responseRange") +
-		                "&postDate=" + request.getParameter("postDate") +
+		                "&pollStartDate=" + request.getParameter("pollStartDate") +
 		                "&pollEndDate=" + request.getParameter("pollEndDate") +
 		                "&currPage=" + request.getParameter("currPage");		
 		logger.debug("receve="+receve);
@@ -3300,7 +3298,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		String brdID = "5";
 		String itemID = "";
 		String saveFlg = "";
-		String title = "", responseRange = "", postDate = "", pollEndDate = "", currPage = "1";
+		String title = "", responseRange = "", pollStartDate = "", pollEndDate = "", currPage = "1";
 		int pageSize=15;
 		boolean resultYN = false;
 		qstListVO.setUserID(loginVO.getId());
@@ -3315,8 +3313,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			title = req.getParameter("title");
 		if(req.getParameter("responseRange")!=null)
 			responseRange = req.getParameter("responseRange");
-		if(req.getParameter("postDate")!=null)
-			postDate = req.getParameter("postDate");
+		if(req.getParameter("pollStartDate")!=null)
+			pollStartDate = req.getParameter("pollStartDate");
 		if(req.getParameter("pollEndDate")!=null)
 			pollEndDate = req.getParameter("pollEndDate");
 		if(req.getParameter("currPage")!=null)
@@ -3329,7 +3327,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		qstListVO.setBrdID(Integer.parseInt(brdID));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
-		qstListVO.setPostDate(postDate);
+		qstListVO.setPollStartDate(pollStartDate);
 		qstListVO.setPollEndDate(pollEndDate);
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
@@ -3337,7 +3335,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		String receve = "brdID=" + qstListVO.getBrdID() +
                 "&title=" + commonUtil.cleanValue(qstListVO.getTitle()) +
                 "&responseRange=" + qstListVO.getResponseRange() +
-                "&postDate=" + qstListVO.getPostDate() +
+                "&pollStartDate=" + qstListVO.getPollStartDate() +
                 "&pollEndDate=" + qstListVO.getPollEndDate() +
                 "&currPage=" + qstListVO.getCurrPage();
 		
@@ -3386,7 +3384,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         }
 		SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
 		s.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String pollStartDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false);
+		pollStartDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false);
 		pollEndDate = commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false); 
 		String uploadSDate = pollStartDate;
         String uploadEDate = pollEndDate;
@@ -3432,7 +3430,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		qstUserPollItemVO.setTitle(req.getParameter("txtSubject"));
 		qstUserPollItemVO.setContent(req.getParameter("txtContent"));
 		qstUserPollItemVO.setPostTerm(Integer.parseInt(req.getParameter("txtExpiredate")));
-		qstUserPollItemVO.setPostDate(commonUtil.getDateStringInUTC(req.getParameter("hidStartDate"), loginVO.getOffset(), true));
+		qstUserPollItemVO.setPollStartDate(commonUtil.getDateStringInUTC(req.getParameter("hidStartDate"), loginVO.getOffset(), true));
 		qstUserPollItemVO.setPollEndDate(commonUtil.getDateStringInUTC(req.getParameter("hidEndDate"), loginVO.getOffset(), true));
 		
 		QstUserPermissionVO qstUserPermissionVO = new QstUserPermissionVO();
@@ -3773,7 +3771,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		String receve = "brdID=" + request.getParameter("brdID") +
 		                "&title=" + commonUtil.cleanValue(request.getParameter("title")) +
 		                "&responseRange=" + request.getParameter("responseRange") +
-		                "&postDate=" + request.getParameter("postDate") +
+		                "&pollStartDate=" + request.getParameter("pollStartDate") +
 		                "&pollEndDate=" + request.getParameter("pollEndDate") +
 		                "&currPage=" + request.getParameter("currPage")+
 		                "&itemNo=" + request.getParameter("itemNo");

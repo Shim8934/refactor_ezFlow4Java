@@ -294,13 +294,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT('$v_PEDATE$ 23:59:59', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#v_PEDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT('$v_PSDATE$ 00:00:00', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#v_PSDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
@@ -367,13 +367,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT('$v_PEDATE$ 23:59:59', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#v_PEDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT('$v_PSDATE$ 00:00:00', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#v_PSDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
@@ -1575,13 +1575,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT('$v_PEDATE$ 23:59:59', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#v_PEDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT('$v_PSDATE$ 00:00:00', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#v_PSDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
@@ -1649,13 +1649,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT('$v_PEDATE$ 23:59:59', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_startdate, '%Y-%m-%d %H:%i:%s') <= DATE_FORMAT(#v_PEDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT('$v_PSDATE$ 00:00:00', '%Y-%m-%d %H:%i:%s')
+				AND DATE_FORMAT(A.poll_enddate, '%Y-%m-%d %H:%i:%s') >= DATE_FORMAT(#v_PSDATE#, '%Y-%m-%d %H:%i:%s')
 			]]>
 		</isNotEqual>
 		
