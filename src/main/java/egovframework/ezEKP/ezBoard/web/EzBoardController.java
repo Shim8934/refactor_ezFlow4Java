@@ -1,14 +1,12 @@
 package egovframework.ezEKP.ezBoard.web;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.PrivateKey;
-import java.sql.Clob;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -63,6 +61,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -3844,13 +3843,13 @@ public class EzBoardController extends EgovFileMngUtil{
 			String tempItem = itemList.split(";")[i].split(",")[0];
 			
 			if (mode != null && mode.equals("temp")) {
-				ezBoardService.deleteTempItem(tempItem, boardID, userInfo.getTenantId());
-				if (docPath != null && !docPath.equals("")){
+				ezBoardService.deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
+				if (docPath != null && !docPath.equals("")) {
 					deleteFile(realPath + docPath);
 				}
 			} else {
-				ezBoardService.deleteItem(mode, tempItem, boardID, userInfo.getTenantId());
-				if (docPath != null && !docPath.equals("")){
+				ezBoardService.deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
+				if (docPath != null && !docPath.equals("")) {
 					deleteFile(realPath + docPath);
 				}
 			}
@@ -6257,11 +6256,23 @@ public class EzBoardController extends EgovFileMngUtil{
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
         	from.setAddress(userInfo.getEmail());
         	
-        	OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+        	String mail = "";
+        	
+        	try {
+        		OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+        		
+        		mail = AccessUserInfo.getMail();
+				logger.debug("user sendMail");
+			} catch (Exception e) {
+				OrganDeptVO accessDeptInfo = ezOrganService.getDeptInfo(vo.getAccessID(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				mail = accessDeptInfo.getMail();
+				logger.debug("dept sendMail");
+			}
         	
         	InternetAddress to = new InternetAddress();
         	to.setPersonal(vo.getAccessName(), "UTF-8");
-        	to.setAddress(AccessUserInfo.getMail());
+        	to.setAddress(mail);
         	
         	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         }

@@ -11,7 +11,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js?ver=0.1"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<!-- data picker-->
@@ -1167,8 +1167,8 @@
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
-		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t273' /></span></li>
+		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
 		        <li id="btn_copy"><span onClick="CopyItem_onclick()"><spring:message code='ezBoard.t274' /></span></li>
