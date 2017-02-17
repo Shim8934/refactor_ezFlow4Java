@@ -1049,16 +1049,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								returnStr.append("<num>" + getScheduleListTerm.getNum() + "</num>");
 								returnStr.append("<pnum>" + getScheduleListTerm.getpNum() + "</pnum>");
 								returnStr.append("<ownerID>" + getScheduleListTerm.getOwnerID() + "</ownerID>");
-								returnStr.append("<title>" + getScheduleListTerm.getTitle() + "</title>");
-								returnStr.append("<location>" + getScheduleListTerm.getLocation() + "</location>");
-								returnStr.append("<timeDisplay>" + getScheduleListTerm.getTimeDisplay() + "</timeDisplay>");
+								returnStr.append("<title><![CDATA[" + getScheduleListTerm.getTitle() + "]]></title>");
+								returnStr.append("<location><![CDATA[" + getScheduleListTerm.getLocation() + "]]></location>");
+								returnStr.append("<timeDisplay><![CDATA[" + getScheduleListTerm.getTimeDisplay() + "]]></timeDisplay>");
 								returnStr.append("<startDate>" + reSDate + "</startDate>");
 								returnStr.append("<endDate>" + reEDate + "</endDate>");
 								returnStr.append("<alertTime>" + getScheduleListTerm.getAlertTime() + "</alertTime>");
 								returnStr.append("<reFlag>" + getScheduleListTerm.getReFlag() + "</reFlag>");
 								returnStr.append("<gresFlag>" + getScheduleListTerm.getgResFlag() + "</gresFlag>");
 								returnStr.append("<writerID>" + getScheduleListTerm.getWriterID() + "</writerID>");
-								returnStr.append("<content>" + getScheduleListTerm.getContent() + "</content>");
+								returnStr.append("<content><![CDATA[" + getScheduleListTerm.getContent() + "]]></content>");
 								returnStr.append("<importance>" + getScheduleListTerm.getImportance() + "</importance>");
 								returnStr.append("<entryList>" + getScheduleListTerm.getEntryList() + "</entryList>");
 								returnStr.append("<allDay>" + getScheduleListTerm.getAllDay() + "</allDay>");
@@ -1066,12 +1066,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 								returnStr.append("<attachFlag>" + getScheduleListTerm.getAttachFlag() + "</attachFlag>");
 								returnStr.append("<characterID>" + getScheduleListTerm.getCharacterID() + "</characterID>");
 								returnStr.append("<approveFlag>" + getScheduleListTerm.getApproveFlag() + "</approveFlag>");
-								returnStr.append("<owner_nm>" + getScheduleListTerm.getOwnerNm() + "</owner_nm>");
-								returnStr.append("<dept_name>" + getScheduleListTerm.getDeptNm() + "</dept_name>");
+								returnStr.append("<owner_nm><![CDATA[" + getScheduleListTerm.getOwnerNm() + "]]></owner_nm>");
+								returnStr.append("<dept_name><![CDATA[" + getScheduleListTerm.getDeptNm() + "]]></dept_name>");
 									
 								if (pType.equals("") || pType == null) {
-									returnStr.append("<jobtitle>" + getScheduleListTerm.getJobTitle() + "</jobtitle>");
-									returnStr.append("<jobtitle2>" + getScheduleListTerm.getJobTitle2() + "</jobtitle2>");
+									returnStr.append("<jobtitle><![CDATA[" + getScheduleListTerm.getJobTitle() + "]]></jobtitle>");
+									returnStr.append("<jobtitle2><![CDATA[" + getScheduleListTerm.getJobTitle2() + "]]></jobtitle2>");
 								}
 								returnStr.append("</ROW>");
 							}
@@ -1080,16 +1080,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
 							returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
 							returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
-							returnStr.append("<title>" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "</title>");
-							returnStr.append("<location>" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "</location>");
-							returnStr.append("<timeDisplay>" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "</timeDisplay>");
+							returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
+							returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
+							returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
 							returnStr.append("<startDate>" + returnRepDateTimesDom.getElementsByTagName("f_sDate").item(j).getTextContent() + "</startDate>");
 							returnStr.append("<endDate>" + returnRepDateTimesDom.getElementsByTagName("f_eDate").item(j).getTextContent() + "</endDate>");
 							returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
 							returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
 							returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
 							returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-							returnStr.append("<content>" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "</content>");
+							returnStr.append("<content><![CDATA[" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "]]></content>");
 							returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
 							returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
 							returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
@@ -1097,13 +1097,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
 							returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
 							returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
-							returnStr.append("<owner_nm>" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "</owner_nm>");
-							returnStr.append("<dept_name>" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "</dept_name>");
+							returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
+							returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
 							if (pType.equals("") || pType == null) {
-								returnStr.append("<owner_nm2>" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "</owner_nm2>");
-								returnStr.append("<dept_name2>" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "</dept_name2>");
-								returnStr.append("<jobtitle>" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "</jobtitle>");
-								returnStr.append("<jobtitle2>" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "</jobtitle2>");
+								returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
+								returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
+								returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
+								returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
 							}
 							returnStr.append("</ROW>");
 						}
@@ -2529,22 +2529,22 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         
         returnXML += "<NODE>";
         returnXML += makeXMLElement(strValue, "VALUE", true);
-        returnXML += makeXMLElement(strStyle, "STYLE");
-        returnXML += makeXMLElement(strData1, "DATA1");
+        returnXML += makeXMLElement(strStyle, "STYLE", false);
+        returnXML += makeXMLElement(strData1, "DATA1", false);
         returnXML += makeXMLElement(strData2, "DATA2", true);
-        returnXML += makeXMLElement(strData3, "DATA3");
-        returnXML += makeXMLElement(strData4, "DATA4");
-        returnXML += makeXMLElement(strData5, "DATA5");
-        returnXML += makeXMLElement(strData6, "DATA6");
-        returnXML += makeXMLElement(strData7, "DATA7");
+        returnXML += makeXMLElement(strData3, "DATA3", false);
+        returnXML += makeXMLElement(strData4, "DATA4", false);
+        returnXML += makeXMLElement(strData5, "DATA5", false);
+        returnXML += makeXMLElement(strData6, "DATA6", false);
+        returnXML += makeXMLElement(strData7, "DATA7", false);
         returnXML += makeXMLElement(strData8, "DATA8", true);
         returnXML += makeXMLElement(strData9, "DATA9", true);
         returnXML += makeXMLElement(strData10, "DATA10", true);
-        returnXML += makeXMLElement(strData11, "DATA11");
-        returnXML += makeXMLElement(strData12, "DATA12");
-        returnXML += makeXMLElement(strData13, "DATA13");
-        returnXML += makeXMLElement(strData14, "DATA14");
-        returnXML += makeXMLElement(strData15, "DATA15");
+        returnXML += makeXMLElement(strData11, "DATA11", false);
+        returnXML += makeXMLElement(strData12, "DATA12", false);
+        returnXML += makeXMLElement(strData13, "DATA13", false);
+        returnXML += makeXMLElement(strData14, "DATA14", false);
+        returnXML += makeXMLElement(strData15, "DATA15", false);
         
         if(intSubCnt == 0) {
         	strIsLeaf = "TRUE";
@@ -2558,9 +2558,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	strSetNodeIconByName = "RESOURCE";
         }
         
-        returnXML += makeXMLElement(strIsLeaf, "ISLEAF");
-        returnXML += makeXMLElement(strSetNodeIconByName, "SETNODEICONBYNAME");
-        returnXML += makeXMLElement("FALSE", "EXPANDED");
+        returnXML += makeXMLElement(strIsLeaf, "ISLEAF", false);
+        returnXML += makeXMLElement(strSetNodeIconByName, "SETNODEICONBYNAME", false);
+        returnXML += makeXMLElement("FALSE", "EXPANDED", false);
         
         if(blnFirstNode == true) {
         	returnXML += makeXMLElement("", "SELECT", true);
@@ -2576,11 +2576,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			return "<"+strElementName+">"+strElementText+"</"+strElementName+">";
 		}
 	}
-	
-	public String makeXMLElement(String strElementText, String strElementName) {
-		return "<"+strElementName+">"+strElementText+"</"+strElementName+">";
-	}
-	
+
 	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception {
 		String brdID = "";
 		String companyID = "";

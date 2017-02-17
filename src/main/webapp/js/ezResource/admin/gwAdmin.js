@@ -31,7 +31,7 @@ function NavigateBrdAdmin_Res(pFlag) {
 		p_BrdNm = p_BrdNm.replace(rep, "chr(38)");
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
-		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + p_BrdNm;
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + encodeURIComponent(p_BrdNm);
 		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
@@ -64,7 +64,7 @@ function NavigateBrdAdminleft(pFlag) {
 		p_BrdNm = p_BrdNm.replace( rep, "chr(38)" );
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
-		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + p_BrdNm;
+		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + encodeURIComponent(p_BrdNm);
 		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
