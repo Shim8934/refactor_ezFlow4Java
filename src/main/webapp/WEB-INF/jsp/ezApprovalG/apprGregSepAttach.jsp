@@ -433,8 +433,8 @@
 		            DivPopUpShow(475, 375, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:475px;dialogHeight:425px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(475, 425);
+		            var feature = "dialogWidth:475px;dialogHeight:415px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(455, 365);
 		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);

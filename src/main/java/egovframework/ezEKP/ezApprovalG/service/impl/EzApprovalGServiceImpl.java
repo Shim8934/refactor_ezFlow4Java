@@ -23,6 +23,7 @@ import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16677,8 +16678,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (selectClause.toUpperCase().indexOf(arrList.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase().trim()) < 0) {
 					if (arrList.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase().trim().indexOf("DATE") > -1) {
 						String utcDate[] = arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim().split("AS");
-						
-						extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(12*60) AS" + utcDate[1] ;
+						if(globals.getProperty("Globals.DbType").equals("mysql")){
+							extraSelectClause += ",DATE_ADD(DATE_FORMAT(" + utcDate[0] + ",'%Y-%m-%d %H:%i'), INTERVAL " + cabinetListVO.getOffsetMin() + " MINUTE) AS" + utcDate[1] ;
+						} else { 
+							extraSelectClause += "," + utcDate[0] + "+ '" + cabinetListVO.getOffsetMin() + "'/(12*60) AS" + utcDate[1] ;
+						}
 					} else {
 						extraSelectClause += ", " + arrList.getElementsByTagName("SELECTFIELD").item(i).getTextContent().trim();
 					}
@@ -17329,6 +17333,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertChangeCabCabinetHistory2(map);
 
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			 return "FALSE";
 		}
@@ -17361,6 +17366,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (SCFlag.equals("1"))
 	        {
+				map.put("v_NewVersion", newVersion);
 				ezApprovalGDAO.insertChangeCabScHistory_Cab(map);
 	        }
 	
@@ -17379,6 +17385,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertChangeCabCabinetHistory2(map);
 			
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "FALSE";
 		}
@@ -17421,6 +17428,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_NewVersion", newVersion2);
 			ezApprovalGDAO.insertChangeCabScHistory_Cab(map);
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "FALSE";
 		}
