@@ -28,7 +28,7 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t61' />");
 					
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('${clubVO.c_ClubName}');
+						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
 					} else {
 						alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
