@@ -830,13 +830,17 @@
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
-			AND
-				startdate > #v_pStartDate#
+			<![CDATA[
+				AND
+					startdate >= #v_pStartDate#
+			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
-			AND
-				enddate > #v_pEndDate#
+			<![CDATA[
+				AND
+					startdate <= #v_pEndDate#
+			]]>
 		</isNotEqual>
 		
 		<![CDATA[
@@ -929,13 +933,17 @@
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
-			AND
-				startdate > #v_pStartDate#
+			<![CDATA[
+				AND
+					startdate >= #v_pStartDate#
+			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
-			AND
-				enddate > #v_pEndDate#
+			<![CDATA[
+				AND
+					startdate <= #v_pEndDate#
+			]]>
 		</isNotEqual>
 		
 		<![CDATA[
@@ -3305,13 +3313,17 @@
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
-			AND
-				startdate > #v_pStartDate#
+			<![CDATA[
+				AND
+					startdate >= #v_pStartDate#
+			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
-			AND
-				enddate > #v_pEndDate#
+			<![CDATA[
+				AND
+					startdate <= #v_pEndDate#
+			]]>
 		</isNotEqual>
 	</select>
 	
@@ -3348,13 +3360,17 @@
 		</isNotEqual>
 		
 		<isNotEqual property="v_pStartDate" compareValue="">
-			AND
-				startdate > #v_pStartDate#
+			<![CDATA[
+				AND
+					startdate >= #v_pStartDate#
+			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="v_pEndDate" compareValue="">
-			AND
-				enddate > #v_pEndDate#
+			<![CDATA[
+				AND
+					startdate <= #v_pEndDate#
+			]]>
 		</isNotEqual>
 	</select>
 	
