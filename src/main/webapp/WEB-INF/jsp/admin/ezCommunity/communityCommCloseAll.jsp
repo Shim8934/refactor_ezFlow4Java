@@ -9,6 +9,7 @@
 	alert("<spring:message code = 'ezCommunity.t56' />");
 	
 	window.opener.parent.frames[1].location = "/admin/ezCommunity/closeCom.do";
+	self.close();
 </script>
 </head>
 <body>

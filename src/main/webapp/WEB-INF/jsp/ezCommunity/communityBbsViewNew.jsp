@@ -240,7 +240,7 @@
   			</tr>
   			<tr>
 				<td style="padding-top:10px;height:70%" id="ItemOverflow">
-					<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
     			</td>
   			</tr>
   			<tr>

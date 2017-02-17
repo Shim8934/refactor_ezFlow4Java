@@ -18,24 +18,39 @@
 				if (document.mod.c_ClubName.value == "") {
 					alert("<spring:message code = 'ezCommunity.t2' />");
 					document.mod.c_ClubName.focus();
-					
 					return;	
 				}
-			
+				
+				if (document.mod.c_ClubName.value.length > 50) {
+	                alert("<spring:message code='ezCommunity.t3' />");
+	                document.mod.c_ClubName.focus();
+	                return;
+	            }
+							
+				if (document.mod.c_ClubName2.value.length > 50) {
+	                alert("<spring:message code='ezCommunity.t3' />");
+	                document.mod.c_ClubName.focus();
+	                return;
+	            }
+				
 				if (document.mod.c_ClubDesc.value == "") {
 				    alert("<spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t448' />");
 					document.mod.c_ClubDesc.focus();
-					
 					return;	
 				}
 				
+				if (document.mod.c_ClubDesc.value.length > 2000) {
+	                alert("<spring:message code='ezCommunity.t1009' />");
+	                document.mod.c_ClubDesc.focus();
+	                return;
+	            }
+				
 				if(document.mod.c_ClubConfirmType[0].checked == true & pPermitCount != 0) {
 			        alert("<spring:message code = 'ezCommunity.t1494' />\n<spring:message code = 'ezCommunity.t1495' />");
-			        
 			        return;
 			    }
 				
-				document.mod.submit();	
+				document.mod.submit();
 			}
 	
 			function resetAll() {

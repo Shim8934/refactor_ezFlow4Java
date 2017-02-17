@@ -258,11 +258,11 @@
        			OWNERID IN ($v_PIDLIST$)
             AND 
             	(            		
-            		(STARTDATE >= ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND STARTDATE <= ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' ) 
+            		(STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(ENDDATE >= ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND ENDDATE <  ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'') 
+            		(ENDDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR
-            		(STARTDATE < ''|| TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' AND ENDDATE >=  ''|| TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') ||'' ) 
+            		(STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')) 
             		OR 
             		(DATETYPE='3')
             	)
@@ -624,6 +624,15 @@
 			</isNotEqual>                       	
 		</isNotEqual>			
 	</select>
+	
+	<select id="EzScheduleDAO.getCurScheduleId" resultClass="int">
+		<![CDATA[
+			SELECT 
+				SEQ_TBL_SCHEDULE.CURRVAL 
+			FROM 
+				dual
+		]]>
+	</select>
 		
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
@@ -636,6 +645,28 @@
 				SYS_EXTRACT_UTC(SYSTIMESTAMP),	#v_SCHEDULETYPE#,	#v_IMPORTANCE#,	#v_HASATTENDANT#,	#v_HASATTACH#,	'N',				'N',			#v_ISPUBLIC#,	#v_DATETYPE#,
 				TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),		TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			NVL(#v_REPETITION#, ' '),	' ',	#v_TITLE#,		NVL(#v_LOCATION#, ' '),				
 				#v_CONTENTPATH#,				#v_TENANTID#	 
+			)
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertScheduleAttach" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_SCHEDULEATTACH(
+				ATTACHID, 							SCHEDULEID,						FILENAME, 				FILEPATH, 				FILESIZE,			TENANT_ID
+			) VALUES (
+				SEQ_TBL_SCHEDULEATTACH.NEXTVAL,		SEQ_TBL_SCHEDULE.CURRVAL,		#v_FILENAME#,			#v_FILEPATH#,			#v_FILESIZE#,		#v_TENANTID#
+			)
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertScheduleAttendant" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_ATTENDANT(
+				SCHEDULEID, 						ATTENDANTID,					ATTENDANTNAME, 			ATTENDANTNAME2,			ATTENDANTDEPTNAME,		ATTENDANTDEPTNAME2,
+				STATUS,								TENANT_ID,						RESPONSEDATE			
+			) VALUES (
+				SEQ_TBL_SCHEDULE.CURRVAL,			#v_ATTENDANTID#,				#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
+				0,									#v_TENANTID#,					SYS_EXTRACT_UTC(SYSTIMESTAMP)	
 			)
    		]]>
 	</insert>
@@ -759,15 +790,6 @@
 		]]>
 	</procedure>
  -->
- 	
-	<select id="EzScheduleDAO.getNewScheduleId" resultClass="Integer">
-		<![CDATA[
-			SELECT 
-				SEQ_INC_TBLSCHEDULE.NEXTVAL 
-			FROM 
-				dual;
-		]]>
-	</select>
 	
 	<procedure id="EzScheduleDAO.getUserLocalInfo" parameterClass="Map" resultMap="userLocalInfoVO" >
 		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
@@ -775,13 +797,6 @@
 	
 	<procedure id="EzScheduleDAO.getScheduleGmailInfo" parameterClass="Map" resultMap="scheduleGmailInfoVO" >
 		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-
-	<procedure id="EzScheduleDAO.scheduleNewItem" parameterClass="ScheduleInfoVO">
-		{CALL EZPIMS.EZSP_INSERTSCHEDULE(#parentId#, #ownerId#, #ownerName#, #ownerName2#, #creatorId#, #creatorName#, #creatorName2#,
-										 #modifierId#, #modifierName#, #modifierName2#, #scheduleType#, #importance#, #hasAttendant#, #hasAttach#, #hasComment#,
-										 #isReadOnly#, #isPublic#, #dateType#, #startDate#, #endDate#, #repetition#, #repetitionDel#,
-										 #title#, #location#, #contentPath#, #groupName#)}
 	</procedure>
 
 </sqlMap>

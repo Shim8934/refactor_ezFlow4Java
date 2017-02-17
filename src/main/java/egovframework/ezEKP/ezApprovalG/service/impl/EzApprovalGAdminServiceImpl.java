@@ -614,7 +614,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				    }
 					
 					sb.append("<ROW>");
-					sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offSet)) + "</VALUE>");
 					
 					if (j == 0) {
 						if (mode.equals("GROUP") || mode.equals("JOIN")) {
@@ -633,6 +633,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			sb.append("</ROWS></LISTVIEWDATA>");
 		}
+		logger.debug("result = " + sb.toString());
 		return sb.toString();
 	}
 
@@ -1452,7 +1453,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						fieldValue = String.valueOf(field.get(bodyVo));
 					}
 			    }
-				sb.append("<CELL><VALUE>" + ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang, tenantID, offset) + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName.toUpperCase(), fieldValue, companyID, lang, tenantID, offset)) + "</VALUE></CELL>");
 			}
 			sb.append("</ROW>");
 		}

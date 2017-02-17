@@ -66,7 +66,7 @@
 							<li class="icon"><img src="/images/<spring:message code="main.t00025" />/main/icon_personal03.gif" alt="<spring:message code="main.t00019" />" /></li>
 							<li class="count">
 								<div>
-									<span id="schedulenum" runat="server">0</span>
+									<span id="schedulenum">0</span>
 								</div>
 							</li>
                     		<%if(userLang != "3"){ %>
@@ -179,7 +179,8 @@
     	<%} %>
 		
 		<script type="text/javascript" src="<spring:message code='main.t00024'/>"></script>
-		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>   
+		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
 		<script type="text/javascript">
 			var UserAgentState = navigator.userAgent.toLowerCase();
 		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
@@ -232,13 +233,11 @@
 
 		        try { top.onresize() } catch (e) { }
 		        
-		        //
+		        //ajax로 각 모듈 counting 및 list 호출
 		        getnewmailcount();
-		        getnewapprovalcount();
-		        //
-		        
+		        getnewapprovalcount();		        
+		        getScheduleList(nowDay, pMode);
 			}
-
 
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date) {
 			    date = date.substr(0, 10);
@@ -259,61 +258,69 @@
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    //PNO-3 END
 			}
-
-			var xmlhttp_getScheduleList_total = createXMLHttpRequest();
+			
 			var selDate = "";
-			function getScheduleList(date,pGubun) {
-			    selDate = date;
-			    var xmlpara = createXmlDom();
+			function getScheduleList(date, mode) {
+			    selDate = date;			    
 
-			    var objNode;
-			    createNodeInsert(xmlpara, objNode, "PARAMETER");
-			    createNodeAndInsertText(xmlpara, objNode, "pSelectDate", date);
-			    createNodeAndInsertText(xmlpara, objNode, "MODE", pGubun);
-
-
-			    xmlhttp_getScheduleList_total = null;
-			    xmlhttp_getScheduleList_total = createXMLHttpRequest();
-			    xmlhttp_getScheduleList_total.open("POST", "/myoffice/ezSchedule/schedule_newwebpartlist.aspx", true);
-			    xmlhttp_getScheduleList_total.onreadystatechange = getScheduleList_after;
-			    xmlhttp_getScheduleList_total.send(xmlpara);
+			    $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezSchedule/scheduleNewWebPartList.do",
+		    		data : {
+		    			selectDate  : date		    			
+		    		},
+		    		success: function(text){
+		    			getScheduleList_after(text, mode, date);
+		    		}
+			    });
 			}
 
-			function getScheduleList_after(date) {
-			    
-			    if (xmlhttp_getScheduleList_total == null || xmlhttp_getScheduleList_total.readyState != 4) return;
-
+			function getScheduleList_after(text, mode, date) {
 			    try {
 			        var listHTML = "<ul class=\"schedule_list \">";
-
 			        var xmldom = createXmlDom();
-			        xmldom = xmlhttp_getScheduleList_total.responseXML;
+			        xmldom = loadXMLString(text);
+			        
 			        var count = 0;
-			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
-			            var SCHEDULEID = getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i));
-			            var SCHEDULETYPE = getNodeText(xmldom.getElementsByTagName("SCHEDULETYPE").item(i));
-			            var DATETYPE = getNodeText(xmldom.getElementsByTagName("DATETYPE").item(i));
-			            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
-			            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
-			            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
-			            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
+			        var mType;
+			        
+			        if (mode == "P") {
+			        	mType = "1";
+			        } else {
+			        	mType = "23";
+			        }			        
 
-			            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
-			            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
-			            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));
-			            //if (startdate.getFullYear() == selDateType.getFullYear() && startdate.getMonth() == parseInt(selDateType.getMonth()) && startdate.getDate() == selDateType.getDate()) {
-		                if ((((startdate <= selDateType) && (enddate >= selDateType))) || (startdate >= selDateType && enddate <= selDateType)) {
+			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
+		        		var SCHEDULETYPE = getNodeText(xmldom.getElementsByTagName("SCHEDULETYPE").item(i));
+		        		
+		        		if (mType.indexOf(SCHEDULETYPE) > -1) {		        		
+				            var SCHEDULEID = getNodeText(xmldom.getElementsByTagName("SCHEDULEID").item(i));			            
+				            var DATETYPE = getNodeText(xmldom.getElementsByTagName("DATETYPE").item(i));
+				            var REPEATCOUNT = getNodeText(xmldom.getElementsByTagName("REPEATCOUNT").item(i));
+				            var STARTDATE = getNodeText(xmldom.getElementsByTagName("STARTDATE").item(i));
+				            var ENDDATE = getNodeText(xmldom.getElementsByTagName("ENDDATE").item(i));
+				            var TITLE = getNodeText(xmldom.getElementsByTagName("TITLE").item(i));
+				            var startdate = new Date(STARTDATE.split(' ')[0].split('-')[0], STARTDATE.split(' ')[0].split('-')[1], STARTDATE.split(' ')[0].split('-')[2]);
+				            var enddate = new Date(ENDDATE.split(' ')[0].split('-')[0], ENDDATE.split(' ')[0].split('-')[1], ENDDATE.split(' ')[0].split('-')[2]);
+				            var selDateType = new Date(selDate.substring(0, 4), selDate.substring(5, 7), selDate.substring(8, 10));			            
+			                
 			                listHTML += "<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>";
 			                listHTML += "<span style='CURSOR:pointer;'  onClick=\"open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')\" title='" + TITLE + "'>";
 			                listHTML += "<nobr><b>&nbsp;" + TITLE + "</b></nobr></span></li>";
 			                count++;
-			            }	           
+			        	}
 			        }
 			        listHTML += "</ul>";
-			        
+
+			        if (date == nowDay) {
+			        	var cnt = xmldom.getElementsByTagName("ROW").length;
+			        	document.getElementById("schedulenum").innerHTML = cnt;
+			        }
 
 			        if (count > 0)
-			            document.getElementById("ScheduleList").innerHTML = listHTML;
+			            document.getElementById("ScheduleList").innerHTML = listHTML;			        	
 			        else
 			        {
 			            var nodata = "<div class='nodata_schedule '>";
@@ -361,11 +368,7 @@
 			        scrollbox.player.touch("player-scrbox", {
 			            overflowY: "scroll" // auto, scroll 
 			        });
-
-
-			    }
-			    catch (e) {
-			    }
+			    } catch (e) {}
 			}
 
 			var xmlHttp_getnewmailcount_total = null;
@@ -397,7 +400,6 @@
 			    }
 			}
 
-
 			function event_newmailcount_end() {
 				if (xmlHttp != null && xmlHttp.readyState == 4) {
 					if (xmlHttp.status > 199 && xmlHttp.status < 300) {
@@ -414,7 +416,7 @@
 				if (("<%=userApprovalG%>") == ("YES"))
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
 				else
-				    xmlHttp_getnewapprovalcount_total.open("Post", "/myoffice/ezApproval/WebPartFolder/getWebPartCount.aspx", true);
+				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
 			    xmlHttp_getnewapprovalcount_total.onreadystatechange = event_newapprovalcount;
 			    xmlHttp_getnewapprovalcount_total.send("<DATA><FLAG>1</FLAG></DATA>");
 			}
@@ -446,31 +448,6 @@
 					}
 				}
 			}
-
-		    //
-			var xmlHttp_GetScheduleCount_total = null;
-			function GetScheduleCount()
-			{
-			    xmlHttp_GetScheduleCount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-			    xmlHttp_GetScheduleCount_total.open("POST", "/myoffice/ezSchedule/remote/schedule_get_count.aspx", true);
-			    xmlHttp_GetScheduleCount_total.onreadystatechange = event_GetScheduleCount;
-			    xmlHttp_GetScheduleCount_total.send();
-			}
-				
-			function event_GetScheduleCount()
-			{
-			    if (xmlHttp_GetScheduleCount_total != null && xmlHttp_GetScheduleCount_total.readyState == 4)
-				    {
-			        if (xmlHttp_GetScheduleCount_total.status > 199 && xmlHttp_GetScheduleCount_total.status < 300) {
-		                if(CrossYN())
-		                    document.getElementById("schedulenum").textContent = xmlHttp_GetScheduleCount_total.responseText;
-		                else
-		                    document.getElementById("schedulenum").innerText = xmlHttp_GetScheduleCount_total.responseText;
-				    }
-			        xmlHttp_GetScheduleCount_total = null;
-				    }
-			}
-		    //
 			
 			// 표준모듈 (2007.03.23) 수정 : 전자메모보고 처리할 메모 갯수 		
 			var xmlHttp_getMemocount_total = null;
@@ -507,13 +484,11 @@
 					
 			function btnSumming_click(objThis)
 			{
-
 				switch (objThis.id)
 				{
 					case "NewMail" : 
 						window.open("/ezEmail/mailMain.do?funCode=1", "main");
-						break;
-						
+						break;						
 										
 					case "AprSign" : 		
 						var listType;
@@ -539,10 +514,7 @@
 						break;
 						
 					case "Schedule" : 
-						window.open("/myoffice/main/index_pims.aspx?funCode=2","main");
-						break;
-					case "schedulenum" :
-						window.open("/myoffice/main/index_pims.aspx?funCode=2","main");
+						window.open("/ezSchedule/scheduleIndex.do?funCode=2","main");
 						break;
 						
 					case "Poll" :
@@ -570,12 +542,10 @@
 			}
 
 		    function btnWrite_onclick(objThis) {
-
 		        switch (objThis.id) {
 		            case "mailwrite":
 		                new_mail_onclick();
 		                break;
-
 
 		            case "approvalwrite":
 		                openForm();
@@ -593,10 +563,9 @@
 		                    var left = (width - wWeight) / 2;
 		                    var top = (heigth - wHeight) / 2;
 		                    
-		                        window.open("/myoffice/ezschedule/schedule_write_Cross.aspx?defaultid=0", "",
-		                        "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		                }
-		                else {
+		                    window.open("/ezSchedule/scheduleWrite.do?defaultid=0", "",
+		                    "height = " + wHeight + ", width = " + wWeight + ", status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+		                } else {
 		                    var wWeight = "790";
 		                    var wHeight = "760";
 
@@ -753,54 +722,51 @@
 		        if ("<%=userApprovalG%>" == ("YES"))
 		            gb = "G";
 		        
-		        	pArgument[0] = "${userInfo.id}";
-		            pArgument[1] = formURL;
-		            pArgument[2] = "DRAFT";
-		            pArgument[3] = formDocType;
-		            pArgument[4] = "0"
-		            pArgument[5] = ""
-		            pArgument[6] = ""
-		            pArgument[7] = "";
+	        	pArgument[0] = "${userInfo.id}";
+	            pArgument[1] = formURL;
+	            pArgument[2] = "DRAFT";
+	            pArgument[3] = formDocType;
+	            pArgument[4] = "0"
+	            pArgument[5] = ""
+	            pArgument[6] = ""
+	            pArgument[7] = "";
 
-		            var openLocation = "";
-		            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    alert("<spring:message code='main.t3000' />");
-		                    return;
-		                }
-		                else {
-		                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
-		                    var openLocation = "/ezApprovalG/draftui.do";
-		                }
-		            }
-		            else {
-		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-		                	var openLocation = "/ezApprovalG/draftui.do";
-		                }
-		                else {
-		                    if (pUse_IE11Browser == "CK")
-		                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-		                    	var openLocation = "/ezApprovalG/draftui.do";
-		                    else {
-		                        if (pUse_Editor == "")
-		                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        else {
-		                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
-		                        	var openLocation = "/ezApprovalG/draftui.do";
-		                        }
-		                    }
-		                }
-		                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-		                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-		                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
-		            }
-		            openwindow(openLocation, "", 890, 620);
-
-
-		        }
-
+	            var openLocation = "";
+	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+	                if (CrossYN() || pNoneActiveX == "YES") {
+	                    alert("<spring:message code='main.t3000' />");
+	                    return;
+	                }
+	                else {
+	                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
+	                    var openLocation = "/ezApprovalG/draftui.do";
+	                }
+	            }
+	            else {
+	                if (CrossYN() || pNoneActiveX == "YES") {
+	                    //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+	                	var openLocation = "/ezApprovalG/draftui.do";
+	                }
+	                else {
+	                    if (pUse_IE11Browser == "CK")
+	                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
+	                    	var openLocation = "/ezApprovalG/draftui.do";
+	                    else {
+	                        if (pUse_Editor == "")
+	                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
+	                        	var openLocation = "/ezApprovalG/draftui.do";
+	                        else {
+	                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
+	                        	var openLocation = "/ezApprovalG/draftui.do";
+	                        }
+	                    }
+	                }
+	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
+	            }
+	            openwindow(openLocation, "", 890, 620);
+	        }
 
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 		        try {
@@ -825,8 +791,7 @@
 		            }
 		            window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
-		        } catch (e) {
-		        }
+		        } catch (e) {}
 		    }
 
 		    function scheduleChangeTab(obj) {

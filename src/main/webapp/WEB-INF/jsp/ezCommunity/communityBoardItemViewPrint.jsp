@@ -251,7 +251,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td class="pad1" id="ItemOverflow" style="display:none"  >
-		    		<iframe id="message" class="viewbox" name="message" frameborder="0" style="display:none" onload ="displaytable()">
+		    		<iframe id="message" class="viewbox" name="message" style="display:none" onload ="displaytable()">
 		    	</iframe></td> 
 		  	</tr>
 		    <tr>

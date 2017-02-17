@@ -15,7 +15,7 @@
         <script type="text/javascript" src="/js/ezSchedule/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezSchedule/ListView_list.js"></script>
         <script type="text/javascript" src="/js/Common.js"></script>        
-        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>		
+        <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 	        var pStartTime = "<c:out value='${startTime}' />";
 	        var pEndTime = "<c:out value='${endTime}' />";
@@ -228,11 +228,10 @@
 	            if (CrossYN()) {
 	                schedule_add_user_cross_dialogArguments[0] = g_param;
 	                schedule_add_user_cross_dialogArguments[1] = Add_UserInfo_onclick_Complete;
-	                var OpenWin = window.open("/myoffice/ezSchedule/schedule_Add_User_Cross.aspx?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, "schedule_Add_User_Cross", GetOpenWindowfeature(695, 430));
+	                var OpenWin = window.open("/ezSchedule/scheduleAddUser.do?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, "schedule_Add_User_Cross", GetOpenWindowfeature(695, 430));
 	                try { OpenWin.focus(); } catch (e) { }
-	            }
-	            else{
-	                var reParam = window.showModalDialog("schedule_Add_User.aspx?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, g_param, "edge:sunken; dialogHeight:430px;scroll:no; dialogWidth:695px; status:no; help:no" + feature);
+	            } else{
+	                var reParam = window.showModalDialog("/ezSchedule/scheduleAddUser.do?cmd=" + cmd + "&num=" + org_num + "&ownerID=" + org_ownerID, g_param, "edge:sunken; dialogHeight:430px;scroll:no; dialogWidth:695px; status:no; help:no" + feature);
 	                if (typeof (reParam) != "undefined" && reParam != null) {
 	                    idDatepicker.vtLocalDate = reParam["startTime"];
 	                    idDatepicker.vtLocalEndDate = reParam["endTime"];
@@ -756,7 +755,8 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };                    
+	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -851,6 +851,7 @@
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listDBclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
