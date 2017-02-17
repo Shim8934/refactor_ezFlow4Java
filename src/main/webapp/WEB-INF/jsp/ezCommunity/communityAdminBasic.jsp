@@ -18,24 +18,39 @@
 				if (document.mod.c_ClubName.value == "") {
 					alert("<spring:message code = 'ezCommunity.t2' />");
 					document.mod.c_ClubName.focus();
-					
 					return;	
 				}
-			
+				
+				if (document.mod.c_ClubName.value.length > 50) {
+	                alert("<spring:message code='ezCommunity.t3' />");
+	                document.mod.c_ClubName.focus();
+	                return;
+	            }
+							
+				if (document.mod.c_ClubName2.value.length > 50) {
+	                alert("<spring:message code='ezCommunity.t3' />");
+	                document.mod.c_ClubName.focus();
+	                return;
+	            }
+				
 				if (document.mod.c_ClubDesc.value == "") {
 				    alert("<spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t448' />");
 					document.mod.c_ClubDesc.focus();
-					
 					return;	
 				}
 				
+				if (document.mod.c_ClubDesc.value.length > 2000) {
+	                alert("<spring:message code='ezCommunity.t1009' />");
+	                document.mod.c_ClubDesc.focus();
+	                return;
+	            }
+				
 				if(document.mod.c_ClubConfirmType[0].checked == true & pPermitCount != 0) {
 			        alert("<spring:message code = 'ezCommunity.t1494' />\n<spring:message code = 'ezCommunity.t1495' />");
-			        
 			        return;
 			    }
 				
-				document.mod.submit();	
+				document.mod.submit();
 			}
 	
 			function resetAll() {
@@ -63,11 +78,11 @@
 						<table style="width:100%">
 							<tr class="primary">
 								<th><c:out value = '${lang_Primary}' /></th>
-								<td><input type="text" name="c_ClubName" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"></td>
+								<td><input type="text" name="c_ClubName" value="<c:out value = '${club.c_ClubName}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 							<tr class="secondary">
 								<th><c:out value = '${lang_Secondary}' /></th>
-								<td><input type="text" name="c_ClubName2" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"></td>
+								<td><input type="text" name="c_ClubName2" value="<c:out value = '${club.c_ClubName2}' />" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
 							</tr>
 						</table>
 					</td>
@@ -180,7 +195,7 @@
 					<th colspan="2"><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t461' /></th>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="2000"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td colspan="2"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 		  

@@ -425,7 +425,7 @@
 			FROM
 				$v_BNAME$
 			WHERE
-				no = CAST(#v_NO#, AS INT)
+				no = CAST(#v_NO# AS INT)
 			AND
 				tenant_id = #tenantID# 
 		]]>
@@ -4606,7 +4606,7 @@
 			DELETE FROM
 				$v_BNAME$ 
 			WHERE
-				no = CAST(#v_NO#, AS INT)
+				no = CAST(#v_NO# AS INT)
 			AND
 				tenant_id = #tenantID# 
 		]]>
