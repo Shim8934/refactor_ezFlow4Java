@@ -71,8 +71,6 @@ public interface EzResourceService {
 
 	public String getLocalTime(String substring) throws Exception;
 	
-	public String getDBTime(String pDateTime) throws Exception;
-
 	public String convertToUTC(String sDate) throws Exception;
 
 	public String getAdminFlag(String companyID, String brdID, String id, int tenantID) throws Exception;

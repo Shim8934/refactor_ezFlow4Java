@@ -268,7 +268,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
 	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception {
 		logger.debug("addResData Start");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantID", tenantID);
+		
+		int brdID = ezResourceDAO.addResData_S1(map);
+		
 		map.put("v_P_ClassGB", classGB);
 		map.put("v_P_ODeptID", deptID);
 		map.put("v_P_ODeptNm", deptNm);
@@ -286,10 +291,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_OwnerNm2", ownerNm2);
 		map.put("v_P_OwnerPos2", ownerPos2);
 		map.put("v_Brd_GB", "2");
-		map.put("v_Brd_ID", ezResourceDAO.addResData_S1());
+		map.put("v_Brd_ID", brdID);
 		map.put("v_Brd_Access", strBreAccess);
-		map.put("tenantID", tenantID);
-		
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -360,6 +363,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		map2.put("v_pCompanyID", companyID);
 		map2.put("v_pOwnerID", ownerID);
+		map2.put("tenantID", tenantID);
 		int num = ezResourceDAO.insertScheduleRepetition_S(map2);
 		
 		map.put("v_Num", num);
@@ -2234,27 +2238,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				strDateTime = strDateTime.substring(0, pDateTime.length());
 			}
 
-			return strDateTime;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return pDateTime;
-		}
-	}
-	
-	public String getDBTime(String pDateTime) {
-		String strDateTime = "";
-		
-		if (pDateTime.equals("")) {
-			return strDateTime;
-		}
-		try {
-			String pOffset = "+09:00";
-			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, (Integer.parseInt(pOffset.split(":")[0])*-1)+9, ""), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
-			strDateTime = EgovDateUtil.convertDate(addMinutes(strDateTime, (Integer.parseInt(pOffset.split(":")[1])*-1), ""), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
-			
-			if (pDateTime.length() < 19) {
-				strDateTime = strDateTime.substring(0, pDateTime.length());
-			}
 			return strDateTime;
 		} catch (Exception e) {
 			e.printStackTrace();
