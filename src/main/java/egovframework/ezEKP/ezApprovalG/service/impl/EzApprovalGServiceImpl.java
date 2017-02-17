@@ -9588,6 +9588,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					deleteFile(dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName);
 					rtnVal = true;
 				} catch (Exception e) {
+					System.out.println(e.getMessage());
 					rtnVal = false;
 				}
 				  
@@ -9609,6 +9610,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					deleteFile(dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName); 
 					rtnVal = true;
 				} catch (Exception e) {
+					System.out.println(e.getMessage());
 					rtnVal = false;
 				}
 			}
