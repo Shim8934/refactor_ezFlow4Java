@@ -1,4 +1,6 @@
-﻿function close_onclick()
+﻿document.write("<script type='text/javascript' src='/js/jquery/jquery-1.11.3.min.js'></script>");
+
+function close_onclick()
 {
 	if (!confirm(strLang8))
 		window.close();
@@ -21,8 +23,8 @@ function show_personinfo(userid)
 }
 
 function check_time() {
-    var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
-    var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()
+    var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
     var startYear = startDate.split("-")[0];
     var startMonth = startDate.split("-")[1];
@@ -98,7 +100,7 @@ function save_schedule()
 
 	var ResourceSaveResult = false;
 	if (scheduleid == "") {
-	    if (document.getElementById("resourcelist")) {
+	    if (document.getElementById("resourcelist")) {	    	
 	        if (trim(document.getElementById("resourcelist").innerHTML) != "") {
 	            ResourceSaveResult = resource_Check();
 	            if (!ResourceSaveResult)
@@ -306,7 +308,7 @@ function save_schedule()
 	}
 	else {
 	    if (ResourceSaveResult) {
-	        SaveScheduleId = trim(xmlHTTP.responseText.split("OK_")[1]);
+	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
 	            var rntVal = resource_save();
 	            if (rntVal != "OK") {
@@ -399,46 +401,31 @@ function check_name(type) {
         if (names[i] == "")
             continue;
 
-        var adCount = 0;
-
-        var xmlHTTP = createXMLHttpRequest();
+        var adCount = 0;        
         var xmlDOM = createXmlDom();
-
-        var objNode;
-        createNodeInsert(xmlDOM, objNode, "DATA");
-        createNodeAndInsertText(xmlDOM, objNode, "SEARCH", "displayname::" + names[i]);
-        createNodeAndInsertText(xmlDOM, objNode, "CELL", "company;description;title;displayname;mail");
-        createNodeAndInsertText(xmlDOM, objNode, "PROP", "displayname;description");
-        createNodeAndInsertText(xmlDOM, objNode, "TYPE", "user");
-
-        try {
-            xmlHTTP.open("POST", "/ezOrgan/getSearchList.do", false);
-            xmlHTTP.send(xmlDOM);
-
-            if (xmlHTTP.statusText != "OK") {
-                alert(strLang20 + xmlHTTP.statusText);
-                xmlDOM = null;
-                xmlHTTP = null;
-                continue;
-            }
-            else {
-                xmlDOM = loadXMLString(xmlHTTP.responseText);
-                adCount = xmlDOM.getElementsByTagName("ROW").length;
-            }
-        } catch (e) {
-            alert(strLang20 + e.description);
-            xmlDOM = null;
-            xmlHTTP = null;
-            continue;
-        }
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezOrgan/getSearchList.do",
+    		data : {
+    			search : "displayName::" + names[i],
+    			cell   : "company;description;title;displayName;mail",
+    			prop   : "displayName;description",
+    			type   : "user"
+    		},
+    		success: function(xml){
+    			xmlDOM = loadXMLString(xml);
+                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
+    		}    		
+    	});
 
         if (adCount == 0) {
             alert("'" + names[i] + "'" + strLang21);
             continue;
-        }
-        else if (adCount == 1) {
+        } else if (adCount == 1) {
             if (g_attendant == null)
-
                 g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
 
             if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
@@ -450,8 +437,7 @@ function check_name(type) {
                         return;
                     }
                 }
-            }
-            else {
+            } else {
                 alert(strLang24);
                 return;
             }
@@ -467,8 +453,7 @@ function check_name(type) {
                 document.getElementById("receiverlist").innerHTML = g_attendant["name"][length];
             else
                 document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
-        }
-        else {
+        } else {
             var rgParams = new Array();
             rgParams["addrBook"] = xmlDOM;
             rgParams["name"] = "";
@@ -1264,8 +1249,8 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
             xmlDOMrec = null;
         }
     }
-
-    xmlHTTP.open("POST", "/myoffice/ezResource/ResSch/ezResource_TimeDupCheck.aspx", false);
+    
+    xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
     xmlHTTP.send(xmlDOM);
 
     var rtnValue = xmlHTTP.responseText;
@@ -1360,7 +1345,7 @@ function SaveSchedule_onClick(cmd, resItem) {
     createNodeAndInsertText(xmlDoc, objNode, "APPROVE", objNode23);
     createNodeAndInsertText(xmlDoc, objNode, "SCHEDULEID", SaveScheduleId);
 
-    xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Schedule_Add_Ok.aspx?cmd=" + cmd + "&type=" + typeVal, false);
+    xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=" + cmd + "&type=" + typeVal, false);
     xmlHttp.send(getXmlString(xmlDoc));
 
     var returnStr, p_num, p_ownerID;
@@ -1373,7 +1358,7 @@ function SaveSchedule_onClick(cmd, resItem) {
         xmlHttp = null;
         if (cmd == "add" && objNode23 == "0") {
             xmlHttp = createXMLHttpRequest();
-            xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Sendmail.aspx", false);
+            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
             xmlHttp.send(xmlDoc.xml);
             xmlHttp = null;
         }
@@ -1398,7 +1383,7 @@ function SaveSchedule_onClick(cmd, resItem) {
 
 function SaveRepetition(org_num, org_ownerID) {
     var xmlHttp = createXMLHttpRequest();
-    xmlHttp.open("POST", "/myoffice/ezResource/ResSch/Schedule_Repetition_Proc.aspx?cmd=add&num=" + org_num + "&ownerID=" + org_ownerID, false);
+    xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=add&num=" + org_num + "&ownerID=" + org_ownerID, false);
     xmlHttp.send(g_data["recurrence"]);
 
     var res = xmlHttp.responseText;

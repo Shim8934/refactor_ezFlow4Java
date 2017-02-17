@@ -623,9 +623,9 @@
                     idlist = idtype;
                 var feature = GetOpenPosition(837, 660);
                 if (idlist == "G")
-                    window.open("schedule_print.aspx?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
                 else
-                    window.open("schedule_print.aspx?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
