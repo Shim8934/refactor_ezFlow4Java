@@ -4179,6 +4179,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			return "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -4209,8 +4210,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>TRUE</RESULT>";
 		} else {
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-			ezApprovalGDAO.doSendOfferApprove2(map);
-			
+			try{
+				ezApprovalGDAO.doSendOfferApprove2(map);
+			} catch (Exception e) {
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+    			System.out.println(e.getMessage());
+			}
 			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID, userInfo.getTenantId());
 			
 			return "<RESULT>FALSE</RESULT>";
@@ -9572,7 +9577,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DOCID", orgDocID);
 			map.put("v_TENANTID", tenantID);
 			String temp =ezApprovalGDAO.chkDocDeleteTemp(map);
-			
+			try {
 			if(temp!=null){
 				map.put("v_temp", "1");
 			} else {
@@ -9584,14 +9589,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!fileName.trim().equals("")) {
 				String extFileName = getExtendedFileName(fileName);
 				
-				try {
 					deleteFile(dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName);
 					rtnVal = true;
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					rtnVal = false;
-				}
+				} 
 				  
+			}
+			catch (Exception e) {
+				System.out.println(e.getMessage());
+				rtnVal = false;
 			}
 		} else {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -9602,17 +9607,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			String fileName = makeListField(ezApprovalGDAO.getDocInfoHref(map));
 			String oldYear = getDocHrefYear(docID, companyID, tenantID);
-			
+			try {
 			if (!fileName.trim().equals("")) {
 				String extFileName = getExtendedFileName(fileName);
 				
-				try {
 					deleteFile(dirPath + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName); 
 					rtnVal = true;
-				} catch (Exception e) {
-					System.out.println(e.getMessage());
-					rtnVal = false;
-				}
+				} 
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+				rtnVal = false;
 			}
 		}
 		
@@ -11905,9 +11909,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String updateProcessYN(String docID, String deptID, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PROCESSYN", processYN);
@@ -17644,6 +17646,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String doSendOffer(Document xmlDom, String dirPath,	String companyID, String lang, int tenantID) throws Exception {
+
 		String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
 		String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
 		String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
@@ -17847,7 +17850,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String updateProcessYN2(String docID, String deptID, String deptName, String deptName2, String processYN, String mode, String companyID, String lang, int tenantID) throws Exception {
 		String gFlag = getCode2Name("A35", "002", companyID , lang, tenantID);
-		
 		Map<String , Object> map = new HashMap<String, Object>();
 		try{
 			if(!gFlag.equals("G")) {
