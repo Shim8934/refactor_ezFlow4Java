@@ -68,6 +68,8 @@
 				doc.write(html);
 				doc.close();
 		        
+				$("#message").contents().find("body").css("word-wrap", "break-word");
+				
 		        AddLinkTarget();
 	
 		        SetAttachmentInfo();
