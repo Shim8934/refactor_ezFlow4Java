@@ -6156,7 +6156,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				switch (arrList.getElementsByTagName("DTYPE").item(p).getTextContent().trim()) {
 				case "dtSerialNum" :						// 순번
 //                    resultXML.append(docXML.getElementsByTagName("ROWNUM_").item(k).getTextContent());
-					resultXML.append(start+1);
+					resultXML.append(start+k);
 					break;
 
 				case "dtCabClassNo" :						// 기록물철 분류번호
@@ -15283,25 +15283,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_temp3", "");
 		map.put("v_temp4", "");
+		int v_temp = 0;
+		int v_temp2 = 0;
+		int v_temp3 = 0;
+		
 		if (checkMode.equals("VIE")){
-			int v_temp  = ezApprovalGDAO.countVieTempDocID(map);
-			map.put("v_temp", v_temp);
-			
-			if (v_temp != 1) {
-				int v_temp2  = ezApprovalGDAO.countVieTempDocID2(map);
+			 v_temp  = ezApprovalGDAO.countVieTempDocID(map);
+				map.put("v_temp", v_temp);
+			if (v_temp == 1) {
+				 v_temp2  = ezApprovalGDAO.countVieTempDocID2(map);
 				map.put("v_temp2", v_temp2);
+			} else {
+				v_temp3  = ezApprovalGDAO.countRecTempDocID(map);
+				
+				if(v_temp3 == 1) {
+					map.put("v_temp3", v_temp3);
+				} else {
+					map.put("v_temp3", "2");
+				}
 			}
 		} else if(checkMode.equals("REC")) {
-			int v_temp  = ezApprovalGDAO.countRecTempDocID(map);
+			 v_temp  = ezApprovalGDAO.countRecTempDocID(map);
 			map.put("v_temp", v_temp);
 			
 			if(v_temp == 1 ) {
-				int v_temp2  = ezApprovalGDAO.countRecTempDocID2(map);
+				 v_temp2  = ezApprovalGDAO.countRecTempDocID2(map);
 				map.put("v_temp2", v_temp2);
+				
 			} else {
-				int v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
+				 v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
 				map.put("v_temp3", v_temp3);
-				if( v_temp3 == 0 ) {
+				if( v_temp3 != 1 ) {
 					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
 					map.put("v_temp4", tempList.size());
 				}

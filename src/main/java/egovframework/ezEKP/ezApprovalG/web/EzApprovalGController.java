@@ -3655,7 +3655,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			if (docID != null && !docID.equals("")) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId());
 				

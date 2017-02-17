@@ -607,6 +607,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGRecordVO>) list("EzApprovalG.selectUserName", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> permissAprLineInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGAprLineVO>) select("EzApprovalG.permissAprLineInfo", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
