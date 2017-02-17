@@ -2085,7 +2085,7 @@
        		WHERE
        			TENANT_ID = #tenantID#
        		AND  
-       			ITEMID = #orgItemID#
+       			ITEMID = #itemID#
 		]]>
 	</select>
 
@@ -3023,7 +3023,7 @@
 				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
 			)
        		VALUES ( 
-       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       			#v_STRITEMID#, #seqNum#,   #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
        		)
 		]]>
 	</insert>
@@ -3189,6 +3189,8 @@
           		TENANT_ID = #v_TENANTID#
           	AND
           		BOARDID = #v_BOARDID#
+          	AND  
+          		USERID = #v_USERID#
 		]]>
 	</update>
 	
@@ -3696,6 +3698,8 @@
 	       		tenant_id = #tenantID#
 	       	AND
 	       		itemid = #itemID#
+	       	ORDER BY
+	       		GUID
        	]]>
 	</select>
 	

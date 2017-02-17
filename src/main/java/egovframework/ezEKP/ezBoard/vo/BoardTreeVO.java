@@ -82,5 +82,19 @@ public class BoardTreeVO {
 	public void setIsLeaf(String isLeaf) {
 		this.isLeaf = isLeaf;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		boolean rtnBool = false;
+		BoardTreeVO boardTreeVO = (BoardTreeVO) obj;
+		
+		if (boardId.equals(boardTreeVO.getBoardId())) {
+			rtnBool = true;
+		} else {
+			rtnBool = false;
+		}
+		
+		return rtnBool;
+	}
 
 }

@@ -5294,7 +5294,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메일보내기 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createMailImg.do")
+	@RequestMapping(value = "/ezApprovalG/createMailImg.do" )
+	@ResponseBody
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");

@@ -39,6 +39,26 @@
 		<result property="READFLAG" 				/>
 	</resultMap>
 	
+	<resultMap id="getThumbnailList" class="HashMap">
+		<result property="BOARDID" 					/>
+		<result property="ITEMID" 					/>
+		<result property="WRITERID" 				/>
+		<result property="WRITERNAME" 				/>
+		<result property="WRITERDEPTNAME" 			/>
+		<result property="WRITERCOMPANYNAME" 		/>
+		<result property="WRITEDATE" 				/>
+		<result property="TITLE" 					/>
+		<result property="READCOUNT" 				/>
+		<result property="WRITERNAME2" 				/>
+		<result property="WRITERDEPTNAME2" 			/>
+		<result property="WRITERCOMPANYNAME2" 		/>
+		<result property="ONELINECNT" 				/>
+		<result property="DOCNO" 					/>
+		<result property="MAINCONTENT" 				jdbcType="TEXT" javaType="String" nullValue=""/>
+		<result property="FILEPATH" 				/>
+		<result property="READFLAG" 				/>
+	</resultMap>
+	
 	<resultMap id="get_apprUserList" class="BoardVO">
 		<result property="boardId" 					column="BOARDID" 				columnIndex="1"/>
 		<result property="apprUserId" 				column="APPRUSERID" 			columnIndex="2"/>
@@ -865,7 +885,7 @@
 	   				 AND
 	   					ITEMID = A.ItemID) ONELINECNT,
      				A.UPPERITEMIDTREE,
-     				A.DocNo,
+     				A.DOCNO,
      				'' AS NOTICE,
      				P.GUBUN,
      				A.MAINCONTENT
@@ -2049,7 +2069,7 @@
        		WHERE
        			TENANT_ID = #tenantID#
        		AND  
-       			ITEMID = #orgItemID#
+       			ITEMID = #itemID#
 		]]>
 	</select>
 
@@ -3048,6 +3068,8 @@
 	       		tenant_id = #tenantID#
 	       	AND
 	       		itemid = #itemID#
+	       	ORDER BY
+	       		GUID
        	]]>
 	</select>
 	
@@ -3484,7 +3506,7 @@
 				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
 			)
        		VALUES ( 
-       			#v_STRITEMID#, UUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       			#v_STRITEMID#, #seqNum#, #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
        		)
 		]]>
 	</insert>
@@ -3627,6 +3649,8 @@
           		TENANT_ID = #v_TENANTID#
           	AND
           		BOARDID = #v_BOARDID#
+          	AND  
+          		USERID = #v_USERID#
 		]]>
 	</update>
 	
