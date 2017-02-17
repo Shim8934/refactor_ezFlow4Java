@@ -51,6 +51,8 @@ public interface EzPersonalAdminService {
 	String statusChangeSlider2(String aRuleID, String aPriority, String bRuleID, String bPriority, String mode, int tenantID) throws Exception;
 	
 	int getNoticeCount(String companyID, int tenantID) throws Exception;
+	
+	int getNoticeCountUser(String companyID, int tenantID) throws Exception;
 
 	int getPollCount(String companyID, int tenantID) throws Exception;
 

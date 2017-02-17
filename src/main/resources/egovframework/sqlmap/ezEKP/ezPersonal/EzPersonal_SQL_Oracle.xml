@@ -691,6 +691,127 @@
                                   ROWNUM <= 5
           ]]>
      </select>
+     
+      <select id="EzPersonalDAO.getNoticeListUser" parameterClass="Map"    resultClass="PersonalNoticeVO">
+          <isEqual property="v_pStart" compareValue="0">
+              <isNotEmpty property="v_pCompanyID">
+                  <![CDATA[
+	                   SELECT
+                          * 
+                       FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM
+                                      TBL_PS_NOTICE 
+                                  WHERE
+                                      (COMPANYID = 'Top'
+                                  OR
+                                      COMPANYID = #v_pCompanyID#)
+                                  AND
+                                      TENANT_ID = #tenantID#    
+                                  ORDER BY
+                                      ITEMSEQ DESC )
+                       WHERE
+                            ROWNUM <= #v_pCount#
+		          ]]>
+              </isNotEmpty>
+              <isEmpty property="v_pCompanyID">
+                  <![CDATA[
+                      SELECT
+                          * 
+                      FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM
+                                      TBL_PS_NOTICE 
+                                  WHERE
+                                      TENANT_ID = #tenantID#
+                                  AND
+                                      (COMPANYID = 'Top'
+                                  OR
+                                      CompanyID = 'S907000')
+                                  ORDER BY
+                                      ITEMSEQ DESC )
+                      WHERE
+                            ROWNUM <= #v_pCount#
+              ]]>
+              </isEmpty>
+          </isEqual>
+           <isNotEqual property="v_pStart" compareValue="0">
+                <isNotEmpty property="v_pCompanyID">
+                  <![CDATA[
+                     SELECT
+                        * 
+                     FROM ( SELECT
+                                    ITEMSEQ ,
+                                    POSTDATE ,
+                                    TITLE ,
+                                    TITLE2 
+                                FROM ( SELECT
+                                              * 
+                                           FROM (   SELECT
+                                                            ITEMSEQ ,
+                                                            POSTDATE ,
+                                                            TITLE ,
+                                                            TITLE2 
+                                                        FROM
+                                                            TBL_PS_NOTICE 
+                                                        WHERE
+                                                            TENANT_ID = #tenantID#
+                                                        AND    
+                                                            (COMPANYID = 'Top'
+                                                        OR
+                                                            COMPANYID = #v_pCompanyID#)
+                                                        ORDER BY
+                                                            ITEMSEQ ASC )
+                                            WHERE
+                                                ROWNUM <= #v_pTotal - v_pStart# ) TEMPTBLNOTICE
+                                            ORDER BY
+                                                ITEMSEQ DESC )
+                      WHERE
+                          ROWNUM <= #v_pCount#
+              ]]>
+              </isNotEmpty>
+               <isEmpty property="v_pCompanyID">
+                  <![CDATA[
+                      SELECT
+                          * 
+                      FROM ( SELECT
+                                      ITEMSEQ ,
+                                      POSTDATE ,
+                                      TITLE ,
+                                      TITLE2 
+                                  FROM ( SELECT
+                                                * 
+                                              FROM ( SELECT
+                                                             ITEMSEQ ,
+                                                             POSTDATE ,
+                                                             TITLE ,
+                                                             TITLE2 
+                                                         FROM
+                                                             TBL_PS_NOTICE 
+                                                         WHERE
+                                                             TENANT_ID = #tenantID#
+                                                         AND    
+                                                             (COMPANYID = 'Top'
+                                                         OR
+                                                             CompanyID = 'S907000')
+                                                         ORDER BY
+                                                              ITEMSEQ ASC )
+                                             WHERE
+                                                ROWNUM <= #v_pTotal - v_pStart# ) TEMPTBLNOTICE
+                                             ORDER BY
+                                                ITEMSEQ DESC )
+                      WHERE
+                          ROWNUM <= #v_pCount#
+                  ]]>
+              </isEmpty>              
+          </isNotEqual>
+     </select>
   
 </sqlMap>
 
