@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title><spring:message code='ezQuestion.t533' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>

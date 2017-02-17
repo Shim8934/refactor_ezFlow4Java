@@ -298,13 +298,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE(#v_PEDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE(#v_PSDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -371,13 +371,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE(#v_PEDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE(#v_PSDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -1561,13 +1561,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE(#v_PEDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE(#v_PSDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
@@ -1635,13 +1635,13 @@
 		
 		<isNotEqual property="eDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE('$v_PEDATE$ 23:59:59', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_startdate, 'yyyy-MM-dd HH24:MI:ss') <= TO_DATE(#v_PEDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		
 		<isNotEqual property="sDateLength" compareValue="0">
 			<![CDATA[
-				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE('$v_PSDATE$ 00:00:00', 'yyyy-MM-dd HH24:MI:ss')
+				AND TO_DATE(A.poll_enddate, 'yyyy-MM-dd HH24:MI:ss') >= TO_DATE(#v_PSDATE#, 'yyyy-MM-dd HH24:MI:ss')
 			]]>
 		</isNotEqual>
 		

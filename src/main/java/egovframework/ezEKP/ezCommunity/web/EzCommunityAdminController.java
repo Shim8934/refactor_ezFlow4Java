@@ -106,6 +106,10 @@ public class EzCommunityAdminController {
 		String code = "", keyword = "", sRadio = "", titleName = "";
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 17;
 		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		String bName = request.getParameter("bName");
 		
 		if (request.getParameter("code") != null) {
@@ -167,6 +171,10 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int curPage = 1, comNoPerPage = 10;
 		String select = "", query = "";
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		if (request.getParameter("page") != null) {
 			curPage = Integer.parseInt(request.getParameter("page"));
@@ -258,6 +266,10 @@ public class EzCommunityAdminController {
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
 		int tenantID = userInfo.getTenantId();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");
@@ -423,6 +435,10 @@ public class EzCommunityAdminController {
 		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
 		int tenantID = userInfo.getTenantId();
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
 		
 		if (request.getParameter("code") != null) {
 			code = request.getParameter("code");

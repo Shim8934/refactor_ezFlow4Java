@@ -184,8 +184,6 @@ public interface EzBoardService {
 	
 	public void brdUpdateItem(BoardListVO boardListVO, String mode) throws Exception;
 
-	public void saveAttachInfo(String strItemID, String filePath, long fileSize, String fileName, int tenantID) throws Exception;
-	
 	public void saveOneLineReply(String itemID, String replyID, String boardID, LoginVO userInfo, String content, String password) throws Exception;
 	
 	public void setBoardList_Config(BoardConfigVO boardConfigVO) throws Exception;
@@ -210,9 +208,9 @@ public interface EzBoardService {
 	
 	public void photoListAlbumEditTemp(String boardID, String itemID, String title, String content, int tenantID) throws Exception;
 	
-	public void deleteItem(String mode, String itemID, String boardID, int tenantID) throws Exception;
+	public void deleteItem(String mode, String itemID, String boardID, String realPath, int tenantID) throws Exception;
 
-	public void deleteTempItem(String itemID, String boardID, int tenantID) throws Exception;
+	public void deleteTempItem(String itemID, String boardID, String realPath, int tenantID) throws Exception;
 	
 	public void photoListDel(String boardID, String imageID, int tenantID) throws Exception;
 

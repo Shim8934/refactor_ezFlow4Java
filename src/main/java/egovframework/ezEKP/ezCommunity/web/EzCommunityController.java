@@ -435,7 +435,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//사용하는곳이 없다
 //		int memberCount = commHomeGet2(code);
 		
-		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String boardGroupAdminFG = ezCommunityService.checkIfBoardGroupAdmin("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
 		int mode = 0;
 		
 //		if (boardGroupAdminFG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1 ||  userInfo.getRollInfo().toLowerCase().indexOf("t=1") > -1) {
@@ -447,7 +447,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		logger.debug("mode : " + mode);
 		
-		String retXML = ezCommunityService.getBoardTree("TOP", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+		String retXML = ezCommunityService.getBoardTree("top", userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), mode, 0, 0, " ", code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		if (retXML.substring(0, 5).toUpperCase().equals("ERROR")) {
 			retXML = "<RESULT>ERROR</RESULT>";
@@ -2384,7 +2384,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String num = "", pExcludeBoardID = " ", flag = "", clickBoard = "", boardID = "";
-		String pRootBoardID = "TOP", pSubFlag = "0";
+		String pRootBoardID = "top", pSubFlag = "0";
 		int pSelectBy = 0, pMode = 0;
 		
 		String code = request.getParameter("code");
@@ -2695,13 +2695,13 @@ public class EzCommunityController extends EgovFileMngUtil{
         int tenantID = userInfo.getTenantId();
         
 		try{
-	        ezCommunityService.adminHomeBoardSet("TRUE", "", 0, code, "", tenantID);
+	        ezCommunityService.adminHomeBoardSet("true", "", 0, code, "", tenantID);
 	        
 	        if (!left.equals("")) {
 	        	int i = 1;
 	        	
 	        	for (String splitLeft : left.split(";")) {
-	        		ezCommunityService.adminHomeBoardSet("FLASE", "1", i, code, splitLeft, tenantID);
+	        		ezCommunityService.adminHomeBoardSet("false", "1", i, code, splitLeft, tenantID);
 	        		i++;
 	        	}
 	        }
@@ -2710,7 +2710,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	        	int i = 1;
 	        	
 	        	for (String splitRight : right.split(";")) {
-	        		ezCommunityService.adminHomeBoardSet("FLASE", "2", i, code, splitRight, tenantID);
+	        		ezCommunityService.adminHomeBoardSet("false", "2", i, code, splitRight, tenantID);
 	        		i++;
 	        	}
 	        }

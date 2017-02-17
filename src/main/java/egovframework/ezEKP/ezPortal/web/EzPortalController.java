@@ -1750,6 +1750,21 @@ public class EzPortalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 포탈 - webPart 테마1 메일 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeMail.do")
+	public String theme1wpThemeMail(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeMail started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("theme1wpThemeMail ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeMail";
+	}
+	
+	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/environmentMain.do")

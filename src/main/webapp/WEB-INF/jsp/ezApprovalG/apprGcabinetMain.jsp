@@ -962,7 +962,7 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnRegAttach_onclick_Complete;
 		
-		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(565, 350));
+		            var OpenWin = window.open(url, "schedule_select_attendant", GetOpenWindowfeature(570, 370));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		    }

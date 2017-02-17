@@ -2351,7 +2351,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     		return retValue;
         }
         
-        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",EVERYONE";
+        String pAccessID = pUserID + "," + ezOrganService.getDeptFullPath(pDeptID, tenantID) + ",everyone";
         String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
         
         for (int i = 0; i < pAccessID.split(",").length; i++) {
@@ -2442,7 +2442,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			return boardInfo;
 		}
 		
-		String userDeptPath = userInfo.getDeptPathCode() + ",EVERYONE";
+		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
 		
 		CommunityBoardPropertyVO boardInfoTemp = null;
 		
@@ -2495,10 +2495,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setAccess_FG(Integer.toString(boardInfoTemp.getAccess_()));
 			boardInfo.setBoardAdmin_FG(boardInfoTemp.getBoardAdmin_FG().toLowerCase());
 			boardInfo.setListView_FG(boardInfoTemp.getListView_FG().toLowerCase());
-			boardInfo.setRead_FG(boardInfoTemp.getRead_FG().toLowerCase());
-			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG().toLowerCase());
-			boardInfo.setReply_FG(boardInfoTemp.getReply_FG().toLowerCase());
-			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG().toLowerCase());
+			boardInfo.setRead_FG(boardInfoTemp.getRead_FG());
+			boardInfo.setWrite_FG(boardInfoTemp.getWrite_FG());
+			boardInfo.setReply_FG(boardInfoTemp.getReply_FG());
+			boardInfo.setDelete_FG(boardInfoTemp.getDelete_FG());
 		}
 		
 		CommunityBoardPropertyVO strProp = getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -6498,7 +6498,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_BOARDID", pNewID);
 		map.put("v_B_BOARD_NAME1", bBoardName1);
 		map.put("v_B_BOARD_NAME2", bBoardName2);
-		map.put("v_PARENTBOARDID", "TOP");
+		map.put("v_PARENTBOARDID", "top");
 		map.put("v_ATTACHSIZELIMIT", comatt);
 		map.put("v_BOARDNO", boardNo);
 		map.put("tenantID", tenantID);
@@ -6523,14 +6523,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ACCESSNAME", displayName1 + "(" + companyName1 + ", " + deptName1 + ")");
 		map.put("v_ACCESSLEVEL", 1);
 		map.put("v_ACCESS_", 1);
-		map.put("v_PARENTBOARDID", "TOP");
-		map.put("v_BOARDADMIN_FG", "TRUE");
-		map.put("v_LISTVIEW_FG", "TRUE");
-		map.put("v_READ_FG", "TRUE");
-		map.put("v_WRITE_FG", "TRUE");
-		map.put("v_REPLY_FG", "TRUE");
-		map.put("v_DELETE_FG", "TRUE");
-		map.put("v_INHERIT_FG", "TRUE");
+		map.put("v_PARENTBOARDID", "top");
+		map.put("v_BOARDADMIN_FG", "true");
+		map.put("v_LISTVIEW_FG", "true");
+		map.put("v_READ_FG", "true");
+		map.put("v_WRITE_FG", "true");
+		map.put("v_REPLY_FG", "true");
+		map.put("v_DELETE_FG", "true");
+		map.put("v_INHERIT_FG", "true");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);
@@ -6542,49 +6542,49 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_ACCESSLEVEL", 1);
 		map.put("v_ACCESS_", 1);
 		map.put("v_PARENTBOARDID", pNewID);
-		map.put("v_BOARDADMIN_FG", "TRUE");
-		map.put("v_LISTVIEW_FG", "TRUE");
-		map.put("v_READ_FG", "TRUE");
-		map.put("v_WRITE_FG", "TRUE");
-		map.put("v_REPLY_FG", "TRUE");
-		map.put("v_DELETE_FG", "TRUE");
-		map.put("v_INHERIT_FG", "TRUE");
+		map.put("v_BOARDADMIN_FG", "true");
+		map.put("v_LISTVIEW_FG", "true");
+		map.put("v_READ_FG", "true");
+		map.put("v_WRITE_FG", "true");
+		map.put("v_REPLY_FG", "true");
+		map.put("v_DELETE_FG", "true");
+		map.put("v_INHERIT_FG", "true");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);
 		
 		map = new HashMap<String, Object>();
 		map.put("v_BOARDID", pNewID);
-		map.put("v_ACCESSID", "EVERYONE");
-		map.put("v_ACCESSNAME", "EVERYONE");
+		map.put("v_ACCESSID", "everyone");
+		map.put("v_ACCESSNAME", "everyone");
 		map.put("v_ACCESSLEVEL", null);
 		map.put("v_ACCESS_", 1);
-		map.put("v_PARENTBOARDID", "TOP");
-		map.put("v_BOARDADMIN_FG", "FALSE");
-		map.put("v_LISTVIEW_FG", "TRUE");
-		map.put("v_READ_FG", "TRUE");
-		map.put("v_WRITE_FG", "FALSE");
-		map.put("v_REPLY_FG", "TRUE");
-		map.put("v_DELETE_FG", "FALSE");
-		map.put("v_INHERIT_FG", "FALSE");
+		map.put("v_PARENTBOARDID", "top");
+		map.put("v_BOARDADMIN_FG", "false");
+		map.put("v_LISTVIEW_FG", "true");
+		map.put("v_READ_FG", "true");
+		map.put("v_WRITE_FG", "false");
+		map.put("v_REPLY_FG", "true");
+		map.put("v_DELETE_FG", "false");
+		map.put("v_INHERIT_FG", "false");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);
 		
 		map = new HashMap<String, Object>();
 		map.put("v_BOARDID", pNewSubID);
-		map.put("v_ACCESSID", "EVERYONE");
-		map.put("v_ACCESSNAME", "EVERYONE");
+		map.put("v_ACCESSID", "everyone");
+		map.put("v_ACCESSNAME", "everyone");
 		map.put("v_ACCESSLEVEL", null);
 		map.put("v_ACCESS_", 1);
 		map.put("v_PARENTBOARDID", pNewID);
-		map.put("v_BOARDADMIN_FG", "FALSE");
-		map.put("v_LISTVIEW_FG", "TRUE");
-		map.put("v_READ_FG", "TRUE");
-		map.put("v_WRITE_FG", "FALSE");
-		map.put("v_REPLY_FG", "TRUE");
-		map.put("v_DELETE_FG", "FALSE");
-		map.put("v_INHERIT_FG", "FALSE");
+		map.put("v_BOARDADMIN_FG", "false");
+		map.put("v_LISTVIEW_FG", "true");
+		map.put("v_READ_FG", "true");
+		map.put("v_WRITE_FG", "false");
+		map.put("v_REPLY_FG", "true");
+		map.put("v_DELETE_FG", "false");
+		map.put("v_INHERIT_FG", "false");
 		map.put("tenantID", tenantID);
 		
 		ezCommunityDAO.insertCommBoardManage(map);

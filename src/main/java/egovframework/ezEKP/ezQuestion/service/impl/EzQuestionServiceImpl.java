@@ -49,12 +49,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PUSERID", questionListVO.getUserID());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
-		map.put("v_PSDATE",questionListVO.getPostDate());
+		map.put("v_PSDATE",questionListVO.getPollStartDate());
 		map.put("v_PEDATE", questionListVO.getPollEndDate());
 		map.put("v_PLANG", questionListVO.getLang());
 		map.put("rangeLength", questionListVO.getResponseRange().length());
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
-		map.put("sDateLength", questionListVO.getPostDate().length());
+		map.put("sDateLength", questionListVO.getPollStartDate().length());
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
@@ -73,12 +73,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_PPAGESIZE", questionListVO.getPageSize());
 		map.put("v_PTITLE", questionListVO.getTitle());
 		map.put("v_PRANGE", questionListVO.getResponseRange());
-		map.put("v_PSDATE", questionListVO.getPostDate());
+		map.put("v_PSDATE", questionListVO.getPollStartDate());
 		map.put("v_PEDATE", questionListVO.getPollEndDate());
 		map.put("v_PLANG", questionListVO.getLang());
 		map.put("rangeLength", questionListVO.getResponseRange().length());
 		map.put("eDateLength", questionListVO.getPollEndDate().length());
-		map.put("sDateLength", questionListVO.getPostDate().length());
+		map.put("sDateLength", questionListVO.getPollStartDate().length());
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
@@ -122,7 +122,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserEmail", map.get("userEmail"));
 		map.put("v_pTitle", map.get("subject"));
 		map.put("v_pContent", map.get("content"));
-		map.put("v_pPostDate", commonUtil.getTodayUTCTime("yyyy-MM-dd"));
+		map.put("v_pPostDate", commonUtil.getTodayUTCTime(""));
 		map.put("v_pPostTerm", map.get("expiredate"));
 		map.put("v_pItemRef", map.get("itemNo"));
 		map.put("v_pItemImp", map.get("importance"));
@@ -697,7 +697,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_psubject", qstUserPollItemVO.getTitle());
 		map.put("v_pcontent", qstUserPollItemVO.getContent());
 		map.put("v_ppostterm", qstUserPollItemVO.getPostTerm());
-		map.put("v_pstartdate", qstUserPollItemVO.getPostDate());
+		map.put("v_pstartdate", qstUserPollItemVO.getPollStartDate());
 		map.put("v_penddate", qstUserPollItemVO.getPollEndDate());
 		map.put("v_presultflg", qstUserPermissionVO.getPublicResultFlg());
 		map.put("v_pflg", qstUserPermissionVO.getPublicFlg());

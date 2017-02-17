@@ -101,6 +101,11 @@ public class EzPersonalDAO extends EgovAbstractDAO{
 		return (List<PersonalNoticeVO>) list("EzPersonalDAO.getNoticeListMain", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PersonalNoticeVO> getNoticeListUser (Map<String, Object> map) {
+		return (List<PersonalNoticeVO>) list("EzPersonalDAO.getNoticeListUser", map);
+	}
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (Map<String, Object> map) {
 		return (PersonalGetEmpOfMonthVO) select("EzPersonalDAO.getEmpOfMonth", map);
 	}
