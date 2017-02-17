@@ -1109,7 +1109,9 @@
 			WHERE 
 				UID_ = #v_PPUID# 
 			AND
-				OWNERPAGEID = #v_PPAGEID#	
+				OWNERPAGEID = #v_PPAGEID#
+            AND
+                TENANT_ID = #tenantID#
 		]]>
 	</update>
 	
@@ -1120,9 +1122,11 @@
 			SET
 				DISPLAYNAME = #v_PDISPLAYNAME#, DISPLAYNAME2 = #v_PDISPLAYNAME2#, TENANT_ID = #tenantID#
 			WHERE 
-				UID = #v_PPUID#
+				UID_ = #v_PPUID#
 			AND
-				OWNERPAGEID = #v_PPAGEID# 	
+				OWNERPAGEID = #v_PPAGEID#
+            AND
+                TENANT_ID = #tenantID# 	
 		]]>
 	</update>
 	

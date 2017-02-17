@@ -5294,7 +5294,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메일보내기 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createMailImg.do")
+	@RequestMapping(value = "/ezApprovalG/createMailImg.do" )
+	@ResponseBody
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
@@ -5474,6 +5475,91 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			result = "<RESULT>FALSE</RESULT>";
 		}
+		
+		return result;
+	}
+	
+	
+	@RequestMapping(value = "/ezApprovalG/uploadDocHistory.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String uploadDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("pDocID").item(0).getTextContent();
+		String pHTML = doc.getElementsByTagName("pHtml").item(0).getTextContent().replace("\r\n", "\n").replace("\n", "\r\n");
+
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ ".mht";
+		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
+		String dirPath2 = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			File file = new File (dirPath2);
+			if(!file.exists()) {
+				file.mkdirs();
+			}
+			
+			File file2 = new File (dirPath);
+			if(!file2.exists()) {
+				file2.mkdirs();
+			}
+		
+			stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
+			
+			bos = new FileOutputStream(dirPath + commonUtil.separator  + fileName);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		} catch (Exception e) {
+		} finally {
+		   if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		   if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+		return dirPath+ commonUtil.separator  + fileName;
+		}
+	/**
+	 * 전자결재G 문서 내용 변경 이력
+	 */	
+	@RequestMapping(value = "/ezApprovalG/updateDocHistory.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateDocHistory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,  HttpServletRequest request ,@RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("pDocID").item(0).getTextContent();
+		String url = doc.getElementsByTagName("pURL").item(0).getTextContent();
+		String userID = doc.getElementsByTagName("pUserID").item(0).getTextContent();
+		String userName = doc.getElementsByTagName("pUserName").item(0).getTextContent();
+		String userJobTitle = doc.getElementsByTagName("pUserJobTitle").item(0).getTextContent();
+		String userDeptID = doc.getElementsByTagName("pUserDeptID").item(0).getTextContent();
+		String userDeptName = doc.getElementsByTagName("pUserDeptName").item(0).getTextContent();
+		String userName2 = doc.getElementsByTagName("PUSERNAME2").item(0).getTextContent();
+		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
+		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
+		
+		
+
+		String result = ezApprovalGService.updateHistoryForDoc(docID, url, userID, userName, userName2, userJobTitle, userJobTitle2, userDeptID, userDeptName, userDeptName2, userInfo);
 		
 		return result;
 	}

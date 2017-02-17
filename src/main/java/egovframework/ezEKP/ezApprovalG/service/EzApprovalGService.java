@@ -379,4 +379,6 @@ public interface EzApprovalGService {
 
 	public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
 
+	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
+
 }

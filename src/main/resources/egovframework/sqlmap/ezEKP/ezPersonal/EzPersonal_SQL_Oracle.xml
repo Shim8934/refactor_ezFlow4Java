@@ -10,6 +10,7 @@
 	<typeAlias  alias="PersonalGetQuickLinkMenuVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO"/>
 	<typeAlias  alias="PersonalGetWebPartGroupVO" 			type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO"/>
 	<typeAlias  alias="PersonalGetWebPartVO" 				type="egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO"/>
+    <typeAlias  alias="PersonalNoticeVO"        type="egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO"/>
 	
 	<select id="EzPersonalDAO.getSliderList" parameterClass="Map"  resultClass="PersonalSliderImageVO">
 		<isEqual property="v_MODE" compareValue="ADMIN">
@@ -669,5 +670,27 @@
 				CN = #cn#
 		]]>
 	</select>
+    
+    <select id="EzPersonalDAO.getNoticeListMain" parameterClass="Map"    resultClass="PersonalNoticeVO">
+          <![CDATA[
+              SELECT
+                  * 
+              FROM (   SELECT
+                                TITLE,
+                                TITLE2,
+                                ITEMSEQ
+                            FROM
+                                TBL_PS_NOTICE 
+                            WHERE
+                                COMPANYID = #v_pCompanyID#
+                            AND
+                                 TENANT_ID = #tenantID#  
+                            ORDER BY
+                                 POSTDATE DESC )
+                            WHERE
+                                  ROWNUM <= 5
+          ]]>
+     </select>
+  
 </sqlMap>
 

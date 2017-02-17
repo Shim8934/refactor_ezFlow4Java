@@ -6,10 +6,48 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
-		<style type="text/css" title="ezform_style_1">
-		P {
-				MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm
+		<style type="text/css">
+			input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
+				font-size:12px;
+				color: #393939;
+				text-decoration: none;
+				ime-mode:active;
+			}
+			table, th, td {
+				border-collapse: collapse;
+				empty-cells: show;
+				padding:0;margin:0;
+				font-size:12px;
+			}
+			th {
+				white-space: nowrap;
+				word-break: keep-all;
+				word-wrap: normal;
+				color: #666;
+				background-color:#f3f3f3;
+				border:1px solid #b6b6b6;
+				padding:2px 10px;
+			}
+			.popup table { clear:both }
+			.popup .pad1{padding:10px 0px;}
+			.content td, .file td, .file2 td, .popuplist td {
+				padding:0px 2px 0px 2px;
+				background: #FFF;
+				border:1px solid #b6b6b6;
+				height:29px;
+				word-break:break-all;
+			}
+			.content td, .file td, .file2 td {
+				width: 100%;
+			}
+			.file{height:50px;width:100%}
+			.file div {OVERFLOW:auto;padding:0px 0;height:50px}
+			.viewbox {
+				border:1px solid #b6b6b6;
+				padding:5px;
+				height:100%;
+				background-color:#fff;
+				border-collapse:collapse
 			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -92,7 +130,6 @@
 		        }
 		        document.getElementById('txtTitle').innerHTML = MakeXMLString(Title);
 		        document.getElementById('txtContent').innerHTML = ExtractBetweenPattern(Content, "kaoni>", "</body>");
-		        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:" + "<spring:message code='ezBoard.t347'/>" + " '>" + txtContent.innerHTML + "</div>";
 		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onmouseover", "");
 		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onfocus", "");
 		        var TDs = document.getElementById('txtContent').getElementsByTagName("TD");
@@ -194,19 +231,21 @@
 		  </tr>
 		  <tr>
 		    <td class="pad1">
-		        <div id="ItemOverflow" class="viewbox" style="overflow:auto;padding:10px 10px 10px 10px;height:510px;width:720px;">
+		        <div id="ItemOverflow" class="viewbox" style="overflow:auto;padding:10px 10px 10px 10px;height:510px;width:734px;">
 		            <div id="txtContent" class="white"  style="overflow-y:auto; height:100%; width:100%"></div>
 		        </div>
 		    </td>
 		    <c:if test="${guBun != '3'}">
 			  <tr>
-			    <td style="height:20px"><table class="file">
-			        <tr>
-			          <th><spring:message code='ezBoard.t292'/></th>
-			          <td><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
-			          <td id="ItemLevel" style="display:none"></td>
-			        </tr>
-			      </table></td>
+			    <td style="height:20px">
+				    <table class="file">
+				        <tr>
+				          <th><spring:message code='ezBoard.t292'/></th>
+				          <td><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
+				          <td id="ItemLevel" style="display:none"></td>
+				        </tr>
+			      	</table>
+			    </td>
 			  </tr>
 		    </c:if>
 		</table>

@@ -403,7 +403,7 @@
              ORDER BY
                  DISPLAYNAME ASC
              LIMIT
-                 #startRow#,#pEndRow#
+                 #startRow#,#endRow#
 		]]>
 	</select>
 	
@@ -883,7 +883,7 @@
 			SET
 				DISPLAYNAME = #v_PDISPLAYNAME#, DISPLAYNAME2 = #v_PDISPLAYNAME2#, TENANT_ID = #tenantID#
 			WHERE 
-				UID = #v_PPUID#
+				UID_ = #v_PPUID#
 			AND
 				OWNERPAGEID = #v_PPAGEID# 	
 		]]>

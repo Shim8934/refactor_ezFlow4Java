@@ -29,7 +29,7 @@
 		    var EndPollYN, ResponseYN, ResultOpenYN;
 			var MultiResYN, WriteYN, AdminYN;
 			var TR_Contents_Start = 1;
-			var szSearchParam ="&title=" + "<c:out value='${qstListVO.title}'/>" + "&responseRange=" + "<c:out value='${qstListVO.responseRange}'/>" + "&postDate=" + "<c:out value='${qstListVO.postDate}'/>" + "&pollEndDate=" + "<c:out value='${qstListVO.pollEndDate}'/>";
+			var szSearchParam ="&title=" + "<c:out value='${qstListVO.title}'/>" + "&responseRange=" + "<c:out value='${qstListVO.responseRange}'/>" + "&pollStartDate=" + "<c:out value='${qstListVO.pollStartDate}'/>" + "&pollEndDate=" + "<c:out value='${qstListVO.pollEndDate}'/>";
 			var CurPage = "<c:out value='${qstListVO.currPage}'/>";
 			var totalPage = "<c:out value='${qstListVO.totalPage}'/>";
 		    var totalCount = "<c:out value='${qstListVO.totalCnt}'/>";

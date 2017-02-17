@@ -142,16 +142,14 @@
 	
 	
 	            for (i = 0; i < xmldomNodes.length; i++) {
-	                filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-// 	                filename = filepath.substr(89, filepath.length - 88);
-	                filename = filepath.substr(filepath.lastIndexOf('_') + 1);
+	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
 	                filename = ReplaceText(filename, "%7e", "~");
 	                filename = ReplaceText(filename, "%3d", "=");
 	                filepath = "/upload_board/" + filepath;
 	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
-	
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();

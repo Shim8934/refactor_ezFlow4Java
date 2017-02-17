@@ -2085,7 +2085,7 @@
        		WHERE
        			TENANT_ID = #tenantID#
        		AND  
-       			ITEMID = #orgItemID#
+       			ITEMID = #itemID#
 		]]>
 	</select>
 
@@ -3023,7 +3023,7 @@
 				ITEMID, 	   GUID, 	   FILEPATH, 		   FILESIZE, 	 FILENAME, 	   TENANT_ID 
 			)
        		VALUES ( 
-       			#v_STRITEMID#, SYS_GUID(), #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
+       			#v_STRITEMID#, #seqNum#,   #v_STRATTACHMENTS#, #v_FILESIZE#, #v_FILENAME#, #v_TENANTID# 
        		)
 		]]>
 	</insert>
@@ -3189,6 +3189,8 @@
           		TENANT_ID = #v_TENANTID#
           	AND
           		BOARDID = #v_BOARDID#
+          	AND  
+          		USERID = #v_USERID#
 		]]>
 	</update>
 	
@@ -3696,6 +3698,8 @@
 	       		tenant_id = #tenantID#
 	       	AND
 	       		itemid = #itemID#
+	       	ORDER BY
+	       		GUID
        	]]>
 	</select>
 	
@@ -4183,6 +4187,87 @@
 				itemid = #itemID#
 		]]>
 	</delete>
+  
+  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultClass="BoardListVO">
+    <![CDATA[
+	     SELECT
+            * 
+         FROM ( SELECT
+                      A.ITEMID ,
+                      A.STARTDATE ,
+                      A.TITLE ,
+                      A.ABSTRACT 
+                    FROM
+                       TBL_BOARD_ITEM A
+                    LEFT JOIN ( SELECT
+                                        COUNT(USERID)  TOTALCOUNT  ,
+                                        ITEMID 
+                                     FROM
+                                        TBL_BOARD_ITEM_READ 
+                                     WHERE
+                                        USERID = #v_PUSERID#
+                                     AND
+                                        BOARDID = #v_PBOARDID#
+                                     AND
+                                        TENANT_ID = #tenantID#  
+                                     GROUP BY ITEMID ) D
+                    ON
+                        A.ITEMID = D.ITEMID
+                    AND
+                        A.TENANT_ID = D.TENANT_ID    
+                    WHERE
+                        BOARDID = #v_PBOARDID#
+                    AND
+                        STARTDATE <= #nowDate#
+                    AND
+                        ENDDATE > #nowDate#
+                    AND
+                        D.TOTALCOUNT IS NULL
+                    AND
+                        A.TENANT_ID = #tenantID#    
+                    ORDER BY
+                        A.PARENTWRITEDATE DESC,
+                        A.UPPERITEMIDTREE,
+                        A.STARTDATE DESC )
+                    WHERE
+                        ROWNUM <= #v_PMAXCOUNT#
+	]]>
+  </select>
+  
+  <select id="EzBoardDAO.boardListPortal" parameterClass="Map" resultClass="Integer">
+      <![CDATA[
+	        SELECT
+                COUNT(A.ItemID)  CNT
+            FROM
+                TBL_BOARD_ITEM A  
+            LEFT JOIN ( SELECT
+                                COUNT(USERID)  TOTALCOUNT,ITEMID 
+                             FROM
+                                TBL_BOARD_ITEM_READ 
+                            WHERE
+                                USERID = #v_PUSERID# 
+                            AND
+                                BOARDID = #v_PBOARDID#
+                            AND
+                                TENANT_ID = #tenantID#  
+                            GROUP BY
+                                ITEMID ) D   
+            ON
+                A.ITEMID = D.ITEMID
+            AND
+                A.TENANT_ID = D.TENANT_ID    
+            WHERE
+                A.TENANT_ID = #tenantID#
+            AND
+                BOARDID = #v_PBOARDID#
+            AND
+                STARTDATE <= #nowDate#
+            AND
+                ENDDATE > #nowDate#
+            AND
+                D.TOTALCOUNT IS NULL 
+		]]>
+  </select>
 	
 </sqlMap>
 

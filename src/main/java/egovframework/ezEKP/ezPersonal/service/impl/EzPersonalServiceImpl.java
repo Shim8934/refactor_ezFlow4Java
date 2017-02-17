@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartGroupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetWebPartVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -282,6 +283,14 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		} else {
 			return ezPersonalDAO.getUserWebPart_S3(map);
 		}
+	}
+	
+	@Override
+	public List<PersonalNoticeVO> getNoticeListMain(String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID);
+		map.put("tenantID", tenantID);
+		return ezPersonalDAO.getNoticeListMain(map);
 	}
 
 	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception {

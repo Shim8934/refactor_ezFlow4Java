@@ -2197,10 +2197,12 @@
 				A.MaxURL ,
              	B.* 
         	FROM
-        		EZPORTA.TBL_PORTLET_GENERAL A,
+        		TBL_PORTLET_GENERAL A,
              	TBL_PORTLET_IMAGE B
        		WHERE
        			A.UID_ = B.UID_
+            AND
+                A.TENANT_ID = B.TENANT_ID
 			AND
 				A.UID_ = #v_UID#
 			AND

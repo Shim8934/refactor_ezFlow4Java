@@ -45,8 +45,8 @@ public class IMAPAccess {
 	private String password;
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
-	private int timeout = 10000;
-	private int connectionTimeout = 10000;
+	private int timeout = 5000; // 간혹 SocketTimeoutException이 발생하는 경우가 있어 시간을 짧게 설정함.
+	private int connectionTimeout = 5000;
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale) {
 		this.host = host;

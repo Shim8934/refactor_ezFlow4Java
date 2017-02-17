@@ -595,6 +595,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezPortal/portalPage.do")
 	public String portalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("portalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = "";
@@ -683,6 +685,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		skinType = skinCookieValue;
+		
 		if (skinType == null || skinType.equals("")) {
 			skinType = "1";
 		}
@@ -696,7 +699,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		// 부문홈에서 호출한 경우 부문홈ID
 		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
 			pClassID = req.getParameter("pClassID");
-			
 			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
 		}
 		
@@ -732,52 +734,37 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (width == null || (width).equals("") || (width).equals("-1") || (width).equals("0")) {
+		if (width == null || width.equals("") || width.equals("-1") || width.equals("0")) {
 			width = "100%";
 		}
-				
+		
 		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
 			height = "100%";
 		}
-				
-		if (!mode.equals("view")) {
+		
+		if (mode != null && !mode.equals("view")) {
 			displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
 			displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
-            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
-            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
-/*	            List<PortalGetThemeListVO> themeList = ezPortalService.getThemeList(userInfo.getCompanyID());
-	        	String xmlStr = "<DATA>";
-				for (int i=0; i<themeList.size(); i++) {
-					xmlStr += commonUtil.getQueryResult(themeList.get(i));
-				}
-				xmlStr += "</DATA>";
-				Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
-				
-				for (int i=0; i<themeList.size(); i++) {
-					if (pSelectThemeUID != null && pSelectThemeUID.equals(themeList.get(i).getuID())) {
-						pThemeSelectObject += "<option value='" + themeList.get(i).getuID() + "' selected>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent() + "</option>";
-					} else {
-						pThemeSelectObject += "<option value='" + themeList.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
-					}
-					
-				}     */   
-            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
-            if (editMode.equals("new_inherit")) {
-            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
-            } else {
-            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
-            }
-            
-            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
-            portalPageCategoryXML = "<DATA>";
-            for (PortalTBLPortalPageCategoryVO result : list) {
-            	portalPageCategoryXML += commonUtil.getQueryResult(result);
-            }
-            portalPageCategoryXML += "</DATA>";
-            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
-            
+			pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
+			pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
+			
+			//신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
+			if (editMode != null && editMode.equals("new_inherit")) {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
+			} else {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
+			}
+			
+			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
+			portalPageCategoryXML = "<DATA>";
+			for (PortalTBLPortalPageCategoryVO result : list) {
+				portalPageCategoryXML += commonUtil.getQueryResult(result);
+			}
+			portalPageCategoryXML += "</DATA>";
+			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
+			
 		}
-
+		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
@@ -794,10 +781,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editMode", editMode);
-		
+		model.addAttribute("tableViewOption", tableViewOption);
+
+		logger.debug("portalPage ended");
 		return "/ezPortal/portalPortalPage";
-		
-		
 	}
 	
 	/**
@@ -1142,9 +1129,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
-		
-
-		
 	}
 	
 	/**
@@ -1152,7 +1136,10 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpTotalSection2.do")
 	public String wpTotalSection2(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpTotalSection2 started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String noneActiveX = "YES";
 		String filePath = "";
 		String displayName = "";
@@ -1226,6 +1213,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("result", result);
 		model.addAttribute("sliderList", sliderList);
 		
+
+		logger.debug("wpTotalSection2 ended");
 		return "/ezPortal/portalWpTotalSection2";	
 	}
 	
@@ -1234,51 +1223,51 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewBoard.do")
 	public String wpNewBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewBoard started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String pCompanyBoard = "";        
-        String pCompanyBDNM = "";
-        String pCompanyType = "";
-        String pDeptBoardID = "";
-        String pDeptBDNM = "";
-        String pDeptType = "";
-        String pNewsBoardID = "";
-        String pNewsBDNM = "";
-        String pNewsType = "";
-        //String pItemID = "";
-        //String pDocTitle = "";
-       // String pDocContent = "";
-        //boolean pExist = true;
-		try {
-			if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
-				pCompanyBoard = req.getParameter("companyBoardID");
-				pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-				pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
-			}
-			if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
-				pDeptBoardID = req.getParameter("deptBoardID");
-				pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-				pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
-			}
-			if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
-				pNewsBoardID = req.getParameter("newsBoardID");
-				pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-				pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
-			}
-			
-			model.addAttribute("pCompanyBoard", pCompanyBoard);
-			model.addAttribute("pCompanyBDNM", pCompanyBDNM);
-			model.addAttribute("pCompanyType", pCompanyType);
-			model.addAttribute("pDeptBoardID", pDeptBoardID);
-			model.addAttribute("pDeptBDNM", pDeptBDNM);
-			model.addAttribute("pDeptType", pDeptType);
-			model.addAttribute("pNewsBoardID", pNewsBoardID);
-			model.addAttribute("pNewsBDNM", pNewsBDNM);
-			model.addAttribute("pNewsType", pNewsType);
-			return "/ezPortal/portalWpNewBoard";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "";
+		String pCompanyBDNM = "";
+		String pCompanyType = "";
+		String pDeptBoardID = "";
+		String pDeptBDNM = "";
+		String pDeptType = "";
+		String pNewsBoardID = "";
+		String pNewsBDNM = "";
+		String pNewsType = "";
+		//String pItemID = "";
+		//String pDocTitle = "";
+		// String pDocContent = "";
+		//boolean pExist = true;
+		
+		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
+			pCompanyBoard = req.getParameter("companyBoardID");
+			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
+		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
+			pDeptBoardID = req.getParameter("deptBoardID");
+			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+		}
+		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
+			pNewsBoardID = req.getParameter("newsBoardID");
+			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
+			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+		}
+		
+		model.addAttribute("pCompanyBoard", pCompanyBoard);
+		model.addAttribute("pCompanyBDNM", pCompanyBDNM);
+		model.addAttribute("pCompanyType", pCompanyType);
+		model.addAttribute("pDeptBoardID", pDeptBoardID);
+		model.addAttribute("pDeptBDNM", pDeptBDNM);
+		model.addAttribute("pDeptType", pDeptType);
+		model.addAttribute("pNewsBoardID", pNewsBoardID);
+		model.addAttribute("pNewsBDNM", pNewsBDNM);
+		model.addAttribute("pNewsType", pNewsType);
+		
+		logger.debug("wpNewBoard ended");
+		return "/ezPortal/portalWpNewBoard";
 	}
 	
 	/**
@@ -1486,9 +1475,6 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 		}
 
-		
-		
-		
 		model.addAttribute("pPollTitle", pPollTitle);
 		model.addAttribute("votePoll", votePoll);
 		model.addAttribute("pPollItemSeq", pPollItemSeq);
@@ -1663,6 +1649,104 @@ public class EzPortalController extends EgovFileMngUtil {
 		result.append("</DATA>");
 		logger.debug("quickLinkXML="+result.toString());
 		return result.toString();
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 totalSection 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpTotalSection.do")
+	public String theme1wpTotalSection(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpTotalSection started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String noneActiveX = "";
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useIE11Browser = "";
+		String mailAddress = "";
+		String displayName = "";
+		String department = "";
+		String title = "";
+		String companyNm = "";
+		String userApprovalG = "";
+		String lastLogin = "";
+		String pollNum = "";
+		String userPhoto = "";
+		
+		noneActiveX = "YES";
+		
+		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
+			useIE11Browser = "CK";
+		}
+		
+		mailAddress = userInfo.getEmail();
+		if (userInfo.getLang().equals("1")) {
+			displayName = userInfo.getDisplayName1();
+			department = userInfo.getDeptName1();
+			title = userInfo.getTitle1();
+			companyNm = userInfo.getCompanyName1();
+		} else {
+			displayName = userInfo.getDisplayName2();
+			department = userInfo.getDeptName2();
+			title = userInfo.getTitle2();
+			companyNm = userInfo.getCompanyName2();
+		}
+		
+		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
+		
+		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
+		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+		
+		//전자설문
+		pollNum = String.valueOf(ezQuestionService.wpCountPollCount(userInfo.getId(),userInfo.getTenantId(), userInfo.getOffset()));
+		
+		//유저이미지
+		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
+		
+		if (result != null && !result.equals("")) {
+			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
+			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
+			
+			
+		} else {
+			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
+		}
+		logger.debug("userPhoto="+userPhoto);
+		
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("department", department);
+		model.addAttribute("title", title);
+		model.addAttribute("companyNm", companyNm);
+		model.addAttribute("userApprovalG", userApprovalG);
+		model.addAttribute("lastLogin", lastLogin);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("useIE11Browser", useIE11Browser);
+		model.addAttribute("mailAddress", mailAddress);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("pollNum", pollNum);
+		model.addAttribute("userPhoto", userPhoto);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("wpTotalSection ended");
+		return "/ezPortal/theme1/portalTheme1WpTotalSection";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 공지사항 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeNotice.do")
+	public String theme1wpThemeNotice(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeNotice started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("theme1wpThemeNotice ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeNotice";
 	}
 	
 	/**

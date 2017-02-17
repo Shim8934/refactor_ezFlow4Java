@@ -139,7 +139,7 @@
 						AND
 							access_ = 1
 						AND
-							write_fg = 'TRUE'
+							write_fg = 'true'
 						AND
 							boardid <> #v_pExcludeBoardID#
 						AND (	accessid = #v_pUserID#
@@ -148,7 +148,7 @@
 						    OR
 						    	accessid = #v_pCompanyID#
 						    OR
-						    	accessid = 'EVERYONE') 
+						    	accessid = 'everyone') 
  						) B
  					ON
  						A.boardid = B.boardid
@@ -195,7 +195,7 @@
 							OR
 								accessid = #v_pCompanyID#
 	                        OR
-	                        	accessid = 'EVERYONE')
+	                        	accessid = 'everyone')
  						) B
  					ON
  						A.boardid = B.boardid
@@ -2638,7 +2638,7 @@
 					WHERE
 						RTRIM(A.c_clubno) = #v_copNo#
 					AND
-						A.parentboardid != 'TOP'
+						A.parentboardid != 'top'
 					AND
 						A.tenant_id = #tenantID#
 					) T1
@@ -2657,7 +2657,7 @@
         		WHERE
         			RTRIM(A.c_clubno) = #v_copNo#
         		AND
-        			A.parentboardid != 'TOP'
+        			A.parentboardid != 'top'
         		AND
         			B.startdate <= #v_pNow#
         		AND
@@ -2988,7 +2988,7 @@
 			FROM
 				TBL_COMM_BOARDMANAGE
 			WHERE
-				boardadmin_fg = 'TRUE'
+				boardadmin_fg = 'true'
 			AND
 				(	accessid = #v_pUserID#
 				OR
@@ -4436,7 +4436,7 @@
 			WHERE
 				boardid = #v_BOARDID#
 			AND
-				parentboardid = 'TOP'
+				parentboardid = 'top'
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -5600,7 +5600,7 @@
 <!-- 		{CALL EZSP_ADMIN_HOMEBOARD_SET(#v_CLEAR#, #v_POSITION#, #v_SN#, #v_CN#, #v_BOARDID#)} -->
 <!-- 	</procedure> -->
 	<update id="EzCommunityDAO.adminHomeBoardSet"				parameterClass="Map">
-		<isEqual property="v_CLEAR" compareValue="TRUE">
+		<isEqual property="v_CLEAR" compareValue="true">
 			<![CDATA[
 				UPDATE
 					TBL_COMM_BOARDINFO
@@ -5613,7 +5613,7 @@
 					tenant_id = #tenantID#
 			]]>
 		</isEqual>
-		<isNotEqual property="v_CLEAR" compareValue="TRUE">
+		<isNotEqual property="v_CLEAR" compareValue="true">
 			<![CDATA[
 				UPDATE
 					TBL_COMM_BOARDINFO
@@ -5659,7 +5659,7 @@
 				#v_BOARDGROUPID#,
 				#v_BOARDGROUPNAME#,
 				#v_BOARDGROUPNAME2#,
-				'TOP',
+				'top',
 				#v_BOARDNO#,
 				#tenantID#)
 		]]>
@@ -5676,15 +5676,15 @@
 				parentboardid,
 				boardadmin_fg,
 				tenant_id)
-		VALUES
-			(#v_BOARDGROUPID#,
-			#v_USERINFO_USERID#,
-			#v_ACCESSNAME#,
-			1,
-			1,
-			'TOP',
-			'TRUE',
-			#tenantID#)
+			VALUES
+				(#v_BOARDGROUPID#,
+				#v_USERINFO_USERID#,
+				#v_ACCESSNAME#,
+				1,
+				1,
+				'top',
+				'true',
+				#tenantID#)
 		]]>
 	</insert>
 	
@@ -5701,12 +5701,12 @@
 				tenant_id)
 			VALUES
 				(#v_BOARDGROUPID#,
-				'EVERYONE',
-				'EVERYONE',
-				'',
+				'everyone',
+				'everyone',
+				'null',
 				1,
-				'TOP',
-				'TRUE',
+				'top',
+				'true',
 				#tenantID#)
 		]]>
 	</insert>
@@ -5783,13 +5783,13 @@
 				1,
 				1,
 				#v_PARENTBOARDID#,
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
+				'true',
+				'true',
+				'true',
+				'true',
+				'true',
+				'true',
+				'true',
 				#tenantID#)
 		]]>
 	</insert>
@@ -5812,18 +5812,18 @@
 				tenant_id)
 			VALUES
 				(#v_BOARDID#,
-				'EVERYONE',
-				'EVERYONE',
+				'everyone',
+				'everyone',
 				NULL,
 				1,
 				#v_PARENTBOARDID#,
-				'FALSE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'TRUE',
-				'FALSE',
+				'false',
+				'true',
+				'true',
+				'true',
+				'true',
+				'true',
+				'false',
 				#tenantID#)
 		]]>
 	</insert>
@@ -5981,7 +5981,7 @@
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
-				accessid <> 'EVERYONE'
+				accessid <> 'everyone'
 			AND
 				A.tenant_id = #tenantID#
 		]]>

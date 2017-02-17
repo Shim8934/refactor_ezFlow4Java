@@ -545,7 +545,9 @@
 	        <h2><span onclick="Open_Func(1)"><spring:message code="ezBoard.t365" /></span></h2>
 	        <ul>
 	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(1)"><spring:message code="ezBoard.t366" /></span></li>
-	            <li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
+	            <c:if test="${questionAdmin == 'true' }">
+	            	<li><span style="width: 100%; display: inline-block;" onclick="Open_Func(2)"><spring:message code="ezBoard.t367" /></span></li>
+	            </c:if>
 	        </ul>
 	        <h3>
 	        <span onclick="boardConfig()" style="width:100%; display:inline-block;"><spring:message code="ezBoard.t0005" /></span>
