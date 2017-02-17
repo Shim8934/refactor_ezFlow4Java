@@ -14,7 +14,7 @@
 		        };
 		    }
 		    if (new RegExp(/Chrome/).test(navigator.userAgent)) {
-		        window.resizeTo(340, 262);
+		        window.resizeTo(330+ (window.outerWidth - window.innerWidth), 205+ (window.outerHeight - window.innerHeight));
 		    }
 		    if (navigator.userAgent.indexOf('Firefox') != -1) {
 		        window.resizeTo(348, 277);

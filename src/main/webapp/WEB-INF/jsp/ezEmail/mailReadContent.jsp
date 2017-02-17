@@ -245,7 +245,7 @@
 		</div>
 		<div id="MailBigAttachRayer" class="previewmail_addfile">
 		</div>
-		<div class='margin' id="normalScreen" style="margin-top:5px;">${htmlBody}</div>
+		<div class='margin' id="normalScreen" style="margin-top:5px; word-wrap:break-word;">${htmlBody}</div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>  
 	</body>
 	<script language="javascript" type="text/javascript">

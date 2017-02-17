@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezSchedule.service;
 
 import java.util.List;
 
+import org.w3c.dom.NodeList;
+
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
@@ -33,9 +35,7 @@ public interface EzScheduleService {
 	public List<ScheduleDeptVO> getPublicScheduleDept(String userId, String lang, int tenantId) throws Exception;
 	
 	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId) throws Exception;
-	
-	public int getNewScheduleId() throws Exception;
-	
+		
 	public int getReceiveCount (String pUserId, int tenantId) throws Exception;
 	
 	public int getInviteScheduleGroupCnt (String pUserId, int tenantId) throws Exception;
@@ -78,9 +78,9 @@ public interface EzScheduleService {
 
 	public void insertSecretary(String userID, String displayName, String displayName2, String secretaryID, String secretaryName, int tenantID) throws Exception;
 
-	public void insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
-			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, String attachxml, String attendantxml, 
-			String contentPath, int tenantId) throws Exception;
+	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
+			String ispublic, String datetype, String startdate, String enddate, String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
+			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception;
 
 	
 }

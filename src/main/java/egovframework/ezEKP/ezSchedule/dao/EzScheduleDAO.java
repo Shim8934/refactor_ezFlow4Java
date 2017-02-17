@@ -66,9 +66,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 		return (List<ScheduleCumulerVO>) list("EzScheduleDAO.getPublicScheduleCumuler", map);
 	}
 
-	public int getNewScheduleId(Map<String, Object> map) {
-		select("EzScheduleDAO.getNewScheduleId", map);
-		return (int) map.get("v_pScheduleId");
+	public int getCurScheduleId(Map<String, Object> map) {
+		return (int) select("EzScheduleDAO.getCurScheduleId", map);		
 	}
 
 	public int getReceiveCount(Map<String, Object> map) {
@@ -186,7 +185,15 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 
 	public void insertSchedule(Map<String, Object> map) throws Exception {
-		insert("EzScheduleDAO.insertSchedule", map);		
+		insert("EzScheduleDAO.insertSchedule", map);
+	}
+
+	public void insertScheduleAttach(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleAttach", map);
+	}
+
+	public void insertScheduleAttendant(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleAttendant", map);
 	}
 
 }

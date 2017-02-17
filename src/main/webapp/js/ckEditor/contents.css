@@ -20,6 +20,7 @@ body
 	background-color: #fff;
 
 	margin: 20px;
+	word-wrap:break-word;
 }
 
 .cke_editable
