@@ -1176,7 +1176,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzResourceDAO.addResData_S1" resultClass="Integer">
+	<select id="EzResourceDAO.addResData_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
 				(NVL(MAX(BRD_ID) , 0) + 1)
