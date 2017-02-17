@@ -98,6 +98,7 @@
         	</dl>
         	<ul class="content_list01" id="mail_list">
         	</ul>
+        	
     	</div>
 	</body>
 </html>

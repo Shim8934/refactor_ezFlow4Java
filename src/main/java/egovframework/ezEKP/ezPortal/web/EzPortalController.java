@@ -1765,6 +1765,36 @@ public class EzPortalController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 포탈 - webPart 테마1 메일 그래프 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeMailGraph.do")
+	public String theme1wpThemeMailGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeMaiGraph started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("theme1wpThemeMailGraph ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeMailGraph";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 일정 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeCalendar.do")
+	public String theme1wpThemeCalendar(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeCalendar started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("theme1wpThemeCalendar ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeCalendar";
+	}
+	
+	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezPortal/environmentMain.do")
