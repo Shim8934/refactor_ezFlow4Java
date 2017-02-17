@@ -31,6 +31,8 @@ public interface EzPersonalService {
 	
 	public List<PersonalNoticeVO> getNoticeListMain (String companyID, int tenantID) throws Exception;
 	
+	public List<PersonalNoticeVO> getNoticeListUser (String companyID, int pTotal, int pCount, int pStart, int tenantID) throws Exception;
+	
 	public PersonalGetEmpOfMonthVO getEmpOfMonth (String pTerm, int tenantID) throws Exception;
 	
 	public PersonalLightPollVO getCurrentPoll (String pUserID, String pCompanyID, int tenantID) throws Exception;

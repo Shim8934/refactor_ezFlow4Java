@@ -1166,7 +1166,7 @@
 <!-- 	<procedure id="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETLINEINFO(#v_DOCID#, #v_MODE#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 				TBL_APRLINEINFO.DOCID, 
@@ -1191,7 +1191,7 @@
               	TBL_EXPAPRLINE.ORGUSERID, 
               	TBL_EXPAPRLINE.PROXYUSERID,
               	TBL_EXPAPRLINE.PROXYUSERNAME,  
-              	TBL_EXPAPRLINE.PROXYUSERNAME2 ,
+              	TBL_EXPAPRLINE.PROXYUSERNAME2,
               	TBL_EXPAPRLINE.PROXYUSERJOBTITLE, 
               	TBL_EXPAPRLINE.PROXYUSERJOBTITLE2,
               	TBL_EXPAPRLINE.PROXYUSERDEPTID, 
@@ -1389,7 +1389,7 @@
                     	A.AprMemberDeptName2,  
                     	B.ORGUSERID, 
                     	B.PROXYUSERID, 
-                    	B.PROXYUSERNAME, 
+                    	B.PROXYUSERNAME,
                     	B.PROXYUSERJOBTITLE, 
                     	B.PROXYUSERDEPTID, 
                     	B.PROXYUSERDEPTNAME ,
@@ -13387,7 +13387,7 @@
 				   		</isNotEmpty>
 				   		<isEmpty property="v_ORDEROPTION2">
 				   			ORDER BY 
-				   				RECEIPTDATE DESC, SN 
+				   				RECEIPTDATE DESC, SN DESC
 				   		</isEmpty>
 				   		<![CDATA[
 				   		LIMIT
@@ -15752,7 +15752,7 @@
         		AttachUserDeptName2, 
         		TENANT_ID   
            FROM 
-           		TBL_APRDOCATTACHINFO A 
+           		TBL_APRDOCATTACHINFO  
 		   WHERE  
 		   		DOCID = #v_DOCID# 
 		   AND 	

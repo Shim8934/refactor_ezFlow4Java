@@ -1237,4 +1237,39 @@ public class EzPersonalController extends EgovFileMngUtil {
 		return "/ezPersonal/persShowNotice";
 	}
 	
+	/**
+	 * 포탈 테마1 공지사항 리스트 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/noticeList.do")
+	public String noticeList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("noticeList started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		int pageSize = 15;
+		int currentPage = 0;
+		int totalCount = 0;
+		
+		
+		if (req.getParameter("page") != null && !req.getParameter("page").equals("")) {
+			currentPage = Integer.parseInt(req.getParameter("page"));
+		} else {
+			currentPage = 1;
+		}
+		
+		totalCount = ezPersonalAdminService.getNoticeCountUser(userInfo.getCompanyID(), userInfo.getTenantId());
+		List<PersonalNoticeVO> list = ezPersonalService.getNoticeListUser(userInfo.getCompanyID(), totalCount, pageSize, (currentPage-1) * pageSize, userInfo.getTenantId());
+		
+		int pageCount = (totalCount + pageSize -1) / pageSize; 
+		
+		model.addAttribute("pageCount", pageCount);
+		model.addAttribute("currentPage", currentPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("list", list);
+		
+		logger.debug("noticeList ended");
+		return "/ezPersonal/persNoticeList";
+	}
+	
+	
 }

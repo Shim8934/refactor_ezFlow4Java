@@ -62,6 +62,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("tenantID", tenantID);
 		return ezPersonalAdminDAO.getNoticeCount(map);
 	}
+	
+	@Override
+	public int getNoticeCountUser(String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pMode", "U");
+		map.put("tenantID", tenantID);
+		return ezPersonalAdminDAO.getNoticeCount(map);
+	}
 
 	@Override
 	public List<PersonalNoticeVO> getNoticeList(String companyID, int totalCount, int pageSize, int pStart, int tenantID) throws Exception {
