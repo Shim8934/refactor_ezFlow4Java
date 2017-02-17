@@ -1794,7 +1794,7 @@
 			</isNotEqual>
 		    </isEqual>
 		<isNotEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp3" compareValue="0">
+			<isEqual property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -1803,7 +1803,7 @@
                   FROM DUAL  
                   ]]>
 			</isEqual>
-			<isNotEqual property="v_temp3" compareValue="0">
+			<isNotEqual property="v_temp3" compareValue="1">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
@@ -17944,4 +17944,19 @@
         VALUES 
         ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDSATE#, ' ' );
    	</insert>
+   	
+   	<select id="EzApprovalG.permissAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+   		SELECT 
+   			DOCID ,
+            'NULL' PROCESSORID  ,
+            'NULL' RECEIVEDDEPTID  
+         FROM 
+         	TBL_APRLINEINFO 
+         WHERE  
+         	DOCID = #v_PDOCID#
+         AND 
+         	APRMEMBERID = #v_PAPRUSERID#
+         AND 
+         	( APRSTATE = '002' OR APRSTATE = '005' )
+   	</select>
 </sqlMap>
