@@ -1164,7 +1164,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
-				filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
+				filePath = "/admin/ezOrgan/getPersonalInfo.do?fileName="+result.getFilePath();
 			} else {
 				filePath = "/images/default_pic.jpg";
 			}
@@ -1802,6 +1802,25 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		logger.debug("theme1wpThemeAppr ended");
 		return "/ezPortal/theme1/portalTheme1WpThemeAppr";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 생일 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBirth.do")
+	public String theme1wpThemeBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeAppr started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		Calendar cal = Calendar.getInstance();
+		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
+	
+		model.addAttribute("curMon", curMon);	
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("theme1wpThemeBirth ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeBirth";
 	}
 	
 	

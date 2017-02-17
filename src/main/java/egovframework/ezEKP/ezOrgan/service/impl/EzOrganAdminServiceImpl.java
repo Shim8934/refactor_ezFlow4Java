@@ -674,14 +674,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             for (int i = 0; i < addJobinfo.length; i++) {
             	String[] userInfo = addJobinfo[i].split(":");
             	pDeptID = userInfo[0];
-            	if (userInfo.length > 2) {
+            	            	
+            	if (userInfo.length > 1) {
             		sTitle1 = userInfo[1];
             	}
                 
                 sTitle2 = "";
                 
-                if (userInfo.length == 3) {
+                if (userInfo.length > 2) {
                     sTitle2 = userInfo[2];
+                } else {
+                    sTitle2 = sTitle1;
                 }
                 
                 // 해당 User가 겸직할 부서의 Group Email 주소에 User를 등록한다.                  

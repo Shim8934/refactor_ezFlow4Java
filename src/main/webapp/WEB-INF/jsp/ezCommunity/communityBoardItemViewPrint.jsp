@@ -79,7 +79,9 @@
 				doc.open();
 				doc.write(html);
 				doc.close();
-			
+				
+				$("#message").contents().find("body").css("word-wrap", "break-word");
+				
 			    SetAttachmentInfo();
 			    if (OneLineReplyFlag == "1") {
 			    	getOneLineReply();
