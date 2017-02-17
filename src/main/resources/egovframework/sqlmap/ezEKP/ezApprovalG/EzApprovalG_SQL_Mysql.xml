@@ -3699,7 +3699,7 @@
 					<isGreaterEqual property="start" compareValue="0">
 						) N $orderBy$
 					LIMIT
-						#limit#, #rowCount# 
+					#limit#, #rowCount# 
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
@@ -3711,7 +3711,7 @@
 			<isEmpty property="isDocPrint">
 				) N $orderBy$ 
 			LIMIT
-				#limit#, #rowCount#
+					#limit#, #rowCount#
 			</isEmpty>
 	</select>
 	
@@ -6516,7 +6516,7 @@
                 	AND 
                 		 C.AprState IN ( '004' )
            ORDER BY 
-           		C.AprMemberSN DESC )
+           		C.AprMemberSN DESC )A
 		</isEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getDocInfoSP" parameterClass="Map" resultClass="ApprGDocInfoWebSrvVO"> -->
@@ -8224,11 +8224,11 @@
 			TBL_SEPERATEATTACH.RegisterType = #regType#
 	</isNotEmpty>
 	<isNotEmpty property="regStartDate" prepend="AND">
-			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y.%m.%d %H:%i:%s')
+			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
 	</isNotEmpty>
 	<isNotEmpty property="regEndDate" prepend="AND">
 		<![CDATA[
-			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y.%m.%d %H:%i:%s')
+			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
 	<isNotEmpty property="sc" prepend="AND">
