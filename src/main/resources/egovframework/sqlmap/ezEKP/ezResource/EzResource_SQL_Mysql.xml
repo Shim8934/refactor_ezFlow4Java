@@ -1075,27 +1075,23 @@
     		SET
     			BRD_STEP = BRD_STEP - 1
 			WHERE
-				BRD_UPPER = ( SELECT
-								Brd_Upper 
-                         	  FROM
-                         		TBL_RS_BRD 
-                         	  WHERE
-                         		BRD_ID = #v_P_Brd_ID#
-                         	  AND
-                         		BRD_COMPANY = #v_P_CompanyID# 
-                         	  AND
-								TENANT_ID = #tenantID# )
+				BRD_UPPER = ( SELECT S1.BRD_UPPER 
+							  FROM ( SELECT *
+                         	  		 FROM TBL_RS_BRD 
+                         	  		 WHERE BRD_ID = #v_P_Brd_ID#
+                         	  		 AND BRD_COMPANY = #v_P_CompanyID# 
+                         	  		 AND TENANT_ID = #tenantID# 
+                         	  	   ) AS S1
+                         	)
     		AND
-    			BRD_STEP > ( SELECT
-								BRD_STEP 
-							 FROM
-								TBL_RS_BRD 
-                     		 WHERE
-                     			BRD_ID = #v_P_Brd_ID#
-							 AND
-								BRD_COMPANY = #v_P_CompanyID#
-							 AND
-								TENANT_ID = #tenantID# )
+    			BRD_STEP > ( SELECT S2.BRD_STEP 
+    						 FROM ( SELECT *
+							 		FROM TBL_RS_BRD 
+                     		 		WHERE BRD_ID = #v_P_Brd_ID#
+							 		AND BRD_COMPANY = #v_P_CompanyID#
+							 		AND TENANT_ID = #tenantID# 
+							 	  ) AS S2
+						   )
 			AND
 				TENANT_ID = #tenantID#					  		
 		]]>
