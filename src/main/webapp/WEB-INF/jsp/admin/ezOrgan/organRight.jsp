@@ -653,7 +653,7 @@
 		            usermenu4.disabled = false;
 		            usermenu5.disabled = false;
 		            usermenu6.disabled = false;
-		            usermenu7.disabled = false;
+//		            usermenu7.disabled = false;
 		            usermenu8.disabled = false;
 		            try {
 		                usermenu9.disabled = false;
@@ -671,7 +671,7 @@
 		            usermenu4.disabled = true;
 		            usermenu5.disabled = true;
 		            usermenu6.disabled = true;
-		            usermenu7.disabled = true;
+//		            usermenu7.disabled = true;
 		            usermenu8.disabled = true;
 		            
 		            try {
@@ -685,6 +685,7 @@
 		                usermenusipuri.disabled = true;
 		            }
 		        }
+		        		        
 		        if (TreeView.selectedIndex != -1){
 		            displayUserList(treeNode.GetNodeData("CN"));
 		        }
