@@ -292,6 +292,17 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("tenantID", tenantID);
 		return ezPersonalDAO.getNoticeListMain(map);
 	}
+	
+	@Override
+	public List<PersonalNoticeVO> getNoticeListUser(String companyID,int pTotal, int pCount, int pStart, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pTotal", pTotal);
+		map.put("v_pCount", pCount);
+		map.put("v_pStart", pStart);
+		map.put("tenantID", tenantID);
+		return ezPersonalDAO.getNoticeListUser(map);
+	}
 
 	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception {
 		

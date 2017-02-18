@@ -79,7 +79,9 @@
 				doc.open();
 				doc.write(html);
 				doc.close();
-			
+				
+				$("#message").contents().find("body").css("word-wrap", "break-word");
+				
 			    SetAttachmentInfo();
 			    if (OneLineReplyFlag == "1") {
 			    	getOneLineReply();
@@ -251,7 +253,7 @@
 		  	</tr>
 		  	<tr>
 		    	<td class="pad1" id="ItemOverflow" style="display:none"  >
-		    		<iframe id="message" class="viewbox" name="message" frameborder="0" style="display:none" onload ="displaytable()">
+		    		<iframe id="message" class="viewbox" name="message" style="display:none" onload ="displaytable()">
 		    	</iframe></td> 
 		  	</tr>
 		    <tr>

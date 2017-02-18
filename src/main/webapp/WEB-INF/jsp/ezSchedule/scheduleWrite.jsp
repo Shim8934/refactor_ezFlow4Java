@@ -12,6 +12,7 @@
         <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" type="text/css" >
 		<link rel="stylesheet" href="/js/jquery/timeControls/jquery.timepicker.css" type="text/css" />
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
@@ -19,7 +20,6 @@
 		<script type="text/javascript" src="/js/ezSchedule/Calendar/TabMenu.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<!-- data picker-->		
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<!-- time picker-->		
@@ -341,8 +341,7 @@
 		        if (scheduleid == "") {
 		            printOwner = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].textContent;
 		            printAttendant = document.getElementById("receiverlist").textContent;
-		        }
-		        else {
+		        } else {
 		            printOwner = document.getElementById("LabelOwner").textContent;
 		            printAttendant = document.getElementById("LabelAttendant").textContent;
 		        }
@@ -356,9 +355,9 @@
 		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + "<spring:message code='ezSchedule.t280' />";
 		            else
 		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-		        }
-		        else
+		        } else {
 		            printDate = "<spring:message code='ezSchedule.t343' />";
+		        }
 
 		        printLocation = document.getElementById("TextLocation").value;
 		        printTitle = document.getElementById("TextTitle").value;
@@ -401,7 +400,7 @@
 		        printDocument = message.GetEditorContent();
 
 		        var params = { 'type': 'NEW', 'printOwner': printOwner, 'printAttendant': printAttendant, 'printIsPublic': printIsPublic, 'printImportance': printImportance, 'printRepetition': printRepetition, 'printDate': printDate, 'printLocation': printLocation, 'printTitle': printTitle, 'printAttach': printAttach, 'printDocument': printDocument };
-		        post_to_url("schdule_ContentsPirnt.aspx", params, "post");
+		        post_to_url("/ezSchedule/scheduleContentsPirnt.do", params, "post");
 		    }
 
 	        function post_to_url(path, params, method) {
@@ -467,12 +466,7 @@
 	                                        <option value='Y'><spring:message code='ezSchedule.t359'/></option>
 	                                        <option value='N' selected><spring:message code='ezSchedule.t360'/></option>
 	                                    </select>	
-	                                </li>
-	                                <!--
-	              <asp:PlaceHolder ID="HolderRepetition" runat="server" Visible="false">
-	                <li><span onClick="restore_deleted()" title="<spring:message code='ezSchedule.t361'/>"><spring:message code='ezSchedule.t362'/></span></li>
-	              </asp:PlaceHolder>
-	              -->
+	                                </li>	              
 	                            </ul>
 	                        </div>
 	                        <div id="close">
@@ -683,9 +677,9 @@
 	            selToggleList(document.getElementById("close"), "ul", "li", "0");
 	            Tab1_NewTabIni("tab1");
 	        </script>
-	    <script type="text/javascript">
-	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
-	    </script>
+		    <script type="text/javascript">
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
+		    </script>
 	    </form>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">

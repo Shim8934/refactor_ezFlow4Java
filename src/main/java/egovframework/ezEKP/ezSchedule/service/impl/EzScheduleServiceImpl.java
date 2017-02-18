@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezSchedule.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -20,6 +19,7 @@ import javax.annotation.Resource;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
@@ -135,13 +135,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getPublicScheduleCumuler(map);
-	}
-
-	@Override
-	public int getNewScheduleId() throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		return ezScheduleDAO.getNewScheduleId(map);
 	}
 
 	@Override
@@ -673,13 +666,15 @@ System.out.println("=========================================================== 
 	}
 
 	@Override
-	public void insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
-			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, String attachxml, String attendantxml, 
-			String defaultPath, int tenantId) throws Exception {
+	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
+			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
+			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception {
+
+System.out.println("======================================================== service start");		
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		//본문내용 MHT 저장
-		String contentPath = defaultPath + commonUtil.separator + "doc";
+		String mhtPath = commonUtil.separator + "doc";
+		String contentPath = defaultPath + mhtPath;
 		File file = new File(contentPath);
 
 		if (!file.exists()) {			
@@ -687,27 +682,41 @@ System.out.println("=========================================================== 
 		}
 		
 		InputStream stream = null;
-		OutputStream bos = null;
+		OutputStream bos = null;		
+		int sID = 0;
 		
 		try {
-			contentPath += commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+			contentPath += schedulePath;
 
 			byte[] ct = Base64.decode(content);
 			stream = new ByteArrayInputStream(ct);
 			bos = new FileOutputStream(contentPath);
-			
+System.out.println("======================================================== service 2");			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
 			
 			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-			
-			//첨부파일 저장 + SQL
+System.out.println("======================================================== service 3");		
+			//첨부파일 카운트
 			String hasattach = "N";
-			//비서관련 데이터 저장 로직 + SQL
+			
+			if(attach.getLength() > 0) {				
+				hasattach = "Y";
+			}
+			//비서정보 카운트
 			String hasattendant = "N";
+			
+			if(attendantId.getLength() > 0) {				
+				hasattendant = "Y";
+			}			
 			//일정 정보 저장
+			schedulePath = mhtPath + schedulePath;
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			
 			map.put("v_OWNERID", ownerid);
 			map.put("v_OWNERNAME", ownername);
 			map.put("v_CREATORID", creatorid);
@@ -723,18 +732,55 @@ System.out.println("=========================================================== 
 			map.put("v_REPETITION", repetition);
 			map.put("v_TITLE", title);
 			map.put("v_LOCATION", location);
-			map.put("v_CONTENTPATH", contentPath);
-			map.put("v_TENANTID", tenantId);		
+			map.put("v_CONTENTPATH", schedulePath);
+			map.put("v_TENANTID", tenantId);
 			
-			ezScheduleDAO.insertSchedule(map);	
+			ezScheduleDAO.insertSchedule(map);			
+			//첨부파일 저장
+			Map<String, Object> attachMap = new HashMap<String, Object>();
+			
+			for (int i=0; i < attach.getLength(); i++) {
+				String[] files = attach.item(i).getTextContent().split("/");				
+				String fileName = files[1];
+				String filePath = files[0];
+				String fileSize = files[2];
+				
+				attachMap.put("v_FILENAME", fileName);
+				attachMap.put("v_FILEPATH", filePath);
+				attachMap.put("v_FILESIZE", fileSize);
+				attachMap.put("v_TENANTID", tenantId);
+				
+				ezScheduleDAO.insertScheduleAttach(attachMap);
+			}
+			//참석자 관련 데이터 저장 로직
+			Map<String, Object> attendantMap = new HashMap<String, Object>();
+			
+			for (int i=0; i < attendantId.getLength(); i++) {								
+				String v_attendantId = attendantId.item(i).getTextContent();				
+				String v_attendantName = attendantName.item(i).getTextContent();
+				String v_attendantName2 = attendantName2.item(i).getTextContent();
+				String v_attendantDeptName = attendantDeptName.item(i).getTextContent();
+				String v_attendantDeptName2 = attendantDeptName2.item(i).getTextContent();
+
+				attendantMap.put("v_ATTENDANTID", v_attendantId);
+				attendantMap.put("v_ATTENDANTNAME", v_attendantName);
+				attendantMap.put("v_ATTENDANTNAME2", v_attendantName2);
+				attendantMap.put("v_ATTENDANTDEPTNAME", v_attendantDeptName);
+				attendantMap.put("v_ATTENDANTDEPTNAME2", v_attendantDeptName2);
+				attendantMap.put("v_TENANTID", tenantId);
+				
+				ezScheduleDAO.insertScheduleAttendant(attendantMap);
+			}
+			
+			sID = ezScheduleDAO.getCurScheduleId(null);			
 		} catch (Exception e) {
 			
 		} finally {
 			if (stream != null) stream.close();				
 			if (bos != null) bos.close();
-		}			
-	}
-	
+		}
+		return sID;
+	}	
 	
 	
 }

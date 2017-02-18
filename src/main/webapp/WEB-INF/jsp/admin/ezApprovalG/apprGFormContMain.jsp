@@ -456,7 +456,7 @@
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
 	            <td valign="top" style="width:45%">
-	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 100%; HEIGHT: 288px; BACKGROUND-COLOR: #ffffff;overflow:auto"></div>
+	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 357px; HEIGHT: 288px; BACKGROUND-COLOR: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td align="center" style="width:10%">
 	               <a class="imgbtn" id="btnManage" style="display:none"><span onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>

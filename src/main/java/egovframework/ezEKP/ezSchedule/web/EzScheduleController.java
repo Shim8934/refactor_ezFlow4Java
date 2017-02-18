@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSchedule.web;
 
 import java.io.File;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.ibm.icu.util.Calendar;
 
@@ -51,7 +52,6 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
@@ -189,15 +189,61 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
-		StringBuilder sb = new StringBuilder("<DATA>");
-		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+				
 		String startDate = request.getParameter("STARTDATE");
 		String endDate = request.getParameter("ENDDATE");
 		String idList = request.getParameter("IDLIST");
 		String groupID = request.getParameter("GROUPID");
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		//일정관리 데이터 호출 함수
+		List<ScheduleInfoVO> sList = scheduleListData(startDate, endDate, idList, groupID, offSetMin, userInfo);
+		
+		Collections.sort(sList, new EzScheduleCompareUtil());
+		
+		for(int j = 0; j < sList.size(); j++){			
+			ScheduleInfoVO data = sList.get(j);
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+	
+		return sb.toString();
+	}
+	
+	/**
+	 * 메인화면 일정 데이터 표출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleNewWebPartList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleNewWebPartList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		String selectDate = request.getParameter("selectDate");
+		String idList = "T";
+				
+		StringBuilder sb = new StringBuilder("<DATA>");
+		//일정관리 데이터 호출 함수
+		List<ScheduleInfoVO> sList = scheduleListData(selectDate, selectDate, idList, "", offSetMin, userInfo);
+		
+		Collections.sort(sList, new EzScheduleCompareUtil());
+		
+		for(int j = 0; j < sList.size(); j++){			
+			ScheduleInfoVO data = sList.get(j);
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+		
+	/**
+	 * 일정관리 일정 데이터 표출 함수	 
+	 * */	
+	
+	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {				
 		String pidList = "";
 		
 		if(startDate != null && !startDate.equals("")) {
@@ -215,6 +261,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			
 			endDate = eDate[0] + "-" + eMon + "-" + eDay  + " 23:59:59";
 		}
+		
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), true);
 		
 		if (idList == null) {
 			idList = "";
@@ -248,17 +297,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 			pidList = "'" + idList + "'";
 		}		
 		
-		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", startDate, endDate, "", offSetMin, userInfo.getTenantId());
-		
-		Collections.sort(sList, new EzScheduleCompareUtil());
-		
-		for(int j = 0; j < sList.size(); j++){			
-			ScheduleInfoVO data = sList.get(j);
-			sb.append(commonUtil.getQueryResult(data));
-		}
-		sb.append("</DATA>");
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, "", offSetMin, userInfo.getTenantId());		
 	
-		return sb.toString();
+		return sList;
 	}
 
 	/**
@@ -1302,151 +1343,287 @@ System.out.println("=================================== model end");
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleSave.do")
 	@ResponseBody
-	public void scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, Model model, LoginVO loginVO) throws Exception {        
-        String pageFrom = "";
-        String _pattern;
-        String saveScheduleId = "";
-        List<String> inlineimage = new ArrayList<String>();
-        List<String> inlineContent = new ArrayList<String>();
+	public String scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);	
+		int result = 0;
+						
+        String pageFrom = request.getParameter("pageFrom");
+		if (pageFrom == null) pageFrom = "";
 
-        try {
-			loginVO = commonUtil.userInfo(loginCookie);
-			String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-			
-			model.addAttribute("userInfo", loginVO);
-	
-	        pageFrom = request.getParameter("pageFrom");
-    		if (pageFrom == null) pageFrom = "";
-	
-    		Document doc = commonUtil.convertStringToDocument(requestXML);
-	        String scheduleid	= doc.getElementsByTagName("SCHEDULEID").item(0).getTextContent();
-	        String ownerid		= doc.getElementsByTagName("OWNERID").item(0).getTextContent();
-	        String ownername	= doc.getElementsByTagName("OWNERNAME").item(0).getTextContent();
-	        String ownername2	= doc.getElementsByTagName("OWNERNAME2").item(0).getTextContent();
-	        String creatorid	= doc.getElementsByTagName("CREATORID").item(0).getTextContent();
-	        String creatorname	= doc.getElementsByTagName("CREATORNAME").item(0).getTextContent();
-	        String creatorname2	= doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent();
-	        String scheduletype	= doc.getElementsByTagName("SCHEDULETYPE").item(0).getTextContent();
-	        String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
-	        String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
-	        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();
-	        String schenddate	= doc.getElementsByTagName("ENDORGINDATE").item(0).getTextContent();
-	        String otherid		= doc.getElementsByTagName("OTHERID").item(0).getTextContent();
-	        String pattern = "";
+		Document doc = commonUtil.convertStringToDocument(requestXML);
+        String scheduleid	= doc.getElementsByTagName("SCHEDULEID").item(0).getTextContent();
+        String ownerid		= doc.getElementsByTagName("OWNERID").item(0).getTextContent();
+        String ownername	= doc.getElementsByTagName("OWNERNAME").item(0).getTextContent();
+        String ownername2	= doc.getElementsByTagName("OWNERNAME2").item(0).getTextContent();
+        String creatorid	= doc.getElementsByTagName("CREATORID").item(0).getTextContent();
+        String creatorname	= doc.getElementsByTagName("CREATORNAME").item(0).getTextContent();
+        String creatorname2	= doc.getElementsByTagName("CREATORNAME2").item(0).getTextContent();
+        String scheduletype	= doc.getElementsByTagName("SCHEDULETYPE").item(0).getTextContent();
+        String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
+        String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
+        String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();	        
+        String sch_enddate	= doc.getElementsByTagName("ENDORGINDATE").item(0).getTextContent();
+        String pattern = "";
 
-	        if (scheduleid != "") {
-	            _pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
-	            pattern = _pattern;
-	        } /*else {
-	        	scheduleid = "" + ezScheduleService.getNewScheduleId();
-	        }	*/        
-	
-	        String startdate	= doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
-	        String enddate		= doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
-	        String repetition	= doc.getElementsByTagName("REPETITION").item(0).getTextContent();
-	        String title		= doc.getElementsByTagName("TITLE").item(0).getTextContent();
-	        String location		= doc.getElementsByTagName("LOCATION").item(0).getTextContent();
-	        String content		= doc.getElementsByTagName("CONTENT").item(0).getTextContent();
-	        String attachxml	= doc.getElementsByTagName("ATTACHLIST").item(0).getTextContent();
-	        String attendantxml	= doc.getElementsByTagName("ATTENDANTLIST").item(0).getTextContent();
-	        String changekey	= doc.getElementsByTagName("CHANGEKEY").item(0).getTextContent();	               
-	        
-	        if (pattern.equals("0")) {
-	        	repetition = "";
-	        }        
-	        
-	        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+        if (scheduleid != null && !scheduleid.equals("")) {
+        	pattern = doc.getElementsByTagName("PATTERN").item(0).getTextContent();
+        }        
+
+        String startdate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+        String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+                	
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(sdf.parse(enddate));
+    	
+    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+    		cal.add(Calendar.MINUTE, -1);        		
+    		enddate = sdf.format(cal.getTime());
+    	}
+    	//한자리수 날짜가 들어와도 yyyy-MM-dd HH:mm 형식으로 변환하여 요류방지
+    	startdate = sdf.format(sdf.parse(startdate));
+    	enddate = sdf.format(sdf.parse(enddate));
+
+        startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), true);
+    	enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), true);
+        
+        String repetition	= doc.getElementsByTagName("REPETITION").item(0).getTextContent();
+        String title		= doc.getElementsByTagName("TITLE").item(0).getTextContent();
+        String location		= doc.getElementsByTagName("LOCATION").item(0).getTextContent();
+        String content		= doc.getElementsByTagName("CONTENT").item(0).getTextContent();
+        NodeList attach				= doc.getElementsByTagName("ATTACH");
+        NodeList attendantId 		= doc.getElementsByTagName("ATTENDANTID");
+        NodeList attendantName 		= doc.getElementsByTagName("ATTENDANTNAME1");
+        NodeList attendantName2 	= doc.getElementsByTagName("ATTENDANTNAME2");
+        NodeList attendantDeptName 	= doc.getElementsByTagName("ATTENDANTDEPTNAME");
+        NodeList attendantDeptName2 = doc.getElementsByTagName("ATTENDANTDEPTNAME2");
+   
+	    if (pattern.equals("0")) {
+        	repetition = "";
+        }        
+        
+        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
   
-	        if (scheduleid == null || scheduleid.equals("")) {
-	        	//insertSchedule
-	        	startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), true);
-	        	enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), true);
-	        	
-	        	ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, attendantxml, defaultPath, loginVO.getTenantId());
-	        } else {
-	        	//updateSchedule
-	        	//ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentPath);
-	        }	        
-	    } catch (Exception Ex) {
-	        Ex.printStackTrace();;
-	    }		
+	    if (scheduleid == null || scheduleid.equals("")) {
+        	//insertSchedule
+        	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId());
+        } else {
+        	//updateSchedule
+        	//ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentPath);
+        }
+        
+        return Integer.toString(result);
 	}
+	
+	/**
+	 * 일정작성 > 참석자 일정조회 팝업
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleAddUser.do")
+	public String scheduleAddUser(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("userInfo", loginSimpleVO);
+		
+		return "/ezSchedule/scheduleAddUser";
+	}
+	
+	/**
+	 * 일정작성 > 참석자 일정조회 데이터 
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleAttendantList.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String scheduleAttendantList(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
+		String startDate = request.getParameter("STARTDATE");
+		String endDate = request.getParameter("ENDDATE");
+		String idList = request.getParameter("IDLIST");		
+		String pidList = "'" + idList + "'";		
+		String utcStartTime = commonUtil.getDateStringInUTC(startDate + " 00:00:00", userInfo.getOffset(), true);
+		String utcEndTime = commonUtil.getDateStringInUTC(endDate + " 23:59:59", userInfo.getOffset(), true);
 
-//	// 일정 저장
-//    public String InsertSchedule_DB(String pOwnerID, String pOwnerName, String pOwnerName2, String pCreatorID, String pCreatorName, String pCreatorName2,
-//            String pScheduleType, String pImportance, String pIsPublic, String pDateType,
-//            String pStartDate, String pEndDate, String pRepetition, String pTitle, String pLocation, String pContent, String pAttachXML,
-//            String pAttendantXML, String pContentPath)
-//    {
-//        try
-//        {
-//            // 일정 본문을 파일로 저장한다.
-//            String path = "Doc/" + Guid.NewGuid().ToString().ToUpper() + ".mht";
-//            StreamWriter writer = new StreamWriter(pContentPath + System.IO.Path.DirectorySeparatorChar.ToString() + path.Replace("/", "\\"), false, System.Text.Encoding.Default);
-//            writer.Write(pContent);
-//            writer.Close();
-//
-//            XmlDocument xmldom = new XmlDocument();
-//            xmldom = GetXmlReaderString(pAttachXML);
-//
-//            //String conStr = GetSystemConfigValue("ezPims");
-//
-//            StringBuilder attachsql = new StringBuilder();
-//            for (int i = 0; i < xmldom.GetElementsByTagName("ATTACH").Count; i++)
-//            {
-//                String filename = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[1];
-//                String filepath = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[0];
-//                String filesize = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[2];
-//
-//				attachsql += "INSERT INTO TBLSCHEDULEATTACH(AttachID, ScheduleID, FileName, FilePath, FileSize) VALUES(SEQ_INC_TBLSCHEDULEATTACH.NEXTVAL, seq_inc_TBLSCHEDULE.CURRVAL, '" + 
-//				MakeRightField(filename) + "','" + MakeRightField(filepath) + "', " + filesize + ");";
-//            }
-//
-//            xmldom = GetXmlReaderString(pAttendantXML);
-//
-//            StringBuilder attendantsql = new StringBuilder();
-//            for (int i = 0; i < xmldom.GetElementsByTagName("ATTENDANTID").Count; i++)
-//            {
-//                String attendantid = xmldom.GetElementsByTagName("ATTENDANTID")[i].InnerText;
-//                String attendantname = xmldom.GetElementsByTagName("ATTENDANTNAME1")[i].InnerText;
-//                String attendantname2 = xmldom.GetElementsByTagName("ATTENDANTNAME2")[i].InnerText;
-//                String attendantdeptname = xmldom.GetElementsByTagName("ATTENDANTDEPTNAME")[i].InnerText;
-//                String attendantdeptname2 = xmldom.GetElementsByTagName("ATTENDANTDEPTNAME2")[i].InnerText;
-//
-//				attendantsql.append("INSERT INTO TBLATTENDANT(ScheduleID,AttendantID,AttendantName,AttendantDeptName,Status,ResponseDate) VALUES(seq_inc_TBLSCHEDULE.CURRVAL, '" + 
-//				MakeRightField(attendantid) + "','" + MakeRightField(attendantname) + "','" + MakeRightField(attendantdeptname) + "',0,sysdate);)";
-//            }                
-//            pTitle = LeftByte(pTitle, 250);
-//            pLocation = LeftByte(pLocation, 250);
-//            pCreatorName = LeftByte(pCreatorName, 50);
-//            pCreatorName2 = LeftByte(pCreatorName2, 50);
-//
-//            string hasattach = "N";
-//            if (attachsql.Length > 0) hasattach = "Y";
-//
-//            string hasattendant = "N";
-//            if (attendantsql.Length > 0) hasattendant = "Y";
-//
-//            StringBuilder sql = new StringBuilder();
-//			sql.append(  "INSERT INTO TBLSCHEDULE(ScheduleID,ParentID,OwnerID,OwnerName,CreatorID,CreatorName,CreateDate,ModifierID,ModifierName,");
-//			sql.append( "ModifyDate,ScheduleType,Importance,HasAttendant,HasAttach,HasComment,IsReadOnly,IsPublic,DateType,StartDate,");
-//			sql.append( "EndDate,Repetition,RepetitionDelete,Title,Location,ContentPath) VALUES(seq_inc_TBLSCHEDULE.NEXTVAL,0,'" + MakeRightField(pOwnerID) );
-//            sql.append( "','" + MakeRightField(pOwnerName) + "','" + MakeRightField(pCreatorID) + "','" );
-//            sql.append( MakeRightField(pCreatorName) + "',sysdate,'" + MakeRightField(pCreatorID) + "','" + MakeRightField(pCreatorName) + "'," );
-//			sql.append( "sysdate," + pScheduleType + "," + pImportance + ",'" + hasattendant + "','" + hasattach + "','N','N','" );
-//			sql.append( pIsPublic + "'," + pDateType + ",to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi'),to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),'" + pRepetition);
-//            sql.append( "','','" + MakeRightField(pTitle) + "','" +	MakeRightField(pLocation) + "','" + path + "');");
-//            sql.append(attachsql.ToString() + attendantsql.ToString());
-//
-//            return GetSingleQueryResult("ezPims", sql.ToString());
-//        }
-//        catch (Exception Ex)
-//        {
-//            WriteTextLog("schedule_save", "InsertSchedule_DB", Ex.ToString());
-//            return Ex.Message;
-//        }
-//    }
-//
+		List<ScheduleInfoVO> sList = ezScheduleService.getScheduleList(pidList, "", utcStartTime, utcEndTime, "", offSetMin, userInfo.getTenantId());
+		
+		StringBuilder sb = new StringBuilder("<DATA>");
+		
+		for(int j = 0; j < sList.size(); j++){			
+			ScheduleInfoVO data = sList.get(j);
+			sb.append(commonUtil.getQueryResult(data));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString(); 
+	}
+	
+	/**
+	 * 일정작성 > 자원 현황 조회 
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleResourceInfo.do")	
+	public String scheduleResourceInfo(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("userInfo", loginSimpleVO);
+		
+		return "/ezSchedule/scheduleResourceInfo";
+	}
+	
+	/**
+	 * 일정작성 > 이름확인 조회
+	 */
+	@RequestMapping(value = "/ezSchedule/checkName.do")
+	public String checkName(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		return "ezSchedule/scheduleCheckName";
+	}
+	
+	/**
+	 * 일정 메인화면 > 인쇄
+	 */
+	@RequestMapping(value = "/ezSchedule/schedulePrint.do")
+	public String schedulePrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO, Locale locale) throws Exception {
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		
+		String idList = request.getParameter("idlist");
+		String groupId = request.getParameter("groupid");		
+		String startDate = request.getParameter("date");		
+		String view = request.getParameter("view");
+		String endDate = "";
+		String name = "";
+		String deptName = "";
+		String description = "";
+				
+		if (loginVO.getPrimary().equals("1")) {
+			deptName = loginVO.getDeptName1();
+			name = loginVO.getDisplayName1();
+		} else {
+			deptName = loginVO.getDeptName2();
+			name = loginVO.getDisplayName2();
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(sdf.parse(startDate));
+		
+		startDate = sdf.format(cal.getTime());
+		
+		if (view.equals("2")) {
+			endDate = startDate;
+			
+			description = "[" + msg.getMessage("ezSchedule.t277", locale) + " " + startDate;
+		} else if (view.equals("1")) {			
+			cal.add(Calendar.DATE, 6);
+			endDate = sdf.format(cal.getTime());
+			
+			description = "[" + msg.getMessage("ezSchedule.t278", locale) + " " + startDate + " ~ " + endDate;			
+		} else if (view.equals("0")) {			
+			cal.add(Calendar.DATE, 41);
+			endDate = sdf.format(cal.getTime());
+			
+			description = "[" + msg.getMessage("ezSchedule.t279", locale) + " " + startDate + " ~ " + endDate;			
+		}
+				
+		List<ScheduleInfoVO> sList = scheduleListData(startDate, endDate, idList, groupId, offSetMin, loginVO);
+		
+		String today = commonUtil.getTodayUTCTime("");
+		today = commonUtil.getDateStringInUTC(today, loginVO.getOffset(), false);
+		
+		model.addAttribute("scheduleListData", sList);
+		model.addAttribute("description", description);
+		model.addAttribute("deptName", deptName);
+		model.addAttribute("name", name);
+		model.addAttribute("today", today);
+		model.addAttribute("primary", loginVO.getPrimary());
+		
+		return "ezSchedule/schedulePrint";
+	}
+	
+	/**
+	 * 일정작성 > 인쇄
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleContentsPirnt.do")
+	public String scheduleContentsPirnt(Model model, HttpServletRequest request) throws Exception {
+		String type = request.getParameter("type");
+		String printOwner = request.getParameter("printOwner");
+		String printCreator = request.getParameter("printCreator");
+		String printCreateDate = request.getParameter("printCreateDate");		
+		String printAttendant = request.getParameter("printAttendant");
+		String printIsPublic = request.getParameter("printIsPublic");
+		String printImportance = request.getParameter("printImportance");
+		String printRepetition = request.getParameter("printRepetition");
+		String printDate = request.getParameter("printDate");
+		String printLocation = request.getParameter("printLocation");
+		String printTitle = request.getParameter("printTitle");
+		String printAttach = request.getParameter("printAttach");
+		String printDocument = request.getParameter("printDocument");
+		
+		model.addAttribute("type", type);
+		model.addAttribute("printOwner", printOwner);
+		model.addAttribute("printCreator", printCreator);
+		model.addAttribute("printCreateDate", printCreateDate);
+		model.addAttribute("printAttendant", printAttendant);
+		model.addAttribute("printIsPublic", printIsPublic);
+		model.addAttribute("printImportance", printImportance);
+		model.addAttribute("printRepetition", printRepetition);
+		model.addAttribute("printDate", printDate);
+		model.addAttribute("printLocation", printLocation);
+		model.addAttribute("printTitle", printTitle);
+		model.addAttribute("printAttach", printAttach);
+		model.addAttribute("printDocument", printDocument);
+		
+		return "ezSchedule/scheduleContentsPirnt";
+	}
+	
+	/**
+	 * 일정작성 > 일정상세 팝업
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleRead.do")
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO) throws Exception {		
+        String _parentid;
+        String _ownerid;
+        String _creatorid;
+        String _modifierid;            
+        String _content;
+        String _contentpath = "";
+        String _isreadonly;
+        String _title = "";
+        String _repeatcount = "0";
+        String _admin = "Y";
+        String groupname = "";
+        boolean _isMeCreate = true;
+        String _stype;
+        String _changekey;        
+        String endDateString = "";
+        String startDateString = "";
+        String allDayString = "";
+        String recurringPattern = "";
+        String recurringLabelText = "";        
+        String s_DateForAttandant = "";
+        String e_DateForAttandant = "";        
+        String hasattach = null;        
+        double OffsetHour = 0;
+        double offsetMin = 0;
+        
+        loginVO = commonUtil.userInfo(loginCookie);
+        
+        String Use_Editor = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
+        String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+        String otherid = request.getParameter("otherid");
+        String pageFrom = request.getParameter("pageFrom");
+        String _scheduleid = request.getParameter("id");
+        String _datetype = request.getParameter("datetype");
+        String _scheduletype = request.getParameter("type");
+        String _pattern = request.getParameter("pattern");
+        
+        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());
+        
+        model.addAttribute("scheduleInfo", vo);
+        model.addAttribute("_scheduletype", _scheduletype);        
+        
+		return "ezSchedule/scheduleRead";
+	}
+	
 //    // 일정 업데이트
 //    public String UpdateSchedule_DB(String pScheduleID, String pModifierID, String pModifierName, String pModifierName2,
 //        String pImportance, String pIsPublic, String pDateType,
@@ -1557,17 +1734,7 @@ System.out.println("=================================== model end");
             temp = null;
         }
         return true;
-	}
-	
-	
-	/**
-	 * 일정관리 checkName 호출 Method
-	 */
-	@RequestMapping(value = "/ezSchedule/checkName.do")
-	public String checkName(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		
-		return "ezSchedule/checkName";
-	}
+	}	
 	
 	/**
 	 * 일정관리 draganddrop 호출 Method

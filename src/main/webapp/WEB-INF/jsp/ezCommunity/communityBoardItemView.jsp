@@ -77,6 +77,8 @@
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					$("#message").contents().find("body").css("word-wrap", "break-word");
                 	 
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();
@@ -996,7 +998,7 @@
 <%-- 	            			<iframe id="message" class="viewbox" src="/ezCommunity/boardItemViewContent.do?type=COMMUNITYCONTENT&docID=${pItemID}" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe> --%>
 <%-- 	            		</c:when> --%>
 <%-- 	            		<c:otherwise> --%>
-	            			<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	            			<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 <%-- 	            		</c:otherwise> --%>
 <%-- 	            	</c:choose> --%>
 	                

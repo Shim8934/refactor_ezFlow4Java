@@ -1166,7 +1166,7 @@
 <!-- 	<procedure id="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO"> -->
 <!-- 		{CALL EZSP_GETLINEINFO(#v_DOCID#, #v_MODE#, #v_ORDEROPTION#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+	<select id ="EzApprovalG.getLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="APR">
 			SELECT 
 				TBL_APRLINEINFO.DOCID, 
@@ -1191,7 +1191,7 @@
               	TBL_EXPAPRLINE.ORGUSERID, 
               	TBL_EXPAPRLINE.PROXYUSERID,
               	TBL_EXPAPRLINE.PROXYUSERNAME,  
-              	TBL_EXPAPRLINE.PROXYUSERNAME2 ,
+              	TBL_EXPAPRLINE.PROXYUSERNAME2,
               	TBL_EXPAPRLINE.PROXYUSERJOBTITLE, 
               	TBL_EXPAPRLINE.PROXYUSERJOBTITLE2,
               	TBL_EXPAPRLINE.PROXYUSERDEPTID, 
@@ -1389,7 +1389,7 @@
                     	A.AprMemberDeptName2,  
                     	B.ORGUSERID, 
                     	B.PROXYUSERID, 
-                    	B.PROXYUSERNAME, 
+                    	B.PROXYUSERNAME,
                     	B.PROXYUSERJOBTITLE, 
                     	B.PROXYUSERDEPTID, 
                     	B.PROXYUSERDEPTNAME ,
@@ -1794,7 +1794,7 @@
 			</isNotEqual>
 		    </isEqual>
 		<isNotEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp3" compareValue="0">
+			<isEqual property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -1803,7 +1803,7 @@
                   FROM DUAL  
                   ]]>
 			</isEqual>
-			<isNotEqual property="v_temp3" compareValue="0">
+			<isNotEqual property="v_temp3" compareValue="1">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
@@ -3699,7 +3699,7 @@
 					<isGreaterEqual property="start" compareValue="0">
 						) N $orderBy$
 					LIMIT
-						#limit#, #rowCount# 
+					#limit#, #rowCount# 
 					</isGreaterEqual>
 				</isEqual>
 				<isNotEqual property="isDocPrint" compareValue="TRUE">
@@ -3711,7 +3711,7 @@
 			<isEmpty property="isDocPrint">
 				) N $orderBy$ 
 			LIMIT
-				#limit#, #rowCount#
+					#limit#, #rowCount#
 			</isEmpty>
 	</select>
 	
@@ -6516,7 +6516,7 @@
                 	AND 
                 		 C.AprState IN ( '004' )
            ORDER BY 
-           		C.AprMemberSN DESC )
+           		C.AprMemberSN DESC )A
 		</isEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getDocInfoSP" parameterClass="Map" resultClass="ApprGDocInfoWebSrvVO"> -->
@@ -8224,11 +8224,11 @@
 			TBL_SEPERATEATTACH.RegisterType = #regType#
 	</isNotEmpty>
 	<isNotEmpty property="regStartDate" prepend="AND">
-			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y.%m.%d %H:%i:%s')
+			TBL_RECORD.RegisterDate >= STR_TO_DATE(#regStartDate#, '%Y-%m-%d %H:%i:%s')
 	</isNotEmpty>
 	<isNotEmpty property="regEndDate" prepend="AND">
 		<![CDATA[
-			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y.%m.%d %H:%i:%s')
+			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
 	<isNotEmpty property="sc" prepend="AND">
@@ -13114,7 +13114,7 @@
 		         AND 
 		         		SEPERATEATTACHNO = #v_SEPATTNO#
 		         AND
-		         		TENANT_ID = #v_TENANTID# )
+		         		TENANT_ID = #v_TENANTID# ) A
 	</select>
 	<insert id="EzApprovalG.insertRecordHistory" parameterClass="Map">
 		INSERT INTO 
@@ -13317,7 +13317,7 @@
 				   		$v_SUBQUERY$
 				   		<isEqual property="v_ISDOCPRINT" compareValue="TRUE">
 				   			AND 
-				   				SN BETWEEN #v_PAGESIZE2#  AND  #v_PAGESIZE#
+				   				SN BETWEEN #iv_PAGESIZE2#  AND  #iv_PAGESIZE#
 				   		</isEqual>
 				   		<isNotEmpty property="v_MANAGEDEPTID" >
 				   		 	AND 
@@ -13387,7 +13387,7 @@
 				   		</isNotEmpty>
 				   		<isEmpty property="v_ORDEROPTION2">
 				   			ORDER BY 
-				   				RECEIPTDATE DESC, SN 
+				   				RECEIPTDATE DESC, SN DESC
 				   		</isEmpty>
 				   		<![CDATA[
 				   		LIMIT
@@ -13415,7 +13415,7 @@
 			  				TBL_CABINETCLASS.ProcessDeptName2, 
 			  				TBL_CABINET.CabinetClassNo, 
 			  				TBL_CABINETCLASS.RecTypeCode as RecTypeCode, 
-			  				TBL_CABINETCLASS.CreateDate + $offsetMin$/(24*60) AS ClassCreateDate, 
+			  				DATE_ADD(DATE_FORMAT(TBL_CABINETCLASS.CreateDate ,'%Y-%m-%d %H:%i'), INTERVAL #offsetMin# MINUTE) AS ClassCreateDate, 
 			  				TBL_CABINETCLASS.OwnerID, 
 			  				TBL_CABINETCLASS.SpecialCatalogFlag, 
 			  				TBL_CABINETCLASS.TerminateFlag, 
@@ -14664,7 +14664,7 @@
 	   		AND
 	   			SeperateAttachNo= #v_SEPATTNO#
 	   		AND
-	   			TENANT_ID = #v_TENANTID#)
+	   			TENANT_ID = #v_TENANTID#) A
    </select>
    
    
@@ -15752,7 +15752,7 @@
         		AttachUserDeptName2, 
         		TENANT_ID   
            FROM 
-           		TBL_APRDOCATTACHINFO A 
+           		TBL_APRDOCATTACHINFO  
 		   WHERE  
 		   		DOCID = #v_DOCID# 
 		   AND 	
@@ -17239,7 +17239,7 @@
    		 From 
    		 	TBL_CABINETCLASS A
    		 Where 
-   		 	TBL_CABINETCLASS.CabinetClassNo = #v_CabinetClassNo#
+   		 	A.CabinetClassNo = #v_CabinetClassNo#
    		 AND 
    		 	TENANT_ID = #v_TENANTID#)
    	</insert>
@@ -17253,7 +17253,7 @@
    		 From 
    		 	TBL_SPECIALCATALOGINFO_CAB A
    		 WHERE 
-   		 	CabinetClassNo = #v_CabinetClassNo#
+   		 	A.CabinetClassNo = #v_CabinetClassNo#
    		 AND 
    		 	TENANT_ID= #v_TENANTID#)
    	</insert>
@@ -17288,7 +17288,7 @@
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
-					TENANT_ID = #v_TENANTID# )), CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(#v_SYSDATE#, '%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, #v_REASON# , #v_USERID#, #v_USERNAME# , #v_USENAME2#, #v_ModifyFlag#, '0' , TENANT_ID 
+					TENANT_ID = #v_TENANTID# )A ), CabinetClassNo, Title, RecTypeCode, DATE_FORMAT(#v_SYSDATE#, '%Y%m%d'), KeepingPeriod, DisplayEndDate, DisplayReason, #v_REASON# , #v_USERID#, #v_USERNAME# , #v_USENAME2#, #v_ModifyFlag#, '0' , TENANT_ID 
            From 
            		TBL_CABINETCLASS  
            Where 
@@ -17329,7 +17329,7 @@
 				WHERE 
 					CABINETCLASSNO = #v_CabinetClassNo#
 				AND
-					TENANT_ID = #v_TENANTID# )
+					TENANT_ID = #v_TENANTID# )A
    	</select>
    	
    	<update id="EzApprovalG.updateChangeCabExtCabinetClass" parameterClass="Map">
@@ -17944,4 +17944,19 @@
         VALUES 
         ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDSATE#, ' ' );
    	</insert>
+   	
+   	<select id="EzApprovalG.permissAprLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+   		SELECT 
+   			DOCID ,
+            'NULL' PROCESSORID  ,
+            'NULL' RECEIVEDDEPTID  
+         FROM 
+         	TBL_APRLINEINFO 
+         WHERE  
+         	DOCID = #v_PDOCID#
+         AND 
+         	APRMEMBERID = #v_PAPRUSERID#
+         AND 
+         	( APRSTATE = '002' OR APRSTATE = '005' )
+   	</select>
 </sqlMap>

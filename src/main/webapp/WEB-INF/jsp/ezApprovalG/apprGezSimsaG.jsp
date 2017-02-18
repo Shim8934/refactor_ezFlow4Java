@@ -719,7 +719,7 @@
 		            return;
 		        }
 		        if (!NostampFlag) {
-		            var SealHref = "/files/upload_approvalG/sealImg/nostamp.gif";
+		            var SealHref = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/sealImg/nostamp.gif";
 		            var SealWidth = 30;
 		            var SealHeight = 30;
 		            field = message.GetListItem(fields, "sealsign");

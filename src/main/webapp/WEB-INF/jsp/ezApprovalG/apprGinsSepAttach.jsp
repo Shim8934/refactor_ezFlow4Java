@@ -141,11 +141,11 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(500, 350, url);
+		            DivPopUpShow(520, 380, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
-		            feature = feature + GetShowModalPosition(410, 555);
+		            var feature = "dialogWidth:410px;dialogHeight:535px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            feature = feature + GetShowModalPosition(510, 380);
 		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
@@ -305,11 +305,11 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(500, 350, url);
+		                DivPopUpShow(520, 380, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
-		                feature = feature + GetShowModalPosition(410, 555);
+		                feature = feature + GetShowModalPosition(520, 380);
 		
 		                if (url != "")
 		                    var rtn = window.showModalDialog(url, para, feature);
@@ -345,7 +345,7 @@
 		
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
 		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(480, 430);
+		            feature = feature + GetShowModalPosition(475, 375);
 		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);

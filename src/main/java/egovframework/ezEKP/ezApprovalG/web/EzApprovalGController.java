@@ -995,8 +995,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getFullDate.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
-	public String getFullDate() throws Exception{
-		String fullDate = commonUtil.getTodayUTCTime("");
+	public String getFullDate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String fullDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset() ,false);
 		fullDate = fullDate.substring(0, 16).replace("-", "."); 
 		
 		return fullDate;
@@ -3655,7 +3656,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			if (docID != null && !docID.equals("")) {
 				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId());
 				
@@ -5294,7 +5295,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 메일보내기 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/createMailImg.do")
+	@RequestMapping(value = "/ezApprovalG/createMailImg.do" )
+	@ResponseBody
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");

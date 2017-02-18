@@ -208,7 +208,7 @@
 	    	var pSeach = false;
 	    	function DisplayUserImageList() {
 		        var xmlRtn = pListXML_Info;
-		        totalPage = Math.ceil(new Number(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length / 50));
+		        totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
 	    	    document.getElementById("DeptUserImgList").innerHTML = "";
 	        	document.getElementById("txtlist_Layer").scrollTop = "0";
 	        	document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes
@@ -221,7 +221,7 @@
 	        	var UserListHTML = "";
 	        	
 	        	if (SelectDeptNM.getAttribute("countinfo") != "1") {
-	            	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang1 + "</span>]";
+	            	SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) + strLang1 + "</span>]";
 	            	SelectDeptNM.setAttribute("countinfo","1")
 	        	}
 	        	

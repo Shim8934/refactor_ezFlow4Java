@@ -52,9 +52,7 @@
 				doc.write(html);
 				doc.close();
 		        
-// 		        if (g_progresswin) {
-// 		        	g_progresswin.close();
-// 		        }
+				$("#message").contents().find("body").css("word-wrap", "break-word");
 		    }
 			
 			function btn_Delete_Onclick() {
@@ -116,8 +114,7 @@
 		        var top = (heigth - 400) / 2;
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
-				
-
+			
 		    function ImageUrl(pUrl, cnt) {
 		        var link = "/ezCommon/imgFileRead.do?pUrl=" + pUrl + "&cnt=" + cnt;
 
@@ -240,7 +237,7 @@
   			</tr>
   			<tr>
 				<td style="padding-top:10px;height:70%" id="ItemOverflow">
-					<iframe id="message" class="viewbox" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
     			</td>
   			</tr>
   			<tr>
