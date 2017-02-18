@@ -23,7 +23,8 @@
 		<!-- time picker-->
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<script language="JavaScript" type="text/javascript">
+		
+		<script type="text/javascript">
 			var g_Dateinit = true;
 			var L_SearchStartDt = "${qstUserPollItemVO.pollStartDate}";
 			var L_SearchEndDt = "${qstUserPollItemVO.pollEndDate}";
@@ -64,32 +65,7 @@
 	        	});
 	        	var NowDate = new Date("${uploadSDate}");
 	        	var NowDate2 = new Date("${uploadEDate}");
-				//2017-01-09 그냥 서버단에서 함수 쓴다음 넘김
 	        	
-	        	//offset
-	        	//var offset = "${offset}";
-	        	//offset *= 1;
-//alert(offset);
-	        	//NowDate.setHours(NowDate.getHours() - offset);
-	        	//NowDate2.setHours(NowDate2.getHours() - offset);
-	        	
-	        	//var offset2 = "${offset2}";
-	        	//offset2 *= 1;
-//alert(offset2);
-//alert("${offset}".substring(0,1));
-	        	//if ("${offset}".substring(0,1) == "+") {
-	        		//NowDate.setMinutes(NowDate.getMinutes() - offset2);
-		        	//NowDate2.setMinutes(NowDate2.getMinutes() - offset2);	
-	        	//} else {
-	        		//NowDate.setMinutes(NowDate.getMinutes() + offset2);
-		        	//NowDate2.setMinutes(NowDate2.getMinutes() + offset2);
-	        	//}
-//alert("NowDate="+NowDate);
-//alert("NowDate2="+NowDate2);
-	        	//2016-12-21 -9 , 한국기준으로만 되어있어서 offset으로 변경
-	        	
-	        	//NowDate.setHours(NowDate.getHours() - 9);
-	        	//NowDate2.setHours(NowDate2.getHours() - 9);
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
 	        	$("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -340,7 +316,7 @@
 			}
 			function Save_OK_chk() {
 	    		var ResultYN = '${resultYN}';
-	    		if (ResultYN == "True") {
+	    		if (ResultYN == "true") {
 	        		document.getElementById("set_anonymity").disabled = true;
 	        		document.getElementById("set_Target").disabled = true;
 	        		document.getElementById("aLinkbtn").style.display = "none";
@@ -395,9 +371,11 @@
                     	<input style="WIDTH: 50px" type="text" maxLength="4" value="${qstUserPollItemVO.postTerm}" name="txtExpiredate" id="txtExpiredate"/> 
                     	<input type="hidden" id="hidExpiredate" value="0" name="hidden" /> 
                     	<spring:message code='ezQuestion.t233' />
-                    	<%-- <% if (int.Parse(post_term)==0) { %> --%> 
-                    	(<spring:message code='ezQuestion.t234' />
-                    	<%-- <% } %>  --%>
+ 
+                    	<c:if test="${postTerm == '0' }">
+                    		<spring:message code='ezQuestion.t234' />
+                    	</c:if>
+                    	
                 	</td> 
             	</tr> 
             	<tr> <!-------------각종 설문 옵션 -----------------> 
@@ -406,7 +384,7 @@
 	                    <spring:message code='ezQuestion.t237' />
     	                <select onchange="return set_anonymity_onchange()" name="set_anonymity" id="set_anonymity">
     	                	<c:choose>
-    	                		<c:when test="${qstUserPermissionVO.publicFlg eq '0'}"> 
+    	                		<c:when test="${qstUserPermissionVO.publicFlg == '0'}"> 
             	            		<option value="0" selected="selected"><spring:message code='ezQuestion.t238' /></option> 
                 	        		<option value="1"><spring:message code='ezQuestion.t239' /></option>
 								</c:when>                	        		 
@@ -419,7 +397,7 @@
                     	<spring:message code='ezQuestion.t240' />
                     	<select onchange="return set_MultiResponse_onchange()" name="set_MultiResponse" id="set_MultiResponse">
                     		<c:choose>  
-	                        	<c:when test="${qstUserPermissionVO.multiResponseFlg eq '0'}">  
+	                        	<c:when test="${qstUserPermissionVO.multiResponseFlg == '0'}">  
     	                    		<option value="1"><spring:message code='ezQuestion.t241' /></option> 
         	                		<option value="0" selected="selected"><spring:message code='ezQuestion.t242' /></option>
         	                	</c:when> 
@@ -432,7 +410,7 @@
                     	<spring:message code='ezQuestion.t243' />
                     	<select onchange="return set_openResult_onchange()" name="set_openResult" id="set_openResult">
                     		<c:choose>   
-	                        	<c:when test="${qstUserPermissionVO.publicResultFlg eq '0'}">
+	                        	<c:when test="${qstUserPermissionVO.publicResultFlg == '0'}">
     	                    		<option value="1"><spring:message code='ezQuestion.t244' /></option> 
         	                		<option value="0" selected="selected"><spring:message code='ezQuestion.t245' /></option>
         	                	</c:when>	 
@@ -444,17 +422,17 @@
                     	</select> 
                     	<select id="importance" name="importance" style="DISPLAY:none">
                     		<c:choose> 
-                    			<c:when test="${qstUserPollItemVO.itemImp eq '1'}">
+                    			<c:when test="${qstUserPollItemVO.itemImp == '1'}">
 			                        <option value="1"  selected><spring:message code='ezQuestion.t246' /></option>
 	    		                    <option value="2"><spring:message code='ezQuestion.t247' /></option>
 	            		            <option value="3"><spring:message code='ezQuestion.t248' /></option> 
         	                	</c:when>
-        	                	<c:when test="${qstUserPollItemVO.itemImp eq '2'}">
+        	                	<c:when test="${qstUserPollItemVO.itemImp == '2'}">
 			                        <option value="1"><spring:message code='ezQuestion.t246' /></option>
 	    		                    <option value="2" selected><spring:message code='ezQuestion.t247' /></option>
 	            		            <option value="3"><spring:message code='ezQuestion.t248' /></option> 
         	                	</c:when>
-        	                	<c:when test="${qstUserPollItemVO.itemImp eq '3'}">
+        	                	<c:when test="${qstUserPollItemVO.itemImp == '3'}">
 			                        <option value="1"><spring:message code='ezQuestion.t246' /></option>
 	    		                    <option value="2"><spring:message code='ezQuestion.t247' /></option>
 	            		            <option value="3" selected><spring:message code='ezQuestion.t248' /></option> 
@@ -468,7 +446,7 @@
     	            <td>
         	            <select style="WIDTH: 100px; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" onchange="return set_Target_onchange()" name="set_Target" id="set_Target">
         	            	<c:choose> 
-        	            		<c:when test="${qstUserPermissionVO.responseRange eq '0'}">
+        	            		<c:when test="${qstUserPermissionVO.responseRange == '0'}">
                 	        		<option value="0" selected="selected"><spring:message code='ezQuestion.t251' /></option> 
                     	    		<option value="1"><spring:message code='ezQuestion.t252' /></option>
                     	    	</c:when> 
@@ -478,17 +456,19 @@
                         		</c:otherwise> 
                         	</c:choose>
                     	</select> 
-                    	<%boolean resultYN = (boolean)request.getAttribute("resultYN"); %>
-                    	<% if (!resultYN) { %><a id="aLinkbtn" class="imgbtn"> <span id="aLink"  onclick='menu_SelectRange()' );> <spring:message code='ezQuestion.t253'/></span></a><% } %>
+                    	<c:if test="${resultYN != 'true' }">
+                    		<a id="aLinkbtn" class="imgbtn"> <span id="aLink" onclick='menu_SelectRange()'> <spring:message code='ezQuestion.t253'/></span></a>
+                    	</c:if>
+                    	
                 	</td> 
             	</tr> 
             	<tr> <!----------- 설문제목 -------------> 
 	                <th><spring:message code='ezQuestion.t255' /></th> 																																							<!-- 	//자바단에서 replace해주기 -->		
-    	            <td><input type="text" maxlength="500" name="txtSubject" id="txtSubject" style="FONT-SIZE:9pt;  WIDTH:99%;  FONT-FAMILY:'<spring:message code='ezQuestion.t105' />'" value="${qstUserPollItemVO.title}"> </td> 
+    	            <td><input type="text" maxlength="500" name="txtSubject" id="txtSubject" style="FONT-SIZE:9pt;  WIDTH:99%;  FONT-FAMILY:'<spring:message code='ezQuestion.t105' />'" value="<c:out value = '${qstUserPollItemVO.title}' />"> </td> 
         	    </tr>
             	<tr>    <!----------- 설문취지 ------------------> 
 	                <th><spring:message code='ezQuestion.t257' /></th> 
-    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 99%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" rows="10" cols="">${qstUserPollItemVO.content}</textarea></td> 
+    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 99%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" rows="10" cols=""><c:out value = '${qstUserPollItemVO.content}' /></textarea></td> 
         	    </tr> 
         	</table> 
         	<div class="btnposition">

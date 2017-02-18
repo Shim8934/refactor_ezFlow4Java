@@ -971,8 +971,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstStep2(HttpServletRequest req, QstStep1VO qstStep1VO, QstAddVO questionAddVO, ModelMap model) {
 		StringBuilder pStep1DataXML = new StringBuilder();
 		pStep1DataXML.append("<PARAMETER>");
-		pStep1DataXML.append("<SUBJECT><![CDATA[" + req.getParameter("txtSubject") + "]]></SUBJECT>");
-		pStep1DataXML.append("<CONTENT><![CDATA[" + req.getParameter("txtContent") + "]]></CONTENT>");
+		pStep1DataXML.append("<SUBJECT>" + commonUtil.cleanValue(req.getParameter("txtSubject")) + "</SUBJECT>");
+		pStep1DataXML.append("<CONTENT>" + commonUtil.cleanValue(req.getParameter("txtContent")) + "</CONTENT>");
 		pStep1DataXML.append("<STARTDATE>" + req.getParameter("hidStartDate")+"</STARTDATE>");
 		pStep1DataXML.append("<ENDDATE>" + req.getParameter("hidEndDate")+"</ENDDATE>");
 		pStep1DataXML.append("<EXPIREDATE>" + req.getParameter("txtExpiredate")+"</EXPIREDATE>");
@@ -1064,12 +1064,12 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			pDataXML = req.getParameter("DataXML").trim().replace("&lt;", "<").replace("&gt;", ">");
 			logger.debug("pDataXML="+pDataXML);
 			Document doc = commonUtil.convertStringToDocument(pDataXML);
-			pQstTitle = doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent();
+			pQstTitle = commonUtil.cleanValue(doc.getElementsByTagName("QUESTIONCONTENT").item(0).getTextContent());
 		
 			//첨부
 			if(doc.getElementsByTagName("ATTACH").getLength() > 0) {
 				if(doc.getElementsByTagName("ATTACH").item(0).getChildNodes() != null) {
-					pQstAnsInfo = doc.getElementsByTagName("ATTACH").item(0).getTextContent();
+					pQstAnsInfo = commonUtil.cleanValue(doc.getElementsByTagName("ATTACH").item(0).getTextContent());
 					
 					XPath xpath = XPathFactory.newInstance().newXPath();
 					
@@ -1082,7 +1082,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						if(pQstAttach != null && !pQstAttach.equals("")) {
 							pQstAttach += ";";
 						}
-						pQstAttach += doc.getElementsByTagName("ATTACHTITLE").item(i).getTextContent();
+						pQstAttach += commonUtil.cleanValue(doc.getElementsByTagName("ATTACHTITLE").item(i).getTextContent());
 					}
 				}
 			}
@@ -1098,7 +1098,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					int pCnt = doc.getElementsByTagName("ANSWER").getLength();
 					
 					for(int i=0; i<pCnt; i++) {
-						pSelectOption += "<option value=\"" +doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "\" ";
+						pSelectOption += "<option value=\"" + commonUtil.cleanValue(doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent()) + "\" ";
 						XPath xpath = XPathFactory.newInstance().newXPath();
 						NodeList nodes = (NodeList)xpath.evaluate("//ROW/ANSWER["+(i+1)+"]/ATTACH", doc, XPathConstants.NODESET);
 						if(nodes.getLength() > 0) {
@@ -1109,7 +1109,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						} else {
 							pSelectOption += ">";
 						}
-						pSelectOption += String.valueOf(i + 1) + ". " + doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent() + "</option>";
+						pSelectOption += String.valueOf(i + 1) + ". " + commonUtil.cleanValue(doc.getElementsByTagName("ANSWERTITLE").item(i).getTextContent()) + "</option>";
 					}
 				}
 			}
@@ -3323,7 +3323,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		}
 		
 		qstListVO.setBrdID(Integer.parseInt(brdID));
-		qstListVO.setTitle(title);
+		qstListVO.setTitle(commonUtil.cleanValue(title));
 		qstListVO.setResponseRange(responseRange);
 		qstListVO.setPollStartDate(pollStartDate);
 		qstListVO.setPollEndDate(pollEndDate);
