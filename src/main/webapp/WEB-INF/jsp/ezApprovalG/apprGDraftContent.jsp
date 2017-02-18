@@ -5,7 +5,11 @@
 	    <title></title>
 	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	     <style>
+          P { margin-top: 0px;margin-bottom: 0px; } 
+   	 	</style>
 	    <script language="javascript" type="text/javascript">
+	    
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
@@ -29,6 +33,9 @@
 	                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
 	                            break;
 	                    }
+	                }
+	                else if (obj.nodeName == "P") {
+	                    ret = true;
 	                }
 	            } catch (e) { }
 	            return ret;
