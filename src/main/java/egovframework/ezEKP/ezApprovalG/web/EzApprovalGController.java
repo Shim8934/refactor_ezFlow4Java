@@ -5300,8 +5300,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		
-		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getTodayUTCTime("yyyyMMdd") ;
+		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
 		FileOutputStream stream = null;
 		try{
 		File file = new File(strPath);
