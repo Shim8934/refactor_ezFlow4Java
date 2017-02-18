@@ -1089,7 +1089,7 @@ function ViewDoc_onclick() {
                 }
             }
             else
-                ViewDoc_onclick_Complete("True");
+            	 ViewDoc_onclick_Complete("True");
         }
         else
             ViewDoc_onclick_Complete("True");
@@ -1158,8 +1158,8 @@ function ViewDoc_onclick_Complete(Rtn) {
         }
         else {
             var para = new Array();
-            para[0] = DocID;
-            para[1] = pURL;
+            DocID = selRow.getAttribute("DATA1");
+            pURL = selRow.getAttribute("DATA2");
 
             var openLocation = "";
             

@@ -165,7 +165,8 @@
 	        try {
 	            var listview = new ListView();
 	            listview.LoadFromID("listAPRLINE1");
-	            if (listview.GetDataRows().length > 0) {
+	            var oArrRows = listview.GetDataRows();
+	            if (oArrRows[0].textContent != strLang944) {
 	                var RtnVal = setReceiveDistribute();
 	                if (RtnVal == "TRUE") {
 	                    if (ReturnFunction != null) {
@@ -189,8 +190,8 @@
 	                }
 	                } else {
 	                var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
-	                return;
 	                OpenAlertUI(pAlertContent);
+	                return;
 	            }
 	        } catch (ErrMsg) {
 	            alert(ErrMsg.description);

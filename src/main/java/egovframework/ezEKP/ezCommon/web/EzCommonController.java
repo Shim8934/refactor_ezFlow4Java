@@ -30,9 +30,7 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
-import egovframework.ezEKP.ezEmail.web.EzEmailMailWriteController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -447,7 +445,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		String pImgUrl = request.getParameter("url");
 		String width = request.getParameter("width");
 		String height = request.getParameter("height");
-		String type = request.getParameter("type");
+//		String type = request.getParameter("type");
 		
 		String realFilePath = pImgUrl.replace(request.getScheme() + ":" + commonUtil.separator + commonUtil.separator + request.getServerName() + ":" + request.getServerPort(), realPath);
 		

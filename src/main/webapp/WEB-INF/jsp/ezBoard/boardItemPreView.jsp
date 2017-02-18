@@ -6,50 +6,7 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
-		<style type="text/css">
-			input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
-				font-size:12px;
-				color: #393939;
-				text-decoration: none;
-				ime-mode:active;
-			}
-			table, th, td {
-				border-collapse: collapse;
-				empty-cells: show;
-				padding:0;margin:0;
-				font-size:12px;
-			}
-			th {
-				white-space: nowrap;
-				word-break: keep-all;
-				word-wrap: normal;
-				color: #666;
-				background-color:#f3f3f3;
-				border:1px solid #b6b6b6;
-				padding:2px 10px;
-			}
-			.popup table { clear:both }
-			.popup .pad1{padding:10px 0px;}
-			.content td, .file td, .file2 td, .popuplist td {
-				padding:0px 2px 0px 2px;
-				background: #FFF;
-				border:1px solid #b6b6b6;
-				height:29px;
-				word-break:break-all;
-			}
-			.content td, .file td, .file2 td {
-				width: 100%;
-			}
-			.file{height:50px;width:100%}
-			.file div {OVERFLOW:auto;padding:0px 0;height:50px}
-			.viewbox {
-				border:1px solid #b6b6b6;
-				padding:5px;
-				height:100%;
-				background-color:#fff;
-				border-collapse:collapse
-			}
-		</style>
+		<link rel="stylesheet" href="/css/previewBoard.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		var curFontSize = 1;
@@ -115,13 +72,25 @@
 		                lstAttachLink.innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
 		        	}
 		        }
-		        if (gubun != "2") document.getElementById('WriteUserNM').innerHTML = WriterName;
-		        else document.getElementById('WriteUserNM').innerHTML = window.opener.document.getElementById('txtNickName').value;
-		        if (document.getElementById('WriteUserNM').innerText == "") document.getElementById('WriteUserNM').innerHTML = "<spring:message code='ezBoard.t286'/>";
-		        if (WriteDate == "") WriteDate = "${strNow}";
+		        if (gubun != "2") {
+		        	document.getElementById('WriteUserNM').innerHTML = WriterName;
+		        } else {
+		        	document.getElementById('WriteUserNM').innerHTML = window.opener.document.getElementById('txtNickName').value;
+		        }
+		        if (document.getElementById('WriteUserNM').innerText == "") {
+		        	document.getElementById('WriteUserNM').innerHTML = "<spring:message code='ezBoard.t286'/>";
+		        }
+		        if (WriteDate == "") {
+		        	WriteDate = "${strNow}";
+		        }
+		        
 		        document.getElementById('PostDate').innerHTML = WriteDate;
-		        if (pEndDate.substr(0, 4) == "9999") pEndDate = "<spring:message code='ezBoard.t287'/>";
-		        else pEndDate = pEndDate.split(" ")[0];
+		        
+		        if (pEndDate.substr(0, 4) == "9999") {
+		        	pEndDate = "<spring:message code='ezBoard.t287'/>";
+		        } else {
+		        	pEndDate = pEndDate.split(" ")[0];
+		        }
 		        document.getElementById('EndDate').innerHTML = pEndDate;
 		        if (gubun != 2) {
 		            document.getElementById('User_DeptNM').innerHTML = MakeXMLString(WriterDeptName);
@@ -148,9 +117,9 @@
 		                        }
 		                    }
 		                    WriterValue = WriterValue.substring(0, WriterValue.length - 1);
-		                }
-		                else
+		                } else {
 		                    WriterValue = paremtElement[0].value;
+		                }
 		
 		                document.getElementById("extensionAttribute" + i).innerHTML = WriterValue;
 		            }

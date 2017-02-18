@@ -1,0 +1,45 @@
+table, th, td {
+	border-collapse: collapse;
+	empty-cells: show;
+	padding:0;margin:0;
+	font-size:12px;
+}
+th {
+	white-space: nowrap;
+	word-break: keep-all;
+	word-wrap: normal;
+	color: #666;
+	background-color:#f3f3f3;
+	border:1px solid #b6b6b6;
+	padding:2px 10px;
+}
+.popup table { 
+	clear:both 
+}
+.popup .pad1 {
+	padding:10px 0px;
+}
+.content td, .file td, .file2 td, .popuplist td {
+	padding:0px 2px 0px 2px;
+	background: #FFF;
+	border:1px solid #b6b6b6;
+	height:29px;
+	word-break:break-all;
+}
+.content td, .file td, .file2 td {
+	width: 100%;
+}
+.file {
+	height:50px;width:100%
+}
+.file div {
+	OVERFLOW:auto;padding:0px 0;height:50px
+}
+.viewbox {
+	border:1px solid #b6b6b6;
+	padding:5px;
+	height:100%;
+	background-color:#fff;
+	border-collapse:collapse
+}
+

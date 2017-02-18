@@ -82,9 +82,9 @@ public class BoardListVO {
 	private String extensionAttribute1;
 	/** 확장속성*/
 	private String extensionAttribute2;
-	/** 확장속성*/
+	/** 작성자직위*/
 	private String extensionAttribute3;
-	/** 확장속성*/
+	/** 작성자직위(다국어)*/
 	private String extensionAttribute32;
 	/** 확장속성*/
 	private String extensionAttribute4;

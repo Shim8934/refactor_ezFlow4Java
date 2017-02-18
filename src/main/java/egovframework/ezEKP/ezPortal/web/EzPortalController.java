@@ -1823,6 +1823,128 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/theme1/portalTheme1WpThemeBirth";
 	}
 	
+	/**
+	 * 포탈 - webPart 테마1 게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBoard.do")
+	public String theme1wpThemeBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeBoard started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pBoardType = "";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("pBoardType", pBoardType);
+		
+		logger.debug("theme1wpThemeBoard ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeBoard";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 설문 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePoll.do")
+	public String theme1wpThemePoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemePoll started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (result != null) {
+			if (result.getResult() > 0) {
+				if (result.getResult() != 0) {
+					votePoll = Integer.toString(result.getResult());
+				}
+			} else {
+				votePoll = "";
+			}	
+			
+			if (result.getItemSeq() > 0) {
+				if (result.getItemSeq() != 0) {
+					pPollItemSeq = result.getItemSeq();
+					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+				}	
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("votePoll", votePoll);
+		model.addAttribute("pPollItemSeq", pPollItemSeq);
+		model.addAttribute("pPollTitle", pPollTitle);
+		
+		logger.debug("theme1wpThemePoll ended");
+		return "/ezPortal/theme1/portalTheme1WpThemePoll";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 포토게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePhoto.do")
+	public String theme1wpThemePhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("theme1wpThemePhoto started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pPhotoGalleryID = "";
+		
+		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
+			pPhotoGalleryID = req.getParameter("photoGalleryID");
+		}
+		
+		String boardString = ezBoardService.getThumbListXML(userInfo.getId(), "4", pPhotoGalleryID, 1, "", "", userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+		logger.debug("boardString="+boardString);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(boardString);
+		StringBuilder sb = new StringBuilder();
+		
+		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+			sb.append("<div id=\"content_1\" class=\"photocont\">");
+			sb.append("<div class=\"images_container\" id=\"images_container\">");
+            
+			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+				String imgSrc = xmlDom.getElementsByTagName("FILEPATH").item(i).getTextContent();
+				String itemID = xmlDom.getElementsByTagName("ITEMID").item(i).getTextContent();
+				String boardID = xmlDom.getElementsByTagName("BOARDID").item(i).getTextContent();
+				
+				if (i % 2 == 0) {
+					sb.append("<ul>");
+					sb.append("<li>");
+					sb.append("<img style=\"cursor:pointer;\" onclick=\"ItemRead_onclick(this)\" src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+                    
+					sb.append("</li>");
+                    if (i == (xmlDom.getElementsByTagName("ROW").getLength() - 1)) {
+                    	sb.append("</ul>");
+                    }
+				} else {
+					sb.append("<li>");
+					sb.append("<img style='cursor:pointer;' onclick='ItemRead_onclick(this)' src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+					sb.append("</li>");
+					sb.append("</ul>");
+				}
+			}
+			sb.append("</div>");
+			sb.append("</div>");
+			
+		} else {
+			sb.append("<div class=\"nodata_h\">");
+            sb.append("<p><img src=\"/images/kr/theme01/main/nodata_gray.png\" ></p>");
+            sb.append("<p>" + egovMessageSource.getMessage("main.t00026", locale) + "</p>");
+            sb.append("</div>");
+		}
+		
+		logger.debug("strHTML="+sb.toString());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strHTML", sb.toString());
+		
+		logger.debug("theme1wpThemePhoto ended");
+		return "/ezPortal/theme1/portalTheme1WpThemePhoto";
+	}
+	
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수

@@ -4,7 +4,6 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
