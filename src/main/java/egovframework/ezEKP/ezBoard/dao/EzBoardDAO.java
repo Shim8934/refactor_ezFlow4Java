@@ -612,5 +612,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
     public void deleteImageItem(BoardListVO boardListVO) throws Exception {
         delete("EzBoardDAO.deleteImageItem", boardListVO);
 	}
+
+	public int photoViewDBCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzBoardDAO.photoViewDBCount", map);
+	}
     
 }

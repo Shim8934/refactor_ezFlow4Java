@@ -1619,7 +1619,7 @@ function addzero(arg)
 	{
 		arg = "0" + arg;
 	}
-	return arg
+	return arg;
 
 }
 
@@ -1635,4 +1635,99 @@ function isIE(){
 		isIE = true;
 	}
     return isIE;
+}
+
+//board 페이징 중복 함수
+function makePageSelPageBrd() {
+	var strtext;
+    var PagingHTML = "";
+    document.getElementById("tblPageRayer").innerHTML = "";
+    if (pAdminType != "y")
+        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+    else
+        parent.document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
+    strtext = "<div class='pagenavi'>";
+    PagingHTML += strtext;
+    var pageNum = CurPage;
+    if (totalPage > 1 && pageNum != 1) {
+        strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
+        PagingHTML += strtext;
+    }
+    else {
+        strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
+        PagingHTML += strtext;
+    }
+    if (totalPage > BlockSize) {
+        if (pageNum > BlockSize) {
+            strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+            PagingHTML += strtext;
+        }
+    }
+    else {
+        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+        PagingHTML += strtext;
+    }
+    var MaxNum;
+    var i;
+    var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+    if (totalPage >= (startNum + parseInt(BlockSize))) {
+        MaxNum = (startNum + parseInt(BlockSize)) - 1;
+    }
+    else {
+        MaxNum = totalPage;
+    }
+    for (i = startNum; i <= MaxNum; i++) {
+        if (i == pageNum) {
+            strtext = "<span class='on'>" + i + "</span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+            PagingHTML += strtext;
+        }
+    }
+    if (totalPage > BlockSize) {
+        if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+            strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }
+        else {
+            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+            PagingHTML += strtext;
+        }
+    }
+    else {
+        strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+        strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+        PagingHTML += strtext;
+    }
+    if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+        strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+        PagingHTML += strtext;
+    }
+    else {
+        strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+        PagingHTML += strtext;
+    }
+    
+    PagingHTML += "</div>";
+    td_Create1(PagingHTML);
+}
+
+function compareExtension(check, extension) {
+    var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+    for (var i = 0; i < filterExtension.length; i++) {
+        if (extension.toLowerCase() == filterExtension[i]) {
+            check = true;
+            break;
+        }
+    }
+    
+    return check;
 }

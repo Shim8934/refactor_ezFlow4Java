@@ -227,7 +227,6 @@
 					});
 		        }
 		
-		        var perCnt = "";
 		        var firstFlag = false;
 		        function getBoardList_after(xml) {
 		            try {
@@ -245,8 +244,7 @@
 		
 		                var lstCnt = getNodeText(cntNode);
 		                totalCount = lstCnt;
-		                if (perCnt == "")
-		                    perCnt = getNodeText(perNode);
+		                var perCnt = getNodeText(perNode);
 		
 		                listcount.value = perCnt;
 		

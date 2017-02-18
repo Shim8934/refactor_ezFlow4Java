@@ -1896,7 +1896,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			pPhotoGalleryID = req.getParameter("photoGalleryID");
 		}
 		
-		String boardString = ezBoardService.getThumbListXML(userInfo.getId(), "4", pPhotoGalleryID, 1, "", "", userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+		String boardString = ezBoardService.getThumbListXML(userInfo, "4", pPhotoGalleryID, 1, "", "");
 		logger.debug("boardString="+boardString);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(boardString);

@@ -80,7 +80,16 @@
 	        }
 	
 	        function imgtemp_onclick() {
-	        	if (document.form.file1.value != "") {            
+	        	if (document.form.file1.value != "") {
+		            var extension = document.getElementById("file1").value.split('.');
+		            var check = false;
+		            check = compareExtension(check, extension[1]);
+
+		            if (!check) {
+		                document.getElementById("file1").value = "";
+		                return;
+		            }
+		            
 		            var fd = new FormData();
 		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
 		                fd.append("file1", document.getElementById("form").file1.files[i]);
@@ -427,7 +436,7 @@
 	    <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
 	
 	    <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm">
-	    <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onChange="imgtemp_onclick()"/>
+	    <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onChange="imgtemp_onclick()" accept="image/*"/>
 	    <input type="hidden" name="mode" id="mode" />
 	    </form>
 	</body>

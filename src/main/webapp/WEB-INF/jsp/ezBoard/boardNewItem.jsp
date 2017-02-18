@@ -103,7 +103,6 @@
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 		    var idDatepicker_Temp = "";
 		    var _T1_Temp = "";
-		    
 		    if (!"${isCrossBrowser}") {
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
 			    var objMHTRead = new ActiveXObject("MhtFormat.Convert");
@@ -484,7 +483,7 @@
 		        		}else if(colType[i] == "text"){
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(comName1[i] + strLang79);
+	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
 		        		}else if(colType[i] == "check"){

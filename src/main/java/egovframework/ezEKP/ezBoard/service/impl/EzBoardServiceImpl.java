@@ -1126,6 +1126,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
+	public int photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pItemID", itemID);
+		map.put("v_pBoardID", boardID);
+		map.put("v_TENANTID", tenantID);
+		
+		return ezBoardDAO.photoViewDBCount(map);
+	}
+
+	@Override
 	public List<BoardAttachVO> photoViewDBAll(String itemID, String boardID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemID", itemID);
@@ -1808,22 +1818,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.saveOneLineReply(map);
 	}
 	
-	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, String offset, int tenantID) throws Exception {
+	public String getThumbListXML(LoginVO userInfo, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption) throws Exception {
 		BoardListVO boardListVO = new BoardListVO();
 		BoardVO ezBoardVO = new BoardVO();
 		ezBoardVO.setBoardType(pBoardType);
-		ezBoardVO.setLang(strLang);
+		ezBoardVO.setLang(userInfo.getLang());
 		
 		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		myFavoriteVO.setBoardId(pBoardID);
-		myFavoriteVO.setUserId(pUserID);
+		myFavoriteVO.setUserId(userInfo.getId());
         myFavoriteVO.setType(pBoardType);
 		
 		StringBuilder sb = new StringBuilder();
 		String orderOption1 = "";
 		String orderOption2 = "";
 		
-		String strMultiData = commonUtil.getMultiData(strLang, tenantID);
+		String strMultiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		List<BoardListHeaderVO> list = getListHeader(ezBoardVO);
 		
@@ -1831,16 +1841,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int hLength = list.size();
 		
 		int boardCount = getThumbNailCount(myFavoriteVO);
-		int personalCount = 5;
+		BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
+        
+        int personalCount = boardConfigVO.getListCount();
 		
 		sb.append("<DOCLIST>");
-		sb.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-		sb.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-		sb.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
+		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+		sb.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+		sb.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
 		sb.append("<LISTVIEWDATA>");
 		sb.append("<ROWS>");
-		
-//		BoardConfigVO pCount = getPersonalCount(pUserID);
 		
 		int startRow = 1;
 		int endRow = 0;
@@ -1852,7 +1862,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		BoardVO boardVO = new BoardVO();
 		
-		boardListVO.setUserID(pUserID);
+		boardListVO.setUserID(userInfo.getId());
 		boardListVO.setBoardID(pBoardID);
 		boardListVO.setStartRow(startRow);
 		boardListVO.setEndRow(endRow);
@@ -1861,7 +1871,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		boardListVO.setOrderByMain(orderOption2.trim());
 		boardVO.setType("1");
 		boardVO.setBoardId(pBoardID);
-		boardVO.setTenantID(tenantID);
+		boardVO.setTenantID(userInfo.getTenantId());
 		
 		List<HashMap<String, Object>> boardList = getThumbnailList(boardListVO, boardVO);
 		
@@ -1880,12 +1890,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				if (fieldName.equals("WRITEDATE")) {
 					fieldValue =(String)boardList.get(j).get(fieldName);
                 	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
-                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, offset, false);
+                	fieldValue = commonUtil.getDateStringInUTC(fieldValue, userInfo.getOffset(), false);
 				} else {
 					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
 				}
 				
-				sb.append("<VALUE>"+fieldValue+"</VALUE>");
+				sb.append("<VALUE>" + fieldValue + "</VALUE>");
 				
 				if (i == 0) {
 					sb.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");

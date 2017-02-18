@@ -954,24 +954,24 @@ public class EzBoardController extends EgovFileMngUtil{
         	startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
             endRow = (personalCount * boardVO.getPageNum());
 
-            resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-            resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-            resultXML.append("<PERSONALCNT>"+personalCount+"</PERSONALCNT>");
-            resultXML.append("<PREVIEWTYPE>"+previewtype+"</PREVIEWTYPE>");
-            resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-            resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-            resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-            resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
-            resultXML.append("<WRITEDATENUM>"+writeDateSN+"</WRITEDATENUM>");
-            resultXML.append("<TITLENUM>"+titleSN+"</TITLENUM>");
+            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
+            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
+            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+            resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+            resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+            resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+            resultXML.append("<WRITEDATENUM>" + writeDateSN + "</WRITEDATENUM>");
+            resultXML.append("<TITLENUM>" + titleSN + "</TITLENUM>");
             resultXML.append("<LISTVIEWDATA>");
             resultXML.append("<HEADERS>");
             
             for (BoardListHeaderVO vo:headerList) {
             	resultXML.append("<HEADER>");
-        		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-            	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-            	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+        		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+            	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+            	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
             	resultXML.append("</HEADER>");
             }
             resultXML.append("</HEADERS>");
@@ -1602,7 +1602,7 @@ public class EzBoardController extends EgovFileMngUtil{
         resultXML.append("<DOCLIST>");
         resultXML.append("<TOTALCNT>" + boardListVO.getTotalCount() + "</TOTALCNT>");
         resultXML.append("<PAGECNT>" + boardListVO.getPageCount() + "</PAGECNT>");
-        resultXML.append("<PERSONALCNT>" + boardListVO.getTotalCount() + "</PERSONALCNT>");
+        resultXML.append("<PERSONALCNT>" + boardConfigVO.getListCount() + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
         resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
         resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
@@ -1948,22 +1948,22 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-        resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-        resultXML.append("<PERSONALCNT>"+boardConfigVO.getListCount()+"</PERSONALCNT>");
-        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + boardConfigVO.getListCount() + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
         resultXML.append("</HEADERS>");
@@ -2079,22 +2079,22 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>"+boardCount+"</TOTALCNT>");
-        resultXML.append("<PAGECNT>"+boardCount+"</PAGECNT>");
-        resultXML.append("<PERSONALCNT>"+boardConfigVO.getListCount()+"</PERSONALCNT>");
-        resultXML.append("<PREVIEWTYPE>"+boardConfigVO.getPreview()+"</PREVIEWTYPE>");
-        resultXML.append("<PREVIEWWLIST>"+boardConfigVO.getPreviewWList()+"</PREVIEWWLIST>");
-        resultXML.append("<PREVIEWWCONTENT>"+boardConfigVO.getPreviewWContent()+"</PREVIEWWCONTENT>");
-        resultXML.append("<PREVIEWHLIST>"+boardConfigVO.getPreviewHList()+"</PREVIEWHLIST>");
-        resultXML.append("<PREVIEWHCONTENT>"+boardConfigVO.getPreviewHContent()+"</PREVIEWHCONTENT>");
+        resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + boardConfigVO.getListCount() + "</PERSONALCNT>");
+        resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+        resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+        resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+        resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+        resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
         resultXML.append("<LISTVIEWDATA>");
         resultXML.append("<HEADERS>");
         
         for (BoardListHeaderVO vo:headerList) {
         	resultXML.append("<HEADER>");
-    		resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-        	resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-        	resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+    		resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+        	resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+        	resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
         	resultXML.append("</HEADER>");
         }
         resultXML.append("</HEADERS>");
@@ -2215,9 +2215,9 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        resultXML.append("<TOTALCNT>" + boardConfigVO.getTotalCnt() + "</TOTALCNT>");
-        resultXML.append("<PAGECNT>" + boardConfigVO.getPageCnt() + "</PAGECNT>");
-        resultXML.append("<PERSONALCNT>" + boardConfigVO.getTotalCnt() + "</PERSONALCNT>");
+        resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+        resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+        resultXML.append("<PERSONALCNT>" + personalCount_ + "</PERSONALCNT>");
         resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
         resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
         resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
@@ -5201,20 +5201,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		int pStartRow = (page - 1) * imageCnt + 1;
         int pEndRow = page * imageCnt;
         
+        int imageCount = ezBoardService.photoViewDBCount(itemID, boardID, userInfo.getTenantId());
+        
         List<BoardAttachVO> photoViewList = ezBoardService.photoViewDB(itemID, boardID, pStartRow, pEndRow, userInfo.getTenantId());
+        
         StringBuffer sb = new StringBuffer();
         
         sb.append("<DATA>");
         
         for (int k = 0; k < photoViewList.size(); k++) {
         	sb.append("<ROW>");
-        	sb.append("<RNUM>" + photoViewList.get(k).getRnum() +"</RNUM>");
-        	sb.append("<IMAGECOUNT>" + photoViewList.get(k).getImageCount() +"</IMAGECOUNT>");
-        	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() +"</IMAGEID>");
-        	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() +"</FILEPATH>");
-        	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) +"</FILECONTENT>");
-        	sb.append("<FLAG>" + photoViewList.get(k).getFlag() +"</FLAG>");
-        	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() +"</IMAGENAME>");
+        	sb.append("<IMAGECOUNT>" + imageCount + "</IMAGECOUNT>");
+        	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() + "</IMAGEID>");
+        	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() + "</FILEPATH>");
+        	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) + "</FILECONTENT>");
+        	sb.append("<FLAG>" + photoViewList.get(k).getFlag() + "</FLAG>");
+        	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() + "</IMAGENAME>");
         	
         	String filePath = photoViewList.get(k).getFilePath();
         	int idx = filePath.lastIndexOf(commonUtil.separator);
@@ -6105,8 +6107,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezBoard/getImagePortletList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, LoginSimpleVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception{
-		userInfo = commonUtil.userInfoSimple(loginCookie);
+	public String getImagePortletList(HttpServletRequest request, @RequestBody String xmlPara, @CookieValue("loginCookie") String loginCookie) throws Exception{
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String pBoardType = xmlDom.getElementsByTagName("pBoardType").item(0).getTextContent();
@@ -6115,7 +6117,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String pOrderCell = xmlDom.getElementsByTagName("orderCell").item(0).getTextContent();
 		String pOrderOption = xmlDom.getElementsByTagName("orderOption").item(0).getTextContent();
 		
-		String boardXML = ezBoardService.getThumbListXML(userInfo.getId(), pBoardType, pBoardID, pPageNum, pOrderCell, pOrderOption, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+		String boardXML = ezBoardService.getThumbListXML(userInfo, pBoardType, pBoardID, pPageNum, pOrderCell, pOrderOption);
 		
 		return boardXML;
 	}

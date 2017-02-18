@@ -290,7 +290,6 @@
 					}        			
 				});	
 		    }
-		    var perCnt = "";
 		    var firstFlag = false;
 		    function getBoardList_after(xml) {
 		        try {
@@ -308,14 +307,12 @@
 		            if (listNode == null) return;
 		            var lstCnt = getNodeText(cntNode);
 		            var pageCnt = getNodeText(pagenode);
-		            if(perCnt == "")
-		                perCnt = getNodeText(perNode);
-		             
+		            var perCnt = getNodeText(perNode);
 		
 		            listcount.value = perCnt;
 		            totalPage = Math.ceil(new Number(pageCnt / perCnt));
 		            pTotalCnt = lstCnt;
-		            makePageSelPage();
+		            makePageSelPageBrd();
 		            var xmlDoc;
 		            if (CrossYN()) {
 		                var xmlLIST = createXmlDom();
@@ -458,89 +455,9 @@
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
-		    function makePageSelPage() {
-		        var strtext;
-		        var PagingHTML = "";
-		        document.getElementById("tblPageRayer").innerHTML = "";
-		        if(pAdminType != "y")
-		            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
-		        else
-		            parent.document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang42 + "]";
-		        strtext = "<div class='pagenavi'>";
-		        PagingHTML += strtext;
-		        var pageNum = CurPage;
-		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		            PagingHTML += strtext;
-		        }
-		        var MaxNum;
-		        var i;
-		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
-		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        }
-		        else {
-		            MaxNum = totalPage;
-		        }
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        PagingHTML += "</div>";
-		        td_Create1(PagingHTML);
-		    }
 		    function goToPageByNum(Value) {
 		        CurPage = Value;
-		        makePageSelPage();
+		        makePageSelPageBrd();
 		        movePage(CurPage);
 		    }
 		    function selbeforeBlock() {

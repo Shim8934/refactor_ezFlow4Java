@@ -128,8 +128,6 @@ public interface EzBoardService {
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
 	
-	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, String offset, int tenantID) throws Exception;
-	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
 	public String getBoardTree(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy, String pExcludeBoardID, String lang, int tenantID) throws Exception;
@@ -239,5 +237,9 @@ public interface EzBoardService {
 	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception;
 
 	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception;
+
+	public int photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
+
+	public String getThumbListXML(LoginVO userInfo, String pBoardType, String pBoardID, int pPageNum, String pOrderCell, String pOrderOption) throws Exception;
 
 }
