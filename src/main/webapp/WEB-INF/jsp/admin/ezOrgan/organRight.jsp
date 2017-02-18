@@ -1004,7 +1004,13 @@
 		        if (listview.GetSelectedRows().length == 0){
 					alert("<spring:message code='ezOrgan.t12' />");
 					return;
+				} else {
+				    if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
+	                    alert("<spring:message code='ezOrgan.t12' />");
+	                    return;				        
+				    }    
 				}
+		        
 		        //2016-04-18 장진혁 과장 -- Cross 버전 사용으로 인한 주석 처리
 			    //if (CrossYN()) {
 		        selectdept_cross_dialogArguments[0] = "<spring:message code='ezOrgan.t13' />";
