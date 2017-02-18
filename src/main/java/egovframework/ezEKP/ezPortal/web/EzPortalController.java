@@ -1841,6 +1841,47 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/theme1/portalTheme1WpThemeBoard";
 	}
 	
+	/**
+	 * 포탈 - webPart 테마1 설문 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePoll.do")
+	public String theme1wpThemePoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemePoll started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (result != null) {
+			if (result.getResult() > 0) {
+				if (result.getResult() != 0) {
+					votePoll = Integer.toString(result.getResult());
+				}
+			} else {
+				votePoll = "";
+			}	
+			
+			if (result.getItemSeq() > 0) {
+				if (result.getItemSeq() != 0) {
+					pPollItemSeq = result.getItemSeq();
+					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+				}	
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("votePoll", votePoll);
+		model.addAttribute("pPollItemSeq", pPollItemSeq);
+		model.addAttribute("pPollTitle", pPollTitle);
+		
+		logger.debug("theme1wpThemePoll ended");
+		return "/ezPortal/theme1/portalTheme1WpThemePoll";
+	}
+	
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
