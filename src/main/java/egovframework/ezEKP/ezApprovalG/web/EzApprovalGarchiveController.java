@@ -324,7 +324,7 @@ public class EzApprovalGarchiveController {
 	public String moveRecord(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model,Locale locale, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result=ezApprovalGService.moveRecord(xmlDom,userInfo.getLang());
+		String result=ezApprovalGService.moveRecord(xmlDom,userInfo.getLang(), userInfo.getTenantId());
 		Document xmlResult = commonUtil.convertStringToDocument(result);
 		
 		return commonUtil.convertDocumentToString(xmlResult);

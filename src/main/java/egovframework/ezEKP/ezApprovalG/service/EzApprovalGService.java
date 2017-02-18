@@ -329,7 +329,7 @@ public interface EzApprovalGService {
 
 	public String getRecordHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
-	public String moveRecord(Document xmlDom, String lang) throws Exception;
+	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception;
 
 	public String getRecordSimpleInfo(Document xmlDom, String lang, int tenantID) throws Exception;
 
