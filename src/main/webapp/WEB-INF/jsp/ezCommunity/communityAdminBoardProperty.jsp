@@ -490,11 +490,11 @@
 				<td style="padding:0">
 					<table style="width:100%;">
 						<tr class="primary">
-							<th>${lang_Primary}</th>
+							<th>${langPrimary}</th>
 							<td><input name="text" type=text id="txtBoardName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName}" maxlength=25></td>
 						</tr>
 						<tr class="secondary">
-							<th>${lang_Secondary}</th>
+							<th>${langSecondary}</th>
 							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}" maxlength=25></td>
 						</tr>
 					</table>
