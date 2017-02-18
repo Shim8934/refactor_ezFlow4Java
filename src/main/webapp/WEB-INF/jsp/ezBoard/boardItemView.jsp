@@ -916,7 +916,7 @@
 	<body class="popup" style="overflow:hidden; height:100%;">
 		<table class="layout" style="height:100%">
 		  <tr>
-		    <td style="vertical-align: top; height: 20px;">
+		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
 		        <ul>
 		        	<c:choose>
@@ -1015,7 +1015,7 @@
 		    <tr>
 		    <c:choose>
 				<c:when test="${guBun != '3'}">
-					<td style="vertical-align: top; height: 80px;">
+					<td style="vertical-align: top; height: 10px;">
 					<table class="content2" style="width:100%;">
 						<tr>
 						<th><spring:message code='ezBoard.t223' /></th>
@@ -1139,8 +1139,8 @@
 		  <tr>
 		  <c:choose>
 			  <c:when test="${guBun != '3'}">
-			    <td class="pad1">
-			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:437px; overflow:auto;"></iframe>
+			    <td class="pad1" style="height : 100px">
+			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto;"></iframe>
 			    </td>
 			  </c:when>
 			  <c:otherwise>
