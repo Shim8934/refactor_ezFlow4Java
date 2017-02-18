@@ -1823,6 +1823,24 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/theme1/portalTheme1WpThemeBirth";
 	}
 	
+	/**
+	 * 포탈 - webPart 테마1 게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBoard.do")
+	public String theme1wpThemeBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeBoard started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pBoardType = "";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("pBoardType", pBoardType);
+		
+		logger.debug("theme1wpThemeBoard ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeBoard";
+	}
+	
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
