@@ -303,7 +303,7 @@
 				for (var i = 0; i < SelectNodes(retXML, "TREEVIEWDATA/NODE").length; i++) {
 					treeXML += "<li><span id='" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA1") + "\" , \"" + cnt + "\", event)'>" + SelectSingleNodeValue(SelectNodes(retXML, "TREEVIEWDATA/NODE")[i], "DATA2") + "</span>";
 					treeXML += "<span id=\"sub" + i + "\" style=\"display:none;margin-left:0px;padding-bottom:15px\">";
-					treeXML += "<div  class='tree' id='TreeCtrl" + i + "obj' style='height:auto;width:135px;padding-left:40px;margin-left:-40px;overflow-x:auto;overflow-y:hidden;'></div>\n";
+					treeXML += "<div class='tree' id='TreeCtrl" + i + "obj' style='height:auto;width:135px;padding-left:40px;margin-left:-40px;overflow-x:auto;overflow-y:hidden;'></div>\n";
 					treeXML += "</span></li>";
 				}
 				

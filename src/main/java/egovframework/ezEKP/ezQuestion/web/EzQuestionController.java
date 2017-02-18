@@ -1260,33 +1260,34 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
                     String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId());
                     
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
-             			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
-             				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
-             					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
-             					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
-             					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
-             					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
-             					String deptID2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
-             					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
-             					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
-             					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
-             					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(9).getTextContent();
-             					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-                             	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-                             	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-                             	qstCompleteVO2.setUserID(userID);
-                             	qstCompleteVO2.setUserNm(userNm);
-                             	qstCompleteVO2.setUserNm2(userNm2);
-                             	qstCompleteVO2.setUserEmail(userEmail);
-                             	qstCompleteVO2.setUserDeptID(deptID2);
-                             	qstCompleteVO2.setUserDeptNm(deptNM);
-                             	qstCompleteVO2.setUserDeptNm2(deptNM2);
-                             	qstCompleteVO2.setUserPOS(userPos);
-                             	qstCompleteVO2.setUserPOS2(userPos2);
-                             	ezQuestionService.callInsertPollResponsep1(qstCompleteVO2, loginVO.getTenantId());
-             				}
-             			}
+         			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
+         				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
+         					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+         					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+         					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+         					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+         					String deptID2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+         					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
+         					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
+         					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
+         					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(9).getTextContent();
+         					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+                         	qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+                         	qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+                         	qstCompleteVO2.setUserID(userID);
+                         	qstCompleteVO2.setUserNm(userNm);
+                         	qstCompleteVO2.setUserNm2(userNm2);
+                         	qstCompleteVO2.setUserEmail(userEmail);
+                         	qstCompleteVO2.setUserDeptID(deptID2);
+                         	qstCompleteVO2.setUserDeptNm(deptNM);
+                         	qstCompleteVO2.setUserDeptNm2(deptNM2);
+                         	qstCompleteVO2.setUserPOS(userPos);
+                         	qstCompleteVO2.setUserPOS2(userPos2);
+                         	ezQuestionService.callInsertPollResponsep1(qstCompleteVO2, loginVO.getTenantId());
+         				}
+         			}
 				}
+				
 				int pUserCnt = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
 				for(int i=0; i<pUserCnt; i++) {
 					String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
@@ -1355,6 +1356,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
 		
 		for(int i=0; i<qstCnt; i++) {
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			
 			String qstSubject = doc.getElementsByTagName("QUESTIONCONTENT").item(i).getTextContent();
 			String answerType = doc.getElementsByTagName("ANSWERTYPE").item(i).getTextContent();
 			String multiSelect = doc.getElementsByTagName("MULTISELECT").item(i).getTextContent();
@@ -1362,10 +1365,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			String selViewEnd = doc.getElementsByTagName("SELVIEWEND").item(i).getTextContent();*/
 			
 			int v_quesNo = 1;
-			logger.debug("brdID="+pBrdID);
-			logger.debug("itemNo="+vItemID);
+			
 			v_quesNo = ezQuestionService.getQuestionNo(Integer.parseInt(pBrdID), Integer.parseInt(vItemID), loginVO.getTenantId());
-			logger.debug("quesNo="+v_quesNo);
 			
 			if(v_quesNo == 0) {
 				v_quesNo = 1;
@@ -1383,7 +1384,23 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			
 			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
 			
-			XPath xpath = XPathFactory.newInstance().newXPath();
+			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
+			
+			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
+				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
+					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+					qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO2.setQuesNo(v_quesNo);
+					qstCompleteVO2.setAnswerNo(0);
+					qstCompleteVO2.setAttachNo(k+1);
+					qstCompleteVO2.setAttachType(qstAttachNodes.item(k).getChildNodes().item(0).getTextContent());
+					qstCompleteVO2.setAttachName(qstAttachNodes.item(k).getChildNodes().item(1).getTextContent());
+					qstCompleteVO2.setAttachURL(qstAttachNodes.item(k).getChildNodes().item(2).getTextContent());
+					ezQuestionService.pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
+				}
+			}
+			
 			NodeList nodes1 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER_ANSWER", doc, XPathConstants.NODESET);
 			if(nodes1.getLength() > 0) {
 				int ansAnsCnt = nodes1.getLength();
@@ -1398,45 +1415,45 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				}
 			}
 			
-				NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
-				if(nodes.getLength() > 0) {
-					int ansCnt = nodes.getLength();
-					for(int iAns=0; iAns < ansCnt; iAns++ ) {
-						qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
-						qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
-						qstCompleteVO.setQuesNo(v_quesNo);
-						qstCompleteVO.setAnswerNo(iAns+1);
-						qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "''"));
-						ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
+			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+			if(nodes.getLength() > 0) {
+				int ansCnt = nodes.getLength();
+				for(int iAns=0; iAns < ansCnt; iAns++ ) {
+					qstCompleteVO.setStrBrdID(Integer.parseInt(pBrdID));
+					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
+					qstCompleteVO.setQuesNo(v_quesNo);
+					qstCompleteVO.setAnswerNo(iAns+1);
+					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
+					
+					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
+						nList = doc.getElementsByTagName("ANSWER");	
 						
-						if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
-							nList = doc.getElementsByTagName("ANSWER");	
-							
-							if(nList.item(iAns).getChildNodes().item(1) != null){
-								if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
-									int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
-									for(int aa=0; aa<ansAttachCnt; aa++) {
-										String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
-										String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-										if(ansAttachType.equals("3") || ansAttachType.equals("4") || ansAttachType.equals("6") || ansAttachType.equals("7")) {
-										}
-										QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
-										qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
-										qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
-										qstCompleteVO2.setQuesNo(v_quesNo);
-										qstCompleteVO2.setAnswerNo(iAns+1);
-										qstCompleteVO2.setAttachNo(aa+1);
-										//qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
-										qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
-										qstCompleteVO2.setAttachURL(ansAttachUrl);
-										qstCompleteVO2.setAttachType(ansAttachType);
-										ezQuestionService.pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
+						if(nList.item(iAns).getChildNodes().item(1) != null){
+							if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
+								int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+								for(int aa=0; aa<ansAttachCnt; aa++) {
+									String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
+									String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
+									if(ansAttachType.equals("3") || ansAttachType.equals("4") || ansAttachType.equals("6") || ansAttachType.equals("7")) {
 									}
+									QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+									qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
+									qstCompleteVO2.setItemNo(Integer.parseInt(vItemID));
+									qstCompleteVO2.setQuesNo(v_quesNo);
+									qstCompleteVO2.setAnswerNo(iAns+1);
+									qstCompleteVO2.setAttachNo(aa+1);
+									//qstCompleteVO2.setAttachName(doc.getElementsByTagName("ATTACHTITLE").item(aa).getTextContent().replace("'", "''"));
+									qstCompleteVO2.setAttachName(nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(1).getTextContent().replace("'", "''"));
+									qstCompleteVO2.setAttachURL(ansAttachUrl);
+									qstCompleteVO2.setAttachType(ansAttachType);
+									ezQuestionService.pollSaveAttach(qstCompleteVO2, loginVO.getTenantId());
 								}
 							}
 						}
 					}
 				}
+			}
 		}
 		
 		QstCompleteVO qstCompleteVO = new QstCompleteVO();

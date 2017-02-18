@@ -214,11 +214,10 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserDeptNM2", qstCompleteVO.getUserDeptNm2());
 		map.put("v_pUserPOS", qstCompleteVO.getUserPOS());
 		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
-		map.put("v_temp", "");
 		map.put("tenantID", tenantID);
 		
 		Integer temp = ezQuestionDAO.callInsertPollResponsep(map);
-		logger.debug("3333" + temp);
+		
 		if (temp != null) {
 			ezQuestionDAO.callInsertPollResponsep1(map);
 		}
@@ -269,6 +268,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@Override
 	public void pollSaveAttach(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
+		logger.debug("pollSaveAttach started.");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -280,6 +281,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pAttachType", qstCompleteVO.getAttachType());
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.pollSaveAttach(map);
+		
+		logger.debug("pollSaveAttach ended.");
 	}
 
 	@Override
