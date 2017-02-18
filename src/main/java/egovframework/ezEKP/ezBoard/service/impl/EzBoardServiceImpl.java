@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -670,7 +672,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 	@Override
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, String adminType, int tenantID) throws Exception {
-		
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
@@ -731,7 +732,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("limit", boardListVO.getStartRow() - 1);
 		
 		if (boardVO.getSubFlag().equals("Y")) {
-			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
+			map.put("v_PWHEREBOARD", " (A.BOARDID = '" + boardVO.getBoardId() + "' OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
 		} else {
 			map.put("v_PWHEREBOARD", " A.BOARDID = '" + boardVO.getBoardId() + "' ");
 		}
@@ -1004,19 +1005,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, int tenantID) throws Exception {
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemID", itemID);
+		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardDAO.getBrdGetItemInfo(map);
 	}
 
 	@Override
-	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, int tenantID) throws Exception {
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
 		map.put("v_pItemID", itemID);
+		map.put("lang", multiLang);
 		map.put("v_TENANTID", tenantID);
 		
 		return ezBoardDAO.getBrdGetItemInfoTemp(map);
@@ -1192,6 +1195,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PSUBFLAG", boardVO.getSubFlag());
 		map.put("v_PSUBQUERY", boardVO.getSearchQuery());
 		map.put("v_TENANTID", boardVO.getTenantID());
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		
 		if (boardVO.getSubFlag().equals("Y")) {
 			map.put("v_PWHEREBOARD", " (BOARDID = '" + boardVO.getBoardId() + "' OR BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = '" + boardVO.getTenantID() + "' AND PARENTBOARDID = '" + boardVO.getBoardId() + "'))");
@@ -1388,6 +1392,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			ezBoardDAO.deleteBoardItemRead2(map);
 			ezBoardDAO.deleteBoardReply(map);
 			
+			if (mode != null && mode.equals("PHOTO")) {
+				BoardListVO boardListVO = new BoardListVO();
+				boardListVO.setItemID(strItemID);
+				boardListVO.setTenantID(tenantID);
+				
+				ezBoardDAO.deleteImageItem(boardListVO);
+			}
+			
 			return "OK";
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteTempItem");
@@ -1423,7 +1435,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
 			}
 			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
-			sb.append("<ParentWriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getParentWriteDate(), offset, false) + "</ParentWriteDate>");
+			sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
 			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 			sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
 			sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
@@ -1490,7 +1502,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
 		}
 		sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
-		sb.append("<ParentWriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getParentWriteDate(), offset, false) + "</ParentWriteDate>");
+		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
 		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
 		sb.append("<Title>" + commonUtil.cleanValue(itemInfo.getTitle()) + "</Title>");
 		sb.append("<ContentLocation>" + itemInfo.getContentLocation() + "</ContentLocation>");
@@ -1723,7 +1735,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		ezBoardDAO.setApprFlag(boardListVO);
 		ezBoardDAO.deleteBoardItemRead(boardListVO);
 		
-		if(mode.equals("PHOTO")){
+		if (mode.equals("PHOTO")) {
 			photoSaveDB(boardListVO);
 		}
 		
@@ -1974,6 +1986,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         } else {
         	result.append("<TREEVIEWDATA>");
         }
+        //오름차순으로 정렬!
+        Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
+			@Override
+			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
+				return o1.getTreeViewOrder().compareTo(o2.getTreeViewOrder());
+			}
+		});
         
         for (int i = 0; i < brdBoardTreeList.size(); i++) {
         	if (strRollInfo != null && strRollInfo.toLowerCase().indexOf("c=1") == -1 && strRollInfo.toLowerCase().indexOf("k=1") == -1 && strRollInfo.toLowerCase().indexOf("n=1") == -1) {
@@ -2346,22 +2365,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (mode.equals("reply")) {
 				boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
 			}
+			
 			boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
 			
-			if (mode.equals("copy")) {
-				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
-			} else if (mode.equals("temp")) {
-				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
-				boardListVO.setParentWriteDate(boardListVO.getWriteDate());
-			} else {
-				boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent());
-				boardListVO.setParentWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), userInfo.getOffset(), true));
-			}
-			
-			if (boardListVO.getParentWriteDate().equals("")) {
-				boardListVO.setParentWriteDate(boardListVO.getStartDate());
-			}
-
 			if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
 				boardListVO.setExtensionAttribute1("0");
 			} else {
@@ -2414,6 +2421,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "PHOTO", realPath, userInfo.getTenantId())) {
 					return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 				}
+				
 				boardListVO.setHasAttach("1");
 			} else {
 				boardListVO.setHasAttach("0");

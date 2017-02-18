@@ -71,7 +71,8 @@
 						async : false,
 						url : "/ezCommon/mhtToHTMLContent.do",
 						data : { type   : "BOARDCONTENT", 
-								 itemID 	 : pItemID
+								 itemID : pItemID,
+								 href   : strContentLocation 
 							   },
 						success: function(result){
 							html = result;

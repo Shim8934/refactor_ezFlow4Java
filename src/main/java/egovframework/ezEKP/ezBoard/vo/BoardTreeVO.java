@@ -21,6 +21,8 @@ public class BoardTreeVO {
 	private String select;
 	/** 이즈맆	*/
 	private String isLeaf;
+	/** */
+	private String docNO;
 	
 	public String getBoardId() {
 		return boardId;
@@ -81,6 +83,12 @@ public class BoardTreeVO {
 	}
 	public void setIsLeaf(String isLeaf) {
 		this.isLeaf = isLeaf;
+	}
+	public String getDocNO() {
+		return docNO;
+	}
+	public void setDocNO(String docNO) {
+		this.docNO = docNO;
 	}
 	
 	@Override

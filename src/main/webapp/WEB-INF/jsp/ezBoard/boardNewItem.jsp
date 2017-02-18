@@ -82,7 +82,7 @@
 		    var strContentLocation = "${boardListVO.contentLocation}";
 		    var strUpperItemIDTree = "${boardListVO.upperItemIDTree}";
 		    var strItemLevel = "${boardListVO.itemLevel}";
-		    var strWriterTitle = "${boardListVO.title}";
+		    var strWriterTitle = "${boardListVO.extensionAttribute3}";
 		    var strWriterFakeName = "${strWriterFakeName}";
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
@@ -297,9 +297,17 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
 		            buttonImageOnly: true
 		        });
+       
+		        if (ExpireDays != -1) {
+			        var utcDate = new Date(strNow.substring(0, 10));
+			        utcDate.setDate(utcDate.getDate() + Number(ExpireDays));
+		        } else {
+			        var utcDate = new Date(strNow.substring(0, 10));
+			        utcDate.setMonth(utcDate.getMonth() + 1);
+		        }
 		        
 		        $("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
-		        $("#Sdatepicker2").datepicker('setDate', getDatePickerTime("${userInfo.offset}"));
+		        $("#Sdatepicker2").datepicker('setDate', utcDate);
 		    });
 		    if("${userInfo.lang}" == "1"){
 		        $(function () {
@@ -433,7 +441,6 @@
 		        } else {
 		            if ((pMode == "modify" || pMode == "temp") && $('#Sdatepicker2').val().substring(0, 4) != "9999") {
 		                pEndDateTime = $('#Sdatepicker2').val() + strEndDate.substring(10, 19);
-		
 		            }
 		            else {
 		                pEndDateTime = $('#Sdatepicker2').val() + strNow.substring(10, 19);
@@ -499,7 +506,7 @@
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
 		            if (configEndDate < currEndDate) {
-		                alert("<spring:message code='ezBoard.t382' />"+"${endDateTime}"+"<spring:message code='ezBoard.t383' />");
+		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
 		                return;
 		            }
 		            if (currEndDate < currReserveDate) {
@@ -733,13 +740,9 @@
 		            if (orgMode == "temp") {
 		                var xmlDom = createXmlDom();
 		                var xmlhttp = createXMLHttpRequest();
-		                var objNode, objSubNode, objDataNode;
-		                objNode = createNodeInsert(xmlDom, objNode, "NODES");
-		                objSubNode = createNodeAndAppandNode(xmlDom, objNode, objSubNode, "NODE");
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
 		
 		                xmlhttp.open("POST", "/ezBoard/deleteTempItem.do", false);
-		                xmlhttp.send(xmlDom);
+		                xmlhttp.send(strItemID);
 		            }
 		
 		            if (pMode != "temp") {
