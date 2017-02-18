@@ -742,36 +742,36 @@
 						*
 					FROM
 						(SELECT
-							RESPONSEUSER_ID AS USER_ID, 
-                			MAX(RESPONSEUSER_NAME$v_pLang$) AS USER_NAME,
-							MAX(RESPONSEUSER_EMAIL) AS USER_EMAIL,
-							MAX(RESPONSEUSER_DEPT_ID) AS USER_DEPT_ID, 
-							MAX(RESPONSEUSER_DEPT_NAME$v_pLang$) AS USER_DEPT_NAME,
-							MAX(RESPONSEUSER_POSITION$v_pLang$) AS USER_POSITION, 
-							MAX(RESPONSEUSER_JIKGUB$v_pLang$) AS USER_JIKGUB,
-							MAX(RESPONSEUSER_GENDER) AS USER_GENDER,
-							MAX(RESPONSEUSER_AGE) AS USER_AGE,
-							MAX(RESPONSE_DATE) AS RESPONSE_DATE 
+							responseuser_id AS user_id, 
+                			MAX(responseuser_name$v_pLang$) AS user_name,
+							MAX(responseuser_email) AS user_email,
+							MAX(responseuser_dept_id) AS user_dept_id, 
+							MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
+							MAX(responseuser_position$v_pLang$) AS user_position, 
+							MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
+							MAX(responseuser_gender) AS user_gender,
+							MAX(responseuser_age) AS user_age,
+							MAX(response_date) AS response_date 
                 		FROM
-                			TBL_POLL_RESPONSE  
+                			tbl_poll_response  
                 		WHERE
-                			BRD_ID = #v_pstrBrdID#
+                			brd_id = #v_pstrBrdID#
                 		AND
-                			ITEM_NO = #v_pItemNo#
+                			item_no = #v_pItemNo#
                 		AND
-                			TENANT_ID = #tenantID#
+                			tenant_id = #tenantID#
 						GROUP BY
-							RESPONSEUSER_ID
+							responseuser_id
 						LIMIT
                 			#v_pTotalCnt# 
                 		) P
 					ORDER BY
-                		P.RESPONSE_DATE DESC
+                		P.response_date DESC
                 	LIMIT
 						#v_pPageSize#
                 	) K
 				ORDER BY
-					K.RESPONSE_DATE ASC
+					K.response_date ASC
 			]]>
 		</isEqual>
 		
@@ -784,36 +784,36 @@
 						*
 					FROM
 						(SELECT
-							USER_ID	AS USER_ID,
-                        	USER_NM$v_pLang$ AS USER_NAME,
-                        	USER_EMAIL AS USER_EMAIL,
-                        	USER_DEPT_ID AS USER_DEPT_ID,	
-                        	USER_DEPT_NM$v_pLang$ AS USER_DEPT_NAME,
-					        USER_POS$v_pLang$ AS USER_POSITION,
-					        USER_JIKGUB$v_pLang$ AS USER_JIKGUB,
-					        USER_GENDER AS USER_GENDER,
-					        USER_AGE AS USER_AGE,
-					        RESPONSE_DATE AS RESPONSE_DATE
+							user_id	AS user_id,
+                        	user_nm$v_pLang$ AS user_name,
+                        	user_email AS user_email,
+                        	user_dept_id AS user_dept_id,	
+                        	user_dept_nm$v_pLang$ AS user_dept_name,
+					        user_pos$v_pLang$ AS user_position,
+					        user_jikgub$v_pLang$ AS user_jikgub,
+					        user_gender AS user_gender,
+					        user_age AS user_age,
+					        response_date AS response_date
                         FROM
                         	TBL_POLL_RESPONSEPERSON 
                         WHERE
-                        	BRD_ID = #v_pstrBrdID#
+                        	brd_id = #v_pstrBrdID#
                         AND
-                        	ITEM_NO = #v_pItemNo#
+                        	item_no = #v_pItemNo#
                         AND
-                        	RESPONSE_DATE IS NULL
+                        	response_date IS NULL
                         AND
-                        	TENANT_ID = #tenantID#
+                        	tenant_id = #tenantID#
                         LIMIT
                 			#v_pPageSize#
                 		) P
                 	ORDER BY
-                		P.USER_ID DESC
+                		P.user_id DESC
                 	LIMIT
                			#v_pTotalCnt#
                 	) K
                ORDER BY
-               		K.USER_ID ASC
+               		K.user_id ASC
 			]]>
 		</isNotEqual>
 		
@@ -1965,8 +1965,6 @@
      				(#v_pstrBrdID#, #v_pItemNo#, #v_pGubunID#, #v_pGubunNm#, #v_pGubunNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #v_pUserGender#, #v_pUserAge#, #tenantID#)
 			]]>
 		</isEqual>
-		<![CDATA[
-		]]>
 	</insert>
 	
 	<!-- <procedure id="EzQuestionDAO.insertQuestion" parameterClass="Map">

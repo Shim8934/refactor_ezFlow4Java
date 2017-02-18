@@ -777,6 +777,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Override
 	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
+		logger.debug("responseList started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
@@ -785,7 +787,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
 		map.put("tenantID", tenantID);
-		return ezQuestionDAO.responseList(map);
+		
+		List<QstResponseVO> list = ezQuestionDAO.responseList(map);
+		
+		logger.debug("responseList ended.");
+		
+		return list;
 	}
 
 	@Override

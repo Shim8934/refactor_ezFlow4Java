@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<c:choose>
-			<c:when test="${responseYN==Y }">
+			<c:when test="${responseYN=='Y' }">
 				<title><spring:message code='ezQuestion.t335' /></title>
 			</c:when>
 			<c:otherwise>

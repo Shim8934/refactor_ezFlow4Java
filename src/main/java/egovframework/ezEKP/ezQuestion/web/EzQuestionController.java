@@ -1257,10 +1257,11 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
                     String propList = "department;mail;displayname;title;description;company;title";
                     String pClass = "all";
                        
-                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, ezCommonService.getTenantConfig("PrimaryLang", loginVO.getTenantId()), loginVO.getTenantId());
+                    String sXML = ezOrganService.getDeptMemberList(deptID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId());
+                    
              		Document xmlDom = commonUtil.convertStringToDocument(sXML);
              			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
-             				if(xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent() != "") {
+             				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
              					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
              					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
              					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
@@ -1309,7 +1310,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					//String userGender = "";
 					//String userAge = "";
 					
-					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent() == "") {
+					if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals("")) {
 						userDeptId = "TOP";
 					} else {
 						userDeptId = infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
@@ -1417,7 +1418,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 									for(int aa=0; aa<ansAttachCnt; aa++) {
 										String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
 										String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
-										if(ansAttachType == "3" || ansAttachType == "4" || ansAttachType == "6" || ansAttachType == "7") {
+										if(ansAttachType.equals("3") || ansAttachType.equals("4") || ansAttachType.equals("6") || ansAttachType.equals("7")) {
 										}
 										QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
 										qstCompleteVO2.setStrBrdID(Integer.parseInt(pBrdID));
@@ -1534,7 +1535,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			String pFileName_Guid = UUID.randomUUID().toString();
 			String newFileName = pFileName_Guid+pFileName.substring(pFileName.lastIndexOf("."));
 			
-			if(type == "1") {
+			if(type.equals("1")) {
 				
 			}
 			
@@ -1736,7 +1737,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
                 pFilePath = qstAttachVO.getAttachUrl();
                 pFileName = qstAttachVO.getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
             }
-            if (pFilePath != null && pFilePath != ""){
+            if (pFilePath != null && !pFilePath.equals("")){
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
             }
         }
@@ -1771,7 +1772,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         	lang = loginVO.getLang();
         }
         if (request.getParameter("page") != null){
-            if (request.getParameter("page") != ""){
+            if (!request.getParameter("page").equals("")){
                 pCurrPage = Integer.parseInt(request.getParameter("page"));
             }else{
                 pCurrPage = 1;
@@ -2088,6 +2089,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         model.addAttribute("pTotalCnt", pTotalCnt);
         model.addAttribute("pAnsType", pAnsType);
         model.addAttribute("publicFlg", publicFlg);
+        model.addAttribute("responseYN", responseYN);
         logger.debug("pageCount="+pageCount);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
@@ -2405,7 +2407,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         	qPercent="w";
         	sort="A";
         	
-        	if(responseUserDeptName == null || responseUserDeptName.toUpperCase() == "NULL"){
+        	if(responseUserDeptName == null || responseUserDeptName.toUpperCase().equals("NULL")){
         		title = " [" + egovMessageSource.getMessage("ezQuestion.t57", locale) + answer;
         		qPercent = "";
         		sort="Q";
@@ -3004,7 +3006,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		
 		itemNo = request.getParameter("itemNo");
 		
-		if(itemNo != ""){
+		if(!itemNo.equals("")){
 			row = sheet.createRow(0);
 			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552", locale) + "\r\n";
 			cell = row.createCell(0);
@@ -3081,7 +3083,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					cell.setCellValue(header[i]);
 				}
 				
-				if(qUser != ""){
+				if(!qUser.equals("")){
 					for(String key : tbl.keySet()){
 						sNo=sNo+1;
 						answerStr = answerStr + sNo + "," + key + tbl.get(key) + "\r\n";
@@ -3264,7 +3266,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		}
         int getItemNo = 0;
         int maxNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID), loginVO.getTenantId());
-        if(String.valueOf(maxNo) == "")  {
+        if(String.valueOf(maxNo).equals(""))  {
         	getItemNo = 0;
         } else {
         	getItemNo = maxNo;
@@ -3318,7 +3320,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		if(req.getParameter("currPage")!=null)
 			currPage = req.getParameter("currPage");
 		
-		if(itemID == null || itemID == "" || itemID.equals("")) {
+		if(itemID == null || itemID.equals("")) {
 			itemID = "0";
 		}
 		
@@ -3659,7 +3661,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						}
 					}
 					
-					if(arrLine[2] == "5") {
+					if(arrLine[2].equals("5")) {
 						String tableAnswerValue = ezQuestionService.tableAnswerValue(5, Integer.parseInt(itemID), qstTempSaveVO.get(i).getQuestionNo(), loginVO.getTenantId());
 						xmlTemp = null;
 						xmlTemp = commonUtil.convertStringToDocument(tableAnswerValue);
