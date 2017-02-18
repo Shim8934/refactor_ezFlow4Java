@@ -495,7 +495,7 @@
 						</tr>
 						<tr class="secondary">
 							<th>${lang_Secondary}</th>
-							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}"></td>
+							<td><input name="text2" type="text" id="txtBoardName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${boardInfo.boardName2}" maxlength=25></td>
 						</tr>
 					</table>
 				</td>
@@ -513,18 +513,18 @@
 		        <td>
 			        <c:choose>
 			        	<c:when test="${boardProp.itemExpires == '-1' }">
-							<input type=checkbox id="chkPermanent" onClick="chkPermanent_onclick()" checked>
+							<input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()" checked>
 		      				<spring:message code = 'ezCommunity.t385' />
-						    <input type=checkbox id="chkExpires" onClick="chkExpires_onclick()">
-						    <input type="text" id="txtExpires" value="365" style="width:35px">
+						    <input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()">
+						    <input type="text" id="txtExpires" value="365" style="width:35px" maxlength="3">
 		      				<spring:message code = 'ezCommunity.t386' />
 			        	</c:when>
 							
 			        	<c:otherwise>
-			        		<input type=checkbox id="chkPermanent" onClick="chkPermanent_onclick()">
+			        		<input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()">
 							<spring:message code = 'ezCommunity.t385' />
-							<input type=checkbox id="chkExpires" onClick="chkExpires_onclick()" checked>
-							<input type="text" id="txtExpires" style="width:35px" value="${boardProp.itemExpires}">
+							<input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()" checked>
+							<input type="text" id="txtExpires" style="width:35px" value="${boardProp.itemExpires}" maxlength="3">
 							<spring:message code = 'ezCommunity.t386' />
 			        	</c:otherwise>
 			        </c:choose>
@@ -536,9 +536,9 @@
 						<th><spring:message code = 'ezCommunity.t387' /></th>
 						<td>
 							<spring:message code = 'ezCommunity.t388' />
-							<input type=inputbox id="deleteafter" style="width:50px">
+							<input type="text" id="deleteafter" style="width:50px" maxlength="3">
 							<spring:message code = 'ezCommunity.t389' /><br>
-							<input type=checkbox id="usedeleteafter">
+							<input type="checkbox" id="usedeleteafter">
 							<spring:message code = 'ezCommunity.t390' />
 						</td>
       				</c:when>
@@ -547,9 +547,9 @@
 							<th><spring:message code = 'ezCommunity.t391' /></th>
 							<td>
 								<spring:message code = 'ezCommunity.t388' />
-								<input type=inputbox id="deleteafter" style="width:50px" value="${boardProp.deleteAfter}">
+								<input type="text" id="deleteafter" style="width:50px" value="${boardProp.deleteAfter}" maxlength="3">
 								<spring:message code = 'ezCommunity.t389' /><br>
-								<input type=checkbox id="usedeleteafter" checked>
+								<input type="checkbox" id="usedeleteafter" checked>
 								<spring:message code = 'ezCommunity.t390' />
 							</td>
       				</c:otherwise>
@@ -560,36 +560,36 @@
         		<td>
         			<c:choose>
         				<c:when test="${boardProp.gubun == '1' }">
-        					<input type=checkbox id="chkGroupBoard" onClick="checkboardtype(event)" checked>
+        					<input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)" checked>
       						<spring:message code = 'ezCommunity.t393' />
         				</c:when>
         				
         				<c:otherwise>
-        					<input type=checkbox id="chkGroupBoard" onClick="checkboardtype(event)">
+        					<input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)">
       						<spring:message code = 'ezCommunity.t393' />
         				</c:otherwise>
         			</c:choose>
         			
         			<c:choose>
         				<c:when test="${boardProp.gubun == '2' }">
-        					<input type=checkbox id="chkAnonyBoard" onClick="checkboardtype(event)" checked>
+        					<input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)" checked>
       						<spring:message code = 'ezCommunity.t394' />
         				</c:when>
         				
         				<c:otherwise>
-        					<input type=checkbox id="chkAnonyBoard" onClick="checkboardtype(event)">
+        					<input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)">
       						<spring:message code = 'ezCommunity.t394' />
         				</c:otherwise>
         			</c:choose>
         			
         			<c:choose>
         				<c:when test="${boardProp.gubun == '3' }">
-        					<input type=checkbox id="chkPhotoBoard" onClick="checkboardtype(event)" checked> 
+        					<input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)" checked> 
 							<spring:message code = 'ezCommunity.t395' />
         				</c:when>
         				
         				<c:otherwise>
-        					<input type=checkbox id="chkPhotoBoard" onClick="checkboardtype(event)"> 
+        					<input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)"> 
       						<spring:message code = 'ezCommunity.t395' />
         				</c:otherwise>
         			</c:choose>
@@ -658,11 +658,11 @@
       		</tr>
       		<tr style="${_style}">
 		        <th><spring:message code = 'ezCommunity.t405' /></th>
-		        <td><input type="text" id="txtAttachLimit" style="width:25px" value="${boardProp.attachSizeLimit}">MB</td>
+		        <td><input type="text" id="txtAttachLimit" style="width:25px" value="${boardProp.attachSizeLimit}" maxlength="3">MB</td>
       		</tr>
 			<tr style="${_style}">
 				<th>URL</th>
-				<td><input type="text" id="txtURL" style="width:100%" value="${boardProp.url}"></td>
+				<td><input type="text" id="txtURL" style="width:100%" value="${boardProp.url}" maxlength="150"></td>
 			</tr>
 			<tr style="${_style}">
 				<th><spring:message code = 'ezCommunity.t406' /></th>
