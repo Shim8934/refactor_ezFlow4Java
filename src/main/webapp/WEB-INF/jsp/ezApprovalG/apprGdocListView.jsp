@@ -51,7 +51,11 @@
         g_ParamXml = RetValue[9];
         DeptName = RetValue[10];
         gTotalDocList = RetValue[11];
-        document.getElementById("StartNum").value = "1";
+        if(gTotalDocList < 1) {
+            document.getElementById("StartNum").value = "0";
+        } else {
+            document.getElementById("StartNum").value = "1";
+        }
         if (parseInt(gTotalDocList) > 1000)
             gTotalDocList = "1000";
         document.getElementById("EndNum").value = gTotalDocList;
