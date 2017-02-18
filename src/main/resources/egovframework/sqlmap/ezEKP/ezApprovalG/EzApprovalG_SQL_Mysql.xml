@@ -10272,7 +10272,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
 			   WHERE  ConfirmFlag = '0'
 		</select>
 		
@@ -10296,7 +10296,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#) A	 
 				WHERE  
-					Code = '2')
+					Code = '2')B
 		</select>
 		
 		<select id="EzApprovalG.transferCabinetSn" parameterClass="Map" resultClass="String">
@@ -10372,6 +10372,8 @@
 			    							Code = '4') B	)
 	            AND 
 	            	RollbackFlag = '0'
+	            AND 
+	            	TENANT_ID = #v_TENANTID#
 		</select>
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
@@ -10513,6 +10515,7 @@
 					 			  Code = '4') B )
 			AND 
 				RegSerialNo = $v_RtnSN$
+			AND TENANT_ID = #v_TENANTID#
 		</update>
 		<insert id="EzApprovalG.insertTbCabinetClass" parameterClass="Map">
 		INSERT INTO 
@@ -10610,7 +10613,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
         WHERE 
         	 ConfirmFlag = '0' )
 		</insert>
@@ -10724,7 +10727,7 @@
 													     AND
 													     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
-													     		ConfirmFlag ASC)
+													     		ConfirmFlag ASC)A
                                                    WHERE  
                                                    		ConfirmFlag = '0' )
                AND
