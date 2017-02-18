@@ -214,9 +214,13 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserDeptNM2", qstCompleteVO.getUserDeptNm2());
 		map.put("v_pUserPOS", qstCompleteVO.getUserPOS());
 		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
-		map.put("v_temp", "");
 		map.put("tenantID", tenantID);
-		ezQuestionDAO.callInsertPollResponsep1(map);
+		
+		Integer temp = ezQuestionDAO.callInsertPollResponsep(map);
+		
+		if (temp != null) {
+			ezQuestionDAO.callInsertPollResponsep1(map);
+		}
 	}
 
 	@Override
@@ -264,6 +268,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@Override
 	public void pollSaveAttach(QstCompleteVO qstCompleteVO, int tenantID) throws Exception {
+		logger.debug("pollSaveAttach started.");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", qstCompleteVO.getStrBrdID());
 		map.put("v_pItemNo", qstCompleteVO.getItemNo());
@@ -275,6 +281,8 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pAttachType", qstCompleteVO.getAttachType());
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.pollSaveAttach(map);
+		
+		logger.debug("pollSaveAttach ended.");
 	}
 
 	@Override
@@ -776,7 +784,9 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
+	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int pCurPage, int tenantID) throws Exception {
+		logger.debug("responseList started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
@@ -784,8 +794,14 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
+		map.put("mariaStart", (pCurPage-1) * pPageSize);
 		map.put("tenantID", tenantID);
-		return ezQuestionDAO.responseList(map);
+		
+		List<QstResponseVO> list = ezQuestionDAO.responseList(map);
+		
+		logger.debug("responseList ended.");
+		
+		return list;
 	}
 
 	@Override

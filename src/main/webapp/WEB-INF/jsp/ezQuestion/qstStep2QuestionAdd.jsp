@@ -51,9 +51,9 @@
 	        		for (var i = 0; i < Ques_Answer.input_Ans.length; i++) {
 	            		if (Ques_Answer.input_Ans[i].getAttribute("ansinfo") != null) {
 	                		var m_AttachInfo = { "type": new Array(), "attachTitle": new Array(), "href": new Array() };
-			                m_AttachInfo["type"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("TYPE")[0]);
-	                		m_AttachInfo["attachTitle"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("ATTACHTITLE")[0]);        ///
-	                		m_AttachInfo["href"][0] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("HREF")[0])
+			                m_AttachInfo["type"][i] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("TYPE")[0]);
+	                		m_AttachInfo["attachTitle"][i] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("ATTACHTITLE")[0]);        ///
+	                		m_AttachInfo["href"][i] = getNodeText(loadXMLString(Ques_Answer.input_Ans[i].getAttribute("ansinfo")).getElementsByTagName("HREF")[0])
 			                Ques_Answer.input_Ans[i].AnsInfo = m_AttachInfo;
 	    		            m_AttachInfo = null;
 	            		}

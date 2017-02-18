@@ -663,6 +663,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("strXML", strXML);
         model.addAttribute("totalCount", totalCount);
         model.addAttribute("totalPage", totalPage);
+        model.addAttribute("boardName", boardInfo.getBoardName());
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstract", abstracts);

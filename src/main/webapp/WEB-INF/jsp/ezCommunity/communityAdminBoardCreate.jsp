@@ -141,48 +141,6 @@
 						break;		
 				}
 			}
-			
-			/* function searchBoard_onclick() {
-			    var feature = "DialogHeight:470px;DialogWidth:340px;status:no;help:no;edge:sunken";
-			    feature = feature + GetShowModalPosition(340, 470);
-			    var ret = window.showModalDialog("/myoffice/ezCommunity/class_admin/Board/SearchBoard.aspx", "", feature);
-			    
-				if(typeof(ret) == "undefined") {
-				} else {
-					var spans = TopBoardsList.all.tags("span");
-					
-					for (var i=0; i<spans.length; i++) {
-						if(spans.item(i).id == ret[1]) {
-							loadTreeViewByPath(spans.item(i), ret[0], ret[1], ret[2], ret[3]);
-						}
-					}
-				}
-			}
-	
-			function loadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID, pBoardName, pParentBoardID) {
-				var divs = TopBoardsList.all.tags("DIV");
-				
-				for (var i=0; i<divs.length; i++) {
-					if(divs.item(i).parentElement.parentElement.id == "TreeArea") {
-						divs.item(i).parentElement.parentElement.style.display = "none";
-					}
-				}
-	
-				pObjSpan.parentElement.parentElement.nextSibling.style.display = "";
-				var TreeCtrl = pObjSpan.parentElement.parentElement.nextSibling.firstChild.firstChild;
-				
-				TreeCtrl.server = SS_ServerName;
-				TreeCtrl.config = xmlDom_treeview;
-				TreeCtrl.source = GetBoardTreeByPath(pBoardID, pBoardGroupID);
-				TreeCtrl.update();
-	
-				SelectedBoardID = pBoardID;
-				SelectedBoardName = pBoardName;
-				SelectedBoardParentBoardID = pParentBoardID;
-				SelectedBoardGroupID = pBoardGroupID;
-	
-				window.location.href = "BoardProperty.aspx?BoardID=" + SelectedBoardID;
-			} */
 		</script>
 	</head>
 	<body class="mainbody">
@@ -216,23 +174,23 @@
 			    	<table style="width:100%">
 						<tr class="primary">
 				        	<th>${lang_Primary}</th>
-				        	<td><input type="text" id ="txtNewName" name="txtNewName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+				        	<td><input type="text" id ="txtNewName" name="txtNewName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
 		        		</tr>
 		        		<tr class="secondary">
 							<th>${lang_Secondary}</th>
-							<td><input type="text" id ="txtNewName2" name="txtNewName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;"></td>
+							<td><input type="text" id ="txtNewName2" name="txtNewName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
 						</tr>
 		      		</table>
 				</td> 
 			</tr> 
-			<tr style="display:none"> 
+			<%-- <tr style="display:none"> 
 			    <th rowspan="2">URL</th> 
 			    <td style="width:70px;white-space:nowrap;"><input type="radio" name="radiobutton" value="radiobutton"><spring:message code='ezCommunity.t327' /></td> 
 			    <td><input type="text" name="textfield2" style="width:100%"></td> 
 		  	</tr>
 		  	<tr style="display:none"> 
 		    	<td colspan="2"><input type="radio" name="radiobutton" value="radiobutton"><spring:message code='ezCommunity.t328' /></td> 
-		  	</tr> 
+		  	</tr>  --%>
 		</table> 
 		
 		<div class="btnposition">

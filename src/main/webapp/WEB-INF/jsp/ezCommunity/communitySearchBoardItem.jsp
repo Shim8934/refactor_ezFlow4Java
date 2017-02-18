@@ -873,7 +873,7 @@
 		
 		<table class="content">
 			<tr>
-				<th><spring:message code='ezCommunity.t419'/></th>
+				<th><spring:message code='ezCommunity.t418'/></th>
 				<td>${boardName}</td>
 			</tr>
 			<tr>

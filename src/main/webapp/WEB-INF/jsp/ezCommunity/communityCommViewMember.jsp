@@ -33,6 +33,7 @@
 		    var CurPage = "<c:out value = '${curPage}' />";
 		    var totalPage = "<c:out value = '${totalPage}' />";
 		    var totalCount = "<c:out value = '${keywordCount}' />";
+		    var code = "<c:out value = '${code}' />"
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload =function () {
@@ -81,13 +82,13 @@
 			    var strSearch = "";
 			    
 			    if (document.getElementById("s_radio").value == "id") {
-				    strSearch = "sRadio=id&keyword=" + document.getElementById("keyword").value;
+				    strSearch = "sRadio=id&keyword=" + encodeURIComponent(document.getElementById("keyword").value);
 			    } else {
-				    strSearch = "sRadio=name&keyword=" + document.getElementById("keyword").value;
+				    strSearch = "sRadio=name&keyword=" + encodeURIComponent(document.getElementById("keyword").value);
 			    }
 			    
-				strSearch = strSearch + "&key=" + document.getElementById("keyword").value + "&code=${code}";
-				window.location.href = "/ezCommunity/commViewMember.do?" + encodeURIComponent(strSearch);
+				strSearch = strSearch + "&key=" + encodeURIComponent(document.getElementById("keyword").value) + "&code="+ encodeURIComponent(code);
+				window.location.href = "/ezCommunity/commViewMember.do?" + strSearch;
 			}
 			
 	        var BlockSize = 10;

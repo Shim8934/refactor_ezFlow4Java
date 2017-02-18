@@ -5724,8 +5724,6 @@
 							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
 							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 							   	</isNotEmpty>
-						
-							   	
 							   	<isNotEmpty property="v_ORDEROPTION">
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
@@ -5749,7 +5747,7 @@
 							   	<![CDATA[
 							   	LIMIT #v_PAGESIZE#
 							   	 ) A 
-							   	 LIMIT #v_PAGESIZE2#
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
@@ -6957,6 +6955,7 @@
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
+   		<!-- 직인  대장 -->
    		UNION ALL 
    		 <![CDATA[
    			SELECT 
@@ -6980,14 +6979,14 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
 	   	UNION ALL 
-	   	
+	   	<!-- 공람 문서 -->
 		<![CDATA[
    			SELECT 
    				COUNT(DOCID) 
@@ -6998,9 +6997,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -10273,7 +10272,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
 			   WHERE  ConfirmFlag = '0'
 		</select>
 		
@@ -10297,7 +10296,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#) A	 
 				WHERE  
-					Code = '2')
+					Code = '2')B
 		</select>
 		
 		<select id="EzApprovalG.transferCabinetSn" parameterClass="Map" resultClass="String">
@@ -10373,6 +10372,8 @@
 			    							Code = '4') B	)
 	            AND 
 	            	RollbackFlag = '0'
+	            AND 
+	            	TENANT_ID = #v_TENANTID#
 		</select>
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
@@ -10514,6 +10515,7 @@
 					 			  Code = '4') B )
 			AND 
 				RegSerialNo = $v_RtnSN$
+			AND TENANT_ID = #v_TENANTID#
 		</update>
 		<insert id="EzApprovalG.insertTbCabinetClass" parameterClass="Map">
 		INSERT INTO 
@@ -10611,7 +10613,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
         WHERE 
         	 ConfirmFlag = '0' )
 		</insert>
@@ -10725,7 +10727,7 @@
 													     AND
 													     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
-													     		ConfirmFlag ASC)
+													     		ConfirmFlag ASC)A
                                                    WHERE  
                                                    		ConfirmFlag = '0' )
                AND
