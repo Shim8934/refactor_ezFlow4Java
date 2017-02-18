@@ -1199,7 +1199,7 @@ function btnAddSepAttach_onclick() {
     g_SepAttachLVXml = message.DocumentBodyGetAttribute("SepAttachLVXml");
     if (!g_SepAttachLVXml)
         g_SepAttachLVXml = "";
-
+    
     var para = new Array();
     para[0] = g_SepAttachLVXml;
     para[1] = cabinetID;
@@ -1216,7 +1216,7 @@ function btnAddSepAttach_onclick_Complete(rtn) {
     DivPopUpHidden();
     if (rtn[0] == "TRUE") {
         g_SepAttachLVXml = rtn[1];
-        message.BodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
+        message.DocumentBodySetAttribute("SepAttachLVXml", g_SepAttachLVXml);
     }
 }
 function GetSepAttParamXml(g_SepAttachLVXml) {
