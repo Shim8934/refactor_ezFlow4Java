@@ -385,8 +385,9 @@
         	success : function(result){	
         		xmlDOM = loadXMLString(result);
                 adCount = xmlDOM.getElementsByTagName("ROW").length;
-                if(adCount<0){
+                if(adCount == 0){
                 	  alert("<spring:message code='ezApprovalG.t1161'/>");
+                	  return;
                 }
                 document.getElementById("OrgListView").innerHTML = "";
                 var listview = new ListView();
