@@ -1772,14 +1772,11 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         	lang = loginVO.getLang();
         }
         if (request.getParameter("page") != null){
-            if (!request.getParameter("page").equals("")){
-                pCurrPage = Integer.parseInt(request.getParameter("page"));
-            }else{
-                pCurrPage = 1;
-            }
+            pCurrPage = Integer.parseInt(request.getParameter("page"));
         }else{
             pCurrPage = 1;
         }
+        
         pPageSize = 15;
         pBlockSize = 10;
 
@@ -1791,6 +1788,9 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
 
         /** EZSP_RESULTSUBJECTIVELISTCNT*/
+        logger.debug(brdID);
+        logger.debug(itemNo);
+        logger.debug(questionNo);
         pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), lang, loginVO.getTenantId());
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
@@ -1997,7 +1997,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", responseRange = "";
         String brdID = "", itemNo = "", questionNo = "", responseYN = "";
-        int pPageSize = 0, pBlockSize = 0, pageCount = 0, pCurrPage = 1, pTotalCnt = 0, pTotalPage = 0;
+        int pPageSize = 0, pBlockSize = 0, pageCount = 0, pCurPage = 1, pTotalCnt = 0, pTotalPage = 0;
         String lang="";
         String pAnsType = "";
         
@@ -2017,17 +2017,10 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         		pageCount = pageCount-1;
         	}
         }
-        if (request.getParameter("currPage") != null){
-        	if (request.getParameter("currPage").equals("")){
-        		pCurrPage = 1;
-        	}else{
-        		pCurrPage = request.getParameter("currPage") == null || request.getParameter("currPage").toLowerCase().equals("null") || request.getParameter("currPage").equals("") ? 0 : Integer.parseInt(request.getParameter("currPage")) ;
-        	}
-        }
-        if(loginVO.getLang().equals("1")){
-        	lang ="";
-        }else{
-        	lang = loginVO.getLang();
+        if (request.getParameter("page") != null){
+        	pCurPage = Integer.parseInt(request.getParameter("page"));
+        } else {
+        	pCurPage = 1;
         }
         	
         pPageSize = 15;
@@ -2044,7 +2037,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
         responseRange = qstUserPermissionVO.getResponseRange();
         /** EZSP_RESPONSELISTCNT*/
-        pTotalCnt = ezQuestionService.responseListCnt(brdID, itemNo, responseYN.trim(), lang, loginVO.getTenantId());
+        pTotalCnt = ezQuestionService.responseListCnt(brdID, itemNo, responseYN.trim(), commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
         logger.debug("pTotalCnt="+pTotalCnt);
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
@@ -2055,8 +2048,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         }
         logger.debug("pageCount="+pageCount);
         /** EZSP_RESPONSELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdID, itemNo, responseYN.trim(), pTotalCnt, pPageSize, lang, loginVO.getTenantId());
-        		
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.responseList(brdID, itemNo, responseYN.trim(), pTotalCnt, pPageSize, commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), pCurPage, loginVO.getTenantId());
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
         
@@ -2070,11 +2062,8 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             
             iNum++;
             int iCurrNumber = 0;
-            iCurrNumber = iNum + (pCurrPage - 1) * pPageSize;
-            logger.debug("iNum="+iNum);
-            logger.debug("pCurrPage="+pCurrPage);
-            logger.debug("pPageSize="+pPageSize);
-            logger.debug("iCurrNumber="+iCurrNumber);
+            iCurrNumber = iNum + (pCurPage - 1) * pPageSize;
+            
             Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
             No.appendChild(ivalue);
             newRow.appendChild(No);
@@ -2085,12 +2074,11 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         model.addAttribute("itemNo", itemNo);
         model.addAttribute("questionNo", questionNo);
         model.addAttribute("pTotalPage", pTotalPage);
-        model.addAttribute("pCurrPage", pCurrPage);
+        model.addAttribute("pCurrPage", pCurPage);
         model.addAttribute("pTotalCnt", pTotalCnt);
         model.addAttribute("pAnsType", pAnsType);
         model.addAttribute("publicFlg", publicFlg);
         model.addAttribute("responseYN", responseYN);
-        logger.debug("pageCount="+pageCount);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
         

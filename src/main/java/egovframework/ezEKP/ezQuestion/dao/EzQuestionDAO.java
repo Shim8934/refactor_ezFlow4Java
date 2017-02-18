@@ -404,4 +404,8 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	public void questionDelete1(Map<String,Object> map) {
 		delete("EzQuestionDAO.questionDelete1", map);
 	}
+
+	public Integer callInsertPollResponsep(Map<String, Object> map) {
+		return (Integer) select("EzQuestionDAO.callInsertPollResponsep", map);
+	}
 }

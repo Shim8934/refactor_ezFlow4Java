@@ -216,7 +216,12 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pUserPOS2", qstCompleteVO.getUserPOS2());
 		map.put("v_temp", "");
 		map.put("tenantID", tenantID);
-		ezQuestionDAO.callInsertPollResponsep1(map);
+		
+		Integer temp = ezQuestionDAO.callInsertPollResponsep(map);
+		logger.debug("3333" + temp);
+		if (temp != null) {
+			ezQuestionDAO.callInsertPollResponsep1(map);
+		}
 	}
 
 	@Override
@@ -776,7 +781,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
+	public List<QstResponseVO> responseList(String brdID, String itemNo, String responseYN, int pTotalCnt, int pPageSize, String lang, int pCurPage, int tenantID) throws Exception {
 		logger.debug("responseList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -786,6 +791,7 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pTotalCnt", pTotalCnt);
 		map.put("v_pPageSize", pPageSize);
 		map.put("v_pLang", lang);
+		map.put("mariaStart", (pCurPage-1) * pPageSize);
 		map.put("tenantID", tenantID);
 		
 		List<QstResponseVO> list = ezQuestionDAO.responseList(map);
