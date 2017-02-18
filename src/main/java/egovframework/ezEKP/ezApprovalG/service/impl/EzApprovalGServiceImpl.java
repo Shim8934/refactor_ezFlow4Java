@@ -16003,7 +16003,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String moveRecord(Document xmlDom, String lang) throws Exception {
+	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception {
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String NewCabID = xmlDom.getElementsByTagName("NEWCABID").item(0).getTextContent().trim();
@@ -16016,11 +16016,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SEPATTNO", SepAttachNo);
 		map.put("v_CABINETID", NewCabID);
 		map.put("v_FLAG", Flag);
+		map.put("v_TENANTID", tenantID);
 		try {
 		 ezApprovalGDAO.moveRecord(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
-			e.getStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		
