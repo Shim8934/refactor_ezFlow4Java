@@ -8,7 +8,7 @@
 	    <style>
         P { margin-top: 0px;margin-bottom: 0px; }
     	</style>
-	    <script language="javascript" type="text/javascript">
+	    <script  language="javascript" type="text/javascript">
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
@@ -98,6 +98,7 @@
 	            if (curevent.keyCode == "8") {
 	                if (obj.childNodes.length > 0) {
 	                    var i = 0;
+	                    
 	                    if (obj.childNodes.item(i).nodeName == "#text")
 	                        i = 1;
 	                    if (obj.childNodes.item(i).textContent.length == 0)
@@ -141,7 +142,7 @@
 	            try {
 	                var TDRows = obj.getElementsByTagName("TD");
 	                for (var i = 0; i < TDRows.length; i++) {
-	                    if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id != "doctitle") {
+	                    if (TDRows.item(i).getAttribute("free") != null && TDRows.item(i).id != "doctitle" && TDRows.item(i).id != "body") {
 	                        var isContinue = true;
 	                        if (TDRows.item(i).childNodes.length > 1) {
 	                            var ChildNodes_;
@@ -217,6 +218,17 @@
 	                    }
 	
 	                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
+	                    
+	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
+	                    if (Document_Ptag.length > 0) {
+	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
+	                            if (Document_Ptag[i].style.marginBottom == "")
+	                                Document_Ptag[i].style.marginBottom = "0px";
+	                            if (Document_Ptag[i].style.marginTop == "")
+	                                Document_Ptag[i].style.marginTop = "0px";
+	                        }
+	                    }
+	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {
@@ -258,14 +270,7 @@
 	                if (flag) {
 	                    OrgBodyHtml = document.getElementById('div_Content').innerHTML;
 	                    BodyTagsEnabled(document.getElementById('div_Content'));
-	                    var Body_innerHTML = "";
-	                    if (document.getElementById("body") != null) {
-	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
-	                            Body_innerHTML = document.getElementById("body").innerHTML;
-	                            document.getElementById("body").innerHTML = "";
-	                        }
-	                    }
-	                    Conent_contentEditable(document.getElementById('div_Content'));
+	                    
 	                    var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                    for (var i = 0; i < SelectRows.length; i++) {
 	                        SelectRows.item(i).onchange = function () { SelectOnchange(this); };
@@ -275,6 +280,16 @@
 	                        if (CheckRows.item(i).type == "checkbox" || CheckRows.item(i).type == "radio")
 	                            CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                    }
+	                    
+	                    var Body_innerHTML = "";
+	                    if (document.getElementById("body") != null) {
+	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
+	                            Body_innerHTML = document.getElementById("body").innerHTML;
+	                            document.getElementById("body").innerHTML = "";
+	                        }
+	                    }
+	                    Conent_contentEditable(document.getElementById('div_Content'));
+	                    
 	                    if (document.getElementById("body") != null) {
 	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
 	                            document.getElementById("body").innerHTML = Body_innerHTML;
@@ -319,12 +334,29 @@
 	                else {
 	                    DocTitleObj.innerHTML = GetDocTitle();
 	                    if (document.getElementById("body") != null) {
-	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
-	                        BODYTag.innerHTML = HtmlContent;
-	                        document.getElementById("body").innerHTML = BODYTag.innerHTML;
-	                    }
-	                    BodyTagsDisabled(document.getElementById('div_Content'));
-	                    document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+// 	                        var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+// 	                        BODYTag.innerHTML = HtmlContent;
+// 	                        document.getElementById("body").innerHTML = BODYTag.innerHTML;
+// 	                    }
+// 	                    BodyTagsDisabled(document.getElementById('div_Content'));
+// 	                    document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
+	                    	 if (!isEditor) {
+	                             var _checkbox = document.getElementsByTagName("input");
+	                             for (var i = 0; i < _checkbox.length; i++) {
+	                                 if (GetAttribute(_checkbox[i], "type") == "checkbox" && _checkbox[i].checked == true)
+	                                     _checkbox[i].setAttribute("checked", "checked");
+	                                 if (GetAttribute(_checkbox[i], "type") == "checkbox" && _checkbox[i].checked == false)
+	                                     _checkbox[i].removeAttribute("checked");
+	                             }
+	                         }
+	                         var HtmlContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body").innerHTML;
+	                         BODYTag.innerHTML = HtmlContent;
+	                         document.getElementById("body").style.paddingLeft = "10px";
+	                         document.getElementById("body").style.paddingRight = "15px";
+	                         document.getElementById("body").innerHTML = BODYTag.innerHTML;
+	                     }
+	                     BodyTagsDisabled(document.getElementById('div_Content'));
+	                     document.getElementById('div_Content').innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
 	                }
 	            }
 	            catch (e) {
@@ -334,10 +366,10 @@
 	        function GetDocTitle() {
 	            try {
 	                if (document.getElementById("frame_doctitle") == null) {
-	                    return document.getElementById("doctitle").textContent;
+	                    return getNodeText(document.getElementById("doctitle"));
 	                }
 	                else {
-	                    return document.getElementById("frame_doctitle").textContent;
+	                    return getNodeText(document.getElementById("frame_doctitle"));
 	                }
 	            } catch (e)
 	            { return ""; }
@@ -480,15 +512,20 @@
 	                var META2 = document.createElement("META");
 	                META2.name = "GENERATOR";
 	                META2.content = "MSHTML 10.00.9200.16721";
+	                var META3 = document.createElement("META");
+	                META3.httpEquiv = "X-UA-Compatible";
+	                META3.content = "IE=edge";
 	                HEAD.appendChild(META);
 	                HEAD.appendChild(META2);
+	                HEAD.appendChild(META3);
 	                HTML.appendChild(HEAD);
+	                
 	                var BODY = document.createElement("BODY");
 	                Doc_ContentHtml = document.createElement("DIV");
 	                Doc_ContentHtml.innerHTML = document.getElementById('div_Content').innerHTML;
 	                BODY.appendChild(Doc_ContentHtml);
 	                HTML.appendChild(BODY);
-	
+
 	                return HTML.outerHTML;
 	            } catch (e)
 	            { return ""; }
