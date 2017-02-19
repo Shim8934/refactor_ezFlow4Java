@@ -154,10 +154,10 @@
 								+ CheckTimeRevision(idDatepicker.startMinutes()) + ":01";
 				var tmpEndDateTime = idDatepicker.endFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.endMonth()) + 1)) + "-"
-								+ CheckTimeRevision(idDatepicker.endDate()) + " "
+								+ CheckTimeRevision(parseInt(idDatepicker.endDate() + 1)) + " "
 								+ CheckTimeRevision(idDatepicker.endHours()) + ":"
 								+ CheckTimeRevision(idDatepicker.endMinutes()) + ":01";
-								
+
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/savePopup.do",
