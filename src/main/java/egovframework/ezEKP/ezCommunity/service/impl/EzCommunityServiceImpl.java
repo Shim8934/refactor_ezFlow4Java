@@ -1094,7 +1094,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if(!selType.equals("2")){
 					for(int i=1; i <= Integer.parseInt(selRes); i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1102,7 +1102,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					selectedNo = 9;
 					
 					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -2966,14 +2966,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.brdUpdateItemUpdate(map);
 			ezCommunityDAO.brdUpdateItemDelete(map);
 		} else {
-			logger.debug("newItem");
-			int docNo= ezCommunityDAO.brdNewItemSelect(userInfo.getTenantId());
-			logger.debug("docNo="+docNo);
-			
-			map.put("v_pDocNo", docNo + 1);
-			
+			map.put("v_pDocNo", "");
 			ezCommunityDAO.brdNewItemInsert(map);
-			
 		}
 		
 		map = new HashMap<String, Object>();

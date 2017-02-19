@@ -1,59 +1,67 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
-		<script type="text/javascript" src="<spring:message code='ezCommunity.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
-		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<c:if test="${isCrossBrowser == true}">
-			<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
-		</c:if>
-		
-		<c:if test="${isCrossBrowser != true}">
-			<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
-			<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
-			<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		</c:if>
-		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
-		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
-		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
-		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
-		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
-		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
-		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
-		
-		<!-- data picker -->
-		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
-        <script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
-        <link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
-		<!-- time picker -->
-		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css"/>
-		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css"
+	href="<spring:message code='ezCommunity.i1'/>">
+<script type="text/javascript"
+	src="<spring:message code='ezCommunity.e1'/>"></script>
+<script type="text/javascript" src="/js/ezCommunity/ConvertSaveImage.js"></script>
+<script type="text/javascript" src="/js/mouseeffect.js"></script>
+<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+<c:if test="${isCrossBrowser == true}">
+	<script type="text/javascript" src="/js/ezCommunity/AttachMain_CK.js"></script>
+	<script type="text/javascript" src="/js/ezCommunity/AttachItem_CK.js"></script>
+</c:if>
 
-		<c:choose>
-			<c:when test="${pMode == 'new' || pUrl != ''}">
-				<title><spring:message code='ezCommunity.t1128'/></title>
-			</c:when>
-			<c:when test="${pMode == 'reply' }">
-				<title><spring:message code='ezCommunity.t1129'/></title>
-			</c:when>
-			<c:otherwise>
-				<title><spring:message code='ezCommunity.t1130'/></title>
-			</c:otherwise>
-		</c:choose>
-		
-		<script type="text/javascript">
+<c:if test="${isCrossBrowser != true}">
+	<script type="text/javascript" src="/js/ezCommunity/AttachMain.js"></script>
+	<script type="text/javascript" src="/js/ezCommunity/AttachItem.js"></script>
+	<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
+</c:if>
+<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
+<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
+<script type="text/javascript" src="/js/rsa/asn1.js"></script>
+<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
+<script type="text/javascript" src="/js/rsa/rsa.js"></script>
+<script type="text/javascript" src="/js/rsa/prng4.js"></script>
+<script type="text/javascript" src="/js/rsa/rng.js"></script>
+<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+
+<!-- data picker -->
+<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css" />
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+<script type="text/javascript"
+	src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
+<link rel="stylesheet" href="/js/jquery/dateControls/demos.css" />
+<!-- time picker -->
+<link rel="stylesheet" type="text/css"
+	href="/js/jquery/timeControls/jquery.timepicker.css" />
+<script type="text/javascript"
+	src="/js/jquery/timeControls/jquery.timepicker.js"></script>
+
+<c:choose>
+	<c:when test="${pMode == 'new' || pUrl != ''}">
+		<title><spring:message code='ezCommunity.t1128' /></title>
+	</c:when>
+	<c:when test="${pMode == 'reply' }">
+		<title><spring:message code='ezCommunity.t1129' /></title>
+	</c:when>
+	<c:otherwise>
+		<title><spring:message code='ezCommunity.t1130' /></title>
+	</c:otherwise>
+</c:choose>
+
+<script type="text/javascript">
 			var userInfo = "<c:out value = '${userInfo}' />";
 			var item = "<c:out value = '${item}' />";
 			var pUploadFilePath = "<c:out value = '${pUploadFilePath}' />";
@@ -97,11 +105,11 @@
 		    var gubun = "<c:out value = '${boardInfo.gubun}' />";		
 		    var pUrl = "<c:out value = '${pUrl}' />";
 		    var pDocID = "<c:out value = '${pDocID}' />";
-		    var unloadflag = "0";
 		    var PhotoBoard = "N";
 		    var _hasattach = "<c:out value = '${hasAttach}' />";
 		    var rsa = new RSAKey();
 			var flag = false;
+			var saveFlag = false;
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -354,10 +362,18 @@
 		        
 		        return pEndDateTime;
 		    }
+		    
+		    function checkSaveItem() {
+		    	if (saveFlag == true) {
+		    		return ;
+		    	}
+		    }
 	
 		    function SaveItem() {
-		        unloadflag ="1";
-		        
+		    	checkSaveItem();
+		    	
+		    	saveFlag == true;
+		    	
 		        if(MHTLoadComplete != "true") {
 		            alert("<spring:message code='ezCommunity.t1138'/>");		
 		            return;
@@ -572,6 +588,7 @@
 		        
 		        xmlhttp = null;
 		        xmldom = null;
+		        saveFlag = false;
 		    }
 	
 		    function JSleep(sTime) {
@@ -873,202 +890,234 @@
 //                 document.getElementById("file1").type = "file";
             }
 		</script>
-		
-		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
+
+<script type="text/javascript" FOR="EzHTTPTrans"
+	EVENT="AttachAddFile(filename)">
 		    Append_AttachAdd(filename);
 		</script>
-	</head>
-	<body class = "popup" style = "height: 100%">
-		<table class="layout">
-	        <tr>
-	            <td style="height: 20px">
-	                <div id="menu">
-	                    <ul>
-	                        <li><span onclick="SaveItem();"><spring:message code='ezCommunity.t155'/></span></li>
-	                        <li><span onclick="PreviewItem();"><spring:message code='ezCommunity.t1167'/></span></li>
-	                    </ul>
-	                </div>
-	                <div id="close">
-	                    <ul>
-	                        <li><span onclick="window.close();"><spring:message code='ezCommunity.t21'/></span></li>
-	                    </ul>
-	                </div>
-	                
-	                <script type="text/javascript">
+</head>
+<body class="popup" style="height: 100%">
+	<table class="layout">
+		<tr>
+			<td style="height: 20px">
+				<div id="menu">
+					<ul>
+						<li><span onclick="SaveItem();"><spring:message
+									code='ezCommunity.t155' /></span></li>
+						<li><span onclick="PreviewItem();"><spring:message
+									code='ezCommunity.t1167' /></span></li>
+					</ul>
+				</div>
+				<div id="close">
+					<ul>
+						<li><span onclick="window.close();"><spring:message
+									code='ezCommunity.t21' /></span></li>
+					</ul>
+				</div> <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	                    selToggleList(document.getElementById("close"), "ul", "li", "0");
 	                </script>
-	                
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="height: 20px;">
-	                <table class="content">
-	                    <tr>
-	                        <th><spring:message code='ezCommunity.t1168'/></th>
-	                        <td id="tdBoardName">${boardInfo.boardName }</td>
-	                    </tr>
-	                    
-	                    <c:choose>
-	                    	<c:when test="${(pMode == 'new' || pReservedItem == 'true' || pUrl != '') && boardInfo.gubun != '2' }">
-	                    		<tr id="tdReservationDate">
-	                    	</c:when>
-	                    	<c:otherwise>
-	                    		<tr id="tdReservationDate" style="DISPLAY: none">
-	                    	</c:otherwise>
-	                    </c:choose>
-	                    
-	                        <th><spring:message code='ezCommunity.t1169'/></th>
-	                        <td>
-	                        	<c:choose>
-	                        		<c:when test="${pReservedItem == 'true' }">
-	                        			<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked><spring:message code='ezCommunity.t913'/>
-	                        		</c:when>
-	                        		<c:otherwise>
-	                        			<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()"><spring:message code='ezCommunity.t913'/>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                        	<span id="reservation_date">
-		                        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" />
-		                        	<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-		                            <a class="imgbtn"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezCommunity.t444'/></span></a>
-		                        </span>
-	                        </td>
-	                    </tr>
-	                    <tr id="tdEndDate">
-	                        <th><spring:message code='ezCommunity.t384'/></th>
-	                        <td>
-	                        
-	                        	<c:choose>
-	                        		<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
-	                        			<span id="Chkbox"><input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked><spring:message code='ezCommunity.t930'/></span>
-	                        			<span id="Makedate"><input type="text" id="Edatepicker" style="width:80px;text-align:center"></span>
-	                        		</c:when>
-	                        		<c:otherwise>
-	                        			<span id="Chkbox"><input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()"><spring:message code='ezCommunity.t930'/></span>
-	                                	<span id="Makedate"><input type="text" id="Edatepicker" style="width:80px;text-align:center"></span>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                        </td>
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezCommunity.t1171'/></th>
-	                        <c:choose>
-	                        	<c:when test="${item.importance == '1' }">
-	                        		<td><input type="checkbox" id="chkEmergent" checked><spring:message code='ezCommunity.t1172'/></td>
-	                        	</c:when>
-	                        	<c:otherwise>
-	                        		<td><input type="checkbox" id="chkEmergent"><spring:message code='ezCommunity.t1172'/></td>
-	                        	</c:otherwise>
-	                        </c:choose>
-	                    </tr>
-	                    
-	                    <c:if test="${boardInfo.gubun == '2' }">
-	                    	<tr>
-		                        <th><spring:message code='ezCommunity.t1173'/></th>
-		                        <td>
-		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="${item.writerName }">&nbsp;&nbsp;(<spring:message code='ezCommunity.t1174'/>
-		                        </td>
-		                    </tr>
-		                    <tr>
-		                        <th><spring:message code='ezCommunity.t1175'/></th>
-		                        <td>
-		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15">&nbsp;&nbsp;(<spring:message code='ezCommunity.t1176'/>
-		                        </td>
-	                    	</tr>
-	                    </c:if>
-	                    
-	                    <tr>
-	                        <th><spring:message code='ezCommunity.t433'/></th>
-	                        <td><input type="text" id="txtAbstract" style="WIDTH: 100%; box-sizing:border-box;-moz-box-sizing:border-box;word-break: break-all" value="" maxlength="100"></td>
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezCommunity.t124'/></th>
-	                        <td><input type="text" id="txtTitle" style="WIDTH: 100%; box-sizing:border-box;-moz-box-sizing:border-box;word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
-	                    </tr>
-	                </table>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="height: 100%; vertical-align: top;" id="EdtorSize">
-	            	<c:choose>
-	            		<c:when test="${editor == 'TAGFREE' }">
-	            			<iframe id="message" class="viewbox" name="message" src="TagFree_TFX_Editor.aspx" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
-	            		</c:when>
-	            		<c:when test="${editor =='DEXT' }">
-	            			<iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
-	            		</c:when>
-	            		<c:otherwise>
-	            			<iframe id="message" class="viewbox" name="message" src="/ezCommunity/ckEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
-	            		</c:otherwise>
-	            	</c:choose>
-	            </td>
-	        </tr>
-	        <tr id="docTR" style="display: none">
-	            <td>
-	                <div id="docContentBorder" style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white;">
-	                    <iframe id="docContent" style="width: 100%; height: 100%;" frameborder="0"></iframe>
-	                </div>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="padding-top: 10px; height: 20px; vertical-align: top;">
-	                
-	                <c:choose>
-	                	<c:when test="${isCrossBrowser != true}">
-	                		<table class="file">
-						        <form name="multicheck">
-									<tr>
-										<th><spring:message code='ezCommunity.t933'/></th>
-										<td class="pos1">
-											<script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
-											<div id="lstAttachLink" style="display:none;OVERFLOW:auto;HEIGHT:50px;">&nbsp;</div>
-										</td>
-										<td class="pos2">
-											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177'/></span></a><br>
-											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178'/></span></a>
-										</td>
-									</tr>
-								</form>
-							</table>
-	                	</c:when>
-	                	<c:otherwise>
-	                		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-			                <form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm" style="visibility: hidden;">
-			                    <input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="multiple" />
-			                    <input type="hidden" name="boardID" id="boardID" />
-			                    <input type="hidden" name="maxSize" id="maxSize" />
-			                    <input type="hidden" name="mode" id="mode" />
-			                    <input type="hidden" name="cnt" id="cnt" />
-			                    <input type="hidden" name="mailGubun" id="mailgubun" />
-			                </form>
-	                		<table class="file">
-			                    <form name="multicheck">
-			                        <tr>
-			                            <th><spring:message code='ezCommunity.t933'/></th>
-			                            <td class="pos1">
-			                                <div id="lstAttachLink">&nbsp;</div>
-			                            </td>
-			                            <td class="pos2">
-			                            	<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177'/></span></a><br>
-			                                <a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178'/></span></a>
-			                            </td>
-			                        </tr>
-			                    </form>
-			                </table>
-	                	</c:otherwise>
-	                </c:choose>
-	                
-	            </td>
-	        </tr>
-	        
-	        <div id="txtAttachList"></div>
-	    </table>
-	    
-	    <input id="publicModulus" value="${publicModulus }" type="hidden"/>
-	    <input id="publicExponent" value="${publicExponent }" type="hidden"/>
-	    
-	    <script type="text/javascript">
+
+			</td>
+		</tr>
+		<tr>
+			<td style="height: 20px;">
+				<table class="content">
+					<tr>
+						<th><spring:message code='ezCommunity.t1168' /></th>
+						<td id="tdBoardName">${boardInfo.boardName }</td>
+					</tr>
+
+					<c:choose>
+						<c:when
+							test="${(pMode == 'new' || pReservedItem == 'true' || pUrl != '') && boardInfo.gubun != '2' }">
+							<tr id="tdReservationDate">
+						</c:when>
+						<c:otherwise>
+							<tr id="tdReservationDate" style="DISPLAY: none">
+						</c:otherwise>
+					</c:choose>
+
+					<th><spring:message code='ezCommunity.t1169' /></th>
+					<td><c:choose>
+							<c:when test="${pReservedItem == 'true' }">
+								<input type="checkbox" id="chk_reservation"
+									onclick="Reservation_onclick()" checked>
+								<spring:message code='ezCommunity.t913' />
+							</c:when>
+							<c:otherwise>
+								<input type="checkbox" id="chk_reservation"
+									onclick="Reservation_onclick()">
+								<spring:message code='ezCommunity.t913' />
+							</c:otherwise>
+						</c:choose> <span id="reservation_date"> <input type="text"
+							id="Sdatepicker" style="width: 80px; text-align: center" /> <input
+							id="Stimepicker" type="text" class="time"
+							style="width: 43px; margin-left: 10px; text-align: center;" /> <a
+							class="imgbtn"><span onclick="btn_PostDate_Clear()"
+								popuplocation='topright'><spring:message
+										code='ezCommunity.t444' /></span></a>
+					</span></td>
+					</tr>
+					<tr id="tdEndDate">
+						<th><spring:message code='ezCommunity.t384' /></th>
+						<td><c:choose>
+								<c:when
+									test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
+									<span id="Chkbox"><input type="checkbox"
+										id="ChkPermanence" name="ChkPermanence"
+										onclick="return ChkPermanent()" checked>
+									<spring:message code='ezCommunity.t930' /></span>
+									<span id="Makedate"><input type="text" id="Edatepicker"
+										style="width: 80px; text-align: center"></span>
+								</c:when>
+								<c:otherwise>
+									<span id="Chkbox"><input type="checkbox"
+										id="ChkPermanence" name="ChkPermanence"
+										onclick="return ChkPermanent()">
+									<spring:message code='ezCommunity.t930' /></span>
+									<span id="Makedate"><input type="text" id="Edatepicker"
+										style="width: 80px; text-align: center"></span>
+								</c:otherwise>
+							</c:choose></td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezCommunity.t1171' /></th>
+						<c:choose>
+							<c:when test="${item.importance == '1' }">
+								<td><input type="checkbox" id="chkEmergent" checked>
+								<spring:message code='ezCommunity.t1172' /></td>
+							</c:when>
+							<c:otherwise>
+								<td><input type="checkbox" id="chkEmergent">
+								<spring:message code='ezCommunity.t1172' /></td>
+							</c:otherwise>
+						</c:choose>
+					</tr>
+
+					<c:if test="${boardInfo.gubun == '2' }">
+						<tr>
+							<th><spring:message code='ezCommunity.t1173' /></th>
+							<td><input type="text" id="txtNickName" style="WIDTH: 150px"
+								maxlength="15" value="${item.writerName }">&nbsp;&nbsp;(<spring:message
+									code='ezCommunity.t1174' /></td>
+						</tr>
+						<tr>
+							<th><spring:message code='ezCommunity.t1175' /></th>
+							<td><input type="password" id="txtPassWord"
+								style="WIDTH: 150px" maxlength="15">&nbsp;&nbsp;(<spring:message
+									code='ezCommunity.t1176' /></td>
+						</tr>
+					</c:if>
+
+					<tr>
+						<th><spring:message code='ezCommunity.t433' /></th>
+						<td><input type="text" id="txtAbstract"
+							style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box; word-break: break-all"
+							value="" maxlength="100"></td>
+					</tr>
+					<tr>
+						<th><spring:message code='ezCommunity.t124' /></th>
+						<td><input type="text" id="txtTitle"
+							style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box; word-wrap: break-word; word-break: break-all;"
+							value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td style="height: 100%; vertical-align: top;" id="EdtorSize"><c:choose>
+					<c:when test="${editor == 'TAGFREE' }">
+						<iframe id="message" class="viewbox" name="message"
+							src="TagFree_TFX_Editor.aspx"
+							style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+					</c:when>
+					<c:when test="${editor =='DEXT' }">
+						<iframe id="message" class="viewbox" name="message"
+							src="DEXT_Editor.aspx"
+							style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+					</c:when>
+					<c:otherwise>
+						<iframe id="message" class="viewbox" name="message"
+							src="/ezCommunity/ckEditor.do"
+							style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+					</c:otherwise>
+				</c:choose></td>
+		</tr>
+		<tr id="docTR" style="display: none">
+			<td>
+				<div id="docContentBorder"
+					style="border: #B6B6B6 1px solid; BACKGROUND-COLOR: white;">
+					<iframe id="docContent" style="width: 100%; height: 100%;"
+						frameborder="0"></iframe>
+				</div>
+			</td>
+		</tr>
+		<tr>
+			<td style="padding-top: 10px; height: 20px; vertical-align: top;">
+
+				<c:choose>
+					<c:when test="${isCrossBrowser != true}">
+						<table class="file">
+							<form name="multicheck">
+								<tr>
+									<th><spring:message code='ezCommunity.t933' /></th>
+									<td class="pos1"><script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
+										<div id="lstAttachLink"
+											style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
+									</td>
+									<td class="pos2"><a class="imgbtn"><span
+											id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message
+													code='ezCommunity.t1177' /></span></a><br> <a class="imgbtn"><span
+											id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message
+													code='ezCommunity.t1178' /></span></a></td>
+								</tr>
+							</form>
+						</table>
+					</c:when>
+					<c:otherwise>
+						<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+						<form method="post" id="form" name="form"
+							enctype="multipart/form-data" target="ifrm"
+							style="visibility: hidden;">
+							<input type="file" name="file1" id="file1"
+								onchange="btn_AttachAdd_onclick()"
+								style="width: 1px; height: 1px;" multiple="multiple" /> <input
+								type="hidden" name="boardID" id="boardID" /> <input
+								type="hidden" name="maxSize" id="maxSize" /> <input
+								type="hidden" name="mode" id="mode" /> <input type="hidden"
+								name="cnt" id="cnt" /> <input type="hidden" name="mailGubun"
+								id="mailgubun" />
+						</form>
+						<table class="file">
+							<form name="multicheck">
+								<tr>
+									<th><spring:message code='ezCommunity.t933' /></th>
+									<td class="pos1">
+										<div id="lstAttachLink">&nbsp;</div>
+									</td>
+									<td class="pos2"><a class="imgbtn"><span
+											id="btn_AttachAdd"
+											onclick="return btn_AttachSelect_onclick()"><spring:message
+													code='ezCommunity.t1177' /></span></a><br> <a class="imgbtn"><span
+											id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message
+													code='ezCommunity.t1178' /></span></a></td>
+								</tr>
+							</form>
+						</table>
+					</c:otherwise>
+				</c:choose>
+
+			</td>
+		</tr>
+
+		<div id="txtAttachList"></div>
+	</table>
+
+	<input id="publicModulus" value="${publicModulus }" type="hidden" />
+	<input id="publicExponent" value="${publicExponent }" type="hidden" />
+
+	<script type="text/javascript">
 	    	<c:if test="${boardInfo.gubun != '2'}">
             	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
 	    	</c:if>
@@ -1077,10 +1126,14 @@
 	            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
 	    	</c:if>
 		</script>
-		
-		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
-		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
-			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-		</div>
-	</body>
+
+	<div
+		style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0, 0, 0, 0.7); display: none;"
+		id="mailPanel">&nbsp;</div>
+	<div class="layerpopup"
+		style="z-index: 2000; position: absolute; display: none;"
+		id="iFramePanel">
+		<iframe src="/blank.htm" style="border: none;" id="iFrameLayer"></iframe>
+	</div>
+</body>
 </html>
