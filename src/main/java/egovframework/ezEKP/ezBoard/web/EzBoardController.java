@@ -6477,4 +6477,43 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardListPortal";
 	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemPreViewPhotoContent.do")
+	public String boardItemPreViewPhotoContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("boardItemPreViewPhotoContent started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String showAdjacent = request.getParameter("showAdjacent");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String mode = request.getParameter("mode");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if (!boardInfo.getRead_FG().equals("true")) {
+        	return "main/warning";
+        }
+		
+//		String retVal = "";
+//		
+//		if (!mode.equals("temp")) {
+//			retVal = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+//		} else {
+//			retVal = ezBoardService.getItemTempXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+//		}
+		
+		ezBoardService.setAsRead(userInfo, boardID, itemID);
+
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("mode", mode);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardInfo", boardInfo);
+		
+		logger.debug("boardItemPreViewPhotoContent ended");
+		
+		return "ezBoard/boardItemPreViewPhotoContent";
+	}
 }

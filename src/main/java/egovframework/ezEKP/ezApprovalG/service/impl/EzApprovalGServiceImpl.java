@@ -6752,6 +6752,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			result = "<RESULT>FALSE</RESULT>";
 		}
 		
