@@ -14,7 +14,6 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
-import org.apache.logging.log4j.core.config.LoggersPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1387,16 +1386,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) throws Exception {
+		logger.debug("getLogoHTML started");
+
 		String pUID = "";
 		String pAccessIDList = getAccessList(userInfo);
 		
 		for (int i=0; i<pAccessIDList.split(",").length; i++) {
 			pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim(), userInfo.getTenantId());
 			
-			if (pUID != null) {
+			logger.debug("pUID="+pUID);
+			if (pUID != null && !pUID.equals("")) {
 				break;
 			}
 		}
+		
+		logger.debug("pUID="+pUID);
+		logger.debug("getLogoHTML ended");
 		return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
 	}
 	

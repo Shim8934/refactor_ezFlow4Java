@@ -1095,7 +1095,9 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND
-				B.TENANT_ID = #tenantID#		
+				B.TENANT_ID = #tenantID#
+            AND
+                ROWNUM <= 1		
 		]]>
 	</select>
 	
