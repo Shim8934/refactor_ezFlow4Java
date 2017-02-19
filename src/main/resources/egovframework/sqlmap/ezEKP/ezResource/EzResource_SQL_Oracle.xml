@@ -1109,19 +1109,6 @@
 		]]>
 	</delete>
 	
-	<delete id="EzResourceDAO.delResData2" parameterClass="Map">
-		<![CDATA[
-			DELETE
-			 	TBL_RS_SCHEDULEFILE
-   			WHERE
-   				OWNERID = #v_P_Brd_ID#
-   			AND
-   				COMPANYID = #v_P_CompanyID#
-   			AND
-	   			TENANT_ID = #tenantID#
-		]]>
-	</delete>
-	
 	<delete id="EzResourceDAO.delResData3" parameterClass="Map">
 		<![CDATA[
 			DELETE

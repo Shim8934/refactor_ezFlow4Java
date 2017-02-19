@@ -236,7 +236,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.delResData(map);
 		ezResourceDAO.delResData_U(map);
 		ezResourceDAO.delResData1(map);
-		ezResourceDAO.delResData2(map);
 		ezResourceDAO.delResData3(map);
 	}
 	
