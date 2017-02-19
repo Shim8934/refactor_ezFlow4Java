@@ -781,7 +781,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
-
+		
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO obj = list.get(i);
@@ -798,6 +798,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				sb.append("<ACCESSNAME>" + obj.getAccessName() + "</ACCESSNAME>");
 				sb.append("<ACCESSNAME2>" + obj.getAccessName2() + "</ACCESSNAME2>");
 				sb.append("<BOARDGROUPACL>" + obj.getBoardGroupACL() + "</BOARDGROUPACL>");
+				sb.append("<DISPLAYNAME>" + obj.getDisplayName() + "</DISPLAYNAME>");
 				sb.append("<BOARDADMIN_FG>" + obj.getBoardAdmin_FG() + "</BOARDADMIN_FG>");
 				sb.append("<ACCESS_>" + obj.getAccess_() + "</ACCESS_>");
 				sb.append("<LISTVIEW_FG>" + obj.getListView_FG() + "</LISTVIEW_FG>");
@@ -972,7 +973,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			topid = "Top";
 		}
 
-		model.addAttribute("defaultwin", "To");
 		model.addAttribute("strXML", "");
 		model.addAttribute("topid", topid);
 		model.addAttribute("userLang", "");
