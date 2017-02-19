@@ -162,6 +162,7 @@
 <%-- 		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li> --%>
 <%-- 		      		</c:if>		      		 --%>
                     </c:if>
+                    <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
 		  	</div>		  	
 		</form>		
