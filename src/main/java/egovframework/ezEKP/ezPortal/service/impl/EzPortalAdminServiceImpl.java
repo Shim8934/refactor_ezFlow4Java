@@ -1526,7 +1526,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			strSQL += " AND PORTLET_TYPE="+"'"+pGubunFlag+"'";
 		}
 		
-		if (pPageGubunFlag != null && !pGubunFlag.equals("")) {
+		if (pPageGubunFlag != null && !pPageGubunFlag.equals("")) {
 			strSQL += " AND GUBUNFLAG="+"'"+pPageGubunFlag+"'";
 		}
 		
