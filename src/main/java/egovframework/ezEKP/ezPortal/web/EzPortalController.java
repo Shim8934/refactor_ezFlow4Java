@@ -3061,14 +3061,19 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portalPageACL.do")
 	public String portalPageACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("portalPageACL started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
+		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
+		
 		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		model.addAttribute("list", list);
 		model.addAttribute("uID", uID);
+
+		logger.debug("portalPageACL ended");
 		return "/ezPortal/portalPortalPageACL";
 	}
 	
