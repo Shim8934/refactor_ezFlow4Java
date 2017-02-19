@@ -154,7 +154,11 @@
 					SELECT 
 						DISTINCT A.boardid BoardID,
 	                    A.boardname BoardName,
-	                    A.boardname2 BoardName2,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2,
 	                    A.treevieworder TreeViewOrder,
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
@@ -200,7 +204,11 @@
 					SELECT 
 						DISTINCT A.BoardID BoardID  ,
 	                    A.BoardName BoardName  ,
-	                    A.BoardName2 BoardName2  ,
+	                    CASE
+							WHEN (A.boardname2 = '' OR A.boardname2 IS NULL)
+							THEN A.boardname
+							ELSE A.boardname2
+						END BoardName2,
 	                    A.TreeViewOrder TreeViewOrder  ,
 	                    A.BoardColor BoardColor  ,
 	                    A.Gubun ,
@@ -249,7 +257,11 @@
 				SELECT 
 					DISTINCT A.BoardID ,
                     A.BoardName ,
-                    A.BoardName2 ,
+                    CASE
+						WHEN (A.Boardname2 = '' OR A.Boardname2 IS NULL)
+						THEN A.Boardname
+						ELSE A.Boardname2
+					END BoardName2,
                     A.TreeViewOrder ,
                     A.BoardColor BoardColor,
                     A.Gubun ,
