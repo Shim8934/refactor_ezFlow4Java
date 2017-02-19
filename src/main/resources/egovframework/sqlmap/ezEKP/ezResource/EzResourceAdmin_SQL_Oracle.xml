@@ -400,22 +400,26 @@
    				BRD_STEP = BRD_STEP - 1
    			WHERE  
    				BRD_UPPER = ( SELECT
-   										BRD_UPPER 
-                        			  FROM
-                        			  	TBL_RS_BRD 
-                        			  WHERE  
-                        			  	BRD_ID = #v_P_Brd_ID#
-                        			  AND 
-                        			  	BRD_COMPANY = #v_P_CompanyID# )
+								BRD_UPPER 
+                        	  FROM
+                        		TBL_RS_BRD 
+                        	  WHERE  
+                        		BRD_ID = #v_P_Brd_ID#
+                        	  AND 
+                        		BRD_COMPANY = #v_P_CompanyID# 
+                        	  AND
+          						TENANT_ID = #tenantID# )
 			AND
 				BRD_STEP > ( SELECT
-									 BRD_STEP 
-                    				FROM
-                    					TBL_RS_BRD 
-                    				WHERE
-                    					BRD_ID = #v_P_Brd_ID#
-                    				AND
-                    					BRD_COMPANY = #v_P_CompanyID# )
+								BRD_STEP 
+                    		 FROM
+                    			TBL_RS_BRD 
+                    		 WHERE
+                    			BRD_ID = #v_P_Brd_ID#
+                    		 AND
+                    			BRD_COMPANY = #v_P_CompanyID# 
+                    		 AND
+          						TENANT_ID = #tenantID# )
             AND
             	TENANT_ID = #tenantID#        					
 		]]>
@@ -449,7 +453,7 @@
 	
 	<delete id="EzResourceAdminDAO.delClsData_D5" parameterClass="Map">
 		<![CDATA[
-			 DELETE
+			DELETE
 			 	TBL_RS_RESACL
    			WHERE
    				RESID = #v_P_Brd_ID#
@@ -479,49 +483,58 @@
 				BRD_GB = u'1'
 			AND
 				BRD_ID IN ( SELECT
-									 RESID 
-                                FROM
-                                	TBL_RS_RESACL 
-                                WHERE
-                                	CompanyID = #v_P_CompanyID#
-                                AND 
-                                	MEMBER_ID IN ( #v_P_DeptPath# )
-                                AND 
-                                	BRD_ID IN ( SELECT
-                                						 BRD_ID 
-                                                	 FROM
-                                                	 	 TBL_RS_BRD 
-                                                	 WHERE
-                                                	 	 BRD_UPPER = #v_P_ParentID#
-                                                	 AND
-                                                	 	 BRD_COMPANY = #v_P_CompanyID#
-                                                	 AND
-                                                	 	 BRD_GB = u'1' )
+								RESID 
+                            FROM
+                            	TBL_RS_RESACL 
+                            WHERE
+                            	CompanyID = #v_P_CompanyID#
+                            AND 
+                            	MEMBER_ID IN ( #v_P_DeptPath# )
+                            AND 
+                            	BRD_ID IN ( SELECT
+                                				BRD_ID 
+                                            FROM
+                                            	TBL_RS_BRD 
+                                            WHERE
+                                            	BRD_UPPER = #v_P_ParentID#
+                                            AND
+                                            	BRD_COMPANY = #v_P_CompanyID#
+                                            AND
+                                            	BRD_GB = u'1' 
+                                            AND
+          										TENANT_ID = #tenantID# )
+          					AND
+          						TENANT_ID = #tenantID#
 								
-                                UNION 
-                                	SELECT
-	                                	RESID 
-	                                FROM
-	                                	TBL_RS_RESACL 
-	                                WHERE
-	                                	COMPANYID = #v_P_CompanyID#
-	                                AND
-	                                	MEMBER_ID = #v_P_UserID#
-									AND
-										BRD_ID IN ( SELECT 
-															BRD_ID 
-	                                                     FROM
-	                                                     	TBL_RS_BRD 
-	                                                     WHERE
-	                                                     	BRD_UPPER = #v_P_ParentID#
-	                                                     AND
-	                                                        BRD_COMPANY = #v_P_CompanyID#
-	                                                     AND
-	                                                        BRD_GB = u'1' )
-             				  )
-          AND
-          	TENANT_ID = #tenantID#   				  
-       	 ORDER BY Brd_Step
+							UNION 
+                           	SELECT
+                            	RESID 
+                        	FROM
+                            	TBL_RS_RESACL 
+                        	WHERE
+                            	COMPANYID = #v_P_CompanyID#
+                        	AND
+                            	MEMBER_ID = #v_P_UserID#
+							AND
+								BRD_ID IN ( SELECT 
+												BRD_ID 
+                                            FROM
+                                            	TBL_RS_BRD 
+                                            WHERE
+                                            	BRD_UPPER = #v_P_ParentID#
+                                            AND
+                                            	BRD_COMPANY = #v_P_CompanyID#
+                                            AND
+                                            	BRD_GB = u'1' 
+                                            AND
+         										TENANT_ID = #tenantID# )
+         					AND
+         						TENANT_ID = #tenantID#
+             			  )
+			AND
+				TENANT_ID = #tenantID#   				  
+			ORDER BY 
+				Brd_Step
 		]]>
 	</select>
 	

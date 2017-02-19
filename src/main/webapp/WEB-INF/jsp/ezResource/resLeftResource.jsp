@@ -15,7 +15,7 @@
 		<script type="text/javascript" src="/js/ezResource/ResTreeInfo_cross.js"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 		    var brdId		= "${brdID}";			
-    		var Brd_Nm		= "${brdNm}";			
+    		var Brd_Nm		= "<c:out value='${brdNm}' />";			
     		var brdGubun	= "${brdGubun}";		
     		var g_UserID	= "${userID}";
     		var g_DeptID	= "${deptID}";

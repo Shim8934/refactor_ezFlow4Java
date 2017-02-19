@@ -24,7 +24,7 @@
 	        var org_companyID = ss_companyID;
 	        var pAdminFg = "${adminFg}";
 	        var s_userID = '${userInfo.id}';
-	        var org_brdName = "${brdName}";
+	        var org_brdName = "<c:out value='${brdName}' />";
 	        var iReFlag = "${reFlagVal}";
 	        var pUse_Editor = "${useEditor}";
 	        var pUse_IE11Browser = "${useIE11Browser}";
@@ -45,7 +45,7 @@
 	        var sDT2 = "${startDateTime2}";
 	        var eDT2 = "${endDateTime2}";
 	        var pNoneActiveX = "${pNoneActiveX}";
-	        var brdName = "${brdName}";
+	        var brdName = "<c:out value='${brdName}' />";
 	        var resID = "${resID}";
 	        
 	        window.onload = function () {
@@ -54,9 +54,7 @@
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);
 	                ItemArray[1] = Array(brdName);
-	                //brdNm에 trim
-	                //document.getElementById('itemList').innerHTML = encodeURIComponent("${brdName}");
-	                document.getElementById('itemList').innerHTML = "${brdName}";
+	                document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' />";
 	            }
 	            var xmlHttp = createXMLHttpRequest();
 	            var xmlpara = createXmlDom();
@@ -410,7 +408,7 @@
         		<tr>
             		<th><spring:message code='ezResource.t224' /></th>
             		<td colspan="3">
-                		<div id="titleDIV"> ${title}</div>
+                		<div id="titleDIV"> <c:out value='${title}' /></div>
             		</td>
         		</tr>
         			<tr style="height:100%">

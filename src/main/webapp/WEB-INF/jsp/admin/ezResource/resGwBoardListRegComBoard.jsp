@@ -165,7 +165,7 @@
 		<table class="content">
   			<tr>
     			<th><spring:message code="ezResource.t44" /></th>
-    			<td>${getBrdInfo.brdNm}<input type=hidden id="UPPER_NM" name="UPPER_NM" value="${getBrdInfo.brdNm}"></td>
+    			<td><c:out value="${getBrdInfo.brdNm}" /><input type=hidden id="UPPER_NM" name="UPPER_NM"  value="<c:out value="${getBrdInfo.brdNm}" />"></td>
   			</tr>
 		</table>
 		<br>
@@ -180,18 +180,18 @@
 		 			<table style="width:100%">
 						<tr class="primary">
 							<th>${langPrimary}</th>
-							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="${getBrdInfo.brdNm}" style="width:99%"></td>
+							<td><input type="text"  id="Brd_NM" name="Brd_NM" value="<c:out value="${getBrdInfo.brdNm}" />" style="width:99%"></td>
 						</tr>
 						<tr class="secondary">
 							<th>${langSecondary}</th>
-							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="${getBrdInfo.brdNm2}" style="width:99%"></td>
+							<td><input type="text"  id="Brd_NM2" name="Brd_NM2" value="<c:out value="${getBrdInfo.brdNm2}" />" style="width:99%"></td>
 						</tr>
 					</table>
     			</td>
   			</tr>
   			<tr>
     			<th><spring:message code="ezResource.t47" /></th>
-    			<td><textarea id="Brd_Explain" style="font-size:9pt ; width:98%" rows="3">${getBrdInfo.brdExplain}</textarea></td>
+    			<td><textarea id="Brd_Explain" style="font-size:9pt ; width:98%" rows="3"><c:out value="${getBrdInfo.brdExplain}" /></textarea></td>
   			</tr>
   			<tr style="display:none">  
     			<th><spring:message code="ezResource.t48" /></th>
@@ -214,7 +214,7 @@
 								<input type="radio" id="term" name="term" onClick="BRD_POSTTERM.value='';" value="0" checked>
     							<spring:message code="ezResource.t51" />
       							<input type="radio" id="Radio1" name="term" onClick="BRD_POSTTERM.value='365';" value="1" checked>
-      							<input type="text"  id="BRD_POSTTERM" value="${getBrdInfo.brdPostTerm}" style="font-size:9pt ; width:30px">
+      							<input type="text"  id="BRD_POSTTERM" value="<c:out value="${getBrdInfo.brdPostTerm}" />" style="font-size:9pt ; width:30px">
       							<spring:message code="ezResource.t52" />
 							</c:when>
 							<c:otherwise>
@@ -229,7 +229,7 @@
   			</tr>
   			<tr style="display:none">
     			<th style="vertical-align:top"><spring:message code="ezResource.t53" /></th>
-    			<td><textarea id="BRD_ACCESS" style="font-size:9pt ; width:100%" rows="3"> ${getBrdInfo.brdAccess}</textarea></td>
+    			<td><textarea id="BRD_ACCESS" style="font-size:9pt ; width:100%" rows="3"><c:out value="${getBrdInfo.brdAccess}" /></textarea></td>
   			</tr>
 		</table>
 		<div class="btnposition">
