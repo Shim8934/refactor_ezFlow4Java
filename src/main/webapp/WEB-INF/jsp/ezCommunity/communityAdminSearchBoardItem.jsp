@@ -63,6 +63,9 @@
 			}
 	
 		    $(function () {
+		    	$("#txtTitle").val("${title}");
+		    	$("#txtAbstracts").val("${abstracts}");
+		    	$("#txtWriterName").val("${writerName}");
 		    	var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
     			
@@ -865,15 +868,15 @@
 		  	</tr>
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t138' /></th>
-			    <td><input type="text" id="txtWriterName" style="width:100px" value="${writerName}" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtWriterName" style="width:100px" onkeydown="return onkey_down()"></td>
 		  	</tr>
 		 	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t124' /></th>
-			    <td><input type="text" id="txtTitle" style="width:400px" value="${title}" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtTitle" style="width:400px" onkeydown="return onkey_down()"></td>
 		 	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t433' /></th>
-			    <td><input type="text" id="txtAbstract" style="width:400px" value="${abstracts}" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtAbstract" style="width:400px" onkeydown="return onkey_down()"></td>
 		  	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t434' /></th>

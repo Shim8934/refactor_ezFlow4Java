@@ -153,7 +153,7 @@
 		        }
 							
 		        if (pMode == "reply") {
-		            document.getElementById("txtTitle").value = "${item.title}";
+		            document.getElementById("txtTitle").value = "<c:out value = '${item.title}' />";
 		        }
 		        
 		        ChkPermanent();
@@ -448,11 +448,11 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", SSUserName);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", SSUserName2);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", SSDeptID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(SSDeptName));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", MakeXMLString(SSDeptName2));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", SSDeptName);
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", SSDeptName2);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYID", SSCompanyID);
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", MakeXMLString(SSCompanyName));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", MakeXMLString(SSCompanyName2));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME", SSCompanyName);
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", SSCompanyName2);
 		        } else {
 		            var nickname = txtNickName.value;
 		            
@@ -461,8 +461,8 @@
 		            }
 		            
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", encodeURIComponent(nickname));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", encodeURIComponent(nickname));
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME2", "");
@@ -472,11 +472,11 @@
 		        }
 	
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "IMPORTANCE", importance);
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", MakeXMLString(document.getElementById("txtTitle").value));
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TITLE", encodeURIComponent(document.getElementById("txtTitle").value));
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "STARTDATE", pStartDate);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ENDDATE", pEndDate);
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT",  MakeXMLString(document.getElementById("txtAbstract").value));
-		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ABSTRACT",  encodeURIComponent(document.getElementById("txtAbstract").value));
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", encodeURIComponent(AttachFileList()));
 	
 		        if(pMode == "new" || pUrl != "") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
@@ -577,11 +577,12 @@
 		            }
 		            
 		            JSleep(500);
-		            window.opener.location.reload(true);
-		            saveFlag = false;
+					window.opener.location.reload(true);
+					saveFlag = false;
+					
 		            window.close();
 		        } else {
-		        	saveFlag = false;
+		            saveFlag = false;
 		            alert("<spring:message code='ezCommunity.t283'/> " + xmlhttp.responseText);
 		        }
 		        
