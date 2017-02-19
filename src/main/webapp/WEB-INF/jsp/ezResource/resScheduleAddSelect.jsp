@@ -13,8 +13,8 @@
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
 		<script type="text/javascript" src="/js/ezResource/control/ListView.htc.js"></script>
 		<script id="clientEventHandlersJS" type="text/javascript">
-			var Brd_Id		= '${brdID}';		
-			var Brd_Nm		= '${brdNm}';		
+			var Brd_Id		= "${brdID}";		
+			var Brd_Nm		= "<c:out value='${brdNm}' />";		
 			var brdGubun	= '${brdGubun}';		
 			var g_UserID	= "${userInfo.id}";
 			var g_DeptID	= "${userInfo.deptID}";
@@ -396,9 +396,9 @@
 
 		            if (boardGubun == "1") {
 		                if ((!chkVal && i == 2) || (chkVal && i == 3)) {
-		                    RealPath = "&nbsp;<a href=" + "/ezResource/listResource.do?brdID=" + brdId + "&brdNm=" + escape(brdnm) + "&accessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "</a>" + RealPath;
+		                    RealPath = "&nbsp;<a href=" + "/ezResource/listResource.do?brdID=" + brdId + "&brdNm=" + encodeURIComponent(brdnm) + "&accessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "</a>" + RealPath;
 		                } else {
-		                    RealPath = "&nbsp;<a href=" + "/ezResource/listResource.do?brdID=" + brdId + "&brdNm=" + escape(brdnm) + "&accessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "&nbsp;></a>" + RealPath;
+		                    RealPath = "&nbsp;<a href=" + "/ezResource/listResource.do?brdID=" + brdId + "&brdNm=" + encodeURIComponent(brdnm) + "&accessCode=" + g_AccessCode + " target='right' class='n'>" + brdnm + "&nbsp;></a>" + RealPath;
 		                }
 		            } else {
 		                chkVal = true;
@@ -450,12 +450,12 @@
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            schedule_add_ck_dialogArguments[0] = parameter;
 		            strTitle = "scheduleAdd";
-		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURI(ReturnValue_Name[0]);
+		            url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
 		        } else {
 		            if (pUse_Editor == "" || pUse_Editor == "CK") {
-		                url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURI(ReturnValue_Name[0]);
+		                url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
 		            } else {
-		                url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURI(ReturnValue_Name[0]);
+		                url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=&seled=&dayView=&ownerID=" + ReturnValue_CN[0] + "&brdName=" + encodeURIComponent(ReturnValue_Name[0]);
 		            }
 		        }
 

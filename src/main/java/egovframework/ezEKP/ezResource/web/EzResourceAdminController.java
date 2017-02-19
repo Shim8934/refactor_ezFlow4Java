@@ -557,7 +557,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 					pSubBrdLst = pSubBrdLst + "<OPTION STEP= " + strBrdStep;
 					pSubBrdLst = pSubBrdLst + "  COUNT= " + strBrdCount;
                     pSubBrdLst = pSubBrdLst + "  VALUE= " + strBrdID + " " + strTmp + ">";
-                    pSubBrdLst = pSubBrdLst + strBrdNm + "</option>";
+                    pSubBrdLst = pSubBrdLst + strBrdNm + "</OPTION>";
 				}
 			}
 		} else {

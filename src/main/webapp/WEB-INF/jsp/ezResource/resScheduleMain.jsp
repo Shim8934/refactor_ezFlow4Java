@@ -30,7 +30,7 @@
 	    var pUserID    = "${userInfo.id}";
 	    var pCompanyID = "${userInfo.companyID}";
 	    var ApproveFlag     = "${approveFlag}";
-	    var brd_NM = "${brdNm}";
+	    var brd_NM = "<c:out value='${brdNm}' />";
 	    var ResID = "${resID}";
 	    var pDisplaySTime = "${displaySTIME}";
 	    var pDisplayETime = "${displayETIME}";
@@ -39,7 +39,7 @@
 	    var p_Type = "";
 	    var pBrdid = "${resID}";
 	    var title_name = new Array();
-	    title_name[0] = pBrdid + "/" + "${brdNm}";
+	    title_name[0] = pBrdid + "/" + "<c:out value='${brdNm}' />";
 	    var pUse_Editor = "${useEditor}";
 	    var pNoneActiveX = "${nonActiveX}";
 	    document.onselectstart = function () { return false; };
@@ -258,12 +258,12 @@
 	        }
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
-	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=${brdNm}", "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	        	window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        } else {
 	            if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            } else {
-	                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("${brdNm}"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            }
 	        }
 	    }
@@ -349,12 +349,12 @@
 	        function btnform_onclick() {
 	            var feature = GetOpenPosition(700, 700);
 	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            } else {
 	                if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                } else {
-	                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + encodeURI("${brdNm}"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	                }
 	            }
 	        }
@@ -451,7 +451,7 @@
 		</script>
 	</head>
 	<body class="mainbody" style="overflow: auto;" id="BodyTop">
-		<h1><span id="titleimg"></span> ${brdNm}</h1>
+		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
@@ -522,7 +522,7 @@
 											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
 										</tr>
 										<tr>
-											<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all">${brdExplain}</div></td>
+											<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
 										</tr>
 									</table>
 		                    	</td>

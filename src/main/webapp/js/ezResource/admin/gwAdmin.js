@@ -32,7 +32,7 @@ function NavigateBrdAdmin_Res(pFlag) {
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
 		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + encodeURIComponent(p_BrdNm);
-		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "&brdLevel=" + encodeURIComponent(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
 		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
@@ -65,7 +65,7 @@ function NavigateBrdAdminleft(pFlag) {
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
 		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + encodeURIComponent(p_BrdNm);
-		szUrl += "&brdLevel=" + escape(p_BrdLevel) + "&brdRef=" + p_BrdRef;
+		szUrl += "&brdLevel=" + encodeURIComponent(p_BrdLevel) + "&brdRef=" + p_BrdRef;
 		szUrl += "&brdStep=" + p_BrdStep + "&brdCount=" + p_BrdCount;
 		szUrl += "&brdGb=" + p_BrdGb + "&brdUpper=" + p_BrdUpper;
 		szUrl += "&brdGroup=" + p_BrdGroup + "&menu=" + pFlag + "&selCompanyID=" + pSelCompanyID;
