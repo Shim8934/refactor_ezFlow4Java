@@ -140,11 +140,11 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(520, 380, url);
+		            DivPopUpShow(500, 610, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:410px;dialogHeight:535px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
-		            feature = feature + GetShowModalPosition(510, 380);
+		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            feature = feature + GetShowModalPosition(410, 555);
 		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
@@ -305,11 +305,11 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(520, 380, url);
+		                DivPopUpShow(500, 610, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
-		                feature = feature + GetShowModalPosition(520, 380);
+		                feature = feature + GetShowModalPosition(410, 555);
 		
 		                if (url != "")
 		                    var rtn = window.showModalDialog(url, para, feature);
@@ -347,7 +347,7 @@
 
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
 		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(480, 430);
+        			feature = feature + GetShowModalPosition(480, 430);
 		            if (CrossYN()) {
 		            	selectcabinetintask_cross_dialogArguments[0] = para;
 		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
@@ -355,15 +355,6 @@
 		                 DivPopUpShow(480, 430, url);
 		            }
 		            else {
-		          
-		            var para = new Array();
-		            para[0] = g_TaskCode;		
-		            para[1] = GetAttribute(selnode[0], "DATA1");		
-		
-		            var url = "/ezApprovalG/selectCabinetInTask.do";
-		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(475, 375);
-		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
 		
