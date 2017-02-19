@@ -267,7 +267,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPNAME", column);
 		map.put("v_PROPVALUE", number);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganAdminDao.updateProperty(map);
 	    } else {
 	        // 사원의 경우
@@ -365,7 +365,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("nowDate", nowDate);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 		    ezOrganAdminDao.retireDBData(map);
 		} else {
 		    ezOrganAdminDao.retireDBData_I(map);
@@ -627,7 +627,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", lang);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			return ezOrganAdminDao.getUserInfo(map);
 		} else {
 		    // Proxy User인 지 여부를 확인한다.
@@ -701,7 +701,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_TITLE2", sTitle2);
                     
             		try {
-            			if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            			if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             				ezOrganAdminDao.setAddJob(map);
             			} else {
             				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
@@ -780,7 +780,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", deptID);
 		map.put("temp", "");
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganAdminDao.restoreRetireEntry(map);
 	    } else {
 	    	ezOrganAdminDao.restoreRetireEntry(map);

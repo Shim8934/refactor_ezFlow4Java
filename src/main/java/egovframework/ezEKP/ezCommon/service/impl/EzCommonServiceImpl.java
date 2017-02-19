@@ -994,7 +994,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Override
 	public String getTenantConfig(String property, int tenantID) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTenantConfigForJMocha(property, tenantID);
         } else {
             return getTenantConfigForLocal(property, tenantID);
