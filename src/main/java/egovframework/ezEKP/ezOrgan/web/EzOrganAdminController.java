@@ -1355,6 +1355,29 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		    ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
 		} else {
 		    if (!titleInfo.equals("")) {
+		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+		        StringBuilder sbCurrentJobList = new StringBuilder();
+		        
+		        // 지정된 사용자의 현재 겸직 목록을 구한다.
+		        for (int i = 0; i < organUserVOList.size(); i++) {
+		            OrganUserVO organUserVO = organUserVOList.get(i);
+		            
+		            if (i == 0) {
+		                sbCurrentJobList.append(organUserVO.getDepartment() + "::");
+		            } else {
+		                sbCurrentJobList.append(";" + organUserVO.getDepartment() + "::");
+		            }
+		        }
+		        
+		        String currentJobList = sbCurrentJobList.toString();
+		        
+		        logger.debug("currentJobList=" + currentJobList);
+		        
+		        if (!currentJobList.equals("")) {
+		            // 현재 겸직 목록을 모두 삭제한다.
+		            ezOrganAdminService.deleteJob(userID, currentJobList, tenantID);
+		        }
+		        
 		        String sTitle1 = "";
 		        String sTitle2 = "";
 		        String pDeptID = "";
@@ -1389,9 +1412,10 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	            titleInfo = sb.toString();
 	            
 	            logger.debug("new titleInfo=" + titleInfo);
-		    }
-		    
-		    ezOrganAdminService.addJob(userID, titleInfo, tenantID);
+	            
+	            // 새로운 겸직 목록을 설정한다.
+	            ezOrganAdminService.addJob(userID, titleInfo, tenantID);	            
+		    }		    
 		}
 		
 		logger.debug("saveSubTitle ended.");
