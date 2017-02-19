@@ -427,6 +427,10 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 		update("EzPortalAdminDAO.updateMenuItemSetOrder", map);
 	}
 	
+	public void updateSubMenuItemSetOrder (Map<String, Object> map) {
+		update("EzPortalAdminDAO.updateSubMenuItemSetOrder", map);
+	}
+	
 	public void saveSubMenuItemConfig_U1 (Map<String, Object> map) {
 		update("EzPortalAdminDAO.saveSubMenuItemConfig_U1", map);
 	}

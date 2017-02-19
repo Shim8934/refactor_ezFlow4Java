@@ -124,6 +124,8 @@ public interface EzPortalAdminService {
 	
 	public void updateMenuItemSetOrder (int columnPos, String uID, String ownerPageID, int tenantID) throws Exception;
 	
+	public void updateSubMenuItemSetOrder (int columnPos, String uID, String ownerPageID, int tenantID) throws Exception;
+	
 	public void removeSubMenuItem (String uID, String parentUID, String pageID, int tenantID) throws Exception;
 	
 }
