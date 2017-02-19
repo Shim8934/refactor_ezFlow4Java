@@ -35,12 +35,12 @@
 
 			function search() {
 				if (document.comm_search.s_radio.value == "1" ) {
-					var strSearch = "sRadio=C_SysopID&keyword=" + make_searchstring(document.comm_search.keyword.value);
+					var strSearch = "sRadio=C_SysopID&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				} else if (document.comm_search.s_radio.value == "2" ) {
-					var strSearch = "sRadio=C_ClubName" + lang + "&keyword=" + make_searchstring(document.comm_search.keyword.value);
+					var strSearch = "sRadio=C_ClubName" + lang + "&keyword=" + encodeURIComponent(document.comm_search.keyword.value);
 				}
 				
-				window.location.href = "/admin/ezCommunity/closeCom.do" + "?" + encodeURI(strSearch);
+				window.location.href = "/admin/ezCommunity/closeCom.do" + "?" + strSearch;
 			}
 
 			function comm_searchCheck() {
@@ -187,7 +187,7 @@
             
             function moveToPage(sCurPage) {
                 if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/closeCom.do?bName=&sRadio=<c:out value = '${sRadio} '/>&code=<c:out value = '${code}' />&keyword=" + make_searchstring("<c:out value = '${keyword}' />") + "&block=<c:out value = '${nowBlock}' />&goToPage=" + sCurPage;
+					window.location.href = "/admin/ezCommunity/closeCom.do?bName=&sRadio=<c:out value = '${sRadio} '/>&code=<c:out value = '${code}' />&keyword=" + encodeURIComponent("<c:out value = '${keyword}' />") + "&block=<c:out value = '${nowBlock}' />&goToPage=" + sCurPage;
 				}
 			}
             //########################################페이지네이션 변경 ##############################################

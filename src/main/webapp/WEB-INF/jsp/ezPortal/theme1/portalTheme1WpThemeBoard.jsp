@@ -35,7 +35,7 @@
 						orderOption : ""
     	        	},
     	        	success : function(xml){
-    	        		getBoardList_NewBoard_after(loadXMLString(xml));
+    	        		getBoardList_after(loadXMLString(xml));
     	        	},
     	        	error : function(error){
     	        		console.log("<spring:message code='ezBoard.t22'/>portalWpNewBoard" + error);	

@@ -98,7 +98,7 @@
 					</c:choose>
 				</tr>
 				<tr>
-	          		<td colspan="2"><textarea name="memo" style="width:98%;height:300px"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2"><textarea name="memo" style="width:98%;height:300px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
 	        	</tr>
       		</form>
 		</table>

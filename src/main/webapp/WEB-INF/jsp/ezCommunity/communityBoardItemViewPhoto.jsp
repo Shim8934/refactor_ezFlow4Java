@@ -55,7 +55,8 @@
 					dataType : "text",
 					async : false,
 					url : "/ezCommon/mhtToHTMLContent.do",
-					data : { type	:	"COMMUNITYCONTENT", 
+					data : { type	:	"COMMUNITYCONTENT",
+							 href	:	strContentLocation,
 							 itemID	:	pItemID
 						   },
 					success: function(result){

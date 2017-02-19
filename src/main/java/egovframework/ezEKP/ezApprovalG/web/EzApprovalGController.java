@@ -228,8 +228,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	for (int k = 0; k < deptList.length; k++) {
         		String[] subList = deptList[k].split(":");
         		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
-                String pTitle1_ = commonUtil.cleanValue(subList[1]);
-                String pTitle2_ = commonUtil.cleanValue(subList[2]);
+                String pTitle1_ = ""; 
+                String pTitle2_ = "";
+                
+                if (subList.length > 1) {
+                    pTitle1_ = commonUtil.cleanValue(subList[1]);
+                }
+ 
+                if (subList.length > 2) {
+                    pTitle2_ = commonUtil.cleanValue(subList[2]);
+                } else {
+                    pTitle2_ = pTitle1_;
+                }
+                
                 String pDeptNM1_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME", userInfo.getTenantId()));
                 String pDeptNM2_ = commonUtil.cleanValue(ezOrganService.getPropertyValue(subList[0], "DISPLAYNAME2", userInfo.getTenantId()));
                 String pDeptNM_ = userInfo.getPrimary().equals("1") ? pDeptNM1_ : pDeptNM2_;
@@ -5300,8 +5311,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String createMailImg(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String docID = request.getParameter("docID");
-		
-		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getTodayUTCTime("yyyyMMdd") ;
+		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
 		FileOutputStream stream = null;
 		try{
 		File file = new File(strPath);

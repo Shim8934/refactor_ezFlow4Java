@@ -5,7 +5,11 @@
 	    <title></title>
 	    <script  type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	     <style>
+          P { margin-top: 0px;margin-bottom: 0px; } 
+   	 	</style>
 	    <script language="javascript" type="text/javascript">
+	    
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
@@ -29,6 +33,9 @@
 	                        else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
 	                            break;
 	                    }
+	                }
+	                else if (obj.nodeName == "P") {
+	                    ret = true;
 	                }
 	            } catch (e) { }
 	            return ret;
@@ -160,7 +167,7 @@
 	                        var Div_ = document.createElement("DIV");
 	                        Div_.style.width = "99%";
 	                        Div_.style.overflow = "hidden";
-	                        Div_.setAttribute("contentEditable", true);
+        					Div_.setAttribute("contentEditable", true);
 	                        Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
@@ -178,7 +185,7 @@
 	                        Div_.setAttribute("contentEditable", true);
 	                        Div_.style.textAlign = "left";
 	                        Div_.onkeypress = function (event) { var ret = onKeyDownEvent(event, this, 127); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
+ 							Div_.innerHTML = TDRows.item(i).innerHTML;
 	                        TDRows.item(i).innerHTML = "";
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
@@ -202,13 +209,25 @@
 	                    var _DocContentHtml = getNodeText(XmlBodyDATA);
 	                    var ConXmlDiv = document.createElement("DIV");
 	                    ConXmlDiv.innerHTML = _DocContentHtml;
+	                    
 	                    if (ConXmlDiv.getElementsByTagName("XML").length > 0) {
 	                        isConDoc = true;
 	                        ConXmlDiv.getElementsByTagName("XML").item(0).style.display = "none";
 	                        CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
-	                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
+	                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');	                    
+	                    
+	                    var Document_Ptag = document.getElementById('div_Content').getElementsByTagName("P");
+	                    if (Document_Ptag.length > 0) {
+	                        for (var i = 0 ; i < Document_Ptag.length; i++) {
+	                            if (Document_Ptag[i].style.marginBottom == "")
+	                                Document_Ptag[i].style.marginBottom = "0px";
+	                            if (Document_Ptag[i].style.marginTop == "")
+	                                Document_Ptag[i].style.marginTop = "0px";
+	                        }
+	                    }
+	                    
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
 	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
 	                    for (var i = 0; i < TDRows.length; i++) {
@@ -230,7 +249,7 @@
 	                    }
 	
 	                    if (parent.pDraftFlag != "REDRAFT") {
-	                        var Body_innerHTML = "";
+  						var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
 	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
 	                                Body_innerHTML = document.getElementById("body").innerHTML;
@@ -282,6 +301,7 @@
 	                        }
 	                    }
 	
+	
 	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
 	                        SetAttribute(document.getElementById("body"), getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
 	                    }
@@ -299,7 +319,7 @@
 	            try {
 	                if (flag) {
 	                    BodyTagsEnabled(document.getElementById('div_Content'));
-	                    var Body_innerHTML = "";
+        var Body_innerHTML = "";
 	                    if (document.getElementById("body") != null) {
 	                        if (document.getElementById("body").getAttribute("class") == "FIELD") {
 	                            Body_innerHTML = document.getElementById("body").innerHTML;
@@ -465,6 +485,7 @@
 	            }
 	            return HtmlObject;
 	        }
+	        
 	        function Get_HtmlBody(HTML) {
 	            var Div = document.createElement("DIV");
 	            Div.innerHTML = HTML;
@@ -511,8 +532,12 @@
 	                var META2 = document.createElement("META");
 	                META2.name = "GENERATOR";
 	                META2.content = "MSHTML 10.00.9200.16721";
+	                var META3 = document.createElement("META");
+	                META3.httpEquiv = "X-UA-Compatible";
+	                META3.content = "IE=edge";
 	                HEAD.appendChild(META);
 	                HEAD.appendChild(META2);
+	                HEAD.appendChild(META3);
 	                HTML.appendChild(HEAD);
 	
 	                var pDiv_Content = document.getElementById('div_Content');

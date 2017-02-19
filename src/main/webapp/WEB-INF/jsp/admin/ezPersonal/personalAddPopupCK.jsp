@@ -114,6 +114,12 @@
 					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}
+				
+				if (document.getElementById("Title2").value == "")
+				{
+					alert("<spring:message code = 'ezPersonal.t148' />");
+					return;
+				}
 	
 				if (parseInt(document.getElementById("wWidth").value, 10) != document.getElementById("wWidth").value)
 				{
@@ -146,6 +152,13 @@
 					return;
 				}
 				
+				if (get_length(document.getElementById("Title2").value, 10) > 250)
+				{
+					alert("<spring:message code = 'ezPersonal.t149' />");
+					document.getElementById("Title2").focus();
+					return;
+				}
+				
 	            
 				var tmpStartDateTime = idDatepicker.startFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.startMonth()) + 1)) + "-"
@@ -154,10 +167,10 @@
 								+ CheckTimeRevision(idDatepicker.startMinutes()) + ":01";
 				var tmpEndDateTime = idDatepicker.endFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.endMonth()) + 1)) + "-"
-								+ CheckTimeRevision(idDatepicker.endDate()) + " "
+								+ CheckTimeRevision(parseInt(idDatepicker.endDate() + 1)) + " "
 								+ CheckTimeRevision(idDatepicker.endHours()) + ":"
 								+ CheckTimeRevision(idDatepicker.endMinutes()) + ":01";
-								
+
 				$.ajax({
 		        	type : "POST",
 		        	url : "/admin/ezPersonal/savePopup.do",
@@ -294,7 +307,7 @@
   			</tr>
 		</table> 
 		<div class="btnposition"> 
-		    <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a>
+		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		    <a class="imgbtn"><span onclick="window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 		</div>

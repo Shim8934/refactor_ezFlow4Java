@@ -1561,17 +1561,19 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, userInfo.getTenantId());
 		}
 
-		PortalMenuItemItemsImageVO result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
+		List<PortalMenuItemItemsImageVO> result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
 		
 		if (result != null) {
-			displayName = result.getDisplayName();
-			displayName2 = result.getDisplayName2();
-			imagePath = result.getNormalImagePath();
-			linkURL = result.getLinkURL();
-			linkLocation = result.getLinkLocation();
-			windowOption = result.getWindowOption();
-			imageWidth = String.valueOf(result.getImageWidth());
-			imageHeight = String.valueOf(result.getImageHeight());
+			for (int i=0; i<result.size(); i++) {
+				displayName = result.get(0).getDisplayName();
+				displayName2 = result.get(0).getDisplayName2();
+				imagePath = result.get(0).getNormalImagePath();
+				linkURL = result.get(0).getLinkURL();
+				linkLocation = result.get(0).getLinkLocation();
+				windowOption = result.get(0).getWindowOption();
+				imageWidth = String.valueOf(result.get(0).getImageWidth());
+				imageHeight = String.valueOf(result.get(0).getImageHeight());
+			}
 		}
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());
@@ -2201,6 +2203,30 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		}
 
 		logger.debug("saveMenuItemsOrder ended");
+	}
+	
+	/**
+	 * 관리자 포탈 서브메뉴 순서조정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItemsOrder.do")
+	@ResponseBody
+	public void saveSubMenuItemsOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("saveSubMenuItemsOrder started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+			ezPortalAdminService.updateSubMenuItemSetOrder(i + 1, xmlDom.getElementsByTagName("UID").item(i).getTextContent(), pageID, userInfo.getTenantId());
+		}
+
+		logger.debug("saveSubMenuItemsOrder ended");
 	}
 	
 	/**

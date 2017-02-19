@@ -665,7 +665,7 @@
 				                var left = (width - wWeight) / 2;
 				                var top = (heigth - wHeight) / 2;
 
-				                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+				                var Para = window.open("/ezCommunity/commOut.do?code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,resizable=0,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 				            }
 				        } catch (e) { }
 		    		}

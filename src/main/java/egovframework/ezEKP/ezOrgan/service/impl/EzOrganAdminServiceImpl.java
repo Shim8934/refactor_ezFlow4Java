@@ -267,7 +267,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PROPNAME", column);
 		map.put("v_PROPVALUE", number);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganAdminDao.updateProperty(map);
 	    } else {
 	        // 사원의 경우
@@ -365,7 +365,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		map.put("nowDate", nowDate);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 		    ezOrganAdminDao.retireDBData(map);
 		} else {
 		    ezOrganAdminDao.retireDBData_I(map);
@@ -627,7 +627,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CN", cn);
 		map.put("v_LANGDATA", lang);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			return ezOrganAdminDao.getUserInfo(map);
 		} else {
 		    // Proxy User인 지 여부를 확인한다.
@@ -661,12 +661,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    
 		String sTitle1 = "";
         String sTitle2 = "";
-        String delFlag = "1";
         String pDeptID = "";
         
         if (!titleInfo.equals("")) {
-            delFlag = "2";
-            
             String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
             
         	String[] addJobinfo = titleInfo.split(";");
@@ -702,17 +699,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
             		map.put("v_DEPTID", pDeptID);
             		map.put("v_TITLE1", sTitle1);
             		map.put("v_TITLE2", sTitle2);
-            		map.put("v_DELFLAG", delFlag);
                     
             		try {
-            			if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            			if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             				ezOrganAdminDao.setAddJob(map);
             			} else {
-
-            				if (delFlag != null && delFlag.equals("1")) {
-            					ezOrganAdminDao.setAddJob(map);
-            				}
-
             				if ((pDeptID != null && !pDeptID.equals("")) || (sTitle1 != null && !sTitle1.equals(""))) {
             					ezOrganAdminDao.setAddJob_I(map);
             				}
@@ -753,7 +744,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
                 
                 logger.debug("updateGroupDel rc=" + rc);
                 
-                if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식 주소를 찾지 못해도 성공으로 봄.)
+                if (rc != -100) { // updateGroupDel 성공(부모그룹이나 자식 주소를 찾지 못해도 성공으로 봄. 어차피 삭제하려는 것이므로.)
                     Map<String, Object> map = new HashMap<String, Object>();        
                     
                     map.put("v_TENANT_ID", tenantID);
@@ -789,7 +780,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_PARENTCN", deptID);
 		map.put("temp", "");
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganAdminDao.restoreRetireEntry(map);
 	    } else {
 	    	ezOrganAdminDao.restoreRetireEntry(map);

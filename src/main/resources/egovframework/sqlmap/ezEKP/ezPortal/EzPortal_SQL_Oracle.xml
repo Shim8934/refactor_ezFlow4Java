@@ -1095,7 +1095,9 @@
 			AND
 				A.TENANT_ID = #tenantID#
 			AND
-				B.TENANT_ID = #tenantID#		
+				B.TENANT_ID = #tenantID#
+            AND
+                ROWNUM <= 1		
 		]]>
 	</select>
 	
@@ -2051,7 +2053,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO">
+	<select id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO" remapResults="true">
 		<![CDATA[
 			SELECT 
 				DISTINCT AA.UID_ ,

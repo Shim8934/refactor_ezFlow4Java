@@ -30,7 +30,7 @@ public interface EzPortalAdminService {
 	
 	public List<PortalTBLTopMenuItemsVO> loadPositionSettings (Map<String, Object> map) throws Exception;
 	
-	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID, int tenantID) throws Exception;
+	public List<PortalMenuItemItemsImageVO> logoEdit (String uID, String pageID, int tenantID) throws Exception;
 	
 	public PortalPortletGeneralVO getPortletProperties (String pUID, int tenantID) throws Exception;
 	
@@ -123,6 +123,8 @@ public interface EzPortalAdminService {
 	public void removeMenuItem (String uID, String parentUID, String pageID, int tenantID) throws Exception;
 	
 	public void updateMenuItemSetOrder (int columnPos, String uID, String ownerPageID, int tenantID) throws Exception;
+	
+	public void updateSubMenuItemSetOrder (int columnPos, String uID, String ownerPageID, int tenantID) throws Exception;
 	
 	public void removeSubMenuItem (String uID, String parentUID, String pageID, int tenantID) throws Exception;
 	

@@ -1354,7 +1354,68 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		if (!deleteTitleInfo.equals("")) {
 		    ezOrganAdminService.deleteJob(userID, deleteTitleInfo, tenantID);
 		} else {
-		    ezOrganAdminService.addJob(userID, titleInfo, tenantID);
+		    if (!titleInfo.equals("")) {
+		        List<OrganUserVO> organUserVOList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+		        StringBuilder sbCurrentJobList = new StringBuilder();
+		        
+		        // 지정된 사용자의 현재 겸직 목록을 구한다.
+		        for (int i = 0; i < organUserVOList.size(); i++) {
+		            OrganUserVO organUserVO = organUserVOList.get(i);
+		            
+		            if (i == 0) {
+		                sbCurrentJobList.append(organUserVO.getDepartment() + "::");
+		            } else {
+		                sbCurrentJobList.append(";" + organUserVO.getDepartment() + "::");
+		            }
+		        }
+		        
+		        String currentJobList = sbCurrentJobList.toString();
+		        
+		        logger.debug("currentJobList=" + currentJobList);
+		        
+		        if (!currentJobList.equals("")) {
+		            // 현재 겸직 목록을 모두 삭제한다.
+		            ezOrganAdminService.deleteJob(userID, currentJobList, tenantID);
+		        }
+		        
+		        String sTitle1 = "";
+		        String sTitle2 = "";
+		        String pDeptID = "";
+		        
+	            String[] addJobinfo = titleInfo.split(";");
+	            StringBuilder sb = new StringBuilder();
+	            
+	            for (int i = 0; i < addJobinfo.length; i++) {
+	                String[] jobInfo = addJobinfo[i].split(":");
+	                pDeptID = jobInfo[0];
+	                sTitle1 = "";
+	                
+	                if (jobInfo.length > 1) {
+	                    sTitle1 = jobInfo[1];
+	                }
+	                
+	                sTitle2 = "";
+	                
+	                if (jobInfo.length > 2) {
+	                    sTitle2 = jobInfo[2];
+	                } else {
+	                    sTitle2 = sTitle1;
+	                }
+	                
+	                if (i == 0) {
+	                    sb.append(pDeptID + ":" + sTitle1 + ":" + sTitle2);
+	                } else {
+	                    sb.append(";" + pDeptID + ":" + sTitle1 + ":" + sTitle2);
+	                }
+	            }		
+	            
+	            titleInfo = sb.toString();
+	            
+	            logger.debug("new titleInfo=" + titleInfo);
+	            
+	            // 새로운 겸직 목록을 설정한다.
+	            ezOrganAdminService.addJob(userID, titleInfo, tenantID);	            
+		    }		    
 		}
 		
 		logger.debug("saveSubTitle ended.");

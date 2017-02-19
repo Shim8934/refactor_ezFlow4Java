@@ -44,7 +44,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_CN",userid);
 		map.put("v_FIELD", propName);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			return ezOrganDAO.getPropertyValue(map);
         } else {
             // 지정된 사원이 존재하는 지 여부를 확인한다.
@@ -568,7 +568,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         int i = 0;
         
         if (pLimit != 0) {
-            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
                 // MySQL에 의존적인 부분이라 후에 수정 필요함.
                 strSize = " LIMIT " + pLimit;
             } else {
@@ -637,7 +637,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             strSQL = strSQL.replace("cn", "a.cn");
             strSQL = strSQL.replace("title", "a.title");
             
-            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
                 strSQL = strSQL.replace("mail", "a.mail");
                 strSQL = strSQL.replace("displayname", "a.displayname");
             }
@@ -649,7 +649,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 
         Map<String, Object> map = new HashMap<String, Object>();
         
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             strSQL += " AND a.tenant_id=" + tenantID;
         }
         
@@ -717,7 +717,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         // Pagination에서는 페이지에 따른 행 범위가 따로 지정되기 때문에 최대 제한을 별도로 두지 않는다.
         /*
         if (pLimit != 0) {
-            if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+            if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
                 // Pagination에서는 페이지에 따른 행 범위가 따로 지정되기 때문에 최대 제한을 별도로 두지 않는다.
             } else {
                 strSize = " AND ROWNUM <= " + pLimit;
@@ -784,7 +784,7 @@ public class EzOrganServiceImpl implements EzOrganService {
              strSQL = strSQL.replace("cn", "a.cn");
              strSQL = strSQL.replace("title", "a.title");
              
-             if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+             if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
                  strSQL = strSQL.replace("mail", "a.mail");
                  strSQL = strSQL.replace("displayname", "a.displayname");
              }
@@ -804,7 +804,7 @@ public class EzOrganServiceImpl implements EzOrganService {
          
          Map<String , Object> map = new HashMap<String , Object>();
          
-         if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+         if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
              strSQL += " AND a.tenant_id=" + tenantID;
          }
          
@@ -1225,7 +1225,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_PROPNAME", propName);
 		map.put("v_PROPVALUE", propValue);
 		
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			ezOrganDAO.updateProperty(map);
 	    } else {
 	        // 사원의 경우
@@ -1265,7 +1265,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		map.put("v_ENDDATE", endDate);
 		map.put("v_TENANT_ID", tenantID);
 
-		 if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		 if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			 ezOrganDAO.setProxyUserInfo(map);
 			 return "OK";
 	     } else {

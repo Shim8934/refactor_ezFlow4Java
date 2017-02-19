@@ -265,8 +265,8 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<String> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
-		return (List<String>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
+	public List<CommunityBoardPropertyVO> adminMemberListGoSESelect(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardPropertyVO>) list("EzCommunityDAO.adminMemberListGoSESelect", map);
 	}
 	
 	public CommunityCBoardVO bbsViewNewGet1(Map<String, Object> map) throws Exception {	
@@ -1096,9 +1096,5 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public LoginVO joinOkSendMailGet2(Map<String, Object> map) throws Exception {
 		return (LoginVO) select("EzCommunityDAO.joinOkSendMailGet2", map);
-	}
-
-	public String getContentInfo(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.getContentInfo", map);
 	}
 }

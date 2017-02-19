@@ -350,6 +350,7 @@
 				step,
 				re_level,
 				ref,
+				filename,
 				charfilename,
 				readnum,
 				DATE_ADD(DATE_FORMAT(writeday, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS writeday,
@@ -4979,21 +4980,19 @@
 <!-- 	<procedure id="EzCommunityDAO.brdNewItem" 					parameterClass="Map"> -->
 <!-- 		{CALL EZSP_BRDNEWITEM(#v_pItemID#, #v_pBoardID#, #v_pWriterID#, #v_pWriterName#, #v_pWriterName2#, #v_pWriterDeptID#, #v_pWriterDeptName#, #v_pWriterDeptName2#, #v_pWriterCompanyID#, #v_pWriterCompanyName#, #v_pWriterCompanyName2#, #v_pWriteDate#, #v_pParentWriteDate#, #v_pImportance#, #v_pTitle#, #v_pContentLocation#, #v_pStartDate#, #v_pEndDate#, #v_pAbstract#, #v_pAttachments#, #v_pUpperItemIDTree#, #v_pItemLevel#, #v_pExtensionAttribute1#, #v_pExtensionAttribute2#, #v_pExtensionAttribute3#, #v_pExtensionAttribute32#, #v_pExtensionAttribute4#, #v_pExtensionAttribute5#, #v_pDocPassWord#)} -->
 <!-- 	</procedure> -->
-	
-	<select id="EzCommunityDAO.brdNewItemSelect" 					parameterClass="Integer"	resultClass="Integer">
-		<![CDATA[
-			SELECT
-				IFNULL(MAX(docno), 0)
-			FROM
-				TBL_COMM_ITEM
-			WHERE
-				docno IS NOT NULL
-			AND
-				tenant_id = #tenantID#
-		]]>
-	</select>
-	
 	<insert id="EzCommunityDAO.brdNewItemInsert" 					parameterClass="Map">
+		<selectKey keyProperty="v_pDocNo" resultClass="Integer">
+			<![CDATA[
+				SELECT
+					IFNULL(MAX(docno), 0)
+				FROM
+					TBL_COMM_ITEM
+				WHERE
+					docno IS NOT NULL
+				AND
+					tenant_id = #tenantID#
+			]]>
+		</selectKey>
 		<![CDATA[
 			INSERT INTO TBL_COMM_ITEM
 				(itemid,
@@ -5880,10 +5879,11 @@
 		]]>
 	</update>
 	
-	<select id="EzCommunityDAO.adminMemberListGoSESelect"			parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.adminMemberListGoSESelect"			parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT
-				B.ROWID row_id
+				B.boardid,
+				B.accessid
 			FROM
 				TBL_COMM_BOARDINFO A
 			JOIN
@@ -5909,7 +5909,9 @@
 				accessid = #v_C_ID#,
 				accessname = #v_C_NM#
 			WHERE
-				rowid = #v_rowID#
+				boardid = #boardID#
+			AND
+				accessid = #accessID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -6641,32 +6643,5 @@
 			AND
 				tenant_id = #tenantID#
 		]]>
-	</select>
-	
-	<select id="EzCommunityDAO.getContentInfo"					parameterClass="Map"	resultClass="String">
-		<isEqual property="v_PTYPE" compareValue="COMMUNITYNOTI">
-			<![CDATA[
-				SELECT
-					filename AS filepath
-				FROM
-					TBL_C_BOARD
-				WHERE
-					no = #v_PID#
-				AND
-					tenant_id = #tenantID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PTYPE" compareValue="COMMUNITYCONTENT">
-			<![CDATA[
-				SELECT
-					contentlocation AS filepath
-				FROM
-					TBL_COMM_ITEM
-				WHERE
-					itemid = #v_PID#
-				AND
-					tenant_id = #tenantID#
-			]]>
-		</isEqual>
 	</select>
 </sqlMap>

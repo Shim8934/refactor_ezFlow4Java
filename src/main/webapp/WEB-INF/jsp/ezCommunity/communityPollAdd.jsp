@@ -433,7 +433,7 @@
 	                  		<option value="14"><spring:message code='ezCommunity.t610' />
 	                    </select>
 	                    
-	                    <input type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5">
+	                    <input type="text" id="selRes2" name="selRes2" onkeydown="return selRes2_onkeydown()" onchange="selRes2_onchange(this);" size="5" maxlength="3">
 	                    <spring:message code='ezCommunity.t611' />
 					</td>
 	            </tr>

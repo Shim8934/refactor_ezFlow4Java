@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -25,8 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
-
-import com.sun.media.jfxmedia.logging.Logger;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -702,8 +701,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("initDate", initDate);
-		model.addAttribute("isoUTFstartDate", commonUtil.isoUTFDate(vo.getStartDate()));
-		model.addAttribute("isoUTFEndDate", commonUtil.isoUTFDate(vo.getEndDate()));
+		//model.addAttribute("isoUTFstartDate", commonUtil.isoUTFDate(vo.getStartDate()));
+		//model.addAttribute("isoUTFEndDate", commonUtil.isoUTFDate(vo.getEndDate()));
+		model.addAttribute("isoUTFstartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
+		model.addAttribute("isoUTFEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("personalPopupVO", vo);
 		
 		return "admin/ezPersonal/personalAddPopupCK";

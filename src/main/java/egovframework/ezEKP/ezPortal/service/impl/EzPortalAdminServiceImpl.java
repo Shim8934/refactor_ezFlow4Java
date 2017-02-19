@@ -279,7 +279,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalMenuItemItemsImageVO logoEdit(String uID, String pageID, int tenantID) throws Exception {
+	public List<PortalMenuItemItemsImageVO> logoEdit(String uID, String pageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_OWNERPAGEID", pageID);
@@ -363,6 +363,18 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		logger.debug("updateMenuItemSetOrder ended");
 	}
 	
+	@Override
+	public void updateSubMenuItemSetOrder(int columnPos, String uID, String ownerPageID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("columnPos", columnPos);
+		map.put("uID", uID);
+		map.put("ownerPageID", ownerPageID);
+		map.put("tenantID", tenantID);
+		
+		ezPortalAdminDAO.updateSubMenuItemSetOrder(map);
+	}
+
 	@Override
 	public List<PortalMenuItemItemsMenuItemsSVO> loadSubMenuItems (String pParentUID, String pPageID, int tenantID) throws Exception {
 		logger.debug("loadSubMenuItems started");
@@ -1526,7 +1538,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			strSQL += " AND PORTLET_TYPE="+"'"+pGubunFlag+"'";
 		}
 		
-		if (pPageGubunFlag != null && !pGubunFlag.equals("")) {
+		if (pPageGubunFlag != null && !pPageGubunFlag.equals("")) {
 			strSQL += " AND GUBUNFLAG="+"'"+pPageGubunFlag+"'";
 		}
 		

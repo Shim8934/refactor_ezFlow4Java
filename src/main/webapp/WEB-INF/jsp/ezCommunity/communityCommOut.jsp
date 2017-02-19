@@ -79,7 +79,6 @@
 		    <tr>
 		        <th><spring:message code='ezCommunity.t15'/></th>
 		        <td>
-		        
 		        	<c:choose>
 		        		<c:when test="${club.c_ClubGubun == '2' }">
 		        			<spring:message code='ezCommunity.t718'/>
@@ -88,7 +87,6 @@
 		        			<spring:message code='ezCommunity.t17'/>
 		        		</c:when>
 		        	</c:choose>
-		        
 		        </td>
 		    </tr>
 		    <tr>
