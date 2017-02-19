@@ -1034,7 +1034,7 @@
              	OWNERPOSITION2 ,
              	OWNERCALL ,
              	IFNULL(RESLOCATION, ' ') RESLOCATION ,
-             	CONCAT(SUBSTR(MAKEDATE, 0, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, -2, 2)) MAKEDATE ,
+             	CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE ,
              	IFNULL(APPROVEFLAG, '0') APPROVEFLAG ,
              	BRD_ACCESS 
         	FROM

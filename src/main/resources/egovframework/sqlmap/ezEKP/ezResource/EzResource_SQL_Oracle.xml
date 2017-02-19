@@ -1029,8 +1029,8 @@
              	OWNERPOSITION2 ,
              	OWNERCALL ,
              	NVL(RESLOCATION, ' ') RESLOCATION  ,
-             	SUBSTR(MAKEDATE, 0, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, -2, 2) MAKEDATE  ,
-             	NVL(APPROVEFLAG, '0') APPROVEFLAG  ,
+             	SUBSTR(MAKEDATE, 1, 4) || '-' || SUBSTR(MAKEDATE, 5, 2) || '-' || SUBSTR(MAKEDATE, 7, 2) MAKEDATE  ,
+             	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
