@@ -1060,7 +1060,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("companyID", userInfo.getCompanyID());
-		model.addAttribute("adminFg", "Y");
 		model.addAttribute("resID", resID);
 		model.addAttribute("ownerID", strOwnerID);
 		model.addAttribute("ownerNm", strOwnerNm);
