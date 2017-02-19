@@ -246,10 +246,10 @@ function SaveFile() {
     try {
     	var result = "";
         var mhtBody = "";
-        mhtBody = message.Get_EditorBodyHTML();
-        mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-        mhtBody = ConvertHTMLtoMHT(mhtBody);
-
+    	mhtBody = message.Get_EditorBodyHTML();
+    	EmbedContentIntoXML(mhtBody);
+    	mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	
         $.ajax({
     		type : "POST",
     		dataType : "text",
@@ -268,4 +268,34 @@ function SaveFile() {
     } catch (e) {
         alert("SaveFile : " + e.description);
     }
+}
+
+function EmbedContentIntoXML(bodyhtml) {
+    var tempDiv = document.createElement("DIV");
+    tempDiv.innerHTML = bodyhtml;
+
+    var imgColl = tempDiv.getElementsByTagName("IMG");
+    for (var i = 0; i < imgColl.length; i++) {
+        if (imgColl.item(i).src.toLowerCase().indexOf("upload_common") > 0 && !imgColl.item(i).src.toLowerCase().indexOf(".tmp")) {
+            var OrgSrc = imgColl.item(i).src;
+            var ImgHeight = "0";
+            var ImgWidth = "0";
+            if (imgColl.item(i).outerHTML.toLowerCase().match(/width="?([^>'"]+)['"]/) == null) {
+                if (imgColl.item(i).style.width != "")
+                    ImgWidth = imgColl.item(i).style.width.replace("px", "");
+                if (imgColl.item(i).style.height != "")
+                    ImgHeight = imgColl.item(i).style.height.replace("px", "");
+            }
+            else {
+                var result = imgColl.item(i).outerHTML.toLowerCase().match(/width="?([^>'"]+)['"]/);
+                if (result.length == 2)
+                    ImgWidth = result[1];
+                var result = imgColl.item(i).outerHTML.toLowerCase().match(/height="?([^>'"]+)['"]/);
+                if (result.length == 2)
+                    ImgHeight = result[1];
+            }
+            ConvertSaveImageFile(OrgSrc, ImgWidth, ImgHeight);
+        }
+    }
+    return bodyhtml;
 }
