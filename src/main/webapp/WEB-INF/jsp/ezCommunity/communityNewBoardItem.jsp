@@ -576,19 +576,17 @@
 		                alert("<spring:message code='ezCommunity.t1150'/>" + pStartDate.substr(0, 16) + "<spring:message code='ezCommunity.t1151'/>");
 		            }
 		            
-		            try {
-		                window.opener.location.reload(true);
-		            } catch(e) {
-		            }
-		            
+		            JSleep(500);
+		            window.opener.location.reload(true);
+		            saveFlag = false;
 		            window.close();
 		        } else {
+		        	saveFlag = false;
 		            alert("<spring:message code='ezCommunity.t283'/> " + xmlhttp.responseText);
 		        }
 		        
 		        xmlhttp = null;
 		        xmldom = null;
-		        saveFlag = false;
 		    }
 	
 		    function JSleep(sTime) {
