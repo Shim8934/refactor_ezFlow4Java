@@ -1644,6 +1644,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("nextItemID", nextItemID);
 		model.addAttribute("previousItemID", previousItemID);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strContentLocation", cBoardGet1.getFileName());
 		
 		logger.debug("bbsViewNew ended.");
 		
@@ -4092,7 +4093,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String pUploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		CommunityBoardItemVO item = null;
 		CommunityBoardPropertyVO boardInfo = null;
-		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "", strAbstract = "";
+		String url = "", startDateTime = "", endDateTime = "", expireDays = "", itemID = "";
+		/*String strAbstract = "";*/
 		String browser = ClientUtil.getClientInfo(request, "browser");
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
@@ -4136,9 +4138,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 				if (mode.equals("reply")) {
 					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", userInfo.getLocale()) + item.getTitle());
 					item.setItemLevel(item.getItemLevel() + 1);
-				} else {
+				} 
+				/*else {
 					strAbstract = item.getAbsTract();
-				}				
+				}*/				
 			}
 			
 			startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false);

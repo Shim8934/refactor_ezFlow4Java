@@ -2292,12 +2292,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			result = true;
 		}
 		
-//		if (result != true) {
-//			response.setCharacterEncoding("UTF-8");
-//			response.getWriter().write(egovMessageSource.getMessage("ezCommunity.t423", userInfo.getLocale()));
-//			response.getWriter().flush();
-//		}
-		
 		logger.debug("communityConnCHK ended.");
 		
 		return result;
@@ -6964,26 +6958,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         }
         
         logger.debug("commOutOkSendMail ended.");
-	}
-	
-	@Override
-	public String getContentInfo(String type, String itemID, int tenantID) throws Exception {
-		logger.debug("getContentInfo started.");
-		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PTYPE", type);
-		map.put("v_PID", itemID);
-		map.put("tenantID", tenantID);
-		
-		logger.debug("getContentInfo ended.");
-		
-		String result = ezCommunityDAO.getContentInfo(map);
-		
-		if (type.equals("COMMUNITYNOTI")) {
-			result = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + result;
-		}
-		
-		return result;
 	}
 
 	@Override

@@ -353,7 +353,7 @@
 				step,
 				re_level,
 				ref,
-				charfilename,
+				filename,
 				readnum,
 				TO_DATE(writeday, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writeday,
 				username,
@@ -379,6 +379,7 @@
 				step,
 				re_level,
 				ref,
+				filename,
 				charfilename,
 				readnum,
 				writeday,
@@ -6751,32 +6752,5 @@
 			AND
 				tenant_id = #tenantID#
 		]]>
-	</select>
-	
-	<select id="EzCommunityDAO.getContentInfo"					parameterClass="Map"	resultClass="String">
-		<isEqual property="v_PTYPE" compareValue="COMMUNITYNOTI">
-			<![CDATA[
-				SELECT
-					filename AS filepath
-				FROM
-					TBL_C_BOARD
-				WHERE
-					no = #v_PID#
-				AND
-					tenant_id = #tenantID#
-			]]>
-		</isEqual>
-		<isEqual property="v_PTYPE" compareValue="COMMUNITYCONTENT">
-			<![CDATA[
-				SELECT
-					contentlocation AS filepath
-				FROM
-					TBL_COMM_ITEM
-				WHERE
-					itemid = #v_PID#
-				AND
-					tenant_id = #tenantID#
-			]]>
-		</isEqual>
 	</select>
 </sqlMap>

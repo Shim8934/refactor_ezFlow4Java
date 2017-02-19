@@ -29,7 +29,6 @@
 			var sRadio = "<c:out value='${sRadio}'/>";
 			var keyword = "<c:out value='${keyword}'/>";
 			var fileName = "<c:out value='${fileName}'/>";
-// 			var g_progresswin;
 			
 			window.onload = function () {
 		        GetFileURL();
@@ -41,6 +40,7 @@
 					async : false,
 					url : "/ezCommon/mhtToHTMLContent.do",
 					data : { type	:	"COMMUNITYNOTI", 
+							 href	:	"<c:out value='${strContentLocation}'/>",
 							 itemID	:	encodeURIComponent(no)
 						   },
 					success: function(result){

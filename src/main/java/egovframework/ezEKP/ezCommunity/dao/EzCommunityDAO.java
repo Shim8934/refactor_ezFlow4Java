@@ -1097,8 +1097,4 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public LoginVO joinOkSendMailGet2(Map<String, Object> map) throws Exception {
 		return (LoginVO) select("EzCommunityDAO.joinOkSendMailGet2", map);
 	}
-
-	public String getContentInfo(Map<String, Object> map) throws Exception {
-		return (String) select("EzCommunityDAO.getContentInfo", map);
-	}
 }

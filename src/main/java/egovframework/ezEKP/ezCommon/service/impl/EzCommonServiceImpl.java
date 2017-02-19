@@ -42,7 +42,6 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
-import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
@@ -66,9 +65,6 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
-	
-	@Autowired
-	private EzCommunityService ezCommunityService;
 	
     @Autowired
     private EzEmailUtil ezEmailUtil;
@@ -759,10 +755,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         
         String url = "";
-        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM")) {
+        if (type.equals("HTMLPORTLET") || type.equals("BOARDCONTENT") || type.equals("BOARDCONTENTTEMP") || type.equals("BOARDFORM") || type.equals("COMMUNITYCONTENT")) {
         	url = request.getParameter("href");
-        } else if (type.equals("COMMUNITYNOTI") || type.equals("COMMUNITYCONTENT")) {
-        	url = ezCommunityService.getContentInfo(type, itemID, tenantID);
+        } else if (type.equals("COMMUNITYNOTI")) {
+        	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
         	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
         }
