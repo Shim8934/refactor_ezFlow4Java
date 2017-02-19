@@ -74,6 +74,11 @@
 					return;
 				}
 				
+				if (get_length(document.getElementById("Title2").value) > 500) {
+					alert("<spring:message code = 'ezPersonal.t216' />");
+					return;
+				}
+				
 				for (var i=1; i<11; i++) {
 					if (get_length(eval("answer" + i).value) > 100) {
 						alert("<spring:message code = 'ezPersonal.t217' />");
