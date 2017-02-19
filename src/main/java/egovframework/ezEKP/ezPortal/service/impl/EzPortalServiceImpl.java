@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.logging.log4j.core.config.LoggersPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1943,6 +1944,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
+		logger.debug("getRenderedPortalPageHTMLInsert started");
 		StringBuilder sb = new StringBuilder();
        
         String pageWidth, pageHeight, pageColumnLength,	pageColumnSplit;
@@ -2070,6 +2072,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         if (pMode.equals("edit")) {
 			sb.append("</tr>\n</table>\n");
 		}
+        
+        logger.debug("sb="+sb.toString());
+        logger.debug("getRenderedPortalPageHTMLInsert ended");
 		return sb.toString();
 	
 	}
@@ -2168,10 +2173,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else {
 				logger.debug("no edit");
+				logger.debug("userInfo tableViewOption="+userInfo.getTableViewOption());
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
 						sb.append("<div class='section1_bg'><section class='section1'>\n");
 					} else {
+						logger.debug("userInfo getTheme="+userInfo.getTheme());
 						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
 							sb.append("<div id='Center'>");
 							loadFlag = false;

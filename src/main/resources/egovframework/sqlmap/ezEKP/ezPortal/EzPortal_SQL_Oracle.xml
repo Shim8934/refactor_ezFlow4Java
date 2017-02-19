@@ -2051,7 +2051,7 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO">
+	<select id="EzPortalDAO.firstMainList" parameterClass="Map" resultClass="PortalFirstMainListVO" remapResults="true">
 		<![CDATA[
 			SELECT 
 				DISTINCT AA.UID_ ,
