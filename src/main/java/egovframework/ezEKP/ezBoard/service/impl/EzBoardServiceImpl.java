@@ -1026,9 +1026,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception {
+	public BoardListVO getItemInfo(String itemID, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", itemID);
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 		
 		String tempString = ezBoardDAO.getBoardItem(map);
@@ -2502,13 +2503,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			}
         			file = null;
         		}
-        		temp = strAttachments.split(";")[i].split("}_");
         		
-        		for (int j = 1; j < temp.length; j++) {
-        			if (j == 1) {
-        				fileName = temp[j];
-        			}
-        		}
+        		fileName = strAttachments.split(";")[i].substring(strAttachments.split(";")[i].lastIndexOf("_") + 1);
         		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         		temp = null;
@@ -2613,10 +2609,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception {
+	public BoardAttachVO getAttachInfo(String itemID, String attID, int tenantID) throws Exception {
 		logger.debug("getAttachInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("itemID", itemID);
 		map.put("attID", attID);
 		map.put("tenantID", tenantID);
 

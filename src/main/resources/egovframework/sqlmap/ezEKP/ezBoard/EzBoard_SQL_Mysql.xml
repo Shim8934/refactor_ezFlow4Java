@@ -652,12 +652,12 @@
 			<![CDATA[
 				SELECT 
 					A.TITLE TITLE ,
-                    GUBUN ,
+                    B.GUBUN ,
                     A.BOARDID BOARDID  ,
-                    BOARDNAME ,
-                    A.WRITERNAME,
-                    A.WRITERNAME2,
-                    A.CONTENTLOCATION
+                    B.BOARDNAME$lang$ BOARDNAME,
+                    A.WRITERNAME$lang$ WRITERNAME,
+                    A.CONTENTLOCATION,
+                    C.MAIL
                 FROM 
                 	TBL_Board_Item A
                 JOIN 
@@ -666,6 +666,12 @@
                 	A.tenant_id = B.tenant_id
                 AND
                 	A.BoardID = B.BoardID
+                JOIN
+                	TBL_USERMASTER C
+                ON
+                	A.writerid = C.cn
+                AND
+                	A.tenant_id = C.tenant_id
                 WHERE
                 	A.tenant_id = #tenantID#
                 AND  
@@ -2440,7 +2446,8 @@
                 LEFT JOIN 
                 	( SELECT 
                 		COUNT(USERID)  TOTALCOUNT  ,
-                        ITEMID 
+                        ITEMID,
+                        TENANT_ID 
                       FROM 
                       	TBL_Board_Item_Read 
                       WHERE  
@@ -2652,7 +2659,8 @@
                 LEFT JOIN 
                 	( SELECT 
                 		COUNT(USERID)  TOTALCOUNT  ,
-                        ITEMID 
+                        ITEMID,
+                        TENANT_ID
                       FROM 
                       	TBL_Board_Item_Read 
                       WHERE  
@@ -2723,7 +2731,8 @@
                 LEFT JOIN 
                 	( SELECT 
                 		COUNT(USERID)  TOTALCOUNT  ,
-                        ITEMID
+                        ITEMID,
+                        TENANT_ID
                       FROM 
                       	TBL_Board_Item_Read 
                       WHERE  
@@ -2998,6 +3007,8 @@
 				TBL_BOARD_ITEM_ATTACHMENTS 
 			WHERE 
 				TENANT_ID = #tenantID#
+			AND
+				ITEMID = #itemID#
 			AND
 				GUID = #attID#
 		]]>
@@ -3388,7 +3399,7 @@
 			SELECT 
 				A.APPRUSERID AS ID, 
 				B.MAIL AS EMAIL, 
-				B.DisplayName$lang$ AS DISPLAYNAME, 
+				B.DisplayName$lang$ AS DISPLAYNAME
    			FROM 
    				TBL_BOARD_APPRLIST A 
    			INNER JOIN 
@@ -3754,6 +3765,14 @@
                 	USERID = #v_USERID#
 			]]>
 		</isEqual>
+		<isEmpty property="v_PREVIEWMODE">
+			<![CDATA[
+				SELECT
+					1
+				FROM
+					DUAL
+			]]>
+		</isEmpty>
 	</update>
 	
 	<insert id="EzBoardDAO.setBoardList_Config2_I" parameterClass="Map">

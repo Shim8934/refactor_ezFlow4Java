@@ -73,14 +73,15 @@
 		<result property="accessName" 				column="ACCESSNAME" 				columnIndex="10"/>		
 		<result property="accessName2" 				column="ACCESSNAME2" 				columnIndex="11"/>		
 		<result property="boardGroupACL" 			column="BOARDGROUPACL" 				columnIndex="12"/>				
-		<result property="boardAdmin_FG" 			column="BOARDADMIN_FG" 				columnIndex="13"/>		
-		<result property="access_" 					column="ACCESS_" 					columnIndex="14"/>		
-		<result property="listView_FG" 				column="LISTVIEW_FG" 				columnIndex="15"/>		
-		<result property="read_FG" 					column="READ_FG" 					columnIndex="16"/>		
-		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="17"/>		
-		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="18"/>		
-		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="19"/>		
-		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="20"/>			
+		<result property="displayName"	 			column="DISPLAYNAME3" 				columnIndex="13"/>				
+		<result property="boardAdmin_FG" 			column="BOARDADMIN_FG" 				columnIndex="14"/>		
+		<result property="access_" 					column="ACCESS_" 					columnIndex="15"/>		
+		<result property="listView_FG" 				column="LISTVIEW_FG" 				columnIndex="16"/>		
+		<result property="read_FG" 					column="READ_FG" 					columnIndex="17"/>		
+		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="18"/>		
+		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="19"/>		
+		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="20"/>		
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>			
 	</resultMap>
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
@@ -415,7 +416,7 @@
 				T2.COMPANY ,
 	            T2.DESCRIPTION ,
 	            T2.DISPLAYNAME ,
-	            T2. TITLE ,
+	            T2.TITLE ,
 	            T2.COMPANY2 ,
 	            T2.DESCRIPTION2 ,
 	            T2.DISPLAYNAME2 ,
@@ -424,6 +425,7 @@
 	            T1.ACCESSNAME ,
 	            T1.ACCESSNAME2 ,
 	            T1.BOARDGROUPACL ,
+	            T2.DISPLAYNAME DISPLAYNAME3,
 	            T1.BOARDADMIN_FG ,
 	            T1.ACCESS_ ,
 	            T1.LISTVIEW_FG ,
@@ -460,6 +462,7 @@
 	            T1.ACCESSNAME ,
 	            T1.ACCESSNAME2 ,
 	            T1.BOARDGROUPACL ,
+	            T3.DISPLAYNAME DISPLAYNAME3,
 	            T1.BOARDADMIN_FG ,
 	            T1.ACCESS_ ,
 	            T1.LISTVIEW_FG ,
