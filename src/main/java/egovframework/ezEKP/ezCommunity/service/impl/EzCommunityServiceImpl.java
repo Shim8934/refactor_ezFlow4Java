@@ -4644,12 +4644,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		if (mode.equals("MASTER")) {
-			List<String> list = ezCommunityDAO.adminMemberListGoSESelect(map);
+			List<CommunityBoardPropertyVO> list = ezCommunityDAO.adminMemberListGoSESelect(map);
 			
 			ezCommunityDAO.adminMemberListGoSEUpdate1(map);
 			
-			for (String rowID : list) {
-				map.put("v_rowID", rowID);
+			for (CommunityBoardPropertyVO vo : list) {
+				map.put("accessID", vo.getAccessID());
+				map.put("boardID", vo.getBoardID());
 				
 				ezCommunityDAO.adminMemberListGoSEUpdate2(map);
 			}

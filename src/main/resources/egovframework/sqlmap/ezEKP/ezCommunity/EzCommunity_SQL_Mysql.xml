@@ -5881,10 +5881,11 @@
 		]]>
 	</update>
 	
-	<select id="EzCommunityDAO.adminMemberListGoSESelect"			parameterClass="Map"		resultClass="String">
+	<select id="EzCommunityDAO.adminMemberListGoSESelect"			parameterClass="Map"		resultClass="CommunityBoardPropertyVO">
 		<![CDATA[
 			SELECT
-				B.ROWID row_id
+				B.boardid,
+				B.accessid
 			FROM
 				TBL_COMM_BOARDINFO A
 			JOIN
@@ -5910,7 +5911,9 @@
 				accessid = #v_C_ID#,
 				accessname = #v_C_NM#
 			WHERE
-				rowid = #v_rowID#
+				boardid = #boardID#
+			AND
+				accessid = #accessID#
 			AND
 				tenant_id = #tenantID#
 		]]>
