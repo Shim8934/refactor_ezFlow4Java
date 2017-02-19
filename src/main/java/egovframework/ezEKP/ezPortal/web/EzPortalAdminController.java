@@ -2204,6 +2204,30 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 관리자 포탈 서브메뉴 순서조정 저장 실행 함수
+	 */
+	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItemsOrder.do")
+	@ResponseBody
+	public void saveSubMenuItemsOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
+		logger.debug("saveSubMenuItemsOrder started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String pageID = "";
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		}
+		
+		for (int i=0; i<xmlDom.getElementsByTagName("UID").getLength(); i++) {
+			ezPortalAdminService.updateSubMenuItemSetOrder(i + 1, xmlDom.getElementsByTagName("UID").item(i).getTextContent(), pageID, userInfo.getTenantId());
+		}
+
+		logger.debug("saveSubMenuItemsOrder ended");
+	}
+	
+	/**
 	 * 관리자 포탈 메인메뉴설정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPortal/mainMenuAreaEdit.do")

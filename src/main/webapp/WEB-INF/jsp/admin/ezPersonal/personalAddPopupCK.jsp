@@ -294,7 +294,7 @@
   			</tr>
 		</table> 
 		<div class="btnposition"> 
-		    <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a>
+		    <%-- <a class="imgbtn"><span onclick="html_edit()">HTML<spring:message code = 'ezPersonal.t156' /></span></a> --%>
 		    <a class="imgbtn"><span onclick="OK_Click()"><spring:message code = 'ezPersonal.t12' /></span></a>
 		    <a class="imgbtn"><span onclick="window.close()"><spring:message code = 'ezPersonal.t13' /></span></a>
 		</div>
