@@ -229,7 +229,7 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 	
     @Override
     public int getTenantId(String serverName) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTenantIdForJMocha(serverName);
         } else {
             return getTenantIdForLocal(serverName);

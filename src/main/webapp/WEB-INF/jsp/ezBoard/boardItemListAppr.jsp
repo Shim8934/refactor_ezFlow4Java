@@ -229,7 +229,6 @@
 					});
 		        }
 		
-		        var perCnt = "";
 		        var firstFlag = false;
 		        function getBoardList_after(xml) {
 		            try {
@@ -247,8 +246,7 @@
 		
 		                var lstCnt = getNodeText(cntNode);
 		                totalCount = lstCnt;
-		                if (perCnt == "")
-		                    perCnt = getNodeText(perNode);
+		                var perCnt = getNodeText(perNode);
 		
 		                listcount.value = perCnt;
 		                
@@ -498,7 +496,7 @@
 		
 		        function CheckIfHasReplies() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.aspx?itemList=" + strListInfo, false);
+		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
 		            xmlhttp.send();
 		            if (xmlhttp.responseText == "FALSE") {
 		                xmlhttp = null;

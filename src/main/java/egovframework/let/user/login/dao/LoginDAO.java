@@ -128,7 +128,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	 * @exception Exception
 	 */
     public LoginVO selectUser(LoginVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return selectUserForJMocha(vo);
         } else {
             return selectUserForLocal(vo);
@@ -201,7 +201,7 @@ public class LoginDAO extends EgovAbstractDAO {
 	 * @exception Exception
 	 */
     public void updatePassword(LoginVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             updatePasswordForJMocha(vo);
         } else {
             updatePasswordForLocal(vo);
@@ -247,7 +247,7 @@ public class LoginDAO extends EgovAbstractDAO {
     }
     
     public void updateUser(LoginVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             updateUserForJMocha(vo);
         } else {
             updateUserForLocal(vo);
@@ -296,7 +296,7 @@ public class LoginDAO extends EgovAbstractDAO {
     }
     
     public void insertLog(LoginVO vo) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             insertLogForJMocha(vo);
         } else {
             insertLogForLocal(vo);

@@ -240,7 +240,7 @@ public interface EzCommunityService {
 	
 	public String adminLogoUpload(String code, String realPath, String logoPath, MultipartFile logoFile, int tenantId) throws Exception;
 	
-	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
+//	public String getContentInfo(String type, String itemID, int tenantID) throws Exception;
 	
 	public int searchItemCount(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String startDateTime, String endDateTime) throws Exception;
 	

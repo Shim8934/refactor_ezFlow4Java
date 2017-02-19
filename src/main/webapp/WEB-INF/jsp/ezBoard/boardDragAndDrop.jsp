@@ -3,14 +3,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge" /> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<style>
-		#lstAttachLink {
-		height: 117px;
-		border: 1px solid #3C2F2E;
-		}
+			#lstAttachLink {
+			height: 117px;
+			border: 1px solid #3C2F2E;
+			}
 		</style>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
@@ -32,6 +31,8 @@
 		    var file = new Array;
 		    var xhr = new XMLHttpRequest();
 		    function onDrop(evt) {
+		    	file = new Array;
+		    	
 		        if (evt != undefined) {
 		            evt.stopPropagation();
 		            evt.preventDefault();
@@ -41,36 +42,35 @@
 		            return;
 		        }
 		        var filelist;
+		        
 		        if (evt == undefined) {
 		            filelist = document.getElementById("file").files;
-		        }
-		        else {
+		        } else {
 		            filelist = evt.dataTransfer.files;
 		        }
 		        var tempfilesize = 0;
 		        var filecnt = file.length;
+
 		        for (var i = 0; i < filelist.length; i++) {
 		            filesize = parseInt(filesize) + parseInt(filelist[i].size);
 		            if (filesize / 1024 / 1024 > window.parent.AttachLimit) {
-		                if ("${userInfo.lang}" == "2"){
+		                if ("${userInfo.lang}" == "2") {
 		                    alert(strLang8 + window.parent.AttachLimit + strLang9);
-		                }
-		                else{
+		                } else {
 		                    alert(strLang8 + window.parent.AttachLimit + "MB" + strLang9);
 		                }
-		                if(tempfilesize == 0){
+		                if (tempfilesize == 0) {
 		                    filesize = parseInt(filesize) - parseInt(filelist[i].size);
-		                }
-		                else{
+		                } else {
 		                    filesize = parseInt(filesize) - tempfilesize;
 		                }
 		                return;
-		            }
-		            else {
+		            } else {
 		                file[filecnt + i] = filelist[i];
 		                tempfilesize += filelist[i].size;
 		            }
 		        }
+		        
 		        fileupload();
 		    }
 		    function uploadProgress(evt) {
@@ -110,11 +110,11 @@
 		
 		        var objTh2 = document.createElement("TH");
 		        objTh2.style.width = "87%";
-		        objTh2.textContent = strLang1;
+		        setNodeText(objTh2, strLang1);
 		        objTr.appendChild(objTh2);
 		
 		        var objTh3 = document.createElement("TH");
-		        objTh3.textContent = strLang3;
+		        setNodeText(objTh3, strLang3);
 		        objTh3.style.width = "13%";
 		        objTr.appendChild(objTh3);
 		
@@ -127,14 +127,6 @@
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
 		        window.parent.returnvalue(xhr.responseText);
-		        
-// 		        if (CrossYN()) {
-// 		            document.getElementById("file").value = "";
-// 		        }
-// 		        else {
-// 		            document.getElementById("file").type = "text";
-// 		            document.getElementById("file").type = "file";
-// 		        }
 		        
 		        var strRet = "";
 		        var pBoardID = window.parent.pBoardID;
@@ -150,6 +142,13 @@
 		        }
 		        window.parent.attachxml = strRet;
 		        isfileup = false;
+		        
+		        if (CrossYN()) {
+		            document.getElementById("file").value = "";
+		        } else {
+		            document.getElementById("file").type = "text";
+		            document.getElementById("file").type = "file";
+		        }
 		    }
 		
 		    function uploadFailed(evt) {
@@ -165,7 +164,9 @@
 		    }
 		
 		    function filechange(e) {
-		        onDrop();
+		    	if (!document.getElementById("file").value == "") {
+			        onDrop();
+		    	}
 		    }
 		
 		    function btnfiledel() {
@@ -226,9 +227,11 @@
 		
 		    function fileupload() {
 		        var fd = new FormData();
+
 		        for (var i = 0; i < file.length; i++) {
 		            fd.append("fileToUpload", file[i]);
 		        }
+		        
 		        fd.append("boardID", window.parent.pBoardID);
 		        fd.append("maxSize", window.parent.AttachLimit * 1024 * 1024);
 		        fd.append("mode", "ATT");
@@ -240,7 +243,6 @@
 		        xhr.addEventListener("abort", uploadCanceled, false);
 		        xhr.open("POST", "/ezBoard/uploadItemAttach.do");
 		        xhr.send(fd);
-		        file = new Array;
 		        document.getElementById('progdiv').style.display = "inline-block";
 		    }
 		

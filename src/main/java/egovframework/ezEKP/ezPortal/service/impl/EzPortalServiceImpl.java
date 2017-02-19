@@ -1386,16 +1386,22 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getLogoHTML (String pCallingMenuID, String pContentsUID, LoginVO userInfo) throws Exception {
+		logger.debug("getLogoHTML started");
+
 		String pUID = "";
 		String pAccessIDList = getAccessList(userInfo);
 		
 		for (int i=0; i<pAccessIDList.split(",").length; i++) {
 			pUID = getLogoHtml(pCallingMenuID, pAccessIDList.split(",")[i].trim(), userInfo.getTenantId());
 			
-			if (pUID != null) {
+			logger.debug("pUID="+pUID);
+			if (pUID != null && !pUID.equals("")) {
 				break;
 			}
 		}
+		
+		logger.debug("pUID="+pUID);
+		logger.debug("getLogoHTML ended");
 		return getImageHTML(pCallingMenuID, pUID, false, pContentsUID, userInfo);
 	}
 	
@@ -1943,6 +1949,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	public String getRenderedPortalPageHTMLInsert (String pCallingPageID , String pPortalPageID, String pAccessIDList, String pMode, LoginVO userInfo) throws Exception {
+		logger.debug("getRenderedPortalPageHTMLInsert started");
 		StringBuilder sb = new StringBuilder();
        
         String pageWidth, pageHeight, pageColumnLength,	pageColumnSplit;
@@ -2070,6 +2077,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
         if (pMode.equals("edit")) {
 			sb.append("</tr>\n</table>\n");
 		}
+        
+        logger.debug("sb="+sb.toString());
+        logger.debug("getRenderedPortalPageHTMLInsert ended");
 		return sb.toString();
 	
 	}
@@ -2168,10 +2178,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				sb.append("</TR>\n");
 			} else {
 				logger.debug("no edit");
+				logger.debug("userInfo tableViewOption="+userInfo.getTableViewOption());
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (i == 0) {
 						sb.append("<div class='section1_bg'><section class='section1'>\n");
 					} else {
+						logger.debug("userInfo getTheme="+userInfo.getTheme());
 						if (userInfo.getTheme() != null && !userInfo.getTheme().equals("BASIC") && loadFlag) {
 							sb.append("<div id='Center'>");
 							loadFlag = false;

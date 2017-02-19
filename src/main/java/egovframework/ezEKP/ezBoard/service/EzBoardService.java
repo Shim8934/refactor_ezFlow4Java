@@ -92,13 +92,13 @@ public interface EzBoardService {
 
 	public BoardConfigVO getBoardList_Config(String userId, int tenantID) throws Exception;
 	
-	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, int tenantID) throws Exception;
+	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
-	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception;
+	public BoardListVO getItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
 	
-	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, int tenantID) throws Exception;
+	public BoardListVO getBrdGetItemInfoTemp(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
 	public String getBoardProperty(String pBoardID, BoardPropertyVO boardInfo, LoginVO userInfo) throws Exception;
 	
@@ -127,8 +127,6 @@ public interface EzBoardService {
 	public String deleteOneLineReply(String id, String replyID, String guBun, int tenantID) throws Exception;
 	
 	public String checkOneLineOwner(String replyID, String userID, int tenantID) throws Exception;
-	
-	public String getThumbListXML(String pUserID, String pBoardType, String pBoardID, int pPageNum, String sortHeader, String sortOption, String strLang, String offset, int tenantID) throws Exception;
 	
 	public String portalPageItemEdit(String boardID, int tenantID) throws Exception;
 	
@@ -236,8 +234,12 @@ public interface EzBoardService {
 
 	public String getContentInfo(String type, String docID, int tenantID) throws Exception;
 
-	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception;
+	public BoardAttachVO getAttachInfo(String itemID, String attID, int tenantID) throws Exception;
 
 	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception;
+
+	public int photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
+
+	public String getThumbListXML(LoginVO userInfo, String pBoardType, String pBoardID, int pPageNum, String pOrderCell, String pOrderOption) throws Exception;
 
 }

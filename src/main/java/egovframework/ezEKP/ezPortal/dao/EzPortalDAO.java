@@ -176,7 +176,6 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (List<PortalSearchMenuItemVO>) list("EzPortalDAO.searchMenuItem", map);
 	}
 	
-	
 	public PortalTBLThemeGeneralVO getThemeInfo (Map<String, Object> map) {
 		return (PortalTBLThemeGeneralVO) select("EzPortalDAO.getThemeInfo", map);
 	}
@@ -233,6 +232,10 @@ public class EzPortalDAO extends EgovAbstractDAO {
 		return (PortalImagePortletVO) select("EzPortalDAO.imagePortlet", map);
 	}
 	
+	public String getLogoHtml (Map<String, Object> map) {
+		return (String) select("EzPortalDAO.getLogoHtml", map);
+	}
+	
 	public String getTopMenuConfigItem(Map<String, Object> map) {
 		return (String) select("EzPortalDAO.getTopMenuConfigItem", map);
 	}
@@ -259,10 +262,6 @@ public class EzPortalDAO extends EgovAbstractDAO {
 	
 	public String useStartPageChack2 (Map<String, Object> map) {
 		return (String) select("EzPortalDAO.useStartPageChack2", map);
-	}
-	
-	public String getLogoHtml (Map<String, Object> map) {
-		return (String) select("EzPortalDAO.getLogoHtml", map);
 	}
 	
 	public String getPortalConfigItem (Map<String, Object> map) {

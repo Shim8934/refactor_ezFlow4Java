@@ -37,7 +37,7 @@
 				newPage = parseInt(sCurPage) - 1;
 				
 				if(newPage > 0) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + make_searchstring('${query}') + "&page=" + newPage.toString();
+					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
 				}
 			}
 	
@@ -45,13 +45,13 @@
 				newPage = parseInt(sCurPage) + 1;
 				
 				if(newPage <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + make_searchstring('${query}') + "&page=" + newPage.toString();
+					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
 				}
 			}
 	
 			function moveToPage(sCurPage) {
 	            if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + make_searchstring('${query}') + "&page=" + sCurPage;
+					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + sCurPage;
 				}
 			}
 			
@@ -77,7 +77,7 @@
 					return;
 				}
 				
-				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + strSelect + "&query=" + encodeURI(make_searchstring(strQuery));
+				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
 			}
 			
 			function openinfo_userinfo(pCN) {

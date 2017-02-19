@@ -2039,6 +2039,21 @@
 		]]>
 	</update>
 	
+	<update id="EzPortalAdminDAO.updateSubMenuItemSetOrder" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_MENUITEM_ITEMS_MENUITEMS_S
+			SET 
+				COLUMNPOS = #columnPos#
+			WHERE 
+				UID_ = #uID#
+			AND
+				OWNERPAGEID = #ownerPageID#
+			AND
+				TENANT_ID = #tenantID#				  
+		]]>
+	</update>
+	
 	<delete id="EzPortalAdminDAO.deleteTopMenuItems2" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM

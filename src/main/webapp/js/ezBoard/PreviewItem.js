@@ -23,6 +23,7 @@ function PreviewRayerChange(pGubun) {
     pGubun = pGubun.trim();
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
         ItemPreviewRead(selobj);
+
     if (pGubun == "OFF")
         pGubun = "NONE";
     if (clickPreviweType == "PHOTO") {
@@ -36,7 +37,7 @@ function PreviewRayerChange(pGubun) {
         return;
     }
     try {
-        if(document.getElementById("previewmail_bar_h") != null)
+        if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
 
         if ((pGubun == "H" || pGubun == "W") && selobj != null) {
@@ -74,6 +75,7 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("ResizeBarW").style.width = (CurrenWidth - 10) + "px";
             pMailListHeightW = parseInt(CurrentHeight * (pMailListDiv / 100));
             pMailPreHeightW = parseInt(CurrentHeight * (pMailPreVDiv / 100));
+
             document.getElementById("MailListRayer").style.width = "100%";
             document.getElementById("PreviewRayerW").style.width = "100%";
             document.getElementById("MailListRayer").style.height = pMailListHeightW + "px";
@@ -134,7 +136,7 @@ function PreviewRayerChange(pGubun) {
             document.getElementById("divList").style.overflow = "auto";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
             pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -163,7 +165,7 @@ function PreviewRayerChange_photo(pGubun) {
             pGubun = "H";
         }
         if (pGubun == "NONE")
-            SetConfig = true;
+            SetConfig = false;
 
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "default";
@@ -233,7 +235,7 @@ function PreviewRayerChange_photo(pGubun) {
         isPreviewChange = false;
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        if(SetConfig)
+        if (SetConfig)
             Set_BoardConfig();
 
     } catch (e) { }
@@ -316,20 +318,21 @@ var ContentLocation;
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
         if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
-            if (document.getElementById("PreViewBottom") != null){
-            	document.getElementById("PreViewBottom").style.display = "none";
-            }
-            if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-                alert(strLang73);
+            var xmldom = loadXMLString(xmlhttp.responseText)
+            if (document.getElementById("PreViewBottom") != null)
+                document.getElementById("PreViewBottom").style.display = "none";
+            if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
+                alert(StringLang999);
                 return;
             }
-            WriterID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterID");
-            WriterName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterName");
-            WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
-            WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
-            var WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
-            var Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
-            ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
+            var WriterName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterName");
+            var WriterDeptName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterDeptName");
+            var WriterCompanyName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterCompanyName");
+            var WriteDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriteDate");
+            var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
+            var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
+
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -346,7 +349,13 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
             var pOCS = "";
-            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
+            if (USE_OCS == "YES") {
+                if ((BroswerAndNonActiveXCheck() == "IE")) {
+                    var pSIPUri = getSIPUri(GetAttribute(selobj, "DATA3"));
+                    pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pSIPUri + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
+                }
+            }
+            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + GetAttribute(selobj, "DATA3").trim() + "\")'>" + WriterName + "</span>";
 
             if (document.getElementById('ifrmPreViewH') != null) {
                 document.getElementById('ifrmPreViewH_photo').style.display = "";
@@ -355,16 +364,19 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById('ifrmPreViewW').style.display = "none";
             }
 
+            if (SelectSingleNodeValueNew(xmldom, "DATA") == "NOVIEW") {
+                alert(strLang55);
+                return;
+            }
 
-            document.getElementById("PreH_sub_subject").textContent = Title;
+            setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
-            document.getElementById("PreH_date").textContent = WriteDate;
-            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURI(ContentLocation);
+            setNodeText(document.getElementById("PreH_date"), WriteDate);
+            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURIComponent(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
             else
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
-            
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
 
         }
     }
@@ -437,7 +449,8 @@ function previewItemSet() {
 			async : true,
 			url : "/ezCommon/mhtToHTMLContent.do",
 			data : { type   	 : boardType, 
-					 itemID 	 : ItemID
+					 itemID 	 : ItemID,
+					 href        : ContentLocation
 				   },
 			success: function(result){
 				event_downContent(result, xmlhttp2.responseText);
@@ -839,6 +852,7 @@ function ListCount(pCount) {
     selobj = null;
     MailOptionHidden();
     Set_BoardConfig();
+    CurPage = 1;
     getBoardList();
     
 }

@@ -1398,13 +1398,13 @@ System.out.println("=================================== model end");
         NodeList attendantDeptName 	= doc.getElementsByTagName("ATTENDANTDEPTNAME");
         NodeList attendantDeptName2 = doc.getElementsByTagName("ATTENDANTDEPTNAME2");
    
-	        if (pattern.equals("0")) {
+	    if (pattern.equals("0")) {
         	repetition = "";
         }        
         
         String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
   
-	        if (scheduleid == null || scheduleid.equals("")) {
+	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId());
@@ -1543,7 +1543,7 @@ System.out.println("=================================== model end");
 	 * 일정작성 > 인쇄
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleContentsPirnt.do")
-	public String scheduleContentsPirnt(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+	public String scheduleContentsPirnt(Model model, HttpServletRequest request) throws Exception {
 		String type = request.getParameter("type");
 		String printOwner = request.getParameter("printOwner");
 		String printCreator = request.getParameter("printCreator");
@@ -1573,6 +1573,55 @@ System.out.println("=================================== model end");
 		model.addAttribute("printDocument", printDocument);
 		
 		return "ezSchedule/scheduleContentsPirnt";
+	}
+	
+	/**
+	 * 일정작성 > 일정상세 팝업
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleRead.do")
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO) throws Exception {		
+        String _parentid;
+        String _ownerid;
+        String _creatorid;
+        String _modifierid;            
+        String _content;
+        String _contentpath = "";
+        String _isreadonly;
+        String _title = "";
+        String _repeatcount = "0";
+        String _admin = "Y";
+        String groupname = "";
+        boolean _isMeCreate = true;
+        String _stype;
+        String _changekey;        
+        String endDateString = "";
+        String startDateString = "";
+        String allDayString = "";
+        String recurringPattern = "";
+        String recurringLabelText = "";        
+        String s_DateForAttandant = "";
+        String e_DateForAttandant = "";        
+        String hasattach = null;        
+        double OffsetHour = 0;
+        double offsetMin = 0;
+        
+        loginVO = commonUtil.userInfo(loginCookie);
+        
+        String Use_Editor = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
+        String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+        String otherid = request.getParameter("otherid");
+        String pageFrom = request.getParameter("pageFrom");
+        String _scheduleid = request.getParameter("id");
+        String _datetype = request.getParameter("datetype");
+        String _scheduletype = request.getParameter("type");
+        String _pattern = request.getParameter("pattern");
+        
+        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());
+        
+        model.addAttribute("scheduleInfo", vo);
+        model.addAttribute("_scheduletype", _scheduletype);        
+        
+		return "ezSchedule/scheduleRead";
 	}
 	
 //    // 일정 업데이트

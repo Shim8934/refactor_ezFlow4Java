@@ -673,7 +673,8 @@ System.out.println("=========================================================== 
 System.out.println("======================================================== service start");		
 		
 		//본문내용 MHT 저장
-		String contentPath = defaultPath + commonUtil.separator + "doc";
+		String mhtPath = commonUtil.separator + "doc";
+		String contentPath = defaultPath + mhtPath;
 		File file = new File(contentPath);
 
 		if (!file.exists()) {			
@@ -685,8 +686,8 @@ System.out.println("======================================================== ser
 		int sID = 0;
 		
 		try {
-System.out.println("======================================================== service 1");		
-			contentPath += commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+			String schedulePath = commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + ".mht";
+			contentPath += schedulePath;
 
 			byte[] ct = Base64.decode(content);
 			stream = new ByteArrayInputStream(ct);
@@ -712,6 +713,8 @@ System.out.println("======================================================== ser
 				hasattendant = "Y";
 			}			
 			//일정 정보 저장
+			schedulePath = mhtPath + schedulePath;
+			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
 			map.put("v_OWNERID", ownerid);
@@ -729,7 +732,7 @@ System.out.println("======================================================== ser
 			map.put("v_REPETITION", repetition);
 			map.put("v_TITLE", title);
 			map.put("v_LOCATION", location);
-			map.put("v_CONTENTPATH", contentPath);
+			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
 			
 			ezScheduleDAO.insertSchedule(map);			

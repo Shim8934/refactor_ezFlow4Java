@@ -4,7 +4,6 @@
 <html>
 	<head>
 	    <title></title>
-	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
@@ -143,7 +142,8 @@
 	
 	            for (i = 0; i < xmldomNodes.length; i++) {
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	                filename = filepath.substr(filepath.indexOf("}_") + 2);
+	            	filename = filepath.substr(120, filepath.length - 119);
+// 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
 	                filename = ReplaceText(filename, "%2b", "+");
 	                filename = ReplaceText(filename, "%3b", ";");
 	                filename = ReplaceText(filename, "%7e", "~");
@@ -159,12 +159,12 @@
 	                   strFileExt == ".xlsx" || strFileExt == ".rtf") {
 	                    strTarget = "target=''";
 	                }
-	
+	                
 	                strAttach += "<li>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
+	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
 	                strAttach += "&nbsp;";
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID")) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }

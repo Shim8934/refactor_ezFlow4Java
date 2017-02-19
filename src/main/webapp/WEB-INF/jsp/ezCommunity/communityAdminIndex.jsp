@@ -8,7 +8,7 @@
 		<title>Community <spring:message code = 'ezCommunity.t565' /></title>
 	</head>
 	<frameset cols="192,*" frameborder="NO" border="0" framespacing="0">
-		<frame name="left" scrolling="NO" noresize src="/ezCommunity/adminLeft.do?code=<c:out value = '${code}' />&num=<c:out value ='${num}' />" marginwidth="0" marginheight="0">
+		<frame name="left" scrolling="NO" noresize src="/ezCommunity/adminLeft.do?code=<c:out value = '${code}' />&num=<c:out value ='${num}' />" marginwidth="0" marginheight="0" scrolling="auto">
 		<frame name="right" src="/ezCommunity/adminBasic.do?code=<c:out value = '${code}' />&flag=<c:out value = '${flag}' />" marginwidth="0" marginheight="0" scrolling="auto" frameborder="NO">
 	</frameset>
 	<noframes>

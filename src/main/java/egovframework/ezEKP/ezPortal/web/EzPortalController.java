@@ -1823,6 +1823,655 @@ public class EzPortalController extends EgovFileMngUtil {
 		return "/ezPortal/theme1/portalTheme1WpThemeBirth";
 	}
 	
+	/**
+	 * 포탈 - webPart 테마1 게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBoard.do")
+	public String theme1wpThemeBoard(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemeBoard started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pBoardType = "";
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("pBoardType", pBoardType);
+		
+		logger.debug("theme1wpThemeBoard ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeBoard";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 설문 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePoll.do")
+	public String theme1wpThemePoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("theme1wpThemePoll started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String votePoll = "";
+		int pPollItemSeq = 0;
+		String pPollTitle = "";
+		
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		if (result != null) {
+			if (result.getResult() > 0) {
+				if (result.getResult() != 0) {
+					votePoll = Integer.toString(result.getResult());
+				}
+			} else {
+				votePoll = "";
+			}	
+			
+			if (result.getItemSeq() > 0) {
+				if (result.getItemSeq() != 0) {
+					pPollItemSeq = result.getItemSeq();
+					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+				}	
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("votePoll", votePoll);
+		model.addAttribute("pPollItemSeq", pPollItemSeq);
+		model.addAttribute("pPollTitle", pPollTitle);
+		
+		logger.debug("theme1wpThemePoll ended");
+		return "/ezPortal/theme1/portalTheme1WpThemePoll";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 포토게시판 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemePhoto.do")
+	public String theme1wpThemePhoto(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("theme1wpThemePhoto started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pPhotoGalleryID = "";
+		
+		if (req.getParameter("photoGalleryID") != null && !req.getParameter("photoGalleryID").equals("")) {
+			pPhotoGalleryID = req.getParameter("photoGalleryID");
+		}
+		
+		String boardString = ezBoardService.getThumbListXML(userInfo, "4", pPhotoGalleryID, 1, "", "");
+		logger.debug("boardString="+boardString);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(boardString);
+		StringBuilder sb = new StringBuilder();
+		
+		if (xmlDom.getElementsByTagName("ROW").getLength() > 0) {
+			sb.append("<div id=\"content_1\" class=\"photocont\">");
+			sb.append("<div class=\"images_container\" id=\"images_container\">");
+            
+			for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+				String imgSrc = xmlDom.getElementsByTagName("FILEPATH").item(i).getTextContent();
+				String itemID = xmlDom.getElementsByTagName("ITEMID").item(i).getTextContent();
+				String boardID = xmlDom.getElementsByTagName("BOARDID").item(i).getTextContent();
+				
+				if (i % 2 == 0) {
+					sb.append("<ul>");
+					sb.append("<li>");
+					sb.append("<img style=\"cursor:pointer;\" onclick=\"ItemRead_onclick(this)\" src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+                    
+					sb.append("</li>");
+                    if (i == (xmlDom.getElementsByTagName("ROW").getLength() - 1)) {
+                    	sb.append("</ul>");
+                    }
+				} else {
+					sb.append("<li>");
+					sb.append("<img style='cursor:pointer;' onclick='ItemRead_onclick(this)' src=\"" + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + boardID + "&FILENAME=" + imgSrc.split("/")[imgSrc.split("/").length - 1] + "\" width=\"65\" height=\"65\" onclick=\"ItemRead_onclick(this)\" DATA1=\"" + boardID + "\" DATA2=\"" + itemID + "\">");
+					sb.append("</li>");
+					sb.append("</ul>");
+				}
+			}
+			sb.append("</div>");
+			sb.append("</div>");
+			
+		} else {
+			sb.append("<div class=\"nodata_h\">");
+            sb.append("<p><img src=\"/images/kr/theme01/main/nodata_gray.png\" ></p>");
+            sb.append("<p>" + egovMessageSource.getMessage("main.t00026", locale) + "</p>");
+            sb.append("</div>");
+		}
+		
+		logger.debug("strHTML="+sb.toString());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strHTML", sb.toString());
+		
+		logger.debug("theme1wpThemePhoto ended");
+		return "/ezPortal/theme1/portalTheme1WpThemePhoto";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 커뮤니티 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeComm.do")
+	public String theme1wpThemeComm(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("theme1wpThemeComm started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useIE11Browser", config.getProperty("config.IE11EDITOR"));
+		
+		logger.debug("theme1wpThemeComm ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeComm";
+	}
+	
+	/**
+	 * 포탈 - webPart 테마1 배너 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/wpThemeBanner.do")
+	public String theme1wpThemeBanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("theme1wpThemeBanner started");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String langType = "kr";
+		
+		switch (userInfo.getLang()) {
+            case "1": langType = "kr"; break;
+            case "2": langType = "us"; break;
+            case "3": langType = "jp"; break;
+            case "4": langType = "cn"; break;
+            default:
+                break;
+        }
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("langType", langType);
+		
+		logger.debug("theme1wpThemeBanner ended");
+		return "/ezPortal/theme1/portalTheme1WpThemeBanner";
+	}
+	
+	/**
+	 * 포탈 - 테마1 포탈페이지 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/portalPage.do")
+	public String theme1PortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("theme1PortalPage started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String langPrimary = "";
+		String langSecondary = "";
+		String mode = "";
+		String pageID = "";
+		String parentPageID = "";
+		String myPortalPageID = "";
+		String editMode = "";
+		String viewMode = "";
+		String skinType = "";
+		String pClassID = "";
+		String pClassName = "";
+		String theme = "THEME1";
+		String tableViewOption = "D";
+		String strHTML = "";
+		String width = "";
+		String height = "";
+		String baseType = "";
+		String displayName = "";
+		String displayName2 = "";
+		String pSelectThemeUID = "";
+		String pThemeSelectObject = "";
+		String gubunFlag = "";
+		String portalPageCategoryXML = "";
+		String langType = "kr";
+		
+		switch (userInfo.getLang()) {
+            case "1": langType = "kr"; break;
+            case "2": langType = "us"; break;
+            case "3": langType = "jp"; break;
+            case "4": langType = "cn"; break;
+            default:
+                break;
+        }
+		
+		langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		mode = "edit";
+		
+		// 페이지 ID
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
+			pageID = req.getParameter("pageID");
+		} else {
+			pageID = UUID.randomUUID().toString();
+		}
+		
+		// 부모 페이지 ID
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		} else {
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("")) {
+				parentPageID = ezPortalService.getPortalConfigItem("ParentUID", pageID, userInfo.getTenantId()); 
+			} else {
+				parentPageID = "top";
+			}
+		}
+		
+		// 마이포탈페이지 ID
+		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
+			myPortalPageID = req.getParameter("myPortalPageID");
+		}
+		
+		if (req.getParameter("mode") != null && !req.getParameter("mode").trim().equals("")) {
+			mode = req.getParameter("mode");
+		}
+		
+		if (mode.equals("edit")) {
+			// 상속된경우
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").trim().equals("") && req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("")) {
+				if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").trim().equals("") && req.getParameter("pageID") != null && !req.getParameter("pageID").trim().toLowerCase().equals("top")) {
+					editMode = "new_inherit";
+				}
+			}
+		}
+		
+		// 미리보기
+		if (req.getParameter("viewMode") != null &&  !req.getParameter("viewMode").trim().equals("")) {
+			viewMode = req.getParameter("viewMode");
+		}
+		
+		// 스킨폴더 정의
+		Cookie[] cookies = req.getCookies();
+		String skinCookieValue = "";
+		if (cookies != null) {
+			for (int i=0; i<cookies.length; i++) {
+				if (cookies[i].getName().equals("skinNum")) {
+					skinCookieValue = cookies[i].getValue();
+				}
+			}
+		}
+		
+		if (skinCookieValue == null || skinCookieValue.equals("")) {
+			Cookie skinCookie = new Cookie("skinNum", "1");
+			resp.addCookie(skinCookie);
+		}
+		
+		skinType = skinCookieValue;
+		
+		if (skinType == null || skinType.equals("")) {
+			skinType = "1";
+		}
+		skinType = "skin_" + skinType;
+		
+		// 미리보기인 경우 자기의 캐쉬정보를 삭제한다.
+		if (viewMode.equals("preview")) {
+			ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
+		}
+		
+		// 부문홈에서 호출한 경우 부문홈ID
+		if (req.getParameter("pClassID") != null && !req.getParameter("pClassID").trim().equals("")) {
+			pClassID = req.getParameter("pClassID");
+			pClassName = req.getParameter("pClassName").replace("\"", "\\\"");
+		}
+		
+		// 부문포탈에서 호출한 경우 USERID, DISPLAYNAME 노드를 부문포탈의 정보로 변경
+		if (pClassID != null && !pClassID.trim().equals("")) {
+			userInfo.setId(pClassID);
+			userInfo.setDisplayName1(pClassName);
+		}
+		
+		// 새로만들기
+		if (ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()) != null && !ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("")) {
+			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
+			logger.debug("tavleViewOption="+tableViewOption);
+		} else {
+			tableViewOption = "D";
+			logger.debug("tavleViewOption2="+tableViewOption);
+		}
+		
+		if (mode.trim().equals("new")) {
+			strHTML = ezPortalService.getDefaultPortalPage();
+		} else {  // 읽기, 편집: 본문HTML, width, height정보를 가져온다
+			if (editMode.equals("new_inherit")) {
+				logger.debug("new_inherit");
+				strHTML = ezPortalService.getRenderedPortalPageHTML(parentPageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()), userInfo.getTenantId());
+				logger.debug("strHTML="+strHTML);
+			} else {
+				logger.debug("no new_inherit");
+				strHTML = ezPortalService.getRenderedPortalPageHTML(pageID, "", mode, userInfo, theme, tableViewOption,userInfo.getTenantId());
+				width = ezPortalService.getPortalConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+				height = ezPortalService.getPortalConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()), userInfo.getTenantId());
+				baseType = ezPortalService.portalPageBaseType(pageID, userInfo.getCompanyID(), userInfo.getTenantId());
+				logger.debug("strHTML="+strHTML);
+			}
+		}
+		
+		if (width == null || width.equals("") || width.equals("-1") || width.equals("0")) {
+			width = "100%";
+		}
+		
+		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
+			height = "100%";
+		}
+		
+		if (mode != null && !mode.equals("view")) {
+			displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
+			displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
+			pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
+			pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
+			
+			//신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
+			if (editMode != null && editMode.equals("new_inherit")) {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
+			} else {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
+			}
+			
+			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
+			portalPageCategoryXML = "<DATA>";
+			for (PortalTBLPortalPageCategoryVO result : list) {
+				portalPageCategoryXML += commonUtil.getQueryResult(result);
+			}
+			portalPageCategoryXML += "</DATA>";
+			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
+			
+		}
+		
+		model.addAttribute("strHTML", strHTML);
+		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("mode", mode);
+		model.addAttribute("parentPageID", parentPageID);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("baseType", baseType);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("pSelectThemeUID", pSelectThemeUID);
+		model.addAttribute("gubunFlag", gubunFlag);
+		model.addAttribute("myPortalPageID", myPortalPageID);
+		model.addAttribute("portalPageCategoryXML", portalPageCategoryXML);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("editMode", editMode);
+		model.addAttribute("tableViewOption", tableViewOption);
+		model.addAttribute("langType", langType);
+
+		logger.debug("theme1PortalPage ended");
+		return "/ezPortal/portalTheme1PortalPage";
+		//return "/ezPortal/portalPortalPage";
+	}
+	
+	/**
+	 * 포탈 상단 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/theme1/topMenu.do")
+	public String theme1topMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		String strHTML = "";
+		String pageID = "";
+		String parentPageID = "";
+		String mode = "";
+		String editMode = "";
+		String viewMode = "";
+		String displayName = "";
+		String displayName2 = "";
+		String width = "";
+		String height = "";
+		//String password;
+		String skinNum = "1";
+		//String skinBgFlag = "";
+		//String skinBgColor = "";
+		//String skinBgImage = "";
+		//String skinFontColor = "";
+		//String skinFontOverColor = "";
+		//String skinBgString = "";
+		String skinExist = "NO";
+		String result = "";
+		//String portalMenuID = "";
+		//String portalMenuXml = "";
+		//int pollNum = 0;
+		String script1 = "";
+		//String currSkin = "";
+		String langPrimary = "";
+		String langSecondary = "";
+		String theme = "THEME1";
+		String noneActiveX = "YES";
+		String pSelectThemeUID = "";
+		String pThemeSelectObject = "";
+		
+		langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
+		langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		mode = "edit";
+		
+		if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+			pageID = req.getParameter("pageID");
+		} else {
+			pageID = UUID.randomUUID().toString();
+		}
+
+		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
+			parentPageID = req.getParameter("parentPageID");
+		} else {
+			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
+				parentPageID = ezPortalService.getTopMenuConfigItem("ParentUID", pageID,userInfo.getTenantId());
+			} else {
+				parentPageID = "top";
+			}
+		}
+		
+		if (req.getParameter("mode") != null && !req.getParameter("mode").equals("")) {
+			mode = req.getParameter("mode");
+		}
+
+		if (mode.equals("edit")) {
+			//관리자 권한체크
+		/*	boolean auth = commonUtil.checkAdmin(loginCookie);
+			if (!auth) {
+				resp.setCharacterEncoding("UTF-8");
+				resp.setContentType("text/html; charset=UTF-8");
+				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t264", locale));
+				resp.getWriter().flush();
+			}*/
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				resp.setCharacterEncoding("UTF-8");
+				resp.setContentType("text/html; charset=UTF-8");
+				resp.getWriter().write(egovMessageSource.getMessage("ezPortal.t264", locale));
+				resp.getWriter().flush();
+			}
+			
+		}
+			
+		if (mode.equals("edit")) {
+			if ((req.getParameter("pageID") == null || req.getParameter("pageID").equals("")) && (req.getParameter("parentPageID") != null &&!req.getParameter("parentPageID").equals(""))) {
+				if (!req.getParameter("parentPageID").trim().equals("") && !req.getParameter("parentPageID").trim().toLowerCase().equals("top")) {
+					editMode = "new_inherit";
+				}
+			}
+		}
+			
+		//미리보기
+		if (req.getParameter("viewMode") != null && !req.getParameter("viewMode").equals("")) {
+			viewMode = req.getParameter("viewMode");
+		}
+			
+		//미리보기인 경우 자기의 캐쉬정보를 삭제한다
+		if (viewMode.equals("preView")) {
+			ezPortalService.deleteCacheValue(pageID, ezPortalService.getAccessList(userInfo),userInfo.getTenantId());
+		}
+
+		//스킨정보
+		if (req.getParameter("skinNum") != null && !req.getParameter("skinNum").equals("")) {
+			skinNum = req.getParameter("skinNum");
+		}
+			
+		if (userInfo.getLang().equals("1")) {
+			//currSkin = skinNum;
+			Cookie skinCookie = new Cookie("skinNum", skinNum);
+			resp.addCookie(skinCookie);
+		} else if (userInfo.getLang().equals("2")) {
+			//currSkin = skinNum + "_2";
+			Cookie skinCookie = new Cookie("skinNum", skinNum + "_2");
+			resp.addCookie(skinCookie);
+		} else if (userInfo.getLang().equals("3")) {
+			//currSkin = skinNum + "_3";
+			Cookie skinCookie = new Cookie("skinNum", skinNum + "_3");
+			resp.addCookie(skinCookie);
+		} else if (userInfo.getLang().equals("4")) {
+			//currSkin = skinNum + "_4";
+			Cookie skinCookie = new Cookie("skinNum", skinNum + "_4");
+			resp.addCookie(skinCookie);
+		}
+			
+		//새로만들기
+		if (mode.equals("new")) {
+			strHTML = ezPortalService.getDefaultTopMenu();
+		} 
+		// 열기 : 본문HTML, width, height정보를 가져온다
+		else {
+			if (editMode.equals("new_inherit")) {
+				strHTML = ezPortalService.getRenderedTopMenuHTML(parentPageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
+				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()),userInfo.getTenantId());
+				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(parentPageID,userInfo.getTenantId()),userInfo.getTenantId());
+				logger.debug("strHTML=" + strHTML);
+			} else {
+				strHTML = ezPortalService.getRenderedTopMenuHTML(pageID, "", mode, skinNum, userInfo, theme,userInfo.getTenantId());
+				width = ezPortalService.getTopMenuConfigItem("width", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()),userInfo.getTenantId());
+				height = ezPortalService.getTopMenuConfigItem("height", ezPortalService.getTopParentPageID(pageID,userInfo.getTenantId()),userInfo.getTenantId());
+				logger.debug("strHTML=" + strHTML);
+			}
+		}
+		if ((width == null  || width.equals("")) || width.equals("-1") || width.equals("0")) {
+			width = "100%";
+		}
+		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
+			height = "100%";
+		}
+		if (!mode.equals("view")) {
+			displayName = ezPortalService.getTopMenuConfigItem("DisplayName", pageID,userInfo.getTenantId());
+			displayName2 = ezPortalService.getTopMenuConfigItem("DisplayName2", pageID,userInfo.getTenantId());
+			pSelectThemeUID = ezPortalService.getTopMenuConfigItem("ThemeUID", pageID,userInfo.getTenantId());
+			List<PortalGetThemeListVO> list = ezPortalService.getThemeList(userInfo.getCompanyID(), userInfo.getTenantId());
+			String xmlStr = "<DATA>";
+			for (int i=0; i<list.size(); i++) {
+				xmlStr += commonUtil.getQueryResult(list.get(i));
+			}
+			xmlStr += "</DATA>";
+			Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
+			
+			for (int i=0; i<list.size(); i++) {
+				if (pSelectThemeUID != null && pSelectThemeUID.equals(list.get(i).getuID())) {
+					pThemeSelectObject += "<option value='" + list.get(i).getuID() + "' selected>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent() + "</option>";
+				} else {
+					pThemeSelectObject += "<option value='" + list.get(i).getuID() + "'>" + xmlDom.getElementsByTagName("DISPLAYNAME"+commonUtil.getLangData(userInfo.getPrimary())).item(i).getTextContent()+ "</option>";
+				}
+				
+			}
+			
+		}
+			
+		//사용자 영역에서만 팝업 공지사항을 오픈한다.
+		if (mode.equals("view") && !viewMode.equals("preview")) {
+			// 팝업 공지사항
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			
+			String popUp = "";
+			int popUpWidth = 0;
+			int popUpHeight = 0;
+			String popUpPosition = "";
+			String cookieValue = "";
+			for (int i=0; i<infoList.size(); i++) {
+				int itemSeq = infoList.get(i).getItemSeq();
+				Cookie[] cookies = req.getCookies();
+				if (cookies != null) {
+					for (int j=0; j<cookies.length; j++) {
+						if (cookies[j].getName().equals("POPUP_"+itemSeq)) {
+							cookieValue = cookies[j].getValue();
+						}
+					}
+					if (cookieValue == null || cookieValue.equals("")) {
+						popUpWidth = infoList.get(i).getWidth();
+						popUpHeight = infoList.get(i).getHeight();
+						popUpPosition = infoList.get(i).getPosition();
+						popUp += "openPopup(" + itemSeq + ", " + popUpWidth + ", " + popUpHeight + ", " + popUpPosition + ");";
+					}
+				}
+			
+				
+			}
+			
+			if (popUp != null && !popUp.equals("")) {
+				script1 = "<script language='javascript'>" + popUp + "</script>";
+			}
+			
+			//스킨정보
+			
+			//권한체크
+			result = ezPortalService.ezAclCheck(userInfo.getId(), userInfo.getCompanyID(), userInfo.getCompanyName1(),userInfo.getTenantId());
+			logger.debug("ezAclCheck="+result);
+			String ezCKAdminACL = ezPortalService.ezCkAdminACL(pageID,userInfo.getLang());
+			logger.debug("ezCKAdminACL="+ezCKAdminACL);
+			logger.debug("pageID="+pageID);
+			
+		/*	if (result.equals("3")) {
+				//삭제 쿼리 실행
+				if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) != null && !ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
+					ezPortalService.deleteTBLPortalACL(ezCKAdminACL, userInfo.getId());
+				}
+				
+			} else {
+				//체크 쿼리
+				if (ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()) == null || ezPortalService.selectTBLPortalACL(ezCKAdminACL, userInfo.getId()).equals("")) {
+					ezPortalService.insertTBLPortalACL(ezCKAdminACL, userInfo.getId());
+				} else {
+					ezPortalService.updateTBLPortalACL(ezCKAdminACL, userInfo.getId());
+				}
+			}*/
+			
+			
+				//체크, 삭제 쿼리 실행
+			ezPortalService.ezCkAdminACL(userInfo.getId(), pageID, result, userInfo.getLang(), userInfo.getTenantId());
+			
+			strHTML = strHTML.replace("table-layout:fixed;", "");
+			
+			if (!mode.equals("edit") || !mode.equals("view")) {
+				mode = "view";
+			}
+			
+		}
+		
+		//jgw 관리자체크
+		/*boolean checkAdmin = commonUtil.checkAdmin(loginCookie);*/
+		/*model.addAttribute("checkAdmin", String.valueOf(checkAdmin));*/
+		
+		LoginVO checkAdmin = commonUtil.checkAdmin(loginCookie);
+		if (checkAdmin != null) {
+			model.addAttribute("checkAdmin", "true");
+		} else {
+			model.addAttribute("checkAdmin", "false");
+		}
+		
+		//브라우저체크
+		String browser = ClientUtil.getClientInfo(req, "browser");
+		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
+		
+		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		model.addAttribute("pageID", pageID);
+		model.addAttribute("parentPageID", parentPageID);
+		model.addAttribute("editMode", editMode);
+		model.addAttribute("viewMode", viewMode);
+		model.addAttribute("strHTML", strHTML);
+		model.addAttribute("displayName", displayName);
+		model.addAttribute("displayName2", displayName2);
+		model.addAttribute("langPrimary", langPrimary);
+		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("mode", mode);
+		model.addAttribute("noneActiveX", noneActiveX);
+		model.addAttribute("skinExist", skinExist);
+		model.addAttribute("script1", script1);
+		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
+	
+		return "/ezPortal/theme1/portalTheme1TopMenu";
+	}
 	
 	/**
 	 * 포탈 - 환경설정 메인 화면 호출 함수
@@ -2412,14 +3061,19 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portalPageACL.do")
 	public String portalPageACL(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("portalPageACL started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		String uID = "";
+		
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
+		
 		List<PortalTBLPortalACLVO> list = ezPortalService.getAclItems(uID, userInfo.getTenantId());
 		model.addAttribute("list", list);
 		model.addAttribute("uID", uID);
+
+		logger.debug("portalPageACL ended");
 		return "/ezPortal/portalPortalPageACL";
 	}
 	

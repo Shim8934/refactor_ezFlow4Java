@@ -189,9 +189,10 @@
 	            OWNERNAME,
 	            OWNERNAME2,
 	            (A.CREATEDATE + #v_OFFSETMIN#/(24*60)) AS CREATEDATE,
-	            TBLSCHEDULE.CREATORNAME,
-	            TBLSCHEDULE.CREATORNAME2,
-	            TBLSCHEDULE.CREATEDATE,
+	            A.CREATORID,
+	            A.CREATORNAME,
+	            A.CREATORNAME2,
+	            A.CREATEDATE,
 	            MODIFIERID,
 	            MODIFIERNAME,
 	            MODIFIERNAME2,
@@ -211,9 +212,9 @@
 	            TITLE,
 	            LOCATION,
 	            CONTENTPATH,
-	            GROUPNAME 
+	            GROUPNAME	           
 			FROM 
-				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID
+				TBL_SCHEDULE A LEFT JOIN TBL_SCHEDULEGROUP B ON A.OWNERID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
 	       	WHERE  
 	       		A.SCHEDULEID = #v_SCHEDULEID#
 	       	AND

@@ -735,7 +735,6 @@
 			{CALL EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-	
 	<select id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
 		<isEqual property="v_pResYN" compareValue="Y">
 			<![CDATA[
@@ -743,84 +742,67 @@
 					*
 				FROM
 					(SELECT
-						*
-					FROM
-						(SELECT
-							responseuser_id AS user_id, 
-                			MAX(responseuser_name$v_pLang$) AS user_name,
-							MAX(responseuser_email) AS user_email,
-							MAX(responseuser_dept_id) AS user_dept_id, 
-							MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
-							MAX(responseuser_position$v_pLang$) AS user_position, 
-							MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
-							MAX(responseuser_gender) AS user_gender,
-							MAX(responseuser_age) AS user_age,
-							MAX(response_date) AS RESPONSE_DATE 
-                		FROM
-                			TBL_POLL_RESPONSE  
-                		WHERE
-                			brd_id = #v_pstrBrdID#
-                		AND
-                			item_no = #v_pItemNo#
-                		AND
-                			tenant_id = #tenantID#
-						GROUP BY
-							responseuser_id
-                		) P
+						responseuser_id AS user_id, 
+						MAX(responseuser_name$v_pLang$) AS user_name,
+						MAX(responseuser_email) AS user_email,
+						MAX(responseuser_dept_id) AS user_dept_id, 
+						MAX(responseuser_dept_name$v_pLang$) AS user_dept_name,
+						MAX(responseuser_position$v_pLang$) AS user_position, 
+						MAX(responseuser_jikgub$v_pLang$) AS user_jikgub,
+						MAX(responseuser_gender) AS user_gender,
+						MAX(responseuser_age) AS user_age,
+						MAX(response_date) AS RESPONSE_DATE 
+	                FROM
+						TBL_POLL_RESPONSE  
 					WHERE
-                		ROWNUM <= #v_pTotalCnt# 
-					ORDER BY
-						P.response_date DESC
-					) K
+						brd_id = #v_pstrBrdID#
+					AND
+						item_no = #v_pItemNo#
+					AND
+						tenant_id = #tenantID#
+					GROUP BY
+						responseuser_id
+					) P
 				WHERE
-					ROWNUM <= #v_pPageSize# 
+               		ROWNUM BETWEEN #mariaStart# + 1 AND #mariaStart# + 1 + #v_pPageSize# 
 				ORDER BY
-					K.response_date ASC
+					P.response_date DESC
 			]]>
 		</isEqual>
 		
 		<isNotEqual property="v_pResYN" compareValue="Y">
 			<![CDATA[
 				SELECT
-					*
+						*
 				FROM
 					(SELECT
-						*
+						user_id,
+						user_nm$v_pLang$ AS user_name,
+						user_email,
+						user_dept_id,	
+						user_dept_nm$v_pLang$ AS user_dept_name,
+						user_pos$v_pLang$ AS user_position,
+						user_jikgub$v_pLang$ AS user_jikgub,
+						user_gender,
+						user_age,
+						response_date
 					FROM
-						(SELECT
-							user_id,
-                        	user_nm$v_pLang$ AS user_name,
-                        	user_email,
-                        	user_dept_id,	
-                        	user_dept_nm$v_pLang$ AS user_dept_name,
-					        user_pos$v_pLang$ AS user_position,
-					        user_jikgub$v_pLang$ AS user_jikgub,
-					        user_gender,
-					        user_age,
-					        response_date
-                        FROM
-                        	TBL_POLL_RESPONSEPERSON 
-                        WHERE
-                        	brd_id = #v_pstrBrdID#
-                        AND
-                        	item_no = #v_pItemNo#
-                        AND
-                        	response_date IS NULL
-                        AND
-                        	tenant_id = #tenantID#
-						) P
+						TBL_POLL_RESPONSEPERSON 
 					WHERE
-                		ROWNUM <= #v_pPageSize#
-					ORDER BY
-                		P.user_id DESC
-                	) K
+						brd_id = #v_pstrBrdID#
+					AND
+						item_no = #v_pItemNo#
+					AND
+						response_date IS NULL
+					AND
+						tenant_id = #tenantID#
+					) P
 				WHERE
-               		ROWNUM <= #v_pTotalCnt# 
-				ORDER BY
-					K.user_id ASC
+               		ROWNUM BETWEEN #mariaStart# + 1 AND #mariaStart# + 1 + #v_pPageSize# 
+               	ORDER BY
+               		P.user_id DESC
 			]]>
 		</isNotEqual>
-		
 	</select>
 	
 	<!-- <procedure id="EzQuestionDAO.getObjQuestion" parameterClass="Map" resultMap="objQuestion">
@@ -1879,41 +1861,38 @@
 			{CALL EZSP_CALLINSERTPOLLRESPONSEP_1(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#)}
 		]]>
 	</procedure> -->
-	
-	<insert id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map">
-		<selectKey keyProperty="v_temp" resultClass="Integer">
-			<![CDATA[
+	<select id="EzQuestionDAO.callInsertPollResponsep" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
 				SELECT
 					1
 		        FROM
 		        	DUAL
        			WHERE
-       				NOT EXISTS (SELECT
-       										BRD_ID ,
-                                 			ITEM_NO ,
-                                 			USER_ID 
-                          				FROM
-                          					TBL_POLL_RESPONSEPERSON 
-                           				WHERE
-                           					BRD_ID = #v_pstrBrdID#
-                                    	AND
-                                    		ITEM_NO = #v_pItemNo#
-                                    	AND
-                                    		USER_ID = #v_pUserID#
-                                    	AND
-                                    		TENANT_ID = #tenantID#	)
-			]]>
-		</selectKey>
-		
-		<isEqual property="v_temp" compareValue="1">
-			<![CDATA[
-				INSERT INTO
-					TBL_POLL_RESPONSEPERSON
-     				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID)
-     			VALUES
-     				(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID#)
-			]]>
-		</isEqual>
+       				NOT EXISTS
+						(SELECT
+							BRD_ID ,
+							ITEM_NO ,
+							USER_ID 
+						FROM
+							TBL_POLL_RESPONSEPERSON 
+						WHERE
+							BRD_ID = #v_pstrBrdID#
+						AND
+							ITEM_NO = #v_pItemNo#
+						AND
+							USER_ID = #v_pUserID#
+						AND
+							TENANT_ID = #tenantID#)
+		]]>
+	</select>
+	
+	<insert id="EzQuestionDAO.callInsertPollResponsep1" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_POLL_RESPONSEPERSON
+   				(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, USER_DEPT_ID, USER_DEPT_NM, USER_DEPT_NM2, USER_POS, USER_POS2, TENANT_ID)
+   			VALUES
+   				(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNm#, #v_pUserNm2#, #v_pUserEmail#, #v_pUserDeptID#, #v_pUserDeptNM#, #v_pUserDeptNM2#, #v_pUserPOS#, #v_pUserPOS2#, #tenantID#)
+		]]>
 	</insert>
 	
 	<!-- <procedure id="EzQuestionDAO.callInsertPollResponseper" parameterClass="Map" >

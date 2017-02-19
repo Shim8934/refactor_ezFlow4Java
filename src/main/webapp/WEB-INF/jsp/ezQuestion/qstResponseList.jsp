@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<c:choose>
-			<c:when test="${responseYN==Y }">
+			<c:when test="${responseYN=='Y' }">
 				<title><spring:message code='ezQuestion.t335' /></title>
 			</c:when>
 			<c:otherwise>
@@ -33,7 +33,7 @@
 			var szQuestionNo = "<c:out value='${questionNo}'/>";
 			var pResponse_YN = "<c:out value='${responseYN}'/>";
 			var pTotalPage = "<c:out value='${pTotalPage}'/>";
-			var CurPage = "<c:out value='${pCurrPage}'/>";
+			var CurPage = "<c:out value='${pCurPage}'/>";
 			var totalCount = "${pTotalCnt}";
 
 			document.onselectstart = function () { return false; };
@@ -108,8 +108,8 @@
 			
  			function search_Set(pPage) {
 				if (parseInt(pPage) > 0 && parseInt(pPage) != "" && parseInt(pPage) <= parseInt(pTotalPage)) {
-			    	var szUrl = "/ezQuestion/qstResultSubjective.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
-				window.location.href = szUrl;
+			    	var szUrl = "/ezQuestion/qstResponseList.do?brdID=" + szBrdID + "&itemNo=" + szItemNo + "&page=" + pPage + "&pageCount=" + "${pageCount}" + "&questionNo=" + szQuestionNo;
+					window.location.href = szUrl;
 				}
 			}
 			

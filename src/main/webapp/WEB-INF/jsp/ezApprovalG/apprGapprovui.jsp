@@ -20,7 +20,6 @@
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/html2canvas.js"></script>
-		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
 		    var OrgAprUserID		= '${uID}';
 		    var OrgAprUserName		= '${name}';
@@ -986,18 +985,15 @@
 		    	var imgUrl="";
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 		    	background:'#fff',onrendered: function(canvas) {
-				    $.ajax({
-                        type:     "post",
+		    	    $.ajax({
+                        type:"POST",
+                        dataType:"text",
                         data : {
                         	imgUrl : canvas.toDataURL("image/png"),
                         	docID: pDocID
                         },
-                        url:     "/ezApprovalG/createMailImg.do",
+                        url: "/ezApprovalG/createMailImg.do",
                         success: function (data) {
-                            try{
-                            }catch(e){                
-                                alert('server Error!!');
-                            }
                         }
                     });
 		    		  }

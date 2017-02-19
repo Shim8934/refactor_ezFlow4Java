@@ -660,7 +660,11 @@ function ListView() {
 
                 objTr.setAttribute(strData, strValue);
             }
-            oTbody.appendChild(objTr);            
+            oTbody.appendChild(objTr);
+            
+            if (!getNodeText(oDatas[5]) == "") {
+            	objTr.setAttribute("title", getNodeText(oDatas[5]));
+            }
 
             var chkbox = false;
             for (var j = 0; j < oCells.length; j++) {

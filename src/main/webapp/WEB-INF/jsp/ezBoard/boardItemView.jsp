@@ -71,7 +71,8 @@
 						async : false,
 						url : "/ezCommon/mhtToHTMLContent.do",
 						data : { type   : "BOARDCONTENT", 
-								 itemID 	 : pItemID
+								 itemID : pItemID,
+								 href   : strContentLocation 
 							   },
 						success: function(result){
 							html = result;
@@ -483,7 +484,7 @@
 		
 		            strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
 		            
-		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ filepath +"&fileName="+ filename +"'\">";
+		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ encodeURIComponent(filepath) +"&fileName="+ filename +"'\">";
 		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
@@ -567,7 +568,7 @@
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		            if (RtnVal[0] != "0" && RtnVal[1] != "0") {
 		                url = url.replace("PrintOption.do", "Print.do");
-		                url = url + "&oneline=" + RtnVal[0] + "&attach=" + RtnVal[1];
+		                url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
 		                window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 		            }
 		        }
@@ -575,7 +576,7 @@
 		    function btn_Print_Onclick_Complete(RtnVal) {
 		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
 		            url = url.replace("PrintOption.do", "Print.do");
-		            url = url + "&oneline=" + RtnVal[0] + "&attach=" + RtnVal[1];
+		            url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
 		            window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
 		        }
 		    }
@@ -764,6 +765,7 @@
 
 		        window.open("/ezBoard/boardItemView.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=720,width=1000, status = no, toolbar=no, menubar=no,scrollbars=1, location=no, resizable=1, top=0, left=0", "");
 		    }
+		    //kms 미구현
 		    function ToKMS() {
 		        var url = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezKMS/kasset/KAssetConvert.aspx?Mode=new&Flag=board&ItemID=" + pItemID + "&boardid=" + pBoardID + "&url=" + strContentLocation;
 		        window.open(url, "KAssetConvert", GetOpenWindowfeature(780, 800));

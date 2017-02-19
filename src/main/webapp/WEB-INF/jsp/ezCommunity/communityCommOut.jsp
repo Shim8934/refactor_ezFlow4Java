@@ -79,16 +79,14 @@
 		    <tr>
 		        <th><spring:message code='ezCommunity.t15'/></th>
 		        <td>
-		        
 		        	<c:choose>
 		        		<c:when test="${club.c_ClubGubun == '2' }">
 		        			<spring:message code='ezCommunity.t718'/>
 		        		</c:when>
 		        		<c:when test="${club.c_ClubGubun == '3' }">
-		        		<spring:message code='ezCommunity.t17'/>
+		        			<spring:message code='ezCommunity.t17'/>
 		        		</c:when>
 		        	</c:choose>
-		        
 		        </td>
 		    </tr>
 		    <tr>
@@ -97,7 +95,7 @@
 		    </tr>
 		</table>
 		
-		<textarea name="textarea" id="outreason" style="width: 97%;height:110px"></textarea>
+		<textarea name="textarea" id="outreason" style="width: 97%;height:110px" maxLength="200"></textarea>
 		
 		<div class="btnposition">
 			<a class="imgbtn" name="Submit" id="outok" onClick="return outok_onclick('${code}')"><span><spring:message code='ezCommunity.t719'/></span></a>

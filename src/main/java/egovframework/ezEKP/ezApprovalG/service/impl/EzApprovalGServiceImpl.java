@@ -3776,6 +3776,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
@@ -6099,6 +6100,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	end = Integer.parseInt(recordListVO.getPageSize()) * Integer.parseInt(recordListVO.getPageNO());
         	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
         }
+        
+        
         recordListVO.setEnd(end);
         recordListVO.setStart(start);
         recordListVO.setLimit(start - 1);
@@ -6749,6 +6752,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			result = "<RESULT>FALSE</RESULT>";
 		}
 		
@@ -14097,7 +14101,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID);
 		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
         int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
-
+        int querySize3 = querySize - Integer.parseInt(pageSize) ;
+        
         if (querySize2 >= Integer.parseInt(pageSize)) {
         	querySize2 = Integer.parseInt(pageSize);
         }
@@ -14127,7 +14132,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
-				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, orderOption1, orderOption2, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset);
+				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
@@ -14232,7 +14237,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	private String getSearchDocList(String containerID, String userID, String userSecurityCode, boolean publicFlag, String subQuery, String docNumber, String docTitle, String drafter,
 			String draftDeptName, String formID, String tmpStartDate1, String tmpStartDate2, String tmpEndDate1, String tmpEndDate2, String tmpProcessDate1, String tmpProcessDate2, String aprFlag,
-			String docState, int querySize, int querySize2, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID, String offset) throws Exception{
+			String docState, int querySize, int querySize2, int querySize3, String orderOption1, String orderOption2, String langType, String approvUser, String companyID, int tenantID, String offset) throws Exception{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
 		map.put("v_CONTID", containerID);
@@ -14271,6 +14276,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DOCSTATE", docState.trim());
 		map.put("v_PAGESIZE", querySize);
 		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_PAGESIZE3", querySize3);
 		map.put("v_ORDEROPTION", orderOption1);
 		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
 		
@@ -15999,7 +16005,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String moveRecord(Document xmlDom, String lang) throws Exception {
+	public String moveRecord(Document xmlDom, String lang, int tenantID) throws Exception {
 		String RecID = xmlDom.getElementsByTagName("RECORDID").item(0).getTextContent().trim();
 		String SepAttachNo = xmlDom.getElementsByTagName("SEPATTACHNO").item(0).getTextContent().trim();
 		String NewCabID = xmlDom.getElementsByTagName("NEWCABID").item(0).getTextContent().trim();
@@ -16012,11 +16018,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SEPATTNO", SepAttachNo);
 		map.put("v_CABINETID", NewCabID);
 		map.put("v_FLAG", Flag);
+		map.put("v_TENANTID", tenantID);
 		try {
 		 ezApprovalGDAO.moveRecord(map);
 			rtnVal = "<RESULT>TRUE</RESULT>";
 		} catch (Exception e) {
-			e.getStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			rtnVal = "<RESULT>FALSE</RESULT>";
 		}
 		

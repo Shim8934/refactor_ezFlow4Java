@@ -238,20 +238,17 @@
 		    	var imgUrl="";
 		    html2canvas(document.getElementById("message").contentWindow.document.getElementById("div_Content"), {
 		    	background:'#fff',onrendered: function(canvas) {
-				    $.ajax({
-                        type:     "post",
-                        data : {
-                        	imgUrl : canvas.toDataURL("image/png"),
-                        	docID: DocID
-                        },
-                        url:     "/ezApprovalG/createMailImg.do",
-                        success: function (data) {
-                            try{
-                            }catch(e){                
-                                alert('server Error!!');
-                            }
-                        }
-                    });
+		    		  $.ajax({
+	                        type:"POST",
+	                        dataType:"text",
+	                        data : {
+	                        	imgUrl : canvas.toDataURL("image/png"),
+	                        	docID: DocID
+	                        },
+	                        url: "/ezApprovalG/createMailImg.do",
+	                        success: function (data) {
+	                        }
+	                    });
 		    		  }
 		    		});
 		    var pheight = window.screen.availHeight;

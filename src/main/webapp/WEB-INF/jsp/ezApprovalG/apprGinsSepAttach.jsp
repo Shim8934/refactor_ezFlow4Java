@@ -47,7 +47,6 @@
 		            document.getElementById("listviewdiv").style.height = "500px";
 		            document.getElementById("lvList").style.height = "500px";
 		        }
-		
 		        g_SepAttchLVXml = RetValue[0];
 		        g_CabinetID = RetValue[1];
 		        if (RetValue[2])
@@ -141,11 +140,11 @@
 		            regsepattach_cross_dialogArguments[0] = para;
 		            regsepattach_cross_dialogArguments[1] = btnAddList_onclick_Complete;
 		
-		            DivPopUpShow(520, 380, url);
+		            DivPopUpShow(500, 610, url);
 		        }
 		        else {
-		            var feature = "dialogWidth:410px;dialogHeight:535px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
-		            feature = feature + GetShowModalPosition(510, 380);
+		            var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no;edge:sunken;";
+		            feature = feature + GetShowModalPosition(410, 555);
 		
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
@@ -285,6 +284,7 @@
 		        else
 		            objRow.cells[6].innerHTML = Data;
 		    }
+		    
 		    function btnModList_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
@@ -305,11 +305,11 @@
 		                regsepattach_cross_dialogArguments[0] = para;
 		                regsepattach_cross_dialogArguments[1] = btnModList_onclick_Complete;
 		
-		                DivPopUpShow(520, 380, url);
+		                DivPopUpShow(500, 610, url);
 		            }
 		            else {
 		                var feature = "dialogWidth:410px;dialogHeight:555px;scroll:no;resizable:no;status:no; help:no ";
-		                feature = feature + GetShowModalPosition(520, 380);
+		                feature = feature + GetShowModalPosition(410, 555);
 		
 		                if (url != "")
 		                    var rtn = window.showModalDialog(url, para, feature);
@@ -333,6 +333,8 @@
 		            SetLVRowData(selnode[0], "", rtn[1]);
 		        }
 		    }
+		    
+		    var selectcabinetintask_cross_dialogArguments = new Array();
 		    function btnSelectCabinet_onclick() {
 		        var pLvList = new ListView();
 		        pLvList.LoadFromID("pLvList");
@@ -340,13 +342,19 @@
 		        var selnode = pLvList.GetSelectedRows();
 		        if (selnode.length > 0) {
 		            var para = new Array();
-		            para[0] = g_TaskCode;		
-		            para[1] = GetAttribute(selnode[0], "DATA1");		
-		
+		            para[0] = g_TaskCode;
+		            para[1] = GetAttribute(selnode[0], "DATA1");
+
 		            var url = "/ezApprovalG/selectCabinetInTask.do";
 		            var feature = "dialogWidth:480px;dialogHeight:430px;scroll:no;resizable:no;status:no; help:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(475, 375);
-		
+        			feature = feature + GetShowModalPosition(480, 430);
+		            if (CrossYN()) {
+		            	selectcabinetintask_cross_dialogArguments[0] = para;
+		            	selectcabinetintask_cross_dialogArguments[1] = btnSelectCabinet_onclick_Complete;
+
+		                 DivPopUpShow(480, 430, url);
+		            }
+		            else {
 		            if (url != "")
 		                var rtn = window.showModalDialog(url, para, feature);
 		
@@ -357,11 +365,27 @@
 		                SetAttribute(selnode[0], "DATA1", SelectSingleNodeValueNew(CabXml, "DATA/CABINET/CABINETID"));
 		                selnode[0].cells[2].innerHTML = SelectSingleNodeValueNew(CabXml, "DATA/CABINET/CABINETNAME");
 		            }
+		           }
 		        }
 		        else {
 		            alert("<spring:message code='ezApprovalG.t1031'/>");
 		        }
 		    }
+		    
+		    function btnSelectCabinet_onclick_Complete (rtn) {
+		    	 DivPopUpHidden();
+		         if (rtn[0] == "TRUE") {
+		                 var CabXml = createXmlDom();
+		                 CabXml = loadXMLString(rtn[1]);
+		                 var pLvList = new ListView();
+		                 pLvList.LoadFromID("pLvList");
+
+		                 var selnode = pLvList.GetSelectedRows();
+		                 SetAttribute(selnode[0], "DATA1", SelectSingleNodeValueNew(CabXml, "DATA/CABINET/CABINETID"));
+		                 selnode[0].cells[2].innerHTML = SelectSingleNodeValueNew(CabXml, "DATA/CABINET/CABINETNAME");
+		         }
+		    }
+		    
 		    function GetSelAttachInfoXml(selRow) {
 		        var xmlpara = createXmlDom();
 		

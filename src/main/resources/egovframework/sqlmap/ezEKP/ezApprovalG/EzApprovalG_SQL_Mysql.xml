@@ -5529,7 +5529,7 @@
 	                        AND
 	                       			A.TENANT_ID = #v_TENANTID#
 	                        ORDER BY 
-	                       			FLAG DESC, DOCID DESC )
+	                       			FLAG DESC, DOCID DESC ) D
             LIMIT 1 ) C 
          ]]>
 		</isNotEqual>
@@ -5724,8 +5724,6 @@
 							      	TBL_EXPENDAPRDOCINFO.EDMSYN,
 							      	TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
 							   	</isNotEmpty>
-						
-							   	
 							   	<isNotEmpty property="v_ORDEROPTION">
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
@@ -5749,7 +5747,7 @@
 							   	<![CDATA[
 							   	LIMIT #v_PAGESIZE#
 							   	 ) A 
-							   	 LIMIT #v_PAGESIZE2#
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
 							   	 	) B
 							   	 ]]>
 				<isNotEmpty property="v_ORDEROPTION2">
@@ -5900,7 +5898,7 @@
 									</isEmpty>
 									 <![CDATA[
 									 LIMIT  #v_PAGESIZE#
-									  )  ) A
+									  ) B ) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -5908,7 +5906,7 @@
 						<![CDATA[
 							ORDER BY 
 								$v_ORDEROPTION2$  
-							LIMIT  #v_PAGESIZE2# )  
+							LIMIT  #v_PAGESIZE2# )  C
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
@@ -6107,7 +6105,7 @@
                 AND 
                 	  APRSTATE = '001'
         		ORDER BY 
-        			  APRMEMBERSN )
+        			  APRMEMBERSN ) A
         LIMIT 1
         	]]>
 	</select>
@@ -6957,6 +6955,7 @@
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
    		]]>
+   		<!-- 직인  대장 -->
    		UNION ALL 
    		 <![CDATA[
    			SELECT 
@@ -6980,14 +6979,14 @@
    			AND 
    				TBL_ENDRECEIPTPOINTINFO.PROCESSYN = 'Y'
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#	
 	   	]]>
 	   	UNION ALL 
-	   	
+	   	<!-- 공람 문서 -->
 		<![CDATA[
    			SELECT 
    				COUNT(DOCID) 
@@ -6998,9 +6997,9 @@
    			AND 
    				APRTYPE = '015' 
    			AND 
-   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y.%m.%d %H:%i:%s')
+   			 	STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND 
-	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y.%m.%d %H:%i:%s')
+	   			STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#	
 	   	]]>
@@ -7671,6 +7670,8 @@
 	                     		RECEIVEDDEPTID = #v_DEPTID# 
 	                     AND
 	                   			TENANT_ID = #v_TENANTID#)B )A
+	            WHERE 
+	            	TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
@@ -9953,7 +9954,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.addNewVolume" parameterClass="Map">
 		INSERT 	INTO TBL_CABINET ( 
-        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, 		CREATEDATE, 							CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID
+        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, CREATEDATE, CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID
         )VALUES ( 
    				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_SYSDATE#,      '0',                '0' , #v_TENANTID#)
 	</insert> 
@@ -10273,7 +10274,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
 			   WHERE  ConfirmFlag = '0'
 		</select>
 		
@@ -10297,7 +10298,7 @@
 					AND
 						TENANT_ID = #v_TENANTID#) A	 
 				WHERE  
-					Code = '2')
+					Code = '2')B
 		</select>
 		
 		<select id="EzApprovalG.transferCabinetSn" parameterClass="Map" resultClass="String">
@@ -10373,6 +10374,8 @@
 			    							Code = '4') B	)
 	            AND 
 	            	RollbackFlag = '0'
+	            AND 
+	            	TENANT_ID = #v_TENANTID#
 		</select>
 		<insert  id="EzApprovalG.insertTbSerialNumGen" parameterClass="Map">
 		INSERT INTO 
@@ -10514,6 +10517,7 @@
 					 			  Code = '4') B )
 			AND 
 				RegSerialNo = $v_RtnSN$
+			AND TENANT_ID = #v_TENANTID#
 		</update>
 		<insert id="EzApprovalG.insertTbCabinetClass" parameterClass="Map">
 		INSERT INTO 
@@ -10611,7 +10615,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC)
+			     		ConfirmFlag ASC) A
         WHERE 
         	 ConfirmFlag = '0' )
 		</insert>
@@ -10725,7 +10729,7 @@
 													     AND
 													     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 													     ORDER BY 
-													     		ConfirmFlag ASC)
+													     		ConfirmFlag ASC)A
                                                    WHERE  
                                                    		ConfirmFlag = '0' )
                AND
@@ -10842,7 +10846,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC )
+			     		ConfirmFlag ASC ) C
            WHERE  ConfirmFlag = '0' )
 		</insert>
 		<insert  id="EzApprovalG.insertTbSpecialCatalogInfo2" parameterClass="Map">
@@ -12049,7 +12053,7 @@
 	    					  WHERE  
 	    					  		DocID = #v_DocID#
 	    					  AND
-	    					  		TENANT_ID = #v_TENANTID#)), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_SYSDATE#)
+	    					  		TENANT_ID = #v_TENANTID#)A), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_SYSDATE#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.setMytaskCode" parameterClass="Map"> -->
@@ -12442,16 +12446,16 @@
             	TENANT_ID = #v_TENANTID#
 	</delete>
 	<delete id="EzApprovalG.deleteReceiptTempletDetailInfo2" parameterClass="Map">
-			DELETE FROM 
-					TBL_DEPTTEMPLET
-       		WHERE  
-       				USERID = #v_USERID#
-            AND 
-            		FORMID = #v_FORMID#
-            AND 
-            		APRDEPTSN = #v_APRDEPTSN#
-            AND
-            		TENANT_ID = #v_TENANTID#
+		 DELETE FROM 
+			TBL_DEPTTEMPLET
+     		WHERE  
+     				USERID = #v_USERID#
+          AND 
+          		FORMID = #v_FORMID#
+          AND 
+          		APRDEPTSN = #v_APRDEPTSN#
+          AND
+          		TENANT_ID = #v_TENANTID#
 	</delete>
 <!-- 	<procedure id="EzApprovalG.deleteOpinionInfo" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_DELETEOPINIONINFO(#v_DOCID#)} -->

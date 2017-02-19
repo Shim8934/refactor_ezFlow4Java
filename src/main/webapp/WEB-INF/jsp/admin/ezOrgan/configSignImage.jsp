@@ -215,11 +215,24 @@
 				            alert("<spring:message code='ezOrgan.t9902' />");
 				        }
 		            } 
-        
+		            var extension = document.getElementById("file1").value.split('.');
+		            var check = false;
+		            check = compareExtension(check, extension[1]);
+
+		            if (!check) {
+		                document.getElementById("file1").value = "";
+		                return;
+		            }
+		            
 		            var fd = new FormData();
 		            
-		         	// TODO : 2016-04-22 장진혁과장 --우선적으로 서명 1개만 등록할 수 있도록 구현
-		            fd.append("file1", document.getElementById("form").file1.files[0]);
+		            var file =  document.getElementById("form").file1.files;
+		            for (var i = 0; i < file.length; i++) {
+		                fd.append("file1", file[i]);
+		            }
+		            
+// 		         	// TODO : 2016-04-22 장진혁과장 --우선적으로 서명 1개만 등록할 수 있도록 구현
+// 		            fd.append("file1", document.getElementById("form").file1.files[0]);
 		            
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
@@ -234,6 +247,18 @@
 		            xhr.send(fd);
 				} 
 		    }
+			
+		    function compareExtension(check, extension) {
+		        var filterExtension = new Array("jpe", "jpg", "jpeg", "gif", "png", "bmp", "ico", "svg", "svgz", "tif", "tiff", "ai", "drw", "pct", "psp", "xcf", "psd", "raw");
+		        for (var i = 0; i < filterExtension.length; i++) {
+		            if (extension.toLowerCase() == filterExtension[i]) {
+		                check = true;
+		                break;
+		            }
+		        }
+		        return check;
+		    }
+		    
 			function uploadComplete() {		        
 		        if(xhr.responseText == "UPLOAD_ERROR"){
 		        	alert("<spring:message code='fail.common.msg' />");
@@ -243,12 +268,21 @@
 		        }else{
 		        	document.getElementById("tempFilePath").value = xhr.responseText;		        			        	
 		        	var fileName = encodeURI(xhr.responseText);
-					
+		            
+		        	var imagelist = "";
+		            for (var i = 0; i < signlist.length; i++)
+		                imagelist += signlist.options[i].value + ";";
+
+		            if (imagelist == "")
+		                imagelist = fileName;
+		            else
+		                imagelist += fileName;
+		            
 					$.ajax({
 						type : "POST",
 						dataType : "text",
 						url : "/admin/ezOrgan/saveUserInfo.do",
-						data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : encodeURI(fileName)},
+						data : {parentCn : "", cn : userid, prop : "", extensionAttribute3 : imagelist},
 						success : function(result){
 							if(result != "OK"){
 								alert("<spring:message code='ezOrgan.t119' />");
