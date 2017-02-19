@@ -1178,13 +1178,10 @@ function getfieldValue(pfield) {
 function SaveFile() {
 	var result = "";
     var mhtBody = "";
-    mhtBody = message.Get_EditorBodyHTML();
-
-    EmbedContentIntoXML(mhtBody);
-
-    mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-    mhtBody = ConvertHTMLtoMHT(mhtBody);
-
+	mhtBody = message.Get_EditorBodyHTML();
+	EmbedContentIntoXML(mhtBody);
+	mhtBody = ConvertHTMLtoMHT(mhtBody);
+	
     $.ajax({
 		type : "POST",
 		dataType : "text",
