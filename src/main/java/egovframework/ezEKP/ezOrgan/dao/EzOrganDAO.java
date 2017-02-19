@@ -94,7 +94,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
     
 	public List<OrganDeptVO> getDeptTreeInfo(Map<String, Object> map) throws Exception{	
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getDeptTreeInfoForJMocha(map);
         } else {
             return getDeptTreeInfoForLocal(map);
@@ -107,7 +107,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganDeptVO> getDeptSubTreeInfo(Map<String, Object> map) throws Exception {		
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             // getDeptSubTreeInfo와 getDeptTreeInfo가 동일한 것으로 판단되어 getDeptTreeInfoForJMocha를 호출하도록 함.
             return getDeptTreeInfoForJMocha(map);
         } else {
@@ -192,7 +192,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganDeptVO> getDeptMemberList(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getDeptMemberListForJMocha(map);
         } else {
             return getDeptMemberListForLocal(map);
@@ -279,7 +279,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganDeptVO> getDeptMemberListPage(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getDeptMemberListPageForJMocha(map);
         } else {
             return getDeptMemberListPageForLocal(map);
@@ -350,7 +350,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }   
 	
 	public List<OrganDeptVO> organSearch(Map<String, Object> map) throws Exception {		
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return organSearchForJMocha(map);
         } else {
             return organSearchForLocal(map);
@@ -472,7 +472,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
     // 지정된 부서에서의 사원의 상세 정보를 반환한다.(겸직 부서의 경우 겸직 부서에서의 직위를 반환한다.)
 	public OrganUserVO getTBLUserMaster(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTBLUserMasterForJMocha(map);
         } else {
             return getTBLUserMasterForLocal(map);
@@ -566,7 +566,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
     // 부서의 상세 정보를 반환한다.
 	public OrganDeptVO getTBLDeptMaster(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTBLDeptMasterForJMocha(map);
         } else {
             return getTBLDeptMasterForLocal(map);
@@ -659,7 +659,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public OrganDeptVO getDeptInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getDeptInfoForJMocha(map);
         } else {
             return getDeptInfoForLocal(map);
@@ -777,7 +777,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public OrganUserVO getUserInfo(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getUserInfoForJMocha(map);
         } else {
             return getUserInfoForLocal(map);
@@ -844,7 +844,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	
     // 특정 부서의 사원수를 겸직 사원을 포함하여 반환한다.
 	public String getMemberListCount(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getMemberListCountForJMocha(map);
         } else {
             return getMemberListCountForLocal(map);
@@ -913,7 +913,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public String getPropertyValue(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getPropertyValueForJMocha(map);
         } else {
             return getPropertyValueForLocal(map);
@@ -973,7 +973,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public String getDeptFullPath(String deptID, int tenantID) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getDeptFullPathForJMocha(deptID, tenantID);
         } else {
             return getDeptFullPathForLocal(deptID, tenantID);
@@ -1045,7 +1045,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public int deptSubDeptCnt(String deptID, int tenantId) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return deptSubDeptCntForJMocha(deptID, tenantId);
         } else {
             return deptSubDeptCntForLocal(deptID, tenantId);
@@ -1109,7 +1109,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public OrganUserVO getUserAddjobInfo(Map<String, Object> map) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getUserAddjobInfoForJMocha(map);
         } else {
             return getUserAddjobInfoForLocal(map);
@@ -1184,7 +1184,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public List<OrganDeptVO> organSearchListPage(Map<String, Object> map) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return organSearchListPageForJMocha(map);
         } else {
             return organSearchListPageForLocal(map);
@@ -1238,7 +1238,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public int getSearchListCount(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getSearchListCountForJMocha(map);
         } else {
             return getSearchListCountForLocal(map);
@@ -1293,7 +1293,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public void updateProperty(Map<String, Object> map) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             updatePropertyForJMocha(map);
         } else {
             updatePropertyForLocal(map);
@@ -1357,7 +1357,7 @@ public class EzOrganDAO extends EgovAbstractDAO {
     }
 	
 	public String getCNByEmail(String email, int tenantID) throws Exception{
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getCNByEmailForJMocha(email, tenantID);
         } else {
             return getCNByEmailForLocal(email, tenantID);

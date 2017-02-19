@@ -279,7 +279,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalMenuItemItemsImageVO logoEdit(String uID, String pageID, int tenantID) throws Exception {
+	public List<PortalMenuItemItemsImageVO> logoEdit(String uID, String pageID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", uID);
 		map.put("v_OWNERPAGEID", pageID);

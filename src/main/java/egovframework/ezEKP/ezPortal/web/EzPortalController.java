@@ -2117,8 +2117,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		// 새로만들기
 		if (ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()) != null && !ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId()).trim().equals("")) {
 			tableViewOption = ezPortalService.getPortalConfigItem("TableViewOption", pageID, userInfo.getTenantId());
+			logger.debug("tavleViewOption="+tableViewOption);
 		} else {
 			tableViewOption = "D";
+			logger.debug("tavleViewOption2="+tableViewOption);
 		}
 		
 		if (mode.trim().equals("new")) {
@@ -2191,7 +2193,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("langType", langType);
 
 		logger.debug("theme1PortalPage ended");
-		return "/ezPortal/theme1/portalTheme1PortalPage";
+		return "/ezPortal/portalTheme1PortalPage";
+		//return "/ezPortal/portalPortalPage";
 	}
 	
 	/**

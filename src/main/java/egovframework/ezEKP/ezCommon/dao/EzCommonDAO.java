@@ -92,7 +92,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return selectUserGetLangForJMocha(userID, tenantID);
         } else {
             return selectUserGetLangForLocal(userID, tenantID);
@@ -150,7 +150,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public String selectUserGetTimeZone(String userID, int tenantID) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return selectUserGetTimeZoneForJMocha(userID, tenantID);
         } else {
             return selectUserGetTimeZoneForLocal(userID, tenantID);
@@ -303,7 +303,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public int getTenantIdByDomainName(Map<String, Object> map) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTenantIdByDomainNameForJMocha(map);
         } else {
             return getTenantIdByDomainNameForLocal(map);
@@ -364,7 +364,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public List<TenantServerNameVO> getTenantServerNameList() throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTenantServerNameListForJMocha();
         } else {
             return getTenantServerNameListForLocal();
@@ -425,7 +425,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public List<TenantVO> getTenantList() throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getTenantListForJMocha();
         } else {
             return getTenantListForLocal();
@@ -471,7 +471,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
     }
 	
 	public Map<String, Object> getTenantConfigs(int tenantID) throws Exception {
-		if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+		if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 			return getTenantConfigsForJMocha(tenantID);
 		} else {
 			return getTenantConfigsForLocal(tenantID);
