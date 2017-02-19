@@ -6,6 +6,9 @@
 	    <title></title>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <style>
+          P { margin-top: 0px;margin-bottom: 0px; } 
+   	 	</style>
 	    <script language="javascript" type="text/javascript">
 	        var XmlBodyATT = createXmlDom();
 	        document.onselectstart = function () { return false; };
@@ -164,8 +167,8 @@
 	        function DocumentBodySetAttribute(AttributeName, AttributeValue) {
 	            try {
 	                if (document.getElementById("body").getAttribute("class") == "FIELD") {
-	                    document.getElementById("body").setAttribute(AttributeName, AttributeValue);
-	                }
+	                     document.getElementById("body").setAttribute(AttributeName, AttributeValue);
+	                 }
 	            } catch (e) { }
 	        }
 	        function DocumentBodyGetAttribute(AttributeName) {
@@ -196,8 +199,12 @@
 	                var META2 = document.createElement("META");
 	                META2.name = "GENERATOR";
 	                META2.content = "MSHTML 10.00.9200.16721";
+	                var META3 = document.createElement("META");
+	                META3.httpEquiv = "X-UA-Compatible";
+	                META3.content = "IE=edge";
 	                HEAD.appendChild(META);
 	                HEAD.appendChild(META2);
+	                HEAD.appendChild(META3);
 	                HTML.appendChild(HEAD);
 	                var BODY = document.createElement("BODY");
 	                Doc_ContentHtml = document.createElement("DIV");
