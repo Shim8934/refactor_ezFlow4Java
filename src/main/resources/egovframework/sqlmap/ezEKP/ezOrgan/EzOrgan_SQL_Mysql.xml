@@ -266,6 +266,8 @@
                        			TBL_USERMASTER 
                        		WHERE
                        			DEPARTMENT = #v_CN#
+                            AND
+                                CN <> 'masteradmin'
                        		AND
                        			TENANT_ID = #v_TENANT_ID#	
                        	UNION ALL 
@@ -345,6 +347,8 @@
                           			TBL_USERMASTER 
                           		WHERE
                           			DEPARTMENT = #v_CN#
+                                AND
+                                    CN <> 'masteradmin'                             
                           		AND
                           			TENANT_ID = #v_TENANT_ID#	
                           	UNION ALL 
@@ -425,6 +429,8 @@
                                				TBL_USERMASTER 
                                 		WHERE
                                 			DEPARTMENT = #v_CN#
+                                        AND
+                                            CN <> 'masteradmin'                                   
                                 		AND
                                 			TENANT_ID = #v_TENANT_ID#	
 	                               UNION ALL 
@@ -507,6 +513,8 @@
                            		TBL_USERMASTER 
                            WHERE
 	                           	DEPARTMENT = #v_CN#
+                           AND
+                                CN <> 'masteradmin'                             
 	                       AND
 	                       		TENANT_ID = #v_TENANT_ID#    	
 						UNION ALL 
@@ -575,6 +583,8 @@
                			TBL_USERMASTER 
                		WHERE
                			DEPARTMENT = #v_CN#
+                    AND
+                        CN <> 'masteradmin'                  
                		AND
                			TENANT_ID = #v_TENANT_ID#	
 	              UNION ALL 
