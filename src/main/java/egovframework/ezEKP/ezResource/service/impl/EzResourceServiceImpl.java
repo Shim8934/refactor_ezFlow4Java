@@ -3417,12 +3417,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		// 빠짐없이 반복은 아니라고 봄.
+System.out.println("dtSSize=" + dtS.size());
 		for (ResMakeDupResultVO drS : dtS) {
 			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
 			
+System.out.println("dtTSize=" + dtT.size());
 			for (ResMakeDupResultVO drT : dtT) {
 				logger.debug("drtStartDate="+drT.getStartDateTime());
 				logger.debug("drtEndDate="+drT.getEndDateTime());
@@ -3472,11 +3474,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					break;
 				}
 			}
+			
 			if (isDup) {
 				break;
 			}
 		}
-		
 
 		logger.debug("chkTableRepeat ended");
 		return isDup;
