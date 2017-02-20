@@ -630,7 +630,7 @@
 	                 	TITLE ,
 	                 	TITLE2 ,
 	                 	#v_pTerm# ,
-	                 	DATE_FORMAT(#v_pTerm#, '%Y-%m'),
+	                 	STR_TO_DATE(#v_pTerm#, '%Y-%m'),
 	                 	TENANT_ID
           			FROM
           				TBL_USERMASTER
@@ -639,43 +639,7 @@
                     AND
                     	DEPARTMENT = #v_pDeptID#
                     AND
-                    	TENANT_ID = #tenantID#	
-          		UNION 
-          			SELECT
-          				B.CN ,
-                 		B.DISPLAYNAME ,
-                 		B.DISPLAYNAME2 ,
-                 		C.CN ,
-                 		C.DISPLAYNAME ,
-                 		C.DISPLAYNAME2 ,
-                 		PHYSICALDELIVERYOFFICENAME ,
-                 		COMPANY ,
-                 		COMPANY2 ,
-                 		A.TITLE ,
-                 		A.TITLE2 ,
-                 		#v_pTerm# ,
-                 		DATE_FORMAT(#v_pTerm#, '%Y-%m'),
-                 		A.TENANT_ID
-          			FROM
-          				TBL_ADDJOBMASTER A
-                 	JOIN
-                 		TBL_USERMASTER B
-                 	ON
-                 		A.CN = B.CN 
-                    AND
-                      A.TENANT_ID = B.TENANT_ID
-                 	JOIN
-                 		TBL_DEPTMASTER C
-                 	ON
-                 		A.DEPTID = C.CN
-                    AND
-                        A.TENANT_ID = C.TENANT_ID
-           			WHERE
-           				B.CN = #v_pUserID#
-                    AND
-                    	A.DEPTID = #v_pDeptID#
-                    AND
-                    	A.TENANT_ID = #tenantID#	 )
+                    	TENANT_ID = #tenantID#	)
 		]]>
 	</insert>
 	
