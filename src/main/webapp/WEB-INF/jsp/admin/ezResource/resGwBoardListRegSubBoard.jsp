@@ -11,7 +11,7 @@
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			g_BrdID  = "${brdID}";
 			g_UserID = "${userInfo.id}";
-			g_UserNm = "${userInfo.displayName1}";
+			g_UserNm = "<c:out value='${userInfo.displayName1}' />";
 
 			var L_UpLevel	= "${upLevel}";
 			var L_UpStep	= "${upStep}";
@@ -38,10 +38,10 @@
 			
 				var pParentClsID = g_BrdID;
 				var pMakerDeptID = "${userInfo.deptID}"; 
-				var pMakerDeptNm = "${userInfo.deptName1}"
+				var pMakerDeptNm = "<c:out value='${userInfo.deptName1}' />"
 				var pMakerUserID = g_UserID;
 				var pMakerUserNm = g_UserNm;
-				var pMakerPosition = "${userInfo.title1}";
+				var pMakerPosition = "<c:out value='${userInfo.title1}' />";
 				var pMakerCall = "";
 				var strCompanyID = pCompanyID;
 
@@ -165,8 +165,8 @@
 					<spring:message code="ezResource.t44" />
 				</th>
 				<td>
-					${upNm}
-					<input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${upNm}">
+					<c:out value='${upNm}' />
+					<input type="hidden" id="UPPER_NM" name="UPPER_NM" value="<c:out value='${upNm}' />">
 				</td>
 			</tr>
 		</table>
@@ -197,7 +197,7 @@
 					<spring:message code="ezResource.t47" />
 				</th>
 				<td>
-					<textarea id="Brd_Explain" style="width: 98%" rows="3"> ${upExp}</textarea>
+					<textarea id="Brd_Explain" style="width: 98%" rows="3"><c:out value="${upExp}" /></textarea>
 				</td>
 			</tr>
 			<tr style="display:none">

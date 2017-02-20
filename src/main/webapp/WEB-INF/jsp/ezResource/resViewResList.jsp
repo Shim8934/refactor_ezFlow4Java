@@ -17,7 +17,7 @@
 		</style>
 		<script type="text/javascript">
 			var pBrdid		= "${brdID}";
-			var pBrdnm		= "${brdNm}";
+			var pBrdnm		= "<c:out value='${brdNm}' />";
 			var pAccessCode	= "${accessCode}";
 			var pCompanyID	= "${companyID}";
 			var pUserID		= "${userID}";
@@ -374,7 +374,7 @@
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
-		<h1>${brdNm}<span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<h1><c:out value='${brdNm}' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 
 		<div id="mainmenu">
   			<ul>
@@ -403,7 +403,7 @@
 				<c:forEach var="list"  items="${resBrdList}">
   					<tr>
     					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-						<td title="${list.brdNm}" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr>${list.brdNm}</nobr> </td>
+						<td title="<c:out value='${list.brdNm}' />" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr><c:out value='${list.brdNm}' /></nobr> </td>
 						<td id="OwnDeptID" value="${list.ownDeptNm}" style="text-overflow: ellipsis; overflow: hidden"><nobr>${list.ownDeptNm}</nobr> </td>
 						<td id="OwnerID"  style="cursor:pointer;" value="${list.ownerID}" onClick="MemberInfo_onDblclick('${list.ownerID}')" nowrap>${list.ownerNm}</td>
 						<td id="OwnerPosition">${list.ownerPosition}</td>

@@ -391,9 +391,9 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 					
 					if (elementName.equals("BRDNM") && !langStr.equals("1")) {
 						elementValue = returnXMLDom.getElementsByTagName("BRDNM2").item(i).getTextContent();
-						returnXML += "<" + elementName + ">" + elementValue + "</" + elementName + ">";
+						returnXML += "<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">";
 					} else {
-						returnXML += "<" + elementName + ">" + elementValue + "</" + elementName + ">";
+						returnXML += "<" + elementName + "><![CDATA[" + elementValue + "]]></" + elementName + ">";
 					}
 				}
 				returnXML += "</ROWNODE>";
