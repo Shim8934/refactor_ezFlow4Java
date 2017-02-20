@@ -418,16 +418,6 @@
 		
 		    function imgtemp_onclick() {
 		        if (document.form.file1.value != "") {
-		            var extension = document.getElementById("file1").value.split('.');
-		            var check = false;
-		            check = compareExtension(check, extension[1]);
-
-		            if (!check) {
-		                document.getElementById("file1").value = "";
-		                alert("<spring:message code='main.t4000'/>");
-		                return;
-		            }
-		            
 		            var fd = new FormData();
 		            for (var i = 0; i < document.getElementById("form").file1.files.length; i++) {
 		                fd.append("file1", document.getElementById("form").file1.files[i]);
