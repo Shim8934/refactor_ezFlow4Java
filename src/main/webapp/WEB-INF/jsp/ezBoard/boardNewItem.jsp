@@ -960,11 +960,11 @@
 		
 		    var MailxmlHTTP = createXMLHttpRequest();
 		    function InsertMailInfo() {
+		        var _newGuid = "{" + NewGuid + "}";
 		        var strQuery = "<DATA><URL>" + pUrl + "</URL><NEWGUID>" + _newGuid + "</NEWGUID><ATTACHLIMIT>" + AttachLimit + "</ATTACHLIMIT></DATA>";
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        var _newGuid = "{" + NewGuid + "}";
 		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
 		
 		        MailxmlHTTP.send(strQuery);
