@@ -484,7 +484,7 @@
 		
 		            strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
 		            
-		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ encodeURIComponent(filepath) +"&fileName="+ filename +"'\">";
+		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ encodeURIComponent(filepath) +"&fileName="+ encodeURIComponent(filename) +"'\">";
 		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
