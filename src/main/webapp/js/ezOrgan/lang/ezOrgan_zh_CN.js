@@ -30,5 +30,6 @@ var strLang27 = "除了角色注册的电子邮件";
 var strLang28 = "Prev";
 var strLang29 = "Next";
 var strLang30 = "你确定要删除所有并发位置？";
+var strLang31 = "您不能指定一个完整的管理员权限。.";
 
 var strLang535 = "No Items";

@@ -37,7 +37,13 @@
 	        var type = "c=1";
 	    	
 			$(document).ready(function() {
-				Permissions_List('c=1');
+			    if (${isAdmin}) {
+			        Permissions_List('c=1');
+			    } else {
+		            document.getElementById("Permission_sub1").style.display = "none";
+		            document.getElementById("1tab2").click();
+		            Permissions_List('k=1');			        
+			    }
 			});			
 			
 			function company_change() {

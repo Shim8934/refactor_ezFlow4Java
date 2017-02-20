@@ -29,6 +29,6 @@ var strLang27 = "겸직 등록 메일";
 var strLang28 = "이전";
 var strLang29 = "다음";
 var strLang30 = "모든 겸직을 삭제하시겠습니까?";
-
+var strLang31 = "전체관리자 권한을 지정할 수 없습니다.";
 
 var strLang535 = "데이터가 없습니다.";

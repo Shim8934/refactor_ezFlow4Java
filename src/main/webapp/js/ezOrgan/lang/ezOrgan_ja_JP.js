@@ -29,6 +29,6 @@ var strLang27 = "さらに役割は、電子メールを登録して";
 var strLang28 = "以前";
 var strLang29 = "次";
 var strLang30 = "すべての兼職を解除しますか。";
-
+var strLang31 = "完全な管理者権限を割り当てることができません。";
 
 var strLang535 = "データが存在しません。";
