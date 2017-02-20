@@ -7670,8 +7670,7 @@
 	                     		RECEIVEDDEPTID = #v_DEPTID# 
 	                     AND
 	                   			TENANT_ID = #v_TENANTID#)B )A
-	            WHERE 
-	            	TENANT_ID = #v_TENANTID#
+	           
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
