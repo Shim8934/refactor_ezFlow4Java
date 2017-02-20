@@ -670,6 +670,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		if (mode != null && mode.equals("DEL")) {
 			ezPersonalAdminDAO.setQuickLink_D(map);
 		} else {
+			ezPersonalAdminDAO.setQuickLink_D(map);
 			ezPersonalAdminDAO.setQuickLink_I(map);
 		}
 		

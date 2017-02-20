@@ -66,7 +66,7 @@
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
-	    	var brdName = "${brdName}";
+	    	var brdName = "<c:out value='${brdName}' />";
 	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
@@ -139,10 +139,10 @@
 
 		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
-	    	        ItemArray[1] = Array("${brdName}");
+	    	        ItemArray[1] = Array("<c:out value='${brdName}' />");
 
 	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = unescape("${brdName}");
+	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' />";
 	        	}
 		        
 	        	if (cmd == "add") {

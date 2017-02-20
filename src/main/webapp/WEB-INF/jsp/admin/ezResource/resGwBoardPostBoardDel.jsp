@@ -54,7 +54,7 @@
 					}
 
 					xmlHttp.open("Post", "/admin/ezResource/callBrdDel.do", false);
-					xmlHttp.send(xmlPara)
+					xmlHttp.send(xmlPara);
 					if (xmlHttp.status != 200){
 						alert("1. <spring:message code="ezResource.t63" />");
 						return;
@@ -79,7 +79,7 @@
     	<table class="content">
         	<tr>
             	<th><spring:message code="ezResource.t44" /></th>
-            	<td> ${upNm}<input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${upNm}"></td>
+            	<td><c:out value='${upNm}' /><input type="hidden" id="UPPER_NM" name="UPPER_NM" value="<c:out value='${upNm}' />"></td>
         	</tr>
     	</table>
     	<br>
@@ -90,7 +90,7 @@
   	        		<div class="warnintxt01" style="text-align:left">
 	        			<span class="warningimg"><img src="/images/notify/warning02_resorce.gif" width="136" height="112"></span>
 	        			<dl class="warningdl">
-	        				<dd> ${pWrnMsg}</dd>
+	        				<dd>${pWrnMsg}</dd>
 	        			</dl>
 	        		</div>
 	    		</div>

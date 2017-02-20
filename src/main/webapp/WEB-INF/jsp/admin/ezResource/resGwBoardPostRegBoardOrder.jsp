@@ -144,8 +144,8 @@
             	<th>
                 	<spring:message code="ezResource.t44" /></th>
             	<td>
-                	${upNm}
-                	<input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${upNm}"></td>
+                	<c:out value='${upNm}' />
+                	<input type="hidden" id="UPPER_NM" name="UPPER_NM" value="<c:out value='${upNm}' />"></td>
         	</tr>
     	</table>
     	<br>

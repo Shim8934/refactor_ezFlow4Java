@@ -74,7 +74,7 @@
       			</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; height:100%; padding-right:12px"><textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly> ${brdExplain}</textarea></td>
+    			<td style="padding-bottom:1px; height:100%; padding-right:12px"><textarea name="Brd_Explain" style="width:100%; height: 100%; resize:none" readonly><c:out value='${brdExplain}' /></textarea></td>
   			</tr>
 		</table>
 	</body>

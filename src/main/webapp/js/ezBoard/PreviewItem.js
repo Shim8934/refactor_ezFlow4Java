@@ -374,9 +374,9 @@ function event_ItemPreviewRead_photo() {
             setNodeText(document.getElementById("PreH_date"), WriteDate);
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURIComponent(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
             else
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
 
         }
     }

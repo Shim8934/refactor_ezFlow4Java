@@ -5529,7 +5529,7 @@
 	                        AND
 	                       			A.TENANT_ID = #v_TENANTID#
 	                        ORDER BY 
-	                       			FLAG DESC, DOCID DESC )
+	                       			FLAG DESC, DOCID DESC ) D
             LIMIT 1 ) C 
          ]]>
 		</isNotEqual>
@@ -5898,7 +5898,7 @@
 									</isEmpty>
 									 <![CDATA[
 									 LIMIT  #v_PAGESIZE#
-									  )  ) A
+									  ) B ) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -5906,7 +5906,7 @@
 						<![CDATA[
 							ORDER BY 
 								$v_ORDEROPTION2$  
-							LIMIT  #v_PAGESIZE2# )  
+							LIMIT  #v_PAGESIZE2# )  C
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
@@ -6105,7 +6105,7 @@
                 AND 
                 	  APRSTATE = '001'
         		ORDER BY 
-        			  APRMEMBERSN )
+        			  APRMEMBERSN ) A
         LIMIT 1
         	]]>
 	</select>
@@ -7670,6 +7670,8 @@
 	                     		RECEIVEDDEPTID = #v_DEPTID# 
 	                     AND
 	                   			TENANT_ID = #v_TENANTID#)B )A
+	            WHERE 
+	            	TENANT_ID = #v_TENANTID#
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String"> -->
@@ -7677,7 +7679,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 		MAX(VOLUMENO)  + 1 NEWVOLNO  
+		 		CAST(MAX(VOLUMENO) + 1 as int) NEWVOLNO  
 	     FROM 
 	     		TBL_CABINET 
 	     WHERE  
@@ -9952,7 +9954,7 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.addNewVolume" parameterClass="Map">
 		INSERT 	INTO TBL_CABINET ( 
-        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, 		CREATEDATE, 							CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID
+        		 CABINETID,     VOLUMENO,     CABINETCLASSNO, CREATEDATE, CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID
         )VALUES ( 
    				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_SYSDATE#,      '0',                '0' , #v_TENANTID#)
 	</insert> 
@@ -10844,7 +10846,7 @@
 			     AND
 			     		TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
 			     ORDER BY 
-			     		ConfirmFlag ASC )
+			     		ConfirmFlag ASC ) C
            WHERE  ConfirmFlag = '0' )
 		</insert>
 		<insert  id="EzApprovalG.insertTbSpecialCatalogInfo2" parameterClass="Map">
@@ -12051,7 +12053,7 @@
 	    					  WHERE  
 	    					  		DocID = #v_DocID#
 	    					  AND
-	    					  		TENANT_ID = #v_TENANTID#)), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_SYSDATE#)
+	    					  		TENANT_ID = #v_TENANTID#)A), #v_UserID#, #v_UserName#, #v_UserName2#, #v_UserTitle#, #v_UserTitle2#, #v_DeptCode#, #v_DeptName#, #v_DeptName2#, #v_SYSDATE#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.setMytaskCode" parameterClass="Map"> -->
@@ -12444,16 +12446,16 @@
             	TENANT_ID = #v_TENANTID#
 	</delete>
 	<delete id="EzApprovalG.deleteReceiptTempletDetailInfo2" parameterClass="Map">
-			DELETE FROM 
-					TBL_DEPTTEMPLET
-       		WHERE  
-       				USERID = #v_USERID#
-            AND 
-            		FORMID = #v_FORMID#
-            AND 
-            		APRDEPTSN = #v_APRDEPTSN#
-            AND
-            		TENANT_ID = #v_TENANTID#
+		 DELETE FROM 
+			TBL_DEPTTEMPLET
+     		WHERE  
+     				USERID = #v_USERID#
+          AND 
+          		FORMID = #v_FORMID#
+          AND 
+          		APRDEPTSN = #v_APRDEPTSN#
+          AND
+          		TENANT_ID = #v_TENANTID#
 	</delete>
 <!-- 	<procedure id="EzApprovalG.deleteOpinionInfo" parameterClass="Map"> -->
 <!-- 		{CALL EZSP_DELETEOPINIONINFO(#v_DOCID#)} -->

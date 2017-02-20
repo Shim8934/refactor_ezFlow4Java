@@ -2122,9 +2122,9 @@ function SaveDraftDocInfo()
             return "FALSE";
 
         var mhtBody = "";
-        mhtBody = message.Get_EditorBodyHTML()
-        mhtBody = "<HTML>" + GetCKEditerHeader() + mhtBody + "</HTML>";
-        mhtBody = ConvertHTMLtoMHT(mhtBody);
+    	mhtBody = message.Get_EditorBodyHTML();
+    	EmbedContentIntoXML(mhtBody);
+    	mhtBody = ConvertHTMLtoMHT(mhtBody);
         
         $.ajax({
     		type : "POST",
