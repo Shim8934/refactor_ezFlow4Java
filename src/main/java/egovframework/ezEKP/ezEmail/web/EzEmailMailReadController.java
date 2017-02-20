@@ -471,6 +471,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
     					userEmail, password, egovMessageSource, locale);
+    			
+                if (retryFlag) {
+                    retryFlag = false;
+                }
+    			
     			Folder f = ia.getFolder(folderPath);
     			
     			if (f == null || !f.exists()) {
@@ -1174,6 +1179,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     		try {
     			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
     					userEmail, password, egovMessageSource, locale);
+    			
+    			if (retryFlag) {
+    			    retryFlag = false;
+    			}
+    			
     			Folder f = ia.getFolder(folderPath);
     	
     			if (f == null || !f.exists()) {
