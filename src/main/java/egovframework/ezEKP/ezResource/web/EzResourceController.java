@@ -273,8 +273,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	@ResponseBody
 	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("scheduleGet Start");
-		logger.debug("xmlStr="+xmlStr);
+		logger.debug("xmlStr=" + xmlStr);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
 		String reVal = "";
 		String resID = "";
 		String cmd = "";
@@ -285,12 +287,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		String writerDept = "";
 		String gubun = "P";
 		String groupID = "";
-		String startDate = "";
-		String endDate = "";
 		String resultXML = "";
 		String resultXML1 = "";
 		int page = 0;
-		
 		
 		if (req.getParameter("resID") != null) {
 			resID = req.getParameter("resID");
@@ -307,25 +306,28 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("page") != null) {
 			page = Integer.parseInt(req.getParameter("page"));
 		}
-			
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		if (cmd.equals("get")) {
-			startDate = xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
-			endDate = xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
 			
+			// 승인요청 목록으로 볼 때
 			if (viewType.equals("list")) {
 				approveFlag = xmlDom.getElementsByTagName("APPROVEFLAG").item(0).getTextContent();
 				writerName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
 				writerDept = xmlDom.getElementsByTagName("WRITERDEPT").item(0).getTextContent();
 			}
 			
-			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate.substring(0, 10));
-			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate.substring(0, 10));
+			// 시분초 버림.
+			xmlDom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("STARTDATETIME").item(0).getTextContent().substring(0, 10));
+			xmlDom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(xmlDom.getElementsByTagName("ENDDATETIME").item(0).getTextContent().substring(0, 10));
 			
+			//스케줄 정보 가져옴
 			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
-				
+			
+			
+			// dtstart, dtend utc타임으로 변경...? 시작
 			Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				
 			for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
@@ -340,15 +342,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 				
 			reVal = commonUtil.convertDocumentToString(xmlDom2);
-				
-			Document orderXML = commonUtil.convertStringToDocument(reVal);
+			// dtstart, dtend utc타임으로 변경...? 끝
+			
+			
+			// 승인요청 목록으로 볼 때
 			if (viewType.equals("list")) {
-				String ownerNm = "owner_nm";
-				String deptName = "dept_name";
-				if (!userInfo.getLang().equals("1")) {
-					ownerNm = "owner_nm2";
-					deptName = "dept_name2";
-				}
+				Document orderXML = commonUtil.convertStringToDocument(reVal);
 					
 				// 승인 or 비승인 보기
 				if (!approveFlag.trim().equals("")) {
@@ -481,12 +480,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		}
 			
-		if (!reVal.equals("")) {
-			return reVal.toString();
-		}
-		
 		logger.debug("scheduleGet End");
-		logger.debug("reVal="+reVal.toString());
+		logger.debug("reVal=" + reVal.toString());
 		return reVal.toString();
 	}
 	
@@ -683,7 +678,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		strOwnerID = resBrd.getOwnerID();
 		ownerCall = resBrd.getOwnerCall();
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			strBrdNm = resBrd.getBrdNm();
 			strOwnDeptNm = resBrd.getOwnDeptNm();
 			strOwnerNm = resBrd.getOwnerNm();
@@ -694,7 +689,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			strOwnerNm = resBrd.getOwnerNm2();
 			strOwnerPosition = resBrd.getOwnerPosition2();
 		}
-		strMakeDate = resBrd.getMakeDate() + " " + ezResourceService.getCurrentDate();
+		strMakeDate = resBrd.getMakeDate();
 		strApproveFlag = resBrd.getApproveFlag();
 		
 		/*if (strApproveFlag.equals("1")) {
@@ -714,7 +709,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("ownerPosition", strOwnerPosition);
 		model.addAttribute("ownerCall", ownerCall);
 		model.addAttribute("resLocation", strResLocation);
-		model.addAttribute("makeDate", strMakeDate.substring(0, 10));
+		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
 		
 		return "/ezResource/resViewClsItem";
@@ -756,6 +751,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdID = "";
 		String resID = "";
 		String strBrdNm = "";
+		String strBrdNm2 = "";
 		String strOwnDeptNm = "";
 		String strOwnerNm = "";
 		String strOwnerPosition = "";
@@ -784,21 +780,22 @@ public class EzResourceController extends EgovFileMngUtil {
 			strOwnerID = resBrd.getOwnerID();
 			ownerCall = resBrd.getOwnerCall();
 			
-			if (userInfo.getLang().equals("1")) {
-				strBrdNm = resBrd.getBrdNm();
+			strBrdNm = resBrd.getBrdNm();
+			strBrdNm2 = resBrd.getBrdNm2();
+			
+			if (userInfo.getPrimary().equals("1")) {
 				strOwnDeptNm = resBrd.getOwnDeptNm();
 				strOwnerNm = resBrd.getOwnerNm();
 				strOwnerPosition = resBrd.getOwnerPosition();
 			} else {
-				strBrdNm = resBrd.getBrdNm2();
 				strOwnDeptNm = resBrd.getOwnDeptNm2();
 				strOwnerNm = resBrd.getOwnerNm2();
 				strOwnerPosition = resBrd.getOwnerPosition2();
 			}
-			strMakeDate = resBrd.getMakeDate() + " " + ezResourceService.getCurrentDate();
+			
+			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
 		}
-			
 	
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("userID", userInfo.getId());
@@ -807,6 +804,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("deptName", userInfo.getDeptName1());
 		model.addAttribute("strBrdID", strBrdID); 
 		model.addAttribute("strBrdNm", strBrdNm);
+		model.addAttribute("strBrdNm2", strBrdNm2);
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("ownDeptNm", strOwnDeptNm);
 		model.addAttribute("ownDeptID", strOwnDeptID);
@@ -815,7 +813,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("ownerPosition", strOwnerPosition);
 		model.addAttribute("ownerCall", ownerCall);
 		model.addAttribute("resLocation", strResLocation);
-		model.addAttribute("makeDate", strMakeDate.substring(0, 10));
+		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
 		
 		return "/ezResource/resModClsItem";
@@ -1062,7 +1060,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("companyID", userInfo.getCompanyID());
-		model.addAttribute("adminFg", "Y");
 		model.addAttribute("resID", resID);
 		model.addAttribute("ownerID", strOwnerID);
 		model.addAttribute("ownerNm", strOwnerNm);
@@ -1194,18 +1191,10 @@ public class EzResourceController extends EgovFileMngUtil {
 				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getLang()).item(0).getTextContent();
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getLang()).item(0).getTextContent();
 			}
-			title = getSchedule.getTitle();
 			
-			if (title != null) {
-				 title = title.replace("'", "&#39;");
-                 title = title.replace("\"", "&quot;");
-			}
+			title = getSchedule.getTitle();
 			loc = getSchedule.getLocation();
-
-			if (loc != null) {
-				loc = title.replace("'", "&#39;");
-                loc = title.replace("\"", "&quot;");
-			}
+			
 			timeDisplay = getSchedule.getTimeDisplay();
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
 			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
@@ -2129,54 +2118,52 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
-		StringBuilder strSQL = new StringBuilder();
 		
-		if (cmd.toLowerCase().equals("add")) {
-			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-			strSQL.append("FROM TB_Schedule");
-			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-			strSQL.append("AND ownerID ="+"'"+resID+"'");
-			strSQL.append("AND reFlag ="+0);
-			strSQL.append("AND approveFlag = '1'");
-			strSQL.append("AND NOT(  ");
-			strSQL.append("                (endDate <=  ");
-			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-			strSQL.append("              ) or (");
-			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-			strSQL.append("              )");
-		} else {
-			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-			strSQL.append("FROM TB_Schedule");
-			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-			strSQL.append("AND ownerID ="+"'"+resID+"'");
-			strSQL.append("AND reFlag = 0");
-			strSQL.append("AND approveFlag = '1'");
-			strSQL.append("AND NOT IN ("+num+")");
-			strSQL.append("AND NOT ( ");
-			strSQL.append("                 (endDate <=  ");
-			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-			strSQL.append("              ) or (");
-			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-			strSQL.append("              )");
-		}
+//		StringBuilder strSQL = new StringBuilder();
+//		
+//		if (cmd.toLowerCase().equals("add")) {
+//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
+//			strSQL.append("FROM TB_Schedule");
+//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
+//			strSQL.append("AND ownerID ="+"'"+resID+"'");
+//			strSQL.append("AND reFlag ="+0);
+//			strSQL.append("AND approveFlag = '1'");
+//			strSQL.append("AND NOT(  ");
+//			strSQL.append("                (endDate <=  ");
+//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
+//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
+//			strSQL.append("              ) or (");
+//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
+//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
+//			strSQL.append("              )");
+//		} else {
+//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
+//			strSQL.append("FROM TB_Schedule");
+//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
+//			strSQL.append("AND ownerID ="+"'"+resID+"'");
+//			strSQL.append("AND reFlag = 0");
+//			strSQL.append("AND approveFlag = '1'");
+//			strSQL.append("AND NOT IN ("+num+")");
+//			strSQL.append("AND NOT ( ");
+//			strSQL.append("                 (endDate <=  ");
+//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
+//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
+//			strSQL.append("              ) or (");
+//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
+//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
+//			strSQL.append("              )");
+//		}
 		
 		boolean isDupRep = false;
 		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
-		//반복예약 데이터가 있을 때
+		
 		if (isRep) {
 			logger.debug("===반복예약 데이터가 있을 때===");
 			if (cmd.equals("add")) {
 				num = null;
 			}
 			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
-		}
-		
-		//반복예약 데이터가 없을 때
-		if (!isRep) {
+		} else {
 			logger.debug("===반복예약 데이터가 없을 때===");
 			if (cmd.equals("add")) {
 				num = null;
@@ -2194,7 +2181,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else {
 			ret = "False";
 		}
-		
 
 		logger.debug("timeDupCheck ended");
 		return ret;

@@ -103,6 +103,8 @@ public interface EzPortalService {
 	
 	public PortalTBLPortletBoardVO boardPortlet (Map<String, Object> map) throws Exception;
 	
+	public String getLogoHtml (String pOwnerPageID, String pAccessID, int tenantID) throws Exception;
+	
 	public String getTopMenuConfigItem (String itemName, String uID, int tenantID) throws Exception;
 	
 	public String getMenuItemConfigItem (String itemName, String uID, int tenantID) throws Exception;
@@ -138,8 +140,6 @@ public interface EzPortalService {
 	public String useStartPageChack (String pUserID, String pCompanyID, int tenantID) throws Exception;
 	
 	public String useStartPageChack2 (String pUserID, String pCompanyID, String pParentUID, int tenantID) throws Exception;
-	
-	public String getLogoHtml (String pOwnerPageID, String pAccessID, int tenantID) throws Exception;
 	
 	public String getPortalConfigItem (String pItemName, String pPageID, int tenantID) throws Exception;
 	

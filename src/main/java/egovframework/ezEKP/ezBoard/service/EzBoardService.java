@@ -94,7 +94,7 @@ public interface EzBoardService {
 	
 	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
-	public BoardListVO getItemInfo(String itemID, int tenantID) throws Exception;
+	public BoardListVO getItemInfo(String itemID, String lang, int tenantID) throws Exception;
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
 	
@@ -234,7 +234,7 @@ public interface EzBoardService {
 
 	public String getContentInfo(String type, String docID, int tenantID) throws Exception;
 
-	public BoardAttachVO getAttachInfo(String attID, int tenantID) throws Exception;
+	public BoardAttachVO getAttachInfo(String itemID, String attID, int tenantID) throws Exception;
 
 	public String deleteTempItem1(String mode, String strItemID, int tenantID) throws Exception;
 

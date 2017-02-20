@@ -12,7 +12,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree.js"></script>	    
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js?ver_0.1"></script>
+	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
 		<script type="text/javascript" language="javascript">
 			var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
@@ -27,7 +27,7 @@
 		    var m_selectedTree = null;
 		    var g_fnaddReceiver;
 		    var g_xmlHTTP = null;
-		    var bSearch = false;		    
+		    var bSearch = false;
 		    var topid = "<c:out value='${topid}'/>";
 		    var userLang = "<c:out value='${userLang}'/>";
 		    var ReturnFunction;
@@ -35,14 +35,13 @@
 		    
 		    window.onload = function () {
 				try {
-		            RetValue = parent.selecttarget_cross_dialogArguments[0];
-		            ReturnFunction = parent.selecttarget_cross_dialogArguments[1];
+					RetValue = parent.selecttarget_dialogArguments[0];
+		            ReturnFunction = parent.selecttarget_dialogArguments[1];
 		        } catch (e) {
 		            try {
-		                RetValue = opener.selecttarget_cross_dialogArguments[0];
-		                ReturnFunction = opener.selecttarget_cross_dialogArguments[1];
+		            	RetValue = opener.selecttarget_dialogArguments[0];
+		                ReturnFunction = opener.selecttarget_dialogArguments[1];
 		            } catch (e) {
-		                RetValue = window.dialogArguments;
 		            }
 		        }
 
@@ -60,21 +59,19 @@
 		        m_receiverTitleList = new Array(ToTitle);
 		        m_receiverWindowList = new Array(ListViewMsgTo);
 		        
-		        var listviewheader = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t35'/></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>")
 		        var listview = new ListView();
 		        listview.SetID("ListViewMsgToView");
 		        listview.SetMulSelectable(false);
 		        listview.SetRowOnClick("SelectReceiverWindow");
 		        listview.SetRowOnDblClick("DeleteReceiver");
-		        listview.DataSource(listviewheader);
+		        listview.DataSource(loadXMLString(document.getElementById("listviewheader").innerHTML.toUpperCase()));
 		        listview.DataBind("ListViewMsgTo");
 		        
-				var listviewheader2 = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t36' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t9' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t37' /></NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t38' /></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>");
 		        var listview5 = new ListView();
 		        listview5.SetID("OrganList");
 		        listview5.SetMulSelectable(false);
 		        listview5.SetRowOnDblClick("ListViewNodeDblClick");
-		        listview5.DataSource(listviewheader2);
+		        listview5.DataSource(loadXMLString(document.getElementById("listviewheader2").innerHTML.toUpperCase()));
 		        listview5.DataBind("OrganListView");
 
 		        applyCurrentData();
@@ -102,9 +99,6 @@
 	        }
 		        
 		    function displayUserList(DeptID) {
-		    	var xmlpara = createXmlDom();		        
-		    	var listviewheader2 = loadXMLString("<LISTVIEWDATA><HEADERS><HEADER><NAME><spring:message code='ezBoard.t36' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t9' /></NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t37' /></NAME><WIDTH>80</WIDTH></HEADER><HEADER><NAME><spring:message code='ezBoard.t38' /></NAME><WIDTH>100</WIDTH></HEADER></HEADERS></LISTVIEWDATA>");
-		    	
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -112,13 +106,13 @@
 		        	data : {deptID : DeptID, cell : "displayname;description;title;telephonenumber", prop : "mail;displayName;description;title", type : "user"},
 		        	success : function(result){		 
 		        		result = loadXMLString(result);
-		        		document.getElementById("OrganListView").innerHTML = "";
+		                document.getElementById("OrganListView").innerHTML = "";
 		                var listview = new ListView();
 		                listview.SetID("OrganList");
 		                listview.SetSelectFlag(false);
 		                listview.SetMulSelectable(false);
 		                listview.SetRowOnDblClick("ListViewNodeDblClick");
-		                listview.DataSource(listviewheader2);
+		                listview.DataSource(loadXMLString(document.getElementById("listviewheader2").innerHTML.toUpperCase()));
 		                listview.DataBind("OrganListView");
 		                listview.DataSource(result);
 		                listview.RowDataBind();
@@ -319,9 +313,7 @@
 		                        if (MaxID < curnum)
 		                            MaxID = curnum;
 		                    }
-		                    //var objTr = listview.AddRow(MaxID);
-		                    //SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                    //listview.AddDataRow(objTr, Resultxml);
+		                    
 		                    var objTr = listview.NewAddRow(0, "ListViewMsgToView" + "_TR_" + eval(MaxID + 1));
 		                    listview.AddDataRow(objTr, Resultxml);
 		                    listview.SetSelectedIndex(MaxID + 1);
@@ -373,8 +365,7 @@
 		                            MaxID = curnum;
 		                    }
 		                    var objTr = listview.NewAddRow(0, "ListViewMsgToView" + "_TR_" + eval(MaxID + 1));
-		                    //var objTr = listview.AddRow(MaxID);
-		                    //SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    
 		                    listview.AddDataRow(objTr, Resultxml);
 		                    listview.SetSelectedIndex(MaxID + 1);
 		                    admin_OK.disabled = false;
@@ -404,6 +395,7 @@
 		                selectedTarget += ", " + listviewSelected[nCnt1].cells[0].innerText;
 		        }
 		        selectTargetListXML += "</DATA>";
+  
 		        RetValue["window"].document.getElementById("selectedTarget").innerHTML = MakeXMLString(selectedTarget);
 		        if (ReturnFunction != null) {
 		            ReturnFunction(selectTargetListXML);
@@ -478,7 +470,47 @@
 		    
 		    function Key_Down(e){
 		        if (e.keyCode == 13){
-		            cnsearch_click("displayname");
+		            cnsearch_click("displayName");
+		        }
+		    }
+		    
+		    function checkbox_onclick(e) {
+		        if (!CrossYN()) {
+		            srcElementID = window.event.srcElement.id;
+		        } else {
+		            srcElementID = e.target.id;
+		        }
+
+		        var checkFlag = "Y";
+		        if (srcElementID == "admin_OK") {
+		            admin_OK.checked = true;
+		            admin_NO.checked = false;
+		            checkFlag = "Y";
+		        }
+		        else {
+		            admin_OK.checked = false;
+		            admin_NO.checked = true;
+		            checkFlag = "N";
+		        }
+
+		        var pListViewDL = new ListView();
+		        pListViewDL.LoadFromID("ListViewMsgToView");
+		        var arrRows = pListViewDL.GetSelectedRows();
+		        if (arrRows == "") return;
+		        SetAttribute(arrRows[0], "DATA5", checkFlag);
+
+		        if (checkFlag == "N") {
+		            if (CrossYN()) {
+		                SetAttribute(arrRows[0].childNodes[0], "style", "color:red;");
+		            } else {
+		                arrRows[0].childNodes[0].style.color = "red";
+		            }
+		        } else {
+		            if (CrossYN()) {
+		                SetAttribute(arrRows[0].childNodes[0], "style", "color:;");
+		            } else {
+		                arrRows[0].childNodes[0].style.color = "";
+		            }
 		        }
 		    }
 	    </script>
@@ -521,7 +553,7 @@
 			<tr align=left>
 		    	<td  colspan=3 id="cnblock" align=right height="30">
 		        	<input type="text" id="cnkeyword" style="WIDTH:100px" name="Input" onkeydown='Key_Down(event)'>
-		        	<a class="imgbtn"  name="button"><span onClick='cnsearch_click("displayname")'><spring:message code='ezBoard.t42' /></span></a>
+		        	<a class="imgbtn"  name="button"><span onClick='cnsearch_click("displayName")'><spring:message code='ezBoard.t42' /></span></a>
 		    	</td>
 		  	</tr>  
 		  	<tr>

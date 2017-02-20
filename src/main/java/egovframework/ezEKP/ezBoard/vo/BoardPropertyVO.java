@@ -129,6 +129,8 @@ public class BoardPropertyVO {
 	private int totalCount;
 	/** 테넌트아이디*/
 	private int tenantID;
+	/** */
+	private String displayName;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -496,6 +498,12 @@ public class BoardPropertyVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getDisplayName() {
+		return displayName;
+	}
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	
 }

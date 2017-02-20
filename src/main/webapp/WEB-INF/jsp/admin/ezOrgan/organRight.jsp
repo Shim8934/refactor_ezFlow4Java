@@ -650,9 +650,13 @@
 		            usermenu1.disabled = false;
 		            usermenu2.disabled = false;
 		            usermenu3.disabled = false;
+		            
+		            <c:if test="${IsJMochaStandAlone != 'YES'}"> 
 		            usermenu4.disabled = false;
 		            usermenu5.disabled = false;
 		            usermenu6.disabled = false;
+		            </c:if>
+		            
 //		            usermenu7.disabled = false;
 		            usermenu8.disabled = false;
 		            try {
@@ -668,9 +672,13 @@
 		            usermenu1.disabled = true;
 		            usermenu2.disabled = true;
 		            usermenu3.disabled = true;
+		            
+		            <c:if test="${IsJMochaStandAlone != 'YES'}">
 		            usermenu4.disabled = true;
 		            usermenu5.disabled = true;
 		            usermenu6.disabled = true;
+		            </c:if>
+		            
 //		            usermenu7.disabled = true;
 		            usermenu8.disabled = true;
 		            

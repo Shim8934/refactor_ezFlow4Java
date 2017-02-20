@@ -2242,7 +2242,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
     } catch (e) { }
 
 
-    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:12px;font-family:Gulim'>" + tempDiv.innerHTML + "</div>";
+    var BodyHTMLContent = "<style>P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}</style> <div style='font-size:13px;font-family:Gulim'>" + tempDiv.innerHTML + "</div>";
     
     try {
         // 본문에 <![CDATA[]]> 부분이 있으면 XML 파싱 에러가 발생하여 제거 코드 추가함.

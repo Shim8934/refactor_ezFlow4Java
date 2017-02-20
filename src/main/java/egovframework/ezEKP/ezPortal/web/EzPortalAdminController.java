@@ -1561,17 +1561,19 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = ezPortalAdminService.createNewLogoItem(parentUID, pageID, userInfo.getTenantId());
 		}
 
-		PortalMenuItemItemsImageVO result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
+		List<PortalMenuItemItemsImageVO> result = ezPortalAdminService.logoEdit(uID, pageID, userInfo.getTenantId());
 		
 		if (result != null) {
-			displayName = result.getDisplayName();
-			displayName2 = result.getDisplayName2();
-			imagePath = result.getNormalImagePath();
-			linkURL = result.getLinkURL();
-			linkLocation = result.getLinkLocation();
-			windowOption = result.getWindowOption();
-			imageWidth = String.valueOf(result.getImageWidth());
-			imageHeight = String.valueOf(result.getImageHeight());
+			for (int i=0; i<result.size(); i++) {
+				displayName = result.get(0).getDisplayName();
+				displayName2 = result.get(0).getDisplayName2();
+				imagePath = result.get(0).getNormalImagePath();
+				linkURL = result.get(0).getLinkURL();
+				linkLocation = result.get(0).getLinkLocation();
+				windowOption = result.get(0).getWindowOption();
+				imageWidth = String.valueOf(result.get(0).getImageWidth());
+				imageHeight = String.valueOf(result.get(0).getImageHeight());
+			}
 		}
 		
 		List<PortalTBLPortalACLVO> aclList = ezPortalService.getAclItems(uID, userInfo.getTenantId());

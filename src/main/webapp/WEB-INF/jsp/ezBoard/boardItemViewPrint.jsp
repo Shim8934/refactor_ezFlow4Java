@@ -56,7 +56,8 @@
 					async : false,
 					url : "/ezCommon/mhtToHTMLContent.do",
 					data : { type   : "BOARDCONTENT", 
-							 itemID 	 : pItemID
+							 itemID 	 : pItemID,
+							 href   : strContentLocation 
 						   },
 					success: function(result){
 						html = result;
@@ -67,25 +68,29 @@
 				doc.write(html);
 				doc.close();
 				
-		        if (eOneline == "Y")
+		        if (eOneline == "Y") {
 		            document.getElementById('onelineView').style.display = "";
-		        if (eAttach == "Y")
+		        }
+		        
+		        if (eAttach == "Y") {
 		            document.getElementById('attachView').style.display = "";
+		        }
 		
 		        SetAttachmentInfo();
-		        if (OneLineReplyFlag == "1") getOneLineReply();
-		
+		        if (OneLineReplyFlag == "1") {
+		        	getOneLineReply();
+		        }
+		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
 		       
 		    };
 		
 		    function DocumentComplate() {
-// 		        if (!CrossYN()) {
-// 		            preview_print();
-// 		        }
-// 		        else{
+		        if (CrossYN()) {
 		            window.print();
-// 		        }
+		        } else {
+		            preview_print();
+		        }
 		
 		        clearInterval(myVar);
 		    }
@@ -140,6 +145,7 @@
 		            temp = i + 1;
 		                strHTML += "<font color=blue>" + temp.toString() + ". " + "<span><font color=blue>" + getNodeText(xmldom.getElementsByTagName("USERNAME").item(i)) + "</font></span>(" + getNodeText(xmldom.getElementsByTagName("WRITEDATE").item(i)) + ")" + " : </font>" + getNodeText(xmldom.getElementsByTagName("CONTENT").item(i)) + "<br>";
 		        }
+
 		        if (i == 0)
 		            strHTML = "<spring:message code='ezBoard.t312'/>";
 		        document.getElementById('onelinereplylist').innerHTML = strHTML;

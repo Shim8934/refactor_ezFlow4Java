@@ -30,7 +30,7 @@ public interface EzPortalAdminService {
 	
 	public List<PortalTBLTopMenuItemsVO> loadPositionSettings (Map<String, Object> map) throws Exception;
 	
-	public PortalMenuItemItemsImageVO logoEdit (String uID, String pageID, int tenantID) throws Exception;
+	public List<PortalMenuItemItemsImageVO> logoEdit (String uID, String pageID, int tenantID) throws Exception;
 	
 	public PortalPortletGeneralVO getPortletProperties (String pUID, int tenantID) throws Exception;
 	

@@ -382,7 +382,7 @@
 							 WHERE  BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
 							 AND Brd_GB = '2' 
-							 AND TENANT_ID = #tenantID#) sub_rescnt ,
+							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
 						   '0' Access_Lvl ,
 						   A.APPROVEFLAG 
 					FROM TBL_RS_BRD A
@@ -410,18 +410,21 @@
 							 FROM TBL_RS_BRD 
 							 WHERE BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
-							 AND Brd_GB = '1' ) sub_clscnt ,
+							 AND Brd_GB = '1' 
+							 AND TENANT_ID = #tenantID# ) sub_clscnt ,
 						   ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
 							 FROM TBL_RS_BRD 
 							 WHERE  BRD_UPPER = A.BRD_ID
 							 AND Brd_Company = #v_P_CompanyID#
-							 AND Brd_GB = '2' ) sub_rescnt ,
+							 AND Brd_GB = '2' 
+							 AND TENANT_ID = #tenantID# ) sub_rescnt ,
 						   '0' Access_Lvl ,
 						   A.APPROVEFLAG 
 					FROM TBL_RS_BRD A
 					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
 					AND Brd_Company = #v_P_CompanyID#
 					AND Brd_GB = '1'
+					AND TENANT_ID = #tenantID#
 					ORDER BY Brd_Step 
 				]]>
 			</isNotEqual>	
@@ -490,6 +493,8 @@
                 	A.BRD_COMPANY = #v_P_COMPANYID#
                 AND
                 	( MEMBER_ID = #v_PCOMID# OR MEMBER_ID = #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL )
+                AND 
+                	A.TENANT_ID = #tenantID#
 			]]>
 		</isEmpty>
 		<isNotEmpty property="v_P_ParentID">
@@ -550,9 +555,9 @@
       			AND
                 	(MEMBER_ID = #v_PCOMID# OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
       			AND
-                	TENANT_ID = #tenantID#
+                	A.TENANT_ID = #tenantID#
                    
-      		UNION
+      			UNION
           
       			SELECT
              	    DISTINCT(BRD_ID) ,
@@ -588,7 +593,7 @@
       			AND
                     (MEMBER_ID = #v_PCOMID#	OR MEMBER_ID= #v_PDEPTID# OR MEMBER_ID = #v_PUSERID# OR MEMBER_ID = 'everyone' OR MEMBER_ID IS NULL)
       			AND
-                    TENANT_ID = #tenantID#
+                    A.TENANT_ID = #tenantID#
       			ORDER BY
                     BRD_GB, BRD_STEP
 			]]>
@@ -606,14 +611,9 @@
 			SELECT 
 				BRD_ID ,
                 CASE #v_LANG#
-			       WHEN
-				      '1' 
-			       THEN
-				      BRD_NM
-			       ELSE
-				      BRD_NM2
-			       END
-				BRD_NM,
+			       WHEN'1' THEN BRD_NM
+			       ELSE BRD_NM2
+			    END BRD_NM,
 				APPROVEFLAG 
 			FROM
 				TBL_RS_BRD 
@@ -677,13 +677,7 @@
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
-				( A.OWNERID = #v_POWNERID#
-					AND
-						PNUM = 0
-                   	AND
-                   		REFLAG <> '1'
-                   	OR
-                   		REFLAG = '2' )
+				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
 			AND 
                 ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND 
@@ -813,7 +807,7 @@
 			AND
 				REFLAG = '1'
 			AND
-				(STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME)
+				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
 				( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
@@ -991,7 +985,8 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
-			LIMIT #v_PTOPCNT#
+			LIMIT
+				#v_PTOPCNT#
 		]]>
 	</select>
 	
@@ -1003,7 +998,7 @@
 	<select id="EzResourceDAO.getBrdCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(BRD_ID)	cnt 
+				COUNT(BRD_ID) cnt 
 			FROM
 				TBL_RS_BRD 
 			WHERE  
@@ -1038,9 +1033,9 @@
              	OWNERPOSITION ,
              	OWNERPOSITION2 ,
              	OWNERCALL ,
-             	IFNULL(RESLOCATION, ' ') RESLOCATION  ,
-             	CONCAT(SUBSTR(MAKEDATE, 0, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, -2, 2)) MAKEDATE  ,
-             	IFNULL(APPROVEFLAG, '0') APPROVEFLAG  ,
+             	IFNULL(RESLOCATION, ' ') RESLOCATION ,
+             	CONCAT(SUBSTR(MAKEDATE, 1, 4), '-', SUBSTR(MAKEDATE, 5, 2), '-', SUBSTR(MAKEDATE, 7, 2)) MAKEDATE ,
+             	IFNULL(APPROVEFLAG, '0') APPROVEFLAG ,
              	BRD_ACCESS 
         	FROM
         		TBL_RS_BRD 
@@ -1080,23 +1075,23 @@
     		SET
     			BRD_STEP = BRD_STEP - 1
 			WHERE
-				BRD_UPPER = ( SELECT
-								Brd_Upper 
-                         	  FROM
-                         		TBL_RS_BRD 
-                         	  WHERE
-                         		BRD_ID = #v_P_Brd_ID#
-                         	  AND
-                         		BRD_COMPANY = #v_P_CompanyID# )
+				BRD_UPPER = ( SELECT S1.BRD_UPPER 
+							  FROM ( SELECT *
+                         	  		 FROM TBL_RS_BRD 
+                         	  		 WHERE BRD_ID = #v_P_Brd_ID#
+                         	  		 AND BRD_COMPANY = #v_P_CompanyID# 
+                         	  		 AND TENANT_ID = #tenantID# 
+                         	  	   ) AS S1
+                         	)
     		AND
-    			BRD_STEP > ( SELECT
-								BRD_STEP 
-							 FROM
-								TBL_RS_BRD 
-                     		 WHERE
-                     			BRD_ID = #v_P_Brd_ID#
-							 AND
-								BRD_COMPANY = #v_P_CompanyID# )
+    			BRD_STEP > ( SELECT S2.BRD_STEP 
+    						 FROM ( SELECT *
+							 		FROM TBL_RS_BRD 
+                     		 		WHERE BRD_ID = #v_P_Brd_ID#
+							 		AND BRD_COMPANY = #v_P_CompanyID#
+							 		AND TENANT_ID = #tenantID# 
+							 	  ) AS S2
+						   )
 			AND
 				TENANT_ID = #tenantID#					  		
 		]]>
@@ -1112,19 +1107,6 @@
    				COMPANYID = #v_P_CompanyID#
    			AND
    				TENANT_ID = #tenantID#	
-		]]>
-	</delete>
-	
-	<delete id="EzResourceDAO.delResData2" parameterClass="Map">
-		<![CDATA[
-			 DELETE FROM
-			 	TBL_RS_SCHEDULEFILE
-   			WHERE
-   				OWNERID = #v_P_Brd_ID#
-   			AND
-   				COMPANYID = #v_P_CompanyID#
-   			AND
-	   			TENANT_ID = #tenantID#
 		]]>
 	</delete>
 	
@@ -1182,12 +1164,14 @@
 		]]>
 	</procedure> -->
 	
-	<select id="EzResourceDAO.addResData_S1" resultClass="Integer">
+	<select id="EzResourceDAO.addResData_S1" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
 				(IFNULL(MAX(BRD_ID) , 0) + 1)
    			FROM
    				TBL_RS_BRD 
+   			WHERE
+	   			TENANT_ID = #tenantID# 
 		]]>
 	</select>
 	
@@ -1351,6 +1335,8 @@
 	   			COMPANYID = #v_pCompanyID# 
 	   		AND
 	   			OWNERID = #v_pOwnerID#
+	   		AND
+      			TENANT_ID = #tenantID#
    		]]>
 	</select>
 	
@@ -1624,10 +1610,9 @@
 	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 
-				num, pnum, ownerID, writerID, deptNM, ownerNM, 
-				title, location, timeDisplay, startDate, endDate, 
-				alertTime, CONTENT, importance, reFlag, gresFlag, 
-				entryList, allDay, writeDay, companyID, characterID, attachFlag 
+				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
+				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, 
+				companyID, characterID, attachFlag, tenant_ID
 			)
 			SELECT
 				#v_MaxNum# ,
@@ -1651,7 +1636,8 @@
 	        	#nowDate# ,
 	        	#v_P_companyID# ,
 	         	CHARACTERID ,
-	         	ATTACHFLAG 
+	         	ATTACHFLAG ,
+	         	tenant_ID
 	        FROM 
 	        	TBL_RS_SCHEDULE 
 			WHERE
@@ -1758,22 +1744,23 @@
 			DELETE FROM
 				TBL_RS_SCHEDULE
           	WHERE 
-          		( COMPANYID = #v_P_companyID#
-				AND
+				( COMPANYID = #v_P_companyID#
+					AND
 				  OWNERID = #v_P_ownerID#
-                AND
-                  NUM = #v_P_num#
-                AND
-                  TENANT_ID = #tenantID# )
-            OR ( COMPANYID = #v_P_companyID#
-            	AND
-            		OWNERID = #v_P_ownerID#
-            	AND
-            		PNUM = #v_P_num#
-            	AND
-            		REFLAG >= 3
-            	AND
-            		TENANT_ID = #tenantID#	)
+					AND
+				  NUM = #v_P_num#
+					AND
+				  TENANT_ID = #tenantID# )
+            OR 
+				( COMPANYID = #v_P_companyID#
+					AND
+				  OWNERID = #v_P_ownerID#
+					AND
+				  PNUM = #v_P_num#
+					AND
+				  REFLAG >= 3
+					AND
+				  TENANT_ID = #tenantID# )
 		]]>
 	</delete>
 	
@@ -1814,13 +1801,13 @@
                 ENTRYLIST = #v_P_entryList#,
                 ATTACHFLAG = #v_P_attachFlag#,
                 CHARACTERID = #v_P_characterID#
-           WHERE
+			WHERE
            		COMPANYID = #v_P_companyID#
-           AND
+			AND
            		NUM = #v_P_num#
-           AND
+			AND
            		OWNERID = #v_P_ownerID#
-           AND
+			AND
            		TENANT_ID = #tenantID#	
 		]]>
 	</update>
@@ -1835,6 +1822,8 @@
 				COMPANYID = #v_P_companyID#
 			AND
 				OWNERID = #v_P_writerID#
+			AND
+           		TENANT_ID = #tenantID#
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
@@ -2009,13 +1998,10 @@
 			AND
 				reFlag = 0
 			AND
-				Num <> (CASE
-							#v_p_cmd#
-                        WHEN
-                        	'add' THEN -1
-                        ELSE
-                        	#v_p_num# 
-                        END)
+				Num <> ( CASE #v_p_cmd#
+						 	WHEN 'add' THEN -1
+						 	ELSE #v_p_num# 
+						 END )
 			AND
 				ApproveFlag = '1'
 			AND
@@ -2067,13 +2053,10 @@
 			AND
 				B.ApproveFlag = '1' 
 			AND
-				B.num <> (CASE
-							#v_p_cmd#
-                          WHEN
-                          	'add' THEN -1
-                          ELSE
-                          	#v_p_num#
-                          END)
+				B.num <> ( CASE #v_p_cmd#
+							WHEN 'add' THEN -1
+							ELSE #v_p_num#
+                           END )
 			AND
 				B.TENANT_ID = #tenantID#
 		]]>
@@ -2121,15 +2104,10 @@
 			AND
 				B.TENANT_ID = C.TENANT_ID	
 			AND
-				( B.num = C.num
-			OR
-				( B.pnum = C.num
-			AND
-				B.reFlag = 4 ) )
+				( B.num = C.num OR ( B.pnum = C.num AND B.reFlag = 4 ) )
 			WHERE
 				B.ownerID = #v_p_ownerID#
 			AND
-				
 				B.pnum <> 0
 			AND
 				B.TENANT_ID = #tenantID#				
@@ -2177,28 +2155,35 @@
     
     <select id="EzResourceDAO.getSendMailToUser" parameterClass="Map" resultClass="ResGetSendMailToUserVO">
         <![CDATA[
-            SELECT
-              S.WRITERID, S.OWNERNM, S.DEPTNM, S.TITLE, S.STARTDATE, S.ENDDATE, T.BRD_NM, HR.MAIL
-            FROM
-              TBL_RS_SCHEDULE S
-            INNER JOIN
-              TBL_RS_BRD T
-            ON
-              S.OWNERID = T.BRD_ID
-            AND
-              S.TENANT_ID = T.TENANT_ID       
-            INNER JOIN
+			SELECT
+				S.WRITERID, 
+				S.OWNERNM, 
+				S.DEPTNM, 
+				S.TITLE, 
+				S.STARTDATE, 
+				S.ENDDATE, 
+				T.BRD_NM, 
+				HR.MAIL
+			FROM
+				TBL_RS_SCHEDULE S
+			INNER JOIN
+				TBL_RS_BRD T
+			ON
+				S.OWNERID = T.BRD_ID
+			AND
+				S.TENANT_ID = T.TENANT_ID       
+			INNER JOIN
               TBL_USERMASTER HR
-            ON
-              S.WRITERID = HR.CN
-            AND
-              S.TENANT_ID = HR.TENANT_ID      
-            WHERE
-              S.OWNERID = #resID#
-            AND
-              S.NUM = #num#
-            AND
-              S.TENANT_ID = #tenantID#      
+			ON
+				S.WRITERID = HR.CN
+			AND
+				S.TENANT_ID = HR.TENANT_ID      
+			WHERE
+				S.OWNERID = #resID#
+			AND
+				S.NUM = #num#
+			AND
+				S.TENANT_ID = #tenantID#
 		]]>
     </select>
 </sqlMap>

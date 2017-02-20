@@ -9,18 +9,14 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){
-				if("<c:out value='${use_portal}'/>" != 'YES'){
-					window.open("index_personal.aspx","bottom");
-				}else{
-				    <c:if test="${IsJMochaStandAlone == 'YES'}">
-				    window.open("/admin/ezOrgan/organMain.do", "bottom");
-				    </c:if>
-				    <c:if test="${IsJMochaStandAlone != 'YES'}">
-					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
-					//메인화면 포탈로 설정 2016-10-04 지정석
-					window.open("/admin/ezPortal/portalMain.do", "bottom");
-					</c:if>
-				}
+			    <c:if test="${IsJMochaStandAlone == 'YES'}">
+			    window.open("/admin/ezOrgan/organMain.do", "bottom");
+			    </c:if>
+			    <c:if test="${IsJMochaStandAlone != 'YES'}">
+				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
+				//메인화면 포탈로 설정 2016-10-04 지정석
+				window.open("/admin/ezPortal/portalMain.do", "bottom");
+				</c:if>
 				
 				<c:if test="${IsJMochaStandAlone != 'YES'}">
 				var ua = navigator.userAgent;
@@ -162,6 +158,7 @@
 <%-- 		      			<li><span id="menu17" onClick="menu_change(920);"><spring:message code="main.t501" /></span></li> --%>
 <%-- 		      		</c:if>		      		 --%>
                     </c:if>
+                    <li class='btn_logout' style='float:right;'><span style='cursor:pointer' onclick='top.location.href = "/user/login/actionLogout.do"'><spring:message code='ezPortal.t990043' /></span></li>
 		    	</ul>
 		  	</div>		  	
 		</form>		

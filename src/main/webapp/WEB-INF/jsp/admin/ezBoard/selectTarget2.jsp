@@ -8,13 +8,13 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='/css/organ_tree.css' type="text/css" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree.js"></script>	    
 	    <script type="text/javascript" src="/js/ezBoard/ListView_list_admin.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezOrgan/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/string_component_utf8.js"></script>
-	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
 		<script type="text/javascript" language="javascript">
 			var m_orgImg = { "normal": "/images/tab_org1.gif", "select": "/images/tab_org.gif" };
 		    var m_dlImg = { "normal": "/images/tab_dl1.gif", "select": "/images/tab_dl.gif" };
@@ -85,7 +85,7 @@
 		        g_xmlHTTP.send(strQuery);
 
 		        m_selectedTree = TreeView;
-		        SelectReceiverWindow(${defaultwin}Title, ListViewMsg${defaultwin});
+		        SelectReceiverWindow(ToTitle, ListViewMsgTo);
 			});
 			
 			function TreeViewNodeClick(pNodeID, pTreeID) {						        	
@@ -232,13 +232,13 @@
 		            m_receiverTitleList[count].style.fontWeight = "normal";
 		            m_receiverWindowList[count].style.backgroundColor = m_titleNoneSelectedColor;
 		            m_receiverWindowList[count].normalColor = m_titleNoneSelectedColor;
-		            //ChangeRowsColor(m_receiverWindowList[count], m_titleNoneSelectedColor);
+		            ChangeRowsColor(m_receiverWindowList[count], m_titleNoneSelectedColor);
 		        }
-		        ${defaultwin}Title.style.fontWeight = "bold";
-		        ListViewMsg${defaultwin}.style.backgroundColor = m_titleSelectedColor;
-		        ListViewMsg${defaultwin}.normalColor = m_titleSelectedColor;
-		        //ChangeRowsColor(ListViewMsg${defaultwin}, m_titleSelectedColor);
-		        m_selectedWindow = ListViewMsg${defaultwin};		        
+		        ToTitle.style.fontWeight = "bold";
+		        ListViewMsgTo.style.backgroundColor = m_titleSelectedColor;
+		        ListViewMsgTo.normalColor = m_titleSelectedColor;
+		        ChangeRowsColor(ListViewMsgTo, m_titleSelectedColor);
+		        m_selectedWindow = ListViewMsgTo;		        
 		    }
 		    
 		    function DeleteReceiver(pListView) {
@@ -301,9 +301,7 @@
 		                        if (MaxID < curnum)
 		                            MaxID = curnum;
 		                    }
-		                    //var objTr = listview.AddRow(MaxID);
-		                    //SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                    //listview.AddDataRow(objTr, Resultxml);
+		                    
 		                    var objTr = listview.NewAddRow(0, "ListViewMsgToView" + "_TR_" + eval(MaxID + 1));
 		                    listview.AddDataRow(objTr, Resultxml);
 		                    listview.SetSelectedIndex(MaxID + 1);		                    
@@ -353,8 +351,7 @@
 		                            MaxID = curnum;
 		                    }
 		                    var objTr = listview.NewAddRow(0, "ListViewMsgToView" + "_TR_" + eval(MaxID + 1));
-		                    //var objTr = listview.AddRow(MaxID);
-		                    //SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		                    
 		                    listview.AddDataRow(objTr, Resultxml);
 		                    listview.SetSelectedIndex(MaxID + 1);		                    
 		                }

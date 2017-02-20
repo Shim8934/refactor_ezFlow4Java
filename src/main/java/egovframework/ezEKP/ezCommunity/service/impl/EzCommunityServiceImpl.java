@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1094,7 +1095,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				
 				if(!selType.equals("2")){
 					for(int i=1; i <= Integer.parseInt(selRes); i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -1102,7 +1103,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					selectedNo = 9;
 					
 					for(int i=1; i <= Integer.parseInt(selRes) - 1; i++) {
-						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\"><br>");
+						sb.append("<span style=\"display:inline-block; width:30px;\">"+ i + ". </span><input type= \"text\" size=\"80\" name = \"selNo_" + i + "\" maxlength=\"200\"><br>");
 					}
 					
 					answerCount = Integer.parseInt(selRes);
@@ -2837,8 +2838,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setItemID(xmlData.getElementsByTagName("ITEMID").item(0).getTextContent());
 		item.setBoardID(xmlData.getElementsByTagName("BOARDID").item(0).getTextContent());
 		item.setWriterID(xmlData.getElementsByTagName("WRITERID").item(0).getTextContent().trim());
-		item.setWriterName(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim());
-		item.setWriterName2(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim());
+		item.setWriterName(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME").item(0).getTextContent(), "utf-8").trim());
+		item.setWriterName2(URLDecoder.decode(xmlData.getElementsByTagName("WRITERNAME2").item(0).getTextContent(), "utf-8").trim());
 		item.setWriterDeptID(xmlData.getElementsByTagName("DEPTID").item(0).getTextContent());
 		item.setWriterDeptName(xmlData.getElementsByTagName("DEPTNAME").item(0).getTextContent());
 		item.setWriterDeptName2(xmlData.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
@@ -2847,7 +2848,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setWriterCompanyName2(xmlData.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
 		item.setWriteDate(dateStr);
 		item.setImportance(Integer.parseInt(xmlData.getElementsByTagName("IMPORTANCE").item(0).getTextContent()));
-		item.setTitle(xmlData.getElementsByTagName("TITLE").item(0).getTextContent().trim());
+		item.setTitle(URLDecoder.decode(xmlData.getElementsByTagName("TITLE").item(0).getTextContent(), "utf-8").trim());
 
 		if (pMode.equals("copy")) {
 			pContentLocation = xmlData.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent();
@@ -2863,8 +2864,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		item.setEndDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true));
-		item.setAbsTract(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent());
-		item.setAttachments(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		item.setAbsTract(URLDecoder.decode(xmlData.getElementsByTagName("ABSTRACT").item(0).getTextContent(), "utf-8"));
+		item.setAttachments(URLDecoder.decode(xmlData.getElementsByTagName("ATTACHMENTS").item(0).getTextContent(), "utf-8"));
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
@@ -2966,14 +2967,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.brdUpdateItemUpdate(map);
 			ezCommunityDAO.brdUpdateItemDelete(map);
 		} else {
-			logger.debug("newItem");
-			int docNo= ezCommunityDAO.brdNewItemSelect(userInfo.getTenantId());
-			logger.debug("docNo="+docNo);
-			
-			map.put("v_pDocNo", docNo + 1);
-			
+			map.put("v_pDocNo", "");
 			ezCommunityDAO.brdNewItemInsert(map);
-			
 		}
 		
 		map = new HashMap<String, Object>();
@@ -3011,8 +3006,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + attach.getItemID() + "</ItemID>");
 			sb.append("<GUID>" + attach.getGuID() + "</GUID>");
-			sb.append("<FileName><![CDATA[" + attach.getFileName() + "]]></FileName>");
-			sb.append("<FilePath><![CDATA[" + attach.getFilePath() + "]]></FilePath>");
+			sb.append("<FileName>" + commonUtil.cleanValue(attach.getFileName()) + "</FileName>");
+			sb.append("<FilePath>" + commonUtil.cleanValue(attach.getFilePath()) + "</FilePath>");
 			sb.append("<FileSize>" + getProperSizeDisplay(Integer.parseInt(attach.getFileSize())) + "</FileSize>");
 			sb.append("<FileSize2>" + attach.getFileSize() + "</FileSize2>");
 			sb.append("</NODE>");
@@ -4531,7 +4526,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		sb.append("</NODES>");
 		
-		logger.debug("adminSearchItemXML ended.");
+		logger.debug("adminSearchItemXML ended. result=" + sb.toString());
 		
 		return sb.toString();
 	}
@@ -4644,12 +4639,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		
 		if (mode.equals("MASTER")) {
-			List<String> list = ezCommunityDAO.adminMemberListGoSESelect(map);
+			List<CommunityBoardPropertyVO> list = ezCommunityDAO.adminMemberListGoSESelect(map);
 			
 			ezCommunityDAO.adminMemberListGoSEUpdate1(map);
 			
-			for (String rowID : list) {
-				map.put("v_rowID", rowID);
+			for (CommunityBoardPropertyVO vo : list) {
+				map.put("accessID", vo.getAccessID());
+				map.put("boardID", vo.getBoardID());
 				
 				ezCommunityDAO.adminMemberListGoSEUpdate2(map);
 			}
@@ -5261,16 +5257,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
 				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
 				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
-				sb.append("<WriterName>" + itemList.getWriterName() + "</WriterName>");
+				sb.append("<WriterName>" + commonUtil.cleanValue(itemList.getWriterName()) + "</WriterName>");
 				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
 				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
-				sb.append("<Title>" + itemList.getTitle() + "</Title>");
-				sb.append("<Attachments>" + itemList.getAttachments() + "</Attachments>");
+				sb.append("<Title>" + commonUtil.cleanValue(itemList.getTitle()) + "</Title>");
+				sb.append("<Attachments>" + commonUtil.cleanValue(itemList.getAttachments()) + "</Attachments>");
 				sb.append("<ReadCount>" + itemList.getReadCount() + "</ReadCount>");
 				sb.append("<ItemLevel>" + itemList.getItemLevel() + "</ItemLevel>");
-				sb.append("<Abstract>" + itemList.getAbsTract() + "</Abstract>");
+				sb.append("<Abstract>" + commonUtil.cleanValue(itemList.getAbsTract()) + "</Abstract>");
 				sb.append("</NODE>");
 			}
 		}

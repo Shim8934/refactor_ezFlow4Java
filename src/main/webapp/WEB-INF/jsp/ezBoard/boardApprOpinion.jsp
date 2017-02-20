@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
     <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
     <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
     <script type="text/javascript">
         var pMod = "${mode}";
@@ -21,20 +22,20 @@
             xmlhttpAppr.send();
 
             if (xmlhttpAppr.responseText == "OK") {
-                var xmlhttp2 = createXMLHttpRequest();
-                var objNode;
-                var Xmldom = createXmlDom();
-                createNodeInsert(Xmldom, objNode, "DATA");
-                createNodeAndInsertText(Xmldom, objNode, "CONTENT", document.getElementById("txt_OpinionContent").value);
-                xmlhttp2.open("POST", "/myoffice/ezBoardSTD/interASP/SendreturnNoticemail.aspx?ItemID=" + ItemList, false);
-                xmlhttp2.send(Xmldom);
-                var ResponseXML = xmlhttp2.responseXML;
-                xmlhttp2 = createXMLHttpRequest();
-                xmlhttp2.open("POST", "/myoffice/ezEmail/remote/mail_send_noti.aspx", false);
-                xmlhttp2.send(ResponseXML);
-                xmlhttp2 = null;
-
-                alert("<spring:message code='ezBoard.t999009'/>");
+            	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/sendReturnNoticeMail.do",
+					data : { 
+							 content   : document.getElementById("txt_OpinionContent").value,
+							 itemID    : ItemList
+						   },
+					success: function(result) {
+						alert("<spring:message code='ezBoard.t999009'/>");
+					}        			
+				});
+                
                 try {
                     window.opener.refresh_onclick();
                     window.close();

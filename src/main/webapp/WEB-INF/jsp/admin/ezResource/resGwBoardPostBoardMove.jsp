@@ -151,7 +151,7 @@
 		<table class="content">
   			<tr>
     			<th><spring:message code='ezResource.t44' /></th>
-    			<td>${upNm} <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${upNm}"></td>
+    			<td><c:out value='${upNm}' /> <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="<c:out value='${upNm}' />"></td>
   			</tr>
 		</table>
 		<br>
@@ -159,7 +159,7 @@
 			<table class="content">
   				<tr>
     				<th> <spring:message code='ezResource.t84' /></th>
-    				<td>${upNm} </td>
+    				<td><c:out value='${upNm}' /> </td>
   				</tr>
   				<tr>
     				<th> <spring:message code='ezResource.t47' /></th>
@@ -184,7 +184,7 @@
 			
 			<c:choose>
 				<c:when test="${brdID eq 1}">
-					<div class="txt"> ${wrnMsg}</div>
+					<div class="txt"><c:out value='${wrnMsg}' /></div>
 				</c:when>
 				<c:otherwise>
 					<table class="content">

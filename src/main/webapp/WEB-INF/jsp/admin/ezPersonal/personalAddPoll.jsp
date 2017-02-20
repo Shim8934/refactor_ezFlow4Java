@@ -74,10 +74,24 @@
 					return;
 				}
 				
+				if (get_length(document.getElementById("Title2").value) > 500) {
+					alert("<spring:message code = 'ezPersonal.t216' />");
+					return;
+				}
+				
 				for (var i=1; i<11; i++) {
 					if (get_length(eval("answer" + i).value) > 100) {
 						alert("<spring:message code = 'ezPersonal.t217' />");
 						eval("answer" + i).focus();
+						return;
+					}
+				}
+				
+				//2017-02-19
+				//보기에 아무것도 넣지 않았을때, 보기를 입력해야 하도록 수정
+				for (var i=1; i<parseInt(selectnum.value)+1; i++) {
+					if (document.getElementById("answer" + i).value == "") {
+						alert("<spring:message code = 'ezPersonal.jjs01'/>"+i+"<spring:message code = 'ezPersonal.jjs02'/>");
 						return;
 					}
 				}

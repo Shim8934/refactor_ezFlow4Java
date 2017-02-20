@@ -15,9 +15,9 @@
 			var strBrd_ID = "${brdID}";
 			var strCompanyID = "${companyID}";
 			var userID = "${userID}";
-			var userName = "${userName}";
+			var userName = "<c:out value='${userName}' />";
 			var deptID = "${deptID}";
-			var deptName = "${deptName}";
+			var deptName = "<c:out value='${deptName}' />";
 			
 			window.onload = function () {
 				document.getElementById("Brd_NM").focus();
@@ -201,14 +201,14 @@
 					<table class="content">
         				<tr>
           					<th> <spring:message code="ezResource.t151"/></th>
-          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="${deptName}" style="width: 200px"></td>
+          					<td><input type="text" name="OwnDept" id="OwnDept" idval="${deptID}" value="<c:out value='${deptName}' />" style="width: 200px"></td>
           					<th> <spring:message code="ezResource.t152"/></th>
           					<td id="MakeDate" nowrap style="width:120px;padding-right:15px">${makeDate} </td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t153"/></th>
           					<td>
-          						<input type="text" name="Owner" id="Owner" idval="${userID}" position="${title}" nmval="${displayName}" value="${displayName}(${title})" style="width: 200px">
+          						<input type="text" name="Owner" id="Owner" idval="${userID}" position="<c:out value='${title}' />" nmval="<c:out value='${displayName}' />" value="<c:out value='${displayName}' />(<c:out value='${title}' />)" style="width: 200px">
             						<a class="imgbtn">
             							<span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span>
             						</a>

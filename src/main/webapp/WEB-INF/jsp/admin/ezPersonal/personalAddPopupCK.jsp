@@ -114,6 +114,12 @@
 					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}
+				
+				if (document.getElementById("Title2").value == "")
+				{
+					alert("<spring:message code = 'ezPersonal.t148' />");
+					return;
+				}
 	
 				if (parseInt(document.getElementById("wWidth").value, 10) != document.getElementById("wWidth").value)
 				{
@@ -143,6 +149,13 @@
 				{
 					alert("<spring:message code = 'ezPersonal.t149' />");
 					document.getElementById("Title").focus();
+					return;
+				}
+				
+				if (get_length(document.getElementById("Title2").value, 10) > 250)
+				{
+					alert("<spring:message code = 'ezPersonal.t149' />");
+					document.getElementById("Title2").focus();
 					return;
 				}
 				

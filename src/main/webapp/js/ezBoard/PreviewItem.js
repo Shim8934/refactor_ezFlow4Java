@@ -85,7 +85,7 @@ function PreviewRayerChange(pGubun) {
                 document.getElementById("divList").style.height = (pMailListHeightW - 45) + "px";
             document.getElementById("PreviewRayerW").style.height = (pMailPreHeightW + 45) + "px";
 
-            if (window.parent.location.href.indexOf("BoardItemList_Favorite.aspx") > -1)
+            if (window.parent.location.href.indexOf("/ezBoard/boardItemList_favorite.do") > -1)
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 35) + "px";
             else
                 document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 95) + "px";
@@ -372,11 +372,11 @@ function event_ItemPreviewRead_photo() {
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             setNodeText(document.getElementById("PreH_date"), WriteDate);
-            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURI(ContentLocation);
+            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURIComponent(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
             else
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
 
         }
     }
@@ -449,7 +449,8 @@ function previewItemSet() {
 			async : true,
 			url : "/ezCommon/mhtToHTMLContent.do",
 			data : { type   	 : boardType, 
-					 itemID 	 : ItemID
+					 itemID 	 : ItemID,
+					 href        : ContentLocation
 				   },
 			success: function(result){
 				event_downContent(result, xmlhttp2.responseText);

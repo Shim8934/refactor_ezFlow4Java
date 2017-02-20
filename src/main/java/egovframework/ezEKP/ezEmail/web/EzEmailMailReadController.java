@@ -464,64 +464,84 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = null;
-		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			Folder f = ia.getFolder(folderPath);
-			
-			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-			} else {
-				f.open(Folder.READ_ONLY);
-				Message message = null;
-				
-				if (f.isOpen() && f instanceof IMAPFolder) {
-					message = ((IMAPFolder)f).getMessageByUID(uid);
-				}
-				
-				if (message == null) {
-					logger.error("Message not found. uid=" + uid);
-				} else {
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
-					double size = Double.parseDouble(bodyInfoList.get(2));
-					String strSize = ezEmailUtil.getSizeWithUnit(size);
-					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
-					
-					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-					    String[] messageIds = message.getHeader("Message-ID");
-					    
-					    if (messageIds != null) {
-					        logger.debug("Message-ID=" + messageIds[0]);
-					    } else {
-					        logger.debug("No Message-ID");
-					    }
-					    
-						// send an MDN to the sender.
-						if (!ezEmailUtil.hasMDNSentFlag(message)) {
-							logger.debug("MDNSentFlag isn't set.");
-							
-							// retrieve user info from db.
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
-							
-							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
-							
-							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
-						}
-						else {
-							logger.debug("MDNSentFlag is set");
-						}
-					}
-				}
-			}
-		} catch (MessagingException e) { 
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+        boolean retryFlag = false;
+        int retryCount = 1; // 메일 읽기 실패 시 재시도 횟수        
+        
+        do {		
+    		try {
+    			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+    					userEmail, password, egovMessageSource, locale);
+    			
+                if (retryFlag) {
+                    retryFlag = false;
+                }
+    			
+    			Folder f = ia.getFolder(folderPath);
+    			
+    			if (f == null || !f.exists()) {
+    				logger.error("Folder not found. folderPath=" + folderPath);
+    			} else {
+    				f.open(Folder.READ_ONLY);
+    				Message message = null;
+    				
+    				if (f.isOpen() && f instanceof IMAPFolder) {
+    					message = ((IMAPFolder)f).getMessageByUID(uid);
+    				}
+    				
+    				if (message == null) {
+    					logger.error("Message not found. uid=" + uid);
+    				} else {
+    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+    					double size = Double.parseDouble(bodyInfoList.get(2));
+    					String strSize = ezEmailUtil.getSizeWithUnit(size);
+    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+    					
+    					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+    					    String[] messageIds = message.getHeader("Message-ID");
+    					    
+    					    if (messageIds != null) {
+    					        logger.debug("Message-ID=" + messageIds[0]);
+    					    } else {
+    					        logger.debug("No Message-ID");
+    					    }
+    					    
+    						// send an MDN to the sender.
+    						if (!ezEmailUtil.hasMDNSentFlag(message)) {
+    							logger.debug("MDNSentFlag isn't set.");
+    							
+    							// retrieve user info from db.
+    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+    							
+    							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+    									userEmail, password);
+    							
+    							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
+    						}
+    						else {
+    							logger.debug("MDNSentFlag is set");
+    						}
+    					}
+    				}
+    			}
+    		} catch (Exception e) { 
+    			e.printStackTrace();
+    			
+                retryFlag = true;
+                --retryCount;
+                
+                if (retryCount > -1) {
+                    logger.debug("Message read fail. Retry...");
+                    
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception ex) {}
+                }                   			
+    		} finally {
+    			if (ia != null) {
+    				ia.close();
+    			}
+    		}
+        } while (retryFlag && retryCount > -1);		
 		
 		model.addAttribute("htmlBody", bodyInfoList.get(0));
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -1152,63 +1172,83 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		List<String> bodyInfoList = null;
 		String pAttachListHtmlSub = "";
 		IMAPAccess ia = null;
+        boolean retryFlag = false;
+        int retryCount = 1; // 메일 읽기 실패 시 재시도 횟수		
 		
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			Folder f = ia.getFolder(folderPath);
-	
-			if (f == null || !f.exists()) {
-				logger.error("Folder not found. folderPath=" + folderPath);
-			} else {
-				f.open(Folder.READ_ONLY);
-				Message message = null;
-				if (f.isOpen() && f instanceof IMAPFolder) {
-					message = ((IMAPFolder)f).getMessageByUID(uid);
-				}
-				
-				if (message == null) {
-					logger.error("Message not found. uid=" + uid);
-				} else {
-					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
-					double size = Double.parseDouble(bodyInfoList.get(2));
-					String strSize = ezEmailUtil.getSizeWithUnit(size);
-					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
-	
-					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-                        String[] messageIds = message.getHeader("Message-ID");
-                        
-                        if (messageIds != null) {
-                            logger.debug("Message-ID=" + messageIds[0]);
-                        } else {
-                            logger.debug("No Message-ID");
-                        }
-					    
-						// send an MDN to the sender.
-						if (!ezEmailUtil.hasMDNSentFlag(message)) {
-							logger.debug("MDNSentFlag isn't set.");
-							
-							// retrieve user info from db.
-							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
-							
-							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
-									userEmail, password);
-							
-							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
-						}
-						else {
-							logger.debug("MDNSentFlag is set");
-						}				
-					}
-				}
-			}
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
-		}
+        do {
+    		try {
+    			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+    					userEmail, password, egovMessageSource, locale);
+    			
+    			if (retryFlag) {
+    			    retryFlag = false;
+    			}
+    			
+    			Folder f = ia.getFolder(folderPath);
+    	
+    			if (f == null || !f.exists()) {
+    				logger.error("Folder not found. folderPath=" + folderPath);
+    			} else {
+    				f.open(Folder.READ_ONLY);
+    				Message message = null;
+    				if (f.isOpen() && f instanceof IMAPFolder) {
+    					message = ((IMAPFolder)f).getMessageByUID(uid);
+    				}
+    				
+    				if (message == null) {
+    					logger.error("Message not found. uid=" + uid);
+    				} else {
+    					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, false);
+    					double size = Double.parseDouble(bodyInfoList.get(2));
+    					String strSize = ezEmailUtil.getSizeWithUnit(size);
+    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+    	
+    					if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
+                            String[] messageIds = message.getHeader("Message-ID");
+                            
+                            if (messageIds != null) {
+                                logger.debug("Message-ID=" + messageIds[0]);
+                            } else {
+                                logger.debug("No Message-ID");
+                            }
+    					    
+    						// send an MDN to the sender.
+    						if (!ezEmailUtil.hasMDNSentFlag(message)) {
+    							logger.debug("MDNSentFlag isn't set.");
+    							
+    							// retrieve user info from db.
+    							OrganUserVO userVO = ezOrganAdminService.getUserInfo(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+    							
+    							SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+    									userEmail, password);
+    							
+    							processAutoMDN(sa, message, userEmail, userVO.getDisplayName());
+    						}
+    						else {
+    							logger.debug("MDNSentFlag is set");
+    						}				
+    					}
+    				}
+    			}
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			
+                retryFlag = true;
+                --retryCount;
+                
+                if (retryCount > -1) {
+                    logger.debug("Message read fail. Retry...");
+                    
+                    try {
+                        Thread.sleep(1000);
+                    } catch (Exception ex) {}
+                }    			
+    		} finally {
+    			if (ia != null) {
+    				ia.close();
+    			}
+    		}        
+        } while (retryFlag && retryCount > -1);		
 		
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", bodyInfoList.get(0));

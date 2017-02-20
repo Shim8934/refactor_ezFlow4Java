@@ -177,11 +177,11 @@
           						<table style="width:100%">
               						<tr class="primary">
                 						<th>${langPrimary}</th>
-                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${brdID}" value="${brdNm}" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+                						<td><input type="text" name="Brd_NM" id="Brd_NM" idval="${strBrdID}" value="<c:out value='${strBrdNm}' />" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
               						</tr>
               						<tr class="secondary">
                 						<th>${langSecondary}</th>
-                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${brdID}" value="${brdNm2}" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
+                						<td><input type="text" name="Brd_NM2" id="Brd_NM2" idval="${strBrdID}" value="<c:out value='${strBrdNm2}' />" style="width: 98%" onBlur="CheckLen(this, 50)"></td>
 									</tr>
 								</table>          
 							</td>
@@ -214,7 +214,7 @@
   			</tr>
   			<tr>
     			<td style="padding-bottom:1px; height:100%; padding-right:12px">
-        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none"> ${brdExplain}</textarea>
+        			<textarea name="Brd_Explain" id="Brd_Explain" style="width: 100%; height: 100%;resize:none"><c:out value='${brdExplain}' /></textarea>
     			</td>
   			</tr>
 		</table>

@@ -3305,7 +3305,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 게시물첨부 표출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/uploadItemAttach.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezBoard/uploadItemAttach.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String uploadItemAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -3801,7 +3801,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		boardID = request.getParameter("boardID");
 		
 		if (boardID != null && !boardID.equals("")) {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getTenantId());
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
 			docPath = boardListVO.getContentLocation();
 			
 			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
@@ -3818,7 +3818,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			}
 		} else {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getTenantId());
+			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
 			boardID = boardListVO.getBoardID();
 			docPath = boardListVO.getContentLocation();
 			
@@ -5097,6 +5097,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String type = request.getParameter("type");
 		String boardID = request.getParameter("boardID");
 		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
 		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String filePath = "";
 		
@@ -5109,7 +5110,7 @@ public class EzBoardController extends EgovFileMngUtil{
         
         if (filePath != null && !filePath.equals("")) {
         	logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
-    		ezCommonService.responseAttach(filePath, fileName, false, request, response);
+        	downFile(request, response, realPath + filePath, fileName);
         }
 	}
 	
@@ -5816,16 +5817,18 @@ public class EzBoardController extends EgovFileMngUtil{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
 		String attID = request.getParameter("attID");
+		String itemID = request.getParameter("itemID");
 		String fileName = "";
 		String filePath = "";
+		String realPath = commonUtil.getRealPath(request);
 		
-		BoardAttachVO result = ezBoardService.getAttachInfo(attID, userInfo.getTenantId());
+		BoardAttachVO result = ezBoardService.getAttachInfo(itemID, attID, userInfo.getTenantId());
 		
 		filePath = result.getFilePath();
 		fileName = result.getFileName();
 		
 		if (filePath != null && !filePath.equals("")) {
-			ezCommonService.responseAttach(filePath, fileName, true, request, response);
+			downFile(request, response, realPath + filePath, fileName);
 		}
 	}
 	
@@ -6312,7 +6315,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (boardInfo.getReplyNotify().equals("1")) {
+		if (!boardInfo.getReplyNotify().equals("1")) {
 			return ;
 		}
 		
@@ -6352,10 +6355,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 게시판 전자결재관련 메일전송 실행 Method
+	 * 게시판 전자결재승인관련 메일전송 실행 Method
 	 */
 	@RequestMapping(value = "/ezBoard/sendApprNoticeMail.do")
-	public void sendApprnoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void sendApprnoticeMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("sendApprnoticemail started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -6403,10 +6406,59 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 	
 	/**
+	 * 게시판 전자결재승인반려관련 메일전송 실행 Method
+	 */
+	@RequestMapping(value = "/ezBoard/sendReturnNoticeMail.do")
+	public void sendReturnNoticemail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("sendReturnNoticemail started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String itemID = request.getParameter("itemID");
+		String content = request.getParameter("content");
+		
+		logger.debug("content=" + content + ",itemID=" + itemID);
+		
+		String[] itemIDs = itemID.split(";");
+		
+		for (int k = 0; k < itemIDs.length; k++) {
+			String tempItemID = itemIDs[k].split(",")[0];
+			
+			BoardListVO boardListVO = ezBoardService.getItemInfo(tempItemID, userInfo.getLang(), userInfo.getTenantId());
+			
+			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
+	        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+	        
+	        StringBuilder bodyContent = new StringBuilder();
+	        
+	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999015", userInfo.getLocale()) + "<br><br>");
+	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + boardListVO.getBoardName());
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + boardListVO.getTitle() + "</a>");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + content + "</a>");
+	        bodyContent.append("</DIV>");
+	        
+	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
+	        
+        	InternetAddress from = new InternetAddress();
+        	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+        	from.setAddress(userInfo.getEmail());
+        	
+        	InternetAddress to = new InternetAddress();
+        	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
+        	to.setAddress(boardListVO.getMail());
+        	
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+		}
+		
+		logger.debug("sendReturnNoticemail ended");
+	}
+	
+	/**
 	 * 게시판 boardListPortal 화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardListPortal.do")
-	public String boardListPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+	public String boardListPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
@@ -6424,5 +6476,44 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("totalCount", totalCount);
 		
 		return "ezBoard/boardListPortal";
+	}
+	
+	@RequestMapping(value = "/ezBoard/boardItemPreViewPhotoContent.do")
+	public String boardItemPreViewPhotoContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("boardItemPreViewPhotoContent started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String showAdjacent = request.getParameter("showAdjacent");
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String mode = request.getParameter("mode");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		
+		if (!boardInfo.getRead_FG().equals("true")) {
+        	return "main/warning";
+        }
+		
+//		String retVal = "";
+//		
+//		if (!mode.equals("temp")) {
+//			retVal = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+//		} else {
+//			retVal = ezBoardService.getItemTempXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+//		}
+		
+		ezBoardService.setAsRead(userInfo, boardID, itemID);
+
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardID", boardID);
+		model.addAttribute("mode", mode);
+		model.addAttribute("showAdjacent", showAdjacent);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("boardInfo", boardInfo);
+		
+		logger.debug("boardItemPreViewPhotoContent ended");
+		
+		return "ezBoard/boardItemPreViewPhotoContent";
 	}
 }

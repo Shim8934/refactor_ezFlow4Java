@@ -187,7 +187,7 @@ public class EzPersonalDAO extends EgovAbstractDAO{
     }
     
 	public String getPassword (String cn, int tenantID) throws Exception {
-        if (config.getProperty("config.UseJMochaUserRepository").equals("YES")) {
+        if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
             return getPasswordForJMocha(cn, tenantID);
         } else {
             return getPasswordForLocal(cn, tenantID);

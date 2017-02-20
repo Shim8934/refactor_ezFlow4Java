@@ -12,7 +12,7 @@
 		<script type="text/javascript" src="/js/ezResource/admin/gwBoard_Post_RegBoardRightMain.js" ></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
 			g_BrdID = "${brdID}";
-			g_BrdNm = "${brdNm}";
+			g_BrdNm = "<c:out value='${brdNm}' />";
 			g_UserID = "${userInfo.id}";
 
 			var L_BrdGb = "${brdGb}";
@@ -97,7 +97,7 @@
 		<table class="content">
   			<tr>
     			<th> <spring:message code="ezResource.t44" /></th>
-    			<td>${brdNm} <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="${brdNm}"></td>
+    			<td><c:out value='${brdNm}' /> <input type="hidden" id="UPPER_NM" name="UPPER_NM" value="<c:out value='${brdNm}' />"></td>
   			</tr>
 		</table>
 		<br>

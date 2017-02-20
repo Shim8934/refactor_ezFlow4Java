@@ -3107,7 +3107,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 
         if (!searchStart.equals("")) {
         	startDateTime = searchStart + " 00:00:00";
-        	endDateTime = searchEnd + "23:59:59";
+        	endDateTime = searchEnd + " 23:59:59";
         }
 
         if (!title.equals("") || !writerName.equals("") || !abstracts.equals("") || !searchStart.equals("")) {
