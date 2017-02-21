@@ -644,8 +644,8 @@
                	  	TENANT_ID = #tenantID#
                	  AND  
                	  	(DEPTLEVEL = 1
-               	  OR 
-               	  	CN = 'Top') ) A
+               	  AND 
+               	  	CN <> 'Top') ) A
            	ORDER BY 
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>

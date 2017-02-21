@@ -877,6 +877,12 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    logger.debug("saveUserInfo started.");
 	    
 	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    
+        //관리자 권한 체크
+        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+            return "cmm/error/adminDenied";
+        }
+	    
 	    int tenantID = userInfo.getTenantId();
 	    
 	    vo.setTenantId(tenantID);
@@ -890,10 +896,15 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    
 		String result = "";		
 		
+		// 전체관리자가 아닌데 전체관리자 권한을 설정하려는 경우엔 CHECKPERMISSION을 반환한다.
+        if (userInfo.getRollInfo().indexOf("c=1") == -1 
+                && vo.getExtensionAttribute1() != null
+                && vo.getExtensionAttribute1().toLowerCase().indexOf("c=1") > -1) {
+            result = "CHECKPERMISSION";		
 		// 기존 사용자를 수정하는 경우엔 parentCn의 값이 empty string 이다.
-		if (vo.getParentCn().equals("")) {		
-			ezOrganAdminService.updateDBData_user(vo);
-			result = "OK";
+        } else if (vo.getParentCn().equals("")) {				    
+	        ezOrganAdminService.updateDBData_user(vo);
+	        result = "OK";
 		// 새로운 사용자를 등록한다.
 		} else {		    
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
@@ -1520,6 +1531,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("use_ie11Browser", use_ie11Browser);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
+		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
         model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);		
 		
 		logger.debug("permissionsList ended.");
@@ -1609,6 +1621,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	    logger.debug("permissionsCheck started.");
 	    
 		LoginVO user = commonUtil.userInfo(loginCookie);
+		
 		//관리자 권한 체크
 		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -1630,6 +1643,7 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
 		model.addAttribute("userInfo", user);
+		model.addAttribute("isAdmin", user.getRollInfo().indexOf("c=1") > -1);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
 		
 		logger.debug("permissionsCheck ended.");

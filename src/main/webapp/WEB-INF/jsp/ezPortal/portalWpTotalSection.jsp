@@ -172,6 +172,7 @@
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
+		<script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule3.js"></script>
 		<%if (request.getHeader("User-Agent").indexOf("Trident") < 0 && request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0){ %>
 			<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
     	<%} else { %>

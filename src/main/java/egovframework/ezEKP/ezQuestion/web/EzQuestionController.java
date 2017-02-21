@@ -140,7 +140,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			responseRange = request.getParameter("responseRange");
 		}
 		if(request.getParameter("pollStartDate") != null && !request.getParameter("pollStartDate").equals("")){
-logger.debug("pollStartDate=" + request.getParameter("pollStartDate"));
 			pollStartDate = request.getParameter("pollStartDate");
 			pollStartDate = commonUtil.makeDate(pollStartDate.substring(0,4), pollStartDate.substring(5,7), pollStartDate.substring(8,10), true);
 		}
