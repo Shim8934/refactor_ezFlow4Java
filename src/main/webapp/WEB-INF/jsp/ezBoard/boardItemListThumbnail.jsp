@@ -582,6 +582,11 @@
 		            if (ret)
 		                DeleteItem();
 		        }
+		        
+		        try {
+                	leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -604,18 +609,23 @@
 		            xmlhttp = null;
 		            alert("<spring:message code='ezBoard.t268'/>");
 		
-		                    if (CurPage == totalPage) {
-		                        var SelList = new ListView();
-		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1;
-		                        if (SelList.GetRowCount() == DeleteCount) {
-		                            CurPage = CurPage - 1;
-		                        }
-		                    }
-		                    if (CurPage == 0) CurPage = 1;
-		                    getBoardList();
-		                }
-		            }
+                    if (CurPage == totalPage) {
+                        var SelList = new ListView();
+                        SelList.LoadFromID("BoardList");
+                        var DeleteCount = strListInfo.split(';').length - 1;
+                        if (SelList.GetRowCount() == DeleteCount) {
+                            CurPage = CurPage - 1;
+                        }
+                    }
+                    if (CurPage == 0) CurPage = 1;
+                    getBoardList();
+                    
+                    try {
+                    	leftCountRf();
+    				} catch (e) {
+    				}
+                }
+            }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);

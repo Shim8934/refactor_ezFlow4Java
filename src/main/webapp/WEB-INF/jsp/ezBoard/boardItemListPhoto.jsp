@@ -595,7 +595,10 @@
 					    DeleteItem();
 				}
 		        
-		        leftCountRf();
+		        try {
+			        leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -627,6 +630,11 @@
                     }
                     if (CurPage == 0) CurPage = 1;
                     getBoardList();
+                    
+                    try {
+                    	leftCountRf();
+    				} catch (e) {
+    				}
                 }
             }
 		    function CheckIfHasReplies() {

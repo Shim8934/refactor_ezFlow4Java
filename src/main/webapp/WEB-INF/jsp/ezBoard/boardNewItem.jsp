@@ -1551,64 +1551,64 @@
 		        }
 		    }
 		    
-		        function NewItem_onclick_Complete(ret) {
-		            if (typeof (ret) != "undefined") {
-		                pBoardID = ret[0];
-		                GetBoardInfo();
-		                if (ret[2] == "3" || ret[2] == "4") {
-		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
-		                        return;
-		                    else {
-		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
-		                        return;
-		                    }
-		                }
-		                else if (ret[2] == "2") {
-		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
-		                        return;
-		                    else {
-		                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
-		                        return;
-		                    }
-		                }
-		                pBoardID = ret[0];
-		                document.getElementById("BoardSpan").innerHTML = ret[1];
-		                InitializeSettings();
-		                ChkPermanent();
-		                pBoardType = "";
-		
-		                if (pcheckForm.toUpperCase() == "TRUE") {
-		                	var fullPath = "";
-		                	$.ajax({
-		    					type : "POST",
-		    					dataType : "text",
-		    					async : false,
-		    					url : "/ezBoard/getContentInfo.do",	        			
-		    					data : { type : "BOARDFORM", 
-		    							 docID: pBoardID
-		    						   },
-		    					success: function(result){
-		    						fullPath = result;
-		    					}        			
-		    				});	
-		                    var htmlData = message.SetEditorContentURL2(fullPath);
-		                    message.SetEditorContent(htmlData);
-		                }
-		                else {
-		                    if (OpenWin == null)
-		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p></p>");
-		                }
-		
-		                if (pUseBackGround.toUpperCase() == "TRUE") {
-		                    document.getElementById("pUseBackGroundTR").style.display = "";
-		                    GetBackGroundImage();
-		                }
-		                else
-		                    document.getElementById("pUseBackGroundTR").style.display = "none";
-		                SelBoard = true;
-		            }
-		        }
+	        function NewItem_onclick_Complete(ret) {
+	            if (typeof (ret) != "undefined") {
+	                pBoardID = ret[0];
+	                GetBoardInfo();
+	                if (ret[2] == "3" || ret[2] == "4") {
+	                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
+	                        return;
+	                    else {
+	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+	                        return;
+	                    }
+	                }
+	                else if (ret[2] == "2") {
+	                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
+	                        return;
+	                    else {
+	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                        return;
+	                    }
+	                }
+	                pBoardID = ret[0];
+	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	                InitializeSettings();
+	                ChkPermanent();
+	                pBoardType = "";
+	
+	                if (pcheckForm.toUpperCase() == "TRUE") {
+	                	var fullPath = "";
+	                	$.ajax({
+	    					type : "POST",
+	    					dataType : "text",
+	    					async : false,
+	    					url : "/ezBoard/getContentInfo.do",	        			
+	    					data : { type : "BOARDFORM", 
+	    							 docID: pBoardID
+	    						   },
+	    					success: function(result){
+	    						fullPath = result;
+	    					}        			
+	    				});	
+	                    var htmlData = message.SetEditorContentURL2(fullPath);
+	                    message.SetEditorContent(htmlData);
+	                }
+	                else {
+	                    if (OpenWin == null)
+	                        document.getElementById("txtTitle").focus();
+	                    message.SetEditorContent("<p></p>");
+	                }
+	
+	                if (pUseBackGround.toUpperCase() == "TRUE") {
+	                    document.getElementById("pUseBackGroundTR").style.display = "";
+	                    GetBackGroundImage();
+	                }
+	                else
+	                    document.getElementById("pUseBackGroundTR").style.display = "none";
+	                SelBoard = true;
+	            }
+	        }
 		
 		    var backxmlhttp = null;
 		    function GetBackGroundImage() {

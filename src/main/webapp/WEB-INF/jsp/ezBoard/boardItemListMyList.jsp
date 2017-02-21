@@ -50,444 +50,443 @@
 			font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 		}
 		</style>
-		    
-		    <script type="text/javascript">
-		        var ShowAdjacent = "";
-		        var USE_OCS = "${useOcs}";
-		        var SSUserID = "${userInfo.id}";  
-		        var pBoardType = "";
-		        var CurPage = "${page}";
-		        var Use_OneLineCount = "NO";
-		        var OrderCell = "";
-		        var OrderOption = "";
-		        var PreviewH_Move = false;
-		        var PreviewW_Move = false;
-		        var clickPreviweType = "";
-		        var selobj = null;
-		        var previewType = "";
-		        var clickPreviweType = "";
-		        var CurrentHeight = 0;
-		        var CurrenWidth = 0;
-		        var pMailListHeightW = 0;
-		        var pMailPreHeightW = 0;
-		        var pMailListDiv = 0;
-		        var pMailPreVDiv = 0;
-		        var pMailListWidthH = 0;
-		        var pMailPreWidthH = 0;
-		        var pMailListDiv_H = 0;
-		        var pMailPreVDiv_H = 0;
-		        var p_ListorderValue = "";
-		        var pPreviewShow_HOW = "OFF";
-		        var SmallSizeList = false;
-		        var OldSmallSizeList = false;
-		        var onclickFlag = false;
-		        var SQLPARADATA = "";
-		        var pMode = "new";
-		        var pAdminType = "n";
-		        var pUse_Editor = "${useEditor}";
-		        var pNoneActiveX = "YES";
-		        var pUse_IE11Browser = "CK";
-		        var starttime;
-		        var endtime;
-		        var strListInfo = "";
-		        window.onunload = Window_onunload;
-		        var window_onunload_Event = false;
-		
-		        window.onresize = function () {
-		            var height = parseInt(document.documentElement.clientHeight - 320);
-		            Window_resize();
-		
-		        };
-		        document.onselectstart = function () { return false; };
-		        window.onload = function () {
-		            if (navigator.userAgent.indexOf('Firefox') != -1) {
-		                document.body.style.MozUserSelect = 'none';
-		                document.body.style.WebkitUserSelect = 'none';
-		                document.body.style.khtmlUserSelect = 'none';
-		                document.body.style.oUserSelect = 'none';
-		                document.body.style.UserSelect = 'none';
+	    <script type="text/javascript">
+	        var ShowAdjacent = "";
+	        var USE_OCS = "${useOcs}";
+	        var SSUserID = "${userInfo.id}";  
+	        var pBoardType = "";
+	        var CurPage = "${page}";
+	        var Use_OneLineCount = "NO";
+	        var OrderCell = "";
+	        var OrderOption = "";
+	        var PreviewH_Move = false;
+	        var PreviewW_Move = false;
+	        var clickPreviweType = "";
+	        var selobj = null;
+	        var previewType = "";
+	        var clickPreviweType = "";
+	        var CurrentHeight = 0;
+	        var CurrenWidth = 0;
+	        var pMailListHeightW = 0;
+	        var pMailPreHeightW = 0;
+	        var pMailListDiv = 0;
+	        var pMailPreVDiv = 0;
+	        var pMailListWidthH = 0;
+	        var pMailPreWidthH = 0;
+	        var pMailListDiv_H = 0;
+	        var pMailPreVDiv_H = 0;
+	        var p_ListorderValue = "";
+	        var pPreviewShow_HOW = "OFF";
+	        var SmallSizeList = false;
+	        var OldSmallSizeList = false;
+	        var onclickFlag = false;
+	        var SQLPARADATA = "";
+	        var pMode = "new";
+	        var pAdminType = "n";
+	        var pUse_Editor = "${useEditor}";
+	        var pNoneActiveX = "YES";
+	        var pUse_IE11Browser = "CK";
+	        var starttime;
+	        var endtime;
+	        var strListInfo = "";
+	        window.onunload = Window_onunload;
+	        var window_onunload_Event = false;
+	
+	        window.onresize = function () {
+	            var height = parseInt(document.documentElement.clientHeight - 320);
+	            Window_resize();
+	
+	        };
+	        document.onselectstart = function () { return false; };
+	        window.onload = function () {
+	            if (navigator.userAgent.indexOf('Firefox') != -1) {
+	                document.body.style.MozUserSelect = 'none';
+	                document.body.style.WebkitUserSelect = 'none';
+	                document.body.style.khtmlUserSelect = 'none';
+	                document.body.style.oUserSelect = 'none';
+	                document.body.style.UserSelect = 'none';
+	            }
+	            initdatepicker();
+	            var height = parseInt(document.documentElement.clientHeight - 180);
+	            document.getElementById("divList").style.height = height + "px";
+	            window_onunload_Event = true;
+	            getBoardList();
+	        };
+	        var Save_unloadSave = false;
+	        function Window_onunload() {
+	            if (window_onunload_Event && !Save_unloadSave) {
+	                var divStyle, ifrmStyle, listCount;
+	
+	                if (document.getElementById("listcount") != null){
+		            	listCount = document.getElementById("listcount").value;
+		            } else {
+		            	listCount = 20;
 		            }
-		            initdatepicker();
-		            var height = parseInt(document.documentElement.clientHeight - 180);
-		            document.getElementById("divList").style.height = height + "px";
-		            window_onunload_Event = true;
-		            getBoardList();
-		        };
-		        var Save_unloadSave = false;
-		        function Window_onunload() {
-		            if (window_onunload_Event && !Save_unloadSave) {
-		                var divStyle, ifrmStyle, listCount;
-		
-		                if (document.getElementById("listcount") != null){
-			            	listCount = document.getElementById("listcount").value;
-			            } else {
-			            	listCount = 20;
-			            }
-		                
-		                if (pPreviewShow_HOW == "W") {
-		                    divStyle = parseInt(document.getElementById("divList").style.height);
-		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-		                }
-		                else if (pPreviewShow_HOW == "H") {
-		                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
-		                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
-		                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
-		                }
-		                else {
-		                    divStyle = 0;
-		                }
-		                if (divStyle < 24)
-		                    divStyle = 24;
-		                
-		                $.ajax({
-							type : "POST",
-							dataType : "json",
-							async : false,
-							url : "/ezBoard/boardGeneralListSave2.do",
-							data : { userID 	 : SSUserID, 
-									 listCount 	 : listCount, 
-									 previewMode : pPreviewShow_HOW,
-									 list 		 : divStyle,
-									 content 	 : (100 - divStyle)
-									},
-							success: function(){
-							}        			
-						});
-		                
-		                Save_unloadSave = true;
-		            }
-		        }
-		
-		        function initdatepicker() {
-		            var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-		            idDatepicker.attachEvent('datechange', onStartDateChanged);
-		            idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-		            idDatepicker.elemDateButtons = "img_StartCalDisp;img_EndCalDisp";
-		            idDatepicker.elemDateInputs = "idDatepicker;_D2";
-		            idDatepicker.elemTimeButtons = "img_StartTime;img_EndTime";
-		            idDatepicker.elemTimeInputs = "_T1;_T2";
-		            idDatepicker.popupType = "both";
-		            idDatepicker.pickerDateFormat = "[yyyy]" +"<spring:message code='ezBoard.t211'/>"+ "[MM]"+ "<spring:message code='ezBoard.t10000'/>";
-		            idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-		            idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-		            idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-		            idDatepicker.firstDayOfWeek = "0";
-		            idDatepicker.textAM = "<spring:message code='ezBoard.t212'/>";
-		            idDatepicker.textPM = "<spring:message code='ezBoard.t213'/>";
-		            idDatepicker.textDecimal = ".";
-		            idDatepicker.textHoursAbbrev = "<spring:message code='ezBoard.t214'/>";
-		            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezBoard.t215'/>";
-		            idDatepicker.daynameLetters = "<spring:message code='ezBoard.t216'/>";
-		            idDatepicker.daynamesShort = "<spring:message code='ezBoard.t216'/>";
-		            idDatepicker.daynamesLong = "<spring:message code='ezBoard.t217'/>";
-		            idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-		            idDatepicker.monthnamesLong = "<spring:message code='ezBoard.t218'/>";
-		            idDatepicker.ready();
-		        }
-		        function SortPage(strHeaderName) {
-		            if (strHeaderName != "CHECK") {
-		                if (OrderCell == strHeaderName) {
-		                    if (OrderOption == "")
-		                        OrderOption = "DESC";
-		                    else
-		                        OrderOption = "";
-		                }
-		                else {
-		                    OrderCell = strHeaderName;
-		                    OrderOption = "";
-		                }
-		                getBoardList();
-		            }
-		        }
-		
-		        var xmlhttp = createXMLHttpRequest();
-		        function getBoardList() {
-			        starttime = new Date().getTime();
-			        if (SQLPARADATA != ""){
-			        	url = "/ezBoard/getSearchBoardList.do";
-			        }
-			        else{
-			        	url = "/ezBoard/getBoardList.do";
-			        }
-			        $.ajax({
+	                
+	                if (pPreviewShow_HOW == "W") {
+	                    divStyle = parseInt(document.getElementById("divList").style.height);
+	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewW").style.height);
+	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+	                }
+	                else if (pPreviewShow_HOW == "H") {
+	                    divStyle = parseInt(document.getElementById("divList").scrollWidth);
+	                    ifrmStyle = parseInt(document.getElementById("ifrmPreViewH").scrollWidth);
+	                    divStyle = parseInt((divStyle * 100) / (divStyle + ifrmStyle));
+	                }
+	                else {
+	                    divStyle = 0;
+	                }
+	                if (divStyle < 24)
+	                    divStyle = 24;
+	                
+	                $.ajax({
 						type : "POST",
-						dataType : "text",
-						async : true,
-						url : url,
-						data : { boardType   : "M", 
-								 pageNum 	 : CurPage, 
-								 orderCell 	 : OrderCell, 
-								 orderOption : OrderOption,
-								 searchQuery : SQLPARADATA
+						dataType : "json",
+						async : false,
+						url : "/ezBoard/boardGeneralListSave2.do",
+						data : { userID 	 : SSUserID, 
+								 listCount 	 : listCount, 
+								 previewMode : pPreviewShow_HOW,
+								 list 		 : divStyle,
+								 content 	 : (100 - divStyle)
 								},
-						success: function(xml){
-							getBoardList_after(loadXMLString(xml));
-						}     			
+						success: function(){
+						}        			
 					});
+	                
+	                Save_unloadSave = true;
+	            }
+	        }
+	
+	        function initdatepicker() {
+	            var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
+	            idDatepicker.attachEvent('datechange', onStartDateChanged);
+	            idDatepicker.attachEvent('enddatechange', onEndDateChanged);
+	            idDatepicker.elemDateButtons = "img_StartCalDisp;img_EndCalDisp";
+	            idDatepicker.elemDateInputs = "idDatepicker;_D2";
+	            idDatepicker.elemTimeButtons = "img_StartTime;img_EndTime";
+	            idDatepicker.elemTimeInputs = "_T1;_T2";
+	            idDatepicker.popupType = "both";
+	            idDatepicker.pickerDateFormat = "[yyyy]" +"<spring:message code='ezBoard.t211'/>"+ "[MM]"+ "<spring:message code='ezBoard.t10000'/>";
+	            idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
+	            idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
+	            idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
+	            idDatepicker.firstDayOfWeek = "0";
+	            idDatepicker.textAM = "<spring:message code='ezBoard.t212'/>";
+	            idDatepicker.textPM = "<spring:message code='ezBoard.t213'/>";
+	            idDatepicker.textDecimal = ".";
+	            idDatepicker.textHoursAbbrev = "<spring:message code='ezBoard.t214'/>";
+	            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezBoard.t215'/>";
+	            idDatepicker.daynameLetters = "<spring:message code='ezBoard.t216'/>";
+	            idDatepicker.daynamesShort = "<spring:message code='ezBoard.t216'/>";
+	            idDatepicker.daynamesLong = "<spring:message code='ezBoard.t217'/>";
+	            idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
+	            idDatepicker.monthnamesLong = "<spring:message code='ezBoard.t218'/>";
+	            idDatepicker.ready();
+	        }
+	        function SortPage(strHeaderName) {
+	            if (strHeaderName != "CHECK") {
+	                if (OrderCell == strHeaderName) {
+	                    if (OrderOption == "")
+	                        OrderOption = "DESC";
+	                    else
+	                        OrderOption = "";
+	                }
+	                else {
+	                    OrderCell = strHeaderName;
+	                    OrderOption = "";
+	                }
+	                getBoardList();
+	            }
+	        }
+	
+	        var xmlhttp = createXMLHttpRequest();
+	        function getBoardList() {
+		        starttime = new Date().getTime();
+		        if (SQLPARADATA != ""){
+		        	url = "/ezBoard/getSearchBoardList.do";
 		        }
-		
-		        var firstFlag = false;
-		        function getBoardList_after(xml) {
-		            try {
-		                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
-		                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
-		                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
-		                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
-		
-		                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
-		                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
-		                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
-		                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));
-		
-		                if (listNode == null) return;
-		
-		                var lstCnt = getNodeText(cntNode);
-		                totalCount = lstCnt;
-		                var perCnt = getNodeText(perNode);
-		
-		                listcount.value = perCnt;
-		
-		                totalPage = Math.ceil(new Number(lstCnt / perCnt));
-		                pTotalCnt = lstCnt;
-		
-		                makePageSelPage();
-		
-		                var xmlDoc;
-		                if (CrossYN()) {
-		                    var xmlLIST = createXmlDom();
-		                    var nodeToImport = xmlLIST.importNode(listNode, true);
-		                    xmlLIST.appendChild(nodeToImport);
-		                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
-		                }
-		                else {
-		                    xmlDoc = createXmlDom();
-		                    xmlDoc.appendChild(listNode);
-		                }
-		                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
-		
-		                var DocList = new ListView();
-		                DocList.SetID("BoardList");
-		                DocList.SetHeaderOnClick("SortPage");
-		                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
-		                DocList.SetRowOnClick("ItemPreviewRead_click");
-		                DocList.SetTitleIdx(0);
-		                DocList.SetSelectFlag(false);
-		                DocList.DataSource(xmlDoc);
-		                DocList.DataBind("lvBoardList");
-		                DocList = null;
-		
-		                var tempno = 0;
-		                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
-		                    if (CrossYN()) {
-		                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
-		                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
-		                    }
-		                    else {
-		                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
-		                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
-		                    }
-		                }
-		                tempno = tempno + "";
-		
-		                if (tempno.length > 4) {
-		                    document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
-		                }
-		
-		                if ("${useOcs}" == "YES" && lstCnt > 0) {
-		                    check_presence();
-		                }
-		
-		                if (!firstFlag) {
-		                    PreviewRayerChange(pPreviewShow_HOW);
-		                    if (CrossYN()) {
-		                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-		                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-		                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-		                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-		                    } else {
-		                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
-		                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-		                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
-		                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
-		                    }
-		                    firstFlag = true;
-		                }
-		                endtime = new Date().getTime();
-		                document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-		                strListInfo = "";
-		            }
-		            catch (e) {
-		            	alert(200);
-		                alert("getBoardList_after : " + e.description);
-		            }
+		        else{
+		        	url = "/ezBoard/getBoardList.do";
 		        }
-		
-		        var BlockSize = 10;
-		        function td_Create1(strtext) {
-		            document.getElementById("tblPageRayer").innerHTML = strtext;
-		        }
-		
-		        function makePageSelPage() {
-		            var strtext;
-		            var PagingHTML = "";
-		            document.getElementById("tblPageRayer").innerHTML = "";
-		            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
-		            strtext = "<div class='pagenavi'>";
-		            PagingHTML += strtext;
-		            var pageNum = CurPage;
-		            if (totalPage > 1 && pageNum != 1) {
-		                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            if (totalPage > BlockSize) {
-		                if (pageNum > BlockSize) {
-		                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		                    PagingHTML += strtext;
-		                }
-		                else {
-		                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		                    PagingHTML += strtext;
-		                }
-		            }
-		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            var MaxNum;
-		            var i;
-		            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		            if (totalPage >= (startNum + parseInt(BlockSize))) {
-		                MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		            }
-		            else {
-		                MaxNum = totalPage;
-		            }
-		            for (i = startNum; i <= MaxNum; i++) {
-		                if (i == pageNum) {
-		                    strtext = "<span class='on'>" + i + "</span>";
-		                    PagingHTML += strtext;
-		                }
-		                else {
-		                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                    PagingHTML += strtext;
-		                }
-		            }
-		            if (totalPage > BlockSize) {
-		                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-		                    PagingHTML += strtext;
-		                }
-		                else {
-		                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		                    PagingHTML += strtext;
-		                }
-		            }
-		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            PagingHTML += "</div>";
-		            td_Create1(PagingHTML);
-		        }
-		
-		        function goToPageByNum(Value) {
-		            CurPage = Value;
-		            makePageSelPage();
-		            movePage(CurPage);
-		        }
-		        function selbeforeBlock() {
-		            var pageNum = parseInt(CurPage);
-		            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-		            goToPageByNum(pageNum);
-		        }
-		        function selbeforeBlock_one() {
-		            var pageNum = parseInt(CurPage);
-		            if (parseInt(pageNum - 1) > 0)
-		                goToPageByNum(parseInt(pageNum - 1));
-		            else
-		                return;
-		        }
-		        function selafterBlock() {
-		            var pageNum = parseInt(CurPage);
-		            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-		            goToPageByNum(pageNum);
-		        }
-		        function selafterBlock_one() {
-		            var pageNum = parseInt(CurPage);
-		            if (parseInt(pageNum + 1) <= totalPage)
-		                goToPageByNum(parseInt(pageNum + 1));
-		            else
-		                return;
-		        }
-		
-		        function movePage(newPage) {
-		            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-		                CurPage = newPage;
-		                getBoardList();
-		            }
-		        }
-		
-		        function prevPage_onclick() {
-		            newPage = parseInt(CurPage) - 1;
-		            if (newPage > 0) {
-		                CurPage = newPage;
-		                getBoardList();
-		            }
-		        }
-		
-		        function nextPage_onclick() {
-		            newPage = parseInt(CurPage) + 1;
-		            if (newPage <= parseInt(totalPage)) {
-		                CurPage = newPage;
-		                getBoardList();
-		            }
-		        }
-		
-		        function SortPage(strHeaderName) {
-		            if (strHeaderName != "CHECK") {
-		                if (OrderCell == strHeaderName) {
-		                    if (OrderOption == "")
-		                        OrderOption = "DESC";
-		                    else
-		                        OrderOption = "";
-		                }
-		                else {
-		                    OrderCell = strHeaderName;
-		                    OrderOption = "";
-		                }
-		                getBoardList();
-		            }
-		        }
-		
-		        function ItemRead_onclick(obj) {
-		            var pheight = window.screen.availHeight;
-		            var pwidth = window.screen.availWidth;
-		            var pTop = (pheight - 720) / 2;
-		            var pLeft = (pwidth - 765) / 2;
-		
-		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-		            }
-		            else {
-	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		            }
-		        }
+		        $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : true,
+					url : url,
+					data : { boardType   : "M", 
+							 pageNum 	 : CurPage, 
+							 orderCell 	 : OrderCell, 
+							 orderOption : OrderOption,
+							 searchQuery : SQLPARADATA
+							},
+					success: function(xml){
+						getBoardList_after(loadXMLString(xml));
+					}     			
+				});
+	        }
+	
+	        var firstFlag = false;
+	        function getBoardList_after(xml) {
+	            try {
+	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
+	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
+	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
+	
+	                pMailListDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWLIST")));
+	                pMailPreVDiv = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWWCONTENT")));
+	                pMailListDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHLIST")));
+	                pMailPreVDiv_H = parseInt(getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWHCONTENT")));
+	
+	                if (listNode == null) return;
+	
+	                var lstCnt = getNodeText(cntNode);
+	                totalCount = lstCnt;
+	                var perCnt = getNodeText(perNode);
+	
+	                listcount.value = perCnt;
+	
+	                totalPage = Math.ceil(new Number(lstCnt / perCnt));
+	                pTotalCnt = lstCnt;
+	
+	                makePageSelPage();
+	
+	                var xmlDoc;
+	                if (CrossYN()) {
+	                    var xmlLIST = createXmlDom();
+	                    var nodeToImport = xmlLIST.importNode(listNode, true);
+	                    xmlLIST.appendChild(nodeToImport);
+	                    xmlDoc = loadXMLString(GetSerializeXml(xmlLIST));
+	                }
+	                else {
+	                    xmlDoc = createXmlDom();
+	                    xmlDoc.appendChild(listNode);
+	                }
+	                if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
+	
+	                var DocList = new ListView();
+	                DocList.SetID("BoardList");
+	                DocList.SetHeaderOnClick("SortPage");
+	                DocList.SetRowOnDblClick("ItemRead_onclick(this)");
+	                DocList.SetRowOnClick("ItemPreviewRead_click");
+	                DocList.SetTitleIdx(0);
+	                DocList.SetSelectFlag(false);
+	                DocList.DataSource(xmlDoc);
+	                DocList.DataBind("lvBoardList");
+	                DocList = null;
+	
+	                var tempno = 0;
+	                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
+	                    if (CrossYN()) {
+	                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
+	                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
+	                    }
+	                    else {
+	                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
+	                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
+	                    }
+	                }
+	                tempno = tempno + "";
+	
+	                if (tempno.length > 4) {
+	                    document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
+	                }
+	
+	                if ("${useOcs}" == "YES" && lstCnt > 0) {
+	                    check_presence();
+	                }
+	
+	                if (!firstFlag) {
+	                    PreviewRayerChange(pPreviewShow_HOW);
+	                    if (CrossYN()) {
+	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+	                    } else {
+	                        if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null)
+	                            ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                        if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null)
+	                            ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022'/>";
+	                    }
+	                    firstFlag = true;
+	                }
+	                endtime = new Date().getTime();
+	                document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+	                strListInfo = "";
+	            }
+	            catch (e) {
+	            	alert(200);
+	                alert("getBoardList_after : " + e.description);
+	            }
+	        }
+	
+	        var BlockSize = 10;
+	        function td_Create1(strtext) {
+	            document.getElementById("tblPageRayer").innerHTML = strtext;
+	        }
+	
+	        function makePageSelPage() {
+	            var strtext;
+	            var PagingHTML = "";
+	            document.getElementById("tblPageRayer").innerHTML = "";
+	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+	            strtext = "<div class='pagenavi'>";
+	            PagingHTML += strtext;
+	            var pageNum = CurPage;
+	            if (totalPage > 1 && pageNum != 1) {
+	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            if (totalPage > BlockSize) {
+	                if (pageNum > BlockSize) {
+	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	                else {
+	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang39 + "</span>";
+	                PagingHTML += strtext;
+	            }
+	            var MaxNum;
+	            var i;
+	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
+	            if (totalPage >= (startNum + parseInt(BlockSize))) {
+	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	            }
+	            else {
+	                MaxNum = totalPage;
+	            }
+	            for (i = startNum; i <= MaxNum; i++) {
+	                if (i == pageNum) {
+	                    strtext = "<span class='on'>" + i + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	                else {
+	                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                    PagingHTML += strtext;
+	                }
+	            }
+	            if (totalPage > BlockSize) {
+	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
+	                    PagingHTML += strtext;
+	                }
+	                else {
+	                    strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                    PagingHTML += strtext;
+	                }
+	            }
+	            else {
+	                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang40 + "</span>";
+	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
+	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            else {
+	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
+	                PagingHTML += strtext;
+	            }
+	            PagingHTML += "</div>";
+	            td_Create1(PagingHTML);
+	        }
+	
+	        function goToPageByNum(Value) {
+	            CurPage = Value;
+	            makePageSelPage();
+	            movePage(CurPage);
+	        }
+	        function selbeforeBlock() {
+	            var pageNum = parseInt(CurPage);
+	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+	            goToPageByNum(pageNum);
+	        }
+	        function selbeforeBlock_one() {
+	            var pageNum = parseInt(CurPage);
+	            if (parseInt(pageNum - 1) > 0)
+	                goToPageByNum(parseInt(pageNum - 1));
+	            else
+	                return;
+	        }
+	        function selafterBlock() {
+	            var pageNum = parseInt(CurPage);
+	            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+	            goToPageByNum(pageNum);
+	        }
+	        function selafterBlock_one() {
+	            var pageNum = parseInt(CurPage);
+	            if (parseInt(pageNum + 1) <= totalPage)
+	                goToPageByNum(parseInt(pageNum + 1));
+	            else
+	                return;
+	        }
+	
+	        function movePage(newPage) {
+	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+	                CurPage = newPage;
+	                getBoardList();
+	            }
+	        }
+	
+	        function prevPage_onclick() {
+	            newPage = parseInt(CurPage) - 1;
+	            if (newPage > 0) {
+	                CurPage = newPage;
+	                getBoardList();
+	            }
+	        }
+	
+	        function nextPage_onclick() {
+	            newPage = parseInt(CurPage) + 1;
+	            if (newPage <= parseInt(totalPage)) {
+	                CurPage = newPage;
+	                getBoardList();
+	            }
+	        }
+	
+	        function SortPage(strHeaderName) {
+	            if (strHeaderName != "CHECK") {
+	                if (OrderCell == strHeaderName) {
+	                    if (OrderOption == "")
+	                        OrderOption = "DESC";
+	                    else
+	                        OrderOption = "";
+	                }
+	                else {
+	                    OrderCell = strHeaderName;
+	                    OrderOption = "";
+	                }
+	                getBoardList();
+	            }
+	        }
+	
+	        function ItemRead_onclick(obj) {
+	            var pheight = window.screen.availHeight;
+	            var pwidth = window.screen.availWidth;
+	            var pTop = (pheight - 720) / 2;
+	            var pLeft = (pwidth - 765) / 2;
+	
+	            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
+	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
+	            }
+	            else {
+                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	            }
+	        }
 		
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -619,7 +618,6 @@
 		    }
 		
 		    function checkBox_checkAll(obj) {
-		
 		        var SelList = new ListView();
 		        SelList.LoadFromID("BoardList");
 		        var oArrRows = SelList.GetSelectedRows();
@@ -689,6 +687,10 @@
 		        if (ret)
 		            DeleteItem();
 		
+		        try {
+                	leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    var copyboarditem_cross_dialogArguments = new Array();
 	        function CopyItem_onclick() {
