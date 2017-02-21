@@ -6021,7 +6021,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (type[0].equals("APPROVAL")) {
 			dirPath2 = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		} else {
-			dirPath2 = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+			dirPath2 = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		}
 		
 		File file = new File(dirPath + boardID);

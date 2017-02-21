@@ -29,6 +29,6 @@ var strLang27 = "Addition Role registered e-mail";
 var strLang28 = "Prev";
 var strLang29 = "Next";
 var strLang30 = "Are you sure you want to delete all the concurrent position?";
-
+var strLang31 = "You can not specify a full administrator privileges.";
 
 var strLang535 = "No Items";

@@ -369,12 +369,12 @@
 
                 <c:choose>
                 	<c:when test="${birthType eq 'Y'}">
-                		<input type="radio" id="RadBirthType1" name="radioGroup"  checked>양력
-                		<input type="radio" id="RadBirthType2" name="radioGroup"  >음력
+                		<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
+                		<input type="radio" id="RadBirthType2" name="radioGroup"  ><spring:message code='ezPersonal.t2002'/>
                 	</c:when>
                 	<c:otherwise>
-                		<input type="radio" id="RadBirthType1" name="radioGroup" >양력
-                		<input type="radio" id="RadBirthType2" name="radioGroup"  checked>음력
+                		<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
+                		<input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/>
                 	</c:otherwise>
                 </c:choose>
                 

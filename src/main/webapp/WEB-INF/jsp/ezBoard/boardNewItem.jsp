@@ -1175,7 +1175,7 @@
 		                var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
 		                for (var i = 0; i < SelectNodes(xmldom, "ATTACHNAME").length; i++) {
 		                    var temppath = getNodeText(SelectNodes(xmldom, "ATTACHFILEHREF")[i]);
-		                    temppath = temppath.substring(24, temppath.length);
+		                    temppath = temppath.substring(34, temppath.length);
 		                    var orgfile = temppath.split("/");
 		                    orgfile = orgfile[orgfile.length - 1];
 		                    xmlstring += "<ROW><FILENAME><![CDATA[" + getNodeText(SelectNodes(xmldom, "ATTACHNAME")[i]) + "]]></FILENAME>";

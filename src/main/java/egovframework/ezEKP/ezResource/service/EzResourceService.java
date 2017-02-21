@@ -150,5 +150,5 @@ public interface EzResourceService {
 	
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
-	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, int tenantID) throws Exception;
+	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception;
 }
