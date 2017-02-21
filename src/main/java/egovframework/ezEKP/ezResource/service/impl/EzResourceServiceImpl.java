@@ -1225,15 +1225,27 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String tmpEDTStr = endDateTime.substring(0, 10);
 			
 		String tmpSDTStr = tmpDTStr;
-		String tmpEDTStr1 = tmpEDTStr;
-			
+		
 		if (number(tmpSTime) > number(tmpETime)) {
 			startDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(startDateTime, 1, "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 			tmpSDTStr = startDateTime.substring(0, 10);
 		}
-			
+		
 		String orgTmpDTStr = tmpDTStr;
 		int n = 1;
+		
+		logger.debug("selType=" + selType);
+		logger.debug("startDateTime=" + startDateTime);
+		logger.debug("endDateTime=" + endDateTime);
+		logger.debug("interval=" + interval);
+		logger.debug("endRecurType=" + endRecurType);
+		logger.debug("instances=" + instances);
+		logger.debug("tmpSTime=" + tmpSTime);
+		logger.debug("tmpETime=" + tmpETime);
+		logger.debug("tmpDTStr=" + tmpDTStr);
+		logger.debug("tmpEDTStr=" + tmpEDTStr);
+		logger.debug("tmpSDTStr=" + tmpSDTStr);
+		logger.debug("orgTmpDTStr=" + orgTmpDTStr);
 		
 		//return할 xml string 생성
 		StringBuilder returnXML = new StringBuilder();
@@ -1242,7 +1254,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int temp = 0;
 		boolean whileFlag = true;
 		while (whileFlag) {
+			
+			// 40일 때
 			if (selType.equals("0")) {
+				// 종료일 지정 안했을 경우
 				if (endRecurType.equals("0")) {
 					if (number(tmpDTStr) > number(eDate)) {
 						break;
@@ -1254,7 +1269,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							returnXML.append("</ROW>");
 						}
 					}
-				} else if (endRecurType.equals("1")) {
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType.equals("1")) {
 					if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
 						break;
 					} else {
@@ -1269,8 +1286,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							n = n+1;
 						}
 					}
-				} else if (endRecurType.equals("2")) {
-					if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType.equals("2")) {
+					if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
+						break;
+					}
+					else if (number(tmpDTStr) >= number(sDate) || number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr)) {
 						returnXML.append("<ROW>");
 						returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
 						returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
@@ -1279,7 +1301,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				tmpDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
 				tmpSDTStr = EgovDateUtil.convertDate(EgovDateUtil.addDay(tmpSDTStr, interval, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyy-MM-dd", "");
-			} else {
+			}
+			// 41일 때
+			else {
+				// 종료일 지정 안했을 경우
 				if (endRecurType.equals("0")) {
 					if (number(tmpDTStr) > number(eDate)) {
 						break;
@@ -1291,7 +1316,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							returnXML.append("</ROW>");
 						}
 					}
-				} else if (endRecurType.equals("1")) {
+				}
+				// 반복 횟수 지정했을 경우
+				else if (endRecurType.equals("1")) {
 					if (number(tmpDTStr) > number(eDate) || n > number(instances)) {
 						break;
 					} else if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7) {
@@ -1306,11 +1333,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							n = n+1;
 						}
 					}
-				} else if (endRecurType.equals("2")) {
+				}
+				// 종료일 지정했을 경우
+				else if (endRecurType.equals("2")) {
 					if (number(tmpDTStr) > number(eDate) || number(tmpDTStr) > number(tmpEDTStr)) {
 						break;
 					} else if (weekDay(tmpDTStr) > 1 && weekDay(tmpDTStr) < 7) {
-						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr1)) {
+						if (number(tmpDTStr) >= number(sDate) && number(tmpDTStr) >= number(orgTmpDTStr) && number(tmpSDTStr) <= number(tmpEDTStr)) {
 							returnXML.append("<ROW>");
 							returnXML.append("<f_sDate>" + tmpDTStr + " " + tmpSTime + "</f_sDate>");
 							returnXML.append("<f_eDate>" + tmpSDTStr + " " + tmpETime + "</f_eDate>");
