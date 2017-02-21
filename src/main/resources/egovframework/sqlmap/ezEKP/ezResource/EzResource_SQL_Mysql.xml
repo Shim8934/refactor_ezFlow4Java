@@ -885,7 +885,20 @@
 	<select id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
 		<![CDATA[
 			SELECT
-				* 
+				OWNERID, 
+				NUM, 
+				COMPANYID, 
+				DATE_FORMAT(STARTDATETIME, '%Y-%m-%d %T') STARTDATETIME, 
+				DATE_FORMAT(ENDDATETIME, '%Y-%m-%d %T') ENDDATETIME, 
+				REWAY, 
+				RENUM, 
+				REDAY, 
+				REYOIL, 
+				REMONTH, 
+				REORD, 
+				ENDFLAG, 
+				RECOUNT, 
+				TENANT_ID
 			FROM
 				TBL_RS_SCHEDULEREPETITION 
 			WHERE
