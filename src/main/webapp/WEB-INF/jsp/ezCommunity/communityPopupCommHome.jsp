@@ -699,6 +699,11 @@
 		    }
 		    
 		    function ItemRead_onclick(val) {
+		    	if (userLevel == "0" || userLevel == "9") {
+    				alert("<spring:message code='ezCommunity.t899' />");
+    				return;
+    			}
+		    	
 		        var pItemID = val.getAttribute("itemid");
 		        var pItemBoardID = val.getAttribute("boardid");
 		        var gubun = val.getAttribute("gubun");
