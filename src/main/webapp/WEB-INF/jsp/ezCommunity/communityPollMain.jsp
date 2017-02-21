@@ -43,6 +43,11 @@
 			}
 					
 			function poll_add() {
+				if (UserLevel == "0" || UserLevel == "9") {
+		            alert("<spring:message code='ezCommunity.t1102' />");
+		            return;
+		        }
+				
 				window.location.href = "/ezCommunity/pollAdd.do?code=" + encodeURIComponent(code);
 			}
 					
