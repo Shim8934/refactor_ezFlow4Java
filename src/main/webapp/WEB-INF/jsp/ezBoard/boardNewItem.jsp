@@ -779,50 +779,54 @@
 		            else {
 		                alert("<spring:message code='ezBoard.t10033' />");
 		            }
-		            if (window.parent != null && window.parent.SuccessBoard != undefined) {
-		                try {
-		                    window.parent.SuccessBoard();
-		                }
-		                catch (e) {
-		                }
-		            }
-		            else if (window.opener != null && window.opener.SuccessBoard != undefined) {
-		                try {
-		                    window.opener.SuccessBoard();
-		                }
-		                catch (e) {
-		                }
-		            }
-		            else {
-		                try {
-		                    if (typeof (window.parent.SuccessBoard) == null || typeof (window.parent.SuccessBoard) == "undefined") {
-		                        try {
-		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mailReadContent.do") < 0)
-		                                window.opener.location.reload(false);
-		                        } catch (e) {
-		
-		                        }
-		                    }
-		                }
-		                catch (e) { }
-		                if (pMode == "boardContent" || pMode == "boardAttach") {
-		                    try {
-		                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
-		                            var checkboard = window.parent.location.toString();
-		                            if (checkboard.indexOf("mailReadContent.do") < 0)
-		                                window.parent.parent.location.reload(false);
-		                        }
-		                    }
-		                    catch (e) { }
-		                }
-		
-		                try {
-		                    window.opener.opener.location.reload(false);
-		                } catch (e) {
-		
-		                }
-		            }
+		            
+		            try {
+			            if (window.parent != null && window.parent.SuccessBoard != undefined) {
+			                try {
+			                    window.parent.SuccessBoard();
+			                }
+			                catch (e) {
+			                }
+			            }
+			            else if (window.opener != null && window.opener.SuccessBoard != undefined) {
+			                try {
+			                    window.opener.SuccessBoard();
+			                }
+			                catch (e) {
+			                }
+			            }
+			            else {
+			                try {
+			                    if (typeof (window.parent.SuccessBoard) == null || typeof (window.parent.SuccessBoard) == "undefined") {
+			                        try {
+			                            var checkboard = window.parent.location.toString();
+			                            if (checkboard.indexOf("mailReadContent.do") < 0)
+			                                window.opener.location.reload(false);
+			                        } catch (e) {
+			
+			                        }
+			                    }
+			                }
+			                catch (e) { }
+			                if (pMode == "boardContent" || pMode == "boardAttach") {
+			                    try {
+			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
+			                            var checkboard = window.parent.location.toString();
+			                            if (checkboard.indexOf("mailReadContent.do") < 0)
+			                                window.parent.parent.location.reload(false);
+			                        }
+			                    }
+			                    catch (e) { }
+			                }
+			
+			                try {
+			                    window.opener.opener.location.reload(false);
+			                } catch (e) {
+			
+			                }
+			            }
+					} catch (e) {
+					}
 
 		            try {
 						window.opener.leftCountRf();
