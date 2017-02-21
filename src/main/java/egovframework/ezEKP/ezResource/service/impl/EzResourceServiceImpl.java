@@ -607,7 +607,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, int tenantID) throws Exception {
+	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception {
 		logger.debug("delResSch Start");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ownerID", ownerID);
@@ -615,8 +615,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_pnum", pNum);
 		map.put("v_P_companyID", companyID);
 		map.put("v_P_writerID",  writerID);
-		map.put("v_P_sDate", sDate);
-		map.put("v_P_eDate", eDate);
 		map.put("v_P_insType", insType);
 		map.put("tenantID", tenantID);
 		
@@ -633,6 +631,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				int maxNum = ezResourceDAO.delResSch_S2(map);
 				logger.debug("maxNum="+maxNum);
 				map.put("v_MaxNum", maxNum);
+				
+				ResGetScheduleVO vo = getSchedule(Integer.parseInt(pNum), ownerID, companyID, tenantID);
+				sDate += " " + commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false).substring(11);
+				eDate += " " + commonUtil.getDateStringInUTC(vo.getEndDate(), offset, false).substring(11);
+				
+				sDate = commonUtil.getDateStringInUTC(sDate, offset, true);
+				eDate = commonUtil.getDateStringInUTC(eDate, offset, true);
+				
+				map.put("v_P_sDate", sDate);
+				map.put("v_P_eDate", eDate);
+				
 				ezResourceDAO.delResSch_I(map);
 			}
 		} else {
@@ -1520,6 +1529,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		int temp = 0;
 		boolean whileFlag = true;
+		
 		while(whileFlag) {
 			int wDayCnt = wDay.length;
 			if (wDayCnt != 0) {
@@ -3055,11 +3065,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String pNum = xmlRes.getElementsByTagName("PNUM").item(0).getTextContent();
 		String companyID = xmlRes.getElementsByTagName("COMPANYID").item(0).getTextContent();
 		String writerID = xmlRes.getElementsByTagName("WRITERID").item(0).getTextContent();
-		String sDate = commonUtil.getDateStringInUTC(xmlRes.getElementsByTagName("STARTDATE").item(0).getTextContent(), offset, true);
-		String eDate = commonUtil.getDateStringInUTC(xmlRes.getElementsByTagName("ENDDATE").item(0).getTextContent(), offset, true);
+		
+		String sDate = EgovDateUtil.convertDate(xmlRes.getElementsByTagName("STARTDATE").item(0).getTextContent(), "yyyy-M-d", "yyyy-MM-dd", "");
+		String eDate = EgovDateUtil.convertDate(xmlRes.getElementsByTagName("ENDDATE").item(0).getTextContent(), "yyyy-M-d", "yyyy-MM-dd", "");
+		
 		String insType = xmlRes.getElementsByTagName("INSTYPE").item(0).getTextContent();
 			
-		delResSch(ownerID, num, pNum, companyID, writerID, sDate, eDate, Integer.parseInt(insType), tenantID);
+		delResSch(ownerID, num, pNum, companyID, writerID, sDate, eDate, Integer.parseInt(insType), offset, tenantID);
 		return true;
 	}
 	
