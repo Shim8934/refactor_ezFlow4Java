@@ -48,7 +48,7 @@
 		            }
 		        } catch (e) {}
 	
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
 		        xmlHTTP.send(strQuery);
@@ -716,9 +716,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -740,7 +740,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -753,7 +753,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -886,7 +886,12 @@
 	            	success : function(result){
 	            		//TODO : 2016-05-03 장진혁과장 -- Email 전송메소드 구현 필요
 	            		//sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang18, AclText)
-		                alert(strLang14);
+	            		
+	            		if (result == 'CHECKPERMISSION') {
+	            		    alert(strLang31);
+	            		} else {
+	            		    alert(strLang14);
+	            		}
 	            	},
 	            	error : function(){
 	            		alert(strLang15);
