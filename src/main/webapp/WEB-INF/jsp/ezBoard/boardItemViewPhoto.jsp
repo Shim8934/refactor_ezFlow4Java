@@ -6,11 +6,11 @@
 	<head>
 		<title><spring:message code='ezBoard.t293'/></title>
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
+		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js" ></script>
-		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt.js"></script>
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
@@ -242,6 +242,10 @@
 		
 				                xmlhttp = null;
 				                try {
+				                	window.opener.leftCountRf();
+								} catch (e) {
+								}
+				                try {
 				                    window.opener.refresh_onclick();
 				                } catch (e) {
 				                }
@@ -270,6 +274,10 @@
 		
 				            xmlhttp = null;
 				            try {
+			                	window.opener.leftCountRf();
+							} catch (e) {
+							}
+				            try {
 				                window.opener.refresh_onclick();
 				            } catch (e) {
 				            }
@@ -295,6 +303,10 @@
 		        }
 		
 		        xmlhttp = null;
+		        try {
+                	window.opener.leftCountRf();
+				} catch (e) {
+				}
 		        try {
 		            window.opener.refresh_onclick();
 		        } catch (e) {
@@ -738,6 +750,10 @@
 		                    }
 		
 		                    xmlhttp = null;
+		                    try {
+			                	window.opener.leftCountRf();
+							} catch (e) {
+							}
 		                    try {
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {

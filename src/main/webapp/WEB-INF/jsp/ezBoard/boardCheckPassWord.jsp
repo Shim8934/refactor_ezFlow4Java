@@ -35,7 +35,8 @@
 					async : false,
 					url : "/ezBoard/confirmPassword.do",
 					data : { newPassword   : rsa.encrypt(document.getElementById("inpPassword").value),
-							 replyID : "${replyID}"
+							 replyID : "${replyID}",
+							 itemID  : "${itemID}"
 							},
 					success: function(result){
 						rtnVal = result;
@@ -46,10 +47,11 @@
 		    }
 		    window.onunload = function ()
 		    {
-		        if (ReturnFunction != null)
+		        if (ReturnFunction != null) {
 		            ReturnFunction(rtnVal);
-		        else
+		        } else {
 		            window.returnValue = rtnVal;
+		        }
 		    };
 		    function btn_OpinionCANCEL_onclick()
 		    {

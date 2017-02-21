@@ -7,6 +7,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.security.PrivateKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -2980,19 +2985,20 @@ public class EzBoardController extends EgovFileMngUtil{
     			strWriterFakeName = boardListVO.getWriterName();
         	}
         }
-        TimeZone tz = TimeZone.getTimeZone("GMT" + userInfo.getOffset().split("\\|")[1]);
-        Calendar strDate = Calendar.getInstance(tz);
-
-        if (strDate.get(Calendar.MINUTE) > 30) {
-        	strDate.add(Calendar.HOUR, 1);
-        	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
-        	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
-        } else {
-        	strDate.add(Calendar.MINUTE, -strDate.get(Calendar.MINUTE));
-        	strDate.add(Calendar.MINUTE, 30);
-        	strDate.add(Calendar.SECOND, -strDate.get(Calendar.SECOND));
-        } 
-        startDateTime = strDate.get(Calendar.YEAR) + "-" + (strDate.get(Calendar.MONTH) + 1) + "-" + strDate.get(Calendar.DATE) + " " + strDate.get(Calendar.HOUR) + ":" + strDate.get(Calendar.MINUTE) + ":" + strDate.get(Calendar.SECOND);
+        
+        ZoneId utc = ZoneId.ofOffset("UTC", ZoneOffset.of(userInfo.getOffset().split("\\|")[1]));
+		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+		
+		if (getTime.getMinute() > 30) {
+			getTime.plusHours(1);
+			startDateTime = getTime.format(formatter);
+			startDateTime = startDateTime + ":00:00"; 
+		} else {
+			startDateTime = getTime.format(formatter);
+			startDateTime = startDateTime + ":30:00"; 
+		}
+		
                 
         if (reservedItem.equals("true")) {
         	startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
@@ -3793,67 +3799,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = "";
 		String itemList = "";
 		String boardID = "";
-		String docPath = "";
 		String realPath = commonUtil.getRealPath(request);
 		
 		itemList = request.getParameter("itemList");
 		mode = request.getParameter("mode");
 		boardID = request.getParameter("boardID");
 		
-		if (boardID != null && !boardID.equals("")) {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-			docPath = boardListVO.getContentLocation();
-			
-			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-			
-			if (!boardInfo.getDelete_FG().equals("true")) {
-				if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-					if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-						return "NO";
-					}
-				} else {
-					if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-						return "NO";
-					}
-				}
-			}
-		} else {
-			BoardListVO boardListVO = ezBoardService.getItemInfo(itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-			boardID = boardListVO.getBoardID();
-			docPath = boardListVO.getContentLocation();
-			
-			BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
-			
-			if (!boardInfo.getDelete_FG().equals("true")) {
-				if (!boardInfo.getBoardAdmin_FG().equals("true")) {
-					if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-						return "NO";
-					}
-				} else {
-					if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
-						return "NO";
-					}
-				}
-			}
-		}
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		for (int i = 0; i < itemList.split(";").length; i++) {
-			String tempItem = itemList.split(";")[i].split(",")[0];
-			
-			if (mode != null && mode.equals("temp")) {
-				ezBoardService.deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
-				if (docPath != null && !docPath.equals("")) {
-					deleteFile(realPath + docPath);
-				}
-			} else {
-				ezBoardService.deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
-				if (docPath != null && !docPath.equals("")) {
-					deleteFile(realPath + docPath);
-				}
-			}
-		}
+		String result = ezBoardService.deleteItem(itemList, mode, boardID, realPath, userInfo, boardInfo);
 		
-		return "OK";
+		return result;
 	}
 	
 	/**
@@ -4614,10 +4570,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/checkPassWord.do")
 	public String checkPassWord(HttpServletRequest request, Model model) throws Exception{
 		String replyID = request.getParameter("replyID");
+		String itemID = request.getParameter("itemID");
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
 		
 		model.addAttribute("replyID", replyID);
+		model.addAttribute("itemID", itemID);
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
         
@@ -4635,6 +4593,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String prm = egovFileScrty.getPrm();
     	String pre = egovFileScrty.getPre();
     	String replyID = request.getParameter("replyID");
+    	String itemID = request.getParameter("itemID");
 		String newPassword = request.getParameter("newPassword");
 		String oldPassword = "";
 		
@@ -4642,9 +4601,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String rpwd = EgovFileScrty.decryptRsa(pk, newPassword);
 		
 		newPassword = EgovFileScrty.encryptPassword(rpwd, "unknown");
-		oldPassword = ezBoardService.getDocPassWord(replyID, userInfo.getTenantId()).trim();
+		
+		if (replyID != null && !replyID.equals(""))	{
+			oldPassword = ezBoardService.getOneLinePassWord(replyID, itemID, userInfo.getTenantId()).trim();
+		} else {
+			oldPassword = ezBoardService.getDocPassWord(itemID, userInfo.getTenantId()).trim();
+		}
 
-		if (newPassword != null && newPassword.trim().equals(oldPassword)) {
+		if (newPassword != null && newPassword.equals(oldPassword)) {
 			return "OK";
 		} else {
 			return "NO";
@@ -6424,7 +6388,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int k = 0; k < itemIDs.length; k++) {
 			String tempItemID = itemIDs[k].split(",")[0];
 			
-			BoardListVO boardListVO = ezBoardService.getItemInfo(tempItemID, userInfo.getLang(), userInfo.getTenantId());
+			BoardListVO boardListVO = ezBoardService.getItemInfo("", tempItemID, userInfo.getLang(), userInfo.getTenantId());
 			
 			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
 	        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";

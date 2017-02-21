@@ -4056,11 +4056,26 @@
 	<select id="EzBoardDAO.getDocPassWord" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
+				DOCPASSWORD 
+			FROM 
+				TBL_BOARD_ITEM 
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				itemid = #itemID#
+		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.getOneLinePassWord" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
 				password 
 			FROM 
 				TBL_BOARD_ONELINEREPLY
 			WHERE 
 				tenant_id = #tenantID#
+			AND
+				itemID = #itemID#
 			AND
 				replyID = #replyID#
 		]]>                
