@@ -26,6 +26,12 @@
 			}
 
 			function cmdOK_onclick(){
+				var re = /[\\/:*?\"<>|]/gi;
+				if( re.test(Brd_NM.value)){
+					alert("<spring:message code="ezResource.kms1" />");
+					return;
+				}
+				
 				if( Brd_NM.value == "" ) {
 					alert("<spring:message code="ezResource.t31" />");
 					return;
