@@ -167,7 +167,7 @@
 		    }
 			
 		    function RefreshView() {
-		        window.location.href = "schedule_search_Cross.aspx?sdate=" + startdate + "&edate=" + enddate + "&filter=" + escape(filter) + "&keyword=" + escape(keyword);
+		        window.location.href = "schedule_search_Cross.aspx?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
 		    }
 			
 		    function onmouseOver(elem) {

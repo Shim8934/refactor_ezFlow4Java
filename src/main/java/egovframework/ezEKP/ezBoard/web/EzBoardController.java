@@ -4802,7 +4802,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (boardVO.getNextItemID().equals("")) {
+		if (boardVO.getNextItemID() != null && boardVO.getNextItemID().equals("")) {
 			adjacentItem = ezBoardService.getAdjacentItems3(boardID, parentWriteDate, itemID, upperItemIDTree.substring(0, 38), boardVO.getPreviousItemID(), tenantID);
 			
 			if (adjacentItem.size() > 0) {
@@ -6434,9 +6434,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int totalCount = ezBoardService.getUnreadItemsCount(userInfo.getId(), boardID, userInfo.getTenantId());
 		
+		if (totalCount != 0) {
+			
+		} else {
+			
+		}
+		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("itemFields", itemFields);
+		model.addAttribute("list", list);
 		
 		return "ezBoard/boardListPortal";
 	}

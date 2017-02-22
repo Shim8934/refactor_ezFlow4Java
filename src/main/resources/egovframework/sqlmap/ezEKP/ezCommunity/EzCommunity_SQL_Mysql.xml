@@ -1215,7 +1215,7 @@
 				usercompanyname2,
 				usertitle,
 				usertitle2,
-				DATE_ADD(readdate, INTERVAL (#offset# /(60*24)) MINUTE) AS readdate
+				DATE_ADD(readdate, INTERVAL #offset# MINUTE) AS readdate
 			FROM
 				TBL_COMM_ITEM_READ 
 			WHERE
@@ -1479,7 +1479,7 @@
 	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				USERNAME$v_USERINFO_LANG$
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -1602,7 +1602,7 @@
 				SELECT
 					A.c_id,
 					A.companyid,
-					B.username$v_USERINFO_LANG$
+					B.username$v_USERINFO_LANG$ AS username
 				FROM
 					TBL_C_CLUBUSER A
 				INNER JOIN
@@ -1627,7 +1627,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$
+						B.username$v_USERINFO_LANG$ AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -1651,7 +1651,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$
+						B.username$v_USERINFO_LANG$ AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN

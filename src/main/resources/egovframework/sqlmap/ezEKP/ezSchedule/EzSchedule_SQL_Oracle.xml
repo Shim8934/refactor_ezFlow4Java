@@ -6,14 +6,12 @@
 	<typeAlias  alias="ScheduleConfigVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO"/>
 	<typeAlias  alias="ScheduleInfoVO"	 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO"/>
 	<typeAlias  alias="AttendantListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttendantListVO"/>
-	<typeAlias  alias="AttachListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttachListVO"/>
-	<typeAlias  alias="ScheduleHqVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleHqVO"/>
+	<typeAlias  alias="AttachListVO"		type="egovframework.ezEKP.ezSchedule.vo.AttachListVO"/>	
 	<typeAlias  alias="ScheduleSecretaryVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO"/>
 	<typeAlias  alias="ScheduleDeptVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO"/>
-	<typeAlias  alias="ScheduleCumulerVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO"/>
-	<typeAlias  alias="UserLocalInfoVO" 	type="egovframework.ezEKP.ezSchedule.vo.UserLocalInfoVO"/>
+	<typeAlias  alias="ScheduleCumulerVO" 	type="egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO"/>	
 	<typeAlias  alias="ScheduleGroupListVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO"/>
-	<typeAlias  alias="ScheduleGmailInfoVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGmailInfoVO"/>
+	<typeAlias  alias="ReceiveListVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO"/>
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
@@ -85,12 +83,6 @@
 		<result property="filePath"			column="FILEPATH"			columnIndex="4"/>
 	</resultMap>
 
-	<resultMap class="ScheduleHqVO" id="scheduleHqVO">
-		<result property="hqId"				column="HQID"				columnIndex="1"/>
-		<result property="hqName"			column="HQNAME"				columnIndex="2"/>
-		<result property="hqName2"			column="HQNAME2"			columnIndex="3"/>
-	</resultMap>
-
 	<resultMap class="ScheduleSecretaryVO" id="scheduleSecretaryVO">
 		<result property="secId"			column="SECRETARYID"		columnIndex="1"/>
 		<result property="secName"			column="SECRETARYNAME"		columnIndex="2"/>
@@ -106,11 +98,6 @@
 		<result property="titleName"		column="TITLE"				columnIndex="2"/>
 	</resultMap>
 
-	<resultMap class="UserLocalInfoVO" id="userLocalInfoVO">
-		<result property="timeZone"			column="TIMEZONE"			columnIndex="1"/>
-		<result property="lang"				column="LANG"				columnIndex="2"/>
-	</resultMap>
-
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupListVO">
 		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
 		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
@@ -120,21 +107,39 @@
 	
 	<resultMap class="ScheduleGroupListVO" id="scheduleGroupMemberListVO">
 		<result property="memberId"			column="MEMBERID"			columnIndex="1"/>
-		<result property="memberName"		column="memberName"			columnIndex="2"/>
-		<result property="memberName2"		column="memberName2"		columnIndex="3"/>
-		<result property="status"			column="status"				columnIndex="4"/>
-		<result property="responseDate"		column="responseDate"		columnIndex="5"/>
+		<result property="memberName"		column="MEMBERNAME"			columnIndex="2"/>
+		<result property="memberName2"		column="MEMBERNAME2"		columnIndex="3"/>
+		<result property="status"			column="STATUS"				columnIndex="4"/>
+		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="5"/>
 		<result property="mail"				column="MAIL"				columnIndex="6"/>
 		<result property="info"				column="INFO"				columnIndex="7"/>		
 	</resultMap>
-
-	<resultMap class="ScheduleGmailInfoVO" id="scheduleGmailInfoVO">
-		<result property="userId"			column="USERID"				columnIndex="1"/>
-		<result property="flag"				column="FLAG"				columnIndex="2"/>
-		<result property="gmailId"			column="GMAILID"			columnIndex="3"/>
-		<result property="gmailPwd"			column="GMAILPWD"			columnIndex="4"/>
+	
+	<resultMap class="ScheduleGroupListVO" id="inviteScheduleGroupListVO">
+		<result property="groupId"			column="GROUPID"			columnIndex="1"/>
+		<result property="groupName"		column="GROUPNAME"			columnIndex="2"/>
+		<result property="memberId"			column="CREATORID"			columnIndex="3"/>
+		<result property="memberName"		column="CREATORNAME"		columnIndex="4"/>
+		<result property="memberName2"		column="CREATORNAME2"		columnIndex="5"/>
+		<result property="description"		column="DESCRIPTION"		columnIndex="6"/>
+		<result property="status"			column="STATUS"				columnIndex="7"/>
+		<result property="responseDate"		column="responseDate"		columnIndex="8"/>		
 	</resultMap>
 	
+	<resultMap class="ReceiveListVO" id="receiveListVO">
+		<result property="scheduleId"		column="SCHEDULEID"			columnIndex="1"/>
+		<result property="status"			column="STATUS"				columnIndex="2"/>
+		<result property="responseDate"		column="RESPONSEDATE"		columnIndex="3"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="4"/>
+		<result property="creatorName"		column="CREATORNAME"		columnIndex="5"/>
+		<result property="creatorName2"		column="CREATORNAME2"		columnIndex="6"/>
+		<result property="title"			column="TITLE"				columnIndex="7"/>
+		<result property="location"			column="LOCATION"			columnIndex="8"/>
+		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
+		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
+		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+	</resultMap>
+
 	<resultMap class="OrganUserVO" id="organUserVO">
 		<result property="cn"					column="CN"					columnIndex="1"/>
 		<result property="displayName"			column="DISPLAYNAME"		columnIndex="2"/>
@@ -430,21 +435,6 @@
 		]]>			
 	</select>
 	
-	<select id="EzScheduleDAO.getPublicScheduleHq" parameterClass="map" resultMap="scheduleHqVO">		
-		<![CDATA[			       	      
-			SELECT 
-				A.EXTENSIONATTRIBUTE12 AS HQID,
-             	B.DISPLAYNAME AS HQNAME,
-             	B.DISPLAYNAME2 AS HQNAME2  
-        	FROM 
-        		TBL_USERMASTER A JOIN TBL_DEPTMASTER B ON A.EXTENSIONATTRIBUTE12 = B.CN AND A.TENANT_ID = B.TENANT_ID
-       		WHERE  
-       			A.CN = #v_CN#
-       		AND
-				A.TENANT_ID = #v_TENANTID#
-		]]>			
-	</select>
-	
 	<select id="EzScheduleDAO.getPublicScheduleSec" parameterClass="map" resultMap="scheduleSecretaryVO">		
 		<![CDATA[			       	      
 			SELECT 
@@ -527,6 +517,19 @@
 		]]>			
 	</select>
 	
+	<select id="EzScheduleDAO.getAttendantCount" parameterClass="Map" resultClass="int">
+		<![CDATA[			       	      
+			SELECT 
+			 	COUNT(1) 
+	        FROM 
+	        	TBL_ATTENDANT 
+	       	WHERE  
+	       		SCHEDULEID = #v_SCHEDULEID#
+	       	AND
+	       		TENANT_ID = #v_TENANTID#	        
+		]]>			
+	</select>
+	
 	<select id="EzScheduleDAO.getAttendantList" parameterClass="Map" resultMap="attendantListVO">
 		<![CDATA[			       	      
 			SELECT 
@@ -536,7 +539,7 @@
 	            ATTENDANTDEPTNAME,
 	            ATTENDANTDEPTNAME2,
 	            STATUS,
-	            RESPONSEDATE 
+	            (RESPONSEDATE + #v_OFFSETMIN#/(24*60)) AS RESPONSEDATE
 	        FROM 
 	        	TBL_ATTENDANT 
 	       	WHERE  
@@ -557,7 +560,7 @@
         	FROM 
         		TBL_SCHEDULEATTACH 
        		WHERE  
-       			SCHEDULEID = #V_SCHEDULEID#
+       			SCHEDULEID = #v_SCHEDULEID#
 			AND
 	       		TENANT_ID = #v_TENANTID#       			
 		]]>			
@@ -634,6 +637,68 @@
 				dual
 		]]>
 	</select>
+	
+	<select id="EzScheduleDAO.getResourceCount" resultClass="int">
+		<![CDATA[
+			SELECT 
+				count(1) 
+			FROM 
+				TBL_RS_SCHEDULE
+			WHERE
+				SCHEDULEID = #v_SCHEDULEID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getReceiveList" parameterClass="Map" resultMap="receiveListVO">
+		<![CDATA[
+			SELECT 
+				B.SCHEDULEID AS SCHEDULEID,
+             	A.STATUS AS STATUS,
+             	(A.RESPONSEDATE + #v_OFFSETMIN#/(24*60)) AS RESPONSEDATE,             	
+             	B.CREATORID AS CREATORID,
+             	B.CREATORNAME AS CREATORNAME,
+             	B.CREATORNAME2 AS CREATORNAME2,
+             	B.TITLE AS TITLE,
+             	B.LOCATION AS LOCATION,
+             	B.DATETYPE AS DATETYPE,             	
+             	(B.STARTDATE + #v_OFFSETMIN#/(24*60)) AS STARTDATE,             	
+             	(B.ENDDATE + #v_OFFSETMIN#/(24*60)) AS ENDDATE
+        	FROM
+        		TBL_ATTENDANT A JOIN TBL_SCHEDULE B ON A.SCHEDULEID = B.SCHEDULEID AND A.TENANT_ID = B.TENANT_ID
+        	WHERE
+        		A.ATTENDANTID = #v_USERID#
+        	AND
+        		( A.STATUS = 0 OR A.STATUS = 3 )
+        	AND
+				A.TENANT_ID = #v_TENANTID#
+        	ORDER BY A.RESPONSEDATE DESC
+		]]>
+	</select>
+	
+	<select id="EzScheduleDAO.getInviteScheduleGroupList" parameterClass="Map" resultMap="inviteScheduleGroupListVO">
+		<![CDATA[
+			SELECT 
+				A.GROUPID AS GROUPID,
+	            GROUPNAME,
+	            CREATORID,
+	            CREATORNAME,
+	            CREATORNAME2,
+	            DESCRIPTION,
+	            STATUS,
+	            (RESPONSEDATE + #v_OFFSETMIN#/(24*60)) AS RESPONSEDATE
+	        FROM
+	        	TBL_SCHEDULEGROUP A JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
+	        WHERE
+	        	MemberID = #v_USERID#
+	        AND
+	        	(STATUS = 0 OR STATUS = 3)
+	        AND
+	        	A.TENANT_ID = #v_TENANTID#
+	        ORDER BY GROUPNAME
+		]]>
+	</select>
 		
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
@@ -653,9 +718,9 @@
 	<insert id="EzScheduleDAO.insertScheduleAttach" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEATTACH(
-				ATTACHID, 							SCHEDULEID,						FILENAME, 				FILEPATH, 				FILESIZE,			TENANT_ID
+				ATTACHID, 							SCHEDULEID,					FILENAME, 				FILEPATH, 				FILESIZE,			TENANT_ID
 			) VALUES (
-				SEQ_TBL_SCHEDULEATTACH.NEXTVAL,		SEQ_TBL_SCHEDULE.CURRVAL,		#v_FILENAME#,			#v_FILEPATH#,			#v_FILESIZE#,		#v_TENANTID#
+				SEQ_TBL_SCHEDULEATTACH.NEXTVAL,		#v_SCHEDULEID#,				#v_FILENAME#,			#v_FILEPATH#,			#v_FILESIZE#,		#v_TENANTID#
 			)
    		]]>
 	</insert>
@@ -663,11 +728,11 @@
 	<insert id="EzScheduleDAO.insertScheduleAttendant" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_ATTENDANT(
-				SCHEDULEID, 						ATTENDANTID,					ATTENDANTNAME, 			ATTENDANTNAME2,			ATTENDANTDEPTNAME,		ATTENDANTDEPTNAME2,
-				STATUS,								TENANT_ID,						RESPONSEDATE			
+				SCHEDULEID,			ATTENDANTID,			ATTENDANTNAME, 			ATTENDANTNAME2,			ATTENDANTDEPTNAME,		ATTENDANTDEPTNAME2,
+				STATUS,				TENANT_ID,				RESPONSEDATE			
 			) VALUES (
-				SEQ_TBL_SCHEDULE.CURRVAL,			#v_ATTENDANTID#,				#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
-				0,									#v_TENANTID#,					SYS_EXTRACT_UTC(SYSTIMESTAMP)	
+				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
+				0,					#v_TENANTID#,			SYS_EXTRACT_UTC(SYSTIMESTAMP)	
 			)
    		]]>
 	</insert>
@@ -712,19 +777,95 @@
    		]]>
 	</insert>
 	
+	<insert id="EzScheduleDAO.insertAttendantSchedule" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_SCHEDULE(
+				SCHEDULEID, 				PARENTID, 			OWNERID, 			OWNERNAME, 			OWNERNAME2, 			CREATORID, 			CREATORNAME, 			CREATORNAME2, 
+				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT, 
+				HASATTACH, 					HASCOMMENT, 		ISREADONLY, 		ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
+				REPETITIONDELETE, 			TITLE, 				LOCATION, 			CONTENTPATH,		TENANT_ID
+			) (
+			SELECT
+				SEQ_TBL_SCHEDULE.NEXTVAL,	#v_SCHEDULEID#,		#v_ATTENDANTID#,	#v_ATTENDANTNAME#,	#v_ATTENDANTNAME2#,		CREATORID, 			CREATORNAME, 			CREATORNAME2,
+				CREATEDATE, 				MODIFIERID, 		MODIFIERNAME, 		MODIFIERNAME2, 		MODIFYDATE, 			SCHEDULETYPE, 		IMPORTANCE, 			HASATTENDANT,
+				HASATTACH, 					HASCOMMENT,			'Y',				ISPUBLIC, 			DATETYPE, 				STARTDATE, 			ENDDATE, 				REPETITION, 
+				REPETITIONDELETE, 			TITLE,				LOCATION, 			CONTENTPATH,		TENANT_ID
+			FROM
+				TBL_SCHEDULE
+			WHERE
+				SCHEDULEID = #v_SCHEDULEID#
+			AND
+				TENANT_ID = #v_TENANTID#				
+			)	
+   		]]>
+	</insert>
+	
+	<update id="EzScheduleDAO.updateSchedule" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_SCHEDULE
+			SET
+				MODIFIERID = #v_MODIFIERID#,
+				MODIFIERNAME = #v_MODIFIERNAME#,
+				MODIFIERNAME2 = #v_MODIFIERNAME2#,
+				MODIFYDATE = SYS_EXTRACT_UTC(SYSTIMESTAMP),
+				IMPORTANCE = #v_IMPORTANCE#,
+				HASATTACH = #v_HASATTACH#,
+				ISPUBLIC = #v_ISPUBLIC#,
+				DATETYPE = #v_DATETYPE#,
+				STARTDATE = TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),				
+				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
+				REPETITION = NVL(#v_REPETITION#, ' '),
+				TITLE = #v_TITLE#,
+				LOCATION = NVL(#v_LOCATION#, ' ')
+	   		WHERE  
+	   			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)	   		
+	   		AND
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
 		<![CDATA[
 			UPDATE 
 				TBL_SCHEDULEGROUPMEMBER
 			SET
-				status = #v_STATUS#,
-				responseDate = SYS_EXTRACT_UTC(SYSTIMESTAMP)	
+				STATUS = #v_STATUS#,
+				RESPONSEDATE = SYS_EXTRACT_UTC(SYSTIMESTAMP)	
 	   		WHERE  
-	   			groupid = #v_GROUPID#
+	   			GROUPID = #v_GROUPID#
 	   		AND
-	   			memberid = #v_MEMBERID#
+	   			MEMBERID = #v_MEMBERID#
 	   		AND
-	   			tenant_id = #v_TENANTID#
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleDAO.updateAttendantSchedule" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_SCHEDULE
+			SET
+				HASATTENDANT = #v_HASATTENDANT#					
+	   		WHERE  
+	   			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)
+	   		AND
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleDAO.updateAttendantStatus" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTENDANT
+			SET
+				STATUS = #v_STATUS#,
+				RESPONSEDATE = SYS_EXTRACT_UTC(SYSTIMESTAMP)
+	   		WHERE  
+	   			SCHEDULEID = #v_SCHEDULEID#
+	   		AND
+	   			ATTENDANTID = #v_ATTENDANTID#
+	   		AND	
+	   			TENANT_ID = #v_TENANTID#
 		]]>	
 	</update>
 	
@@ -733,9 +874,9 @@
 			DELETE FROM
 				TBL_SCHEDULEGROUP
 	   		WHERE  
-	   			groupid = #v_GROUPID#
+	   			GROUPID = #v_GROUPID#
 	   		AND
-	   			tenant_id = #v_TENANTID#
+	   			TENANT_ID = #v_TENANTID#
 	   	]]>		
 	</delete>
 	
@@ -744,9 +885,9 @@
 			DELETE FROM
 				TBL_SCHEDULEGROUPMEMBER
 	   		WHERE  
-	   			groupid = #v_GROUPID#
+	   			GROUPID = #v_GROUPID#
 	   		AND
-	   			tenant_id = #v_TENANTID#
+	   			TENANT_ID = #v_TENANTID#
 	   	]]>		
 	</delete>
 	
@@ -783,22 +924,77 @@
 	   		AND	
 	   			TENANT_ID = #v_TENANTID#
 	   	]]>		
-	</delete>		
-<!-- 
-	<procedure id="EzScheduleDAO.getNewScheduleId" parameterClass="Map" resultClass="Integer">
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleAttach" parameterClass="map">
 		<![CDATA[
-			{CALL EZPIMS.EZFN_GETNEWSCHEDULEID(#v_pScheduleId,javaType=java.lang.Integer,jdbcType=DECIMAL,mode=OUT#)}
-		]]>
-	</procedure>
- -->
+			DELETE FROM
+				TBL_SCHEDULEATTACH
+   			WHERE
+   				SCHEDULEID = #v_SCHEDULEID#
+   			AND	
+	   			TENANT_ID = #v_TENANTID#
+	   	]]>		
+	</delete>
 	
-	<procedure id="EzScheduleDAO.getUserLocalInfo" parameterClass="Map" resultMap="userLocalInfoVO" >
-		{CALL EZPIMS.EZSP_GETPUBLICSCHEDULE_HQ(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>	
+	<delete id="EzScheduleDAO.deleteAttendant" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_ATTENDANT
+   			WHERE
+   				SCHEDULEID = #v_SCHEDULEID#
+   			AND	
+	   			TENANT_ID = #v_TENANTID#
+	   	]]>		
+	</delete>
 	
-	<procedure id="EzScheduleDAO.getScheduleGmailInfo" parameterClass="Map" resultMap="scheduleGmailInfoVO" >
-		{CALL EZPIMS.EZSP_GETSCHEDULEGMAIL(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
+	<delete id="EzScheduleDAO.deleteSchedule" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SCHEDULE
+      		WHERE  
+      			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)
+      		AND	
+	   			TENANT_ID = #v_TENANTID#	
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteResource" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_SCHEDULE
+			WHERE
+				SCHEDULEID = #v_SCHEDULEID#
+			AND
+				TENANT_ID = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteAttendantID" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_ATTENDANT
+			WHERE
+				SCHEDULEID = #v_SCHEDULEID#
+			AND
+				ATTENDANTID = #v_ATTENDANTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+	   	]]>	   			
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteAttendantSchedule" parameterClass="map">
+		<![CDATA[
+			DELETE FROM
+				TBL_SCHEDULE
+			WHERE
+				PARENTID = #v_SCHEDULEID#
+			AND
+				OWNERID	 = #v_ATTENDANTID#
+			AND
+				TENANT_ID = #v_TENANTID#
+	   	]]>
+	</delete>
 
 </sqlMap>
 

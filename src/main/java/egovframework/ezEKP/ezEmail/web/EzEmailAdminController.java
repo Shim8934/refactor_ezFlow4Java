@@ -549,4 +549,57 @@ public class EzEmailAdminController {
 		
 		return returnValue;
 	}
+	
+    /**
+     * 메일 디폴트 Quota (관리자) 화면 호출 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailDefaultQuota.do")
+    public String mailDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+        //관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+        
+        String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+        Double defaultMax = ezEmailUtil.getDefaultQuota(domainName);
+        
+        model.addAttribute("defaultMax", (defaultMax)/1024.0);
+        
+        return "admin/ezEmail/mailDefaultQuota";
+    }
+    
+    /**
+     * 메일 디폴트 Quota 설정 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailSaveDefaultQuota.do")
+    @ResponseBody
+    public String mailSaveDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
+        //관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "Permission Denied";
+        }
+        
+        String returnValue = "True";
+        
+        try {        
+            String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+            Document doc = commonUtil.convertStringToDocument(bodyData);
+            String maxStorage = doc.getElementsByTagName("HARDLIMIT").item(0).getTextContent();
+                        
+            ezEmailUtil.setDefaultQuota(domainName, maxStorage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            returnValue = "ERROR";            
+        }
+        
+        return returnValue;
+    }    
+    
 }

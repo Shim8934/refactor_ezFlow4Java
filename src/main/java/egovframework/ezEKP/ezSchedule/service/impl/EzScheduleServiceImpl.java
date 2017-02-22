@@ -23,7 +23,6 @@ import org.w3c.dom.NodeList;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
-import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
@@ -34,8 +33,8 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
-import egovframework.ezEKP.ezSchedule.vo.ScheduleHqVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -44,10 +43,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
-	
-	@Resource(name="EzCommonService")
-	private EzCommonService ezCommonService;
-	
+		
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -81,9 +77,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<AttendantListVO> getAttendantList(String scheduleId, int tenantId) throws Exception {
+	public List<AttendantListVO> getAttendantList(String scheduleId, String offSetMin, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getAttendantList(map);
@@ -96,15 +93,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_TENANTID", tenantId);
 		
 		return ezScheduleDAO.getAttachList(map);
-	}
-
-	@Override
-	public List<ScheduleHqVO> getPublicScheduleHq(String userId, int tenantId) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_CN", userId);
-		map.put("v_TENANTID", tenantId);
-		
-		return ezScheduleDAO.getPublicScheduleHq(map);
 	}
 
 	@Override
@@ -205,7 +193,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				
 				switch (info[2]) {
 					case "0" :
-System.out.println("=========================================================== case 0 start ============================================================");
 						while (true) {
 							if (date_cal.compareTo(eDate_cal) > 0) break;
 							if (maxCount == count) break;
@@ -239,7 +226,6 @@ System.out.println("=========================================================== 
 					break;
 					
 					case "1" :
-System.out.println("=========================================================== case 1 start ============================================================");
 						int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
 						
 						while (true) {
@@ -272,8 +258,7 @@ System.out.println("=========================================================== 
 					break;	
 					
 					case "2" :
-						while (true) {
-System.out.println("=========================================================== case 2 start ============================================================");							
+						while (true) {						
 							int year = date_cal.get(Calendar.YEAR);
 							int month = date_cal.get(Calendar.MONTH) + 1;
 
@@ -331,7 +316,6 @@ System.out.println("=========================================================== 
 					break;
 					
 					case "3" :
-System.out.println("=========================================================== case 3 start ============================================================");
 						while (true) {
 							int year = date_cal.get(Calendar.YEAR);
 							int month = Integer.parseInt(info[4]);
@@ -348,8 +332,7 @@ System.out.println("=========================================================== 
 								newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
 								
 								if (info[5].equals("2")) {
-									//음력으로 newCal 다시 만듬
-									
+									//음력으로 newCal 다시 만듬									
 									if (!isFirst || newCal.compareTo(date_cal) >= 0) {
 										generated = true;
 									}
@@ -667,13 +650,12 @@ System.out.println("=========================================================== 
 
 	@Override
 	public int insertSchedule(String ownerid, String ownername, String ownername2, String creatorid, String creatorname, String creatorname2, String scheduletype, String importance,
-			String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
-			NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception {
-
-System.out.println("======================================================== service start");		
+		String ispublic, String datetype, String startdate, String enddate,	String repetition, String title, String location, String content, NodeList attach, NodeList attendantId, 
+		NodeList attendantName, NodeList attendantName2, NodeList attendantDeptName, NodeList attendantDeptName2, String defaultPath, int tenantId) throws Exception {
 		
 		//본문내용 MHT 저장
 		String mhtPath = commonUtil.separator + "doc";
+		String uploadFilePath = commonUtil.separator + "uploadFile";
 		String contentPath = defaultPath + mhtPath;
 		File file = new File(contentPath);
 
@@ -692,14 +674,14 @@ System.out.println("======================================================== ser
 			byte[] ct = Base64.decode(content);
 			stream = new ByteArrayInputStream(ct);
 			bos = new FileOutputStream(contentPath);
-System.out.println("======================================================== service 2");			
+	
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
 			
 			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-System.out.println("======================================================== service 3");		
+
 			//첨부파일 카운트
 			String hasattach = "N";
 			
@@ -735,44 +717,42 @@ System.out.println("======================================================== ser
 			map.put("v_CONTENTPATH", schedulePath);
 			map.put("v_TENANTID", tenantId);
 			
-			ezScheduleDAO.insertSchedule(map);			
+			ezScheduleDAO.insertSchedule(map);
+			
+			int scheduleId = ezScheduleDAO.getCurScheduleId(null);
+			
 			//첨부파일 저장
 			Map<String, Object> attachMap = new HashMap<String, Object>();
-			
+						
 			for (int i=0; i < attach.getLength(); i++) {
 				String[] files = attach.item(i).getTextContent().split("/");				
 				String fileName = files[1];
 				String filePath = files[0];
 				String fileSize = files[2];
 				
+				filePath = uploadFilePath + commonUtil.separator + filePath;
+
+				attachMap.put("v_SCHEDULEID", scheduleId);
 				attachMap.put("v_FILENAME", fileName);
 				attachMap.put("v_FILEPATH", filePath);
 				attachMap.put("v_FILESIZE", fileSize);
 				attachMap.put("v_TENANTID", tenantId);
 				
 				ezScheduleDAO.insertScheduleAttach(attachMap);
-			}
-			//참석자 관련 데이터 저장 로직
-			Map<String, Object> attendantMap = new HashMap<String, Object>();
+			}					
 			
+			//참석자 관련 데이터 저장 로직			
 			for (int i=0; i < attendantId.getLength(); i++) {								
 				String v_attendantId = attendantId.item(i).getTextContent();				
 				String v_attendantName = attendantName.item(i).getTextContent();
 				String v_attendantName2 = attendantName2.item(i).getTextContent();
 				String v_attendantDeptName = attendantDeptName.item(i).getTextContent();
 				String v_attendantDeptName2 = attendantDeptName2.item(i).getTextContent();
-
-				attendantMap.put("v_ATTENDANTID", v_attendantId);
-				attendantMap.put("v_ATTENDANTNAME", v_attendantName);
-				attendantMap.put("v_ATTENDANTNAME2", v_attendantName2);
-				attendantMap.put("v_ATTENDANTDEPTNAME", v_attendantDeptName);
-				attendantMap.put("v_ATTENDANTDEPTNAME2", v_attendantDeptName2);
-				attendantMap.put("v_TENANTID", tenantId);
 				
-				ezScheduleDAO.insertScheduleAttendant(attendantMap);
+				insertScheduleAttendant(Integer.toString(scheduleId), v_attendantId, v_attendantName, v_attendantName2, v_attendantDeptName, v_attendantDeptName2, tenantId);
 			}
 			
-			sID = ezScheduleDAO.getCurScheduleId(null);			
+			sID = scheduleId;			
 		} catch (Exception e) {
 			
 		} finally {
@@ -780,7 +760,208 @@ System.out.println("======================================================== ser
 			if (bos != null) bos.close();
 		}
 		return sID;
+	}
+	
+	
+	@Override
+	public int updateSchedule(String scheduleid, String creatorid, String creatorname, String creatorname2, String importance, String ispublic, String datetype, String startdate, String enddate,
+		String repetition, String title, String location, String content, NodeList attach, String defaultPath, int tenantId) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		String uploadFilePath = commonUtil.separator + "uploadFile";
+		
+		//첨부파일 카운트
+		String hasattach = "N";
+		
+		if(attach.getLength() > 0) {				
+			hasattach = "Y";
+		}
+		
+		map.put("v_SCHEDULEID", scheduleid);
+		map.put("v_MODIFIERID", creatorid);
+		map.put("v_MODIFIERNAME", creatorname);
+		map.put("v_MODIFIERNAME2", creatorname2);
+		map.put("v_IMPORTANCE", importance);
+		map.put("v_HASATTACH", hasattach);
+		map.put("v_ISPUBLIC", ispublic);
+		map.put("v_DATETYPE", datetype);
+		map.put("v_STARTDATE", startdate);
+		map.put("v_ENDDATE", enddate);
+		map.put("v_REPETITION", repetition);
+		map.put("v_TITLE", title);
+		map.put("v_LOCATION", location);
+		map.put("v_TENANTID", tenantId);
+
+		ezScheduleDAO.updateSchedule(map);
+		
+		//mht 내용 변경
+		InputStream stream = null;
+		OutputStream bos = null;		
+		
+		try {
+			byte[] ct = Base64.decode(content);
+			stream = new ByteArrayInputStream(ct);
+			bos = new FileOutputStream(defaultPath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+		} catch (Exception e) {
+			
+		} finally {
+			if (stream != null) stream.close();				
+			if (bos != null) bos.close();
+		}
+		//첨부파일 경로 삭제
+		ezScheduleDAO.deleteScheduleAttach(map);
+		//첨부파일 정보 등록		
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+					
+		for (int i=0; i < attach.getLength(); i++) {
+			String[] files = attach.item(i).getTextContent().split("/");				
+			String fileName = files[1];
+			String filePath = files[0];
+			String fileSize = files[2];
+			
+			filePath = uploadFilePath + commonUtil.separator + filePath;
+
+			attachMap.put("v_SCHEDULEID", scheduleid);
+			attachMap.put("v_FILENAME", fileName);
+			attachMap.put("v_FILEPATH", filePath);
+			attachMap.put("v_FILESIZE", fileSize);
+			attachMap.put("v_TENANTID", tenantId);
+			
+			ezScheduleDAO.insertScheduleAttach(attachMap);
+		}	
+		
+		return 0;
+	}
+
+	@Override
+	public void deleteSchedule(String scheduleId, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantID);
+				
+		ezScheduleDAO.deleteScheduleAttach(map);
+		ezScheduleDAO.deleteAttendant(map);
+		ezScheduleDAO.deleteSchedule(map);
 	}	
+
+	@Override
+	public void deleteResource(String scheduleId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.deleteResource(map);
+	}
+
+	@Override
+	public int getResourceCount(String scheduleId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantId);
+		
+		int cnt = ezScheduleDAO.getResourceCount(map);
+		
+		return cnt;		
+	}
+
+	@Override
+	public void scheduleDelAttendant(String scheduleId, String attendantId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_ATTENDANTID", attendantId);
+		map.put("v_TENANTID", tenantId);		
+		
+		ezScheduleDAO.deleteAttendantID(map);
+		ezScheduleDAO.deleteAttendantSchedule(map);
+		
+		int cnt = ezScheduleDAO.getAttendantCount(map);
+		
+		if (cnt == 0) {
+			updateAttendantSchedule("N", scheduleId, tenantId);
+		}
+		
+	}
+
+	@Override
+	public void insertScheduleAttendant(String scheduleId, String attendantId, String attendantName, String attendantName2, String attendantDeptName, String attendantDeptName2, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_ATTENDANTID", attendantId);
+		map.put("v_ATTENDANTNAME", attendantName);		
+		map.put("v_ATTENDANTNAME2", attendantName2);
+		map.put("v_ATTENDANTDEPTNAME", attendantDeptName);
+		map.put("v_ATTENDANTDEPTNAME2", attendantDeptName2);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.insertScheduleAttendant(map);		
+	}
+
+	@Override
+	public void updateAttendantSchedule(String hasAttendant, String scheduleId,	int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_HASATTENDANT", hasAttendant);
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_TENANTID", tenantId);		
+		
+		ezScheduleDAO.updateAttendantSchedule(map);
+	}
+
+	@Override
+	public List<ScheduleReceiveListVO> getReceiveList(String id, int tenantId, String offSetMin) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", id);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_OFFSETMIN", offSetMin);		
+		
+		List<ScheduleReceiveListVO> sList = ezScheduleDAO.getReceiveList(map);
+		
+		return sList;
+	}
+
+	@Override
+	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+				
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_ATTENDANTID", attendantId);
+		map.put("v_ATTENDANTNAME", displayName);		
+		map.put("v_ATTENDANTNAME2", displayName2);
+		map.put("v_STATUS", status);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.updateAttendantStatus(map);
+		
+		if (status.equals("1")) {
+			ezScheduleDAO.insertAttendantSchedule(map);
+		}
+	}
+
+	@Override
+	public List<ScheduleGroupListVO> getInviteScheduleGroupList(String id, int tenantId, String offSetMin) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_USERID", id);
+		map.put("v_TENANTID", tenantId);
+		map.put("v_OFFSETMIN", offSetMin);
+		
+		List<ScheduleGroupListVO> iList = ezScheduleDAO.getInviteScheduleGroupList(map);
+		
+		return iList;
+	}
+	
 	
 	
 }

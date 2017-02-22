@@ -2303,6 +2303,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PMAXCOUNT", pMaxCount);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PBOARDID", pBoardID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return ezBoardDAO.getUnreadItems(map);
 	}
@@ -2312,6 +2313,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return ezBoardDAO.getUnreadItemsCount(map);
 	}

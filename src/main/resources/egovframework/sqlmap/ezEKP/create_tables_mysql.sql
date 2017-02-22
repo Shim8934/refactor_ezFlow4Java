@@ -319,6 +319,20 @@ CREATE TABLE `jmocha_connection_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_default_quota`
+--
+
+DROP TABLE IF EXISTS `jmocha_default_quota`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_default_quota` (
+  `DOMAIN_NAME` varchar(100) NOT NULL,
+  `MAX_STORAGE` double DEFAULT '0',
+  PRIMARY KEY (`DOMAIN_NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_dept_master`
 --
 
@@ -1043,6 +1057,20 @@ CREATE TABLE `jmocha_user_master_retire` (
   `BIRTHTYPE` varchar(1) DEFAULT NULL,
   `PASSWORD` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`CN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jmocha_user_quota`
+--
+
+DROP TABLE IF EXISTS `jmocha_user_quota`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_user_quota` (
+  `USER_ID` varchar(100) NOT NULL,
+  `MAX_STORAGE` double DEFAULT '0',
+  PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -2555,12 +2583,12 @@ DROP TABLE IF EXISTS `tbl_comm_item_attachments`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_item_attachments` (
   `ITEMID` varchar(76) NOT NULL,
-  `GUID` varchar(76) DEFAULT NULL,
+  `GUID` varchar(76) NOT NULL,
   `FILEPATH` varchar(400) NOT NULL,
   `FILESIZE` varchar(20) DEFAULT NULL,
   `FILENAME` varchar(100) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`ITEMID`)
+  PRIMARY KEY (`TENANT_ID`,`GUID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5529,14 +5557,13 @@ DROP TABLE IF EXISTS `tbl_serialnumgen`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_serialnumgen` (
-  `TYPE1` varchar(200) NOT NULL,
+  `TYPE1` varchar(200) DEFAULT NULL,
   `TYPE3` varchar(200) DEFAULT NULL,
   `ROLLBACKFLAG` mediumint(5) NOT NULL,
-  `TYPE2` varchar(200) NOT NULL,
+  `TYPE2` varchar(200) DEFAULT NULL,
   `TIMESEP` bigint(10) DEFAULT NULL,
   `REGSERIALNO` decimal(19,0) NOT NULL,
-  `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`TYPE1`,`TYPE2`,`REGSERIALNO`)
+  `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

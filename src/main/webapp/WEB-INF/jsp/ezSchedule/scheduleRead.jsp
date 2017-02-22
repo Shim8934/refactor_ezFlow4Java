@@ -2,6 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -12,31 +13,33 @@
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>        
 		<title>
 			<spring:message code='ezSchedule.t298'/>
-			<%-- ${title} --%>
+			<c:out value="${title}" />
 		</title>
 		<style> P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm; line-height:20px }</style>
 		<script>
 			var contentpath = "${scheduleInfo.contentPath}";
-			<%-- var ownerid = "<%= _ownerid %>"; --%>
-			<%-- var creatorid = "<%= _creatorid %>"; --%>
-			<%-- var modifierid = "<%= _modifierid %>"; --%>
-			var scheduletype = "${_scheduletype}";
-			<%-- var scheduleid = "<%= _scheduleid %>";
-			var parentid = "<%= _parentid %>";
-			var repeatcount = "<%= _repeatcount %>";
-			var admin = "<%= _admin %>";
-			var userid = "<%= userinfo.UserID %>";
-			var groupname = "<%= groupname %>";
-			var datetype = "<%= _datetype %>";
-			var changekey = "<%= _changekey %>";
-			var pattern = "<%= _pattern %>";
-			var pageFrom = "<%= pageFrom %>";
-			var s_DateForAttandant = "<%= s_DateForAttandant %>";
-			var e_DateForAttandant = "<%= e_DateForAttandant %>";
-			var _otherid = "<%= otherid %>";
-	        var pUse_Editor = "<%= Use_Editor%>";
-	        var use_exchange_pims = "<%= _use_exchange_pims %>";
-	        var ResourceInfo = "<%= ResourceInfo %>"; --%>
+			var ownerid = "<c:out value='${scheduleInfo.ownerId}' />";
+			var creatorid = "<c:out value='${scheduleInfo.creatorId}' />";
+			var modifierid = "<c:out value='${scheduleInfo.modifierId}' />";
+			var scheduletype = "<c:out value='${scheduleInfo.scheduleType}' />";
+			var scheduleid = "<c:out value='${_scheduleid}' />";
+			<%-- var parentid = "<%= _parentid %>"; --%>
+			<%-- var repeatcount = "<%= _repeatcount %>"; --%>
+			<%-- var admin = "<%= _admin %>"; --%>
+			<%-- var userid = "<%= userinfo.UserID %>"; --%>
+			<%-- var groupname = "<%= groupname %>"; --%>
+			var datetype = "<c:out value='${scheduleInfo.dateType}' />";
+			<%-- var changekey = "<%= _changekey %>"; --%>
+			var changekey = "";
+			var pattern = "<c:out value='${_pattern}' />";
+			var pageFrom = "<c:out value='${pageFrom}' />";
+			<%-- var s_DateForAttandant = "<%= s_DateForAttandant %>"; --%>
+			var s_DateForAttandant = "";
+			<%-- var e_DateForAttandant = "<%= e_DateForAttandant %>"; --%>
+			var e_DateForAttandant = "";
+			var _otherid = "<c:out value='${otherid}' />";
+	        var pUse_Editor = "CK";
+	        var ResourceInfo = "<c:out value='${resourceCnt}' />";
 	        
 	        window.onload = function () {	            
                 if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
@@ -44,37 +47,19 @@
                     manageli.style.display = "none";
                 }
                 
-                var html = "";
-alert(contentpath);
-
                 $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
 					url : "/ezCommon/mhtToHTMLContent.do",
 					data : { 
-							type   : "SCHEDULECONTENT", 
-							 itemID 	 : contentpath
-						   },
+						type   : "SCHEDULECONTENT", 
+						itemID 	 : contentpath
+					},
 					success: function(result){
-						html = result;
+						document.getElementById('message').innerHTML = result;
 					}        			
 				});
-alert(html);                
-				var doc = document.getElementById('message').contentWindow.document;
-				doc.open();
-				doc.write(html);
-				doc.close();
-				
-                <%-- var URL = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=SCHEDULECONTENT&DOCID=" + "<%= _contentpath %>";
-                var tempStr = ConvertMHTtoHTML(URL);
-                var tempXML = createXmlDom();
-                var XmlBodyATT = createXmlDom();
-                var XmlBodyDATA = createXmlDom();
-                tempXML = loadXMLString(tempStr);
-                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-                document.getElementById('message').innerHTML = getNodeText(XmlBodyDATA); --%>
 	            
 	            window.onresize();
 	        }
@@ -83,12 +68,11 @@ alert(html);
 	            if (document.all.message.style.width != document.body.clientWidth - 25)
 	                document.all.message.style.width = document.body.clientWidth - 25;
 	
-	            if ((scheduletype != "1" && scheduletype != "6" && scheduletype != "7") || (use_exchange_pims != "YES" && scheduletype != "7" && scheduletype != "1")) {
+	            if ((scheduletype != "1" && scheduletype != "6" && scheduletype != "7") || (scheduletype != "7" && scheduletype != "1")) {
 	                if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
 	                    document.getElementById("messagetd").style.height = document.body.clientHeight - 250 + "PX";
 	                }
-	            }
-	            else
+	            } else
 	                document.getElementById("messagetd").style.height = document.body.clientHeight - 298 + "PX";
 	        }
 				
@@ -97,19 +81,19 @@ alert(html);
 	                userid = creatorid;
 	            else if (userid == "1")
 	                userid = modifierid;
-	
+	            
 	            var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
-	                window.open("/myoffice/common/ShowPersonInfo.aspx?email=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?email=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	            else
-	                window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+	                window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	        }
 	
-	        function group_info() {
+			/* function group_info() {
 	            var feature = GetOpenPosition(430, 450);
 	            window.open("/myoffice/ezSchedule/schedule_group_info.aspx?id=" + ownerid + "&scheduleid=" + scheduleid, "",
 	                "height = 451px, width = 430px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
-	        }
+	        } */
 				
 	        function attach_SelectAll() {
 				    var checks = document.getElementById('attachedfileDIV').getElementsByTagName("input");
@@ -128,8 +112,8 @@ alert(html);
 			        if (checks.item(suffix).checked) {
 			            if (GetAttribute(checks.item(suffix), "attachid") != "" && GetAttribute(checks.item(suffix), "attachid") != null) {
 			                location.href = GetAttribute(checks.item(suffix++), "filepath");
-			            } else {
-			                location.href = "/myoffice/common/DownloadAttach.aspx?filepath=/Upload_Schedule/File/" + GetAttribute(checks.item(suffix), "filepath") + "&filename=" + GetAttribute(checks.item(suffix++), "filename");
+			            } else {		            	
+			                location.href = "/ezSchedule/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + GetAttribute(checks.item(suffix++), "fileName");
 			            }
 			            setTimeout(function () { downloadAll(checks) }, 1000);
 			        } else {
@@ -145,7 +129,7 @@ alert(html);
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 355) / 2;
 	            var pLeft = (pwidth - 530) / 2;
-	            window.open("schedule_manage_attendant_Cross.aspx?ownerid=" + ownerid + "&id=" + encodeURIComponent(scheduleid) + "&changekey=" + encodeURIComponent(changekey) + "&type=" + scheduletype + "&dtype=" + datetype + "&pattern=" + pattern + "&StartTime=" + s_DateForAttandant + "&EndTime=" + e_DateForAttandant, "",
+	            window.open("/ezSchedule/scheduleManageAttendant.do?ownerid=" + ownerid + "&id=" + encodeURIComponent(scheduleid) + "&changekey=" + encodeURIComponent(changekey) + "&type=" + scheduletype + "&dtype=" + datetype + "&pattern=" + pattern + "&StartTime=" + s_DateForAttandant + "&EndTime=" + e_DateForAttandant, "",
 	                "height = 355px, width = 530px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	
@@ -154,35 +138,32 @@ alert(html);
 	                return;
 	
 	            var ResourceDel = "FALSE";;
-	            if (ResourceInfo != "") {
+	            if (ResourceInfo != "0") {
 	                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
-	            }
-	
-	            var xmlHTTP = createXMLHttpRequest();
-	            var xmlDom = createXmlDom();
-	
-	            var objNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleid);
-	            createNodeAndInsertText(xmlDom, objNode, "SCHEDULETYPE", scheduletype);
-	            createNodeAndInsertText(xmlDom, objNode, "DATETYPE", datetype);
-	            createNodeAndInsertText(xmlDom, objNode, "PATTERN", pattern);
-	            createNodeAndInsertText(xmlDom, objNode, "OTHERID", _otherid);
-	
-	            xmlHTTP.open("POST", "remote/schedule_delete.aspx?RESDEL=" + ResourceDel, false);
-	            xmlHTTP.send(xmlDom);
-	
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                alert("<spring:message code='ezSchedule.t212' />");
-	            } else {
-	                alert("<spring:message code='ezSchedule.t213' />");
-	
-	                try { window.opener.RefreshView() } catch (e) { }
-	
-	                if (window.opener.reload != undefined)
-	                    window.opener.reload();
-	                window.close();
-	            }
+	            }           
+	            
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleDelete.do",
+					data : { 
+						scheduleId : scheduleid,
+						resDel : ResourceDel						
+					},
+					success: function() {
+						alert("<spring:message code='ezSchedule.t213' />");
+						
+		                try { window.opener.RefreshView() } catch (e) { }
+		
+		                if (window.opener.reload != undefined)
+		                    window.opener.reload();
+		                window.close();
+					},
+					error: function(err) {
+						alert("<spring:message code='ezSchedule.t212' />");
+					}
+				});	
 	        }
 				
 	        function edit_schedule() {
@@ -193,17 +174,18 @@ alert(html);
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - 760) / 2;
 	            var pLeft = (pwidth - 790) / 2;
-	            if (CrossYN() || pNoneActiveX == "YES") {
-	                win = window.open("schedule_write_Cross.aspx?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
+	            
+	            if (CrossYN()) {
+	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                    "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	                if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                    win = window.open("schedule_write.aspx?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
+	                    win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                        "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                } else {
+	                }/*  else {
 	                    win = window.open("schedule_write_IE.aspx?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                        "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                }
+	                } */
 	            }
 	
 	            win.opener = window.opener;
@@ -227,10 +209,9 @@ alert(html);
 	            printCreateDate = getNodeText(document.getElementById("LabelCreateDate"));
 	            printIsPublic = getNodeText(document.getElementById("LabelPublic"));
 	            printImportance = getNodeText(document.getElementById("LabelImportance"));
-	  <%--           <% if (_scheduletype == "1" || _scheduletype == "6")
-	            { %>
-	            printAttendant = getNodeText(document.getElementById("LabelAttendant"));
-	            <% } %> --%>
+	  			if (scheduletype == "1" || scheduletype == "6") {
+	            	printAttendant = getNodeText(document.getElementById("LabelAttendant"));
+	            }	            
 	            printDate = getNodeText(document.getElementById("LabelDate"));
 	            printLocation = getNodeText(document.getElementById("LabelLocation"));
 	            printTitle = getNodeText(document.getElementById("LabelSubject"));
@@ -239,7 +220,7 @@ alert(html);
 	
 	            var params = { 'type': 'READ', 'printCreator': printCreator, 'printCreateDate': printCreateDate, 'printAttendant': printAttendant, 'printIsPublic': printIsPublic, 'printImportance': printImportance, 'printRepetition': printRepetition, 'printDate': printDate, 'printLocation': printLocation, 'printTitle': printTitle, 'printAttach': printAttach, 'printDocument': printDocument };
 	
-	            post_to_url("schdule_ContentsPirnt.aspx", params, "post");
+	            post_to_url("/ezSchedule/scheduleContentsPrint.do", params, "post");
 	        }
 	
 	        function post_to_url(path, params, method) {
@@ -279,42 +260,25 @@ alert(html);
 	    <form method="post" style="height:98%">
 	        <table id="normalScreen" style="height:100%; width:100%;" class="layout">
 	            <tr>
-	                <td style="height:20px">
-	                    <%-- <% if(!isGoogleSchedule){ %>
+	                <td style="height:20px">	                    
 	                    <div id="menu">
 	                        <ul>
-	                            <asp:PlaceHolder ID="HolderEdit" runat="server">
-	                                <li><span onclick="edit_schedule()">
-	                                    <spring:message code='ezSchedule.t302' />
-	                                </span></li>
-	                                <li><span onclick="delete_schedule()">
-	                                    <spring:message code='ezSchedule.t215' />
-	                                </span></li>
-	                                <% if (_isMeCreate == true)
-	                                   { %>
-	                                <li id ="manageli"><span id=managespan onclick="manage_attendant()">
-	                                    <spring:message code='ezSchedule.t303' />
-	                                </span></li>
-	                                <% }  %>
-	                            </asp:PlaceHolder>
-	                            <li><span onclick="Print_onClick()">
-	                                <spring:message code='ezSchedule.t217' />
-	                            </span></li>
-	                            
-	                            <asp:PlaceHolder ID="HolderGroup" runat="server" Visible="False">
-	                                <li><span onclick="group_info()">
-	                                    <spring:message code='ezSchedule.t305' />
-	                                </span></li>
-	                            </asp:PlaceHolder>
+	                        	<c:if test="${_editPosible == 'Y'}">
+                                <li>
+                                	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
+                                </li>
+                                <li>
+                                	<span onclick="delete_schedule()"><spring:message code='ezSchedule.t215' /></span>
+                                </li>	                                
+                                <li id ="manageli">
+                                	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>
+                                </li>
+                                </c:if>
+                            	<li>
+                            		<span onclick="Print_onClick()"><spring:message code='ezSchedule.t217' /></span>
+                            	</li>                            	
 	                        </ul>
-	                    </div>
-	                    <%}else{ %>
-	                    <div id="menu">
-	                        <ul>
-	                            <li></li>
-	                        </ul>
-	                    </div>
-	                    <%} %> --%>
+	                    </div>	                    
 	                    <div id="close">
 	                        <ul>
 	                            <li>
@@ -326,83 +290,97 @@ alert(html);
 	            </tr>
 	            <tr>
 	                <td style="height:20px">
-	                    <table style="width:100%" class="popuplist">	
-	                         <%-- <% if (_scheduletype == "7") { %>
-	                          <tr>
-	                            <th style="white-space:nowrap">
-	                                <spring:message code='ezSchedule.t159' />
-	                            </th>
-	                            <td colspan="3" style="white-space:nowrap; width:240px;">
-	                                <div style="cursor: pointer;">
-	                                    <asp:Label ID="LabelGroup" runat="server"></asp:Label>
-	                                </div>
-	                            </td>                            
-	                        </tr>
-	                        <% } %> --%>
+	                    <table style="width:100%" class="popuplist">	                         
+	                        <c:if test="${scheduleInfo.scheduleType == '7'}">
+	                        	<tr>
+		                            <th style="white-space:nowrap">
+		                                <spring:message code='ezSchedule.t159' />
+		                            </th>
+		                            <td colspan="3" style="white-space:nowrap;">
+		                                <div style="cursor: pointer;width:270px">
+		                                    <c:out value="${scheduleInfo.groupName}" />
+		                                </div>
+		                            </td>                            
+		                        </tr>
+	                        </c:if>
 	                        <tr>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t161' />
 	                            </th>
-	                            <td style="white-space:nowrap; width:240px;">
-	                                <div style="cursor: pointer;" onclick="show_personinfo('0')">
-	                                    <!-- <asp:Label ID="LabelCreator" runat="server"></asp:Label> -->
+	                            <td style="white-space:nowrap;">
+	                                <div style="cursor: pointer;width:270px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
+	                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
+	                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
 	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap; width:80px">
 	                                <spring:message code='ezSchedule.t306' />
 	                            </th>
 	                            <td style="white-space:nowrap; width:100%">
-	                                <div>
-	                                    <!-- <asp:Label ID="LabelCreateDate" runat="server"></asp:Label> -->
+	                                <div id="LabelCreateDate">	                                    
+	                                    <c:out value="${fn:substring(scheduleInfo.createDate,0,16)}" />
 	                                </div>
 	                            </td>
-	                        </tr>
-	                        
-	                        <%-- <% if(!isGoogleSchedule){ %>
+	                        </tr>	                        
 	                        <tr>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t309' />
 	                            </th>
 	                            <td>
-	                                <div>
-	                                    <asp:Label ID="LabelPublic" runat="server"></asp:Label></div>
+	                                <div id="LabelPublic">
+	                                    <c:if test="${scheduleInfo.isPublic == 'Y'}"><spring:message code='ezSchedule.t359' /></c:if>
+	                                    <c:if test="${scheduleInfo.isPublic == 'N'}"><spring:message code='ezSchedule.t360' /></c:if>
+	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t310' />
 	                            </th>
 	                            <td>
-	                                <div>
-	                                    <asp:Label ID="LabelImportance" runat="server"></asp:Label></div>
+	                                <div id="LabelImportance">
+	                                    <c:if test="${scheduleInfo.importance == '1'}"><spring:message code='ezSchedule.t325' /></c:if>
+	                                    <c:if test="${scheduleInfo.importance == '2'}"><spring:message code='ezSchedule.t326' /></c:if>
+	                                    <c:if test="${scheduleInfo.importance == '3'}"><spring:message code='ezSchedule.t327' /></c:if>
+	                                </div>
 	                            </td>
 	                        </tr>
-	                        <% if (_scheduletype == "1" || _scheduletype == "6")
-	                           { %>
+	                        <c:if test="${scheduleInfo.scheduleType == '1' || scheduleInfo.scheduleType == '6'}"> 
 	                        <tr>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
 	                            <td colspan="3" width="100%">
-	                                <div style="overflow-y: auto; height: 17px; padding-top: 2px">
-	                                    <asp:Label ID="LabelAttendant" runat="server"></asp:Label></div>
+	                                <div style="overflow-y: auto; height: 17px; padding-top: 2px" id="LabelAttendant">	                                
+	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
+	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
+	                                	 		<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
+	                                	 		<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
+                                    			<c:if test="${item.status == '1'}">(<spring:message code='ezSchedule.t251' />)</c:if>
+	                                			<c:if test="${item.status == '2'}">(<spring:message code='ezSchedule.t168' />)</c:if>
+	                                			<c:if test="${item.status == '3'}">(<spring:message code='ezSchedule.t169' />)</c:if>
+	                                			<c:if test="${item.status != '1' && item.status != '2' && item.status != '3'}">(<spring:message code='ezSchedule.t166' />)</c:if>
+	                                			<c:if test="${fn:length(attendantList) != status.count}">,</c:if>	                                				                                		
+                                    		</span>
+	                                	</c:forEach>                            
+	                                </div>
 	                            </td>
 	                        </tr>
-	                        <%} %>
-	                        <%} %> --%>
+	                        </c:if>	                        
 	                        <tr>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t312' />
 	                            </th>
 	                            <td style="white-space:nowrap">
-	                                <div>
+	                                <div id="LabelDate">
 	                                    <!-- <asp:Label ID="LabelDate" runat="server"></asp:Label> -->
+	                                    <c:out value="${dateString}" />
 	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t313' />
 	                            </th>
 	                            <td>
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px">
-	                                    <!-- <asp:Label ID="LabelLocation" runat="server"></asp:Label> -->
+	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelLocation">	                                    
+	                                    <c:out value="${scheduleInfo.location }" />
 	                                </div>
 	                            </td>
 	                        </tr>
@@ -411,8 +389,8 @@ alert(html);
 	                                <spring:message code='ezSchedule.t314' />
 	                            </th>
 	                            <td colspan="3">
-	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px">
-	                                    <!-- <asp:Label ID="LabelSubject" runat="server"></asp:Label> -->
+	                                <div style="word-break: break-all; overflow-y: auto; height: 17px; padding-top: 2px" id="LabelSubject">	                                    
+	                                    <c:out value="${scheduleInfo.title}" />
 	                                </div>
 	                            </td>
 	                        </tr>
@@ -421,9 +399,7 @@ alert(html);
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 100%; padding-top: 6px; height: 370px; background-color: white">
-	                    	<%-- <%= _content %> --%>
-	                    </div>
+	                    <div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 100%; padding-top: 6px; height: 370px; background-color: white"></div>
 	                </td>
 	            </tr>
 	            <tr>
@@ -434,8 +410,38 @@ alert(html);
 	                                <spring:message code='ezSchedule.t316' />
 	                            </th>
 	                            <td class="pos1">
-	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
-	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->
+	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">	                                
+	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
+	                                    	<div style="margin-top:3px;height:20px">
+	                                    		<input type="checkbox" filename="${item.fileName}" filepath="${item.filePath}">
+	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+	                                    			<c:set var="imagePath" value="/images/image.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+	                                    			<c:set var="imagePath" value="/images/doc.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+	                                    			<c:set var="imagePath" value="/images/xls.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+	                                    			<c:set var="imagePath" value="/images/ppt.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'txt'}">
+	                                    			<c:set var="imagePath" value="/images/txt.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'zip'}">
+	                                    			<c:set var="imagePath" value="/images/zip.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'pdf'}">
+	                                    			<c:set var="imagePath" value="/images/pdf.png" />
+	                                    		</c:if>
+	                                    		<c:if test="${item.fileType == 'ecm'}">
+	                                    			<c:set var="imagePath" value="/images/ecm.png" />
+	                                    		</c:if>
+	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (<fmt:formatNumber value='${item.fileSize}' type='number' />)</a>	                                    		
+	                                    	</div>
+	                                    </c:forEach>
 	                                </div>
 	                            </td>
 	                            <td class="pos2">	                                

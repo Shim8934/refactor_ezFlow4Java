@@ -29,8 +29,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  * @Modification Information
  *
  *    수정일        수정자         수정내용
- *    ----------    ------    -------------------    
- *    2017.01.20	장진혁 개발
+ *    ----------    ------      -------------------    
+ *    2017.01.20	장진혁 개발 완료
  *
  * @see
  */
@@ -62,6 +62,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleMain.do")
 	public String  scheduleAdminMain() throws Exception {
+		
+		logger.debug("============ scheduleAdminMain started ============");
+		
 		return "/admin/ezSchedule/scheduleMain";
 	}
 	
@@ -69,7 +72,10 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 왼쪽화면 호출함수
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do")
-	public String  scheduleAdminLeft() throws Exception {			
+	public String  scheduleAdminLeft() throws Exception {
+		
+		logger.debug("============ scheduleAdminLeft started ============");
+		
 		return "/admin/ezSchedule/scheduleLeft";
 	}
 	
@@ -77,7 +83,10 @@ public class EzScheduleAdminController {
 	 * 관리자 일정관리 일정공유관리 화면
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
-	public String  scheduleAdminShareManage() throws Exception {			
+	public String  scheduleAdminShareManage() throws Exception {
+		
+		logger.debug("============ scheduleAdminShareManage started ============");
+		
 		return "/admin/ezSchedule/scheduleAdminShareManage";
 	}
 	
@@ -87,6 +96,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleGetShareManage.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGetShareManage started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 				
 		String result = ezScheduleAdminService.scheduleGetShareManage(loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
@@ -99,6 +111,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupShareDept.do")
 	public String  scheduleAdminPopupShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminPopupShareDept started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String lang = loginSimpleVO.getLang();
 		
@@ -113,6 +128,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleDelShareDept.do")
 	@ResponseBody
 	public void  scheduleDelShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleDelShareDept started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
 		String id = request.getParameter("id");		
 		
@@ -125,6 +143,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveShareDept.do")
 	@ResponseBody
 	public void  scheduleSaveShareDept(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, OrganDeptVO organDeptVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleSaveShareDept started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		int tenantID = loginVO.getTenantId();
@@ -153,6 +174,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayManage.do")	
 	public String scheduleAdminHolidayManage(@CookieValue("loginCookie") String loginCookie, OrganDeptVO organDeptVO, Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleAdminHolidayManage started ============");
+		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -184,6 +208,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleDelHoliday.do")
 	@ResponseBody
 	public void scheduleDelHoliday(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleDelHoliday started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String hID = request.getParameter("holidayID");
@@ -197,6 +224,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleChangeHolidayUse.do")
 	@ResponseBody
 	public void scheduleChangeHolidayUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleChangeHolidayUse started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String hID = request.getParameter("holidayID");
@@ -210,6 +240,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHoliday.do")	
 	public String scheduleAdminPopupHoliday(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleAdminPopupHoliday started ============");
+		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -258,6 +291,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveHoliday.do")
 	@ResponseBody
 	public void scheduleSaveHoliday(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleSaveHoliday started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String holidayName = request.getParameter("holidayName");
@@ -283,6 +319,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminLunarUse.do")
 	public String  scheduleAdminLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminLunarUse started ============");
+		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -314,6 +353,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveLunarUse.do")
 	@ResponseBody
 	public void	scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleSaveLunarUse started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
 		String cID = request.getParameter("COMPANYID");
 		String lunarUse = request.getParameter("LUNARUSE");
@@ -332,6 +374,9 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleAdminRegi.do")
 	public String  scheduleAdminRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminRegi started ============");
+		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -363,6 +408,9 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveRegi.do")
 	@ResponseBody
 	public void	scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleSaveRegi started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);		
 		String cID = request.getParameter("COMPANYID");
 		String regi = request.getParameter("PREVIOSLYREGIUSE");

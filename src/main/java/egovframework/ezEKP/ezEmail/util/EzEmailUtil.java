@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -51,8 +52,11 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 
 import org.apache.commons.codec.binary.Base64;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.sun.mail.imap.IMAPFolder;
@@ -82,6 +86,9 @@ public class EzEmailUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+	
+    @Autowired
+    private Properties config;
 	
 	/**
 	 * returns a string containing size with a size unit(MB or KB or B) 
@@ -1568,6 +1575,185 @@ public class EzEmailUtil {
 		return innerDomainList;
 	}
 	
+	/**
+	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 반환한다.
+	 * @param domainName
+	 * @return
+	 */
+	public Double getDefaultQuota(String domainName) throws Exception {
+	    Double defaultMax = null;
+        
+        String param1 = "domainName=" + domainName;
+        String inputParams = param1;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDefaultQuota";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("getDefaultQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (resultCode.equalsIgnoreCase("OK")) {
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        String maxStorage = (String)result.get("maxStorage");
+                        double maxDouble = Double.parseDouble(maxStorage);
+                        
+                        defaultMax = maxDouble;
+                        
+                        logger.debug("maxStorage=" + maxStorage + ",defaultMax=" + defaultMax);                                                                
+                    }
+                }
+            }                    
+        }                 
+        
+        return defaultMax;
+    }    
+    
+	/**
+	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 설정한다.
+	 * @param domainName
+	 * @param maxStorage
+	 * @throws Exception
+	 */
+	public void setDefaultQuota(String domainName, String maxStorage) throws Exception {
+        String param1 = "domainName=" + domainName;
+        String param2 = "maxStorage=" + maxStorage;
+        String inputParams = param1 + "&" + param2;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDefaultQuota";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("setDefaultQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+                throw new Exception("setDefaultMaxStorage failed");
+            }                    
+        }                 
+    }    
+    
+	/**
+	 * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 반환한다.
+	 * @param userEmail
+	 * @return
+	 */
+    public Double getUserQuota(String userEmail) throws Exception {
+        Double defaultMax = null;
+        
+        String param1 = "userEmail=" + userEmail;
+        String inputParams = param1;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getUserQuota";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("getUserQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (resultCode.equalsIgnoreCase("OK")) {
+                if (reasonCode == 0) {
+                    JSONObject result = (JSONObject)responseObj.get("result");
+                    
+                    if (result != null) {
+                        String maxStorage = (String)result.get("maxStorage");
+                        double maxDouble = Double.parseDouble(maxStorage);
+                        
+                        defaultMax = maxDouble;
+                        
+                        logger.debug("maxStorage=" + maxStorage + ",defaultMax=" + defaultMax);                                                                
+                    }
+                }
+            }                    
+        }                 
+        
+        return defaultMax;
+    }    
+    
+    /**
+     * 특정 사용자에 대한 메일박스 최대 용량을 MB단위로 설정한다.
+     * @param domainName
+     * @param maxStorage
+     * @throws Exception
+     */
+    public void setUserQuota(String userEmail, String maxStorage) throws Exception {
+        String param1 = "userEmail=" + userEmail;
+        String param2 = "maxStorage=" + maxStorage;
+        String inputParams = param1 + "&" + param2;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setUserQuota";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("setUserQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+                throw new Exception("setUserQuota failed");
+            }                    
+        }                 
+    }    
+    
+    /**
+     * 특정 사용자에 대한 메일박스 최대 용량 설정을 제거한다.
+     * @param userEmail
+     * @throws Exception
+     */
+    public void deleteUserQuota(String userEmail) throws Exception {
+        String param1 = "userEmail=" + userEmail;
+        String inputParams = param1;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteUserQuota";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("deleteUserQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+                throw new Exception("deleteUserQuota failed");
+            }                    
+        }                 
+    }    
+    
 	/**
 	 * change an http or https URL to an anchor tag in a text/plain message 
 	 * so that the user can click on it
