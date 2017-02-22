@@ -13,11 +13,9 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.annotation.Resource;
@@ -3773,6 +3771,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemList = "";
 		String result = ""; 
+		
 		itemList = request.getParameter("itemList");
 		
 		for (int i = 0; i < itemList.split(";").length; i++) {
@@ -4206,8 +4205,8 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("<ENDDATE>" + commonUtil.getDateStringInUTC(boardLisitVO.getEndDate(), userInfo.getOffset(), false) + "</ENDDATE>");
         sb.append("<ABSTRACT>" + commonUtil.cleanValue(boardLisitVO.getABSTRACT()) + "</ABSTRACT>");
         sb.append("<ATTACHMENTS>" + commonUtil.cleanValue(attachments) + "</ATTACHMENTS>");
-        sb.append("<UPPERITEMIDTREE>" + boardLisitVO.getUpperItemIDTree() + "</UPPERITEMIDTREE>");
-        sb.append("<ITEMLEVEL>" + boardLisitVO.getItemLevel() + "</ITEMLEVEL>");
+        sb.append("<UPPERITEMIDTREE>" + destItemID + "</UPPERITEMIDTREE>");
+        sb.append("<ITEMLEVEL>1</ITEMLEVEL>");
         sb.append("<EXTENSIONATTRIBUTE1>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute1()) + "</EXTENSIONATTRIBUTE1>");
         sb.append("<EXTENSIONATTRIBUTE2>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute2()) + "</EXTENSIONATTRIBUTE2>");
         sb.append("<EXTENSIONATTRIBUTE3>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute3()) + "</EXTENSIONATTRIBUTE3>");
