@@ -1101,7 +1101,7 @@
 	<c:if test="${boardInfo.buttonHidden == 'N'}">
 		<div id="mainmenu">
 		  <ul>
-		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t273' /></span></li>
+		        <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321' /></span></li>
 		        <li><span onclick="SetRead_onclick()"><spring:message code='ezBoard.t204' /></span></li>
 			    <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
 		        <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89' /></span></li>
