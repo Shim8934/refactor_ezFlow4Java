@@ -12,11 +12,11 @@
 	<frameset rows="68,*" framespacing="0" frameborder="no" border="0">
 		<%String lang = (String)request.getParameter("lang"); %>
     	<%if(lang != "3"){ %>
-  			<frame src="top.aspx" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
-  				<frame src="index_sub.aspx?lurl=portal/left_portal.aspx&rurl=main.aspx?id=portal/portal_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
+  			<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+  				<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do&rUrl=/ezPortal/help/main.do?id=/images/help/portal_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
     	<%} else { %>
-   			<frame src="top.aspx?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
-   			<frame src="index_sub.aspx?lurl=portal/left_portal.aspx?lang=jp&rurl=main.aspx?id=portal/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
+   			<frame src="/ezPortal/top.do?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+   			<frame src="/ezPortal/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=jp&rUrl=/ezPortal/main.do?id=/images/help/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
     	<%} %>
 	</frameset>
 	<noframes>

@@ -15296,30 +15296,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (checkMode.equals("VIE")){
 			 v_temp  = ezApprovalGDAO.countVieTempDocID(map);
 				map.put("v_temp", v_temp);
-			if (v_temp == 1) {
+			if (v_temp < 1) {
 				 v_temp2  = ezApprovalGDAO.countVieTempDocID2(map);
 				map.put("v_temp2", v_temp2);
-			} else {
-				v_temp3  = ezApprovalGDAO.countRecTempDocID(map);
-				
-				if(v_temp3 == 1) {
-					map.put("v_temp3", v_temp3);
-				} else {
-					map.put("v_temp3", "2");
-				}
-			}
+			} 
+			
 		} else if(checkMode.equals("REC")) {
 			 v_temp  = ezApprovalGDAO.countRecTempDocID(map);
 			map.put("v_temp", v_temp);
 			
-			if(v_temp == 1 ) {
+			if(v_temp > 0 ) {
 				 v_temp2  = ezApprovalGDAO.countRecTempDocID2(map);
 				map.put("v_temp2", v_temp2);
 				
 			} else {
 				 v_temp3 = ezApprovalGDAO.countVieTempDocID(map);
 				map.put("v_temp3", v_temp3);
-				if( v_temp3 != 1 ) {
+				if( v_temp3 < 1 ) {
 					List<ApprGAprLineVO> tempList = ezApprovalGDAO.countRecTempDocID3(map);
 					map.put("v_temp4", tempList.size());
 				}
@@ -16201,7 +16194,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				System.out.println(e.getMessage());
 				return  "<RESULT>FALSE</RESULT>";
 			}
-			return "<RESULT>TRUE</RESULT>";
+ 			return "<RESULT>TRUE</RESULT>";
 		}
 		else{
 			try{
