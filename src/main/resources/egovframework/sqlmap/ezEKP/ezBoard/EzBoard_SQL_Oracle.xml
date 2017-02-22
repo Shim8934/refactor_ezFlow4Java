@@ -4312,7 +4312,7 @@
 		]]>
 	</delete>
   
-  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultMap="getBrdGetItemInfo">
+  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultClass="BoardListVO">
     <![CDATA[
 	     SELECT
             * 
