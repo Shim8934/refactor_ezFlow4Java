@@ -2346,7 +2346,11 @@ public class EzBoardController extends EgovFileMngUtil{
 
         if (noticeCount > 0 && type.equals("1")) {
             endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
-
+            
+            if (endRow < 0) {
+            	endRow = 0;
+            }
+            
             List<HashMap<String, Object>> noticeList = ezBoardService.getNoticePostItem(boardVO, personalCount);
 
             int k = 0;
@@ -2464,6 +2468,10 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardVO.getPageNum() != 1) {
             startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount) + 1;
             endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
+            
+            if (startRow <= 0) {
+            	startRow = 1;
+            }
         }
         
         List<HashMap<String, Object>> boardListItem = ezBoardService.getBoardListItem(boardVO.getBoardId(), userInfo.getId(), startRow, endRow, boardCount, orderOption1, orderOption2, type, userInfo.getTenantId());
