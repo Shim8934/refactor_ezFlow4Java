@@ -332,7 +332,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
 
 				String sDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent());
-				String eDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent());
+				String eDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent());
 					
 				xmlDom2.getElementsByTagName("dtstart").item(i).setTextContent(sDate);
 				xmlDom2.getElementsByTagName("dtend").item(i).setTextContent(eDate);
