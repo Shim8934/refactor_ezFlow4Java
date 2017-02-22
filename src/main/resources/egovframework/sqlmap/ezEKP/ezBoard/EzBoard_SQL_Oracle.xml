@@ -271,7 +271,7 @@
 						WHEN BOARDNAME2 IS NULL
 						THEN BOARDNAME
 						ELSE BOARDNAME2
-					END
+					END BOARDNAME
 				FROM 
 					TBL_Board_BoardInfo
 				WHERE  

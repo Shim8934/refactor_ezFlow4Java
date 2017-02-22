@@ -1631,6 +1631,7 @@
 		    }
 		
 		    function event_Get_listComplite(resultXml) {
+		    	document.getElementById("backgroundtd").innerHTML = "";
 	            var backxml = loadXMLString(resultXml);
 	            var i;
 	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {

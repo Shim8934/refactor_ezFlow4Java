@@ -427,7 +427,6 @@ function previewItemSet() {
 	pOCS = "";
     pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName + "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3") + "\")'>" + WriterName + "</span>";
 
-
     if (document.getElementById('ifrmPreViewH_photo') != null) {
         document.getElementById('ifrmPreViewH_photo').style.display = "none";
         document.getElementById('ifrmPreViewW_photo').style.display = "none";

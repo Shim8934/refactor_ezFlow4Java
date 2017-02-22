@@ -837,9 +837,9 @@
 		            alert("<spring:message code='ezBoard.t999072' />");
 		            return;
 		        }
-		
+
 		        if (CheckIfHasReplies()) {
-		            alert(strLang26);
+		            alert("<spring:message code='ezBoard.t196'/>");
 		            return;
 		        }
 		        var arrList = new Array();
@@ -855,8 +855,7 @@
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
 		            OpenWin = GetOpenWindow("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID, "MoveBoardItem", 340, 600);
 		            try { OpenWin.focus(); } catch (e) { }
-		        }
-		        else {
+		        } else {
 		            var pheigth = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            pheigth = parseInt(pheigth) / 2;
