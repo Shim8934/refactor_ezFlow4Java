@@ -137,12 +137,12 @@
 		        if (pStartday == 1)
 		            DefaultView = 1
 		        else
-		            DefaultView = 0
-		            
+		            DefaultView = 0            
+       
 				if (receivecount != "0") {
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
-		            var OpenWin = window.open("/myoffice/ezSchedule/schedule_receive_attendant_cross.aspx", "schedule_select_attendant", GetOpenWindowfeature(730, 420));
+		            var OpenWin = window.open("/ezSchedule/scheduleReceiveAttendant.do", "schedule_select_attendant", GetOpenWindowfeature(730, 420));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete();
@@ -163,7 +163,7 @@
 		        if (groupcount != "0") {
 		            schedule_receive_member_dialogArguments[0] = this;
 		            schedule_receive_member_dialogArguments[1] = windowonload_Complete2;
-		            var OpenWin = window.open("/myoffice/ezSchedule/schedule_receive_member.aspx", "schedule_receive_member", GetOpenWindowfeature(730, 420));
+		            var OpenWin = window.open("/ezSchedule/scheduleReceiveMember.do", "schedule_receive_member", GetOpenWindowfeature(730, 420));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            windowonload_Complete2();
@@ -184,15 +184,7 @@
 		                idSelect.options[lastindex] = newoption;
                     }
                 }
-
-		        /* if ("${_UseGoogleCalrendar}" == "YES" && "${pFlag}" == "Y") {
-		            if ("${pGoogleID}" != null) {
-                        var lastindex = idSelect.length;
-                        var newoption = new Option("<spring:message code='ezSchedule.t400'/>", "GOOGLE");
-		                idSelect.options[lastindex] = newoption;
-                    }
-                } */
-
+	
                 if (sharexml != "") {	
                     var sharexmldom = loadXMLString(sharexml);
 
@@ -249,16 +241,16 @@
 		        if (scheduleid.indexOf("GOOGLE") > -1)
 		            date = GetAttribute(srcEl, "StartDate") + "|" + srcEl.getAttribute;
 
-		        if (repeatcount == "Y") {
+		        if (repeatcount == "Y") {	        	
 		            schedule_read_confirm_cross_dialogArguments[0] = "";
 		            schedule_read_confirm_cross_dialogArguments[1] = ReadSchedule_Complete;
-		            GetOpenWindow("schedule_read_confirm_Cross.aspx", "schedule_read_confirm_Cross", 400, 170);
-		        } else {
+		            GetOpenWindow("/ezSchedule/scheduleReadConfirm.do", "schedule_read_confirm_Cross", 400, 170);
+		        } else {		        	
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
 		            var pLeft = (pwidth - 770) / 2;
-		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + escape(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 660px, width = 770px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        }
 		    }
@@ -277,7 +269,7 @@
 		            var pwidth = window.screen.availWidth;
 		            var pTop = (pheight - 660) / 2;
 		            var pLeft = (pwidth - 770) / 2;
-		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + escape(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
 					            "height = 660px, width = 770px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        } else {
 		            return;
@@ -316,7 +308,7 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + escape(otherid) + "&type=" + type + "&othername=" + escape(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=2", "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=2", "",
 						    "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -363,7 +355,7 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -381,7 +373,7 @@
 		            var feature = GetOpenPosition(790, 760);
 		            
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + escape(otherid) + "&type=" + type + "&othername=" + escape(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&type=" + type + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -413,7 +405,7 @@
 
 		            var feature = GetOpenPosition(790, 760);
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?defaultid=" + index + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -429,7 +421,7 @@
 		            var feature = GetOpenPosition(790, 760);
 		            
 		            //if (CrossYN()) {
-		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + escape(otherid) + "&othername=" + escape(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + escape(sdate) + "&edate=" + escape(edate), "",
+		                window.open("/ezSchedule/scheduleWrite.do?otherid=" + encodeURIComponent(otherid) + "&othername=" + encodeURIComponent(secretarySelect.options[secretarySelect.selectedIndex].innerHTML) + "&datetype=" + datetype + "&sdate=" + encodeURIComponent(sdate) + "&edate=" + encodeURIComponent(edate), "",
 						"height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		            /* } else {
 		                if (pUse_Editor == "" || pUse_Editor == "CK") {
@@ -567,7 +559,7 @@
 		            window.location.href = "/ezSchedule/scheduleMain.do?idtype=" + type + "&otherid=" + encodeURIComponent(secretarySelect.value);
 		        }
 		        parent.frames["left"].idtype = type;
-		        parent.frames["left"].idlist = escape(secretarySelect.value);
+		        parent.frames["left"].idlist = encodeURIComponent(secretarySelect.value);
 		        parent.frames["left"].CalendarMiniView("CalendarMini");
 		        parent.frames["left"].CalendarMiniDataSource();
 		    }
@@ -621,9 +613,9 @@
                     idlist = idtype;
                 var feature = GetOpenPosition(837, 660);
                 if (idlist == "G")
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype + "&groupid=" + groupid, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
                 else
-                    window.open("/ezSchedule/schedulePrint.do?idlist=" + escape(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
+                    window.open("/ezSchedule/schedulePrint.do?idlist=" + encodeURIComponent(idlist) + "&date=" + date + "&view=" + view + "&APP=" + idtype, "", "height = 660px, width = 837px, status = no, toolbar=no, menubar=no, location=no, resizable=0" + feature);
             }
 			
             var schedule_repetition_del_dialogArugment = new Array();
@@ -716,12 +708,11 @@
 
 		    function show_personinfo(userid) {
 		        var feature = GetOpenPosition(420, 450);
-		        window.open("/myoffice/common/ShowPersonInfo.aspx?id=" + userid, "",
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "",
 				    "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 
 		    function open_schedule(scheduleid) {
-alert("open_schedule");
 		        var feature = GetOpenPosition(770, 660);
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid), "",
 					"height = 660px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
