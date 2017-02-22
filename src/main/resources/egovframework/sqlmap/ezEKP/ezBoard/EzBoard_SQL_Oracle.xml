@@ -4312,7 +4312,7 @@
 		]]>
 	</delete>
   
-  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultClass="BoardListVO">
+  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultMap="getBrdGetItemInfo">
     <![CDATA[
 	     SELECT
             * 
@@ -4337,21 +4337,19 @@
                                      GROUP BY ITEMID ) D
                     ON
                         A.ITEMID = D.ITEMID
-                    AND
-                        A.TENANT_ID = D.TENANT_ID    
                     WHERE
                         BOARDID = #v_PBOARDID#
                     AND
-                        STARTDATE <= #nowDate#
+                        STARTDATE <= TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
                     AND
-                        ENDDATE > #nowDate#
+                        ENDDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
                     AND
                         D.TOTALCOUNT IS NULL
                     AND
                         A.TENANT_ID = #tenantID#    
                     ORDER BY
                         A.PARENTWRITEDATE DESC,
-                        A.UPPERITEMIDTREE,
+                        to_char(A.UPPERITEMIDTREE) ASC,
                         A.STARTDATE DESC )
                     WHERE
                         ROWNUM <= #v_PMAXCOUNT#
@@ -4378,16 +4376,14 @@
                                 ITEMID ) D   
             ON
                 A.ITEMID = D.ITEMID
-            AND
-                A.TENANT_ID = D.TENANT_ID    
             WHERE
                 A.TENANT_ID = #tenantID#
             AND
                 BOARDID = #v_PBOARDID#
             AND
-                STARTDATE <= #nowDate#
+                STARTDATE <= TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
             AND
-                ENDDATE > #nowDate#
+                ENDDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
             AND
                 D.TOTALCOUNT IS NULL 
 		]]>

@@ -6435,9 +6435,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		int totalCount = ezBoardService.getUnreadItemsCount(userInfo.getId(), boardID, userInfo.getTenantId());
 		
+		if (totalCount != 0) {
+			
+		} else {
+			
+		}
+		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("itemFields", itemFields);
 		
 		return "ezBoard/boardListPortal";
 	}
