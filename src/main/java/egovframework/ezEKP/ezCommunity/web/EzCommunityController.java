@@ -2299,6 +2299,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
 		
+		logger.debug("strXML = " + strXML);
+		
 		return "ezCommunity/communityCommViewMember";
 	}
 	
