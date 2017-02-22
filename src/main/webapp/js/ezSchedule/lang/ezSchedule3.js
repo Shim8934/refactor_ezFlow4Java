@@ -153,8 +153,14 @@ var strLang264 = "グループ説明 : ";
 var strLang265 = "グループメンバー : ";
 var strLang266 = "グループを選択してください。";
 var strLang267 = "アップロードを制限する拡張子ファイルがあります。";
-
 var strLang268 = "以前";
 var strLang269 = "次";
-
 var strLang270 = "一定時間";
+var strLang271 = "削除する添付ファイルを選択してください。";
+var strLang272 = "過去の日付または時間では予約できません。\n設定し直してください。";
+var strLang273 = "スケジュールを登録する権限がありません。部署のスケジュールは部署管理者とシステム管理者のみ登録できます。";
+var strLang274 = "スケジュールを登録する権限がありません。会社のスケジュールはとシステム管理者のみ登録できます。";
+var strLang535 = "データが存在しません。";
+
+var strLang1000 = "Can not insert company schedule.";
+var strLang1001 = "Can not insert department schedule.";

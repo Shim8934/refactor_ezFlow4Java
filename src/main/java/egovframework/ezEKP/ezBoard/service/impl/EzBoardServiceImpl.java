@@ -1437,6 +1437,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardID != null) {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_pBoardID", boardID);
+			map.put("lang", commonUtil.getMultiData(lang, tenantID));
 			map.put("v_pItemID", itemID);
 			map.put("v_TENANTID", tenantID);
 			
@@ -1446,16 +1447,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<NODE>");
 			sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 			sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
-			
-			if (lang.equals("")) {
-				sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
-				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
-			} else {
-				sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName2()) + "</WriterName>");
-				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
-			}
+			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
+			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
 			sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
 			sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
@@ -1470,12 +1464,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
 			sb.append("<ExtensionAttribute1>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
 			sb.append("<ExtensionAttribute2>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
-			
-			if (lang.equals("")) {
-				sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
-			} else {
-				sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
-			}
+			sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
 			sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
 			sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
 			sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
@@ -1502,6 +1491,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public String getItemTempXML(String boardID, String itemID, String lang, String offset, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", boardID);
+		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("v_pItemID", itemID);
 		map.put("v_TENANTID", tenantID);
 		
@@ -1513,16 +1503,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<NODE>");
 		sb.append("<ItemID>" + itemInfo.getItemID() + "</ItemID>");
 		sb.append("<WriterID>" + itemInfo.getWriterID() + "</WriterID>");
-		
-		if (lang.equals("")) {
-			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
-		} else {
-			sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName2()) + "</WriterName>");
-			sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName2()) + "</WriterDeptName>");
-			sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName2()) + "</WriterCompanyName>");
-		}
+		sb.append("<WriterName>" + commonUtil.cleanValue(itemInfo.getWriterName()) + "</WriterName>");
+		sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemInfo.getWriterDeptName()) + "</WriterDeptName>");
+		sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemInfo.getWriterCompanyName()) + "</WriterCompanyName>");
 		sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemInfo.getWriteDate(), offset, false) + "</WriteDate>");
 		sb.append("<ParentWriteDate>" + itemInfo.getParentWriteDate() + "</ParentWriteDate>");
 		sb.append("<Importance>" + itemInfo.getImportance() + "</Importance>");
@@ -1537,12 +1520,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<copiedItem>" + itemInfo.getCopiedItem() + "</copiedItem>");
 		sb.append("<ExtensionAttribute1>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute1()) + "</ExtensionAttribute1>");
 		sb.append("<ExtensionAttribute2>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute2()) + "</ExtensionAttribute2>");
-		
-        if (lang.equals("")) {
-        	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
-        } else {
-        	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute32()) + "</ExtensionAttribute3>");
-        }
+    	sb.append("<ExtensionAttribute3>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute3()) + "</ExtensionAttribute3>");
         sb.append("<ExtensionAttribute4>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute4()) + "</ExtensionAttribute4>");
 		sb.append("<ExtensionAttribute5>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute5()) + "</ExtensionAttribute5>");
         sb.append("<MainContent>" + commonUtil.cleanValue(itemInfo.getMainContent()) + "</MainContent>");   
@@ -2325,6 +2303,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PMAXCOUNT", pMaxCount);
 		map.put("v_PUSERID", pUserID);
 		map.put("v_PBOARDID", pBoardID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return ezBoardDAO.getUnreadItems(map);
 	}
@@ -2334,6 +2313,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userID);
 		map.put("v_PBOARDID", boardID);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
 		return ezBoardDAO.getUnreadItemsCount(map);
 	}

@@ -851,6 +851,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		} else {
 			//권한이 있는 페이지에 대하여 개인마이페이지
 			//String gubunFlag2 = "1c";
+			logger.debug("권한이 있는 페이지에 대하여 개인마이페이지");
 			pageID = UUID.randomUUID().toString();								
 			//String newMyPortalPage = ezPortalService.newMyPortalPageCreate(resetMyParentPageID, userInfo.getId(), gubunFlag2, userInfo.getCompanyID(), pageID);
 			pMoveURL = "/ezPortal/portalPage.do?mode=edit&pageID=" + pageID + "&parentPageID=" + resetMyParentPageID;
@@ -861,7 +862,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
 			resp.getWriter().write("window.onload = window_onload;");
 			resp.getWriter().write("</script>");
-			//resp.getWriter().flush();
+			resp.getWriter().flush();
 		}
 		
 		if (pageID == null || pageID.equals("")) {
@@ -936,7 +937,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		resp.getWriter().write("window.onload = window_onload;");
 		resp.getWriter().write("</script>");
 		
-		//resp.getWriter().flush();
+		resp.getWriter().flush();
 		
 
 		logger.debug("myPortal ended");
@@ -1297,14 +1298,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				filePath = "/images/default_pic.jpg";
 			}
 			
-			if (userInfo.getLang().equals("2")) {
-				displayName = result.getDisplayName2();
-				title = result.getTitle2();
-				description = result.getDescription2();
-			} else {
+			if (userInfo.getLang().equals("1")) {
 				displayName = result.getDisplayName();
 				title = result.getTitle();
 				description = result.getDescription();
+			} else {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
 			}
 		}
 		
@@ -2779,6 +2780,8 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezPortal/myPortalPage.do")
 	public String myPortalPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
+		logger.debug("myPortalPage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
 		String langPrimary = "";
 		String langSecondary = "";
@@ -2803,7 +2806,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pThemeSelectObject = "";
 		String gubunFlag = "";
 		String portalPageCategoryXML = "";
-
+		
 		langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		langSecondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		mode = "edit";
@@ -2825,6 +2828,8 @@ public class EzPortalController extends EgovFileMngUtil {
 				parentPageID = "top";
 			}
 		}
+		
+		logger.debug("myPortal parentPageID="+parentPageID);
 		
 		// 마이포탈페이지 ID
 		if (req.getParameter("myPortalPageID") != null && !req.getParameter("myPortalPageID").trim().equals("")) {
@@ -2909,34 +2914,34 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (width == null || (width).equals("") || (width).equals("-1") || (width).equals("0")) {
 			width = "100%";
 		}
-				
+		
 		if (height == null || height.equals("") || height.equals("-1") || height.equals("0")) {
 			height = "100%";
 		}
-				
+		
 		if (!mode.equals("view")) {
 			displayName = ezPortalService.getPortalConfigItem("DisplayName", pageID, userInfo.getTenantId());
 			displayName2 = ezPortalService.getPortalConfigItem("DisplayName2", pageID, userInfo.getTenantId());
-            pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
-            pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
-                    
-            //신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
-            if (editMode.equals("new_inherit")) {
-            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
-            } else {
-            	gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
-            }
-                    
-            List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
-            portalPageCategoryXML = "<DATA>";
-            for (PortalTBLPortalPageCategoryVO result : list) {
-            	portalPageCategoryXML += commonUtil.getQueryResult(result);
-            }
-            portalPageCategoryXML += "</DATA>";
-            portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
-            
+			pSelectThemeUID = ezPortalService.getPortalConfigItem("ThemeUID", pageID, userInfo.getTenantId());
+			pThemeSelectObject =  ezPortalService.getThemeInfoPortal(userInfo.getCompanyID(), userInfo, pSelectThemeUID);
+			
+			//신규 상속페이지인 경우 부모페이지의 구분정보를 가져온다.
+			if (editMode.equals("new_inherit")) {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", parentPageID, userInfo.getTenantId());
+			} else {
+				gubunFlag = ezPortalService.getPortalConfigItem("GubunFlag", pageID, userInfo.getTenantId());
+			}
+			
+			List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
+			portalPageCategoryXML = "<DATA>";
+			for (PortalTBLPortalPageCategoryVO result : list) {
+				portalPageCategoryXML += commonUtil.getQueryResult(result);
+			}
+			portalPageCategoryXML += "</DATA>";
+			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
+			
 		}
-
+		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editMode", editMode);
@@ -2955,6 +2960,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("tableViewOption", tableViewOption);
 		model.addAttribute("pClassID", pClassID);
 		model.addAttribute("pClassName", pClassName);
+		
+
+		logger.debug("myPortalPage ended");
 		
 		return "/ezPortal/portalMyPortalPage";
 	}
@@ -3087,6 +3095,96 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("lang", userInfo.getLang());
 		
 		return "/ezPortal/help/help";
+	}
+	
+	/**
+	 * 포탈 - 도움말 상단 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/top.do")
+	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/top";
+	}
+	
+	/**
+	 * 포탈 - 도움말 하단 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/main.do")
+	public String main(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String id = "";
+		
+		if (req.getParameter("id") != null && !req.getParameter("id").equals("")) {
+			id = req.getParameter("id");
+		}
+		
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("id", id);
+		
+		return "/ezPortal/help/main";
+	}
+	
+	/**
+	 * 포탈 - 도움말 indexSub 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/indexSub.do")
+	public String indexSub(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lUrl = "";
+		String rUrl = "";
+		
+		if (req.getParameter("lUrl") != null && !req.getParameter("lUrl").equals("")) {
+			lUrl = req.getParameter("lUrl");
+		}
+		if (req.getParameter("rUrl") != null && !req.getParameter("rUrl").equals("")) {
+			rUrl = req.getParameter("rUrl");
+		}
+		
+		model.addAttribute("lUrl", lUrl);
+		model.addAttribute("rUrl", rUrl);
+		
+		return "/ezPortal/help/indexSub";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftPortal 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftPortal.do")
+	public String leftPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftPortal";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftMail 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftMail.do")
+	public String leftMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftMail";
+	}
+	
+	/**
+	 * 포탈 - 도움말 topPortal 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/topPortal.do")
+	public String topPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/topPortal";
 	}
 	
 	/**

@@ -136,18 +136,14 @@ var strLang127 = "公司时间表";
 var strLang128 = ".";
 var strLang129 = "";
 var strLang130 = "组计划";
-
 var strLang253 = "还没有选定的资源。"
 var strLang254 = "所选择的资源不能被删除。"
 var strLang255 = "资源预留失败。"
-
 var strLang256 = "人";
 var strLang257 = "搜索结果";
-
 var strLang258 = "正在添加附件。"
 var strLang259 = "文件大小"
 var strLang259 = "文件"
-
 var StrLang261 = "接触测试处理完毕.";
 var StrLang262 = "接触失败、请从新输入服 帐号，密码.";
 var strLang263 = "沒有數據。";
@@ -155,8 +151,14 @@ var strLang264 = "集团简介 : ";
 var strLang265 = "集团成员 : ";
 var strLang266 = "选择一个组";
 var strLang267 = "有限的扩展上传文件。";
-
 var strLang268 = "上一页";
 var strLang269 = "下一页";
-
 var strLang270 = "时间表";
+var strLang271 = "请选择要删除的附件。"
+var strLang272 = "结束时间比今天时间早。";
+var strLang273 = "某些部门可以注册一个部门经理，公司经理。";
+var strLang274 = "公司可以注册只有某些公司经理。";
+var strLang535 = "沒有數據。";
+
+var strLang1000 = "Can not insert company schedule.";
+var strLang1001 = "Can not insert department schedule.";

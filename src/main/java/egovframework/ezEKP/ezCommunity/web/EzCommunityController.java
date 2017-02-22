@@ -2299,6 +2299,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
 		
+		logger.debug("strXML = " + strXML);
+		
 		return "ezCommunity/communityCommViewMember";
 	}
 	
@@ -3383,10 +3385,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), club.getC_SysopID().trim(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
-		
-		if (userInfo.getLang().equals("2")) {
-			sysopName = member.getUserName2();
-		}
 		
 		if (sysopName.equals("")) {
 			sysopName = egovMessageSource.getMessage("ezCommunity.t398", userInfo.getLocale());

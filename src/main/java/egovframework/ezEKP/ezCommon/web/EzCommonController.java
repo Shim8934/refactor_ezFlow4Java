@@ -217,12 +217,12 @@ public class EzCommonController extends EgovFileMngUtil{
 				
 				sb.append("<NODE>");
 				sb.append("<NODENAME>" + attribute + "</NODENAME>");
-				sb.append("<NODEVALUE>" + strHTML.substring(strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1, strHTML.indexOf("\"", strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1)) + "</NODEVALUE>");
+				sb.append("<NODEVALUE>" + strHTML + "</NODEVALUE>");
 				
 				attribute = "formid";
 				
 				sb.append("<NODENAME>" + attribute + "</NODENAME>");
-				sb.append("<NODEVALUE>" + strHTML.substring(strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1, strHTML.indexOf("\"", strHTML.indexOf("\"", strHTML.indexOf(attribute)) + 1)) + "</NODEVALUE>");
+				sb.append("<NODEVALUE>" + strHTML + "</NODEVALUE>");
 				sb.append("</NODE>");
 				
         		result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";

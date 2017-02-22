@@ -319,11 +319,7 @@
 	            strXML += "<FILEPATH>" + pUploadFilePath + "</FILEPATH>";
 			    //확장 필드(필요에 따라 추가)
 			    strXML += "<EXTENSIONATTRIBUTE1></EXTENSIONATTRIBUTE1>";
-			
-			    // 20090913 : 게시판 공지게시 기능
-			    //strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
 			    strXML += "<EXTENSIONATTRIBUTE2></EXTENSIONATTRIBUTE2>";
-	
 				strXML += "<EXTENSIONATTRIBUTE3>" + strUserRank + "</EXTENSIONATTRIBUTE3>";	//직급으로 사용
 				strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
 				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
@@ -393,17 +389,17 @@
 				    } else {
 		                alert("<spring:message code='ezBoard.t10033'/>");
 				    }
-	
-	                try {
-	                    window.opener.location.reload(false);
-	                }
-	                catch (e) { }
-	
+				    
 	                try {
 						window.opener.leftCountRf();
 					} catch (e) {
 					}
 					
+	                try {
+	                    window.opener.location.reload(false);
+	                }
+	                catch (e) { }
+	
 					window.close();
 	            } else {
 	                if (loadXMLString(xmlhttp.responseText).text == "INACCESSIBLE")

@@ -1,21 +1,18 @@
 package egovframework.ezEKP.ezSchedule.web;
 
 import java.io.File;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -42,7 +39,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
-import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.service.impl.EzScheduleCompareUtil;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
@@ -53,6 +49,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -68,7 +65,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  *    2016.05.19	지정석	신규작성
  *    2016.08.10	김경식	scheduleMain 추가
  *    2016.08.30	김경식	scheduleWrite 추가
- *    2017.01.10	장진혁 개발
+ *    2017.01.09	일정관리 개발 시작 - 장진혁
+ *    2017.02.22	일정관리 1차 개발 완료 - 장진혁
  *
  * @see
  */
@@ -79,16 +77,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	private Properties config;
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
 		
-	@Resource(name="EzResourceService")
-	private EzResourceService ezResourceService;
-	
 	@Resource(name="EzOrganAdminService")
 	private EzOrganAdminService ezOrganAdminService;
 		
@@ -102,9 +94,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정관리 인덱스화면 호출함수
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleIndex.do")
-	public String  main(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		String	funCode = "";	// 업무관리 or 일정관리(3)
-		String	subCode = "";
+	public String  main(HttpServletRequest request, Model model) throws Exception {
+
+		logger.debug("============ scheduleIndex started ============");
+		
+		String funCode = "";	// 업무관리 or 일정관리(3)
+		String subCode = "";
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
@@ -119,7 +114,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
 		model.addAttribute("funCode", funCode);
-		model.addAttribute("subCode", subCode);
+		model.addAttribute("subCode", subCode);		
 		
 		return "/ezSchedule/scheduleIndex";
 	}
@@ -129,10 +124,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
-		String	funCode		= "";	// 일정관리 or 업무관리(3)
-		String	subCode		= "";	// 아직 모름
-		int	defaultView		= 2;	// 일간, 주간, 월간
-		int	startDay		= 7;	// 일요일부터 또는 월요일부터
+		
+		logger.debug("============ scheduleLeft started ============");
+		
+		String funCode = "";	// 일정관리 or 업무관리(3)
+		String subCode = "";	// 아직 모름
+		int	defaultView = 2;	// 일간, 주간, 월간
+		int	startDay = 7;		// 일요일부터 또는 월요일부터
 		
         if (request.getParameter("funCode") != null) {
             funCode = request.getParameter("funCode");
@@ -169,6 +167,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetHoliday.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetHoliday(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHoliday started ============");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
@@ -189,6 +190,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleGetList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGetList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetList started ============");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 				
@@ -218,6 +222,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezSchedule/scheduleNewWebPartList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleNewWebPartList(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleNewWebPartList started ============");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
@@ -241,9 +248,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 	/**
 	 * 일정관리 일정 데이터 표출 함수	 
-	 * */	
-	
-	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {				
+	 */	
+	public List<ScheduleInfoVO> scheduleListData(String startDate, String endDate, String idList, String groupID, String offSetMin, LoginVO userInfo) throws Exception {
+		
+		logger.debug("============ scheduleListData started ============");
+		
 		String pidList = "";
 		
 		if(startDate != null && !startDate.equals("")) {
@@ -306,12 +315,15 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정관리 메인화면 호출함수
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleMain.do")
-	public String  scheduleMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {		
+	public String  scheduleMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleMain started ============");
+		
 		int	timeZone = 0;
-		String	deptAdmin = "";
-		String	companyAdmin = "";				        
-        String	pOffset = "";        
-        String	defaultTitle = "";
+		String deptAdmin = "";
+		String companyAdmin = "";				        
+        String pOffset = "";        
+        String defaultTitle = "";
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
@@ -346,7 +358,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	ScheduleCumulerVO vo = pubScheCumulerVO.get(i);
         	sb.append("<option value='" + vo.getDeptId() + "' type='dept'>[" + msg.getMessage("ezSchedule.t996", locale) + "]" + vo.getTitleName() + "</option>");            
         }
-        
+     
         if (loginVO.getRollInfo().contains("c=1") || loginVO.getRollInfo().contains("k=1")) {
             companyAdmin = "Y";
             deptAdmin = "Y";
@@ -418,8 +430,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         } else if (idTypeTmp != null && !idTypeTmp.equals("")) {
         	idType = idTypeTmp;
         	
-            switch (idType)
-            {
+            switch (idType) {
                 case "T":
                     idList = "T";
                     break;
@@ -475,6 +486,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleManageGroup.do")
 	public String scheduleManageGroup(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleManageGroup started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginSimpleVO.getTenantId());
 
@@ -489,6 +503,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleGroupList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleGroupList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGroupList started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		List<ScheduleGroupListVO> myList = ezScheduleService.getMyGroupList(loginSimpleVO.getId(), loginSimpleVO.getTenantId());
@@ -532,6 +549,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/getGroupDetail.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getGroupDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ getGroupDetail started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String gID = request.getParameter("groupID");
@@ -545,6 +565,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleDelGroup.do")	
 	public void scheduleDelGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleDelGroup started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
@@ -560,6 +583,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGroupMember.do")	
 	public String scheduleGroupMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleGroupMember started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
@@ -580,6 +606,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleDelMember.do")
 	@ResponseBody
 	public void scheduleDelMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleDelMember started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
@@ -595,6 +624,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleUpdateMember.do")
 	@ResponseBody
 	public void scheduleUpdateMember(@RequestParam(value="memberID[]") String[] member, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleUpdateMember started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String groupID = request.getParameter("groupID");
@@ -610,6 +642,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleSelectAttendant.do")
 	public String scheduleSelectAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSelectAttendant started ============");
+		
         String title = request.getParameter("title");
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
@@ -645,7 +680,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleAddMember.do", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public void scheduleAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public void scheduleAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleAddMember started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String groupId = request.getParameter("groupID");
@@ -670,6 +708,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGroupWrite.do")
 	public String scheduleGroupWrite(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleGroupWrite started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", loginVO.getTenantId());
@@ -685,7 +726,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/getDeptUserList.do", produces = "text/xml;charset=UTF-8")
 	@ResponseBody
-	public String getDeptUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String getDeptUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ getDeptUserList started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String deptId = request.getParameter("deptID");
@@ -701,7 +745,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSaveGroup.do")
 	@ResponseBody
-	public void scheduleSaveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public void scheduleSaveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleSaveGroup started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String gUID = UUID.randomUUID().toString().toUpperCase();		
@@ -732,6 +779,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSearch.do")	
 	public String scheduleSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSearch started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		List<ScheduleInfoVO> sList = null;
@@ -800,6 +850,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/schedulePublicSearch.do")	
 	public String schedulePulbicSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ schedulePulbicSearch started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		List<ScheduleInfoVO> sList = null;
@@ -854,6 +907,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSelectEntity.do")
 	public String scheduleSelectEntity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSelectEntity started ============");
+		
 		String title = request.getParameter("title");
         String startTime = request.getParameter("startTime");
         String endTime = request.getParameter("endTime");
@@ -883,6 +939,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSelectSecretary.do")
 	public String scheduleSelectSecretary(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSelectSecretary started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("deptID", loginVO.getDeptID());
@@ -895,6 +954,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSelectShareDept.do")
 	public String scheduleSelectShareDept(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSelectShareDept started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("deptID", loginVO.getDeptID());
@@ -907,7 +969,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGetLunarUse.do", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String scheduleGetLunarUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String scheduleGetLunarUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGetLunarUse started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
@@ -922,7 +987,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleGetRegi.do", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String scheduleGetRegi(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String scheduleGetRegi(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleGetRegi started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String cID = request.getParameter("COMPANYID");
@@ -935,8 +1003,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 환경설정 메인
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")	
-	public String scheduleConfigMain() throws Exception {		
+	@RequestMapping(value="/ezSchedule/scheduleConfigMain.do")
+	public String scheduleConfigMain() throws Exception {
+		
+		logger.debug("============ scheduleConfigMain started ============");
+		
 		return "/ezSchedule/scheduleConfigMain";
 	}
 	
@@ -945,6 +1016,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleConfig.do")	
 	public String scheduleConfig(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, ScheduleConfigVO scheduleConfigVO, OrganUserVO organUserVO) throws Exception {
+		
+		logger.debug("============ scheduleConfig started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String userID = loginVO.getId();
@@ -979,6 +1053,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSchedule/scheduleSaveConfig.do")
 	@ResponseBody
 	public void scheduleSaveConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleSaveConfig started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		int tenantID = loginSimpleVO.getTenantId();
@@ -1016,31 +1093,38 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 * 일정작성
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleWrite.do")
-	public String scheduleWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {			
+	public String scheduleWrite(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleWrite started ============");
+		
 		String _datetype = "";
 		String _startdate = "";
 		String _enddate = "";
 		String _repetition = "";
 		String _repetitiondel = "";
 		String _content = "";
-        String _contentpath = "";		
+        String _contentpath = "";
 		String _importance = "";
 		String _ispublic = "";
-        String _changekey = "";                       
+        String _changekey = "";
         String recurringLabelText = "";
         String startDateStringOrgin = "";
-        String endDateStringOrgin = "";        
-		String UploadSDate="", UploadEDate="", startDateTime="", endDateTime="";
-        String strIReFlagVal = "";        
-        String _hasattach = "NO";
+        String endDateStringOrgin = "";
+		String UploadSDate="";
+		String UploadEDate="";
+		String startDateTime="";
+		String endDateTime="";
+        String strIReFlagVal = "";
+        String _hasattach = "N";
         String _attendantname = "";
-        String _attendantemail = "";        
+        String _attendantemail = "";
         String pCompanyAdmin = "";
         String pDeptAdmin = "";
         int defaultIndex = 0;
         
         StringBuilder strAttach = new StringBuilder();
         StringBuilder strOwnerID = new StringBuilder();
+        ScheduleInfoVO scheduleInfo = new ScheduleInfoVO();
                
 		loginVO = commonUtil.userInfo(loginCookie);
 
@@ -1077,36 +1161,24 @@ public class EzScheduleController extends EgovFileMngUtil {
         String userName  = loginVO.getDisplayName1();
         String userName2 = loginVO.getDisplayName2();
         String primary = loginVO.getPrimary();
-        String EDITOR = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());        
-    	         
-System.out.println("=================================== start");                    
-        if (!_scheduleid.equals("")) {
-        	//HolderEdit.Visible = true;
-            //HolderEdit2.Visible = true;
-            //HolderWrite.Visible = false;
-            //HolderWrite2.Visible = false;
-            //HolderWrite3.Visible = false;
-System.out.println("=================================== scheduleID have");
-        	String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-        	String pDirPath = config.getProperty("upload_schedule.ROOT");
+        String EDITOR = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
+        String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());        
+                          
+        if (!_scheduleid.equals("")) {		
+        	String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
         	
-        	ScheduleInfoVO scheduleInfo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());            	
-System.out.println("=================================== get scheduleInfo");
+        	scheduleInfo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());
+        	
             _contentpath = pDirPath + scheduleInfo.getContentPath();
-            startDateStringOrgin	= scheduleInfo.getStartDate();
+            startDateStringOrgin = scheduleInfo.getStartDate();
             endDateStringOrgin = scheduleInfo.getEndDate();
             String hasAttendant = scheduleInfo.getHasAttendant();
-            
-            //if (_scheduletype == "7") {
-            //    HolderEdit2.Visible = false;
-            //}
-                            
-            if (hasAttendant.equals("Y")) {
-System.out.println("=================================== has Attendant");            	
+                              
+            if (hasAttendant.equals("Y")) {            	
             	StringBuilder strAttendant = new StringBuilder();
                 String parentId = (scheduleInfo.getParentId().equals("0") ? _scheduleid : scheduleInfo.getParentId());
                 
-                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, loginVO.getTenantId());
+                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginVO.getTenantId());
 
                 for (int i = 0; i < attendantList.size(); i++) {                    	
                 	AttendantListVO attendant = attendantList.get(i);
@@ -1127,55 +1199,42 @@ System.out.println("=================================== has Attendant");
                 	}
                 	
                     if (loginVO.getLang().equals("1")) {
-                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + 
-                    			attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName() + status + "</span>");
+                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName() + status + "</span>");
                     } else {
-                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + 
-                    			attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName2() + status + "</span>");
+                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName2() + status + "</span>");
                     }
                 }                    
             }                
             _hasattach = scheduleInfo.getHasAttach();            
             
-            if (_hasattach.equals("Y")) {
-System.out.println("=================================== has Attach");            	
-            	_hasattach = "YES";            	
+            if (_hasattach.equals("Y")) {            	
+            	_hasattach = "Y";            	
             	
             	List<AttachListVO> attachList = ezScheduleService.getAttachList(_scheduleid, loginVO.getTenantId());
             	
             	strAttach.append("<ROOT><NODES>");
             	
                 for (AttachListVO attach : attachList) {
-                    strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath() + "/" + attach.getFileName() + "/" + attach.getFileSize() + "/ExistsImage") + "]]></DATA>");
-                    strAttach.append("<DATA2><![CDATA[" + attach.getAttachId() + "]]></DATA2>");
+                    strAttach.append("<DATA><![CDATA[" + commonUtil.cleanPropertyValue(attach.getFilePath().split("uploadFile/")[1] + "/" + attach.getFileName() + "/" + attach.getFileSize()) + "]]></DATA>");
+                    strAttach.append("<DATA2><![CDATA[]]></DATA2>");
                     strAttach.append("<DATA3><![CDATA[OK]]></DATA3>");
                 }
                 strAttach.append("</NODES></ROOT>");            		
             } else {
-            	_hasattach = "NO";
+            	_hasattach = "N";
             }
             
-            //parameters
-            String ownerid = scheduleInfo.getOwnerId();
-            String ownername = scheduleInfo.getOwnerName();
-            String ownername2 = scheduleInfo.getOwnerName2();
             _scheduletype = scheduleInfo.getScheduleType();
             _datetype = scheduleInfo.getDateType();
             _startdate = scheduleInfo.getStartDate();
-            _enddate = scheduleInfo.getEndDate();
-            startDateTime = _startdate;
-            endDateTime = _enddate;
+            _enddate = scheduleInfo.getEndDate();            
             _repetition = scheduleInfo.getRepetition();
-            _repetitiondel = scheduleInfo.getRepetitionDel().replaceAll("][", ", ").replaceAll("[","").replaceAll("]", "");
+            _repetitiondel = scheduleInfo.getRepetitionDel();
             _ispublic = scheduleInfo.getIsPublic();
             _importance = scheduleInfo.getImportance();
             
-            //if (_datetype == "3" && _pattern == "1") {
-            //    HolderRepetition.Visible = true;
-            //}
-            
-            //TextLocation.Text = xmldom.SelectSingleNode("DATA/LOCATION").InnerText;
-            //TextTitle.Text = Server.HtmlDecode(xmldom.SelectSingleNode("DATA/TITLE").InnerText);
+            startDateTime = _startdate;
+            endDateTime = _enddate;
             
             String strLabelOwner = "";                
             
@@ -1193,16 +1252,15 @@ System.out.println("=================================== has Attach");
             } else if (_scheduletype.equals("7")) {
                  strLabelOwner = msg.getMessage("ezSchedule.t375", locale);
                  strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
-            }              
+            }
+        	model.addAttribute("strLabelOwner", strLabelOwner);
+        	model.addAttribute("strAttach", strAttach.toString());
         } else {
-System.out.println("=================================== No!! scheduleID have");
-        	if (!_otherid.equals("")) {
-System.out.println("=================================== otherid have");        		
+        	if (!_otherid.equals("")) {        		
         		//개인일정
         		String type = _scheduletype;
         		strOwnerID.append("<option value='" + type + ";;" + _otherid + "'>" + request.getParameter("othername") + "</option>");
-        	} else {
-System.out.println("=================================== No!! otherid have");				
+        	} else {				
 				defaultIndex = Integer.parseInt(_defaultid) -1;
 				
 				if (primary.equals("1")) {
@@ -1228,18 +1286,14 @@ System.out.println("=================================== No!! otherid have");
             		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'>" + msg.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");
             	}
         	}
-        
 			String cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);				
-System.out.println("=================================== all logic start");			
+			
 			_datetype = request.getParameter("datetype");
     		if (_datetype == null) _datetype = "";
 			
-			if (request.getParameter("sdate") != null) {
-System.out.println("=================================== sdate have");				
-				//startDateTime = ezResourceService.isoUTFDate(startDateTime, locale);
+			if (request.getParameter("sdate") != null) {				
 				startDateTime = request.getParameter("sdate");
-			} else {
-System.out.println("=================================== No!! sdate have");				
+			} else {				
 				if (request.getParameter("startdate") != null) {
 					cDate = request.getParameter("startdate");
 				}	
@@ -1247,18 +1301,15 @@ System.out.println("=================================== No!! sdate have");
 			}
 			
 			if (request.getParameter("edate") != null) {
-System.out.println("=================================== edate have");				
 				endDateTime = request.getParameter("edate");
 			} else {
-System.out.println("=================================== No!! edate have");				
 				if (request.getParameter("enddate") != null) {
-System.out.println("=================================== enddate have");					
 					cDate = request.getParameter("enddate");
-				}	
+				}
 				endDateTime = getUploadDate(cDate, false);
 			}
         }
-System.out.println("=================================== model start");        
+
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
 
@@ -1299,7 +1350,9 @@ System.out.println("=================================== model start");
         model.addAttribute("strIReFlagVal", strIReFlagVal);
         model.addAttribute("strOwnerID", strOwnerID);
         model.addAttribute("defaultIndex", defaultIndex);
-System.out.println("=================================== model end");
+        model.addAttribute("offSetMin", offSetMin);
+        model.addAttribute("scheduleInfo", scheduleInfo);
+
    		return "/ezSchedule/scheduleWrite";
 	}	
 		
@@ -1308,6 +1361,9 @@ System.out.println("=================================== model end");
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleRepetition.do")
 	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleRepetition started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("lang", loginSimpleVO.getLang());
@@ -1320,6 +1376,9 @@ System.out.println("=================================== model end");
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleSelectResource.do")
 	public String scheduleSelectResource(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleSelectResource started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 				
 		String brd_Gubun = request.getParameter("pbrdGubun");
@@ -1344,6 +1403,9 @@ System.out.println("=================================== model end");
 	@RequestMapping(value = "/ezSchedule/scheduleSave.do")
 	@ResponseBody
 	public String scheduleSave(@CookieValue("loginCookie") String loginCookie, @RequestBody String requestXML, HttpServletRequest request, HttpServletResponse response, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleSave started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);	
 		int result = 0;
 						
@@ -1362,7 +1424,7 @@ System.out.println("=================================== model end");
         String importance	= doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent();
         String ispublic		= doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
         String datetype		= doc.getElementsByTagName("DATETYPE").item(0).getTextContent();	        
-        String sch_enddate	= doc.getElementsByTagName("ENDORGINDATE").item(0).getTextContent();
+        
         String pattern = "";
 
         if (scheduleid != null && !scheduleid.equals("")) {
@@ -1371,7 +1433,7 @@ System.out.println("=================================== model end");
 
         String startdate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
         String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
-                	
+
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     	Calendar cal = Calendar.getInstance();
     	cal.setTime(sdf.parse(enddate));
@@ -1380,10 +1442,9 @@ System.out.println("=================================== model end");
     		cal.add(Calendar.MINUTE, -1);        		
     		enddate = sdf.format(cal.getTime());
     	}
-    	//한자리수 날짜가 들어와도 yyyy-MM-dd HH:mm 형식으로 변환하여 요류방지
+
     	startdate = sdf.format(sdf.parse(startdate));
     	enddate = sdf.format(sdf.parse(enddate));
-
         startdate = commonUtil.getDateStringInUTC(startdate, loginVO.getOffset(), true);
     	enddate = commonUtil.getDateStringInUTC(enddate, loginVO.getOffset(), true);
         
@@ -1391,6 +1452,7 @@ System.out.println("=================================== model end");
         String title		= doc.getElementsByTagName("TITLE").item(0).getTextContent();
         String location		= doc.getElementsByTagName("LOCATION").item(0).getTextContent();
         String content		= doc.getElementsByTagName("CONTENT").item(0).getTextContent();
+        String contentPath	= doc.getElementsByTagName("CONTENTPATH").item(0).getTextContent();
         NodeList attach				= doc.getElementsByTagName("ATTACH");
         NodeList attendantId 		= doc.getElementsByTagName("ATTENDANTID");
         NodeList attendantName 		= doc.getElementsByTagName("ATTENDANTNAME1");
@@ -1401,16 +1463,22 @@ System.out.println("=================================== model end");
 	    if (pattern.equals("0")) {
         	repetition = "";
         }        
-        
-        String defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
-  
+	    
+	    String defaultPath = "";
+	    
+	    if (contentPath.trim().equals("") || contentPath == null) {	    
+	    	defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+	    } else {
+	    	defaultPath = commonUtil.getRealPath(request) + contentPath;
+	    }
+
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId());
         } else {
         	//updateSchedule
-        	//ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attachxml, contentPath);
+        	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId());
         }
         
         return Integer.toString(result);
@@ -1421,6 +1489,9 @@ System.out.println("=================================== model end");
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleAddUser.do")
 	public String scheduleAddUser(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleAddUser started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("userInfo", loginSimpleVO);
@@ -1433,7 +1504,10 @@ System.out.println("=================================== model end");
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleAttendantList.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAttendantList(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+	public String scheduleAttendantList(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleAttendantList started ============");
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());		
@@ -1462,6 +1536,9 @@ System.out.println("=================================== model end");
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleResourceInfo.do")	
 	public String scheduleResourceInfo(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleResourceInfo started ============");
+		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		model.addAttribute("userInfo", loginSimpleVO);
@@ -1473,7 +1550,10 @@ System.out.println("=================================== model end");
 	 * 일정작성 > 이름확인 조회
 	 */
 	@RequestMapping(value = "/ezSchedule/checkName.do")
-	public String checkName(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String checkName() throws Exception {
+		
+		logger.debug("============ checkName started ============");
+		
 		return "ezSchedule/scheduleCheckName";
 	}
 	
@@ -1482,6 +1562,9 @@ System.out.println("=================================== model end");
 	 */
 	@RequestMapping(value = "/ezSchedule/schedulePrint.do")
 	public String schedulePrint(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO, Locale locale) throws Exception {
+		
+		logger.debug("============ schedulePrint started ============");
+		
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		
@@ -1542,8 +1625,11 @@ System.out.println("=================================== model end");
 	/**
 	 * 일정작성 > 인쇄
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleContentsPirnt.do")
-	public String scheduleContentsPirnt(Model model, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/ezSchedule/scheduleContentsPrint.do")
+	public String scheduleContentsPrint(Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleContentsPrint started ============");
+		
 		String type = request.getParameter("type");
 		String printOwner = request.getParameter("printOwner");
 		String printCreator = request.getParameter("printCreator");
@@ -1572,214 +1658,338 @@ System.out.println("=================================== model end");
 		model.addAttribute("printAttach", printAttach);
 		model.addAttribute("printDocument", printDocument);
 		
-		return "ezSchedule/scheduleContentsPirnt";
+		return "ezSchedule/scheduleContentsPrint";
 	}
 	
 	/**
 	 * 일정작성 > 일정상세 팝업
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleRead.do")
-	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO) throws Exception {		
-        String _parentid;
-        String _ownerid;
-        String _creatorid;
-        String _modifierid;            
-        String _content;
-        String _contentpath = "";
-        String _isreadonly;
-        String _title = "";
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, LoginVO loginVO, Locale locale) throws Exception {
+		
+		logger.debug("============ scheduleRead started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		        
+		String dateString = "";
         String _repeatcount = "0";
-        String _admin = "Y";
-        String groupname = "";
-        boolean _isMeCreate = true;
-        String _stype;
-        String _changekey;        
-        String endDateString = "";
-        String startDateString = "";
-        String allDayString = "";
-        String recurringPattern = "";
-        String recurringLabelText = "";        
-        String s_DateForAttandant = "";
-        String e_DateForAttandant = "";        
-        String hasattach = null;        
-        double OffsetHour = 0;
-        double offsetMin = 0;
-        
-        loginVO = commonUtil.userInfo(loginCookie);
-        
-        String Use_Editor = ezCommonService.getTenantConfig("EDITOR", loginVO.getTenantId());
-        String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
-        String otherid = request.getParameter("otherid");
-        String pageFrom = request.getParameter("pageFrom");
-        String _scheduleid = request.getParameter("id");
-        String _datetype = request.getParameter("datetype");
-        String _scheduletype = request.getParameter("type");
         String _pattern = request.getParameter("pattern");
+        String pageFrom = request.getParameter("pageFrom");
+        String otherid = request.getParameter("otherid");
+        String _scheduleid = request.getParameter("id");
+        String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+        int tenantId = loginVO.getTenantId();
         
-        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, loginVO.getTenantId());
+        //일정 상세정보
+        ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId);
+        
+        //일정기간 계산        
+        if (vo.getDateType().equals("3")){        	
+        	_repeatcount = request.getParameter("repeatcount");
+        	String _date = request.getParameter("date");
+        	
+        	if (vo.getRepetition().split("\\|")[1].equals("1")) {
+        		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
+        	} else {
+        		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " " 
+        					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
+        	}        	
+        } else if (vo.getDateType().equals("2")){
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        } else {
+        	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
+        }
+        
+        //자원예약 정보
+        int resourceCnt = ezScheduleService.getResourceCount(_scheduleid, tenantId);
+        
+        //참석자 정보
+        if (vo.getHasAttendant().equals("Y")) {        
+        	String parentID = (vo.getParentId().equals("0") ? _scheduleid : vo.getParentId());
+        	List<AttendantListVO> aList = ezScheduleService.getAttendantList(parentID, offSetMin, tenantId);
+        	
+        	model.addAttribute("attendantList", aList);
+        }
+        
+        //참부파일 정보
+        if (vo.getHasAttach().equals("Y")) {        
+        	String parentID = (vo.getParentId().equals("0") ? _scheduleid : vo.getParentId());
+        	List<AttachListVO> aList = ezScheduleService.getAttachList(parentID, tenantId);
+        	
+        	for (AttachListVO avo : aList) {        		
+        		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
+        		avo.setFileType(fileType);
+        	}
+        	
+        	model.addAttribute("attachList", aList);
+        }       
+        
+        //참석자 관련 권한부여
+        String _admin = "Y";
+        String _editPosible = "Y";
+        String userId = loginVO.getId();
+        String rollInfo = loginVO.getRollInfo();
+        String ownerId = vo.getOwnerId();
+        String scheduleType = vo.getScheduleType();
+        
+        if (!ownerId.equals(userId) && !ownerId.equals(otherid) && !vo.getCreatorId().equals(userId) && !vo.getModifierId().equals(userId)	 
+        	&& (!scheduleType.equals("2") || !ownerId.equals(loginVO.getDeptID()) || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1 && rollInfo.indexOf("g=1") == -1))
+        	&& (!scheduleType.equals("3") && !scheduleType.equals("2") || (rollInfo.indexOf("c=1") == -1 && rollInfo.indexOf("k=1") == -1)) 
+        	|| vo.getIsReadOnly().equals("Y")
+        ) {
+        	_admin = "N";
+        	_editPosible = "N";
+        }
         
         model.addAttribute("scheduleInfo", vo);
-        model.addAttribute("_scheduletype", _scheduletype);        
+        model.addAttribute("_scheduleid", _scheduleid);
+        model.addAttribute("_pattern", _pattern);
+        model.addAttribute("pageFrom", pageFrom);
+        model.addAttribute("otherid", otherid);
+        model.addAttribute("primary", loginVO.getPrimary());
+        model.addAttribute("lang", loginVO.getLang());
+        model.addAttribute("dateString", dateString);
+        model.addAttribute("resourceCnt", resourceCnt);
+        model.addAttribute("_admin", _admin);
+        model.addAttribute("_editPosible", _editPosible);
         
 		return "ezSchedule/scheduleRead";
 	}
 	
-//    // 일정 업데이트
-//    public String UpdateSchedule_DB(String pScheduleID, String pModifierID, String pModifierName, String pModifierName2,
-//        String pImportance, String pIsPublic, String pDateType,
-//        String pStartDate, String pEndDate, String pRepetition, String pTitle, String pLocation, String pContent, String pAttachXML,
-//        String pContentPath)
-//    {
-//        try
-//        {
-//            // 일정 본문을 파일로 저장한다.
-//            StreamWriter writer = new StreamWriter(pContentPath, false, System.Text.Encoding.Default);
-//            writer.Write(pContent);
-//            writer.Close();
-//
-//            XmlDocument xmldom = new XmlDocument();
-//            xmldom = GetXmlReaderString(pAttachXML);
-//
-//            StringBuilder attachsql = new StringBuilder();
-//
-//            for (int i = 0; i < xmldom.GetElementsByTagName("ATTACH").Count; i++)
-//            {
-//                String filename = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[1];
-//                String filepath = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[0];
-//                String filesize = xmldom.GetElementsByTagName("ATTACH")[i].InnerText.Split('/')[2];
-//				attachsql.append("INSERT INTO TBLSCHEDULEATTACH(AttachID, ScheduleID, FileName, FilePath, FileSize) VALUES(SEQ_INC_TBLSCHEDULEATTACH.NEXTVAL,");
-//                attachsql.append( pScheduleID + ", '" +MakeRightField(filename) + "','" + MakeRightField(filepath) + "', " + filesize + ") ;");
-//            }
-//            pTitle = LeftByte(pTitle, 250);
-//            pLocation = LeftByte(pLocation, 250);
-//            pModifierName = LeftByte(pModifierName, 50);
-//            pModifierName2 = LeftByte(pModifierName2, 50);                
-//
-//            String hasattach = "N";
-//            if (attachsql.Length > 0) hasattach = "Y";
-//            StringBuilder sql = new StringBuilder();
-//            sql.append("UPDATE TBLSCHEDULE SET ModifierID='" + MakeRightField(pModifierID) + "',ModifierName=N'" + MakeRightField(pModifierName) + "'," + "ModifierName2=N'" + MakeRightField(pModifierName2) + "',");
-//            sql.append("ModifyDate=sysdate,Importance=" + pImportance + ",HasAttach='" + hasattach + "',IsPublic='" + pIsPublic + "',DateType=" + pDateType + "," );
-//			sql.append("StartDate=to_date('" + pStartDate + "','yyyy-mm-dd hh24:mi:ss'),EndDate=to_date('" + pEndDate + "','yyyy-mm-dd hh24:mi'),Repetition='" + pRepetition + "',Title='" + MakeRightField(pTitle) + "',Location='" + MakeRightField(pLocation) + "' " );
-//            sql.append("WHERE ScheduleID=" + pScheduleID + " OR ParentID=" + pScheduleID + " ;");
-//            sql.append("DELETE FROM TBLSCHEDULEATTACH WHERE ScheduleID=" + pScheduleID + " ;");
-//
-//            sql.append(attachsql.ToString());
-//
-//            return ExecuteSQL("ezPims", sql.ToString());
-//        }
-//        catch (Exception Ex)
-//        {
-//            WriteTextLog("schedule_save", "UpdateSchedule_DB", Ex.ToString());
-//            return Ex.Message;
-//        }
-//    }
+	/**
+	 * 일정보기 > 일정삭제 
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleDelete.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void scheduleDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleDelete started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String scheduleId = request.getParameter("scheduleId");
+		String resDel = request.getParameter("resDel");
+		
+		//일정데이터 삭제
+		ezScheduleService.deleteSchedule(scheduleId, loginSimpleVO.getTenantId());
+		
+		//자원예약 삭제
+		if (resDel.toUpperCase().equals("TRUE")) {
+			ezScheduleService.deleteResource(scheduleId, loginSimpleVO.getTenantId());
+		}		
+	}
 	
 	/**
-	 * 일정 첨부파일저장 실행 Method
+	 * 일정작성 > 인쇄
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath) throws Exception{
-        long fileSize = 0;
-        String filePath = "";
-        String filePath2 = "";
-        String fileName = "";
-        String[] temp = null;
-        
-        if (!strAttachments.substring(strAttachments.length() - 1).equals(";")) {
-        	strAttachments += ";";
-        }
-        for (int i = 0; i < strAttachments.split(";").length; i++) {
-            if (strType.equals("BOARD")) {
-            	
-            	if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-            		filePath = strAttachments.split(";")[i];
-            	} else {
-            		filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
-            	}
-                File file = new File(realPath + filePath);
-                fileSize = file.length();
-                
-                if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-                    filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
-                    File fileinfo = new File(realPath + filePath2);
-                    if (!fileinfo.exists()) {
-                    	FileUtils.moveFile(file, fileinfo);
-                    }
-                } else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-                	filePath2 = strAttachments.split(";")[i];
-                } else {
-                	filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
-                }
-                file = null;
-            }
-            else{
-                File file = new File(realPath + config.getProperty("upload_board.TEMPUPLOADFILE") + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
-                fileSize = file.length();
-                
-                filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
-                	
-                File fileinfo = new File(realPath + filePath2);
-                if (!fileinfo.exists())
-                	FileUtils.moveFile(file, fileinfo);
-                file = null;
-            }
-            temp = strAttachments.split(";")[i].split("}_");
-            for (int j = 1; j < temp.length; j++) {
-                if (j == 1) {
-                	fileName = temp[j];
-                }
-            }
-            
-//            ezBoardService.saveAttachInfo(strItemID, filePath2, fileSize, fileName);
-            temp = null;
-        }
-        return true;
-	}	
+	@RequestMapping(value = "/ezSchedule/scheduleManageAttendant.do")
+	public String scheduleManageAttendant(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleManageAttendant started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());		
+		String scheduleId = request.getParameter("id");
+		String ownerid = request.getParameter("ownerid");
+		
+		if (scheduleId != null) {
+			scheduleId = scheduleId.replaceAll(" ", "+");
+		}
+		
+		List<AttendantListVO> aList = ezScheduleService.getAttendantList(scheduleId, offSetMin, loginVO.getTenantId());		
+	
+		model.addAttribute("attendantList", aList);
+		model.addAttribute("scheduleId", scheduleId);
+		model.addAttribute("ownerId", ownerid);
+		model.addAttribute("primary", loginVO.getPrimary());
+		
+		return "ezSchedule/scheduleManageAttendant";
+	}
 	
 	/**
-	 * 일정관리 draganddrop 호출 Method
+	 * 일정보기 > 참석자관리 > 참석자추가
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleAddAttendant.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void scheduleAddAttendant(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+		
+		logger.debug("============ scheduleAddAttendant started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String scheduleId = request.getParameter("scheduleId");
+		String memberList = request.getParameter("memberList");
+		
+		JSONParser parser = new JSONParser();
+		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
+		
+		for(int i = 0; i < jsonArray.size(); i++) {
+			JSONObject obj = (JSONObject) jsonArray.get(i);
+			
+			String attendantId = (String) obj.get("attendantId");			
+			String attendantName = (String) obj.get("attendantName1");
+			String attendantName2 = (String) obj.get("attendantName2");
+			String attendantDeptName = (String) obj.get("attendantDeptName");
+			String attendantDeptName2 = (String) obj.get("attendantDeptName2");
+			
+			ezScheduleService.insertScheduleAttendant(scheduleId, attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, loginSimpleVO.getTenantId());
+			ezScheduleService.updateAttendantSchedule("Y", scheduleId, loginSimpleVO.getTenantId());
+		}
+	}
+	
+	/**
+	 * 일정보기 > 참석자관리 > 참석자제외
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleDelAttendant.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void scheduleDelAttendant(@RequestParam(value="attendantIdList[]") String[] attendantIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleDelAttendant started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String scheduleId = request.getParameter("scheduleId");
+
+		for (int i=0; i < attendantIdList.length; i++) {
+			ezScheduleService.scheduleDelAttendant(scheduleId, attendantIdList[i], loginSimpleVO.getTenantId());
+		}	
+	}
+	
+	/**
+	 * 일정메인 > 참석자 초대 팝업
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleReceiveAttendant.do")	
+	public String scheduleReceiveAttendant(@CookieValue("loginCookie") String loginCookie,LoginVO loginVO, Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleReceiveAttendant started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		
+		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin);
+		
+		model.addAttribute("receiveList", rList);
+		model.addAttribute("userInfo", loginVO);
+		
+		return "ezSchedule/scheduleReceiveAttendant";
+	}
+	
+	/**
+	 * 일정보기 > 참석자관리 > 참석자제외
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleAcceptAttendant.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void scheduleAcceptAttendant(@RequestParam(value="scheduleIdList[]") String[] scheduleIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleAcceptAttendant started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String status = request.getParameter("status");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
+		String attendantId = loginSimpleVO.getId();
+		
+		for (int i=0; i < scheduleIdList.length; i++) {
+			ezScheduleService.updateAttendant(scheduleIdList[i], attendantId, displayName, displayName2, status, loginSimpleVO.getTenantId());
+		}	
+	}
+	
+	/**
+	 * 일정메인 > 그룹 초대 팝업
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleReceiveMember.do")	
+	public String scheduleReceiveMember(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, Model model, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleReceiveMember started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+				
+		List<ScheduleGroupListVO> iList = ezScheduleService.getInviteScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), offSetMin);
+		
+		model.addAttribute("receiveList", iList);
+		model.addAttribute("userInfo", loginVO);
+		
+		return "ezSchedule/scheduleReceiveMember";
+	}
+	
+	/**
+	 * 일정보기 > 그룹 초대 > 수락 or 거절
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleAcceptMember.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void scheduleAcceptMember(@RequestParam(value="groupIdList[]") String[] groupIdList, @CookieValue("loginCookie") String loginCookie,LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleAcceptMember started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String status = request.getParameter("status");		
+		String userId = loginSimpleVO.getId();
+		
+		for (int i=0; i < groupIdList.length; i++) {
+			ezScheduleService.updateScheduleMember(groupIdList[i], userId, status, loginSimpleVO.getTenantId());
+		}	
+	}
+	
+	/**
+	 * 일정보기 > 반복일정 보기 방식 선택
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleReadConfirm.do")
+	public String scheduleReadConfirm() throws Exception {
+		
+		logger.debug("============ scheduleReadConfirm started ============");
+		
+		return "ezSchedule/scheduleReadConfirm";
+	}
+
+	/**
+	 * 일정작성 > 첨부파일 리스트 호출 
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleDragAndDrop.do")
 	public String scheduleDragAndDrop(@CookieValue("loginCookie") String loginCookie, Model model, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ scheduleDragAndDrop started ============");
 
         loginVO = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", loginVO);
 		
 		return "ezSchedule/scheduleDragAndDrop";
-	}
+	}	
 		
 	/**
-	 * 스케쥴 첨부  Method
+	 * 일정작성 > 첨부파일 업로드
 	 */
 	@RequestMapping(value = "/ezSchedule/uploadScheduleAttach.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String uploadScheduleAttach(MultipartHttpServletRequest request) throws Exception{
+	public String uploadScheduleAttach(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception{
+		
+		logger.debug("============ uploadScheduleAttach started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload"); 
 		int cnt = multiFile.size();
+		
 		String realPath = request.getServletContext().getRealPath("");
 		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];
-        String[] fileLocation = new String[cnt];
+        Long[] fileSize = new Long[cnt];        
         String[] resultUpload = new String[cnt];
         String[] sGUID = new String[cnt];
         String[] pUploadSN = new String[cnt];
+        
+        String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
-        String useExtension = config.getProperty("config.USE_FileExtension");
         for (int i = 0; i < cnt; i++) {
             resultUpload[i] = "false";
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
 
-        int maxSize = 0;
-        String pBoardID = "";
-        String pMode = "";
-        maxSize = Integer.parseInt(request.getParameter("maxSize"));
-        pBoardID = request.getParameter("boardID");
-        pMode = request.getParameter("mode");
-
-        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {
+        if (StringUtils.isNotEmpty(multiFile.get(0).getOriginalFilename()) && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())) {        	
             for (int i = 0; i < cnt; i++) {
                 String _pFileName = multiFile.get(i).getOriginalFilename();
                 if (_pFileName.indexOf(commonUtil.separator) > 0) {
@@ -1793,63 +2003,74 @@ System.out.println("=================================== model end");
             pFileName[i] = pFileName[i].replace("+", "%2b");
             pFileName[i] = pFileName[i].replace(";", "%3b");
         }
+        
+        String pDirPath = commonUtil.getUploadPath("upload_schedule.ROOT", loginSimpleVO.getTenantId());
 
-        String pDirPath = config.getProperty("upload_schedule.ROOT");
         pDirPath = realPath + pDirPath;
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath);
-        File file2 = new File(pDirPath + pBoardID + commonUtil.separator + "uploadFile");
+        File file = new File(pDirPath + "uploadFile");
+
         if (!file.exists()) {
-        	file.mkdir();
-        	file2.mkdir();
+        	file.mkdir();        
         }
 
         StringBuffer strXML = new StringBuffer();
         strXML.append("<ROOT><NODES>");
         
-        for (int i = 0; i < cnt; i++) {
+        for (int i = 0; i < cnt; i++) {        	
         	fileSize[i] = multiFile.get(i).getSize();
-
-            if (fileSize[i] > maxSize) {
-                resultUpload[i] = "overflow";
+            String extend = pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1);
+            String newFileName = pUploadSN[i] + "." + extend;
+            
+            if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) == -1 && !useExtension.equals("*")) {           	
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[denied]]></DATA3>");
             } else {
-                if (!pMode.equals("ATT")) {
-                	continue;
-                }
-                
-                if (useExtension.toLowerCase().indexOf(pFileName[i].substring(pFileName[i].lastIndexOf(".") + 1).toString().toLowerCase()) == -1 && !useExtension.equals("*")) {
-                    resultUpload[i] = "denied";
-
-                    strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-                    strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-                    strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
-                    strXML.append("<FILELOCATION><![CDATA[" + "" + "]]></FILELOCATION>");
-                } else {
-                    String pAttachPath = realPath + config.getProperty("upload_schedule.TEMPUPLOADFILE") + commonUtil.separator;
-                    File fTemp = new File(pAttachPath);
-                    if (!file.exists()) {
-                    	fTemp.mkdir();
-                    }
-                    writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
-                    fileLocation[i] = pAttachPath + pUploadSN[i] + "_" + pFileName[i];
-                    resultUpload[i] = "OK";
-
-                    strXML.append("<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>");
-                    strXML.append("<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>");
-                    strXML.append("<FILESIZE>" + fileSize[i] + "</FILESIZE>");
-                    strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
-                }
+				writeUploadedFile(multiFile.get(i), newFileName, pDirPath + "uploadFile");
+				strXML.append("<DATA><![CDATA[" + newFileName + "/" + pFileName[i] + "/" + fileSize[i] + "]]></DATA>");
+				strXML.append("<DATA2><![CDATA[]]></DATA2>");
+				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
             }
         }
         strXML.append("</NODES></ROOT>");
         
         return strXML.toString();
-    }	
+    }
+	
+	/**
+	 * 일정보기 > 첨부파일 다운로드
+	 */
+	@RequestMapping(value = "/ezSchedule/downloadAttach.do")
+	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		logger.debug("============ downloadAttach started ============");
+		
+		userInfo = commonUtil.userInfoSimple(loginCookie);		
+
+		String filePath = request.getParameter("filePath");
+		String fileName = request.getParameter("fileName");
+		String realPath = commonUtil.getRealPath(request);
+		String uploadFilePath = commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
+		
+		if (fileName == null || fileName.equals("")) {
+			fileName = filePath; 
+		}
+		
+		String fullFilePath = realPath + uploadFilePath + filePath;
+
+		downFile(request, response, fullFilePath, fileName);	
+	}
     
-    private String getUploadDate(String cDate, boolean isStart) throws Exception
-    {    	
+	/**
+	 * 업로드 날짜를 30분 단위로 구하는 함수
+	 */
+    private String getUploadDate(String cDate, boolean isStart) throws Exception{
+    	
+    	logger.debug("============ getUploadDate started ============");
+    	
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
 		Date now = sdf.parse(cDate);
 		

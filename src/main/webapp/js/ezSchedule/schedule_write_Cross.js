@@ -69,13 +69,13 @@ function save_schedule()
         var selectValue = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value.split(';;')[1];
         if (selectValue == companyID) {
             if (pCompanyAdmin != "Y") {
-                alert("회사 일정은 회사관리자만 등록할 수 있습니다.");
+                alert(strLang1000);
                 return;
             }
         }
         else if (selectValue == deptID) {
             if (pCompanyAdmin != "Y" && pDeptAdmin != "Y") {
-                alert("부서 일정은 부서관리자, 회사관리자가 등록할 수 있습니다.");
+                alert(strLang1001);
                 return;
             }
         }
@@ -85,6 +85,12 @@ function save_schedule()
         alert(timecheckstring);
         return;
     }
+    
+    if (CheckPreviously()) {
+        alert(strLang272);
+        return;
+    }
+    
 	if (scheduleid == "") check_name();
 	
 	if (document.getElementById("TextTitle").value == "")
@@ -118,11 +124,12 @@ function save_schedule()
         ownerid = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
 		ownerid = ownerid.split(";;")[1];
 
-	    ownername = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].innerHTML;
+	    ownername = getNodeText(document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex]);
+
 	    if (ownername.indexOf("-") > -1)
 	        ownername = ownername.split(" - ")[1];
-	    else
-	        ownername = ownername.split("]")[1];
+	    else if (ownername.indexOf("]") > -1)
+	        ownername = ownername.split("]")[1];	    
 	    
         ownername2 = ownername;
     }
@@ -155,7 +162,6 @@ function save_schedule()
 	}
 	else {
 	    var ownerids = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
-	    
 
 	    switch (ownerids.split(";;")[0]) {
 	        case "1": //개인일정
@@ -216,8 +222,8 @@ function save_schedule()
 
     createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
 
-	if (repetition == "")
-	{
+	if ($.trim(repetition) == "")
+	{		
 	    if (document.getElementById("alldaycheck").checked == true)
 		{
 			createNodeAndInsertText(xmlDom, objNode, "DATETYPE", "2");
@@ -269,21 +275,17 @@ function save_schedule()
 	else
 	    createNodeAndInsertText(xmlDom, objNode, "ENDORGINDATE", "");
 
-
-
 	objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTACHLIST");
-
-	// var listtable = dadiframe.contentWindow.document.getElementById("filelist");
+	
 	var listtable = dadiframe.document.getElementById("filelist");
-
 	var filelist = GetChildNodes(listtable);
 
-	for (var i = 0; i < filelist.length - 1; i++) {
-	    createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ATTACHID", filelist[i + 1].getAttribute("attid"));
-	    createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ATTACHINFO", filelist[i + 1].getAttribute("fileinfo"));
-	}
-	
+	for (var i = 0; i < filelist.length - 1; i++) {	    
+	    createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ID", GetAttribute(filelist[i + 1], "attid"));
+	    createNodeAndAppandNodeText(xmlDom, objRow, objRows, "ATTACH", GetAttribute(filelist[i + 1], "fileinfo"));
+	}	
 	objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTENDANTLIST");
+	
 	if (g_attendant != null)
 	{
 		for (var i=0; i<g_attendant["id"].length; i++)
@@ -322,6 +324,30 @@ function save_schedule()
 	    window.close();
 	}
 }
+
+function CheckPreviously() {
+    var rtv = false;
+
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezSchedule/scheduleGetRegi.do",
+		data : {
+			COMPANYID  : companyID		    			
+		},
+		success: function(text) {
+			if (text == "1") {
+				if ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() < utcDate(offSetMin)) {					
+		            rtv = true;
+				}
+			}
+		}
+    });
+
+    return rtv;    
+}
+
 function checkFontInfo(str)
 {
 	if (str == "")
@@ -1487,16 +1513,14 @@ function setAttachFileInfo(strXML) {
         dadiframe.document.getElementById("lstAttachLink").appendChild(listtable);
 
         var extCheck = false;
-        for (i = 0; i < SelectNodes(xml, "ROOT/NODES/RESULTUPLOADA").length; i++) {
-            var location = getNodeText(SelectNodes(xml, "ROOT/NODES/FILELOCATION")[i]);
-            var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/PFILENAME")[i]);
-            var fileSize = parseInt(getNodeText(SelectNodes(xml, "ROOT/NODES/FILESIZE")[i]));
-            var result	 = getNodeText(SelectNodes(xml, "ROOT/NODES/RESULTUPLOADA")[i]);
+        for (i = 0; i < SelectNodes(xml, "ROOT/NODES/DATA").length; i++) {
+            var fileinfo = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[i]);
+            var attid = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[i]);
 
-            if (result == "OK") {
+            if (getNodeText(SelectNodes(xml, "ROOT/NODES/DATA3")[i]) == "OK") {
                 objTr = document.createElement("TR");
-                objTr.setAttribute("fileinfo", location);
-                objTr.setAttribute("attid", fileinfo);
+                objTr.setAttribute("fileinfo", fileinfo);
+                objTr.setAttribute("attid", attid);
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
@@ -1510,8 +1534,10 @@ function setAttachFileInfo(strXML) {
 
                 var objTd2 = document.createElement("TD");
 
-                objTd2.innerHTML = fileinfo;
+                objTd2.innerHTML = fileinfo.split("/")[1];
                 objTr.appendChild(objTd2);
+
+                var fileSize = parseInt(fileinfo.split("/")[2]);
 
                 if (fileSize / 1024 / 1024 > 1) {
                     fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 * 10)) / 10).toFixed(1) + "MB";
@@ -1524,10 +1550,9 @@ function setAttachFileInfo(strXML) {
                 }
 
                 var objTd3 = document.createElement("TD");
-                objTd3.textContent = fileSize;
-                objTd3.setAttribute("align", "right");
-                objTd3.setAttribute("style", "padding-right: 20px;");
+                setNodeText(objTd3, fileSize);
                 objTr.appendChild(objTd3);
+
                 dadiframe.document.getElementById("filelist").appendChild(objTr);
             }
             else
@@ -1536,7 +1561,7 @@ function setAttachFileInfo(strXML) {
         if (extCheck)
             alert(strLang267);
     }
-    catch (e) { alert("setAttachFileInfo :: " + e.description); }
+    catch (e) { alert("returnvalue :: " + e.description); }
 }
 
 function GetEncodeTextNew(pUrl) {

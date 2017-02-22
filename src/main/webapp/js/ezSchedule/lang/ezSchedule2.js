@@ -138,15 +138,11 @@ var strLang130 = "Group Schedule";
 var strLang253 = "Do not have the resources selected."
 var strLang254 = "The selected resource can not be deleted."
 var strLang255 = "Failed resource reservation."
-
-
 var strLang256 = "Persons";
 var strLang257 = "Searches results";
-
 var strLang258 = "Adding attachment."
 var strLang259 = "Filesize"
 var strLang260 = "FileName"
-
 var StrLang261 = "Completed connection testing.";
 var StrLang262 = "Error occurred while connecting. Verify user ID and password.";
 var strLang263 = "No data found.";
@@ -154,8 +150,14 @@ var strLang264 = "Group Description : ";
 var strLang265 = "Group members : ";
 var strLang266 = "Select a group.";
 var strLang267 = "Limited extension upload files.";
-
 var strLang268 = "Prev";
 var strLang269 = "Next";
-
 var strLang270 = "Time schedule";
+var strLang271 = "Select attachment to delete."
+var strLang272 = "End time is earlier than the time today.";
+var strLang273 = "Certain departments can register a department manager, company manager.";
+var strLang274 = "Companies can register only certain company managers.";
+var strLang535 = "No data found.";
+
+var strLang1000 = "Can not insert company schedule.";
+var strLang1001 = "Can not insert department schedule.";

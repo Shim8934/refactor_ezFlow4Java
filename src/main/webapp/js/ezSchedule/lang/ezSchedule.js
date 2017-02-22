@@ -138,24 +138,26 @@ var strLang130 = "그룹일정";
 var strLang253 = "선택된 자원이 없습니다."
 var strLang254 = "선택된 자원은 삭제할 수 없습니다."
 var strLang255 = "자원예약을 실패하였습니다."
-
 var strLang256 = "명";
 var strLang257 = "검색결과";
-
 var strLang258 = "첨부파일을 추가하는중입니다."
 var strLang259 = "파일크기"
 var strLang260 = "파일명"
-
 var StrLang261 = "접속 테스트가 정상적으로 완료되었습니다.";
 var StrLang262 = "접속중 오류 발생. 아이디, 패스워드를 다시 확인하세요.";
-
 var strLang263 = "데이터가 없습니다.";
 var strLang264 = "그룹 설명 : ";
 var strLang265 = "그룹 구성원 : ";
 var strLang266 = "선택된 그룹이 없습니다.";
 var strLang267 = "업로드 제한 확장자 파일이 있습니다.";
-
 var strLang268 = "이전";
 var strLang269 = "다음";
-
 var strLang270 = "일정시간";
+var strLang271 = "삭제할 첨부파일을 선택하세요."
+var strLang272 = "종료시간이 오늘보다 이전시간입니다.";
+var strLang273 = "부서 일정은 부서관리자, 회사관리자가 등록할 수 있습니다.";
+var strLang274 = "회사 일정은 회사관리자만 등록할 수 있습니다.";
+var strLang535 = "데이터가 없습니다.";
+
+var strLang1000 = "회사 일정은 회사관리자만 등록할 수 있습니다.";
+var strLang1001 = "부서 일정은 부서관리자, 회사관리자가 등록할 수 있습니다.";

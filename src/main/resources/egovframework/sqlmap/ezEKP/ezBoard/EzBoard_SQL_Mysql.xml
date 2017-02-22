@@ -265,7 +265,7 @@
 						WHEN (BOARDNAME2 = '' OR BOARDNAME2 IS NULL)
 						THEN BOARDNAME
 						ELSE BOARDNAME2
-					END
+					END BOARDNAME
 				FROM 
 					TBL_Board_BoardInfo
 				WHERE  
@@ -4290,6 +4290,83 @@
 				itemid = #itemID#
 		]]>
 	</delete>
+  
+  <select id="EzBoardDAO.getUnreadItems" parameterClass="Map" resultClass="BoardListVO">
+    <![CDATA[
+       SELECT
+            * 
+         FROM ( SELECT
+                      A.ITEMID ,
+                      A.STARTDATE ,
+                      A.TITLE ,
+                      A.ABSTRACT 
+                    FROM
+                       TBL_BOARD_ITEM A
+                    LEFT JOIN ( SELECT
+                                        COUNT(USERID)  TOTALCOUNT  ,
+                                        ITEMID 
+                                     FROM
+                                        TBL_BOARD_ITEM_READ 
+                                     WHERE
+                                        USERID = #v_PUSERID#
+                                     AND
+                                        BOARDID = #v_PBOARDID#
+                                     AND
+                                        TENANT_ID = #tenantID#  
+                                     GROUP BY ITEMID ) D
+                    ON
+                        A.ITEMID = D.ITEMID
+                    WHERE
+                        BOARDID = #v_PBOARDID#
+                    AND
+                        STARTDATE <= #nowDate#
+                    AND
+                        ENDDATE > #nowDate#
+                    AND
+                        D.TOTALCOUNT IS NULL
+                    AND
+                        A.TENANT_ID = #tenantID#    
+                    ORDER BY
+                        A.PARENTWRITEDATE DESC,
+                        A.UPPERITEMIDTREE ASC,
+                        A.STARTDATE DESC ) as TEMP
+                    LIMIT
+                        #v_PMAXCOUNT#
+  ]]>
+  </select>
+  
+  <select id="EzBoardDAO.boardListPortal" parameterClass="Map" resultClass="Integer">
+      <![CDATA[
+          SELECT
+                COUNT(A.ItemID)  CNT
+            FROM
+                TBL_BOARD_ITEM A  
+            LEFT JOIN ( SELECT
+                                COUNT(USERID)  TOTALCOUNT,ITEMID 
+                             FROM
+                                TBL_BOARD_ITEM_READ 
+                            WHERE
+                                USERID = #v_PUSERID# 
+                            AND
+                                BOARDID = #v_PBOARDID#
+                            AND
+                                TENANT_ID = #tenantID#  
+                            GROUP BY
+                                ITEMID ) D   
+            ON
+                A.ITEMID = D.ITEMID
+            WHERE
+                A.TENANT_ID = #tenantID#
+            AND
+                BOARDID = #v_PBOARDID#
+            AND
+                STARTDATE <= #nowDate#
+            AND
+                ENDDATE > #nowDate#
+            AND
+                D.TOTALCOUNT IS NULL 
+    ]]>
+  </select>
 	
 </sqlMap>
 
