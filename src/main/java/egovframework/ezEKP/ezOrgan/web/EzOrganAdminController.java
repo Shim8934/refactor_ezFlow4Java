@@ -35,6 +35,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -58,7 +59,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzOrganAdminController extends EgovFileMngUtil{
+public class EzOrganAdminController extends EgovFileMngUtil {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminController.class);
             
@@ -80,10 +81,11 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 	@Autowired
 	private EzEmailService ezEmailService;
 	
-	// dhlee
 	@Autowired
 	private EzEmailUserAdminService ezEmailUserAdminService;
-	// dhlee - end
+
+    @Autowired
+    private EzEmailUtil ezEmailUtil;	
 	 
 	/**
 	 * 조직도관리 메인화면 호출 함수
@@ -1960,4 +1962,87 @@ public class EzOrganAdminController extends EgovFileMngUtil{
 		
 		return returnValue;
 	}
+	
+    /**
+     * 조직도관리 편지함관리 창 호출 함수
+     */
+    @RequestMapping(value = "/admin/ezOrgan/configUserQuota.do")
+    public String configUserQuota(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+        logger.debug("configUserQuota started.");
+        
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        
+        //관리자 권한 체크
+        if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+            return "cmm/error/adminDenied";
+        }
+        
+        int tenantID = userInfo.getTenantId();        
+        logger.debug("tenantID=" + tenantID);
+        
+        String userId = (request.getParameter("id") == null ? "" : request.getParameter("id"));  
+
+        String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+        String userEmail = userId + "@" + domainName;
+                        
+        Double userQuota = ezEmailUtil.getUserQuota(userEmail);
+        
+        if (userQuota != null) {
+            userQuota = userQuota/1024.0;
+        }
+        
+        model.addAttribute("userId", userId);
+        model.addAttribute("userQuota", userQuota);
+        
+        logger.debug("configUserQuota ended.");
+        
+        return "admin/ezOrgan/configUserQuota";
+    }
+    
+    /**
+     * 조직도관리 사용자 편지함용량 저장 실행 함수
+     */
+    @RequestMapping(value = "/admin/ezOrgan/saveUserQuota.do")
+    @ResponseBody
+    public String saveUserQuota(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData) throws Exception {
+        logger.debug("saveUserQuota started.");
+        
+        String returnValue = "ERROR";
+        
+        try {
+            //관리자 권한 체크
+            LoginVO userInfo = commonUtil.userInfo(loginCookie);
+            if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+                return returnValue;
+            }
+            
+            logger.debug("bodyData=" + bodyData);
+            
+            Document xmldom = commonUtil.convertStringToDocument(bodyData);
+            String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();
+            String useDefault = xmldom.getElementsByTagName("useDefault").item(0).getTextContent();
+            String hardQuotaLimit = xmldom.getElementsByTagName("hardQuotaLimit").item(0).getTextContent();
+            
+            int tenantID = userInfo.getTenantId();
+            String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
+            String userEmail = userId + "@" + domainName;
+            
+            logger.debug("userEmail=" + userEmail + ",useDefault=" + useDefault + ",hardQuotaLimit=" + hardQuotaLimit);
+            
+            if (useDefault.equals("1")) {
+                ezEmailUtil.deleteUserQuota(userEmail);
+            } else {
+                ezEmailUtil.setUserQuota(userEmail, hardQuotaLimit);
+            }            
+            
+            returnValue = "OK";
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        logger.debug("saveUserQuota ended.");
+        
+        return returnValue;
+    }
+    
 }
