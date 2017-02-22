@@ -30,7 +30,7 @@
 				        url = "/admin/ezEmail/mailDistributionList.do";
 						break;
 					case 3:
-						url = "/myoffice/ezEmail/Admin/mail_mailboxstore_environ.aspx" ;
+						url = "/admin/ezEmail/mailDefaultQuota.do" ;
 						break;
 					case 4:
 						url = "/myoffice/ezEmail/Admin/mail_spamfilter_category.aspx"  ;
@@ -100,11 +100,11 @@
   				<span onClick="goPage(21)" style="display:inline-block;width:100%;"><spring:message code='main.t1001' /></span>
     			<ul></ul>
   			</h2>
+            -->     
   			<h2>
   				<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
     			<ul></ul>
-  			</h2>
-  			-->  			
+  			</h2>  			
   			<!-- 2016-04-05 장진혁 편지지등록 / REQUEST에 MSIE 또는 TRIDENT가 포함될 시에만 메뉴 보여줌으로 되어있었음  -->
   			<!--							
 			<h2>

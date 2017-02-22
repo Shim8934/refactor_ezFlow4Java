@@ -1479,7 +1479,7 @@
 	<select id="EzCommunityDAO.aspCommInfoGet2"					parameterClass="Map"		resultClass="CommunityMemberInfoVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				USERNAME$v_USERINFO_LANG$
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
@@ -1602,7 +1602,7 @@
 				SELECT
 					A.c_id,
 					A.companyid,
-					B.username$v_USERINFO_LANG$
+					B.username$v_USERINFO_LANG$ AS username
 				FROM
 					TBL_C_CLUBUSER A
 				INNER JOIN
@@ -1627,7 +1627,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$
+						B.username$v_USERINFO_LANG$ AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN
@@ -1651,7 +1651,7 @@
 					SELECT
 						A.c_id,
 						A.companyid,
-						B.username$v_USERINFO_LANG$
+						B.username$v_USERINFO_LANG$ AS username
 					FROM
 						TBL_C_CLUBUSER A
 					INNER JOIN

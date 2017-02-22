@@ -1006,9 +1006,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String useExtension = "";
-		if (ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId()) != null) {
-			useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		
+		if (useExtension == null) {
+			useExtension = "";
 		}
 		
 		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
