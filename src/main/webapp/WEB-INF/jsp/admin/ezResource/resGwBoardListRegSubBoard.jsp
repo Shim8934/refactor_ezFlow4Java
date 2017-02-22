@@ -31,10 +31,20 @@
 			}
 
 			function cmdOK_onclick(){
+				var re = /[\\/:*?\"<>|]/gi;
+				if( re.test(Brd_NM.value)){
+					alert("<spring:message code="ezResource.kms1" />");
+					return;
+				}
+				
 		    	if (document.getElementById("Brd_NM").value == "") {
 					alert("<spring:message code="ezResource.t31" />");
 					return;
 				}
+		    	if(document.getElementById("Brd_NM").value == "") {
+		    		
+		    		return;
+		    	}
 			
 				var pParentClsID = g_BrdID;
 				var pMakerDeptID = "${userInfo.deptID}"; 

@@ -1,59 +1,52 @@
-﻿// \ezBoardSTD\admin\OrganAdmin\SelectTarget.aspx1.js			
-// \ezBoardSTD\admin\BoardACL.aspx1.js			
-// \ezBoardSTD\js\AttachItem.js			
-var strLang1 = "添付ファイル名";
+﻿var strLang1 = "添付ファイル名";
 var strLang2 = "ファイルサイズ";
 var strLang3 = "ファイルサイズ";
 var strLang4 = "生成";
-var strLang5 = "渡すパラメーターノード生成 ListType";
-// \ezBoardSTD\js\AttachMain.js
-var strLang6 = "空のファイルは添付することができません。";
-var strLang7 = "ファイル名の長さが111bytesを超過することができません。";
-var strLang8 = "添付ファイルは大きさが ";
-var strLang9 = "を越えることができません。";
-var strLang10 = "のアップロード中です。 ";
-var strLang11 = "のアップロード中、エラーが発生しました。\n\nサーバー側エラー";
-var strLang12 = "添付するファイルが開かれています。 \n\n ファイルを閉じて添付してください。";
-var strLang13 = "のアップロード中、エラーが発生しました。";
-var strLang14 = "添付イメージを削除しますか?";
-var strLang15 = "デリミター( *)[_- )に該当のnode 連結";
-var strLang16 = "削除の時、エラーが発生しました。";
-var strLang17 = "添付ファイルを削除しますか?";
-var strLang18 = "ファイル添付の時、エラーが発生しました。";
+var strLang5 = "引継ぎするパラメーターノード生成 ListType";
+var strLang6 = "空のファイルは添付できません。";
+var strLang7 = "ファイル名の長さは111bytesを超えられません。";
+var strLang8 = "添付ファイルの容量は";
+var strLang9 = "を越えられません。";
+var strLang10 = "をアップロード中です。";
+var strLang11 = "をアップロード中、エラーが発生しました。\n\nサーバ側エラー";
+var strLang12 = "添付しようとするファイルが開かれているため添付できません。 \n\n ファイルを閉じて添付してください。";
+var strLang13 = "をアップロード中、エラーが発生しました。";
+var strLang14 = "選択した画像を削除してよろしいですか?";
+var strLang15 = "区分文字( *)[_- )に該当のnodeを繋げる";
+var strLang16 = "エラーが発生しました。";
+var strLang17 = "添付ファイルを削除してよろしいですか?";
+var strLang18 = "エラーが発生しました。";
 var strLang19 = "・";
 var strLang20 = "添付ファイル名に次の文字は使用できません。";
-var strLang21 = "修正の時、イメージは一つだけ挿入できるようにする。";
-var strLang22 = "すべてのイメージファイル\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0";
-var strLang23 = "一度に 5枚までアップすることができます。";
-var strLang24 = "はイメージファイル形式ではありません。";
-var strLang25 = "正常的なアップロードの時、該当するファイル名を入力する。(バグ登録必要)";
-// \ezBoardSTD\js\ErrorHandler.js			
-// \ezBoardSTD\js\kaoni_ActiveX.js
-var strLang26 = "返信のある投稿には移動できません。";
+var strLang21 = "修正の際、イメージは一つだけ挿入できるようにする。";
+var strLang22 = "すべての画像ファイル\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0";
+var strLang23 = "画像は一度に5つまで添付できます。";
+var strLang24 = "は画像ファイル形式ではありません。";
+var strLang25 = "アップロードが正常に実行されている際に、該当するファイル名を入力する(バグ登録必要)";
+var strLang26 = "コメントのある掲示物は移動できません。";
 var strLang27 = "キャンセルしました。";
-
 var strLang39 = "以前";
 var strLang40 = "次";
 var strLang41 = "総 ";
 var strLang42 = "件";
 var strLang43 = "掲示物がありません。";
-
 var strLang44 = "画像を追加してください。";
-var strLang45 = "メインの写真を選択";
-var strLang46 = "写真の補完を追加";
+var strLang45 = "メイン画像を選択してください。";
+var strLang46 = "画像を登録しました。";
 var strLang46 = "エラーが発生しました。";
-var strLang48 = "削除しますか。";
-var strLang49 = "ひとつ選ぶ";
-var strLang50 = "修正しました。";
-var strLang51 = "エラーを修正";
+var strLang48 = "削除してよろしいですか。"
+var strLang49 = "一つだけ選択してください。";
+var strLang50 = "変更しました。";
+var strLang51 = "エラーが発生しました。";
 var strLang52 = "タイトルなし";
-var strLang53 = "数据。";
-var strLang54 = "ファイルアップロード制限の延長。";
-
-
+var strLang53 = "データが存在しません。";
+var strLang54 = "アップロードが制限されているファイルフォマットです。";
+var strLang55 = "移動または削除されたスクラップは、プレビューを見ることができません。";
 var strLang60 = "承認";
-var strLang61 = "待機";
-var strLang62 = "搬送";
+var strLang61 = "承認待ち";
+var strLang62 = "差し戻し";
+var strLang63 = "親フォルダがあります。";
+
 
 //2016 추가
 
@@ -66,3 +59,4 @@ var strLang76 = "삭제 권한이 없습니다.";
 var strLang77 = "게시물을 선택해 주세요.";
 var strLang78 = "읽음 표시 하시겠습니까?";
 var strLang79 = "를(을) 선택하세요.";
+var strLang80 = "트리뷰의 ID가 지정되지 않았습니다.";

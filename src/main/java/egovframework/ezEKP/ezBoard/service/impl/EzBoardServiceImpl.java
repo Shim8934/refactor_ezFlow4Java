@@ -1026,9 +1026,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public BoardListVO getItemInfo(String itemID, String lang, int tenantID) throws Exception {
+	public BoardListVO getItemInfo(String mode, String itemID, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("itemID", itemID);
+		map.put("mode", mode);
 		map.put("lang", commonUtil.getMultiData(lang, tenantID));
 		map.put("tenantID", tenantID);
 		
@@ -1383,12 +1384,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String getDocPassWord(String replyID, int tenantID) throws Exception {
+	public String getDocPassWord(String itemID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("replyID", replyID);
+		map.put("itemID", itemID);
 		map.put("tenantID", tenantID);	
 		
 		return ezBoardDAO.getDocPassWord(map);
+	}
+
+	@Override
+	public String getOneLinePassWord(String replyID, String itemID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("replyID", replyID);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);	
+		
+		return ezBoardDAO.getOneLinePassWord(map);
 	}
 
 	@Override
@@ -2620,6 +2631,81 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getAttachInfo ended");
 		
 		return ezBoardDAO.getAttachInfo(map);
+	}
+
+	@Override
+	public String deleteItem(String itemList, String mode, String boardID, String realPath, LoginVO userInfo, BoardPropertyVO boardInfo) throws Exception {
+		logger.debug("deleteItem started");
+		
+		try {
+			String docPath = "";
+			
+			if (boardID != null && !boardID.equals("")) {
+				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+				docPath = boardListVO.getContentLocation();
+				
+				if (!boardInfo.getDelete_FG().equals("true")) {
+					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
+						}
+					} else {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
+						}
+					}
+				}
+			} else {
+				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
+				boardID = boardListVO.getBoardID();
+				docPath = boardListVO.getContentLocation();
+				
+				if (!boardInfo.getDelete_FG().equals("true")) {
+					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
+						}
+					} else {
+						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
+							return "NO";
+						}
+					}
+				}
+			}
+			
+			for (int i = 0; i < itemList.split(";").length; i++) {
+				String tempItem = itemList.split(";")[i].split(",")[0];
+				
+				if (mode != null && mode.equals("temp")) {
+					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
+					if (docPath != null && !docPath.equals("")) {
+						File targetFile = new File(realPath + docPath);
+						
+						if (targetFile != null) {
+							targetFile.delete();
+						}
+					}
+				} else {
+					deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
+					if (docPath != null && !docPath.equals("")) {
+						File targetFile = new File(realPath + docPath);
+						
+						if (targetFile != null) {
+							targetFile.delete();
+						}
+					}
+				}
+			}
+			
+			logger.debug("deleteItem ended");
+			
+			return "OK";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.debug("deleteItem error");
+			return "NO";
+		}
+
 	}
 	
 	

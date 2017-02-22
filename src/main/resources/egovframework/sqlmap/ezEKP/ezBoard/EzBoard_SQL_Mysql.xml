@@ -648,49 +648,89 @@
 	</select>
 	
 	<select id="EzBoardDAO.getItemInfo" parameterClass="Map" resultClass="BoardListVO">
-		<isNotEmpty property="tempString">
-			<![CDATA[
-				SELECT 
-					A.TITLE TITLE ,
-                    B.GUBUN ,
-                    A.BOARDID BOARDID  ,
-                    B.BOARDNAME$lang$ BOARDNAME,
-                    A.WRITERNAME$lang$ WRITERNAME,
-                    A.CONTENTLOCATION,
-                    C.MAIL
-                FROM 
-                	TBL_Board_Item A
-                JOIN 
-                	TBL_Board_BoardInfo B   
-                ON 
-                	A.tenant_id = B.tenant_id
-                AND
-                	A.BoardID = B.BoardID
-                JOIN
-                	TBL_USERMASTER C
-                ON
-                	A.writerid = C.cn
-                AND
-                	A.tenant_id = C.tenant_id
-                WHERE
-                	A.tenant_id = #tenantID#
-                AND  
-                	A.ItemID = #itemID#
-			]]>
-		</isNotEmpty>
-		<isEmpty property="tempString">
-			<![CDATA[
-				SELECT 
-					BOARDID, 
-                    CONTENTLOCATION 
-              	FROM 
-              		TBL_Board_Item_temp 
-              	WHERE  
-              		TENANT_ID = #tenantID#
-              	AND
-              		ITEMID = #itemID#
-			]]>
+		<isEmpty property="mode">
+			<isNotEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						A.TITLE TITLE ,
+	                    B.GUBUN ,
+	                    A.BOARDID BOARDID  ,
+	                    B.BOARDNAME$lang$ BOARDNAME,
+	                    A.WRITERNAME$lang$ WRITERNAME,
+	                    A.CONTENTLOCATION,
+	                    C.MAIL
+	                FROM 
+	                	TBL_Board_Item A
+	                JOIN 
+	                	TBL_Board_BoardInfo B   
+	                ON 
+	                	A.tenant_id = B.tenant_id
+	                AND
+	                	A.BoardID = B.BoardID
+	                JOIN
+	                	TBL_USERMASTER C
+	                ON
+	                	A.writerid = C.cn
+	                AND
+	                	A.tenant_id = C.tenant_id
+	                WHERE
+	                	A.tenant_id = #tenantID#
+	                AND  
+	                	A.ItemID = #itemID#
+				]]>
+			</isNotEmpty>
+			<isEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						BOARDID, 
+	                    CONTENTLOCATION 
+	              	FROM 
+	              		TBL_Board_Item_temp 
+	              	WHERE  
+	              		TENANT_ID = #tenantID#
+	              	AND
+	              		ITEMID = #itemID#
+				]]>
+			</isEmpty>
 		</isEmpty>
+		<isNotEmpty property="mode">
+			<isNotEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						A.TITLE TITLE ,
+	                    B.GUBUN ,
+	                    A.BOARDID BOARDID  ,
+	                    B.BOARDNAME$lang$ BOARDNAME,
+	                    A.WRITERNAME$lang$ WRITERNAME,
+	                    A.CONTENTLOCATION
+	                FROM 
+	                	TBL_Board_Item A
+	                JOIN 
+	                	TBL_Board_BoardInfo B   
+	                ON 
+	                	A.tenant_id = B.tenant_id
+	                AND
+	                	A.BoardID = B.BoardID
+	                WHERE
+	                	A.tenant_id = #tenantID#
+	                AND  
+	                	A.ItemID = #itemID#
+				]]>
+			</isNotEmpty>
+			<isEmpty property="tempString">
+				<![CDATA[
+					SELECT 
+						BOARDID, 
+	                    CONTENTLOCATION 
+	              	FROM 
+	              		TBL_Board_Item_temp 
+	              	WHERE  
+	              		TENANT_ID = #tenantID#
+	              	AND
+	              		ITEMID = #itemID#
+				]]>
+			</isEmpty>
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getReaderList" parameterClass="Map" resultClass="BoardReadVO">
@@ -3328,6 +3368,21 @@
 				tenant_id = #tenantID#
 			AND
 				itemid = #itemID#
+		]]>                
+	</select>
+	
+	<select id="EzBoardDAO.getOneLinePassWord" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				password
+			FROM 
+				TBL_BOARD_ONELINEREPLY
+			WHERE 
+				tenant_id = #tenantID#
+			AND
+				itemID = #itemID#
+			AND
+				replyID = #replyID#
 		]]>                
 	</select>
 	

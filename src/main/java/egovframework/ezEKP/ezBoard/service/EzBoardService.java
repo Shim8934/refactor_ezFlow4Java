@@ -94,7 +94,7 @@ public interface EzBoardService {
 	
 	public BoardListVO getBrdGetItemInfo(String boardID, String itemID, String multiLang, int tenantID) throws Exception;
 	
-	public BoardListVO getItemInfo(String itemID, String lang, int tenantID) throws Exception;
+	public BoardListVO getItemInfo(String mode, String itemID, String lang, int tenantID) throws Exception;
 	
 	public BoardListVO getCopyItem(String orgItemID, String orgBoardID, int tenantID) throws Exception;
 	
@@ -241,5 +241,9 @@ public interface EzBoardService {
 	public int photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 
 	public String getThumbListXML(LoginVO userInfo, String pBoardType, String pBoardID, int pPageNum, String pOrderCell, String pOrderOption) throws Exception;
+
+	public String getOneLinePassWord(String replyID, String itemID, int tenantID) throws Exception;
+
+	public String deleteItem(String itemList, String mode, String boardID, String realPath, LoginVO userInfo, BoardPropertyVO boardInfo) throws Exception;
 
 }

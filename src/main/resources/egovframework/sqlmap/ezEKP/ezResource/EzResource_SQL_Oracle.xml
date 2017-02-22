@@ -880,7 +880,20 @@
 	<select id="EzResourceDAO.getRepDateTimes" parameterClass="Map" resultMap="resGetRepDateTimesVO">
 		<![CDATA[
 			SELECT
-				* 
+				OWNERID, 
+				NUM, 
+				COMPANYID, 
+				STARTDATETIME, 
+				ENDDATETIME, 
+				REWAY, 
+				RENUM, 
+				REDAY, 
+				REYOIL, 
+				REMONTH, 
+				REORD, 
+				ENDFLAG, 
+				RECOUNT, 
+				TENANT_ID
 			FROM
 				TBL_RS_SCHEDULEREPETITION 
 			WHERE
@@ -1630,8 +1643,8 @@
 				TITLE ,
 				LOCATION ,
 				TIMEDISPLAY ,
-				TO_DATE(#v_P_sDate# || SUBSTR(STARTDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS') ,
-				TO_DATE(#v_P_eDate# || SUBSTR(ENDDATE, -9, 9),'YYYY-MM-DD HH24:MI:SS') ,
+				TO_DATE(#v_P_sDate#, 'YYYY-MM-DD HH24:MI:SS') ,
+				TO_DATE(#v_P_eDate#, 'YYYY-MM-DD HH24:MI:SS') ,
 				ALERTTIME ,
 				CONTENT ,
 				IMPORTANCE ,

@@ -566,8 +566,9 @@
 		        }
 		    }
 		    var checkpassword_dialogArguments = new Array();
-		    var strItemList = "";
+		   	var strItemList = "";
 		    function DeleteItem_onclick() {
+		    	strItemList = "";
 		        if (gubun == "2") {
 		            if (strListInfo == "") {
 		                alert("<spring:message code='ezBoard.t195' />");
@@ -610,7 +611,6 @@
 		            alert("<spring:message code='ezBoard.t196' />");
 		            return;
 		        }
-		
 		        if (gubun == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") {
 		            if (CrossYN()) {
 		                checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
@@ -629,9 +629,8 @@
 		                }
 		                else {
 		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID="+ pBoardID + "&itemList=" + arrList[0] + ";", false);
+		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=" + gubun + "&boardID="+ pBoardID + "&itemList=" + arrList[0] + ";", false);
 		                    xmlhttp.send();
-		
 		
 		                    if (xmlhttp.responseText == "NO") {
 		                        alert("<spring:message code='ezBoard.t265' />");
@@ -658,36 +657,52 @@
 		            if (ret)
 		                DeleteItem();
 		        }
+		        
+		        try {
+			        leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
-		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
+		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") {
+		        	return;
+		        }
 		
 		        if (ret == "NO") {
 		            alert("<spring:message code='ezBoard.t267' />");
-		                    return;
-		                }
-		                else {
-		                    var xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
-		                    xmlhttp.send();
-		                    if (xmlhttp.responseText == "NO") {
-		                        alert("<spring:message code='ezBoard.t265' />");
-		                        return;
-		                    }
-		                    xmlhttp = null;
-		                    alert("<spring:message code='ezBoard.t268' />");
-		
-		                    if (CurPage == totalPage) {
-		                        var SelList = new ListView();
-		                        SelList.LoadFromID("BoardList");
-		                        var DeleteCount = strListInfo.split(';').length - 1;
-		                        if (SelList.GetRowCount() == DeleteCount) {
-		                            CurPage = CurPage - 1;
-		                        }
-		                    }
-		                    if (CurPage == 0) CurPage = 1;
-		                    getBoardList();
-		                }
+                    return;
+                } else {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=" + gubun + "&boardID=" + pBoardID + "&itemList=" + strItemList[0] + ";", false);
+                    xmlhttp.send();
+            
+                    if (xmlhttp.responseText == "NO") {
+                        alert("<spring:message code='ezBoard.t265' />");
+                        return;
+                    }
+                    if (xmlhttp.responseText == "ERROR") {
+                        alert("<spring:message code='ezBoard.t55' />");
+                        return;
+                    }
+                    xmlhttp = null;
+                    alert("<spring:message code='ezBoard.t268' />");
+
+                    if (CurPage == totalPage) {
+                        var SelList = new ListView();
+                        SelList.LoadFromID("BoardList");
+                        var DeleteCount = strListInfo.split(';').length - 1;
+                        if (SelList.GetRowCount() == DeleteCount) {
+                            CurPage = CurPage - 1;
+                        }
+                    }
+                    if (CurPage == 0) CurPage = 1;
+                    getBoardList();
+                    
+                    try {
+    			        leftCountRf();
+    				} catch (e) {
+    				}
+                }
 		    }
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -703,7 +718,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?mode=" + gubun + "&boardID=" + pBoardID + "&itemList=" + strListInfo, false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -721,7 +736,10 @@
 		                CurPage = CurPage - 1;
 		            }
 		        }
-		        if (CurPage == 0) CurPage = 1;
+		        if (CurPage == 0) {
+		        	CurPage = 1;
+		        }
+		        
 		        getBoardList();
 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {

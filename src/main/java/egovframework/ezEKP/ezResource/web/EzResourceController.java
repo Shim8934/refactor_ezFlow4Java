@@ -271,7 +271,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGet.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleGet(@RequestBody String xmlStr,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String scheduleGet(@RequestBody String xmlStr, HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("scheduleGet Start");
 		logger.debug("xmlStr=" + xmlStr);
 		
@@ -326,23 +326,19 @@ public class EzResourceController extends EgovFileMngUtil {
 			reVal = ezResourceService.getScheduleXML(commonUtil.convertDocumentToString(xmlDom), resID, userInfo.getCompanyID(), groupID, gubun, type, writerName, writerDept, userInfo.getTenantId(), userInfo.getOffset());
 			logger.debug("getScheduleXML=" + reVal);
 			
-			
-			// dtstart, dtend utc타임으로 변경...? 시작
+			// date타입 변경
 			Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				
 			for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
-				String sDate = ezResourceService.getLocalTime(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent().replace("T","").substring(0, 16));
-				String eDate = ezResourceService.getLocalTime(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent().replace("T","").substring(0, 16));
 
-				sDate = ezResourceService.convertToUTC(sDate);
-				eDate = ezResourceService.convertToUTC(eDate);
+				String sDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent());
+				String eDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent());
 					
 				xmlDom2.getElementsByTagName("dtstart").item(i).setTextContent(sDate);
 				xmlDom2.getElementsByTagName("dtend").item(i).setTextContent(eDate);
 			}
 				
 			reVal = commonUtil.convertDocumentToString(xmlDom2);
-			// dtstart, dtend utc타임으로 변경...? 끝
 			
 			
 			// 승인요청 목록으로 볼 때
@@ -1952,9 +1948,9 @@ public class EzResourceController extends EgovFileMngUtil {
 			typeVal = req.getParameter("type");
 		}
 		companyID = userInfo.getCompanyID();
-		logger.debug("xmlStr="+xmlStr);
+		logger.debug("xmlStr=" + xmlStr);
 		Document dom = commonUtil.convertStringToDocument(xmlStr);
-			
+	
 		if (cmd.equals("del")) {
 			logger.debug("del Start");
 			Node rootNode = dom.getDocumentElement();

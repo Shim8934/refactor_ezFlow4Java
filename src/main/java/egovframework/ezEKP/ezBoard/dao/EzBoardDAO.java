@@ -616,5 +616,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public int photoViewDBCount(Map<String, Object> map) throws Exception{
 		return (int) select("EzBoardDAO.photoViewDBCount", map);
 	}
+
+	public String getOneLinePassWord(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.getOneLinePassWord", map);
+	}
     
 }
