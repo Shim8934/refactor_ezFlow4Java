@@ -549,4 +549,125 @@ public class EzEmailAdminController {
 		
 		return returnValue;
 	}
+	
+    /**
+     * 메일 디폴트 Quota (관리자) 화면 호출 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailDefaultQuota.do")
+    public String mailDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+        //관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "cmm/error/adminDenied";
+        }
+        
+        String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+        Long defaultMax = getDefaultMaxStorage(domainName);
+        
+        model.addAttribute("defaultMax", (defaultMax)/1024.0/1024.0/1024.0);
+        
+        return "admin/ezEmail/mailDefaultQuota";
+    }
+    
+    /**
+     * 메일 디폴트 Quota 설정 함수
+     */
+    @RequestMapping(value="/admin/ezEmail/mailSaveDefaultQuota.do")
+    @ResponseBody
+    public String mailSaveDefaultQuota(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception {
+        //관리자 권한체크
+        LoginVO auth = commonUtil.checkAdmin(loginCookie);
+        
+        if (auth == null) {
+            return "Permission Denied";
+        }
+        
+        String returnValue = "True";
+        
+        try {        
+            String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
+        
+            Document doc = commonUtil.convertStringToDocument(bodyData);
+            String maxStorage = doc.getElementsByTagName("HARDLIMIT").item(0).getTextContent();
+                        
+            setDefaultMaxStorage(domainName, maxStorage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+            returnValue = "ERROR";            
+        }
+        
+        return returnValue;
+    }
+    
+    private Long getDefaultMaxStorage(String domainName) {
+        Long defaultMax = null;
+        
+        try {
+            String param1 = "domainName=" + domainName;
+            String inputParams = param1;            
+            
+            String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDefaultQuota";
+            
+            String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+            
+            logger.debug("getDefaultQuota response=" + response);
+       
+            if (response != null) {
+                JSONParser jsonParser = new JSONParser();
+                JSONObject responseObj = null;
+                
+                responseObj = (JSONObject)jsonParser.parse(response);                    
+                String resultCode = (String)responseObj.get("resultCode");
+                int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+                
+                if (resultCode.equalsIgnoreCase("OK")) {
+                    if (reasonCode == 0) {
+                        JSONObject result = (JSONObject)responseObj.get("result");
+                        
+                        if (result != null) {
+                            String maxStorage = (String)result.get("maxStorage");
+                            double maxDouble = Double.parseDouble(maxStorage);
+                            
+                            defaultMax = (long)(maxDouble*1024*1024);
+                            
+                            logger.debug("maxStorage=" + maxStorage + ",defaultMax=" + defaultMax);                                                                
+                        }
+                    }
+                }                    
+            }                 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }                        
+        
+        return defaultMax;
+    }    
+	
+    private void setDefaultMaxStorage(String domainName, String maxStorage) throws Exception {
+        String param1 = "domainName=" + domainName;
+        String param2 = "maxStorage=" + maxStorage;
+        String inputParams = param1 + "&" + param2;            
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDefaultQuota";
+        
+        String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("setDefaultQuota response=" + response);
+   
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = null;
+            
+            responseObj = (JSONObject)jsonParser.parse(response);                    
+            String resultCode = (String)responseObj.get("resultCode");
+            int reasonCode = ((Long)responseObj.get("reasonCode")).intValue();                        
+            
+            if (!resultCode.equalsIgnoreCase("OK") || reasonCode != 0) {
+                throw new Exception("setDefaultMaxStorage failed");
+            }                    
+        }                 
+    }    
+    
 }
