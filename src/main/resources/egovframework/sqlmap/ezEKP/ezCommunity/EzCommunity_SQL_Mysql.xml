@@ -1399,7 +1399,7 @@
 	<select id="EzCommunityDAO.commViewMemberGet3"				parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$,
+				username$v_USERINFO_LANG$ AS username,
 				email
 			FROM
 				TBL_C_MEMBERINFO
@@ -1418,7 +1418,7 @@
 	<select id="EzCommunityDAO.commOutGet"						parameterClass="Map"		resultClass="CommunityMemberInfoVO"		remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$ userName
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
