@@ -3386,10 +3386,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String sysopName = member.getUserName();
 		
-		if (userInfo.getLang().equals("2")) {
-			sysopName = member.getUserName2();
-		}
-		
 		if (sysopName.equals("")) {
 			sysopName = egovMessageSource.getMessage("ezCommunity.t398", userInfo.getLocale());
 		}
