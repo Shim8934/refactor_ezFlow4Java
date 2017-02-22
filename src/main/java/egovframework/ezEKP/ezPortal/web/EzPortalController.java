@@ -1297,14 +1297,14 @@ public class EzPortalController extends EgovFileMngUtil {
 				filePath = "/images/default_pic.jpg";
 			}
 			
-			if (userInfo.getLang().equals("2")) {
-				displayName = result.getDisplayName2();
-				title = result.getTitle2();
-				description = result.getDescription2();
-			} else {
+			if (userInfo.getLang().equals("1")) {
 				displayName = result.getDisplayName();
 				title = result.getTitle();
 				description = result.getDescription();
+			} else {
+				displayName = result.getDisplayName2();
+				title = result.getTitle2();
+				description = result.getDescription2();
 			}
 		}
 		
@@ -3087,6 +3087,96 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("lang", userInfo.getLang());
 		
 		return "/ezPortal/help/help";
+	}
+	
+	/**
+	 * 포탈 - 도움말 상단 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/top.do")
+	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/top";
+	}
+	
+	/**
+	 * 포탈 - 도움말 하단 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/main.do")
+	public String main(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String id = "";
+		
+		if (req.getParameter("id") != null && !req.getParameter("id").equals("")) {
+			id = req.getParameter("id");
+		}
+		
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("id", id);
+		
+		return "/ezPortal/help/main";
+	}
+	
+	/**
+	 * 포탈 - 도움말 indexSub 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/indexSub.do")
+	public String indexSub(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lUrl = "";
+		String rUrl = "";
+		
+		if (req.getParameter("lUrl") != null && !req.getParameter("lUrl").equals("")) {
+			lUrl = req.getParameter("lUrl");
+		}
+		if (req.getParameter("rUrl") != null && !req.getParameter("rUrl").equals("")) {
+			rUrl = req.getParameter("rUrl");
+		}
+		
+		model.addAttribute("lUrl", lUrl);
+		model.addAttribute("rUrl", rUrl);
+		
+		return "/ezPortal/help/indexSub";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftPortal 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftPortal.do")
+	public String leftPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftPortal";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftMail 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftMail.do")
+	public String leftMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftMail";
+	}
+	
+	/**
+	 * 포탈 - 도움말 topPortal 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/topPortal.do")
+	public String topPortal(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/topPortal";
 	}
 	
 	/**
