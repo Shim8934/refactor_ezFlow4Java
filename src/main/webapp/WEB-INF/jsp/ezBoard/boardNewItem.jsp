@@ -781,6 +781,11 @@
 		            }
 		            
 		            try {
+						window.opener.leftCountRf();
+					} catch (e) {
+					}
+					
+		            try {
 			            if (window.parent != null && window.parent.SuccessBoard != undefined) {
 			                try {
 			                    window.parent.SuccessBoard();
@@ -825,11 +830,6 @@
 			
 			                }
 			            }
-					} catch (e) {
-					}
-
-		            try {
-						window.opener.leftCountRf();
 					} catch (e) {
 					}
 
@@ -1075,23 +1075,23 @@
 		    }
 		    */
 		
-		        function InsertDocInfo() {
-		            if (OpenWin != null) {
-		                OpenWin.close();
-		                if (ret == "") {
-		                    if (confirm("<spring:message code='ezBoard.t414' />")) {
-		                        window.close();
-		                    }
-		                    else {
-		                        OpenWin = null;
-		                        SelectBoard(InsertDocInfo_Complete);
-		                        return;
-		                    }
-		                }
-		
-		                if (typeof (ret) == "undefined") return "";
-		                pBoardID = ret;
-		            }
+	        function InsertDocInfo() {
+	            if (OpenWin != null) {
+	                OpenWin.close();
+	                if (ret == "") {
+	                    if (confirm("<spring:message code='ezBoard.t414' />")) {
+	                        window.close();
+	                    }
+	                    else {
+	                        OpenWin = null;
+	                        SelectBoard(InsertDocInfo_Complete);
+	                        return;
+	                    }
+	                }
+	
+	                if (typeof (ret) == "undefined") return "";
+	                pBoardID = ret;
+	            }
 		        GetBoardInfo();
 		        InitializeSettings();
 		
@@ -1631,6 +1631,7 @@
 		    }
 		
 		    function event_Get_listComplite(resultXml) {
+		    	document.getElementById("backgroundtd").innerHTML = "";
 	            var backxml = loadXMLString(resultXml);
 	            var i;
 	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {

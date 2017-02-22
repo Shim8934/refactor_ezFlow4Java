@@ -36,6 +36,7 @@
 					companybutton2.style.display = "none";
 				}
 		    });		    
+		    
 		    function Tree_setconfig(){
 			    var xmlHTTP = createXMLHttpRequest();
 			    xmlHTTP.open("GET", "/xml/common/organtree_config3.xml", false);			    
@@ -45,6 +46,7 @@
 			        treeView.SetConfig(xmlHTTP.responseXML);
 			    }
 			}		    
+		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
 				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
@@ -53,6 +55,7 @@
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 				g_xmlHTTP.send(strQuery);
 			}
+		    
 			function event_getDeptFullTree(){
 				if(g_xmlHTTP != null && g_xmlHTTP.readyState == 4){
 					if (g_xmlHTTP.statusText == "OK"){
@@ -72,6 +75,7 @@
 					}
 				}
 			}			
+			
 			function TreeViewRequestData(pNodeID, pTreeID) {
 		        document.getElementById("TreeView").style.height = "509px";
 		        var TreeIdx = pNodeID;
@@ -83,6 +87,7 @@
 			    GetDeptSubTreeInfo(deptID, TreeIdx);
 			    document.getElementById("TreeView").style.height = "510px";
 			}
+			
 			function GetDeptSubTreeInfo(deptID, TreeIdx) {
 			    var xmlHTTP = createXMLHttpRequest();
 			    var xmlRtn = createXmlDom();
@@ -108,7 +113,8 @@
 			    var treeView = new TreeView();
 			    treeView.LoadFromID("FromTreeView");
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
-			}			
+			}
+			
 			function TreeViewNodeClick() {
 			    var nodeIdx = 1;
 			    var treeView = new TreeView();
@@ -116,10 +122,12 @@
 			    var selnode = treeView.GetSelectNode();
 			    DeptID = selnode.GetNodeData("CN");
 			    displayUserList(DeptID);
-			}			
+			}
+			
 			function TreeViewNodeDbClick(){
 			    return;
 			}			
+			
 			function displayUserList(DeptID){
 				var cellContent;
 				var typeContent;
@@ -171,7 +179,9 @@
 		        	}
 		        });	
 			}			
+			
 			var companyinfo_dialogArguments = new Array();
+			
 			function add_company(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -196,13 +206,16 @@
 			            getDeptFullTree(rtnValue);
 			        }
 			    }
-			}			
+			}
+			
 		    function add_company_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            getDeptFullTree(rtnValue);
 		        }
 		    }		    
+		    
 		    var deptinfo_dialogArguments = new Array();
+		    
 			function add_dept(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -245,11 +258,13 @@
 				    }
 				}
 			}
+			
 		    function add_dept_Complete(rtnValue){
 		        if (typeof (rtnValue) != "undefined"){
 		            getDeptFullTree(rtnValue);
 		        }
 		    }		    
+		    
 		    function del_company(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -291,6 +306,7 @@
 		        	}
 				});
 			}		    
+		    
 		    function info_dept(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -339,13 +355,15 @@
 				        getDeptFullTree(rtnValue);
 				    }
 				}
-			}		    
+			}
+		    
 		    function info_dept_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            alert("<spring:message code='ezOrgan.t7' />");
 		            getDeptFullTree(rtnValue);
 		        }
 		    }
+		    
 		    function del_dept(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -499,6 +517,7 @@
 			
 		    var rgParams = new Array();
 		    var checkname2_cross_dialogArguments = new Array();
+		    
 			function deptsearch_click(){
 				if (document.getElementById("deptkeyword").value == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
@@ -560,6 +579,7 @@
 			        document.getElementById("deptkeyword").value = "";
 			    }
 			}
+			
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
@@ -570,6 +590,7 @@
 		        }
 		        document.getElementById("deptkeyword").value = "";
 		    }
+		    
 		    function search_click(){
 				if (keyword.value == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
@@ -622,6 +643,7 @@
 				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
 				//keyword.value = "";
 			}
+		    
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -638,6 +660,7 @@
 
 			    window.open("/admin/ezOrgan/configEmail.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=315px,width=430px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(430, 315));
 			}
+		    
 			function Change_List(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -657,7 +680,7 @@
 		            usermenu6.disabled = false;
 		            </c:if>
 		            
-//		            usermenu7.disabled = false;
+		            usermenu7.disabled = false;
 		            usermenu8.disabled = false;
 		            try {
 		                usermenu9.disabled = false;
@@ -679,7 +702,7 @@
 		            usermenu6.disabled = true;
 		            </c:if>
 		            
-//		            usermenu7.disabled = true;
+		            usermenu7.disabled = true;
 		            usermenu8.disabled = true;
 		            
 		            try {
@@ -698,12 +721,14 @@
 		            displayUserList(treeNode.GetNodeData("CN"));
 		        }
 		    }
+			
 			function MoveUp_onclick(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
 
 			    listview.RowMoveUp();
 			}
+			
 			function MoveDown_onclick(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -716,6 +741,7 @@
 
 			    listview.RowMoveDown();
 			}
+			
 			function MoveConfirm_onclick(){
 				var objNode = "";
 				var pClass = "";
@@ -760,6 +786,7 @@
 					}
 				});
 			}
+			
 			function add_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -794,11 +821,13 @@
 				    }
 				} */
 			}
+			
 		    function add_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            displayUserList(rtnValue);
 		        }
 		    }
+		    
 			function info_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -850,6 +879,7 @@
 				    }
 				} */
 			}
+			
 		    function info_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var cn = userinfo_dialogArguments[0][0];
@@ -862,6 +892,27 @@
 		            }
 		        }
 		    }
+		    
+		    function mod_quota()
+		    {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvUserList");
+
+		        if (listview.GetSelectedRows().length == 0)
+		        {
+		            alert("<spring:message code='ezOrgan.t43' />");
+		            return;
+		        }
+
+		        if (listview.GetSelectedRows().length > 1)
+		        {
+		            alert("<spring:message code='ezOrgan.t44' />");
+		            return;
+		        }
+		        
+		        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=180px,width=450px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(450, 240));
+		    }
+		    
 		    function mod_sign() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -881,7 +932,9 @@
 		            window.open("ConfigSignImage.do?id=" + listview.GetSelectedRows()[0].getAttribute("DATA2"), "", "height=297px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(320, 297));
 		        } */
 		    }
+		    
 		    var inputpassword_dialogArguments = new Array();
+		    
 			function mod_password(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -924,6 +977,7 @@
 			        }
 			    } --%>
 			}
+			
 		    function mod_password_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		            var listview = new ListView();
@@ -957,6 +1011,7 @@
 		            });
 	            }		        
 		    }		    
+		    
 		    function Retire_user(){
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
@@ -1005,7 +1060,9 @@
 	        		displayUserList(treeNode.GetNodeData("CN"));
 	            }		            
 	        }
+		    
 		    var selectdept_cross_dialogArguments = new Array();
+		    
 			function mov_user(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
@@ -1062,6 +1119,7 @@
 			        }
 			    } --%>
 			}
+			
 		    function mov_user_Complete(rtnValue) {
 		        if (typeof (rtnValue) != "undefined") {
 		        	var listview = new ListView();
@@ -1108,6 +1166,7 @@
 		            displayUserList(treeNode.GetNodeData("CN"));
 		        }
 		    }
+		    
 		    function del_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -1268,11 +1327,9 @@
 						<tr>
 							<td><a class="imgbtn" id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></a></td>
 						</tr>		
-						<!--
 						<tr>
 							<td><a class="imgbtn" id="usermenu7"><span onClick="mod_quota()"><spring:message code='ezOrgan.t92' /></span></a></td>
 						</tr>		                
-						-->
 		                <c:if test="${useOCS == 'YES'}">
 						<tr>
 							<td><a class="imgbtn" id="usermenusipuri"><span onClick="ocssip_manage()">Lync <spring:message code='ezOrgan.t1012' /></span></a></td>

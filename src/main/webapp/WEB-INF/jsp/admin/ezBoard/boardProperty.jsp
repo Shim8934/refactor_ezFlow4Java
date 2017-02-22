@@ -524,8 +524,6 @@
 	    <table class="content">
 	        <tr>
 	            <th><spring:message code="ezBoard.t111"/></th>
-	            <!-- 20060613 준호 수정 -->
-	            <!-- 게시판명 특수문자 있을때 깨지는 현상 수정 -->
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
 		                <table style="width: 100%">

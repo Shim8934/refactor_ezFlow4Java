@@ -96,11 +96,12 @@
 				
 				$('#form').ajaxSubmit({
 					type : "POST",
+					async : true,
 					dataType : "text",
 					url : "/admin/ezBoard/saveBackGroundImage.do",					
-					success : function(){
+					success : function() {
 						 alert("<spring:message code='ezBoard.t79'/>");
-				         window.opener.location.reload(false);
+				         window.opener.GetBackGroundImage();
 				         window.close();	
 					}
 				}); 

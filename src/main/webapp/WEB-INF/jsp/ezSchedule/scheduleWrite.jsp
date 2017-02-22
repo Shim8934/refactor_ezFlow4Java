@@ -52,11 +52,12 @@
 	        var deptID = "<c:out value='${deptID}'/>";
 	        var hasattach = "<c:out value='${hasAttach}'/>";
 	        var attendantname = "<c:out value='${attendantName}'/>";
-	        var attendantemail = "<c:out value='${attendantemail}'/>";
-	        /* var use_exchange_pims = "NO"; */
-	        /* var NoneActiveX = "NO"; */
+	        var attendantemail = "<c:out value='${attendantemail}'/>";	        
 	        var pCompanyAdmin = "<c:out value='${pCompanyAdmin}'/>";
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
+	        var offSetMin = "<c:out value='${offSetMin}'/>";
+	        /* var use_exchange_pims = "NO"; */
+	        /* var NoneActiveX = "NO"; */
 		    
 		    document.onselectstart = function () { return false; };		    
 		    window.onload = function () {
@@ -76,18 +77,16 @@
 
 		        if (scheduleid != "") {
 		            document.getElementById("importantSelect").value = importance;
-		            document.getElementById("publicSelect").value = ispublic;
-	                document.getElementById("HolderEdit").style.display = "visible";
-	                document.getElementById("HolderEdit2").style.display = "visible";
+		            document.getElementById("publicSelect").value = ispublic;	                
 	                document.getElementById("HolderWrite").style.display = "none";
 	                document.getElementById("receiverTr1").style.display = "none";
 	                document.getElementById("receiverTr2").style.display = "none";
 	                document.getElementById("HolderWriteTr1").style.display = "none";
 	                document.getElementById("HolderWriteTr2").style.display = "none";
 
-	                if (scheduletype == "7") {
-		                document.getElementById("HolderEdit2").style.display = "none";
-                    } 
+	                /* if (scheduletype == "7") {
+		                //document.getElementById("HolderEdit2").style.display = "none";
+                    } */ 
 
 		            if (datetype == "1") {
 		                document.getElementById("alldaycheck").checked = false;
@@ -100,32 +99,11 @@
 		                show_repetition_info();
 		            }
 
-		            if (repetition != "" && pattern == "1") {
+		            if ($.trim(repetition) != "" && pattern == "1") {
 		                show_repetition_info();
 		                document.getElementById("repeatinfo").textContent = recurringLabelText;
 		                document.getElementById("periodblockTR").style.display = "none";
-		            }
-		            
-                    /* // 참석자 정보를 가져온다.
-                    if ("${scheduleInfo}" != null && "${scheduleInfo.hasAttendant}" == "Y")
-                    {
-						document.getElementById("LabelAttendant").textContent = strAttendant;
-                    }
-
-                    // 첨부 정보를 가져온다.
-                    if (hasAttach == "Y")
-                    {
-                    	setAttachFileInfo(strAttach);
-                    }
-                    
-                    if ("${scheduleInfo.dateType}" == "3" && "${scheduleInfo.pattern}" == "1")
-                    {
-    	                document.getElementById("HolderRepetition").style.display = "visible";                    	
-                    }
-                    
-    		        document.getElementById("TextLocation").Text = "${scheduleInfo.location}";
-    		        document.getElementById("TextTitle").Text = "${scheduleInfo.title}";
-    		        document.getElementById("LabelOwner").Text = "${strLabelOwner}"; */
+		            }                   
 		        } else if (datetype != ""){ 
 		        	if (datetype == "1") {
 		                document.getElementById("alldaycheck").checked = false;
@@ -141,7 +119,7 @@
 		            ListOwnerID_Change();
 
 		        if (hasattach == "Y") {
-		            setAttachFileInfo("${strXML}");
+		            setAttachFileInfo("${strAttach}");
 		        }
 
 		        try{
@@ -267,7 +245,7 @@
 		    
 		    var g_originalHTML = null;
 		    function DocumentComplete() {
-		        if ((scheduletype == "1" || scheduletype == "6") && "${content}" != "") {
+		        if ((scheduletype == "1" || scheduletype == "6") && $.trim("${content}") != "") {
 		            if (g_originalHTML == null) {
 		                message.SetEditorContent("${content}")
 		                g_originalHTML = message.GetEditorContent();
@@ -275,7 +253,7 @@
 		        } else {
 		            if ("${contentPath}" != "") {
 		                var fullPath = "${contentPath}";
-		                message.SetEditorContentURL(fullPath);
+		                message.SetEditorContentURL(fullPath);		                
 		            }
 		        }
 		    }
@@ -350,7 +328,7 @@
 		        printImportance = document.getElementById("importantSelect").options[document.getElementById("importantSelect").selectedIndex].textContent;
 		        printRepetition = document.getElementById("repeatinfo").textContent;
 
-		        if (repetition == "") {
+		        if ($.trim(repetition) == "") {
 		            if (document.all("alldaycheck").checked == true)
 		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + "<spring:message code='ezSchedule.t280' />";
 		            else
@@ -400,7 +378,7 @@
 		        printDocument = message.GetEditorContent();
 
 		        var params = { 'type': 'NEW', 'printOwner': printOwner, 'printAttendant': printAttendant, 'printIsPublic': printIsPublic, 'printImportance': printImportance, 'printRepetition': printRepetition, 'printDate': printDate, 'printLocation': printLocation, 'printTitle': printTitle, 'printAttach': printAttach, 'printDocument': printDocument };
-		        post_to_url("/ezSchedule/scheduleContentsPirnt.do", params, "post");
+		        post_to_url("/ezSchedule/scheduleContentsPrint.do", params, "post");
 		    }
 
 	        function post_to_url(path, params, method) {
@@ -491,40 +469,41 @@
 	                            <!--일정작성-->
 	                            <div id="schedule1">
 	                                <table class="content">
-                                        <tr id="HolderEdit" style="display: none">
+	                                	<c:if test="${scheduleId != ''}">
+                                        <tr id="HolderEdit">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="2">
-                                                <span ID="LabelOwner" style="OVERFLOW-Y: auto; PADDING-TOP: 2px height:19px;"></span></td>
-<!--                                                 <asp:Label ID="LabelOwner" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px" runat="server" Height="19"></asp:Label></td> -->
-                                        </tr>	
+                                                ${strLabelOwner}
+                                            </td>
+                                        </tr>
+                                        </c:if>
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="2">
-                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;">
-                                            		${strOwnerID}
-                                            	</select>
+                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:20px;">${strOwnerID}</select>
                                             </td>
                                         </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t365'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" />
+	                                        	<input name="TextLocation" type="text" maxlength="50" id="TextLocation" style="width:98%;" value="${scheduleInfo.location}"/>
 	                                        </td>
 	                                    </tr>
 	                                    <tr>
 	                                        <th><spring:message code='ezSchedule.t366'/></th>
 	                                        <td colspan="2">
-	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" />
+	                                        	<input name="TextTitle" type="text" maxlength="100" id="TextTitle" style="width:98%;" value="${scheduleInfo.title}"/>
 	                                        </td>
 	                                    </tr>
 	                                    <tr id="periodblockTR">
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
-	                                        <td colspan="2"><span id="periodblock">
-	                                            <input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
-	                                            <spring:message code='ezSchedule.t369'/>
-	                                           	<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
-	                                            ~
-	                                            <input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+	                                        <td colspan="2">
+	                                        	<span id="periodblock">
+	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1" checked>
+	                                            	<spring:message code='ezSchedule.t369'/>
+	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
+	                                            	~
+	                                            	<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;display:none" />
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>
@@ -540,13 +519,15 @@
 	                                            <div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; HEIGHT: 19px; width: 565px">&nbsp;</div>
 	                                        </td>
 	                                        <td class="pos2"></td>
-	                                    </tr>	
-                                        <tr id="HolderEdit2" style="display: none;">
+	                                    </tr>
+	                                    <c:if test="${scheduleId != '' && scheduleType != '7'}">
+                                        <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
                                                 <span ID="LabelAttendant" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px height=19px"></span>
 											</td>
                                         </tr>
+                                        </c:if>
                                         <tr id="receiverTr1">
                                             <th rowspan="2"><a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
                                             <td class="pos1">
@@ -572,7 +553,7 @@
                                             <td class="pos2"></td>
                                         </tr>
 
-                                        <tr ID="HolderWriteTr1">
+                                        <tr ID="HolderWriteTr2">
                                             <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcerepeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; HEIGHT: 19px; width: 565px">&nbsp;</div>

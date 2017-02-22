@@ -8,9 +8,9 @@
 		<meta http-equiv="refresh" content="${refreshSecond}">
 		
 		<%
-		 String userLang = (String)request.getAttribute("userLang");
-		 String userApprovalG = (String)request.getAttribute("userApprovalG");
-		 String pExist = (String)request.getAttribute("pExist");
+			String userLang = (String)request.getAttribute("userLang");
+		 	String userApprovalG = (String)request.getAttribute("userApprovalG");
+		 	String pExist = (String)request.getAttribute("pExist");
 		 %>
 		<section class="body_bg2">
 			<article  class="personal">
@@ -103,68 +103,41 @@
           			<div class="scrollbox-play-light" style="position:relative; width:260px;height:105px;  "> 
 						<div class="scrollbox" id="best-scrbox" style="width:260px; height:105px;overflow:hidden;"> 
     						<div class="content"> 
-  								<div id="ScheduleList">
-  						<%-- 			<%if(pExist.equals("true")){ %>
-    									<ul class="schedule_list">
-    										<asp:Repeater ID="ScheduleListRepeater" runat="server">  
-        										<ItemTemplate>
-        										 	<li style='text-overflow: ellipsis; overflow: hidden; width: 240px;'>
-            											<span style='CURSOR:pointer;'  onClick="open_schedule('<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("SCHEDULEID")[0].InnerText %>',
-                											'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("SCHEDULETYPE")[0].InnerText %>',
-                											'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATETYPE")[0].InnerText %>',
-                											'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("REPEATCOUNT")[0].InnerText %>',
-                											'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("STARTDATE")[0].InnerText %>')" 
-                											title='<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("TITLE")[0].InnerText %>'>
-                											<nobr>
-                    											<b>&nbsp;<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("TITLE")[0].InnerText %></b>
-                											</nobr>
-            											</span>
-       												 </li> 
-        										</ItemTemplate>
-    										</asp:Repeater>
-    									</ul>
-								<%}else{ %>        
-									<div class='nodata_schedule '>
-    									<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_plan.gif' width='92' height='84' style='margin-top:0px;margin-bottom:5px;'></p>
-    									<p><spring:message code='main.t00026' /></p>
-									</div>
-								<%} %> --%>      
-  							</div>
-					    </div> 
-					    <div class="scrollbar-v"> 
-    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
-    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
-    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
-    					</div> 
+  								<div id="ScheduleList"></div>
+					    	</div>					    
+						    <div class="scrollbar-v"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_up_w.gif" class="button-up"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_ball_w.gif" class="thumb-v"> 
+	    						<img src="/images/<spring:message code='main.t00025' />/main/scrollbar_arrow_down_w.gif" class="button-down"> 
+	    					</div> 
+						</div> 
 					</div> 
-				</div> 
-   	   		</article>
-       		<!-- calender -->
-        	<article class="calender">
-	            <div id="CalendarMini"></div>
-			</article>
-      		<!-- /calender -->   
+   	   			</article>
+	       		<!-- calender -->
+	        	<article class="calender">
+		            <div id="CalendarMini"></div>
+				</article>
+	      		<!-- /calender -->   
 			</div>
-    			<div class="blue_bar"></div>
-			    <div class="bannerlink_area">
-    				<article class="writebanner">
-        				<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
-        				<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
-        				<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
-    				</article>
-    			</div>
-        		<div class="blue_bar"></div>
-    			<article class="time">
-    				<p class="title"><spring:message code='main.t00023' /></p>
-    				<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
-    				<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:1px solid #205f61; background:url(/images/WebPartSliderCI/digitaltime_bg.gif);font-weight:bold; color:#FFF; letter-spacing:4px; font-size:15px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>
-   				 </article>
-			</section>
+    		<div class="blue_bar"></div>
+			<div class="bannerlink_area">
+    			<article class="writebanner">
+        			<p><span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner01.gif" width="58" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner02.gif" width="56" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner03.gif" width="56" height="85"></span></p>
+        			<p><span id="addresswrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner04.gif" width="58" height="85"></span><span id="resourcewrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner05.gif" width="56" height="85"></span><span id="boardwrite" onclick="btnWrite_onclick(this)"><img src="/images/<spring:message code='main.t00025' />/main/writebanner06.gif" width="56" height="85"></span></p>
+        			<%--<span id="mailwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner01.gif" width="58" height="85"></span><span id="approvalwrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner02.gif" width="56" height="85"></span><span id="schedulewrite" onclick="btnWrite_onclick(this)"><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner03.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner04.gif" width="58" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner05.gif" width="56" height="85"></span><span><img src="/images/<%=RM.GetString("t00025")%>/main/writebanner06.gif" width="56" height="85"></span>--%>
+    			</article>
+    		</div>
+        	<div class="blue_bar"></div>
+    		<article class="time">
+    			<p class="title"><spring:message code='main.t00023' /></p>
+    			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
+    			<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:1px solid #205f61; background:url(/images/WebPartSliderCI/digitaltime_bg.gif);font-weight:bold; color:#FFF; letter-spacing:4px; font-size:15px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>
+   			</article>
+		</section>
 			
 		 <%
-		 String browser = "";
-		 String userAgent = request.getHeader("User-Agent");
-		 		
+			 String browser = "";
+			 String userAgent = request.getHeader("User-Agent");		 		
 		 %>
 		
 		<link rel="stylesheet" href="/css/main.css" type="text/css" />
@@ -251,11 +224,11 @@
 			    var top = (heigth - wHeight) / 2;
 
 			    //PNO-3
-			    if (CrossYN() || pNoneActiveX == "YES")
-			        window.open("/myoffice/ezSchedule/schedule_read_Cross.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			    if (CrossYN())
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    else
-			        window.open("/myoffice/ezSchedule/schedule_read.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
+			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&type=" + scheduletype + "&datetype=" + datetype + "&repeatcount=" + repeatcount + "&date=" + date + "&pattern=0", "",
 		                "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			    //PNO-3 END
 			}
@@ -290,7 +263,7 @@
 			        if (mode == "P") {
 			        	mType = "1";
 			        } else {
-			        	mType = "23";
+			        	mType = "23456789";
 			        }			        
 
 			        for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {

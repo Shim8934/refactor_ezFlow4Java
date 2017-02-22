@@ -680,7 +680,7 @@ function ConvertMHTtoHTML(pURL) {
 		async : false,
 		url : "/ezCommon/mhtToHTML.do",
 		data : { strURL   : pURL },
-		success: function(result){
+		success: function(result){			
 			rtnVal = result;
 		}        			
 	});
