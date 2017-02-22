@@ -111,6 +111,11 @@
 	        	var xmlpara = createXmlDom();
 	        	var objNode;
 	        	createNodeInsert(xmlpara, objNode, "PARAMETER");
+	        	
+	        	if($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()>$("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val()){
+	        		alert("<spring:message code="ezResource.t207"/>");
+	        		return;
+	        	}
 	        	createNodeAndInsertText(xmlpara, objNode, "STARTDATETIME", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 	        	createNodeAndInsertText(xmlpara, objNode, "ENDDATETIME", $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val());
 	        	createNodeAndInsertText(xmlpara, objNode, "APPROVEFLAG", listviewtype);
