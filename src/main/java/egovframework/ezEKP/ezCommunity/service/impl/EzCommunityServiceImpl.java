@@ -1642,10 +1642,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 			
-			if (userInfo.getLang().equals("2")) {
-				memberInfo.setUserName(memberInfo.getUserName2());
-			}
-			
 			sb.append("<tr>");
 			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
 			sb.append("<td>");
@@ -1655,17 +1651,17 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId())) + "</td>");
-			sb.append("<td style=\"width:85\">" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
-			sb.append("<td style=\"width:85\">" + user.getC_inDate().substring(0, 10) + "</td>");
-			sb.append("<td style=\"width:150\">");
+			sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId())) + "</td>");
+			sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
+			sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
+			sb.append("<td>");
 			
 			if (user.getC_lastDate() != null) {
 				sb.append(user.getC_lastDate().substring(0, 10));
 			}
 			
 			sb.append("</td>");
-			sb.append("<td style=\"width:55; align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
+			sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
 		}
 		
 		return sb.toString();

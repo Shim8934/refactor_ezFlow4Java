@@ -293,13 +293,13 @@
 			<tr> 
 				<th style="width:55px"><spring:message code = 'ezCommunity.t32' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t10' /></th>
-				<th style="width:85px"><spring:message code = 'ezCommunity.t241' /></th>
+				<th style="width:100px"><spring:message code = 'ezCommunity.t241' /></th>
 				<th style="width:85px"><spring:message code = 'ezCommunity.t512' /></th>
-				<th style="width:110px"><spring:message code = 'ezCommunity.t725' /></th>
-				<th style="width:120px"><spring:message code = 'ezCommunity.t726' /></th>
+				<th style="width:85px"><spring:message code = 'ezCommunity.t725' /></th>
+				<th style="width:85px"><spring:message code = 'ezCommunity.t726' /></th>
 				<th style="width:70px"><spring:message code = 'ezCommunity.t727' /></th>
 			</tr>
-			${strXML }
+			${strXML}
 		</table>
 		
 		<div id="tblPageRayer"></div>

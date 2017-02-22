@@ -1708,7 +1708,7 @@
 				]]>
 		</isEqual>
 		<isEqual property="v_PMODE" compareValue="VIE">
-		<isEqual property="v_temp" compareValue="1">
+		<isGreaterEqual property="v_temp" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -1723,8 +1723,8 @@
             AND
 				TENANT_ID = #v_TENANTID#  
 				]]>
-		</isEqual>
-		<isEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isGreaterEqual property="v_temp2" compareValue="1">
 		<![CDATA[
 			SELECT 
 				DOCID ,
@@ -1739,8 +1739,8 @@
             AND
 				TENANT_ID = #v_TENANTID#  	
 				]]>
-		</isEqual>
-		<isNotEqual property="v_temp2" compareValue="1">
+		</isGreaterEqual>
+		<isLessThan property="v_temp2" compareValue="1">
 		<![CDATA[
 			 SELECT 
 			 	DOCID ,
@@ -1755,12 +1755,12 @@
             AND
 				TENANT_ID = #v_TENANTID#  
 				]]>
-		</isNotEqual>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="REC">
-			<isEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp2" compareValue="1">
+			<isGreaterThan property="v_temp" compareValue="1">
+			<isGreaterThan property="v_temp2" compareValue="1">
 			<![CDATA[
 				SELECT 
 						DOCID ,
@@ -1775,8 +1775,8 @@
                 AND
 						TENANT_ID = #v_TENANTID#  
 						]]>
-			</isEqual>
-			<isNotEqual property="v_temp2" compareValue="1">
+			</isGreaterThan>
+			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
 			     SELECT 
 			     		DOCID ,
@@ -1791,10 +1791,10 @@
 	             AND
 						TENANT_ID = #v_TENANTID#  	
 						]]>	
-			</isNotEqual>
-		    </isEqual>
-		<isNotEqual property="v_temp" compareValue="1">
-			<isEqual property="v_temp3" compareValue="1">
+			</isLessThan>
+		    </isGreaterThan>
+		<isLessThan property="v_temp" compareValue="1">
+			<isGreaterEqual property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -1802,8 +1802,8 @@
                         NULL RECEIVEDDEPTID  
                   FROM DUAL  
                   ]]>
-			</isEqual>
-			<isNotEqual property="v_temp3" compareValue="1">
+			</isGreaterEqual>
+			<isLessThan property="v_temp3" compareValue="1">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
 				 SELECT 
@@ -1834,8 +1834,8 @@
 							TENANT_ID = #v_TENANTID#	
 							]]>	
 				</isLessEqual>
-			</isNotEqual>
-		</isNotEqual>
+			</isLessThan>
+		</isLessThan>
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="TMP">
@@ -13041,7 +13041,7 @@
              EXECUTEDATE ,
              RECEIPTMEMBERNAME ,
              RECEIPTMEMBERNAME2 ,
-             STR_TO_DATE(MODIFYDATE, '%Y-%m-%d %H:%i:%s') MODIFYDATE  ,
+             STR_TO_DATE(MODIFYDATE, '%Y%m%d') MODIFYDATE  ,
              MODIFYREASON ,
              MODIFIERNAME ,
              MODIFIERNAME2 ,
@@ -15649,21 +15649,21 @@
    			TBL_SPECIALCATALOGINFO_REC 
    		(RecordID, SerialNo, SC1, SC2, SC3, TENANT_ID) 
    		(SELECT 
-   			#v_RECORDID#, SerialNo, SC1, SC2, SC3, TBL_SPECIALCATALOGINFO_CAB.TENANT_ID 
+   			#v_RECORDID#, SerialNo, SC1, SC2, SC3, A.TENANT_ID 
    		 FROM 
    		 	TBL_SPECIALCATALOGINFO_CAB A 
    		 INNER JOIN 
    		 	(SELECT 
-   		 		TBL_CABINET.CabinetClassNo,
-   		 		TBL_CABINET.TENANT_ID
+   		 		B.CabinetClassNo,
+   		 		B.TENANT_ID
    		 	 FROM 
    		 	 	TBL_CABINET B
    		 	 WHERE 
-   		 	 	TBL_CABINET.CabinetID = #v_CABID#) TBL_CABINET 
+   		 	 	B.CabinetID = #v_CABID#) TBL_CABINET 
    		  ON 
-   		  	TBL_SPECIALCATALOGINFO_CAB.CabinetClassNo = TBL_CABINET.CabinetClassNo 
+   		  	A.CabinetClassNo = TBL_CABINET.CabinetClassNo 
    		  AND 
-   		  	TBL_SPECIALCATALOGINFO_CAB.TENANT_ID = TBL_CABINET.TENANT_ID 
+   		  	A.TENANT_ID = TBL_CABINET.TENANT_ID 
           Where 
           	SerialNo='000' 
           AND 
