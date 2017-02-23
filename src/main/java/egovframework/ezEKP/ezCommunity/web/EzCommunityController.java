@@ -1366,12 +1366,16 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String useIE11Browser = "";
 		String gubun = request.getParameter("gubun");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String strLang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		if (commonUtil.checkIE(request) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
                 useIE11Browser = "CK";
 		}
 		
-		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("displayName", strLang.equals("2") ? userInfo.getDisplayName2() : userInfo.getDisplayName());
+		model.addAttribute("deptName", strLang.equals("2") ? userInfo.getDeptName2() : userInfo.getDeptName());
+		model.addAttribute("title", strLang.equals("2") ? userInfo.getTitle2() : userInfo.getTitle());
+		model.addAttribute("phone", userInfo.getPhone());
 		model.addAttribute("gubun", gubun);
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("Use_Editor", useEditor);
