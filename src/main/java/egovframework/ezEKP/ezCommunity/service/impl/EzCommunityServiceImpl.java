@@ -698,7 +698,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                     item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), Integer.parseInt(expireDays), "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
                 }
 			} else {
-				item = getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+				item = getItemXML(pBoardID, pItemID, userInfo);
 				
                 if (pMode.equals("reply")) {
                 	item.setItemLevel(item.getItemLevel()+1);
@@ -2797,12 +2797,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID, String offset) throws Exception {
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO userInfo) throws Exception {
 		logger.debug("getItemXML started.");
+		int tenantID = userInfo.getTenantId();
+		String offset = userInfo.getOffset();
+		String lang = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pItemID", pItemID);
+		map.put("v_strLang", lang);
 		map.put("tenantID", tenantID);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		

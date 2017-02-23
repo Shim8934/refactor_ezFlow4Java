@@ -88,7 +88,7 @@ public interface EzCommunityService {
 	
 	public CommunityBoardListVO boardItemListGet1(String pBoardID, String id, int tenantID) throws Exception;
 	
-	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, int tenantID, String offset) throws Exception;
+	public CommunityBoardItemVO getItemXML(String pBoardID, String pItemID, LoginVO usreInfo) throws Exception;
 	
 	public CommunityCClubGuestVO guestEditGet(String code, String lang, String no, String id, int tenantID) throws Exception;
 	
