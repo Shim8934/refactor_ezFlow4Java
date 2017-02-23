@@ -236,6 +236,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public void savePortletSubProperty4(String oldUserType, String uID, String oldCreatorID, String boardID, String userType, String userID, String itemCount, String itemFields, int tenantID) throws Exception {
+		logger.debug("savePortletSubProperty4 started");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_OLDUSERTYPE", oldUserType);
 		map.put("v_UID", uID);
@@ -246,6 +248,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		map.put("v_ITEMCOUNT", itemCount);
 		map.put("v_ITEMFIELDS", itemFields);
 		map.put("tenantID", tenantID);
+		
+		logger.debug("oldUserType="+oldUserType);
+		logger.debug("userType="+userType);
 		
 		if (oldUserType != null && oldUserType.equals("1")) {
 			ezPortalAdminDAO.savePortletSubProperty4_D(map);
@@ -259,7 +264,8 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			}
 			
 		}
-		
+
+		logger.debug("savePortletSubProperty4 ended");
 	}
 	
 	@Override

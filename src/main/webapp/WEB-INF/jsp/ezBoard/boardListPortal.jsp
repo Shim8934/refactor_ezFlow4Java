@@ -20,16 +20,17 @@
 			var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 			var BoardID = "${pBoardID}";
 			
-					function MiniGotoList()
-					{
-						try {
-							parent.top.frames("main").location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
-						} catch (e) {}
-					}
-					function MinicloseWebPart()
-					{
-						parent.del_webpart("${frmID}");
-					}
+			function MiniGotoList() {
+				//try {
+					//window.parent.top.frames("main").location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
+				window.parent.top.frames[0].location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
+				//} catch (e) {}
+			}
+			
+			function MinicloseWebPart() {
+				parent.del_webpart("${frmID}");
+			}
+					
 		    function ItemRead_onclick(pItemID, pBoardID) {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t194'/>");
@@ -43,6 +44,7 @@
 		        pwidth = pwidth - 359;
 		        window.open("/ezBoard/boardItemView.do?showAdjacent=1&itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=657,width=720px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 		    }
+		    
 		    function initsize() {
 		        self.resizeTo(document.body.scrollWidth, document.body.scrollHeight);
 		    }		
