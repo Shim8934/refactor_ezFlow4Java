@@ -1,4 +1,4 @@
-.<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
@@ -18,7 +18,7 @@
 		var brd_color = "${boardProp.boardColor}";
 		var code = "${code}";
 		var versionuse = "${boardProp.versionUse}";
-		var checkUse = "${boardProp.checkUse }";
+		var checkUse = "${boardProp.checkUse}";
 		var iMenuNum = 1;
 		
 		//ShowModalDialog Chrome 적용
@@ -99,18 +99,6 @@
 			    	throw 'Execution stopped until showModalDialog is closed';
 			};
 		})();
-		
-		function ReplaceText( orgStr, findStr, replaceStr ) {
-			var re = new RegExp( findStr, "gi" );
-			return ( orgStr.replace( re, replaceStr ) );
-		}
-
-		function MakeXMLString(str) {
-			str = ReplaceText(str, "&", "&amp;");
-			str = ReplaceText(str, "<", "&lt;");
-			str = ReplaceText(str, ">", "&gt;");
-			return str;
-		}
 		
 		function hasSpecialCharacters(str) {
 			for(var i=0; i<str.length; i++) {
@@ -227,7 +215,7 @@
 			strXML += "<BOARDNAME2>" + txtBoardName2.value + "</BOARDNAME2>";
 			strXML += "<BOARDID>" + BoardID + "</BOARDID>";
 			strXML += "<ATTACHMAX>" + AttachMax + "</ATTACHMAX>";
-			strXML += "<DESCRIPTION>" + MakeXMLString(Description) + "</DESCRIPTION>";
+			strXML += "<DESCRIPTION>" + encodeURIComponent(Description) + "</DESCRIPTION>";
 			strXML += "<EXPIRES>" + Expires + "</EXPIRES>";
 			strXML += "<URL>" + url + "</URL>";
 			strXML += "<GUBUN>" + gubun + "</GUBUN>";
@@ -408,48 +396,6 @@
 					break;		
 			}
 		}
-		
-		/* function searchBoard_onclick() {
-		    var feature = "DialogHeight:470px;DialogWidth:340px;status:no;help:no;edge:sunken";
-		    feature = feature + GetShowModalPosition(340, 470);
-		    var ret = window.showModalDialog("/myoffice/ezCommunity/commhome/admin/Board/SearchBoard.aspx", "", feature);
-		    
-			if(typeof(ret) == "undefined") {
-			} else {
-				var spans = TopBoardsList.all.tags("span");
-				
-				for (var i=0; i<spans.length; i++) {
-					if(spans.item(i).id == ret[1]) {
-						loadTreeViewByPath(spans.item(i), ret[0], ret[1], ret[2], ret[3]);
-					}
-				}
-			}
-		}
-
-		function loadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID, pBoardName, pParentBoardID) {
-			var divs = TopBoardsList.all.tags("DIV");
-			
-			for (var i=0; i<divs.length; i++) {
-				if(divs.item(i).parentElement.parentElement.id == "TreeArea") {
-					divs.item(i).parentElement.parentElement.style.display = "none";
-				}
-			}
-
-			pObjSpan.parentElement.parentElement.nextSibling.style.display = "";
-			var TreeCtrl = pObjSpan.parentElement.parentElement.nextSibling.firstChild.firstChild;
-			
-			TreeCtrl.server = SS_ServerName;
-			TreeCtrl.config = xmlDom_treeview;
-			TreeCtrl.source = GetBoardTreeByPath(pBoardID, pBoardGroupID);
-			TreeCtrl.update();
-
-			SelectedBoardID = pBoardID;
-			SelectedBoardName = pBoardName;
-			SelectedBoardParentBoardID = pParentBoardID;
-			SelectedBoardGroupID = pBoardGroupID;
-
-			window.location.href = "/ezCommunity/adminBoardProperty.do?boardID=" + SelectedBoardID;
-		} */
 		
 		function cherecoardtype(idx) {
 			versionuse = recoard[idx].value;

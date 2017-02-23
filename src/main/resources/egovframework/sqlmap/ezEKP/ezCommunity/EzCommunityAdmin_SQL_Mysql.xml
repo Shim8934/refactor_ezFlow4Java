@@ -285,7 +285,7 @@
 		<![CDATA[
 			SELECT
 				c_clubno,
-				c_clubname$v_USERINFO_LANG$ C_CLUBNAME,
+				c_clubname,
 				c_sysopid,
 				c_clubdesc,
 				c_regdate
