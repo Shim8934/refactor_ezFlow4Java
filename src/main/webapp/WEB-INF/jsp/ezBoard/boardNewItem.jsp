@@ -1846,10 +1846,10 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t429' /></span></li>
+			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t321' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t429' /></span></li>
+			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t321' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">
