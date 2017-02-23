@@ -811,6 +811,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resLocation", strResLocation);
 		model.addAttribute("makeDate", strMakeDate);
 		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		
 		return "/ezResource/resModClsItem";
 	
