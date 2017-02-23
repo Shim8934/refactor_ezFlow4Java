@@ -985,12 +985,9 @@
 			SELECT
 				itemid,
 				writerid,
-				writername,
-				writername2,
-				writerdeptname,
-				writerdeptname2,
-				writercompanyname,
-				writercompanyname2,
+				writername$v_strLang$ AS writername,
+				writerdeptname$v_strLang$ AS writerdeptname,
+				writercompanyname$v_strLang$ AS writercompanyname,
 				TO_DATE(writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 				TO_DATE(parentwritedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS parentwritedate,
 				importance,
@@ -1005,8 +1002,7 @@
 				copieditem,
 				extensionattribute1,
 				extensionattribute2,
-				extensionattribute3,
-				extensionattribute32,
+				extensionattribute3$v_strLang$ AS extensionattribute3,
 				extensionattribute4,
 				extensionattribute5 
 			FROM

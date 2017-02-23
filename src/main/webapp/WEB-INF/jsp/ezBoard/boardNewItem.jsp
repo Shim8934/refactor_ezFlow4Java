@@ -803,13 +803,16 @@
 			            else {
 			                try {
 			                    if (typeof (window.parent.SuccessBoard) == null || typeof (window.parent.SuccessBoard) == "undefined") {
-			                        try {
-			                            var checkboard = window.parent.location.toString();
-			                            if (checkboard.indexOf("mailReadContent.do") < 0)
-			                                window.opener.location.reload(false);
-			                        } catch (e) {
-			
-			                        }
+		                            try {
+		                                var checkboard = window.opener.location.toString();
+		                                if (checkboard.indexOf("mailPreviewContent") > -1) {
+		                                    window.close();
+		                                    return;
+		                                }
+		                                if (checkboard.indexOf("mailReadContent.do") < 0)
+		                                    ReturnFunction();
+		                            } catch (e) {
+		                            }
 			                    }
 			                }
 			                catch (e) { }
@@ -821,13 +824,8 @@
 			                                window.parent.parent.location.reload(false);
 			                        }
 			                    }
-			                    catch (e) { }
-			                }
-			
-			                try {
-			                    window.opener.opener.location.reload(false);
-			                } catch (e) {
-			
+			                    catch (e) { 
+			                    }
 			                }
 			            }
 					} catch (e) {
@@ -1875,7 +1873,7 @@
 	            <td>
 	                <div class="portlet_tabpart03">
 	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t273' /></span></p>
+	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.t321' /></span></p>
 	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.t60' /></span></p>
 	                    </div>
 	                </div>

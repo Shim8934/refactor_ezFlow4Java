@@ -23,8 +23,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
@@ -2912,6 +2914,21 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
+		
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
 		Row row;
 		Cell cell;
 		
@@ -2934,6 +2951,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
 				cell = row.createCell(i);
 				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
 			}
 			
 			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
@@ -2943,6 +2961,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				for(int j=0; j<tr.getChildNodes().getLength(); j++){
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
 				}
 			}
 //		table
@@ -2956,6 +2975,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
 				cell = row.createCell(i);
 				cell.setCellValue(tableHeadNode.getChildNodes().item(0).getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
 			}
 			
 			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
@@ -2965,6 +2985,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				for(int j=0; j<tr.getChildNodes().getLength(); j++){
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
 				}
 			}
 //		graph
@@ -2980,6 +3001,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				for(int j=0; j<tr.getChildNodes().getLength(); j++){
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
 				}
 			}
 		}
@@ -3005,6 +3027,21 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet = workbook.createSheet("report");
+		
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
 		Row row;
 		Cell cell;
 		
@@ -3015,6 +3052,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 			headerInfo = ";" + egovMessageSource.getMessage("ezQuestion.t552", locale) + "\r\n";
 			cell = row.createCell(0);
 			cell.setCellValue(headerInfo);
+			
             headerInfo = egovMessageSource.getMessage("ezQuestion.t553", locale);
             
 			/** EZSP_GETQUESTIONNOCNT*/
@@ -3085,6 +3123,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				for(int i=0; i<header.length; i++){
 					cell = row.createCell(i);
 					cell.setCellValue(header[i]);
+					cell.setCellStyle(headerStyle);
 				}
 				
 				if(!qUser.equals("")){
@@ -3094,16 +3133,19 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						row = sheet.createRow(sNo+1);
 						cell = row.createCell(0);
 						cell.setCellValue(sNo);
+						cell.setCellStyle(bodyStyle);
 						int i =1;
 						
 						for(String keySplit : key.split(",")){
 							cell = row.createCell(i);
 							cell.setCellValue(keySplit);
+							cell.setCellStyle(bodyStyle);
 							i++;
 						}
 						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
 							cell = row.createCell(i);
 							cell.setCellValue(valueSplit);
+							cell.setCellStyle(bodyStyle);
 							i++;
 						}
 					}
@@ -3114,16 +3156,19 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 						row = sheet.createRow(sNo+1);
 						cell = row.createCell(0);
 						cell.setCellValue(sNo);
+						cell.setCellStyle(bodyStyle);
 						int i =1;
 						
 						for(String keySplit : key.split(",")){
 							cell = row.createCell(i);
 							cell.setCellValue(keySplit);
+							cell.setCellStyle(bodyStyle);
 							i++;
 						}
 						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
 							cell = row.createCell(i);
 							cell.setCellValue(valueSplit);
+							cell.setCellStyle(bodyStyle);
 							i++;
 						}
 					}

@@ -283,7 +283,7 @@
 		    
 		    function repComMa(param) {
 		        while (param.indexOf(",") != -1) {
-		            param = param.replace(",", "<spring:message code='ezQuestion.t126' />");
+		            param = param.replace(",", ", ");
 		            if (param.indexOf(",") == -1) {
 		                break;
 		            }

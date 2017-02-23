@@ -1096,7 +1096,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
 
@@ -4125,13 +4125,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			expireDays = boardInfo.getExpireDays();
 			
 			if (!mode.equals("new")) {
-				item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
-				
-				if (userInfo.getLang().equals("2")) {
-					item.setWriterName(item.getWriterName2());
-					item.setWriterDeptName(item.getWriterDeptName2());
-					item.setWriterCompanyName(item.getWriterCompanyName2());
-				}
+				item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 				
 				if (mode.equals("reply")) {
 					item.setTitle("[" + egovMessageSource.getMessage("ezCommunity.t1179", userInfo.getLocale()) + item.getTitle());
@@ -4274,7 +4268,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			response.getWriter().flush();
 		}
 		
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, boardID, itemID);
 		
 		if (item == null) {
@@ -4371,7 +4365,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
-		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo.getTenantId(), userInfo.getOffset());
+		CommunityBoardItemVO item = ezCommunityService.getItemXML(boardID, itemID, userInfo);
 		
 		if (EgovDateUtil.getDaysDiff(item.getParentWriteDate().substring(0, 10), item.getWriteDate().substring(0, 10)) > 0) {
 //			item.setWriteDate(commonUtil.getDateStringInUTC(item.getParentWriteDate(), userInfo.getOffset(), false));
@@ -4417,7 +4411,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		sb.append("<NODES>");
 		
 		try {
-			CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo.getTenantId(), userInfo.getOffset());
+			CommunityBoardItemVO itemVO = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 //			itemVO.setWriteDate(commonUtil.getDateStringInUTC(itemVO.getWriteDate(), userInfo.getOffset(), false));
 			
 			if (itemVO != null) {
