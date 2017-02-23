@@ -1476,8 +1476,10 @@ public class EzResourceController extends EgovFileMngUtil {
                 loc = title.replace("\"", "&quot;");
 			}
 			timeDisplay = getSchedule.getTimeDisplay();
-			startDateTime = getSchedule.getStartDate();
-			endDateTime = getSchedule.getEndDate();
+			
+			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
+			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
+			
 			reFlag = getSchedule.getReFlag();
 			gresFlag = getSchedule.getGresFlag();
 			content = getSchedule.getContent();
@@ -1568,15 +1570,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		
-		/*curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
-		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");*/
+		startDateTime2 = startDateTime;
+		endDateTime2 = endDateTime;
 		
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
-
-		startDateTime2 = ezResourceService.isoUTFDate(startDateTime, locale);
-		endDateTime2 = ezResourceService.isoUTFDate(endDateTime, locale);
-
+		
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		

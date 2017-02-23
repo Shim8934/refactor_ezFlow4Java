@@ -3118,7 +3118,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String pItemID = xmlDoc.getElementsByTagName("ITEMID").item(0).getTextContent();
 		String pReplyID = xmlDoc.getElementsByTagName("REPLYID").item(0).getTextContent();
 		String pBoardID = xmlDoc.getElementsByTagName("BOARDID").item(0).getTextContent();
-		String pContent = xmlDoc.getElementsByTagName("CONTENT").item(0).getTextContent();
+		String pContent = URLDecoder.decode(xmlDoc.getElementsByTagName("CONTENT").item(0).getTextContent(), "utf-8");
 		String pPassword = xmlDoc.getElementsByTagName("PASSWORD").item(0).getTextContent();
 
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);

@@ -24,7 +24,7 @@ INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'INDIVIDUALMAILUSER','5');
 INSERT INTO `jmocha_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`) VALUES (0,'USE_FileExtension','*');
 INSERT INTO `jmocha_tenant_servername` (`SERVER_NAME`,`TENANT_ID`) VALUES ('jtest.kaoni.com',0);
-INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`) VALUES ('jtest.kaoni.com',1024);
+INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) VALUES ('jtest.kaoni.com',1024,824);
 INSERT INTO `tbl_tenant` (`TENANT_ID`,`TENANT_NAME`) VALUES (0,'(주)가온아이');
 INSERT INTO `tbl_tenant_servername` (`SERVER_NAME`,`TENANT_ID`) VALUES ('jtest.kaoni.com',0);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ADJACENT_ITEMS_ENABLE','1',NULL);

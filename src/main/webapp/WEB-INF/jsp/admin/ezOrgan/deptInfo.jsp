@@ -191,11 +191,11 @@
 		    		<table style="width:100%">
 		        		<tr class="primary">
 		          			<th><c:out value='${primary}'/></th>
-		          			<td><input name="text" type="text" id=DeptName style="width:97%"></td>
+		          			<td><input name="text" type="text" id=DeptName style="width:97%" maxLength="50"></td>
 		        		</tr>
 		        		<tr class="secondary">
 		          			<th><c:out value='${secondary}'/></th>
-		          			<td><input name="text" type="text" id=DeptName2 style="width:97%"></td>
+		          			<td><input name="text" type="text" id=DeptName2 style="width:97%" maxLength="50"></td>
 		        		</tr>
 		      		</table>
 		      	</td> 
