@@ -782,7 +782,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getSendMailToUser(map);
 	}
 
-	@SuppressWarnings("deprecation")
 	public String getScheduleXML(String xmlStr, String ownerID, String companyID, String groupID, String gubun, String pType, String pWriterName, String pWriterDept, int tenantID, String offset) throws Exception {
 		logger.debug("getScheduleXML Start");
 		
@@ -802,7 +801,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		returnStr.append("<root>");
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
+		Calendar cal = Calendar.getInstance();
+		
 		for (int i=0; i<scheRSDom.getElementsByTagName("ROW").getLength(); i++) {
 			String num = scheRSDom.getElementsByTagName("num").item(i).getTextContent();
 			String pNum = scheRSDom.getElementsByTagName("pnum").item(i).getTextContent();
@@ -871,12 +871,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<location><![CDATA[" + loc + "]]></location>");
 				returnStr.append("<dtstart>" + startDateTime + "</dtstart>");
 				returnStr.append("<dtend>" + endDateTime + "</dtend>");
-				returnStr.append("<dstartTime>" + (format.parse(startDateTime).getHours()*60 + format.parse(startDateTime).getMinutes()) + "</dstartTime>");
-				returnStr.append("<dendTime>" + (format.parse(endDateTime).getHours()*60 + format.parse(endDateTime).getMinutes()) + "</dendTime>");
-				returnStr.append("<dsDaytype>" + (int)format.parse(startDateTime).getDay() + "</dsDaytype>");
-				returnStr.append("<deDaytype>" + (int)format.parse(endDateTime).getDay() + "</deDaytype>");
+				
+				cal.setTime(format.parse(startDateTime));
+				returnStr.append("<dstartTime>" + (cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)) + "</dstartTime>");
+				returnStr.append("<dsDaytype>" + cal.get(Calendar.DAY_OF_WEEK) + "</dsDaytype>");
+				
+				cal.setTime(format.parse(endDateTime));
+				returnStr.append("<dendTime>" + (cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)) + "</dendTime>");
+				returnStr.append("<deDaytype>" + cal.get(Calendar.DAY_OF_WEEK) + "</deDaytype>");
 				returnStr.append("<alldayevent>"+ allDay +"</alldayevent>");
-					
+				
 				String timeDisplay = scheRSDom.getElementsByTagName("timeDisplay").item(i).getTextContent();
 					
 				if (timeDisplay.equals("1")) {
@@ -912,7 +916,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnStr.append("</root>");
-		logger.debug("returnStr="+returnStr);
+		
+		logger.debug("returnStr=" + returnStr);
 		logger.debug("getScheduleXML End");
 		return returnStr.toString();
 	}
