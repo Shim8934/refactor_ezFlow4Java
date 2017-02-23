@@ -1214,7 +1214,7 @@
 		<![CDATA[
 			SELECT
 				replyid,
-				username$v_userInfo_lang$,
+				username$v_userInfo_lang$ AS username,
 				userid,
 				content,
 				writedate+(#offset#/(60*24)) AS writedate
