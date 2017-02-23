@@ -2982,7 +2982,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
         	} else {
         		if (expireDays.equals("-1")) {
-        			endDateTime = EgovDateUtil.addMonth(today, 1, "yyyy-MM-dd");
+        			endDateTime = "9999-12-31";
     			} else {
     				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
     			}
