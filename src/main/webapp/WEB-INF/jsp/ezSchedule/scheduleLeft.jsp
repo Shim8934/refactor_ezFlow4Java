@@ -39,7 +39,7 @@
 		    		data : {
 		    			COMPANYID  : "VIEW"		    			
 		    		},
-		    		success: function(text){		
+		    		success: function(text){
 		    			XmlNodeText = text;
 			            XmlNode = loadXMLString(XmlNodeText);
 			            
@@ -68,7 +68,7 @@
 			                    }
 			                }
 			            }			            
-			            CalendarMiniDataSource();
+			            CalendarMiniDataSource(XmlNode);
 		    		}
 		    	});
 		    }

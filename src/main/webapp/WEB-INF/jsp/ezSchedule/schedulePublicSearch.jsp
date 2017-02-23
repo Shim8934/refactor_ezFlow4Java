@@ -195,7 +195,7 @@
 	        }
 
 	        var feature = GetOpenPosition(760, 660);
-	        window.open("schedule_publicread_Cross.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&ownerid=" + ownerid + "&date=" + date + "&datetype=" + dateType, "",
+	        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&ownerid=" + ownerid + "&date=" + date + "&datetype=" + dateType, "",
 				"height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 
