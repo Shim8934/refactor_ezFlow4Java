@@ -2982,7 +2982,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
         	} else {
         		if (expireDays.equals("-1")) {
-        			endDateTime = EgovDateUtil.addDay(today, 30, "yyyy-MM-dd");
+        			endDateTime = EgovDateUtil.addMonth(today, 1, "yyyy-MM-dd");
     			} else {
     				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
     			}
@@ -3004,7 +3004,6 @@ public class EzBoardController extends EgovFileMngUtil{
 			startDateTime = getTime.format(formatter);
 			startDateTime = startDateTime + ":30:00"; 
 		}
-		
                 
         if (reservedItem.equals("true")) {
         	startDateTime = commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false);
@@ -5471,8 +5470,8 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 포토게시판이미지다운 호출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/imagedownload.do")
-	public String imagedownload(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
+	@RequestMapping(value = "/ezBoard/imageDownload.do")
+	public String imageDownload(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String itemID = request.getParameter("itemID");

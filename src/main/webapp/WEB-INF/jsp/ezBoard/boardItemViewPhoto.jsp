@@ -1060,10 +1060,10 @@
 		            var pleft = (pwidth - swidth) / 2;
 		            var ptop = (pheight - sheight) / 2;
 		            
-		            window.open("/ezBoard/imagedownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
+		            window.open("/ezBoard/imageDownload.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");			
 		        }
 		
-		    //mouseWheel Event 
+		    	//mouseWheel Event 
 		        document.onmousewheel = ScrollControl;
 		
 		        function ScrollControl()
@@ -1144,7 +1144,7 @@
 		            } catch (e) {
 		            }
 		        }
-		    //mouseWheel Event  END
+		    	//mouseWheel Event  END
 		        function btn_ReWrite() {
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
