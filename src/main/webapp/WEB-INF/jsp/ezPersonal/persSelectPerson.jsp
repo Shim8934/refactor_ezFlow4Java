@@ -144,7 +144,7 @@
 		    			event_displayUserList(loadXMLString(xml));
 		    		},
 		    		error: function(request, status){
-		    			alert("<spring:message code='ezPersonal.t60'/>퍼스널" + request.status);
+		    			alert("<spring:message code='ezPersonal.t60'/>" + request.status);
 		    		}
 		    	});
 		    }
