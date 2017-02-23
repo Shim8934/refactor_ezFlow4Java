@@ -197,11 +197,31 @@
 	            	buttonImageOnly: true
 	        	});
 
-	        	var SDate = new Date("${startDateTime2}");
-	        	SDate.setHours(SDate.getHours() - 9);
+	        	var uploadSDate = "${startDateTime2}";
+
+	        	var sYear = uploadSDate.substring(0, 4);
+				var sMonth = uploadSDate.substring(5, 7);
+				var sDay = uploadSDate.substring(8, 10);
+				var sHour = uploadSDate.substring(11, 13);
+				var sMin = uploadSDate.substring(14, 16);
+
+				var uploadEDate = "${endDateTime2}";
+				var eYear = uploadEDate.substring(0, 4);
+				var eMonth = uploadEDate.substring(5, 7);
+				var eDay = uploadEDate.substring(8, 10);
+				var eHour = uploadEDate.substring(11, 13);
+				var eMin = uploadEDate.substring(14, 16);
+				
+	        	var SDate = new Date("");
+	        	SDate.setFullYear(sYear, sMonth-1, sDay);
+		        SDate.setHours(sHour, sMin, 0, 0);
+	        	//SDate.setHours(SDate.getHours() - 9);
 	        	
-	        	var EDate = new Date("${endDateTime2}");
-	        	EDate.setHours(EDate.getHours() - 9);
+	        	var EDate = new Date();
+		        EDate.setFullYear(eYear, eMonth-1, eDay);
+		        EDate.setHours(eHour, eMin, 0, 0);
+	        	//var EDate = new Date("${endDateTime2}");
+	        	//EDate.setHours(EDate.getHours() - 9);
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
