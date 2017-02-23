@@ -43,7 +43,6 @@
 		                RetValue = opener.selecttarget_cross_dialogArguments[0];
 		                ReturnFunction = opener.selecttarget_cross_dialogArguments[1];
 		            } catch (e) {
-		                RetValue = window.dialogArguments;
 		            }
 		        }
 
@@ -52,11 +51,13 @@
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 		                var input = document.getElementsByTagName("input");
 		                for (var i = 0; i < input.length; i++) {
-		                    if (input[i].getAttribute("type") == "text")
+		                    if (GetAttribute(input[i], "type") == "text")
 		                        KeEventControl(input[i]);
 		                }
 		            }
-		        } catch (e) { }
+		        }
+		        catch (e)
+		        { }
 
 		        m_receiverTitleList = new Array(ToTitle);
 		        m_receiverWindowList = new Array(ListViewMsgTo);

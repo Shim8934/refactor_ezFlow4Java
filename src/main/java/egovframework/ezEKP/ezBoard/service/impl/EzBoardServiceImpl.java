@@ -2685,8 +2685,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			logger.debug("deleteItem error");
 			return "NO";
 		}
-
 	}
-	
 	
 }
