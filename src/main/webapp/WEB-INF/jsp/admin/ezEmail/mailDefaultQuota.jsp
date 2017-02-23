@@ -15,20 +15,24 @@
 		<script type="text/javascript">            
             function Save(pPath)
             {
+                var defaultWarnInput = document.getElementById("defaultWarn");
                 var defaultMaxInput = document.getElementById("defaultMax");
                 
-                if (defaultMaxInput.value == '' || !CheckNumber(defaultMaxInput.value)) {
+                if (defaultWarnInput.value == '' || !CheckNumber(defaultWarnInput.value)
+                        || defaultMaxInput.value == '' || !CheckNumber(defaultMaxInput.value)) {
                     alert("<spring:message code='ezEmail.t99000066' />");
                     return;
                 }
                 
-                if (parseFloat(Remove1000Sep(defaultMaxInput.value, ",", "")) > 2047) {
+                if (parseFloat(Remove1000Sep(defaultWarnInput.value, ",", "")) > 2047
+                        || parseFloat(Remove1000Sep(defaultMaxInput.value, ",", "")) > 2047) {
                     alert("<spring:message code='ezEmail.t71' />");
                     return;
                 }
                 
                 var strXML = "<DATA>";
-                strXML += "<HARDLIMIT>" + parseInt(Remove1000Sep(defaultMaxInput.value, ",", "") * 1024) + "</HARDLIMIT>";
+                strXML += "<WARNSTORAGE>" + parseFloat(Remove1000Sep(defaultWarnInput.value, ",", "") * 1024) + "</WARNSTORAGE>";
+                strXML += "<MAXSTORAGE>" + parseFloat(Remove1000Sep(defaultMaxInput.value, ",", "") * 1024) + "</MAXSTORAGE>";
                 strXML += "</DATA>";
 
                 var xmlhttp = createXMLHttpRequest();
@@ -125,10 +129,14 @@
     <span class="txt">* <spring:message code='ezEmail.t74' /></span>
     <table class="mainlist" id="SaveTBL" style="width:100%">
         <tr>
+            <th style="width:120px; text-align:center"><spring:message code='ezEmail.t78' /></th>
             <th style="width:120px; text-align:center"><spring:message code='ezEmail.t80' /></th>
             <th>&nbsp;</th>
         </tr>     
         <tr>
+            <td style="width:120px;">
+                <input id="defaultWarn" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultWarn}" style="width:100%; text-align:right">
+            </td>        
             <td style="width:120px;">
                 <input id="defaultMax" type="text" onkeyup="return Mark1000Sep(this)" value="${defaultMax}" style="width:100%; text-align:right">
             </td>
