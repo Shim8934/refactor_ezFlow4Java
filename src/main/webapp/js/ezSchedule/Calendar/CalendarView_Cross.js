@@ -578,8 +578,8 @@ function Write() {
         DragEndItemID = DragStartItemID;
         DragStartItemID = tempIndex;
     }
-    var startdate = GetAttribute(document.getElementById(DragStartItemID), "day");
-    var enddate = GetAttribute(document.getElementById(DragEndItemID), "day");
+    var startdate = GetAttribute(document.getElementById(DragStartItemID), "day") + " 00:00:00";
+    var enddate = GetAttribute(document.getElementById(DragEndItemID), "day") + " 23:59:59";
 
     var pheight = window.screen.availHeight;
     var pwidth = window.screen.availWidth;
@@ -587,10 +587,10 @@ function Write() {
     var pLeft = (pwidth - 790) / 2;
     var feature = GetOpenPosition(790, 830);
     if (CrossYN()) {
-        window.open("schedule_write_Cross.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
-        window.open("schedule_write.aspx?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     }
     DragStartItemID = "";
     DragEndItemID = "";

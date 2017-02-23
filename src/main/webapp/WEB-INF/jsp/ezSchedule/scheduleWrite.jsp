@@ -136,14 +136,14 @@
 		        }
 		    }
 		    
-		    window.onresize = function () {
+		    window.onresize = function () {   	
 		        switch (pSelectTab) {
 		            case "schedule1":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
 		                break;
 		            case "schedule2":
 		                if(document.getElementById("receiverTr1").style.display == "none")
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 305 + "PX";
+		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
 		                else
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
 		                break;
@@ -274,10 +274,11 @@
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 395 + "PX";
 		                break;
 		            case "schedule2":
-		                if (document.getElementById("receiverTr1").style.display == "none")
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 305 + "PX";
-		                else
+		                if (document.getElementById("receiverTr1").style.display == "none") {		                	
+		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
+		                } else {		                	
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 365 + "PX";
+		                }
 		                break;
 		            case "schedule3":
 		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
@@ -472,7 +473,7 @@
 	                                	<c:if test="${scheduleId != ''}">
                                         <tr id="HolderEdit">
                                             <th><spring:message code='ezSchedule.t363'/></th>
-                                            <td colspan="2">
+                                            <td colspan="2" id="LabelOwner">
                                                 ${strLabelOwner}
                                             </td>
                                         </tr>
@@ -569,13 +570,13 @@
 	                    <td style="vertical-align:top;height:100%;" id="EdtorSize">
 	                    	<c:choose>
 	                            <c:when test="${EDITOR == 'TAGFREE'}">
-		                            <iframe id="message" class="viewbox" name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
+		                            <iframe id="message" class="viewbox" name="message" src="TagFree_TFX_Editor.aspx" style="padding:0; height:100%; width:99.8%;overflow:auto;"></iframe>
 		                        </c:when>
 	                            <c:when test="${EDITOR == 'DEXT'}">
-		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
+		                            <iframe id="message" class="viewbox" name="message" src="DEXT_Editor.aspx" style="padding:0; height:100%; width:99.8%;overflow:auto;"></iframe>
 		                        </c:when>
 		                        <c:otherwise>
-		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding:0; height:100%; width:100%;overflow:auto;"></iframe>
+		                            <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding:0; height:100%; width:99.8%;overflow:auto;"></iframe>
 		                        </c:otherwise>
 	                        </c:choose>
 	                    </td>
