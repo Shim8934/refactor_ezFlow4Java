@@ -170,6 +170,7 @@
 			            RealImageName(pAttachListXml);
 			        }
 			    }
+
 			    if (pMode == "new") {
 			        btn_PostDate_Clear();
 			    } else {
@@ -504,7 +505,8 @@
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
-		            if (configEndDate < currEndDate) {
+		            
+		            if (configEndDate <= currEndDate) {
 		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
 		                return;
 		            }
@@ -525,7 +527,7 @@
 		            alert("<spring:message code='ezBoard.t386' />");
 		            return;
 		        }
-		        if (pEndDate != "" && pEndDate < strNow) {
+		        if (pEndDate != "" && pEndDate <= strNow) {
 		            alert("<spring:message code='ezBoard.t387' />");
 		            return;
 		        }
