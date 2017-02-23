@@ -485,40 +485,6 @@
 	            }
 			}
 	
-			function SetRead_onclick() {
-				if(Read_FG != "true") {
-					alert("<spring:message code = 'ezCommunity.t423' />");
-					return;
-				}
-	
-				if(strListInfo == "") {
-					alert("<spring:message code = 'ezCommunity.t427' />");
-					return;
-				}
-				
-				var ret = confirm("<spring:message code = 'ezCommunity.t428' />");
-				
-				if(ret)	{
-					var arrList = new Array();
-					var strItemList = "";
-					var i=0;
-	
-					arrList = strListInfo.split(";");
-					
-					for(i=0;i<arrList.length-1;i++) {
-						strItemList += arrList[i].split(",")[0] + ";";
-					}
-					
-					arrList = null;		
-				
-					var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
-					xmlhttp.send();
-					xmlhttp = null;
-					refresh_onclick();
-				}
-			}
-	
 			function MemberInfo_onclick(pUserID) {
 				window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 			}

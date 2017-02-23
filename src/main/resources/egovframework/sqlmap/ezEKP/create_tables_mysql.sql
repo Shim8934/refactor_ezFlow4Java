@@ -328,6 +328,7 @@ DROP TABLE IF EXISTS `jmocha_default_quota`;
 CREATE TABLE `jmocha_default_quota` (
   `DOMAIN_NAME` varchar(100) NOT NULL,
   `MAX_STORAGE` double DEFAULT '0',
+  `WARN_STORAGE` double DEFAULT '0',
   PRIMARY KEY (`DOMAIN_NAME`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -1070,6 +1071,7 @@ DROP TABLE IF EXISTS `jmocha_user_quota`;
 CREATE TABLE `jmocha_user_quota` (
   `USER_ID` varchar(100) NOT NULL,
   `MAX_STORAGE` double DEFAULT '0',
+  `WARN_STORAGE` double DEFAULT '0',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

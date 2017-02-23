@@ -173,8 +173,8 @@
 		    }
 		
 		    var schedule_group_write_dialogArguments = new Array();
-		    function add_group() {
-		        if (!CrossYN()) {		        	
+		    function add_group() {	    	
+		        if (CrossYN()) {		        	
 		            schedule_group_write_dialogArguments[0] = "";
 		            schedule_group_write_dialogArguments[1] = add_group_Complete;
 		            var OpenWin = window.open("/ezSchedule/scheduleGroupWrite.do", "schedule_group_write", GetOpenWindowfeature(980, 670));

@@ -1175,7 +1175,7 @@
 		<![CDATA[
 			SELECT
 				replyid,
-				username$v_userInfo_lang$,
+				username$v_userInfo_lang$ AS username,
 				userid,
 				content,
 				DATE_ADD(writedate, INTERVAL #offset# MINUTE) AS writedate

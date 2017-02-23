@@ -564,9 +564,10 @@ public class EzEmailAdminController {
         
         String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
         
-        Double defaultMax = ezEmailUtil.getDefaultQuota(domainName);
+        Double[] returnedData = ezEmailUtil.getDefaultQuota(domainName);
         
-        model.addAttribute("defaultMax", (defaultMax)/1024.0);
+        model.addAttribute("defaultMax", returnedData[0]/1024);
+        model.addAttribute("defaultWarn", returnedData[1]/1024);
         
         return "admin/ezEmail/mailDefaultQuota";
     }
@@ -589,10 +590,11 @@ public class EzEmailAdminController {
         try {        
             String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
         
-            Document doc = commonUtil.convertStringToDocument(bodyData);
-            String maxStorage = doc.getElementsByTagName("HARDLIMIT").item(0).getTextContent();
+            Document doc = commonUtil.convertStringToDocument(bodyData);            
+            String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0).getTextContent();
+            String warnStorage = doc.getElementsByTagName("WARNSTORAGE").item(0).getTextContent();            
                         
-            ezEmailUtil.setDefaultQuota(domainName, maxStorage);
+            ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
         } catch (Exception e) {
             e.printStackTrace();
             

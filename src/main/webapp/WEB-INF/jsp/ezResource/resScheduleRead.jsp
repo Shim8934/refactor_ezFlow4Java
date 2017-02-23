@@ -372,7 +372,7 @@
             	    </div>
 					<table class="content" style="width: 100%">
 	                    <tr>
-    	                    <th><spring:message code='ezResource.t193' /></th>
+    	                    <th style="width: 70px;"><spring:message code='ezResource.t193' /></th>
         	                <td colspan="3" style="width: 100%">
             	                <div id="displayNM"></div>
                 	        </td>

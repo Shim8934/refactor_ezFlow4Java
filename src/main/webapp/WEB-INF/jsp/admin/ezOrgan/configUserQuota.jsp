@@ -12,10 +12,7 @@
     function window_onload() {
         main_change();
 
-        /*
-        check_change(document.getElementById("CheckQuota1"), document.getElementById("TextQuota1"));
         check_change(document.getElementById("CheckQuota2"), document.getElementById("TextQuota2"));
-        */
         check_change(document.getElementById("CheckQuota3"), document.getElementById("TextQuota3"));
     }
 
@@ -32,22 +29,16 @@
 
     function main_change() {
         if (document.getElementById("CheckUseDefault").checked == true) {
-            /*
-            document.getElementById("CheckQuota1").checked = false;
             document.getElementById("CheckQuota2").checked = false;
-            */
             document.getElementById("CheckQuota3").checked = false;
 
-            /*
-            check_change(document.getElementById("CheckQuota1"), document.getElementById("TextQuota1"));
             check_change(document.getElementById("CheckQuota2"), document.getElementById("TextQuota2"));
-            */
             check_change(document.getElementById("CheckQuota3"), document.getElementById("TextQuota3"));
         }
     }
 
     function OK_Click() {
-        for (i = 3; i < 4; i++) {
+        for (i = 2; i < 4; i++) {
             if (document.getElementById("TextQuota" + i).value != "" && parseFloat(document.getElementById("TextQuota" + i).value) != document.getElementById("TextQuota" + i).value) {
                 alert("<spring:message code='ezOrgan.t169' />");
                 return;
@@ -60,7 +51,7 @@
         }
 
         if (document.getElementById("CheckUseDefault").checked == false) {
-            if (/*document.getElementById("TextQuota1").value == "" || document.getElementById("TextQuota2").value == "" || */document.getElementById("TextQuota3").value == "") {
+            if (document.getElementById("TextQuota2").value == "" || document.getElementById("TextQuota3").value == "") {
                 alert("<spring:message code='ezOrgan.t172' />");
                 return;
             }
@@ -82,11 +73,8 @@
             createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "useDefault", "0");
         }
 
-        /*
-        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "mDBStorageQuota", parseInt(document.getElementById("TextQuota1").value * 1024));
-        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "mDBOverQuotaLimit", parseInt(document.getElementById("TextQuota2").value * 1024));
-        */
-        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "hardQuotaLimit", parseInt(document.getElementById("TextQuota3").value * 1024));
+        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "warnStorage", parseFloat(document.getElementById("TextQuota2").value * 1024));
+        createNodeAndAppandNodeText(xmlPara, objRoot, subNode, "maxStorage", parseFloat(document.getElementById("TextQuota3").value * 1024));
 
         xmlHTTP.open("POST", "/admin/ezOrgan/saveUserQuota.do", false);
         xmlHTTP.send(xmlpara);
@@ -109,18 +97,11 @@
       <th><spring:message code='ezOrgan.t175' /></th>
       <td><input id="CheckUseDefault" type="checkbox" name="CheckUseDefault" <c:if test="${userQuota == null}">checked="checked"</c:if> onclick="main_change();" /><spring:message code='ezOrgan.t176' /></td>
     </tr>
-    <!--
     <tr>
       <th ><spring:message code='ezOrgan.t177' /></th>
-      <td><input id="CheckQuota1" type="checkbox" name="CheckQuota1" onclick="check_change(document.getElementById('CheckQuota1'), document.getElementById('TextQuota1'));" />
-        <input name="TextQuota1" type="text" value="" id="TextQuota1" />GB </td>
+      <td><input id="CheckQuota2" type="checkbox" name="CheckQuota2" <c:if test="${userWarn != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota2'), document.getElementById('TextQuota2'));" />
+        <input name="TextQuota2" type="text" value="<c:if test="${userWarn != null}">${userWarn}</c:if>" id="TextQuota2" />GB </td>
     </tr>
-    <tr>
-      <th ><spring:message code='ezOrgan.t178' /></th>
-      <td><input id="CheckQuota2" type="checkbox" name="CheckQuota2" onclick="check_change(document.getElementById('CheckQuota2'), document.getElementById('TextQuota2'));" />
-        <input name="TextQuota2" type="text" value="" id="TextQuota2" />GB </td>
-    </tr>
-    -->
     <tr>
       <th ><spring:message code='ezStatistics.t1024' /></th>
       <td><input id="CheckQuota3" type="checkbox" name="CheckQuota3" <c:if test="${userQuota != null}">checked="checked"</c:if> onclick="check_change(document.getElementById('CheckQuota3'), document.getElementById('TextQuota3'));" />

@@ -468,7 +468,7 @@
 	            strXML += "<BOARDID>" + pBoardID + "</BOARDID>";
 	            strXML += "<ITEMID>" + pItemID + "</ITEMID>";
 	            strXML += "<REPLYID>" + pReplyID + "</REPLYID>";
-	            strXML += "<CONTENT>" + MakeXMLString(document.getElementById("onelinereply").value) + "</CONTENT>";
+	            strXML += "<CONTENT>" + encodeURIComponent(document.getElementById("onelinereply").value) + "</CONTENT>";
 	            strXML += "<PASSWORD></PASSWORD>";
 	            strXML += "</DATA>";
 
