@@ -87,7 +87,7 @@ public class LoginController {
 	 */
     
     @RequestMapping(value="/user/login/login.do")
-	public String loginView(@ModelAttribute("loginVO") LoginVO loginVO,	HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
+	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
     	if (commonUtil.isLoginCookieExists(request)) {
     	    return "redirect:/ezPortal/portalMain.do"; 
     	}
