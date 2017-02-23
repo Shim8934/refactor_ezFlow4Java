@@ -1026,7 +1026,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String displaySTime = "9";
 		String displayETime = "18";
 		
-		String pOffset = "+09:00";
+		String pOffset = userInfo.getOffset().split("\\|")[1];
 		int timeZoneStr = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 		
 		Date date = new Date();
@@ -1390,8 +1390,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String writerID = "";
 		String curStartDateTime = "";
 		String curEndDateTime = "";
-		/*String curStartDateTime2 = "";
-		String curEndDateTime2 = "";*/
 		String checkSDT = "";
 		String checkEDT = "";
 		String allDay = "";
@@ -1712,8 +1710,6 @@ public class EzResourceController extends EgovFileMngUtil {
 			String startDate = xmlDom.getElementsByTagName("startDateTime").item(0).getTextContent();
 			String endDate = xmlDom.getElementsByTagName("endDateTime").item(0).getTextContent();
 
-			/*xmlDom.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getDBTime(EgovDateUtil.convertDate(startDate, "", "yyyy-MM-dd HH:mm:ss", "")));
-			xmlDom.getElementsByTagName("endDateTime").item(0).setTextContent(ezResourceService.getDBTime(EgovDateUtil.convertDate(endDate, "", "yyyy-MM-dd HH:mm:ss", "")));*/
 			xmlDom.getElementsByTagName("startDateTime").item(0).setTextContent(EgovDateUtil.convertDate(startDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", ""));
 			xmlDom.getElementsByTagName("endDateTime").item(0).setTextContent(EgovDateUtil.convertDate(endDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", ""));
 				

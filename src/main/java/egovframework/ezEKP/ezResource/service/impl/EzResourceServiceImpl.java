@@ -167,7 +167,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID) throws Exception {
+	public List<ResGetScheduleListMainVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
 		map.put("v_PCOMPANYID", companyID);
@@ -950,34 +952,34 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (returnDom1 != null) {
 			for (int m=0; m<returnDom1.getElementsByTagName("ROW").getLength(); m++) {
 				returnStr.append("<ROW>");
-				returnStr.append("<num>"+returnDom1.getElementsByTagName("NUM").item(m).getTextContent()+"</num>");
-				returnStr.append("<pnum>"+returnDom1.getElementsByTagName("PNUM").item(m).getTextContent()+"</pnum>");
-				returnStr.append("<ownerID>"+returnDom1.getElementsByTagName("OWNERID").item(m).getTextContent()+"</ownerID>");
-				returnStr.append("<title><![CDATA["+returnDom1.getElementsByTagName("TITLE").item(m).getTextContent()+"]]></title>");
-				returnStr.append("<location><![CDATA["+returnDom1.getElementsByTagName("LOCATION").item(m).getTextContent()+"]]></location>");
-				returnStr.append("<timeDisplay><![CDATA["+returnDom1.getElementsByTagName("TIMEDISPLAY").item(m).getTextContent()+"]]></timeDisplay>");
-				returnStr.append("<startDate>"+returnDom1.getElementsByTagName("STARTDATE").item(m).getTextContent()+"</startDate>");
-				returnStr.append("<endDate>"+returnDom1.getElementsByTagName("ENDDATE").item(m).getTextContent()+"</endDate>");
-				returnStr.append("<alertTime>"+returnDom1.getElementsByTagName("ALERTTIME").item(m).getTextContent()+"</alertTime>");
-				returnStr.append("<reFlag>"+returnDom1.getElementsByTagName("REFLAG").item(m).getTextContent()+"</reFlag>");
-				returnStr.append("<gresFlag>"+returnDom1.getElementsByTagName("GRESFLAG").item(m).getTextContent()+"</gresFlag>");
-				returnStr.append("<writerID>"+returnDom1.getElementsByTagName("WRITERID").item(m).getTextContent()+"</writerID>");
-				returnStr.append("<content><![CDATA["+returnDom1.getElementsByTagName("CONTENT").item(m).getTextContent()+"]]></content>");
-				returnStr.append("<importance>"+returnDom1.getElementsByTagName("IMPORTANCE").item(m).getTextContent()+"</importance>");
-				returnStr.append("<entryList>"+returnDom1.getElementsByTagName("ENTRYLIST").item(m).getTextContent()+"</entryList>");
-				returnStr.append("<allDay>"+returnDom1.getElementsByTagName("ALLDAY").item(m).getTextContent()+"</allDay>");
-				returnStr.append("<writeDay>"+returnDom1.getElementsByTagName("WRITEDAY").item(m).getTextContent()+"</writeDay>");
-				returnStr.append("<attachFlag>"+returnDom1.getElementsByTagName("ATTACHFLAG").item(m).getTextContent()+"</attachFlag>");
-				returnStr.append("<characterID>"+returnDom1.getElementsByTagName("CHARACTERID").item(m).getTextContent()+"</characterID>");
-				returnStr.append("<approveFlag>"+returnDom1.getElementsByTagName("APPROVEFLAG").item(m).getTextContent()+"</approveFlag>");
-				returnStr.append("<owner_nm><![CDATA["+returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent()+"]]></owner_nm>");
-				returnStr.append("<dept_name><![CDATA["+returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent()+"]]></dept_name>");
+				returnStr.append("<num>" + returnDom1.getElementsByTagName("NUM").item(m).getTextContent() + "</num>");
+				returnStr.append("<pnum>" + returnDom1.getElementsByTagName("PNUM").item(m).getTextContent() + "</pnum>");
+				returnStr.append("<ownerID>" + returnDom1.getElementsByTagName("OWNERID").item(m).getTextContent() + "</ownerID>");
+				returnStr.append("<title><![CDATA[" + returnDom1.getElementsByTagName("TITLE").item(m).getTextContent() + "]]></title>");
+				returnStr.append("<location><![CDATA[" + returnDom1.getElementsByTagName("LOCATION").item(m).getTextContent() + "]]></location>");
+				returnStr.append("<timeDisplay><![CDATA[" + returnDom1.getElementsByTagName("TIMEDISPLAY").item(m).getTextContent() + "]]></timeDisplay>");
+				returnStr.append("<startDate>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("STARTDATE").item(m).getTextContent(), offset, false) + "</startDate>");
+				returnStr.append("<endDate>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("ENDDATE").item(m).getTextContent(), offset, false) + "</endDate>");
+				returnStr.append("<alertTime>" + returnDom1.getElementsByTagName("ALERTTIME").item(m).getTextContent() + "</alertTime>");
+				returnStr.append("<reFlag>" + returnDom1.getElementsByTagName("REFLAG").item(m).getTextContent() + "</reFlag>");
+				returnStr.append("<gresFlag>" + returnDom1.getElementsByTagName("GRESFLAG").item(m).getTextContent() + "</gresFlag>");
+				returnStr.append("<writerID>" + returnDom1.getElementsByTagName("WRITERID").item(m).getTextContent() + "</writerID>");
+				returnStr.append("<content><![CDATA[" + returnDom1.getElementsByTagName("CONTENT").item(m).getTextContent() + "]]></content>");
+				returnStr.append("<importance>" + returnDom1.getElementsByTagName("IMPORTANCE").item(m).getTextContent() + "</importance>");
+				returnStr.append("<entryList>" + returnDom1.getElementsByTagName("ENTRYLIST").item(m).getTextContent() + "</entryList>");
+				returnStr.append("<allDay>" + returnDom1.getElementsByTagName("ALLDAY").item(m).getTextContent() + "</allDay>");
+				returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnDom1.getElementsByTagName("WRITEDAY").item(m).getTextContent(), offset, false) + "</writeDay>");
+				returnStr.append("<attachFlag>" + returnDom1.getElementsByTagName("ATTACHFLAG").item(m).getTextContent() + "</attachFlag>");
+				returnStr.append("<characterID>" + returnDom1.getElementsByTagName("CHARACTERID").item(m).getTextContent() + "</characterID>");
+				returnStr.append("<approveFlag>" + returnDom1.getElementsByTagName("APPROVEFLAG").item(m).getTextContent() + "</approveFlag>");
+				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
+				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
 				
 				if (pType.equals("")) {
-					returnStr.append("<owner_nm2><![CDATA["+returnDom1.getElementsByTagName("OWNERNM2").item(m).getTextContent()+"]]></owner_nm2>");
-					returnStr.append("<dept_name2><![CDATA["+returnDom1.getElementsByTagName("DEPTNM2").item(m).getTextContent()+"]]></dept_name2>");
-					returnStr.append("<jobtitle><![CDATA["+returnDom1.getElementsByTagName("JOBTITLE").item(m).getTextContent()+"]]></jobtitle>");
-					returnStr.append("<jobtitle2><![CDATA["+returnDom1.getElementsByTagName("JOBTITLE2").item(m).getTextContent()+"]]></jobtitle2>");
+					returnStr.append("<owner_nm2><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM2").item(m).getTextContent() + "]]></owner_nm2>");
+					returnStr.append("<dept_name2><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM2").item(m).getTextContent() + "]]></dept_name2>");
+					returnStr.append("<jobtitle><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE").item(m).getTextContent() + "]]></jobtitle>");
+					returnStr.append("<jobtitle2><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE2").item(m).getTextContent() + "]]></jobtitle2>");
 				}
 				
 				returnStr.append("</ROW>");
@@ -993,7 +995,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnRepetition += commonUtil.getQueryResult(getScheduleListRept.get(j));
 			}
 		} else {
-			List<ResGetScheduleListMainVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID);
+			List<ResGetScheduleListMainVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
 
 			for(int j=0; j<getScheduleListReptMain.size(); j++) {
 				returnRepetition += commonUtil.getQueryResult(getScheduleListReptMain.get(j));
@@ -1035,7 +1037,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
 						returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
 						returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
-						returnStr.append("<writeDay>" + returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent() + "</writeDay>");
+						returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
 						returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
 						returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
 						returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
