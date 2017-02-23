@@ -1568,9 +1568,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		
-		/*curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
-		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");*/
-		
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
 
