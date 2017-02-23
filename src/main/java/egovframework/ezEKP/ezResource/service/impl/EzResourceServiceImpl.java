@@ -874,11 +874,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				cal.setTime(format.parse(startDateTime));
 				returnStr.append("<dstartTime>" + (cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)) + "</dstartTime>");
-				returnStr.append("<dsDaytype>" + cal.get(Calendar.DAY_OF_WEEK) + "</dsDaytype>");
+				returnStr.append("<dsDaytype>" + (cal.get(Calendar.DAY_OF_WEEK) - 1) + "</dsDaytype>");
 				
 				cal.setTime(format.parse(endDateTime));
 				returnStr.append("<dendTime>" + (cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE)) + "</dendTime>");
-				returnStr.append("<deDaytype>" + cal.get(Calendar.DAY_OF_WEEK) + "</deDaytype>");
+				returnStr.append("<deDaytype>" + (cal.get(Calendar.DAY_OF_WEEK) - 1) + "</deDaytype>");
 				returnStr.append("<alldayevent>"+ allDay +"</alldayevent>");
 				
 				String timeDisplay = scheRSDom.getElementsByTagName("timeDisplay").item(i).getTextContent();
