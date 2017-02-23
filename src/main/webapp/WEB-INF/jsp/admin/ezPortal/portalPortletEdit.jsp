@@ -50,13 +50,13 @@
 				
 				for (var i=0; i<xmldom.getElementsByTagName("CATEGORY").length; i++) {
 					if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
-						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.t990033'/>" + "&nbsp;";	
+						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.jjs01'/>" + "&nbsp;";	
 					} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4076') {
-						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.t990034'/>" + "&nbsp;";
+						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.jjs02'/>" + "&nbsp;";
 					} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4077') {
-						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.t990035'/>" + "&nbsp;";
+						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.jjs03'/>" + "&nbsp;";
 					} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
-						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.t990036'/>" + "&nbsp;";
+						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.jjs04'/>" + "&nbsp;";
 					}
 					portletHTML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
 				    //portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)).replace("<spring:message code='ezPortal.t147'/>", ""); + " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";

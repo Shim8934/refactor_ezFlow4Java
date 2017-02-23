@@ -38,12 +38,12 @@
 		    var pUse_IE11Browser = "<c:out value='${Use_IE11Browser}' />";
 	
 		    window.onload = function () {
-		        var WriterName ="<c:out value='${userInfo.displayName1}' />";
+		        var WriterName ="<c:out value='${displayName}' />";
 		        var WriteDate = window.opener.GetStartDate();
 		        var pEndDate = window.opener.GetEndDate();
-		        var WriterDeptName = "<c:out value='${userInfo.deptName1}' />";
-		        var WriterTitle = "<c:out value='${userInfo.title1}' />";
-		        var WriterPhone = "<c:out value='${userInfo.phone}' />";
+		        var WriterDeptName = "<c:out value='${deptName}' />";
+		        var WriterTitle = "<c:out value='${title}' />";
+		        var WriterPhone = "<c:out value='${phone}' />";
 		        var Title = window.opener.document.getElementById('txtTitle').value;
 	
 		        if (CrossYN()) {

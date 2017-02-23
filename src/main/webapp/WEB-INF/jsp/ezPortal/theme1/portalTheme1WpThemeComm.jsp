@@ -12,7 +12,7 @@
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var bestclick = false;
-	        var strlang = "%{userInfo.lang}";
+	        var strlang = "{userInfo.lang}";
 	        var pUse_IE11Browser = "${useIE11Browser}";
 	
 	        window.onload = function () {
@@ -193,7 +193,7 @@
 	                        listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 	                        listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
-	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "명) </strong>";
+	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
 	                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
 	                    }
 	                    else {
@@ -207,7 +207,7 @@
 	                        listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/theme01/main/img_dotCommunity1.png' alt='' /></span>";
 	                        listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                        listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
-	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "명) </strong>";
+	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
 	                        listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
 	                    }
 	                    for (var i = 1 ; i < SelectNodes(listdom, "DATA/ROW").length; i++) {
@@ -217,7 +217,7 @@
 	                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME");
 	                        else
 	                            listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME2");
-	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "명) </strong></dd>";
+	                        listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong></dd>";
 	                    }
 	
 	                    listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div></div></div>";
@@ -349,7 +349,7 @@
 	                listHTML += "<span class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong onclick='move_cop(this)' style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "'>" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME");
-	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "명) </strong>";
+	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
 	                listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
 	            }
 	            else {
@@ -361,7 +361,7 @@
 	                listHTML += "<span onclick='move_cop(this)' class='img_dotCommunity1'><img src='/images/kr/community/icon_newCommunity04.png' alt='' /></span>";
 	                listHTML += "<strong style='cursor:pointer' code='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNO");
 	                listHTML += "' type='" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBCONFIRMTYPE") + "' >" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBNAME2");
-	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "명) </strong>";
+	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong>";
 	                listHTML += "<br />" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[0], "C_CLUBDESC") + "</dt>";
 	            }
 	            for (var i = 1 ; i < SelectNodes(listdom, "DATA/ROW").length; i++) {
@@ -371,7 +371,7 @@
 	                    listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME");
 	                else
 	                    listHTML += SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_CLUBNAME2");
-	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "명) </strong></dd>";
+	                listHTML += " (" + SelectSingleNodeValue(SelectNodes(listdom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code='main.t20000'/>) </strong></dd>";
 	            }
 	
 	            listHTML += "</dl></div><div id='newcomm' class='layout_bg' style='display:none'></div>";

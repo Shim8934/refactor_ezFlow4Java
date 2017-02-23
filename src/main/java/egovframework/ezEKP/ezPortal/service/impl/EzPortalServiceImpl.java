@@ -1194,7 +1194,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		if (pMode != null && pMode.equals("edit")) {
 			if (checkEditRightBln(parentUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
 				String newPageID = UUID.randomUUID().toString();
-				getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, egovMessageSource.getMessage("ezPortal.t990038", locale), egovMessageSource.getMessage("ezPortal.t990037", locale), 2, 2, 2, pCompanyID, userInfo.getTenantId());
+				getUserInfo3(parentUID, "Y", pUserID, pGubunFlag, newPageID, pUserName, egovMessageSource.getMessage("ezPortal.jjs06", locale), egovMessageSource.getMessage("ezPortal.jjs05", locale), 2, 2, 2, pCompanyID, userInfo.getTenantId());
 			}
 		}
 		

@@ -10,7 +10,7 @@
 		
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="더보기"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont">
  	 				<c:choose>
   						<c:when test="${pPollItemSeq != 0}">

@@ -25,7 +25,7 @@
 				
 				        window.returnValue = fileinfo;
 					} else {
-						alert("에러발생");
+						alert("error");
 					}
 				};
 			</script>

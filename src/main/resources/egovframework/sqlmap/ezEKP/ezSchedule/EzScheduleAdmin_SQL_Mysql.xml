@@ -10,41 +10,34 @@
 		<result property="description"		column="DESCRIPTION"		columnIndex="3"/>
 		<result property="deptName"			column="DEPTNAME"			columnIndex="4"/>		
 	</resultMap>
-					
+	<!-- checked -->				
 	<select id="EzScheduleAdminDAO.scheduleGetShareManage" parameterClass="map" resultMap="scheduleShareVO">
 		<![CDATA[
-			SELECT				
-				idx,
-				username,
-				description,
-				deptname	 
-        	FROM ( 
-        			SELECT        				
-                      	A.idx,
-                      	CASE #v_LANGDATA#
-                        	WHEN '1' THEN username
-                            WHEN '2' THEN username2
-                      		ELSE username2
-                      	END username  ,
-                      	CASE #v_LANGDATA#
-	                        WHEN '1' THEN B.description
-                            WHEN '2' THEN B.description2
-                      		ELSE B.description2
-                      	END description,
-                      	CASE #v_LANGDATA#
-							WHEN '1' THEN departmentname
-                            WHEN '2' THEN departmentname2
-                      		ELSE departmentname2
-                      	END deptname  
-               		FROM 
-               			TBL_SCHEDULE_PUBLIC_DEPT A INNER JOIN TBL_USERMASTER B ON A.usercn = B.cn
-               		WHERE
-               			A.tenant_id = #v_TENANTID#
-               		ORDER BY A.idx DESC	
-			) PUBLIC_DEPARTMEN
+			select        				
+				a.idx as idx,
+				case #v_LANGDATA#
+                	when '1' then username
+					when '2' then username2
+					else username2
+				end username,
+				case #v_LANGDATA#
+					when '1' then b.description
+					when '2' then b.description2
+					else b.description2
+				end description,
+				case #v_LANGDATA#
+					when '1' then departmentname
+					when '2' then departmentname2
+					else departmentname2
+				end deptname
+			from 
+				tbl_schedule_public_dept a inner join tbl_usermaster b on a.usercn = b.cn and a.tenant_id = b.tenant_id
+			where
+				a.tenant_id = #v_TENANTID#
+			order by a.idx
 		]]>
 	</select>
-	
+	<!-- checked -->
 	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedule_public_dept(
@@ -54,7 +47,7 @@
 			)
 		]]>			
 	</insert>
-	
+	<!-- checked -->
 	<insert id="EzScheduleAdminDAO.scheduleSaveHoliday" parameterClass="map">
 		<![CDATA[
 			insert into tbl_holidaylist(
@@ -64,7 +57,7 @@
 			)
 		]]>
 	</insert>
-	
+	<!-- checked -->
 	<insert id="EzScheduleAdminDAO.scheduleInsertLunarUse" parameterClass="map">
 		<![CDATA[
 			insert into tbl_lunaruse(
@@ -74,7 +67,7 @@
 			)
 		]]>
 	</insert>
-	
+	<!-- checked -->
 	<insert id="EzScheduleAdminDAO.scheduleInsertRegi" parameterClass="map">
 		<![CDATA[
 			insert into tbl_previoslyregi(
@@ -84,7 +77,7 @@
 			)
 		]]>
 	</insert>
-	
+	<!-- checked -->
 	<update id="EzScheduleAdminDAO.scheduleChangeHolidayUse" parameterClass="map">
 		<![CDATA[
 			update 
@@ -97,7 +90,7 @@
 				tenant_id = #v_TENANTID#
 		]]>	
 	</update>
-	
+	<!-- checked -->
 	<update id="EzScheduleAdminDAO.scheduleUpdateHoliday" parameterClass="map">
 		<![CDATA[
 			update 
@@ -116,7 +109,7 @@
 				tenant_id = #v_TENANTID#
 		]]>	
 	</update>
-	
+	<!-- checked -->
 	<update id="EzScheduleAdminDAO.scheduleUpdateLunarUse" parameterClass="map">
 		<![CDATA[
 			update 
@@ -129,7 +122,7 @@
 				tenant_id = #v_TENANTID#
 		]]>	
 	</update>
-	
+	<!-- checked -->
 	<update id="EzScheduleAdminDAO.scheduleUpdateRegi" parameterClass="map">
 		<![CDATA[
 			update 
@@ -142,7 +135,7 @@
 				tenant_id = #v_TENANTID#
 		]]>	
 	</update>
-	
+	<!-- checked -->
 	<delete id="EzScheduleAdminDAO.scheduleDelShareDept" parameterClass="map">
 		<![CDATA[
 			delete from
@@ -153,7 +146,7 @@
 				tenant_id = #v_TENANTID#
 		]]>				
 	</delete>
-	
+	<!-- checked -->
 	<delete id="EzScheduleAdminDAO.scheduleDelHoliday" parameterClass="map">
 		<![CDATA[
 			delete from

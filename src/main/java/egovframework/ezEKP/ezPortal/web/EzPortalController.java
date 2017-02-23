@@ -2658,7 +2658,7 @@ public class EzPortalController extends EgovFileMngUtil {
         String useStartPage = "";
         String deptPathOrgan = "";
 		
-		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.jjs08", locale), egovMessageSource.getMessage("ezPortal.jjs07", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 		logger.debug("userPortalPage="+userPortalPage);
 		

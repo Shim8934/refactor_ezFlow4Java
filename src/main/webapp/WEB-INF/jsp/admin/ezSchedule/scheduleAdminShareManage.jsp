@@ -163,10 +163,10 @@
 		    </ul>
 		</div>
 	    <br />
-	    <table style="width: 750px; height: 385px;" border="0">
+	    <table style="width: 750px; height: 385px;" >
             <tr>
                 <td>
-                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 750px; height: 385px;">
+                    <div style="border: 1px solid #dbdbda;border-top:0px; width: 750px; height: 396px;">
                         <table class="mainlist" style="width: 100%;">
                             <tr>
                                 <th style="width: 38%;"><span><spring:message code='ezSchedule.t999' /></span></th>
