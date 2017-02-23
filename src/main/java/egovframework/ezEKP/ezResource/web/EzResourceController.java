@@ -815,7 +815,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		
 		return "/ezResource/resModClsItem";
-	
 	}
 	
 	/**
