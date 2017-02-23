@@ -101,7 +101,7 @@
 	        function NewBoardmore_btnClick() {
 	            parent.location.href = "/ezBoard/boardMainRedirect.do";
 	            if (CrossYN())
-	                parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}&BoardName=" + escape("새게시물") + "&BoardType=N";
+	                parent.frames["right"].location.href = "/myoffice/ezBoardSTD/BoardItemList_Photo.aspx?BoardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}&BoardName=" + escape("<spring:message code='ezBoard.t480'/>") + "&BoardType=N";
 	        }
 		</script>
 	</head>

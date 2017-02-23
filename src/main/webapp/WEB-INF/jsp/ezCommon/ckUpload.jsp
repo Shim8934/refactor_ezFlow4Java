@@ -13,7 +13,7 @@
 					    var strLocation = strImagePath;
 					    parent.UploadComplete(strLocation);
 					} else {
-						alert("에러발생");
+						alert("error");
 					}
 				};
 			</script>

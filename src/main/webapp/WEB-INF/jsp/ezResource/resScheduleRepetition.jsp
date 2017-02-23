@@ -335,7 +335,7 @@
     			<th align="right"></th>
     			<td>
     				<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton"><spring:message code="ezResource.t317"/>
-      				<input type="text" id="Edatepicker" style="width:80px;text-align:center">
+      				<input type="text" id="Edatepicker" style="width:80px;text-align:center" onFocus="EndTimeSet.checked = true">
       			</td>
   			</tr>
 		</table>
