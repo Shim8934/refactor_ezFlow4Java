@@ -383,7 +383,7 @@
 			FROM 
 				TBL_USERMASTER
             WHERE
-            	<isEqual property="subDept" compareValue="Y">
+            	<isEqual property="v_SUBDEPT" compareValue="Y">
             		DEPARTMENT IN ( 
             						SELECT 
             							CN 
@@ -395,7 +395,7 @@
                                 		TENANT_ID = #v_TENANTID# 	 
                                 	) 
             	</isEqual>
-            	<isNotEqual property="subDept" compareValue="Y">
+            	<isNotEqual property="v_SUBDEPT" compareValue="Y">
             		DEPARTMENT = #v_DEPTID# 
             	</isNotEqual>
             AND
