@@ -30,7 +30,7 @@
 
 		    	function MemberInfo_onDblclick(pSelUserID) {
 			        var feature = GetOpenPosition(420, 438);
-			        window.open("/ezCommon/showPersonInfo.do?ID=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+			        window.open("/ezCommon/showPersonInfo.do?id=" + pSelUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    	}
 
 		    	function btnAdd_Click() {
