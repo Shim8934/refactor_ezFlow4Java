@@ -815,6 +815,10 @@
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
+		        
+		        try {
+					leftCountRf();
+				} catch (e) {}
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -865,6 +869,10 @@
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
+		                	try {
+								leftCountRf();
+							} catch (e) {}
+							
 		                    window.location.reload();
 		                    window.close();
 		                }
@@ -874,6 +882,9 @@
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
 		            if (ret == "OK") {
+			            try {
+							leftCountRf();
+						} catch (e) {}
 		                window.location.reload();
 		                window.close();
 		            }
@@ -925,6 +936,7 @@
 		    function window_reload() {
 		        window.location.href = window.location.href;
 		    }
+		    
 		    function doLayerPopup(obj) {
 		        btn_PostDate_Clear();
 		        document.getElementById("chkSearchSub").checked = false;

@@ -2711,7 +2711,6 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String getBoardItemView(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-        String apprFlag = "Y";
         String extenLang = "1";
         String location = "";
         String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
@@ -2826,7 +2825,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("boardAttrCount", boardAttrCount);
         model.addAttribute("adjacentItem", adjacentItem);
         model.addAttribute("boardPropertyVO", boardPropertyVO);
-        model.addAttribute("apprFlag", apprFlag);
+        model.addAttribute("apprFlag", boardItem.getApprFlag());
         model.addAttribute("extenLang", extenLang);
         model.addAttribute("location", location);
         model.addAttribute("useOcs", useOcs);

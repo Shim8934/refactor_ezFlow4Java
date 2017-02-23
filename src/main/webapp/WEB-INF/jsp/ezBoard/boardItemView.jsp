@@ -910,6 +910,9 @@
 		                else
 		                    alert("<spring:message code='ezBoard.t999009' />");
 		            }
+		            try {
+						window.opener.leftCountRf();
+					} catch (e) {}
 		
 		            try {
 		                window.opener.refresh_onclick();
