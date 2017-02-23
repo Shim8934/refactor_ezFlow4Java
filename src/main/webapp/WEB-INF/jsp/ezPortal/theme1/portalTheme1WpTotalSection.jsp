@@ -655,7 +655,7 @@
 				  <!-- top_search  -->
 	     		<article class="top_search">
 	        		<p class="search_title"><spring:message code="main.t00029" /></p>
-					<input id="input_search" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" /><input type="image" src="/images/kr/theme01/main/top_search_btn.gif" alt="검색"  class="topsearch_btn " onclick="Emp_Search()">
+					<input id="input_search" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" /><input type="image" src="/images/kr/theme01/main/top_search_btn.gif" alt="<spring:message code='ezPortal.t252' />"  class="topsearch_btn " onclick="Emp_Search()">
 	    		</article> 
 	     		<!-- /top_search  -->
 	     		<!-- //section1_left -->

@@ -100,19 +100,19 @@
 	</resultMap>
 	
 	<resultMap class="ResGetRepDateTimesVO" 	id="resGetRepDateTimesVO">
-		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
-		<result property="num"					column="NUM"						columnIndex="2"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>
-		<result property="startDateTime"		column="STARTDATETIME"		columnIndex="4"/>
-		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5"/>
-		<result property="reWay"					column="REWAY"					columnIndex="6"/>
-		<result property="reNum"					column="RENUM"					columnIndex="7" 		nullValue="NULL"/>
-		<result property="reDay"					column="REDAY"					columnIndex="8" 		nullValue="NULL"/>
-		<result property="reYoil"					column="REYOIL"					columnIndex="9"			nullValue="NULL"/>
-		<result property="reMonth"				column="REMONTH"				columnIndex="10"		nullValue="NULL"/>
-		<result property="reOrd"					column="REORD"					columnIndex="11"		nullValue="NULL"/>
-		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
-		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="NULL"/>
+		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
+		<result property="num"					column="NUM"					columnIndex="2" />
+		<result property="companyID"			column="COMPANYID"				columnIndex="3" />
+		<result property="startDateTime"		column="STARTDATETIME"			columnIndex="4" />
+		<result property="endDateTime"			column="ENDDATETIME"			columnIndex="5" />
+		<result property="reWay"				column="REWAY"					columnIndex="6" />
+		<result property="reNum"				column="RENUM"					columnIndex="7" 		nullValue="" />
+		<result property="reDay"				column="REDAY"					columnIndex="8" 		nullValue="" />
+		<result property="reYoil"				column="REYOIL"					columnIndex="9" 		nullValue="" />
+		<result property="reMonth"				column="REMONTH"				columnIndex="10" 		nullValue="" />
+		<result property="reOrd"				column="REORD"					columnIndex="11"		nullValue="" />
+		<result property="endFlag"				column="ENDFLAG"				columnIndex="12" />
+		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="" />
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleListTermVO" id="resGetScheduleListTermVO">

@@ -1,79 +1,125 @@
-var strLang1 = "空きのファイルは添付することができません。";
-var strLang2 = "添付可能なファイルサイズは2MBまでです。";
-var strLang3 = "をアップロード中です… ";
-var strLang4 = "をアップロード中、エラーが発生しました。¥¥n¥¥nサーバ側エラー";
-var strLang5 = "ファイルが開いているため添付できません。\n\n ファイルを閉じてから添付してください。";
-var strLang6 = "をアップロード中、エラーが発生しました。";
-var strLang7 = "保存の場合";
-var strLang8 = "キャンセルの場合";
-var strLang11 = "切り取り";
-var strLang12 = "コピー";
-var strLang13 = "貼り付け";
-var strLang14 = "削除";
-var strLang15 = "すべて選択";
-var strLang16 = "フォントの色";
-var strLang17 = "フォントの色設定";
-var strLang18 = "クリックが発生したらとじるようにします。";
-var strLang19 = "Gullim;word-break:break-all";
-var strLang20 = "Gullim";
-var strLang21 = "Gullim";
-var strLang22 = "添付ファイル名";
-var strLang23 = "ファイルサイズ";
-var strLang24 = "ファイルサイズ";
-var strLang25 = "生成";
-var strLang26 = "渡すパラメーターノード生成 ListType";
-var strLang27 = "添付可能なファイルサイズは ";
-var strLang28 = "までです。";
-var strLang29 = "添付イメージを削除してよろしいですか?";
-var strLang30 = "デリミター( *)[_- )に該当のnode 連結";
-var strLang31 = "エラーが発生しました。";
-var strLang32 = "添付ファイルを削除してよろしいですか?";
-var strLang33 = "エラーが発生しました。";
-var strLang34 = "・";
-var strLang35 = "添付ファイル名に次の文字は使用できません。";
-var strLang36 = "修正の時、イメージは一つだけ入れられるようにする。";
-var strLang37 = "すべてのイメージファイル\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0";
-var strLang38 = "一回につき、5枚まで登録できます。";
-var strLang39 = "入力可能なファイル名の長さは111bytesまでです。";
-var strLang40 = "はイメージファイル形式ではありません。";
-var strLang41 = "教員グループ　正常的なアップロードの時、該当するファイル名を入力する。";
-var strLang42 = "タイトルを入力してください。";
-var strLang43 = "タイトル";
-var strLang44 = "位置";
-var strLang45 = "個人";
-var strLang46 = "部署";
-var strLang47 = "会社";
-var strLang48 = "グループ";
-var strLang49 = "共有";
-var strLang50 = "午前";
-var strLang51 = "エラーが発生しました。";
-var strLang52 = "日程を保存しました。";
-var strLang53 = "参加者リスト";
-var strLang54 = "エラーが発生しました。 - ";
-var strLang55 = "に該当するユーザがいません。";
-var strLang56 = "すでに招待リストに登録されています。";
-var strLang57 = "添付ファイルのサイズは5MBまでです。";
-var strLang58 = "をアップロード中、エラーが発生しました。¥¥n¥¥nサーバ側エラー";
-var strLang59 = "削除された項目がありません。";
-var strLang60 = "削除した項目を全部復元しますか?";
-var strLang61 = "削除した項目の復元中、エラーが発生しました。";
-var strLang62 = "削除した項目を復元しました。";
-var strLang63 = "繰り返し周期 : ";
-var strLang64 = "毎日";
-var strLang65 = "毎週";
-var strLang66 = "毎月";
-var strLang67 = "毎年";
-var strLang68 = "約束時間 : ";
-var strLang69 = "終日";
-var strLang70 = "五";
-var strLang71 = "削除した項目 : ";
-var strLang72 = "回目";
-var strLang73 = "は";
-var strLang74 = "字を超えることができません。";
-var strLang75 = "アップロードのできない拡張子ファイルです。";
-var strLang80 = "以前"
-var strLang81 = "次"
-var strLang82 = "総 "
-var strLang83 = "件"
-var strLang535 = "データが存在しません。";
-var strLang5351 = "人";
+// \ezCommunity\board\attach.js
+var strLang1 = "Can not attach empty file."
+var strLang2 = "The attached file size can not exceed 2MB."
+var strLang3 = " - Uploading. "
+var strLang4 = " - Error occurred while uploading.\n\nServer Error"
+var strLang5 = "The file to attach is being opened in use. \n\n Close that file and attach again."
+var strLang6 = " - Error occurred while uploading."
+var strLang7 = "저장인 경우"
+var strLang8 = "취소의 경우"
+// \ezCommunity\board\bbs_edit.aspx1.js
+// \ezCommunity\board\bbs_edit.aspx2.js
+// \ezCommunity\board\bbs_edit.aspx3.js
+// \ezCommunity\board\bbs_edit_new.aspx1.js
+// \ezCommunity\board\bbs_edit_new.aspx2.js
+// \ezCommunity\board\bbs_edit_new.aspx3.js
+// \ezCommunity\board\bbs_view.aspx1.js
+// \ezCommunity\board\bbs_view.aspx~1.js
+// \ezCommunity\commhome\admin\Board\OrganAdmin\checkName2.htm1.js
+// \ezCommunity\commhome\admin\Board\OrganAdmin\SelectTarget.aspx1.js
+// \ezCommunity\commhome\admin\Board\BoardACL.aspx1.js
+// \ezCommunity\commhome\admin\Board\BoardMoveSelect.aspx1.js
+// \ezCommunity\commhome\admin\Board\BoardOrder.aspx1.js
+// \ezCommunity\commhome\admin\Board\BoardSelect.aspx1.js
+// \ezCommunity\commhome\admin\Board\SearchBoard.aspx1.js
+// \ezCommunity\commhome\poll\poll_add.aspx1.js
+// \ezCommunity\common\common.js
+// \ezCommunity\controls\webclientutil.js
+// \ezCommunity\Editor\js\dhtmled.js
+var strLang11 = "Cur"
+var strLang12 = "Copy"
+var strLang13 = "Paste"
+var strLang14 = "Delete"
+var strLang15 = "Select all"
+var strLang16 = "Font color"
+var strLang17 = "Set font color"
+var strLang18 = "클릭이 발생되면 닫히도록 합니다."
+var strLang19 = "Arial;word-break:break-all"
+// \ezCommunity\Editor\js\사본 - dhtmled.js
+var strLang20 = "Arial"
+var strLang21 = "Arial"
+// \ezCommunity\Editor\dhtml.js
+// \ezCommunity\Editor\Editor.asp1.js
+// \ezCommunity\Editor\Editor.asp2.js
+// \ezCommunity\Editor\kaoni_ActiveX.js
+// \ezCommunity\htm\checkName.htm1.js
+// \ezCommunity\js\AttachItem.js
+var strLang22 = "Attachment filename"
+var strLang23 = "Filesize"
+var strLang24 = "Filesize"
+var strLang25 = "Create"
+var strLang26 = "넘겨줄 파라미터 노드 생성 ListType"
+// \ezCommunity\js\AttachMain.js
+var strLang27 = "The attached file size can not exceed "
+var strLang28 = "MB."
+var strLang29 = "Do you want to delete the attached image?"
+var strLang30 = "구분문자( *)[_- )로 해당node 연결"
+var strLang31 = "Error occurred while deleting."
+var strLang32 = "Do you want to delete attachment?"
+var strLang33 = "Error occurred while adding file."
+var strLang34 = "ㆍ"
+var strLang35 = "Can not use attachment filename with following characters - "
+var strLang36 = "수정시에는 이미지 하나만 넣을 수 있도록 한다."
+var strLang37 = "All image file\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0"
+var strLang38 = "Uploading can only 5 files at once."
+var strLang39 = "The length of filename can not exceed 111bytes."
+var strLang40 = " - It is not image file type."
+var strLang41 = ""
+// \ezCommunity\js\ErrorHandler.js
+// \ezCommunity\js\kaoni_ActiveX.js
+// \ezCommunity\js\schedule_write.js
+var strLang42 = "Enter a subject."
+var strLang43 = "Subject"
+var strLang44 = "Location"
+var strLang45 = "User"
+var strLang46 = "Department"
+var strLang47 = "Company"
+var strLang48 = "Group"
+var strLang49 = "Public"
+var strLang50 = "AM"
+var strLang51 = "Error occured while saving appointment."
+var strLang52 = "Successfully saved appointment."
+var strLang53 = "Attendees list"
+var strLang54 = "Error occured while retrieving organization chart. - "
+var strLang55 = " - There is no user."
+var strLang56 = "The user is existed in inviting list already."
+var strLang57 = "The attached file size can not exceed 5MB."
+var strLang58 = " - Error occured while uploading.\n\nServer Error"
+var strLang59 = "There is no item deleted."
+var strLang60 = "Do you want to restore all deleted items?"
+var strLang61 = "Error occured while restoring the deleted items."
+var strLang62 = "Restored the deleted items."
+var strLang63 = "Recurrence pattern : "
+var strLang64 = "Daily"
+var strLang65 = "Weekly"
+var strLang66 = "Monthly"
+var strLang67 = "Annually"
+var strLang68 = "Appointed time : "
+var strLang69 = "All day long"
+var strLang70 = "오"
+var strLang71 = "Item deleted : "
+var strLang72 = " occurrences"
+var strLang73 = " - "
+var strLang74 = " characters are length of limit."
+var strLang75 = "The extension of the file upload limit."
+// \ezCommunity\manage\function_Main.aspx1.js
+// \ezCommunity\manage\function_Main.aspx~1.js
+// \ezCommunity\BoardSelect.aspx1.js
+// \ezCommunity\CopyBoardItem.aspx1.js
+// \ezCommunity\NewBoardItem.aspx1.js
+// \ezCommunity\NewBoardItem.aspx2.js
+// \ezCommunity\NewBoardItem.aspx3.js
+// \ezCommunity\NewBoardItem_Photo.aspx1.js
+// \ezCommunity\NewBoardItem_Photo.aspx2.js
+// \ezCommunity\schedule_group_write.aspx1.js
+// \ezCommunity\schedule_select_attendant.aspx1.js
+// \ezCommunity\schedule_select_entity.aspx1.js
+// \ezCommunity\schedule_write.aspx1.js
+// \ezCommunity\schedule_write.aspx2.js
+
+var strLang80 = "Prev"
+var strLang81 = "Next"
+var strLang82 = "Total "
+var strLang83 = "-items"
+var strLang535 = "No data found.";
+var strLang5351 = "People";

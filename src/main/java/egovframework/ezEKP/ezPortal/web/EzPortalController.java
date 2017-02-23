@@ -2516,23 +2516,23 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String pSearchString = "";
 		String portalGubun = "";
-		String parentPageID = "";
-		String pageID = "";
+		//String parentPageID = "";
+		//String pageID = "";
 		String gubunFlag = "";
-		String newMyPortalPage = "";
-		String newMyPortalPageList = "";
+		//String newMyPortalPage = "";
+		//String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
-			parentPageID = req.getParameter("parentPageID");
+			//parentPageID = req.getParameter("parentPageID");
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
-				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
+				//parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
 			} else {
-				parentPageID = "Top";
+				//parentPageID = "Top";
 			}
 		}
 		
@@ -2542,10 +2542,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
-			for (PortalMyPortalListVO myPortal : myPortalList) {
-				parentPageID = myPortal.getuID_();
-				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
-			}
+			//for (PortalMyPortalListVO myPortal : myPortalList) {
+				//parentPageID = myPortal.getuID_();
+				//newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
+			//}
 		}
 		
 		if (myPortalList.size() > 0) {
@@ -2569,7 +2569,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			newMyPortalPageList = sb.toString();
+			//newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
@@ -2658,7 +2658,7 @@ public class EzPortalController extends EgovFileMngUtil {
         String useStartPage = "";
         String deptPathOrgan = "";
 		
-		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.t990040", locale), egovMessageSource.getMessage("ezPortal.t990039", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
+		String userPortalPage = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, egovMessageSource.getMessage("ezPortal.jjs08", locale), egovMessageSource.getMessage("ezPortal.jjs07", locale), userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(userPortalPage);
 		logger.debug("userPortalPage="+userPortalPage);
 		
@@ -3300,7 +3300,6 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		String pCreatorId = "";
 		String pBoardID = "";
 		String pItemCount = "";
 		String pItemFields = "";
@@ -3320,10 +3319,10 @@ public class EzPortalController extends EgovFileMngUtil {
 			
 			if (xmlDomProp.getElementsByTagName("USERTYPE").item(0).getTextContent().trim().equals("1")) {
 				logger.debug("uID="+uID);
+				logger.debug("xmlDomProp="+ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent(), userInfo.getTenantId()));
 				Document xmlDomSubProp = commonUtil.convertStringToDocument(ezPortalService.getPortletSubProperties(uID, xmlDomProp.getElementsByTagName("PORTLET_TYPE").item(0).getTextContent(), userInfo.getTenantId()));
 				
 				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
 					pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
 					pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
 					pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
@@ -3334,11 +3333,11 @@ public class EzPortalController extends EgovFileMngUtil {
 				map.put("v_CREATORID", pUserID);
 				map.put("tenantID", userInfo.getTenantId());
 				PortalTBLPortletBoardVO result = ezPortalService.boardPortlet(map);
-				String resultXML = commonUtil.getQueryResult(result);
+				String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
+				logger.debug("resultXML="+resultXML);
 				Document xmlDomSubProp = commonUtil.convertStringToDocument(resultXML);
 				
-				if (xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
-					pCreatorId = xmlDomSubProp.getElementsByTagName("CREATORID").item(0).getTextContent();
+				if (result != null && xmlDomSubProp.getElementsByTagName("CREATORID").getLength() > 0) {
 					pBoardID = xmlDomSubProp.getElementsByTagName("BOARDID").item(0).getTextContent();
 					pItemCount = xmlDomSubProp.getElementsByTagName("ITEMCOUNT").item(0).getTextContent();
 					pItemFields = xmlDomSubProp.getElementsByTagName("ITEMFIELDS").item(0).getTextContent();
@@ -3347,16 +3346,21 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		if (pBoardID == null || pBoardID.equals("")) {
+			resp.setCharacterEncoding("UTF-8");
+			resp.setContentType("text/html; charset=UTF-8");
 			resp.getWriter().write("<font style='FONT-SIZE: 9pt'> " + egovMessageSource.getMessage("ezPortal.t275", locale) + "</font>");
 		} else {
+			logger.debug("gubunFlag="+gubunFlag);
 			if (gubunFlag.equals("2")) {
 				pMoveURL = "/ezPortal/boardListClass.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID + "&pClassID=" + pUserID;
 			} else {
 				pMoveURL = "/ezBoard/boardListPortal.do?boardID=" + pBoardID + "&itemCount=" + pItemCount + "&itemFields=" + pItemFields + "&uID=" + uID;
 			}
+			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
+			resp.getWriter().write("<body onload='window_onload()'></body>");
+			resp.getWriter().flush();
+			resp.getWriter().close();
 		}
-		resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
-		resp.getWriter().write("<body onload='window_onload()'></body>");
 		logger.debug("boardPortlet ended");
 	}	
 }

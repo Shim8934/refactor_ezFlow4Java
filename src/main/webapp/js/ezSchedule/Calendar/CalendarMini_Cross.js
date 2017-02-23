@@ -308,24 +308,21 @@ function DayOnMouseClick(event) {
 }
 
 var MiniHttp;
-function CalendarMiniDataSource() {
+function CalendarMiniDataSource(XmlNode) {
     if (!document.getElementById("MiniCalendar"))
         return;
 
- /*   MiniHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "STARTDATE", sStartDate);
-    createNodeAndInsertText(xmlpara, objNode, "ENDDATE", sEndDate);
-    createNodeAndInsertText(xmlpara, objNode, "APP", idtype);
-    createNodeAndInsertText(xmlpara, objNode, "GROUPID", groupid);
-    createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);
-    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
-    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
-    MiniHttp.send(xmlpara);
-    //getCalendarMiniDataSource_after(xmlhttp);
-*/    
+    if (XmlNode != undefined) {
+	    for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+	    	var hDay = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0,10);    	
+	    	var hDayCal = document.getElementById("TDMINI_" + hDay + "_Day");
+	
+	        if (hDayCal) {
+	        	hDayCal.style.color = "red"        
+	        }
+	    }
+    }
+    
     $.ajax({
 		type : "POST",
 		dataType : "text",
@@ -399,7 +396,7 @@ function MiniDataBind(oAppointment) {
 
     var objElm = document.getElementById("TDMINI_" + oAppointment.trID + "_Day");
     if (objElm) {
-        objElm.style.fontWeight = "bold"
+        objElm.style.fontWeight = "bold"        
     }
 }
 

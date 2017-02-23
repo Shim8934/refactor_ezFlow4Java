@@ -157,11 +157,11 @@
 		
 		        var feature = GetOpenPosition(770, 660);
 		        if (recurring == "1") {
-		            window.open("schedule_read_Cross.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=Y" + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&recurring=" + recurring + "&pageFrom=search&pattern=0", "",
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=Y" + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&recurring=" + recurring + "&pageFrom=search&pattern=0", "",
 							    "height = 660px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        }
 		        else {
-		            window.open("schedule_read_Cross.aspx" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&date=" + date + "&datetype=" + datetype + "&recurring=" + recurring + "&pattern=0", "",
+		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&date=" + date + "&datetype=" + datetype + "&recurring=" + recurring + "&pattern=0", "",
 					            "height = 656px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        }
 		    }

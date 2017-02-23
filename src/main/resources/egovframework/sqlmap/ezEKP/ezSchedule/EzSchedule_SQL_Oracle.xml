@@ -154,34 +154,34 @@
 	<select id="EzScheduleDAO.getScheduleConfig" resultMap="scheduleConfigVO">
 		<![CDATA[
 			SELECT 
-				defaultview,
-            	startday,
-             	starttime,
-             	endtime,
-             	autodelete 
+				DEFAULTVIEW,
+            	STARTDAY,
+             	STARTTIME,
+             	ENDTIME,
+             	AUTODELETE 
         	FROM 
         		TBL_SCHEDULECONFIG 
        		WHERE  
-       			userid = #v_USERID#
+       			USERID = #v_USERID#
        		AND
-       			tenant_id = #v_TENANTID#
+       			TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getScheduleGroupList" parameterClass="Map" resultMap="scheduleGroupListVO">
 		<![CDATA[
 			SELECT 
-				DISTINCT A.groupid as groupid,
-				groupname,
-				'' as description,
-              	'' as createdate
+				DISTINCT A.GROUPID AS GROUPID,
+				GROUPNAME,
+				'' AS DESCRIPTION,
+              	'' AS CREATEDATE
         	FROM 
-        		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GroupID = B.GroupID AND A.tenant_id = B.tenant_id
+        		TBL_SCHEDULEGROUP A LEFT JOIN TBL_SCHEDULEGROUPMEMBER B ON A.GROUPID = B.GROUPID AND A.TENANT_ID = B.TENANT_ID
        		WHERE  
-       			(creatorid = #v_USERID# OR ( memberid = #v_USERID# AND status = 1 ))
+       			(CREATORID = #v_USERID# OR ( MEMBERID = #v_USERID# AND STATUS = 1 ))
 			AND
-				A.tenant_id = #v_TENANTID#       			
-        	ORDER BY GroupName
+				A.TENANT_ID = #v_TENANTID#       			
+        	ORDER BY GROUPNAME
 		]]>
 	</select>
 	
@@ -282,64 +282,66 @@
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
 		<![CDATA[
 			SELECT 
-				groupid,
-            	groupname,
-              	description,
-              	createdate
+				GROUPID,
+            	GROUPNAME,
+              	DESCRIPTION,
+              	CREATEDATE
         	FROM 
         		TBL_SCHEDULEGROUP 
         	WHERE  
-        		creatorid = #v_USERID#
+        		CREATORID = #v_USERID#
        		AND
-       			tenant_id = #v_TENANTID#
-        	ORDER BY GroupName
+       			TENANT_ID = #v_TENANTID#
+        	ORDER BY GROUPNAME
 		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getMyGroupMemberListCnt" parameterClass="map" resultClass="int">
 		<![CDATA[
 			 SELECT 
-			 	count(*)
+			 	COUNT(*)
              FROM (
 	                  SELECT 
-	                  	memberid 
+	                  	MEMBERID,
+	                  	TENANT_ID 
                       FROM 
                       	TBL_SCHEDULEGROUPMEMBER 
                       WHERE  
-                      	groupid = #v_GROUPID#
+                      	GROUPID = #v_GROUPID#
                       AND
-                      	tenant_id = #v_TENANTID#	
-             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN
+                      	TENANT_ID = #v_TENANTID#	
+             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN AND A.TENANT_ID = B.TENANT_ID
              WHERE
-             	B.tenant_id = #v_TENANTID#
+             	B.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getMyGroupMemberList" parameterClass="map" resultMap="scheduleGroupMemberListVO">
 		<![CDATA[
 			 SELECT 
-			 	A.memberid,
-			 	'' as membername,
-			 	'' as membername2,
-			 	'' as status,
-			 	'' as responsedate,
-             	B.mail,
+			 	A.MEMBERID,
+			 	'' AS MEMBERNAME,
+			 	'' AS MEMBERNAME2,
+			 	'' AS STATUS,
+			 	'' AS RESPONSEDATE,
+             	B.MAIL,
              	CASE #v_LANG#
-	                WHEN '1' THEN B.displayname || '(' || description || ')'
-                    WHEN '2' THEN B.displayname2 || '(' || description2 || ')'   
+	                WHEN '1' THEN B.DISPLAYNAME || '(' || DESCRIPTION || ')'
+                    WHEN '2' THEN B.DISPLAYNAME2 || '(' || DESCRIPTION2 || ')'   
                 END info  
              FROM (
 	                  SELECT 
-	                  	memberid 
+	                  	MEMBERID,
+	                  	TENANT_ID 
                       FROM 
                       	TBL_SCHEDULEGROUPMEMBER 
                       WHERE  
-                      	groupid = #v_GROUPID#
+                      	GROUPID = #v_GROUPID#
                       AND
-                      	tenant_id = #v_TENANTID#	
-             )A JOIN TBL_USERMASTER B ON A.MemberID = B.CN
+                      	TENANT_ID = #v_TENANTID#	
+             )A JOIN TBL_USERMASTER B ON A.MEMBERID = B.CN AND A.TENANT_ID = B.TENANT_ID
              WHERE
-             	B.tenant_id = #v_TENANTID#
+             	B.TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 	
@@ -366,31 +368,38 @@
 			SELECT 
 			 	CN,
                 CASE #v_LANG#
-	                WHEN '1' THEN displayname
-                    WHEN '2' THEN displayname2    
-                END displayname,
-                displayname2,
+	                WHEN '1' THEN DISPLAYNAME
+                    WHEN '2' THEN DISPLAYNAME2    
+                END DISPLAYNAME,
+                DISPLAYNAME2,
                 CASE #v_LANG#
-                    WHEN '1' THEN description
-                    WHEN '2' THEN description2   
-                END description,
-                description2,
-                title ,
-                title2 ,
-                telephonenumber 
+                    WHEN '1' THEN DESCRIPTION
+                    WHEN '2' THEN DESCRIPTION2   
+                END DESCRIPTION,
+                DESCRIPTION2,
+                TITLE ,
+                TITLE2 ,
+                TELEPHONENUMBER 
 			FROM 
 				TBL_USERMASTER
             WHERE
-            	<isEqual property="subDept" compareValue="Y">
-            		department IN ( SELECT cn 
-                                FROM 
-                                	TBL_DEPTMASTER
-                                WHERE  
-                                	dept_cd_path LIKE '%'||#v_DEPTID#||'%' )
+            	<isEqual property="v_SUBDEPT" compareValue="Y">
+            		DEPARTMENT IN ( 
+            						SELECT 
+            							CN 
+                                	FROM 
+                                		TBL_DEPTMASTER
+                                	WHERE  
+                                		DEPT_CD_PATH LIKE '%'||#v_DEPTID#||'%'
+                                	AND	
+                                		TENANT_ID = #v_TENANTID# 	 
+                                	) 
             	</isEqual>
-            	<isNotEqual property="subDept" compareValue="Y">
-            		department = #v_DEPTID#
-            	</isNotEqual>           	      
+            	<isNotEqual property="v_SUBDEPT" compareValue="Y">
+            		DEPARTMENT = #v_DEPTID# 
+            	</isNotEqual>
+            AND
+				TENANT_ID = #v_TENANTID#	           	      
 			ORDER BY description		
 	</select>
 	

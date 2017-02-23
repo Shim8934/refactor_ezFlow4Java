@@ -64,7 +64,7 @@
 		                       		<h1><c:out value = '${title}' /></h1>
 		                           	<div class="popup_noticeList">
 		                            	<dl class="noticeListBox" id="popupcontent"> <!-- 여기 height 값을 바꾸시면 됩니다. -->
-		                                	<dt><img src="/images/kr/cm/img_notice.gif" width="68" height="68" alt="공지사항"></dt>
+		                                	<dt><img src="/images/kr/cm/img_notice.gif" width="68" height="68" alt="<spring:message code = 'ezPersonal.t157'/>"></dt>
 		                                    <dd>${content}</dd>
 		                                </dl>
 		                            </div>
