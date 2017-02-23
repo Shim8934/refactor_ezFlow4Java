@@ -4064,6 +4064,7 @@
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
+	          	ExtensionAttribute2 = #extensionAttribute2#,
 	          	ExtensionAttribute5 = #extensionAttribute5#,
 	          	DocPassWord = #docPassword#,
 	          	extensionAttribute6 = #extensionAttribute6#,
