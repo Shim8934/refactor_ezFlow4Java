@@ -384,7 +384,7 @@
 			from 
 				tbl_usermaster
             where
-            	<isEqual property="subDept" compareValue="Y">
+            	<isEqual property="v_SUBDEPT" compareValue="Y">
             		department in ( 
             						select 
             							cn 
@@ -396,7 +396,7 @@
                                 		tenant_id = #v_TENANTID#	
                                 	) 
             	</isEqual>
-            	<isNotEqual property="subDept" compareValue="Y">
+            	<isNotEqual property="v_SUBDEPT" compareValue="Y">
             		department = #v_DEPTID# 
             	</isNotEqual>
             and
