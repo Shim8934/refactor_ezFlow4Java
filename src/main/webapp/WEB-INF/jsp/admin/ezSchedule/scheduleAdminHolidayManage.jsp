@@ -79,9 +79,9 @@
 		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                            _html += "<td style='width:20%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                        else
-		                            _html += "<td style='width:20%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 	
 		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10) + "</td>";
 	
@@ -96,7 +96,7 @@
 		                            _html += "<td style='width:10%;color:gray;'>N</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].textContent == "1")
-		                            _html += "<td style='width:10%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
 		                        else {
 		                            var companyname = "";                           
 		                            var tempcompanylist = companylist.split(";");
@@ -104,7 +104,7 @@
 		                                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].textContent == tempcompanylist[j].split(",")[0])
 		                                    companyname = tempcompanylist[j].split(",")[1];
 		                            }
-		                            _html += "<td style='width:10%;color:gray;'>" + companyname + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 		                        }
 	
 		                        _html += "</tr>";
@@ -135,9 +135,9 @@
 		                            _html += "<td style='width:30%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].text + "</td>";
 	
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].text == "1")
-		                            _html += "<td style='width:20%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t4000' />" + "</td>";
 		                        else
-		                            _html += "<td style='width:20%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 	
 		                        _html += "<td style='width:15%;color:gray;'>" + GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].text.substring(0, 10) + "</td>";
 	
@@ -151,7 +151,7 @@
 		                        else
 		                            _html += "<td style='width:10%;color:gray;'>N</td>";
 		                        if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].text == "1")
-		                            _html += "<td style='width:10%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + "<spring:message code='ezSchedule.t2001' />" + "</td>";
 		                        else {
 		                            var companyname = "";
 		                            var tempcompanylist = companylist.split(";");
@@ -159,7 +159,7 @@
 		                                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "USECOMPANY")[0].text == tempcompanylist[j].split(",")[1])
 		                                    companyname = tempcompanylist[j].split(",")[0];
 		                            }
-		                            _html += "<td style='width:10%;color:gray;'>" + companyname + "</td>";
+		                            _html += "<td style='width:15%;color:gray;'>" + companyname + "</td>";
 		                        }
 		                        _html += "</tr>";
 		                        _html += "</html>";
@@ -317,11 +317,11 @@
 		                        <tr>
 		                            <th style="width: 5%;"><span><spring:message code='ezSchedule.t403' /></span></th>
 		                            <th style="width: 30%;"><span><spring:message code='ezSchedule.t9990003' /></span></th>
-		                            <th style="width: 20%;"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
+		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></span></th>
 		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t4008' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4007' /></span></th>
 		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t4009' /></span></th>
-		                            <th style="width: 10%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
+		                            <th style="width: 15%;"><span><spring:message code='ezSchedule.t2000' /></span></th>
 		                        </tr>
 		                    </table>
 		                    <div id="contentlist" name="contentlist" style="height: 365px; overflow-y: auto;">

@@ -1309,7 +1309,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 				endDateTime = getUploadDate(cDate, false);
 			}
         }
-
+System.out.println(startDateTime);
+System.out.println(endDateTime);
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
 
