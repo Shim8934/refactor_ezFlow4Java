@@ -809,8 +809,9 @@
 		                                    window.close();
 		                                    return;
 		                                }
-		                                if (checkboard.indexOf("mailReadContent.do") < 0)
-		                                    ReturnFunction();
+		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
+		                                    window.opener.getBoardList();
+		                                }
 		                            } catch (e) {
 		                            }
 			                    }
@@ -820,8 +821,9 @@
 			                    try {
 			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 			                            var checkboard = window.parent.location.toString();
-			                            if (checkboard.indexOf("mailReadContent.do") < 0)
+			                            if (checkboard.indexOf("mailReadContent.do") < 0) {
 			                                window.parent.parent.location.reload(false);
+			                            }
 			                        }
 			                    }
 			                    catch (e) { 
