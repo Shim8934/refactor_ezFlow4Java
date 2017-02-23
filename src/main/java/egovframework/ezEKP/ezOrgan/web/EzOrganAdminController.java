@@ -1985,14 +1985,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
         String userEmail = userId + "@" + domainName;
                         
-        Double userQuota = ezEmailUtil.getUserQuota(userEmail);
+        Double[] returnedData = ezEmailUtil.getUserQuota(userEmail);
+        
+        Double userQuota = returnedData[0];
         
         if (userQuota != null) {
-            userQuota = userQuota/1024.0;
+            userQuota = userQuota/1024;
+        }
+
+        Double userWarn = returnedData[1];
+        
+        if (userWarn != null) {
+            userWarn = userWarn/1024;
         }
         
         model.addAttribute("userId", userId);
         model.addAttribute("userQuota", userQuota);
+        model.addAttribute("userWarn", userWarn);
         
         logger.debug("configUserQuota ended.");
         
@@ -2021,18 +2030,20 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             Document xmldom = commonUtil.convertStringToDocument(bodyData);
             String userId = xmldom.getElementsByTagName("CN").item(0).getTextContent();
             String useDefault = xmldom.getElementsByTagName("useDefault").item(0).getTextContent();
-            String hardQuotaLimit = xmldom.getElementsByTagName("hardQuotaLimit").item(0).getTextContent();
+            String warnStorage = xmldom.getElementsByTagName("warnStorage").item(0).getTextContent();
+            String maxStorage = xmldom.getElementsByTagName("maxStorage").item(0).getTextContent();
             
             int tenantID = userInfo.getTenantId();
             String domainName = ezCommonService.getTenantConfig("DomainName", tenantID);
             String userEmail = userId + "@" + domainName;
             
-            logger.debug("userEmail=" + userEmail + ",useDefault=" + useDefault + ",hardQuotaLimit=" + hardQuotaLimit);
+            logger.debug("userEmail=" + userEmail + ",useDefault=" + useDefault 
+                    + ",warnStorage=" + warnStorage + ",maxStorage=" + maxStorage);
             
             if (useDefault.equals("1")) {
                 ezEmailUtil.deleteUserQuota(userEmail);
             } else {
-                ezEmailUtil.setUserQuota(userEmail, hardQuotaLimit);
+                ezEmailUtil.setUserQuota(userEmail, maxStorage, warnStorage);
             }            
             
             returnValue = "OK";

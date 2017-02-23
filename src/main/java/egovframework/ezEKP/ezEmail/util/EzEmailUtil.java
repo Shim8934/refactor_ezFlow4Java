@@ -1580,9 +1580,9 @@ public class EzEmailUtil {
 	 * @param domainName
 	 * @return
 	 */
-	public Double getDefaultQuota(String domainName) throws Exception {
-	    Double defaultMax = null;
-        
+	public Double[] getDefaultQuota(String domainName) throws Exception {
+	    Double returnedData[] = {null, null};
+	    
         String param1 = "domainName=" + domainName;
         String inputParams = param1;            
         
@@ -1606,17 +1606,20 @@ public class EzEmailUtil {
                     
                     if (result != null) {
                         String maxStorage = (String)result.get("maxStorage");
-                        double maxDouble = Double.parseDouble(maxStorage);
+                        double maxDouble = Double.parseDouble(maxStorage);                        
+                        returnedData[0] = maxDouble;
+
+                        String warnStorage = (String)result.get("warnStorage");
+                        double warnDouble = Double.parseDouble(warnStorage);                        
+                        returnedData[1] = warnDouble;
                         
-                        defaultMax = maxDouble;
-                        
-                        logger.debug("maxStorage=" + maxStorage + ",defaultMax=" + defaultMax);                                                                
+                        logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);                                                                
                     }
                 }
             }                    
         }                 
         
-        return defaultMax;
+        return returnedData;
     }    
     
 	/**
@@ -1625,10 +1628,11 @@ public class EzEmailUtil {
 	 * @param maxStorage
 	 * @throws Exception
 	 */
-	public void setDefaultQuota(String domainName, String maxStorage) throws Exception {
+	public void setDefaultQuota(String domainName, String maxStorage, String warnStorage) throws Exception {
         String param1 = "domainName=" + domainName;
         String param2 = "maxStorage=" + maxStorage;
-        String inputParams = param1 + "&" + param2;            
+        String param3 = "warnStorage=" + warnStorage;
+        String inputParams = param1 + "&" + param2 + "&" + param3;            
         
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDefaultQuota";
         
@@ -1655,8 +1659,8 @@ public class EzEmailUtil {
 	 * @param userEmail
 	 * @return
 	 */
-    public Double getUserQuota(String userEmail) throws Exception {
-        Double defaultMax = null;
+    public Double[] getUserQuota(String userEmail) throws Exception {
+        Double returnedData[] = {null, null};
         
         String param1 = "userEmail=" + userEmail;
         String inputParams = param1;            
@@ -1681,17 +1685,20 @@ public class EzEmailUtil {
                     
                     if (result != null) {
                         String maxStorage = (String)result.get("maxStorage");
-                        double maxDouble = Double.parseDouble(maxStorage);
+                        double maxDouble = Double.parseDouble(maxStorage);                        
+                        returnedData[0] = maxDouble;
+
+                        String warnStorage = (String)result.get("warnStorage");
+                        double warnDouble = Double.parseDouble(warnStorage);                        
+                        returnedData[1] = warnDouble;
                         
-                        defaultMax = maxDouble;
-                        
-                        logger.debug("maxStorage=" + maxStorage + ",defaultMax=" + defaultMax);                                                                
+                        logger.debug("maxStorage=" + maxStorage + ",warnStorage=" + warnStorage);                                                                                         
                     }
                 }
             }                    
         }                 
         
-        return defaultMax;
+        return returnedData;
     }    
     
     /**
@@ -1700,10 +1707,11 @@ public class EzEmailUtil {
      * @param maxStorage
      * @throws Exception
      */
-    public void setUserQuota(String userEmail, String maxStorage) throws Exception {
+    public void setUserQuota(String userEmail, String maxStorage, String warnStorage) throws Exception {
         String param1 = "userEmail=" + userEmail;
         String param2 = "maxStorage=" + maxStorage;
-        String inputParams = param1 + "&" + param2;            
+        String param3 = "warnStorage=" + warnStorage;
+        String inputParams = param1 + "&" + param2 + "&" + param3;            
         
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setUserQuota";
         
