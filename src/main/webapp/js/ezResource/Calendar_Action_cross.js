@@ -952,7 +952,7 @@ function tableListControl_today() {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
                 var e_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0]);
-
+                
                 if (title_name[k].split("/")[0] == getNodeText(xmldom.getElementsByTagName("owner_id")[j]) && getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0) {
                     if (DateTrueFalse(TodayDatename, TodayDatename, s_weekDateSet, e_weekDateSet, TodayDatename, "TODAY")) {
                         var _Tr2 = document.createElement("TR");
@@ -962,7 +962,12 @@ function tableListControl_today() {
                         _TD.setAttribute("class", "todaytd_01");
                         _TD.align = "left";
                         _TD.onselectstart = function () { return false; };
-                        _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                        
+                        if (title_name[k].split("/")[2] == "1")
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                        else
+                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                        
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
                         var alldayevent = getNodeText(xmldom.getElementsByTagName("alldayevent")[j]);
@@ -997,9 +1002,11 @@ function tableListControl_today() {
                                 var width_td = d3 * 2;
                                 TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
                                 if (TodayDatename == pObjectSPDay) {
-                                    s_Enddt[0] = 24;
-                                    d2 = new Date(sz_Year, sz_Month, sz_Date, s_Enddt[0], 00);
-                                    width_td = ((d2 - d1) / 1800000);
+                                	if (pObjectSPDay != pObjectEPDay) {
+	                                    s_Enddt[0] = 24;
+	                                    d2 = new Date(sz_Year, sz_Month, sz_Date, s_Enddt[0], 00);
+	                                    width_td = ((d2 - d1) / 1800000);
+                                	}
                                 } else if (TodayDatename == pObjectEPDay) {
                                     s_Startdt[0] = 0;
                                     d1 = new Date(sz_Year, sz_Month, sz_Date, s_Startdt[0], 00);
