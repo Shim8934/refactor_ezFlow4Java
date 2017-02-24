@@ -2128,6 +2128,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean retryFlag = false;
 		int retryCount = 1; //메일 발송 실패 시 재시도 횟수
 		long draftUID = 0;
+		long sentFolderMessageUID = 0;
+		boolean mailSendCompleted = false;
 		
 		do {
 			try {
@@ -2136,28 +2138,60 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				//메일 발송 재시도일 경우 draftUID의 메일을 지우고 retryFlag와 draftUID를 초기화한다.
 				if (retryFlag) {
-					Folder draftFolder = null;
-					try {
-						draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-						draftFolder.open(Folder.READ_WRITE);
-				        Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
-		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
-		        		draftFolder.close(true);
-		        		logger.debug("draftUID message deleted successfully during retry.");
-					} catch (Exception e) {
-						logger.error("Failed to delete draftUID message during retry. draftUID=" + draftUID);
-					} finally {
-						if (draftFolder != null) {
-							try {
-								draftFolder.close(true);
-							} catch (Exception e) {}
-							
-							draftFolder = null;
-						}
-					}
+				    if (draftUID != 0) {
+    					Folder draftFolder = null;
+    					
+    					try {
+    						draftFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    						draftFolder.open(Folder.READ_WRITE);
+    				        Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
+    		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
+    		        		draftFolder.close(true);
+    		        		draftFolder = null;
+    		        		
+    		        		logger.debug("draftUID message deleted successfully during retry.");
+    					} catch (Exception e) {
+    						logger.error("Failed to delete draftUID message during retry. draftUID=" + draftUID);
+    					} finally {
+    						if (draftFolder != null) {
+    							try {
+    								draftFolder.close(true);
+    							} catch (Exception e) {}
+    							
+    							draftFolder = null;
+    						}
+    					}
+				    }
+				    
+				    // 보낸편지함에 저장된 이후 Exception이 발생하여 Retry하는 경우 보낸편지함에 있는 메시지를 삭제한다.
+				    if (sentFolderMessageUID != 0) {
+                        Folder sentFolder = null;
+                        
+                        try {
+                            sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                            sentFolder.open(Folder.READ_WRITE);
+                            Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
+                            sentMessage.setFlag(Flags.Flag.DELETED, true);
+                            sentFolder.close(true);
+                            sentFolder = null;
+                            
+                            logger.debug("sentFolderMessageUID message deleted successfully during retry.");
+                        } catch (Exception e) {
+                            logger.error("Failed to delete sentFolderMessageUID message during retry. sentFolderMessageUID=" + sentFolderMessageUID);
+                        } finally {
+                            if (sentFolder != null) {
+                                try {
+                                    sentFolder.close(true);
+                                } catch (Exception e) {}
+                                
+                                sentFolder = null;
+                            }
+                        }				        
+				    }
 					
 					retryFlag = false;
 					draftUID = 0;
+					sentFolderMessageUID = 0;
 				}
 				
 				//편지함 용량 체크
@@ -2639,37 +2673,52 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	logger.debug("Sending the message");
 		        	
-		        	// 편지함 용량 초과 메세지 확인을 위해 임시저장
-		        	// 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 이동
-		    		message.setFlag(Flags.Flag.SEEN, true);
-		    		AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
-		    		if (uids != null && uids[0] != null) {
-		    			draftUID = uids[0].uid;
-		    		} 
-		        
+                    Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                    		        
 //					String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
 			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 			        
 			        if (!eShowDisplayName.equals("")) {
 		            	message.setHeader("X-NEW-DISPLAYNAME", MimeUtility.encodeText(eShowDisplayName, "UTF-8", null));
 		            }
-			        
+			                            
+                    message.setFlag(Flags.Flag.SEEN, true);
+                    			        
+                    // 예약 발송의 경우
 			        if (!delaySendTime.equals("")) {
+			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
+	                    AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
+	                    if (uids != null && uids[0] != null) {
+	                        draftUID = uids[0].uid;
+	                    } 
+			            
 			        	//예약발송
 			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
 			            doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
-			        	
-			            // this deletion code block has been moved here because
-			            // it needs to be kept in Drafts if an error occurs during the above process.
-			            if (oldMessage != null) {
-			            	oldMessage.setFlag(Flags.Flag.DELETED, true);
-			            }
-			            
+			        				            
 			            //임시보관함에서 삭제
 			            Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
 		        		draftMessage.setFlag(Flags.Flag.DELETED, true);
 		        		
-			        } else {                        
+                        // this deletion code block has been moved here because
+                        // it needs to be kept in Drafts if an error occurs during the above process.
+                        if (oldMessage != null) {
+                            oldMessage.setFlag(Flags.Flag.DELETED, true);
+                        }		        		
+		        	// 즉시 발송의 경우	
+			        } else {         
+			            // mailSendCompleted가 true인 경우는 메일 전송까지 완료된 이후에 Exception이 발생하여 Retry하는 경우이다.
+			            // 이 경우에는 이미 보낸편지함에 저장된 메일이 있으므로 보낸편지함에 다시 저장하지 않는다.
+			            if (mailSendCompleted == false) {
+    			            // 편지함 용량 초과 메세지 확인을 위해 임시저장
+    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
+    			            // 보낸메일함에 바로 저장하는 것으로 변경함.
+    	                    AppendUID[] uids = ((IMAPFolder)sentFolder).appendUIDMessages(new Message[]{message});
+    	                    if (uids != null && uids[0] != null) {
+    	                        sentFolderMessageUID = uids[0].uid;
+    	                    } 
+			            }
+			            
 //		            	if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
 //		            		rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
 //		            	else
@@ -2698,21 +2747,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
 			                }
 			            } else {
-			            	Transport.send(message);
-			            	
-			                // this deletion code block has been moved here because
-			                // it needs to be kept in Drafts if an error occurs during the above process.
-			                if (oldMessage != null) {
-			                	oldMessage.setFlag(Flags.Flag.DELETED, true);
+			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
+			                // 이 경우에는 메일을 다시 전송하지 않는다.
+			                if (mailSendCompleted == false) {
+    			            	Transport.send(message);
+    			            	
+    			            	sentFolderMessageUID = 0;
+    			            	mailSendCompleted = true;
 			                }
-			                	            	
-			            	//보낸편지함에 저장
-			        		Folder sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
-			        		Message draftMessage = ((IMAPFolder)draftFolder).getMessageByUID(draftUID);
-			        		draftFolder.copyMessages(new Message[]{draftMessage}, sentFolder);
-			        		draftMessage.setFlag(Flags.Flag.DELETED, true);
+			            				                	            				        		
+                            // this deletion code block has been moved here because
+                            // it needs to be kept in Drafts if an error occurs during the above process.
+                            if (oldMessage != null) {
+                                oldMessage.setFlag(Flags.Flag.DELETED, true);
+                            }			        		
 			            }
-			            
+			            			            
 			            //예악발송 수정 시 옵션에서 예약발송 안하고 저장했을 시 DB 데이터 삭제, 파일 시스템의 eml파일 삭제
 			            logger.debug("reservedId=" + reservedId);
 			            if (reservedId != null && !reservedId.trim().equals("")) {
@@ -2822,10 +2872,50 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			} finally {
 				if (ia != null) {
 					ia.close();
+					ia = null;
 				}
 			}
 			
 		} while (retryFlag && retryCount > -1);
+		
+		// 즉시 발송의 경우
+		if (cmd.equalsIgnoreCase("SEND") && delaySendTime.equals("")) {
+		    // 보낸편지함에 메일이 저장되었지만 메일 전송이 성공하지 못했다면 해당 메일을 삭제한다.
+		    if (mailSendCompleted == false && sentFolderMessageUID != 0) {
+                Folder sentFolder = null;
+                        
+                try {
+                    Thread.sleep(1000);
+                    
+                    ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+                            userEmail, password, egovMessageSource, locale);                
+                    
+                    sentFolder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+                    sentFolder.open(Folder.READ_WRITE);
+                    Message sentMessage = ((IMAPFolder)sentFolder).getMessageByUID(sentFolderMessageUID);
+                    sentMessage.setFlag(Flags.Flag.DELETED, true);
+                    sentFolder.close(true);
+                    sentFolder = null;
+                    
+                    logger.debug("sentFolderMessageUID message deleted successfully.");
+                } catch (Exception e) {
+                    logger.error("Failed to delete sentFolderMessageUID message. sentFolderMessageUID=" + sentFolderMessageUID);
+                } finally {
+                    if (sentFolder != null) {
+                        try {
+                            sentFolder.close(true);
+                        } catch (Exception e) {}
+                        
+                        sentFolder = null;
+                    }
+                    
+                    if (ia != null) {
+                        ia.close();
+                        ia = null;
+                    }                    
+                }                                           
+		    }
+		}
 		
 		logger.debug("mailInterSend ended. pResult=" + pResult);
 		return "<DATA>" + pResult + "</DATA>";
@@ -2853,31 +2943,34 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			uid = Long.parseLong(uidStr);
 		}
 		
-		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
-		String domainName = ezCommonService.getTenantConfig("domainName", loginInfo.getTenantId());
-		String userEmail = loginInfo.getId() + "@" + domainName;
-		
-		IMAPAccess ia = null;
-		try {
-			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
-					userEmail, password, egovMessageSource, locale);
-			
-			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
-			folder.open(Folder.READ_WRITE);
-			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
-			logger.debug("message=" + message);
-			
-			if (message != null) {
-				message.setFlag(Flags.Flag.DELETED, true);
-			}
-	        folder.close(true);
-	        
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		} finally {
-			if (ia != null) {
-				ia.close();
-			}
+        LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+        
+		if (uid != 0) {
+    		String domainName = ezCommonService.getTenantConfig("domainName", loginInfo.getTenantId());
+    		String userEmail = loginInfo.getId() + "@" + domainName;
+    		
+    		IMAPAccess ia = null;
+    		try {
+    			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+    					userEmail, password, egovMessageSource, locale);
+    			
+    			Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000027", locale));
+    			folder.open(Folder.READ_WRITE);
+    			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
+    			logger.debug("message=" + message);
+    			
+    			if (message != null) {
+    				message.setFlag(Flags.Flag.DELETED, true);
+    			}
+    	        folder.close(true);
+    	        
+    		} catch (MessagingException e) {
+    			e.printStackTrace();
+    		} finally {
+    			if (ia != null) {
+    				ia.close();
+    			}
+    		}
 		}
 		
 		//첨부파일 정보파일(templist) 삭제
