@@ -23,8 +23,7 @@
 		    var pListType = "TXT";
 		    var pListXML_Info = null;
 		    var CurPage = "1";
-	        
-		  	//document.onselectstart = function () { return false; };
+	        		  	
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -657,6 +656,11 @@
 		    }
 			
 		    function close_onclick() {
+		    	if (specialChk(document.all("groupname").value) || specialChk(document.all("description").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		    	
 		        if (document.all("groupname").value == "") {
 		            alert("<spring:message code='ezSchedule.t195' />");
 		            document.all("groupname").focus();
@@ -758,6 +762,11 @@
 		    function search_click(type) {
 		        listContentArry = new Array();
 		        var keywordObj = document.getElementById('keyword');
+		        
+		        if (specialChk(keywordObj.value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
 		        
 		        if (keywordObj.value == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
