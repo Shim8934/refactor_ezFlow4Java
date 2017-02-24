@@ -327,7 +327,7 @@
 		    	</c:choose>
 		    	<c:choose>
 	    		<c:when test="${reservedList.attachments != '0'}">
-	    			<td align=center><img src='/images/i_save01.gif'></td>
+	    			<td><img src='/images/i_save01.gif'></td>
 	    		</c:when>
 	    		<c:otherwise>
 	    			<td></td>

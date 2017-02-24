@@ -2969,7 +2969,7 @@ public class EzBoardController extends EgovFileMngUtil{
         		if (boardListVO.getEndDate().substring(0, 4).equals("9999")) {
         			expireItem = "YES";
         			if (expireDays.equals("-1")) {
-        				endDateTime = EgovDateUtil.addDay(today, 30, "yyyy-MM-dd");
+        				endDateTime = "9999-12-31";
         			} else {
         				endDateTime = EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
         			}
@@ -2996,7 +2996,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
 		
 		if (getTime.getMinute() > 30) {
-			getTime.plusHours(1);
+			getTime = getTime.plusHours(1);
 			startDateTime = getTime.format(formatter);
 			startDateTime = startDateTime + ":00:00"; 
 		} else {

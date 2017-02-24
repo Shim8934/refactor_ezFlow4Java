@@ -475,19 +475,19 @@
 				
 				for (var i = 0; i < colType.length;i++){
 					if(must[i] == "Y"){
-		        		if(colType[i] == "radio"){
-		        			if(GetRadioVal(tableCol[i]) == ""){
+		        		if (colType[i] == "radio") {
+		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "text"){
+		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "check"){
+		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
@@ -506,7 +506,7 @@
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
 
-		            if (configEndDate <= currEndDate) {
+		            if (configEndDate < currEndDate) {
 		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
 		                return;
 		            }
