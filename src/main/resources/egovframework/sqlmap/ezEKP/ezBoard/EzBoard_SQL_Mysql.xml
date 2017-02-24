@@ -7,13 +7,14 @@
 	<typeAlias  alias="userInfo" 					type="egovframework.let.user.login.vo.LoginVO"/>
 	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	<typeAlias  alias="BoardReadVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardReadVO"/>
-	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardAttachVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardAttachVO"/>
 	<typeAlias  alias="BoardConfigVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardConfigVO"/>
 	<typeAlias  alias="BoardAccessVO"	 			type="egovframework.ezEKP.ezBoard.vo.BoardAccessVO"/>
 	<typeAlias  alias="BoardPropertyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardPropertyVO"/>
 	<typeAlias  alias="BoardLineReplyVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
+	<typeAlias  alias="BoardMyFavoriteVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
+	<typeAlias  alias="BoardDeleteItemVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO"/>
 
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
@@ -144,7 +145,7 @@
 		]]>
 	</select>
 
-	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="MyFavoriteVO">
+	<select id="EzBoardDAO.getBoardNewBoardOrder" parameterClass="Map" resultClass="BoardMyFavoriteVO">
 		<![CDATA[
 			SELECT 
 				BOARDID, 
@@ -159,7 +160,7 @@
 		]]>
 	</select>
 	
-	<update id="EzBoardDAO.updateMyBoard" parameterClass="MyFavoriteVO">
+	<update id="EzBoardDAO.updateMyBoard" parameterClass="BoardMyFavoriteVO">
 		<![CDATA[
 			UPDATE TBL_Board_MyBoards
 			SET 
@@ -183,7 +184,7 @@
 		]]>
 	</insert>
 
-	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="MyFavoriteVO" remapResults="true">
+	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
 			<![CDATA[
 				SELECT 
@@ -2307,7 +2308,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="MyFavoriteVO" resultClass="String">
+	<select id="EzBoardDAO.getBoardApprJoinItem" parameterClass="BoardMyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
 				DISTINCT B.BOARDID
@@ -2458,7 +2459,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2536,7 +2537,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2638,7 +2639,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getBoardApprList" parameterClass="MyFavoriteVO" resultClass="String">
+	<select id="EzBoardDAO.getBoardApprList" parameterClass="BoardMyFavoriteVO" resultClass="String">
 		<![CDATA[
 			SELECT 
        			DISTINCT B.BOARDID
@@ -2657,7 +2658,7 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardDAO.getThumbNailCount" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getThumbNailCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -2731,7 +2732,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getThumbNailCount2" parameterClass="MyFavoriteVO" resultClass="Integer">
+	<select id="EzBoardDAO.getThumbNailCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
 			<![CDATA[
 				SELECT 
@@ -4354,7 +4355,7 @@
                                 TENANT_ID = #tenantID#  
                             GROUP BY
                                 ITEMID ) D   
-            ON
+            ON 
                 A.ITEMID = D.ITEMID
             WHERE
                 A.TENANT_ID = #tenantID#
@@ -4368,6 +4369,74 @@
                 D.TOTALCOUNT IS NULL 
     ]]>
   </select>
+  
+  <select id="EzBoardDAO.getExpiredItems" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT 
+				B.BOARDID, 
+				B.ITEMID, 
+			    B.TENANT_ID
+			FROM
+				TBL_BOARD_BOARDINFO A
+			JOIN
+				TBL_BOARD_ITEM B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BOARDID = B.BOARDID
+			WHERE
+				A.BOARDID IN ( SELECT
+									BOARDID
+								FROM
+									TBL_BOARD_BOARDINFO
+								WHERE
+									DELETEAFTER > -1
+								AND
+									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
+			AND
+				B.ENDDATE < ADDDATE(utc_timestamp(), - A.DELETEAFTER)
+		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_BOARD_DELETERESERVEDBOARD
+		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_BOARD_DELETERESERVEDITEM
+		]]>
+  </select>
+  
+  <delete id="EzBoardDAO.deleteReservedBoardItem" parameterClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_BOARD_DELETERESERVEDITEM
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+  			AND
+  				itemID = #itemID#
+		]]>
+  </delete>
+  
+  <delete id="EzBoardDAO.deleteReservedBoard" parameterClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_BOARD_DELETERESERVEDBOARD
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+		]]>
+  </delete>
 	
 </sqlMap>
 

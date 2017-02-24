@@ -1,4 +1,4 @@
-package egovframework.ezEKP.ezStatistics.web;
+package egovframework.ezEKP.ezStatistics.task;
 
 import javax.annotation.Resource;
 
@@ -14,7 +14,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Component
 public class EzStatisticsScheduler {
-	
 	@Autowired
 	private CommonUtil commonUtil;
 	
