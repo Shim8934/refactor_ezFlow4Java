@@ -932,7 +932,6 @@
 	            if (pListType == "IMG") {
 	                document.getElementById("DeptUserImgList").style.display = "";
 	                document.getElementById("txtlist_Layer").style.display = "none";
-	                document.getElementById("tblPageRayer2").style.display = "none";
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
@@ -1793,9 +1792,8 @@
 	                                            </tr>
 	                                        </table>
 	                                    </div>
-	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6"></div>
-	                                    <div style="vertical-align: top; text-align: center; height: 473px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList">
-	                                    </div>
+                                        <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
+	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>
