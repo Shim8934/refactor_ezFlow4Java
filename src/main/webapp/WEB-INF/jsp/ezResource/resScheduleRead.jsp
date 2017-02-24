@@ -42,8 +42,6 @@
 	        var g_fromStr = '${fromStr}';
 	        var allDayFlag = "${allDay}";
 	        var ItemArray = new Array();
-	        var sDT2 = "${startDateTime2}";
-	        var eDT2 = "${endDateTime2}";
 	        var pNoneActiveX = "${pNoneActiveX}";
 	        var brdName = "<c:out value='${brdName}' />";
 	        var resID = "${resID}";
