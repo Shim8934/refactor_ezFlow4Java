@@ -301,7 +301,13 @@
 		        if (isfileup) {
 		            alert(strLang258);
 		            return;
-		        }
+		        }		        
+		        
+		        if (specialChk(document.getElementById("TextLocation").value) || specialChk(document.getElementById("TextTitle").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		        
 		        save_schedule();
 		    }
 		   

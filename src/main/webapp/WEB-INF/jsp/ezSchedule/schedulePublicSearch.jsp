@@ -134,6 +134,11 @@
 
 	        sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	        edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        
+	        if (sdate > edate) {
+	        	alert("<spring:message code='ezResource.dateChk' />");
+	        	return;
+	        }
 
 	        var idlist = "";
 	        var namelist = "";

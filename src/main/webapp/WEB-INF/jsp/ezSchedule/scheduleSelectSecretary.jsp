@@ -178,7 +178,12 @@
 		            deptsearch_click();
 		    }
 		    
-		    function search_click() {		        
+		    function search_click() {
+		    	if (specialChk(keyword.value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		    	
 		        if (keyword.value == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
 		            keyword.focus();
@@ -205,12 +210,18 @@
 		    }
 	
 		    var checkname2_cross_dialogArguments = new Array();
-		    function deptsearch_click() {
+		    function deptsearch_click() {		    	
+		    	if (specialChk(deptkeyword.value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		    	
 		        if (deptkeyword.value == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
 		            deptkeyword.focus();
 		            return;
-		        }		        
+		        }
+		        
 		        var xmlDOM = createXmlDom();
 		        
 		        $.ajax({

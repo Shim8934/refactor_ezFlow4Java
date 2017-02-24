@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSchedule.web;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -1719,7 +1720,8 @@ System.out.println(endDateTime);
         	
         	for (AttachListVO avo : aList) {        		
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
-        		avo.setFileType(fileType);
+        		avo.setFileType(fileType);        		
+        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
         	}
         	
         	model.addAttribute("attachList", aList);
@@ -2052,6 +2054,7 @@ System.out.println(endDateTime);
 		userInfo = commonUtil.userInfoSimple(loginCookie);		
 
 		String filePath = request.getParameter("filePath");
+System.out.println(filePath);		
 		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
@@ -2061,7 +2064,7 @@ System.out.println(endDateTime);
 		}
 		
 		String fullFilePath = realPath + uploadFilePath + filePath;
-
+System.out.println(fullFilePath);
 		downFile(request, response, fullFilePath, fileName);	
 	}
     
