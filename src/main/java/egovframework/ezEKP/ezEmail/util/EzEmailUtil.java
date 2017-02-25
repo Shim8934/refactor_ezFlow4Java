@@ -447,11 +447,18 @@ public class EzEmailUtil {
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
 		
-		//아래 if문 조건에 disposition이 attachment인지 체크했는데
-		//iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
-		//이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
-		//disposition이 attachment인지 체크하는 조건을 뺐다.
-		if (part.getDisposition() != null) {
+		// 아래 if문 조건에 disposition이 attachment인지 체크했는데
+		// iphone에서 inline-image를 보냈을 때 inline-image가 mulitpart/related에 들어있지 않고 mulitpart/mixed에 들어있어서
+		// 이럴 경우 inline-image가 아닌 attachment로 취급하기로 하여
+		// disposition이 attachment인지 체크하는 조건을 뺐다.
+		//
+		// 다음과 같이 message/rfc822이면서 Content-Disposition에 filename이 없는 경우가 있어
+		// 이 경우엔 message/rfc822 type을 처리하는 if문 조건절에서 처리하도록 하기 위해 조건을 추가함.
+		// Content-Type: message/rfc822
+		// Content-Transfer-Encoding: 7bit
+		// Content-Disposition: attachment		
+		if (part.getDisposition() != null 
+		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null)) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
