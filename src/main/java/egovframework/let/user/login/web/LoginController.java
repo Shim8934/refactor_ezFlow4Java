@@ -175,6 +175,7 @@ public class LoginController {
 				loginService.updateUser(loginVO);
 				
 				//접속 로그정보 저장
+				resultVO.setLastLogin(nowDate);
 				resultVO.setIp(ip);
 				resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 				resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
