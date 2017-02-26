@@ -409,7 +409,6 @@
     			<td style="height:20px">
       				<div id="menu">      
         				<ul>
-        					
         					<c:choose>
         						<c:when test="${typeVal ne 'Readonly'}">
         							<div id="menuTable1" >
@@ -417,11 +416,9 @@
           							<li><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>
           							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
           							
-          							<c:if test="${typeVal ne 'Instance'}" >
-          								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
-          									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
-          								</c:if>
-          							</c:if>
+       								<c:if test="${typeVal ne 'Instance' && typeVal ne 'Readonly'}" >
+       									<li><span id="Span2" name="ScheRep" id="ScheRep" name="ScheRep" onClick="Schedule_Repetition_onclick()"> <spring:message code="ezResource.t195"/></span></li>
+       								</c:if>
           								
        								<c:if test="${strApproveFlag eq '1' && adminFg eq 'Y' && cmdStr eq 'mod'}" >
        									<c:choose>
@@ -434,16 +431,16 @@
        									</c:choose>
         					 		</c:if> 
           							
-          						</div>          
-          						<div id="menuTable2" style='display:none'>								
-          							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
-          							<li><span  onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
-          							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
-          						</div>
+	          						</div>          
+	          						<div id="menuTable2" style='display:none'>								
+	          							<li><span  onClick="btn_Save()"> <spring:message code="ezResource.t185"/></span></li>
+	          							<li><span  onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
+	          							<li id="deletebtbn"><span onClick="delSchedule_onClick('${num}','${ownerID}')"> <spring:message code="ezResource.t65"/></span></li>
+	          						</div>
         						</c:when>
         						<c:otherwise>
         							<li id="Table1" ><span onClick="print_onClick( false )"> <spring:message code="ezResource.t186"/></span></li>          
-          							<li id="Table2"  style='display:none'><span onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
+          							<li id="Table2" style='display:none'><span onClick="print_onClick( true )"> <spring:message code="ezResource.t186"/></span></li>
         						</c:otherwise>
         					</c:choose>
         				</ul>
@@ -459,79 +456,19 @@
           					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
         				</tr>
         				
-						<c:choose>
-							<c:when test="${reFlag ne '1'}">
-								<tr id="tr_Recur" style="display: none">
-									<th> <spring:message code="ezResource.t197"/></th>
-          								<td colspan="3"><span id="AllDayDisplay"></span>
-            								<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
-            									<c:choose>
-            										<c:when test="${timeDisplay eq '1'}">
-														<option value="1" selected><spring:message code="ezResource.t198"/></option>
-              											<option value="2" ><spring:message code="ezResource.t199"/></option>
-              											<option value="3" ><spring:message code="ezResource.t200"/></option>
-              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            										</c:when>
-            										<c:when test="${timeDisplay eq '2'}">
-														<option value="1" ><spring:message code="ezResource.t198"/></option>
-              											<option value="2" selected><spring:message code="ezResource.t199"/></option>
-              											<option value="3" ><spring:message code="ezResource.t200"/></option>
-              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            										</c:when>
-            										<c:when test="${timeDisplay eq '3'}">
-														<option value="1" ><spring:message code="ezResource.t198"/></option>
-              											<option value="2" ><spring:message code="ezResource.t199"/></option>
-              											<option value="3" selected><spring:message code="ezResource.t200"/></option>
-              											<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            										</c:when>
-            										<c:when test="${timeDisplay eq '4'}">
-														<option value="1" ><spring:message code="ezResource.t198"/></option>
-              											<option value="2" ><spring:message code="ezResource.t199"/></option>
-              											<option value="3" ><spring:message code="ezResource.t200"/></option>
-              											<option value="4" selected><spring:message code="ezResource.t201"/></option>            												
-            										</c:when>
-            									</c:choose>
-            								</select>        
-            			  				</td>
-            			  			</tr>	
-							</c:when>
-							<c:otherwise>
-								<tr id="tr_Recur" >
-          							<th> <spring:message code="ezResource.t197"/></th>
-          							<td colspan="3"><span id="AllDayDisplay"></span>
-            							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
-            								<c:choose>
-            									<c:when test="${timeDisplay eq '1'}">
-													<option value="1" selected><spring:message code="ezResource.t198"/></option>
-              										<option value="2" ><spring:message code="ezResource.t199"/></option>
-              										<option value="3" ><spring:message code="ezResource.t200"/></option>
-              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            									</c:when>
-            									<c:when test="${timeDisplay eq '2'}">
-													<option value="1" ><spring:message code="ezResource.t198"/></option>
-              										<option value="2" selected><spring:message code="ezResource.t199"/></option>
-              										<option value="3" ><spring:message code="ezResource.t200"/></option>
-              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            									</c:when>
-            									<c:when test="${timeDisplay eq '3'}">
-													<option value="1" ><spring:message code="ezResource.t198"/></option>
-              										<option value="2" ><spring:message code="ezResource.t199"/></option>
-              										<option value="3" selected><spring:message code="ezResource.t200"/></option>
-              										<option value="4" ><spring:message code="ezResource.t201"/></option>            												
-            									</c:when>
-            									<c:when test="${timeDisplay eq '4'}">
-													<option value="1" ><spring:message code="ezResource.t198"/></option>
-              										<option value="2" ><spring:message code="ezResource.t199"/></option>
-              										<option value="3" ><spring:message code="ezResource.t200"/></option>
-              										<option value="4" selected><spring:message code="ezResource.t201"/></option>            												
-            									</c:when>
-            								</c:choose>
-            							</select>        
-            			  			</td>
-        						</tr>
-							</c:otherwise>
-						</c:choose>
-				<!-- 		<script>
+							
+						<tr id="tr_Recur" <c:if test="${reFlag ne '1'}">style="display: none"</c:if>>
+    						<th> <spring:message code="ezResource.t197"/></th>
+    						<td colspan="3"><span id="AllDayDisplay"></span>
+      							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
+	      							<option value="1" <c:if test="${timeDisplay eq '1'}">selected</c:if>><spring:message code="ezResource.t198"/></option>
+									<option value="2" <c:if test="${timeDisplay eq '2'}">selected</c:if>><spring:message code="ezResource.t199"/></option>
+									<option value="3" <c:if test="${timeDisplay eq '3'}">selected</c:if>><spring:message code="ezResource.t200"/></option>
+									<option value="4" <c:if test="${timeDisplay eq '4'}">selected</c:if>><spring:message code="ezResource.t201"/></option> 
+      							</select>
+      			  			</td>
+  						</tr>
+				 		<script>
         		 	  		if (reFlagVal == "1") {
 	                			strDspMod_1 = "style='display:none'";
                 				strDspMod_2 = "";
@@ -539,99 +476,66 @@
 	                			strDspMod_1 = "";
                 				strDspMod_2 = "style='display:none'";
             				}	
-            			</script> -->
+            			</script>
 					
-        			<tr id="tr_STime" ${strDspMod1}>
-          				<th> <spring:message code="ezResource.t197"/></th>
-          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
-          					<c:if test="${allDay eq '1'}">
-          						<input type="checkbox" id="AllDay" checked onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-          					</c:if>
-          					<c:if test="${allDay ne '1'}">
-          						<input type="checkbox" id="AllDay" onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-          					</c:if>
-          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
-           						~
-           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
-          				</td>
-					<!-- </td> -->
-        				</tr>
+	        			<tr id="tr_STime" ${strDspMod1}>
+	          				<th> <spring:message code="ezResource.t197"/></th>
+	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
+	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1'}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	           						~
+	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" />
+	          				</td>
+	        			</tr>
 				        <tr>
-          					<th> <spring:message code="ezResource.t213"/></th>
-          					<td style="width:160px" colspan="3">
-          						<select id="importance1" class="select">
-          							<c:choose>
-          								<c:when test="${importance eq '1'}">
-          									<option value="1" selected><spring:message code="ezResource.t214"/></option>
-          									<option value="2"><spring:message code="ezResource.t215"/></option>
-          									<option value="3"><spring:message code="ezResource.t216"/></option>
-          								</c:when>
-          								<c:when test="${importance eq '2'}">
-          									<option value="1" ><spring:message code="ezResource.t214"/></option>
-          									<option value="2" selected><spring:message code="ezResource.t215"/></option>
-          									<option value="3"><spring:message code="ezResource.t216"/></option>
-          								</c:when>
-          								<c:when test="${importance eq '3'}">
-          									<option value="1"><spring:message code="ezResource.t214"/></option>
-          									<option value="2"><spring:message code="ezResource.t215"/></option>
-          									<option value="3" selected><spring:message code="ezResource.t216"/></option>
-          								</c:when>
-          							</c:choose>
-            					</select>          
-              					<th style="display: none"> <spring:message code="ezResource.t217"/></th>
-              					<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
-              					<th style="display: none"> <spring:message code="ezResource.t218"/></th>
-              					<td style="display: none">
-              						<select id="characterID" name="select" class="select">
-                  						<option value="0" selected><spring:message code="ezResource.t219"/></option>
-                					</select>          
-            					</td>
-        				</tr>
-        				<tr style="display: none">
-          					<th> <spring:message code="ezResource.t222"/></th>
-          					<td colspan="3"><input type="text" id="loc" name="loc" value="${loc}" style="width: 100%" /></td>
-        				</tr>
-        				<tr style="display: none">
-          					<td><input type="checkbox" id="alertCheck" d  />
-            						<spring:message code="ezResource.t223"/></td>
-          					<td colspan="5">&nbsp;</td>
-        				</tr>
+	       					<th> <spring:message code="ezResource.t213"/></th>
+	       					<td style="width:160px" colspan="3">
+	       						<select id="importance1" class="select">
+   									<option value="1" <c:if test="${importance eq '1'}">selected</c:if>><spring:message code="ezResource.t214"/></option>
+   									<option value="2" <c:if test="${importance eq '2'}">selected</c:if>><spring:message code="ezResource.t215"/></option>
+   									<option value="3" <c:if test="${importance eq '3'}">selected</c:if>><spring:message code="ezResource.t216"/></option>
+	         					</select>
+	         				</td>
+       						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
+		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
+		           			<th style="display: none"> <spring:message code="ezResource.t218"/></th>
+		           			<td style="display: none">
+		           				<select id="characterID" name="select" class="select">
+		               				<option value="0" selected><spring:message code="ezResource.t219"/></option>
+		             			</select>          
+		         			</td>
+			     		</tr>
+	       				<tr style="display: none">
+	         				<th> <spring:message code="ezResource.t222"/></th>
+	         				<td colspan="3"><input type="text" id="loc" name="loc" value="${loc}" style="width: 100%" /></td>
+	       				</tr>
+	       				<tr style="display: none">
+	         				<td><input type="checkbox" id="alertCheck" d  /><spring:message code="ezResource.t223"/></td>
+	         				<td colspan="5">&nbsp;</td>
+	       				</tr>
         
 						<tr id="Span1">
-            				<th>
-            					<c:choose>
-            						<c:when test="${cmdStr eq 'mod'}">
-            							<spring:message code="ezResource.t374"/>
-            						</c:when>
-            						<c:otherwise>
-            							<a class="imgbtn"><span  id="Span1" name="ScheRep" onClick="javascript:return Open_Select()"><spring:message code="ezResource.t375"/></span></a>
-            						</c:otherwise>
-            					</c:choose>
-            				</th>
-            				<td colspan="7" id ="itemList" style="padding-left:4px;"></td>
-						</tr>     
+	           				<th>
+	           					<c:choose>
+	           						<c:when test="${cmdStr eq 'mod'}">
+	           							<spring:message code="ezResource.t374"/>
+	           						</c:when>
+	           						<c:otherwise>
+	           							<a class="imgbtn"><span  id="Span1" name="ScheRep" onClick="javascript:return Open_Select()"><spring:message code="ezResource.t375"/></span></a>
+	           						</c:otherwise>
+	           					</c:choose>
+	           				</th>
+	           				<td colspan="7" id ="itemList" style="padding-left:4px;"></td>
+						</tr>
 						<tr>
-          					<th> <spring:message code="ezResource.t224"/></th>
-          					<td colspan="3"><input type="text" id="title" name="title" maxlength="25" value="${title}" style="width: 98%" />          </td>
-        				</tr>
+	         				<th> <spring:message code="ezResource.t224"/></th>
+	         				<td colspan="3"><input type="text" id="title" name="title" maxlength="25" value="${title}" style="width: 98%" />          </td>
+	       				</tr>
       				</table>
       			</td>
   			</tr>
   			<tr>
-        		<%-- <c:choose>
-        			<c:when test="${pNoneActiveX eq 'YES'}">
-        				<td>
-        			</c:when>
-        			<c:otherwise>
-        				<td style="height:100%">
-        			</c:otherwise>
-        		</c:choose> --%>
-        		<%String pNoneActiveX = (String)request.getAttribute("noneActiveX"); %>
-        		 <%if(pNoneActiveX.equals("YES")){ %>
-    				<td>
-    			 <%}else{%>
-        			<td style="height:100%">
-        		<%}%>
+	  			<td <c:if test="${noneActiveX eq 'YES'}">style="height:100%"</c:if>>
         			<table style="height:100%; width:100%">
         				<tr style="height:100%">
           					<td id="EdtorSize">
@@ -686,8 +590,7 @@
   			<table style="height:0px; width:190px; border:0; border-collapse:collapse; border-spacing:0; padding:0px" >
     			<tr>
       				<td style="width:190px">
-      					<table id="baseColorTable" style="border:0px; border-collapse:collapse; border-spacing:1px; padding:0px; border-right-color:#999999; width:220px"
-           				 onclick="baseColorTable_onClick()">
+      					<table id="baseColorTable" style="border:0px; border-collapse:collapse; border-spacing:1px; padding:0px; border-right-color:#999999; width:220px" onclick="baseColorTable_onClick()">
           					<tr>
             					<td style="width:50px; background-color:#000000; height:12px" title="#000000"></td>
             					<td style="width:50px; background-color:#808080" title="#808080"></td>
