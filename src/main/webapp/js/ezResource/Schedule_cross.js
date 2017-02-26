@@ -228,10 +228,6 @@ function Schedule_Repetition_onclick()
 	createNodeAndInsertText(xmlDoc, objNode, "NUM", org_num);
     createNodeAndInsertText(xmlDoc, objNode, "OWNERID", org_ownerID);
     
-	//	g_data["startTime"] = idDatepicker.vtLocalDate;		// 시작시간
-//	g_data["endTime"] = idDatepicker.vtLocalEndDate;	// 종료시간
-	
-    // 071204 - 반복예약시 끝날짜 표시
 	if (endDateTimeRepeat !="" ) {
 		var startYearNum = Number(startDateTimeRepeat.substring(0, 4));
 		var startMonthNum = Number(startDateTimeRepeat.substring(5, 7))-1;
@@ -248,12 +244,18 @@ function Schedule_Repetition_onclick()
 		var startDateRepeat = new Date(startYearNum, startMonthNum, startDayNum, startHourNum, startMiniteNum);
 		var endDateRepeat = new Date(endYearNum, endMonthNum, endDayNum, endHourNum, endMiniteNum);
 	
-		g_data["startTime"] = startDateRepeat;		// 시작시간
-		g_data["endTime"] = endDateRepeat;	// 종료시간
+		g_data["startTime"] = startDateRepeat;
+		g_data["endTime"] = endDateRepeat;
 	} else {
 	    if (repetitionFlag) {
-	        g_data["startTime"] = reStartDate;		// 시작시간
-	        g_data["endTime"] = reEndDate;	// 종료시간
+	    	if(reStartDate == null)
+	            g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	        else
+	            g_data["startTime"] = reStartDate;
+	        if(reEndDate == null)
+	            g_data["endTime"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+	        else
+	            g_data["endTime"] = reEndDate;
 	    } else {
 	        g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();		// 시작시간
 	        g_data["endTime"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();	// 종료시간
@@ -262,7 +264,6 @@ function Schedule_Repetition_onclick()
 	
 	g_data["ftDay"] = "";
 	 
-	// 하루종일 체크 여부
 	var pAlldaycheck = "";
 	if (document.getElementById("AllDay").checked == true) {
 		pAlldaycheck = "1";
@@ -270,7 +271,7 @@ function Schedule_Repetition_onclick()
 		pAlldaycheck = "0";
 	}
 			
-	g_data["alldaycheck"] = pAlldaycheck;				// 하루종일유무
+	g_data["alldaycheck"] = pAlldaycheck;
 	
 	schedule_repetition_cross_dialogArguments[0] = g_data;
 	schedule_repetition_cross_dialogArguments[1] = Schedule_Repetition_onclick_Complete;

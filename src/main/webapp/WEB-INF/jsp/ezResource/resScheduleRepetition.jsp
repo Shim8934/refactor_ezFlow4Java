@@ -6,9 +6,9 @@
 	<head>
 		<title><spring:message code="ezResource.t274"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2"/>" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code="ezResource.e1"/>"></script>
 		<script type="text/javascript" src="/js/ezResource/dlg_recurrence_cross.js"></script>
 		<!-- data picker-->
@@ -28,7 +28,6 @@
 		    }
 		    
 	    	var RetValue;
-	    	
 	    	window.onload = function () {
 		        window_onload();
 	        	datepicker();
@@ -91,12 +90,12 @@
 	        	var SDate, EDate;
 	        	if (m_dlgArgs["alldaycheck"] == "1") {
 	        		try {
-                SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
-                EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
-	            	} catch (e) {
+                		SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
+                		EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
+	        		} catch (e) {
 		                SDate = new Date(m_dlgArgs["startTime"]);
 	                	EDate = new Date(m_dlgArgs["endTime"]);
-	            	}            
+	            	}     
 	        	} else {
 	            	try {
 		                SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
