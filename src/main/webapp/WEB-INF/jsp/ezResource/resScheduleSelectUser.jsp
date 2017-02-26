@@ -398,7 +398,7 @@
                   				<option value="title"><spring:message code='ezResource.t10'/></option> 
                   				<option value="telephonenumber"><spring:message code='ezResource.t11'/></option> 
                   				<option value="mobile"><spring:message code='ezResource.t136'/></option> 
-                  				<option value="HomePhone"><spring:message code='ezResource.t137'/>></option> 
+                  				<option value="HomePhone"><spring:message code='ezResource.t137'/></option> 
                   				<option value="facsimileTelephoneNumber"><spring:message code='ezResource.t138'/></option> 
                   				<option value="mail"><spring:message code='ezResource.t139'/></option> 
                   				<option value="streetAddress"><spring:message code='ezResource.t140'/></option> 
