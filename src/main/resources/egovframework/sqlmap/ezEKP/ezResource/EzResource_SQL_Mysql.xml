@@ -2294,6 +2294,8 @@
 	        FROM 
 	        	TBL_RS_SCHEDULE 
 			WHERE
+				PNUM = #v_P_pNum#
+			AND
 				COMPANYID = #v_P_companyID#
 			AND
 				OWNERID = #v_P_ownerID#
