@@ -89,8 +89,6 @@ public interface EzResourceService {
 	
 	public String isoUTFDate(String dateTimeStr, Locale locale);
 	
-	public String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) throws Exception;
-	
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public String modifyResSch(String xmlStr, int tenantID, String offset) throws Exception;

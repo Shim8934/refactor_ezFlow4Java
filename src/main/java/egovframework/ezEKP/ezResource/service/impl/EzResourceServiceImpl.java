@@ -2473,46 +2473,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
     }
 	
 	@Override
-	public  String convertDate(String strSource, String fromDateFormat, String toDateFormat, String strTimeZone) {
-		SimpleDateFormat simpledateformat = null;
-		Date date = null;
-		String _fromDateFormat = "";
-		String _toDateFormat = "";
-
-		if (EgovStringUtil.isNullToString(strSource).trim().equals("")) {
-			return "";
-		}
-		if (EgovStringUtil.isNullToString(fromDateFormat).trim().equals("")) {
-			_fromDateFormat = "yyyy-MM-dd HH:mm:ss"; // default값
-		} else {
-			_fromDateFormat = fromDateFormat;
-		}
-		if (EgovStringUtil.isNullToString(toDateFormat).trim().equals("")) {
-			_toDateFormat = "yyyy-MM-dd aa h:mm:ss"; // default값
-		} else {
-			_toDateFormat = toDateFormat;
-		}
-		
-		try {
-			simpledateformat = new SimpleDateFormat(_fromDateFormat, Locale.getDefault());
-			date = simpledateformat.parse(strSource);
-			
-			if (!EgovStringUtil.isNullToString(strTimeZone).trim().equals("")) {
-				simpledateformat.setTimeZone(TimeZone.getTimeZone(strTimeZone));
-			}
-			simpledateformat = new SimpleDateFormat(_toDateFormat, Locale.getDefault());
-		} catch (ParseException exception) {
-			
-		}
-		if (simpledateformat != null && simpledateformat.format(date) != null) {
-
-			return simpledateformat.format(date);
-		} else {
-			return "";
-		}
-	}
-	
-	@Override
 	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		

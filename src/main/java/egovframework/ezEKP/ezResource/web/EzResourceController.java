@@ -1238,8 +1238,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 
-		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
-		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
+		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
@@ -1491,8 +1491,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		startDateTime2 = startDateTime;
 		endDateTime2 = endDateTime;
 		
-		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
-		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
+		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 		
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
