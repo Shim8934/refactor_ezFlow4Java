@@ -10,14 +10,16 @@
     	window.resizeTo("1200", "800");
 	</script>
 	<frameset rows="68,*" framespacing="0" frameborder="no" border="0">
-		<%String lang = (String)request.getParameter("lang"); %>
-    	<%if(lang != "3"){ %>
-  			<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+    	<c:choose>
+			<c:when test="${lang != '3'}">
+				<frame src="/ezPortal/help/top.do" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
   				<frame src="/ezPortal/help/indexSub.do?lUrl=/ezPortal/help/leftPortal.do&rUrl=/ezPortal/help/main.do?id=/images/help/portal_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
-    	<%} else { %>
-   			<frame src="/ezPortal/top.do?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
-   			<frame src="/ezPortal/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=jp&rUrl=/ezPortal/main.do?id=/images/help/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
-    	<%} %>
+			</c:when>
+			<c:otherwise>
+				<frame src="/ezPortal/help/top.do?lang=jp" name="top" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
+   				<frame src="/ezPortal/indexSub.do?lUrl=/ezPortal/help/leftPortal.do?lang=jp&rUrl=/ezPortal/help/main.do?id=/images/help/portal_jp_01" name="bottom" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">
+			</c:otherwise>
+		</c:choose>
 	</frameset>
 	<noframes>
 		<body></body>
