@@ -424,8 +424,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
     			}
     		}
 			
-			if (message.getHeader("X-NEW-DISPLAYNAME") != null) {
-				showDisplay = message.getHeader("X-NEW-DISPLAYNAME")[0];
+			if (message.getHeader("X-JMocha-EXT-SENDERNAME") != null) {
+				showDisplay = message.getHeader("X-JMocha-EXT-SENDERNAME")[0];
 			}
 		}
 		
