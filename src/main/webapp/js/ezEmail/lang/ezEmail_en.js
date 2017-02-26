@@ -341,6 +341,13 @@ var strLang352 = "Identical organization and can't be added to Blocked Senders."
 var strLang353 = "The same domain or e-mail address exists.";
 // ### 수신거부 추가
 
+var strLang354 = "Please enter a domain name.";
+var strLang355 = "Big";
+var strLang356 = "Recovery has already been processed.";
+var strLang357 = "최상위로 이동할 수 없습니다.";
+var strLang358 = "같은 편지함으로 이동/복사할 수 없습니다.";
+var strLang359 = "이동하였습니다.";
+
 //추가
 var strLangLHM01 = "Please enter a domain name.";
 var strLangLHM02 = "No admin.";
