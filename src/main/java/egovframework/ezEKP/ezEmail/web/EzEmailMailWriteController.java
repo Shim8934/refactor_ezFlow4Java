@@ -2679,7 +2679,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 			        
 			        if (!eShowDisplayName.equals("")) {
-		            	message.setHeader("X-NEW-DISPLAYNAME", MimeUtility.encodeText(eShowDisplayName, "UTF-8", null));
+		            	message.setHeader("X-JMocha-EXT-SENDERNAME", MimeUtility.encodeText(eShowDisplayName, "UTF-8", null));
 		            }
 			                            
                     message.setFlag(Flags.Flag.SEEN, true);
