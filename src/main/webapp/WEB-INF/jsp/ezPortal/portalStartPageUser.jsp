@@ -97,7 +97,7 @@
 			</tr>		
 			<tr>
 				<td  height="50" > <br /> <spring:message code='ezPortal.t266'/><br />
-        	         <spring:message code='ezPortal.t247'/><br /> <br />
+        	         <spring:message code='ezPortal.t267'/><br /> <br />
 				</td>
 			</tr>
 			<tr>
