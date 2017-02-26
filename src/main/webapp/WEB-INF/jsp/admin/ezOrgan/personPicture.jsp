@@ -97,7 +97,7 @@
 			function imgtemp_onclick() {
 	            if (document.form.file1.value != "") {
 	            	if (document.getElementById("form").file1.files.length > 1) {
-			            alert("<spring:message code='ezOrgan.t9902' />");
+			            alert("<spring:message code='ezOrgan.x0001' />");
 			        }
 	            	
 		            var fd = new FormData();		            
@@ -127,7 +127,7 @@
 			function imgConfirm_onclick(obj) {
 				if(CrossYN()){
 					if (document.getElementById("form").file1.files.length == 0) {
-			            alert("<spring:message code='ezOrgan.t9903' />");
+			            alert("<spring:message code='ezOrgan.x0002' />");
 			            return;
 			        }
 					var fileName = document.getElementById("tempFilePath").value;
