@@ -94,7 +94,7 @@
 			VALUES(
 				SEQ_TBL_CONNECTION_INFO.NEXTVAL, #id#,			#displayName1#,		#displayName2#,		#deptID#,			#deptName1#,		#deptName2#,	
 				#title1#,		#title2#,			#companyID#,		#companyName1#,		#companyName2#,		#ip#,	
-				#lastLogin#,		#browser#,			#os#,				#agent#,        #tenantId#	
+				to_date(#lastLogin#, 'YYYY-MM-DD HH24:MI:SS'),		#browser#,			#os#,				#agent#,        #tenantId#	
 			)				
 		]]>
 	</insert>
