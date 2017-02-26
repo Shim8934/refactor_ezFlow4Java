@@ -1593,7 +1593,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 자원관리 자원 반복 실행 함수
+	 * 자원관리 자원 예약 반복정보 CRUD 실행 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRepetitionProc.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8") 
 	@ResponseBody
@@ -1603,57 +1603,42 @@ public class EzResourceController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyID = "";
 		String cmd = "";
+		String returnValue = "";
 		
 		companyID = userInfo.getCompanyID();
-			
+		
 		if (req.getParameter("cmd") != null) {
 			cmd = req.getParameter("cmd");
 		}
-		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 			
 		if (cmd.equals("get")) {
-			String ret = ezResourceService.getRepetition(xmlStr, userInfo.getTenantId());
-			Document xmlRet = commonUtil.convertStringToDocument(ret);
-			logger.debug("startDateTime="+xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent());
-			logger.debug("endDateTime="+xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent());
-			String startDate = commonUtil.getDateStringInUTC(xmlRet.getElementsByTagName("startDateTime").item(0).getTextContent(), userInfo.getOffset(), false);
-			String endDate = commonUtil.getDateStringInUTC(xmlRet.getElementsByTagName("endDateTime").item(0).getTextContent(), userInfo.getOffset(), false);
-
-			xmlRet.getElementsByTagName("startDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(startDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "")));
-			xmlRet.getElementsByTagName("endDateTime").item(0).setTextContent(ezResourceService.getLocalTime(EgovDateUtil.convertDate(endDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "")));
-				
-			return commonUtil.convertDocumentToString(xmlRet);
-				
+			returnValue = ezResourceService.getRepetition(xmlStr, userInfo.getTenantId(), userInfo.getOffset());
+		
 		} else if (cmd.equals("add") || cmd.equals("mod")) {
-			String startDate = xmlDom.getElementsByTagName("startDateTime").item(0).getTextContent();
-			String endDate = xmlDom.getElementsByTagName("endDateTime").item(0).getTextContent();
-
-			xmlDom.getElementsByTagName("startDateTime").item(0).setTextContent(EgovDateUtil.convertDate(startDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", ""));
-			xmlDom.getElementsByTagName("endDateTime").item(0).setTextContent(EgovDateUtil.convertDate(endDate, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", ""));
-				
 			String num = req.getParameter("num") != null ? req.getParameter("num").trim() : "";
 			String ownerID = req.getParameter("ownerID") != null ? req.getParameter("ownerID").trim() : "";
 		
-			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, commonUtil.convertDocumentToString(xmlDom), cmd, userInfo.getTenantId(), userInfo.getOffset());
+			boolean ret = ezResourceService.saveRepetition(companyID, num, ownerID, xmlStr, cmd, userInfo.getTenantId(), userInfo.getOffset());
 				
 			if (ret == true) {
-				return "OK";
+				returnValue = "OK";
 			} else {
-				return "NO";
+				returnValue = "NO";
 			}
 		} else if (cmd.equals("del")) {
-			boolean ret = ezResourceService.deleteRepetition(commonUtil.convertDocumentToString(xmlDom), userInfo.getTenantId());
+			boolean ret = ezResourceService.deleteRepetition(xmlStr, userInfo.getTenantId());
 				
 			if (ret == true) {
-				return "OK";
+				returnValue = "OK";
 			} else {
-				return "NO";
+				returnValue = "NO";
 			}
 		}
-
+		
+		logger.debug("returnValue=" + returnValue);
 		logger.debug("scheduleRepetitionProc ended");
-		return "";
-
+		
+		return returnValue;
 	}
 	
 	/**

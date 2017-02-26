@@ -85,7 +85,7 @@ public interface EzResourceService {
 	
 	public String updateScheduleDateTime(String xmlDom, String companyID, int tenantID, String offset) throws Exception;
 	
-	public String getRepetition(String xmlStr, int tenantID) throws Exception;
+	public String getRepetition(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID) throws Exception;
 	
