@@ -106,19 +106,22 @@
 			                document.all.txt_TitleE.focus();
 			                return;
 			            }
-			            if (!fileup) {
-			            	//strLang5가 ezQuestion.js에 없음
-			                alert("strLang5");
+			            
+			            /* if (!fileup) {
+			                alert(strLang5);
 			                return;
-			            }
+			            } */
+			            
 			            if (document.all("AttachPath").value == "") {
 			                alert("<spring:message code='ezQuestion.t160' />");
 			                return;
 			            }
+			            
 			            if (CheckChar(document.all("txt_TitleE").value)) {
 			                alert("<spring:message code='ezQuestion.t159' />");
 			                return;
 			            }
+			            
 			            pTitle = document.all("txt_TitleE").value;
 			            pPath = document.all("AttachPath").value;
 			        }
