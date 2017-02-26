@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	<link href="/css/help.css" rel="stylesheet" type="text/css">
-	<script src="/js/help/mouseeffect.js" type="text/javascript" ></script>
+	<script src="/js/mouseeffect.js" type="text/javascript" ></script>
 	<script type="text/javascript">
     	window.resizeTo("1200", "800");
 	</script>
