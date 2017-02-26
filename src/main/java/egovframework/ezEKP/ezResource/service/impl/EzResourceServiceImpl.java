@@ -3769,13 +3769,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			//하나의 요일일때
 			if (isOneDay) {
 				String dsStartDateTimeLoop = "";
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(recParam.getRecEndDateTime());
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
+				dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
+				
+				int compare = 0;
 				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, ""),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
+					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
 					
 					//몇째 요일의 일
 					int recPartDay = (recParam.getRecReOrd()-1) * 7 + recReOneYoil + (1-datePartLeftShift(recFirstDate));
@@ -3783,13 +3781,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					//구하고
 					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date.parse(recParam.getRecEndDateTime()).getHours() + date.parse(recParam.getRecEndDateTime()).getMinutes();
+					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
 					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					//while 조건 비교
 					dsStartDateTimeLoop = dsStartDateTime;
+					
+					String compare1 = dsStartDateTimeLoop;
+					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+					Date day1 = date.parse(compare1);
+					Date day2 = date.parse(compare2);
+					compare = day1.compareTo(day2);
+					
 					//비교한 다음
 					String compare3 = dsStartDateTime;
-					String compare4 = recParam.getRecStartDateTime(); 
+					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");  
 					Date day3 = date.parse(compare3);
 					Date day4 = date.parse(compare4);
 					int subCompare = day3.compareTo(day4);

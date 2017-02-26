@@ -45,8 +45,10 @@ public class IMAPAccess {
 	private String password;
 	private EgovMessageSource egovMessageSource;
 	private Locale locale;
-	private int timeout = 5000; // 간혹 SocketTimeoutException이 발생하는 경우가 있어 시간을 짧게 설정함.
-	private int connectionTimeout = 5000;
+	// 간혹 SocketTimeoutException이 발생하는 경우가 있어 시간을 짧게 설정하고 retry를 수행하도록 함.
+	// James 서버의 netty 버전을 3.10.6.Final로 올린 이후로는 SocketTimeoutException이 발생하지 않는 것으로 보임.
+	private int timeout = 10000; 
+	private int connectionTimeout = 10000; 
 	
 	private IMAPAccess(String host, String port, String userName, String password, EgovMessageSource egovMessageSource, Locale locale) {
 		this.host = host;
