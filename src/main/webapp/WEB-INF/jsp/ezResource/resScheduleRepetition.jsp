@@ -332,7 +332,7 @@
   			<tr>
     			<th style="text-align:right"></th>
     			<td>
-    				<input type="radio" id="NoEnd" name="optRangeEnd" value="radiobutton"  checked>
+    				<input type="radio" id="NoEnd" name="optRangeEnd" value="radiobutton" checked >
     				<label for="NoEnd"><spring:message code="ezResource.t314"/></label>
     			</td>
   			</tr>
@@ -342,7 +342,7 @@
     				<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton">
     				<label for="Instances">
     					<spring:message code="ezResource.t315"/>
-      					<input id="list_ReCount" onFocus='window.document.all["optRangeEnd"][1].checked=true;' maxlength="3" size="4" value="10">
+      					<input id="list_ReCount" onFocus='window.document.all["optRangeEnd"][1].checked=true;' maxlength="3" size="4" value="10" >
       					<spring:message code="ezResource.t316"/>
       				</label>
       			</td>

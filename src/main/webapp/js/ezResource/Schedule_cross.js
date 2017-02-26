@@ -285,7 +285,7 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         return;
     }
 
-    //반복 제거
+    
     if (typeof (retVal) == "number" && retVal == 0) {
         repetitionFlag = false;
         if (g_data["recurrence"] != "") {
@@ -294,7 +294,7 @@ function Schedule_Repetition_onclick_Complete(retVal) {
             g_data["recur_del"] = getXmlString(xmlDoc);
 
             document.getElementById("tr_STime").style.display = "";
-            //document.getElementById("tr_ETime").style.display = "";   
+               
             document.getElementById("tr_Recur").style.display = "none";
 
             document.getElementById("iReFlag").value = "0";
@@ -312,13 +312,23 @@ function Schedule_Repetition_onclick_Complete(retVal) {
         }
 
         g_data["recurrence"] = retVal["xml"];
-        g_data["ptEndDate"] = retVal["ptEndDate"];
+        
+        
+        var ptDate = new Date(retVal["ptEndDate"]);
+        var SetsTime = ptDate.getFullYear() + "-" + (ptDate.getMonth() + 1) + "-" + ptDate.getDate();
+        g_data["ptEndDate"] = SetsTime;
 
-        $("#Sdatepicker").datepicker('setDate', retVal["startTime"]);
-        $("#Edatepicker").datepicker('setDate', retVal["endTime"]);
+        var sDate = new Date(retVal["startTime"]);
+        var SetsTime = sDate.getFullYear() + "-" + (sDate.getMonth() + 1) + "-" + sDate.getDate();
+
+        var eDate = new Date(retVal["endTime"]);
+        var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+        
+        $("#Sdatepicker").datepicker('setDate', SetsTime);
+        $("#Edatepicker").datepicker('setDate', SeteTime);
 
         document.getElementById("tr_STime").style.display = "none";
-        //document.getElementById("tr_ETime").style.display = "none";
+        
         document.getElementById("tr_Recur").style.display = "";
 
         if (retVal["alldaycheck"] == "1")
@@ -342,8 +352,7 @@ function show_repetition_info() {
 	xmlinDoc = createXmlDom();
 	xmlinDoc.async = false;
 	xmlinDoc = loadXMLString(g_data["recurrence"]);
-	//xmlinDoc.loadXML( g_data["recurrence"] );
-	//szType = SelectSingleNodeValueNew(xmlinDoc, "frequency");//xmlinDoc.getElementsByTagName( "frequency" ).item(0).text;
+	
 	szType = getNodeText(SelectNodes(xmlinDoc,"recurrence/frequency")[0]);
 	
 	switch (szType) {
@@ -373,9 +382,9 @@ function show_repetition_info() {
 	    tempSstr = sdate.toLocaleTimeString().split(" ")[1];
 	    tempEstr = edate.toLocaleTimeString().split(" ")[1];
 
-	    // 20070820
-	    reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);//xmlinDoc.getElementsByTagName( "startDateTime" ).item(0).text;
-	    reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]); //xmlinDoc.getElementsByTagName( "endDateTime" ).item(0).text;	    
+	    
+	    reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
+	    reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);  
 
 	    var reStartHour = reStartDate.split(" ")[1].split(":")[0];
 	    var reEndHour = reEndDate.split(" ")[1].split(":")[0];
@@ -412,44 +421,17 @@ function show_repetition_info() {
 	    }
 
 	    repeatinfo += reEndHour + ":" + reEndMinute;
-
-
-
-
-
-	    /*var sdate, edate, tempstr;		
-		
-		sdate = new Date(document.all("idDatepicker").vtLocalDate);
-		edate = new Date(document.all("idDatepicker").vtLocalEndDate);
-		
-		tempSstr = sdate.toLocaleTimeString().split(" ")[1];
-        tempEstr = edate.toLocaleTimeString().split(" ")[1];
-	
-	
-        // [20070523] 
-        // 반복설정시 시간표시부분 수정
-        if(sdate.getHours() < 12)   
-        { repeatinfo += "" + strLang246 + " "; }
-        else    
-        { repeatinfo += "" + strLang247 + " ";  }
-                
-        repeatinfo += tempSstr.substring(0, tempSstr.lastIndexOf(":")) + "" + " ~ " + "";
-        
-        if(edate.getHours() < 12)   
-        { repeatinfo += "" + strLang246 + " "; }
-        else    
-        { repeatinfo += "" + strLang247 + " ";  }
-        
-        repeatinfo += tempEstr.substring(0, tempEstr.lastIndexOf(":"));*/
-
-
-	    //repeatinfo += "" + strLang127 + "" + sdate.toLocaleString().split('" + strLang127 + "')[1] + " ~ " + "" + strLang127 + "" + edate.toLocaleString().split('" + strLang127 + "')[1];
 	}
 	
-	//if (repetitiondel != "")
-	//	repeatinfo += ", 삭제된 항목 : " + repetitiondel + " 회차";<A HREF="../ResSch/Schedule_Repetition_Open.html">../ResSch/Schedule_Repetition_Open.html</A>
-		
-	//document.all("repeatinfo").innerHTML = repeatinfo;
+	repeatinfo += ", " + strLang580 + getNodeText(xmlinDoc.getElementsByTagName("startDateTime")[0]).split(' ')[0] + " ~ ";
+
+	if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
+	    repeatinfo += strLang581;
+	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
+	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
+	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
+	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
+	}
 	
 	document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
 }
@@ -528,7 +510,6 @@ function invite_onclick() {
 		inviteView.style.display = "block";
 		menuTable1.style.display = "none";
 		menuTable2.style.display = "block";
-		//td_content.style.height = "80";
 		
 		if( gresFlag.value == "0" || gresFlag.value == "" ) {
 			gresFlag.value = "1";
@@ -538,7 +519,6 @@ function invite_onclick() {
 		inviteView.style.display = "none";
 		menuTable1.style.display = "block";
 		menuTable2.style.display = "none";
-		//td_content.style.height = "130";
 		
 		if( gresFlag.value > "0" || gresFlag.value == "" ) {
 			gresFlag.value = "0";
@@ -546,9 +526,7 @@ function invite_onclick() {
 	}
 }
 
-// 초대에 대한 코딩
 function Schedule_Entry_onclick() {
-    //Entry_onKeydown();
 
     var g_param = new Array();
 
@@ -1309,37 +1287,10 @@ function printpr() {
 			ezUtil.PrintPreview(document);
 			ezUtil = null;
 }
-//******************************************************************
-//* Function 명   : window.onbeforeprint()
-//* 작성자명      : 박형기                                                                
-//* 작성일자      : 2002년 5월 10일                                                       
-//* 기능설명      : 개일일정 출력에서 윈도우 뜬후에 출력하는 함수
-//* 매개변수      : 
-//*               : 
-//* 수정일자      : 2002년 5월 12일                                                       
-//* 수정내용      : 
-//******************************************************************
-//window.onbeforeprint = function ()
+
 function onbeforeprint() {
     g_documentTitle = document.title;
     document.title = title.value;
-
-    //printAttachmentFileTD.innerHTML = "";
-    //printAttachmentFileTD.innerHTML = "";
-
-    //normalScreen.style.display = "none";
-    //printScreen.style.display = "block";
-    //mainbodytag.className = "";
-
-    /*if( g_printTrueFalse == true )
-	{
-		printInvite.style.display = "block";
-		p_entry.innerHTML = ScheToGot.innerHTML;
-	}
-	else
-	{
-		printInvite.style.display = "none";
-	}*/
 
     setNodeText(document.getElementById("printOwner"), getNodeText(document.getElementById("displayNM")));
 
@@ -1370,10 +1321,6 @@ function onbeforeprint() {
 
     setNodeText(document.getElementById("printTitle"),title.value + " ");		// 제목 인쇄하는 부분
 
-    //var divTag = document.createElement("DIV");
-
-    //divTag.innerHTML = tbContentElement.editor.DOM.body.innerHTML;
-    //printDocument.appendChild(divTag);
 }
 
 window.onafterprint = function () {

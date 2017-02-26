@@ -154,7 +154,17 @@
 	        }
 	        else
 	            repeatinfo += strLang126;
+			
+	        repeatinfo += ", " + strLang580 + getNodeText(xmlinDoc.getElementsByTagName("startDateTime")[0]).split(' ')[0] + " ~ ";
 
+	        if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
+	            repeatinfo += strLang581;
+	        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
+	            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
+	        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
+	            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
+	        }
+	        
 	        document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
 	    }
 

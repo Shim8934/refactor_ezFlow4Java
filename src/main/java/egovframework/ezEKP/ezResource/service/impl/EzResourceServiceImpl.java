@@ -2427,7 +2427,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				reMonth = list.getReMonth();
 				reOrd = list.getReOrd();
 				endFlag = list.getEndFlag();
-				reCount = list.getEndFlag();
+				reCount = list.getReCount();
 			}
 			
 			freq = reWay.substring(0, 1);
