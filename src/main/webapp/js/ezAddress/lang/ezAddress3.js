@@ -9,6 +9,9 @@ var strLang258 = "上一页";
 var strLang259 = "下一页";
 var strLang91001 = "人";
 var strLang100 = "検索結果がないです.";
+var strLang101 = "而试图获取组织发生错误。 - ";
+var strLang102 = "有没有发现部门。";
+var strLang103 = "输入您的搜索字词。";
 
 //추가
 var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";

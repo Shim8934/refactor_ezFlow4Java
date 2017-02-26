@@ -9,6 +9,9 @@ var strLang258 = "이전";
 var strLang259 = "다음";
 var strLang91001 = "명";
 var strLang100 = "검색 결과가 없습니다.";
+var strLang101 = "조직도를 검색하는 도중 오류가 발생했습니다. - ";
+var strLang102 = "검색된 부서가 없습니다.";
+var strLang103 = "검색어를 입력하세요.";
 
 //추가
 var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";
