@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezResource.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -1839,7 +1840,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원예약 저장 후 닫기 실행 함수
 	 */
-	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
@@ -1848,6 +1848,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String cmd = "";
 		String typeVal = "";
 		String companyID = "";
+		String ret = "";
 		
 		if (req.getParameter("cmd") != null && !req.getParameter("cmd").equals("")) {
 			cmd = req.getParameter("cmd");
@@ -1867,52 +1868,53 @@ public class EzResourceController extends EgovFileMngUtil {
 			rootNode.appendChild(objNode);
 				
 			boolean reVal = ezResourceService.delResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("reVal="+reVal);	
+			logger.debug("reVal=" + reVal);	
+			
 			if (reVal == true) {
-				return "OK";
+				ret = "OK";
 			} else {
-				return "NO";
+				ret = "NO";
 			}
 		} else if (cmd.equals("add")) {
 			logger.debug("add Start");
-			String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+			
 			String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-			SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				
-			//////////////////////////////추후 수정
-			if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
-				endDate = ezResourceService.addMinutes(endDate, -1, "yyyy-MM-dd HH:mm");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			cal.setTime(dateFormat.parse(endDate));
+			
+			if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {
+				cal.add(Calendar.MINUTE, -1);
+				endDate = dateFormat.format(cal.getTime());
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
-			dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
-			dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 
-			String ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("ret="+ret);
-			return ret;
+			ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		} else if (cmd.equals("mod")) {
 			logger.debug("mod Start");
-			String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+			
 			String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-			SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			cal.setTime(dateFormat.parse(endDate));
 
-			//////////////////////////////추후 수정
-			if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
-				endDate = ezResourceService.addMinutes(endDate, -1, "yyyy-MM-dd HH:mm");
+			if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {
+				cal.add(Calendar.MINUTE, -1);
+				endDate = dateFormat.format(cal.getTime());
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
-			dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
-			dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
-				
+			
 			Node rootNode = dom.getDocumentElement();
 			Node objNode = dom.createElement("TYPE_VAL");
 			objNode.setTextContent(typeVal);
 			rootNode.appendChild(objNode);
 
-			String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("ret="+ret);
-			return ret;
+			ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		}
-		logger.debug("scheduleAddOk End");
-		return "";
+		
+		logger.debug("ret=" + ret);
+		logger.debug("scheduleAddOk End.");
+		return ret;
 	}
 	
 	/**
@@ -2022,41 +2024,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
-		
-//		StringBuilder strSQL = new StringBuilder();
-//		
-//		if (cmd.toLowerCase().equals("add")) {
-//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-//			strSQL.append("FROM TB_Schedule");
-//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-//			strSQL.append("AND ownerID ="+"'"+resID+"'");
-//			strSQL.append("AND reFlag ="+0);
-//			strSQL.append("AND approveFlag = '1'");
-//			strSQL.append("AND NOT(  ");
-//			strSQL.append("                (endDate <=  ");
-//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-//			strSQL.append("              ) or (");
-//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-//			strSQL.append("              )");
-//		} else {
-//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-//			strSQL.append("FROM TB_Schedule");
-//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-//			strSQL.append("AND ownerID ="+"'"+resID+"'");
-//			strSQL.append("AND reFlag = 0");
-//			strSQL.append("AND approveFlag = '1'");
-//			strSQL.append("AND NOT IN ("+num+")");
-//			strSQL.append("AND NOT ( ");
-//			strSQL.append("                 (endDate <=  ");
-//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-//			strSQL.append("              ) or (");
-//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-//			strSQL.append("              )");
-//		}
 		
 		boolean isDupRep = false;
 		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();

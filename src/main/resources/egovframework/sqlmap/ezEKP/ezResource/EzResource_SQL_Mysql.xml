@@ -644,8 +644,8 @@
                 A.title title  ,
                 LOCATION ,
                 TIMEDISPLAY ,
-                STARTDATE ,
-                ENDDATE ,
+                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
                 ALERTTIME ,
                 REFLAG ,
                 GRESFLAG ,
@@ -654,7 +654,7 @@
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
-                WRITEDAY ,
+                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
@@ -704,8 +704,8 @@
             	TITLE ,
             	LOCATION ,
             	TIMEDISPLAY ,
-            	STARTDATE ,
-            	ENDDATE ,
+            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
             	ALERTTIME ,
             	REFLAG ,
             	GRESFLAG ,
@@ -714,7 +714,7 @@
             	IMPORTANCE ,
             	ENTRYLIST ,
             	ALLDAY ,
-            	WRITEDAY ,
+            	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
             	ATTACHFLAG ,
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
@@ -761,8 +761,8 @@
             	A.title title  ,
             	LOCATION ,
             	TIMEDISPLAY ,
-            	STARTDATE ,
-            	ENDDATE ,
+            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
             	ALERTTIME ,
             	REFLAG ,
             	GRESFLAG ,
@@ -771,7 +771,7 @@
             	IMPORTANCE ,
             	ENTRYLIST ,
             	ALLDAY ,
-            	WRITEDAY ,
+            	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
             	ATTACHFLAG ,
             	A.companyID ,
             	CHARACTERID ,
@@ -835,8 +835,8 @@
              	TITLE ,
              	LOCATION ,
              	TIMEDISPLAY ,
-             	STARTDATE ,
-             	ENDDATE ,
+             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+             	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
              	ALERTTIME ,
              	REFLAG ,
              	GRESFLAG ,
@@ -845,7 +845,7 @@
              	IMPORTANCE ,
              	ENTRYLIST ,
              	ALLDAY ,
-             	WRITEDAY ,
+             	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
              	ATTACHFLAG ,
              	CHARACTERID ,
              	SCH.ApproveFlag ,
@@ -926,8 +926,8 @@
              	A.title title  ,
              	LOCATION ,
              	TIMEDISPLAY ,
-             	STARTDATE ,
-             	ENDDATE ,
+             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+             	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
              	ALERTTIME ,
              	REFLAG ,
              	GRESFLAG ,
@@ -936,7 +936,7 @@
              	IMPORTANCE ,
              	ENTRYLIST ,
              	ALLDAY ,
-             	WRITEDAY ,
+             	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
              	ATTACHFLAG ,
              	CHARACTERID ,
              	APPROVEFLAG ,
@@ -1318,7 +1318,32 @@
 	<select id="EzResourceDAO.getSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
 			SELECT 
-				* 
+				OWNERID, 
+				NUM, 
+				PNUM, 
+				COMPANYID, 
+				WRITERID, 
+				DEPTNM, 
+				OWNERNM, 
+				TITLE, 
+				LOCATION, 
+				TIMEDISPLAY, 
+				DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE, 
+				DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE, 
+				ALLDAY, 
+				ALERTTIME, 
+				CONTENT, 
+				IMPORTANCE, 
+				REFLAG, 
+				GRESFLAG, 
+				DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY, 
+				ENTRYLIST, 
+				CHARACTERID, 
+				ATTACHFLAG, 
+				PUBLICFLAG, 
+				APPROVEFLAG, 
+				SCHEDULEID, 
+				TENANT_ID
       		FROM
       			TBL_RS_SCHEDULE 
       		WHERE  
@@ -1372,7 +1397,32 @@
 	<select id="EzResourceDAO.getScheduleInfo" parameterClass="Map" resultMap="resGetScheduleVO">
 		<![CDATA[
 			SELECT
-				* 
+				OWNERID, 
+				NUM, 
+				PNUM, 
+				COMPANYID, 
+				WRITERID, 
+				DEPTNM, 
+				OWNERNM, 
+				TITLE, 
+				LOCATION, 
+				TIMEDISPLAY, 
+				DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE, 
+				DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE, 
+				ALLDAY, 
+				ALERTTIME, 
+				CONTENT, 
+				IMPORTANCE, 
+				REFLAG, 
+				GRESFLAG, 
+				DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY, 
+				ENTRYLIST, 
+				CHARACTERID, 
+				ATTACHFLAG, 
+				PUBLICFLAG, 
+				APPROVEFLAG, 
+				SCHEDULEID, 
+				TENANT_ID 
         	FROM
         		TBL_RS_SCHEDULE 
        		WHERE  
@@ -1628,8 +1678,8 @@
 				companyID, characterID, attachFlag, tenant_ID
 			)
 			SELECT
-				#v_MaxNum# ,
-	        	#v_P_pnum# ,
+				#v_MaxNum# num ,
+	        	#v_P_pnum# pnum ,
 	        	OWNERID ,
 	        	WRITERID ,
 	        	DEPTNM ,
@@ -1637,17 +1687,17 @@
 	        	TITLE ,
 	        	LOCATION ,
 	        	TIMEDISPLAY ,
-	        	STR_TO_DATE(#v_P_sDate#,'%Y-%m-%d %T') ,
-	        	STR_TO_DATE(#v_P_eDate#,'%Y-%m-%d %T') ,
+	        	STR_TO_DATE(#v_P_sDate#,'%Y-%m-%d %T') startDate ,
+	        	STR_TO_DATE(#v_P_eDate#,'%Y-%m-%d %T') endDate ,
 	        	ALERTTIME ,
 	        	CONTENT ,
 	        	IMPORTANCE ,
-	        	4 ,
+	        	4 reFlag ,
 	         	GRESFLAG ,
 	        	ENTRYLIST ,
 	        	ALLDAY ,
-	        	#nowDate# ,
-	        	#v_P_companyID# ,
+	        	STR_TO_DATE(#nowDate#,'%Y-%m-%d %T') writeDay ,
+	        	#v_P_companyID# companyID ,
 	         	CHARACTERID ,
 	         	ATTACHFLAG ,
 	         	tenant_ID
@@ -1956,7 +2006,20 @@
 	<select id="EzResourceDAO.getScheduleRepetition" parameterClass="Map" resultMap="resGetScheduleRepetitionVO">
 		<![CDATA[
 			SELECT
-				*  
+				OWNERID, 
+				NUM, 
+				COMPANYID, 
+				DATE_FORMAT(STARTDATETIME, '%Y-%m-%d %T') STARTDATETIME, 
+				DATE_FORMAT(ENDDATETIME, '%Y-%m-%d %T') ENDDATETIME, 
+				REWAY, 
+				RENUM, 
+				REDAY, 
+				REYOIL, 
+				REMONTH, 
+				REORD, 
+				ENDFLAG, 
+				RECOUNT, 
+				TENANT_ID
       		FROM
       			TBL_RS_SCHEDULEREPETITION 
        		WHERE
@@ -1988,15 +2051,15 @@
              	TITLE ,
              	LOCATION ,
              	TIMEDISPLAY ,
-             	STARTDATE ,
-             	ENDDATE ,
+             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+             	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
              	ALLDAY  ,
              	ALERTTIME ,
              	CONTENT ,
              	IMPORTANCE ,
              	REFLAG ,
              	GRESFLAG ,
-             	WRITEDAY ,
+             	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
              	ENTRYLIST ,
              	CHARACTERID ,
              	ATTACHFLAG ,
@@ -2033,8 +2096,8 @@
 				C.ownerID as ownerID ,
              	C.num as num ,
              	C.companyID ,
-             	C.startDateTime ,
-             	C.endDateTime ,
+             	DATE_FORMAT(C.startDateTime, '%Y-%m-%d %T') startDateTime ,
+             	DATE_FORMAT(C.endDateTime, '%Y-%m-%d %T') endDateTime ,
              	C.reWay as reWay,
              	C.reNum as reNum,
              	C.reDay as reDay,
@@ -2048,7 +2111,7 @@
              	B.deptNM ,
              	B.ownerNM ,
              	B.title ,
-             	B.writeDay 
+             	DATE_FORMAT(B.writeDay, '%Y-%m-%d %T') writeDay 
         	FROM
         		TBL_RS_SCHEDULE B
 			JOIN
@@ -2094,15 +2157,15 @@
              	B.title ,
              	B.location ,
              	B.timeDisplay ,
-             	B.startDate ,
-             	B.endDate ,
+             	DATE_FORMAT(B.startDate, '%Y-%m-%d %T') startDate ,
+             	DATE_FORMAT(B.endDate, '%Y-%m-%d %T') endDate ,
              	B.allDay ,
              	B.alertTime ,
              	B.content ,
 	            B.importance ,
 	            B.reFlag ,
 	            B.gresFlag ,
-	            B.writeDay ,
+	            DATE_FORMAT(B.writeDay, '%Y-%m-%d %T') writeDay ,
 	            B.entryList ,
 	            B.characterID ,
 	            B.attachFlag ,
@@ -2173,8 +2236,8 @@
 				S.OWNERNM, 
 				S.DEPTNM, 
 				S.TITLE, 
-				S.STARTDATE, 
-				S.ENDDATE, 
+				DATE_FORMAT(S.STARTDATE, '%Y-%m-%d %T') STARTDATE, 
+				DATE_FORMAT(S.ENDDATE, '%Y-%m-%d %T') ENDDATE, 
 				T.BRD_NM, 
 				HR.MAIL
 			FROM
@@ -2199,5 +2262,47 @@
 				S.TENANT_ID = #tenantID#
 		]]>
     </select>
+    
+    <select id="EzResourceDAO.getDeletedRepSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
+        <![CDATA[
+        	SELECT
+	        	OWNERID ,
+				NUM ,
+	        	PNUM ,
+	        	COMPANYID ,
+	        	WRITERID ,
+	        	DEPTNM ,
+	        	OWNERNM ,
+	        	TITLE ,
+	        	LOCATION ,
+	        	TIMEDISPLAY ,
+	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
+	        	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+	        	ALLDAY ,
+	        	ALERTTIME ,
+	        	CONTENT ,
+	        	IMPORTANCE ,
+	        	REFLAG ,
+	         	GRESFLAG ,
+	        	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+	        	ENTRYLIST ,
+	         	CHARACTERID ,
+	         	ATTACHFLAG ,
+	         	PUBLICFLAG ,
+	         	APPROVEFLAG ,
+	         	SCHEDULEID
+	        FROM 
+	        	TBL_RS_SCHEDULE 
+			WHERE
+				COMPANYID = #v_P_companyID#
+			AND
+				OWNERID = #v_P_ownerID#
+			AND
+				REFLAG = '4'
+			AND
+				TENANT_ID = #tenantID# 
+        ]]>
+    </select>
+    	
 </sqlMap>
 
