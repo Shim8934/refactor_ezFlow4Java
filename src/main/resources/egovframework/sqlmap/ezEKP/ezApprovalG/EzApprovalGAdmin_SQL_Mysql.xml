@@ -35,10 +35,14 @@
 				TBL_CONTAINER.containertypeid = TBL_CONTAINERTYPE.containertypeid
 			AND
 				TBL_CONTAINER.tenant_id = TBL_CONTAINERTYPE.tenant_id
-			WHERE
-				containerowndepid = #v_DEPTID#
 			AND
+				TBL_CONTAINER.companyid = TBL_CONTAINERTYPE.companyid
+			WHERE
 				TBL_CONTAINER.tenant_id = #tenantID#
+			AND
+				TBL_CONTAINER.companyid = #companyID#
+			AND
+				containerowndepid = #v_DEPTID#
 		]]>
 	</select>
 
@@ -65,21 +69,27 @@
 			LEFT JOIN
 				TBL_CONTAINERTODOCSTATE
 			ON
-				TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
-			AND
 				TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
+			AND
+				TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
+			AND
+				TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
 			LEFT JOIN
 				TBL_CONTAINERTYPE
 			ON
-				TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
-			AND
 				TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
+			AND
+				TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
+			AND
+				TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
 			WHERE
+				TBL_CODELIST.tenant_id = #tenantID#
+			AND
+				TBL_CODELIST.companyid = #companyID#
+			AND
 				TBL_CODELIST.code1 = 'A02'
 			AND
 				TBL_CODELIST.isuse = '1'
-			AND
-				TBL_CODELIST.tenant_id = #tenantID#
 			ORDER BY
 				TBL_CONTAINERTODOCSTATE.documentstate
 		]]>
@@ -98,14 +108,16 @@
 			SELECT 
 				containerid,
 				usedepid,
-				(SELECT displayname FROM TBL_DEPTMASTER AS T1 WHERE cn = A.usedepid) as containerTypeName,
-				(SELECT displayname2 FROM TBL_DEPTMASTER AS T2 WHERE cn = A.usedepid) as containerTypeName2
+				(SELECT displayname FROM TBL_DEPTMASTER AS T1 WHERE T1.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName,
+				(SELECT displayname2 FROM TBL_DEPTMASTER AS T2 WHERE T2.tenant_id = #tenantID# AND cn = A.usedepid) as containerTypeName2
 			FROM
 				TBL_CONTAINERUSEDEP A
 			WHERE
-				containerid = #v_CONTID#
-			AND
 				A.tenant_id = #tenantID#
+			AND
+				A.companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
 		]]>
 	</select>
 
@@ -136,11 +148,13 @@
 			FROM
 				TBL_TASKCODE
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				subcategorycode = #v_SUBCATECODE#
 			AND
 				delflag = '0'
-			AND
-				tenant_id = #tenantID#
 			ORDER BY
 				taskcode
 		]]>
@@ -181,13 +195,17 @@
 			LEFT OUTER JOIN
 				TBL_TASK_DEPTINFO
 			ON
-				TBL_TASKCODE.taskcode = TBL_TASK_DEPTINFO.taskcode
-			AND
 				TBL_TASKCODE.tenant_id = TBL_TASK_DEPTINFO.tenant_id
-			WHERE
-				TBL_TASKCODE.taskcode = #v_TASKCODE#
 			AND
+				TBL_TASKCODE.companyid = TBL_TASK_DEPTINFO.companyid
+			AND
+				TBL_TASKCODE.taskcode = TBL_TASK_DEPTINFO.taskcode
+			WHERE
 				TBL_TASKCODE.tenant_id = #tenantID#
+			AND
+				TBL_TASKCODE.companyid = #companyID#
+			AND
+				TBL_TASKCODE.taskcode = #v_TASKCODE#
 		]]>
 
 		<isNotEqual property="v_DEPTCODE" compareValue="">
@@ -227,9 +245,11 @@
 			FROM
 				TBL_TASKCODE
 			WHERE
-				taskcode = #v_TASKCODE#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
 		]]>
 	</select>
 
@@ -248,9 +268,11 @@
 			FROM
 				TBL_TASKCODE
 			WHERE
-				taskcode = #v_TASKCODE#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
 		]]>
 	</select>
 
@@ -269,16 +291,16 @@
 				IFNULL(processdeptname2, PROCESSDEPTNAME) AS PROCESSDEPTNAME2,
 				categorycode,
 				cname,
-				IFNULL(cname2,CNAME) AS CNAME2,
+				IFNULL(cname2,cname) AS CNAME2,
 				mcategorycode,
 				mcname,
-				IFNULL(mcname2, MCNAME) AS MCNAME2,
+				IFNULL(mcname2, mcname) AS MCNAME2,
 				subcategorycode,
 				scname,
-				IFNULL(scname2, SCNAME) AS SCNAME2,
+				IFNULL(scname2, scname) AS SCNAME2,
 				taskcode,
 				taskname,
-				IFNULL(taskname2, TASKNAME) AS TASKNAME2,
+				IFNULL(taskname2, taskname) AS TASKNAME2,
 				keepingperiod,
 				keepingmethod,
 				keepingplace,
@@ -293,6 +315,8 @@
 				VTASKCLASS
 			WHERE
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 		]]>
 
 		<isNotEqual property="v_DEPTCODE" compareValue="">
@@ -329,11 +353,13 @@
 			FROM
 				TBL_TASK_DEPTINFO
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				taskcode = #v_TASKCODE#
 			AND
 				delflag = '0'
-			AND
-				tenant_id = #tenantID#	
 			ORDER BY
 				processdeptcode
 		]]>
@@ -365,6 +391,8 @@
 						TBL_SEALINFO
 					WHERE
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					ORDER BY
 						regdate DESC
 				]]>
@@ -385,9 +413,11 @@
 					FROM
 						TBL_SEALINFO
 					WHERE
-						deldate IS NULL
-					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						deldate IS NULL
 					ORDER BY
 						regdate DESC      
 				]]>
@@ -411,6 +441,8 @@
 						TBL_SEALINFO
 					WHERE
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					ORDER BY
 						regdate DESC
 				]]>
@@ -431,9 +463,11 @@
 					FROM
 						TBL_SEALINFO
 					WHERE
-						deldate IS NULL
-					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						deldate IS NULL
 					ORDER BY
 						regdate DESC
 				]]>
@@ -464,11 +498,13 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
-					deptid = #v_DEPTID#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deptid = #v_DEPTID#
 				ORDER BY
 					regdate DESC
 			]]>
@@ -488,13 +524,15 @@
 					regusername,
 					regusername2
 				FROM
-					TBL_SEALDEPTINFO 
+					TBL_SEALDEPTINFO
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					deldate IS NULL
 				AND
 					deptid = #v_DEPTID#
-				AND
-					tenant_id = #tenantID#
 				ORDER BY
 					REGDATE DESC
 			]]>
@@ -565,17 +603,20 @@
 						orgdocnumcode,
 						seperateattachxml,
 						summary,
-						TBL_APRDOCINFO.TENANT_ID
+						TBL_APRDOCINFO.tenant_id
 					FROM
 						TBL_APRDOCINFO
 					RIGHT OUTER JOIN
 						(SELECT
 							DISTINCT docid,
-							tenant_id
+							tenant_id,
+							companyid
 						FROM
 							TBL_APRLINEINFO
 						WHERE
-							TENANT_ID = #tenantID#
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
 		]]>
 
 		<isNotEqual property="v_APPROVUSER" compareValue="">
@@ -588,15 +629,19 @@
 		<![CDATA[
 				) aaa
 			ON
-				TBL_APRDOCINFO.docid = aaa.docid
-			AND
 				TBL_APRDOCINFO.tenant_id = aaa.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = aaa.companyid
+			AND
+				TBL_APRDOCINFO.docid = aaa.docid
 			INNER JOIN
 				TBL_EXPAPRDOCINFO
 			ON
-				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
-			AND
 				TBL_APRDOCINFO.tenant_id = TBL_EXPAPRDOCINFO.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = TBL_EXPAPRDOCINFO.companyid
+			AND
+				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
 				(functiontype IS NOT NULL)
 			AND
@@ -757,9 +802,11 @@
 			FROM
 				TBL_FORMCONTUSERGROUP
 			WHERE
-				formcontid = #v_FORMCONTID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
 		]]>
 	</select>
 
@@ -785,9 +832,11 @@
 			FROM
 				TBL_FORMINFO
 			WHERE
-				formid = #v_PFORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_PFORMID#
 		]]>
 	</select>
 
@@ -805,9 +854,11 @@
 			FROM
 				TBL_FORMRECV
 			WHERE
-				formid = #v_FORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
 			ORDER BY
 				deptsn
 		]]>
@@ -834,9 +885,11 @@
 					FROM
 						TBL_TASKCATEGORY
 					WHERE
-						oldflag IS NULL
-					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						oldflag IS NULL
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
@@ -851,11 +904,13 @@
 				FROM
 					TBL_TASKMIDDLECATEGORY
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					categorycode = #v_PARENTID#
 				AND
 					oldflag IS NULL
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
@@ -870,11 +925,13 @@
 				FROM
 					TBL_TASKSUBCATEGORY
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					mcategorycode = #v_PARENTID#
 				AND
 					oldflag IS NULL
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 	</select>
@@ -895,9 +952,11 @@
 				FROM
 					TBL_ADMINRECEIPTGROUP_SUB 
 				WHERE
-					mainid = #v_MAINID#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mainid = #v_MAINID#
 				ORDER BY
 					subid
 			]]>
@@ -912,11 +971,15 @@
 				JOIN
 					TBL_ADMINRECEIPTGROUP_SUB
 				ON
-					TBL_ADMINRECEIPTGROUP_MAIN.mainid = TBL_ADMINRECEIPTGROUP_SUB.mainid
-				AND
 					TBL_ADMINRECEIPTGROUP_MAIN.tenant_id = TBL_ADMINRECEIPTGROUP_SUB.tenant_id
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.companyid = TBL_ADMINRECEIPTGROUP_SUB.companyid
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.mainid = TBL_ADMINRECEIPTGROUP_SUB.mainid
 				WHERE
 					TBL_ADMINRECEIPTGROUP_MAIN.tenant_id = #tenantID#
+				AND
+					TBL_ADMINRECEIPTGROUP_MAIN.companyid = #companyID#
 				ORDER BY
 					TBL_ADMINRECEIPTGROUP_MAIN.mainid
 			]]>
@@ -930,6 +993,8 @@
 						TBL_ADMINRECEIPTGROUP_MAIN
 					WHERE
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					ORDER BY
 						mainid
 				]]>
@@ -960,9 +1025,11 @@
 					FROM
 						TBL_TASKCODEHISTORY
 					WHERE
-						taskcode = #v_TASKCODE#
-					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						taskcode = #v_TASKCODE#
 					ORDER BY
 						sn DESC
 				]]>
@@ -981,6 +1048,8 @@
 						TBL_TASKCODEHISTORY
 					WHERE
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					ORDER BY
 						sn DESC
 					LIMIT
@@ -1001,9 +1070,11 @@
 					FROM
 						TBL_TASKCODEHISTORY
 					WHERE
-						taskcode = #v_TASKCODE#
-					AND
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						taskcode = #v_TASKCODE#
 					ORDER BY
 						sn DESC
 				]]>
@@ -1021,6 +1092,8 @@
 						TBL_TASKCODEHISTORY
 					WHERE
 						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
 					ORDER BY
 						sn DESC
 					LIMIT
@@ -1049,13 +1122,15 @@
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
 						docstate = '011'
 					AND
 						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
 						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-					AND
-						tenant_id = #tenantID#
 					GROUP BY
 						sentdeptid,
 						sentdeptname
@@ -1072,13 +1147,15 @@
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
 						docstate = '011'
 					AND
 						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
 						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-					AND
-						tenant_id = #tenantID#
 					GROUP BY
 						receiveddeptid,
 						receiveddeptname
@@ -1098,13 +1175,15 @@
 						FROM
 							TBL_ENDRECEIPTPROCESSINFO
 						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
 							docstate = '011'
 						AND
 							processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 						AND
 							processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-						AND
-							tenant_id = #tenantID#
 						GROUP BY
 							sentdeptid,
 							sentdeptname,
@@ -1127,6 +1206,10 @@
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
 						docstate = '011'
 					AND
 						receivesn = '2'
@@ -1134,8 +1217,6 @@
 						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
 						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-					AND
-						tenant_id = #tenantID#
 					GROUP BY
 						sentdeptid,
 						sentdeptname2
@@ -1152,13 +1233,15 @@
 					FROM
 						TBL_ENDRECEIPTPROCESSINFO
 					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
 						docstate = '011'
 					AND
 						processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 					AND
 						processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-					AND
-						tenant_id = #tenantID#
 					GROUP BY
 						receiveddeptid,
 						receiveddeptname2
@@ -1178,13 +1261,15 @@
 						FROM
 							TBL_ENDRECEIPTPROCESSINFO
 						WHERE
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
 							docstate = '011'
 						AND
 							processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 						AND
 							processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-						AND
-							tenant_id = #tenantID#
 						GROUP BY
 							sentdeptid,
 							sentdeptname2,
@@ -1219,13 +1304,15 @@
 			FROM
 				TBL_ENDAPRLINEINFO
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				aprtype = #v_APRTYPE#
 			AND
 				processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
 			AND
 				processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-			AND
-				tenant_id = #tenantID#
 			GROUP BY
 				aprmemberdeptid,
 				aprmemberid,
@@ -1255,13 +1342,17 @@
 			JOIN
 				TBL_CONTAINERTYPE
 			ON
-				TBL_CONTAINER.containertypeid = TBL_CONTAINERTYPE.containertypeid
-			AND
 				TBL_CONTAINER.tenant_id = TBL_CONTAINERTYPE.tenant_id
-			WHERE
-				TBL_CONTAINER.containertypeid = #v_CONTTYPEID#
 			AND
+				TBL_CONTAINER.companyid = TBL_CONTAINERTYPE.companyid
+			AND
+				TBL_CONTAINER.containertypeid = TBL_CONTAINERTYPE.containertypeid
+			WHERE
 				TBL_CONTAINER.tenant_id = #tenantID#
+			AND
+				TBL_CONTAINER.companyid = #companyID#
+			AND
+				TBL_CONTAINER.containertypeid = #v_CONTTYPEID#
 		]]>
 	</select>
 
@@ -1271,9 +1362,11 @@
 			DELETE FROM
 				TBL_CONTAINERTODOCSTATE
         	WHERE
-        		containertypeid = #v_CONTTYPEID#
-        	AND
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containertypeid = #v_CONTTYPEID#
 		]]>
 	</delete>
 
@@ -1283,9 +1376,11 @@
 			DELETE FROM
 				TBL_CONTAINERTYPE
         	WHERE
-        		containertypeid = #v_CONTTYPEID#
-        	AND
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containertypeid = #v_CONTTYPEID#
 		]]>
 	</delete>
 
@@ -1307,6 +1402,8 @@
 				TBL_FORMINFO
 			WHERE
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 		]]>
 	</select>
 
@@ -1321,6 +1418,7 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
+				companyid,
 				tenant_id)
 			VALUES
 				(#v_PFORMCONTAINERID#,
@@ -1331,6 +1429,7 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -1348,9 +1447,11 @@
 				formfilelocation = #v_PURL#,
 				formconnflag = #v_PFORMCONNFLAG#
 			WHERE
-				formid = #v_PFORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_PFORMID#
 		]]>
 	</update>
 
@@ -1359,9 +1460,11 @@
 			DELETE FROM
 				TBL_FORMRECV
 			WHERE
-				formid = #v_PFORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_PFORMID#
 		]]>
 	</delete>
 
@@ -1371,11 +1474,13 @@
 				(formid,
 				deptid,
 				deptsn,
+				companyid,
 				tenant_id)
 			VALUES
 				(#v_PFORMID#,
 				#deptID#,
 				#deptSN#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -1395,11 +1500,13 @@
 			FROM
 				TBL_CONTAINER
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				containertypeid = #v_CONTTYPEID#
 			AND
 				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID#)
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</select>
 
@@ -1419,9 +1526,11 @@
 				FROM
 					TBL_TASKCATEGORY
 				WHERE
-					categorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
@@ -1431,9 +1540,11 @@
 				FROM
 					TBL_TASKMIDDLECATEGORY
 				WHERE
-					mcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mcategorycode = #v_CATECODE#
 					
 			]]>
 		</isEqual>
@@ -1444,9 +1555,11 @@
 				FROM
 					TBL_TASKSUBCATEGORY
 				WHERE
-					subcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 	</select>
@@ -1467,11 +1580,13 @@
 				FROM
 					TBL_TASKMIDDLECATEGORY
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					categorycode = #v_CATECODE#
 				AND
 					oldflag IS NULL
-				AND
-					tenant_id = #tenantID#   
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
@@ -1481,11 +1596,13 @@
 				FROM
 					TBL_TASKSUBCATEGORY
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					mcategorycode = #v_CATECODE#
 				AND
 					oldflag IS NULL
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
@@ -1495,11 +1612,13 @@
 				FROM
 					TBL_TASKCODE
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					subcategorycode = #v_CATECODE#
 				AND
 					delflag = '0'
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 	</select>
@@ -1519,9 +1638,11 @@
 			FROM
 				TBL_TASKCODE
 			WHERE
-				taskcode = #v_TASKCODE#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
 		]]>
 	</select>
 
@@ -1541,9 +1662,11 @@
 				FROM
 					TBL_CABINETCLASS
 				WHERE
-					taskcode = #v_TASKCODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					taskcode = #v_TASKCODE#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_DEPTID" compareValue="">
@@ -1553,11 +1676,13 @@
 				FROM
 					TBL_CABINETCLASS
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					taskcode = #v_TASKCODE#
 				AND
 					RTRIM(processdeptcode) = #v_DEPTID#
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isNotEqual>
 	</select>
@@ -1577,11 +1702,13 @@
 			FROM
 				TBL_TASK_DEPTINFO 
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				taskcode = #v_TASKCODE#
 			AND
 				RTRIM(processdeptcode) = #v_DEPTCODE#
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</select>
 
@@ -1604,11 +1731,14 @@
 			RIGHT OUTER JOIN
 				(SELECT
 					DISTINCT docid,
+					companyid,
 					tenant_id
 				FROM
 					TBL_APRLINEINFO
 				WHERE
 					TBL_APRLINEINFO.tenant_id = #tenantID#
+				AND
+					TBL_APRLINEINFO.companyid = #companyID#
 		]]>
 
 		<isNotEqual property="v_APPROVUSER" compareValue="">
@@ -1621,21 +1751,27 @@
 		<![CDATA[
 				) aaa
 			ON
-				TBL_APRDOCINFO.docid = aaa.docid
-			AND
 				TBL_APRDOCINFO.tenant_id = aaa.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = aaa.companyid
+			AND
+				TBL_APRDOCINFO.docid = aaa.docid
 			INNER JOIN
 				TBL_EXPAPRDOCINFO 
 			ON
-				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
-			AND
 				TBL_APRDOCINFO.tenant_id = TBL_EXPAPRDOCINFO.tenant_id
+			AND
+				TBL_APRDOCINFO.companyid = TBL_EXPAPRDOCINFO.companyid
+			AND
+				TBL_APRDOCINFO.docid = TBL_EXPAPRDOCINFO.docid
 			WHERE
+				TBL_APRDOCINFO.tenant_id = #tenantID#
+			AND
+				TBL_APRDOCINFO.companyid = #companyID#
+			AND
 				(functiontype IS NOT NULL)
 			AND
 				(startdate IS NOT NULL)
-			AND
-				TBL_APRDOCINFO.tenant_id = #tenantID#
 		]]>
 
 		<isNotEqual property="v_DOCNUMBER" compareValue="">
@@ -1720,6 +1856,7 @@
 				(containertypeid,
 				containertypename,
 				containertypename2,
+				companyid,
 				tenant_id)
 			VALUES 
 				((SELECT
@@ -1730,9 +1867,12 @@
 					FROM
 						TBL_CONTAINERTYPE
 					WHERE
-						tenant_id = #tenantID#) AS T1),
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#) AS T1),
 				#v_CONTTYPENAME#,
 				#v_CONTTYPENAME2#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -1748,9 +1888,11 @@
 			DELETE FROM
 				TBL_CONTAINERUSEDEP
 			WHERE
-				containerid = #v_CONTID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
 		]]>
 	</delete>
 
@@ -1759,9 +1901,11 @@
 			DELETE FROM
 				TBL_CONTAINER
 			WHERE
-				containerid = #v_CONTID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #v_CONTID#
 		]]>
 	</delete>
 
@@ -1809,9 +1953,11 @@
 			DELETE FROM
 				TBL_ADMINRECEIPTGROUP_SUB
 			WHERE
-				subid = #v_SUBID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				subid = #v_SUBID#
 		]]>
 	</delete>
 
@@ -1830,9 +1976,11 @@
 			SET
 				mainname = #v_MAINNAME#
 			WHERE
-				mainid = #v_MAINID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				mainid = #v_MAINID#
 		]]>
 	</update>
 
@@ -1847,9 +1995,11 @@
 		<![CDATA[
 			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
 				(mainname,
+				companyid,
 				tenant_id)
 			VALUES
 				(#v_MAINNAME#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -1866,9 +2016,11 @@
 			DELETE FROM
 				TBL_ADMINRECEIPTGROUP_MAIN
 			WHERE
-				mainid = #v_MAINID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				mainid = #v_MAINID#
 		]]>
 	</delete>
 
@@ -1889,6 +2041,7 @@
 					name2,
 					description,
 					oldflag,
+					companyid,
 					tenant_id)
 				VALUES
 					(#v_CATECODE#,
@@ -1896,6 +2049,7 @@
 					#v_NAME2#,
 					#v_DESC#,
 					NULL,
+					#companyID#,
 					#tenantID#)
 			]]>
 		</isEqual>
@@ -1908,6 +2062,7 @@
 					description,
 					categorycode,
 					oldflag,
+					companyid,
 					tenant_id)
 				VALUES 
 					(#v_CATECODE#,
@@ -1916,6 +2071,7 @@
 					#v_DESC#,
 					#v_CODE#,
 					NULL,
+					#companyID#,
 					#tenantID#)
 			]]>
 		</isEqual>
@@ -1928,6 +2084,7 @@
 					description,
 					mcategorycode,
 					oldflag,
+					companyid,
 					tenant_id)
 				VALUES 
 					(#v_CATECODE#,
@@ -1936,6 +2093,7 @@
 					#v_DESC#,
 					#v_CODE#,
 					NULL,
+					#companyID#,
 					#tenantID#)
 			]]>
 		</isEqual>
@@ -1952,9 +2110,11 @@
 					name2 = #v_NAME2#,
 					description = #v_DESC#
 				WHERE
-					categorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
@@ -1967,9 +2127,11 @@
 					description = #v_DESC#,
 					categorycode = #v_CODE#
 				WHERE
-					mcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mcategorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
@@ -1982,9 +2144,11 @@
 					description = #v_DESC#,
 					mcategorycode = #v_CODE#
 				WHERE
-					subcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 	</update>
@@ -2004,9 +2168,11 @@
 				SET
 					oldflag = 'Y'
 				WHERE
-					categorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					categorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
@@ -2016,9 +2182,11 @@
 				SET
 					oldflag = 'Y'
 				WHERE
-					mcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					mcategorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
@@ -2028,9 +2196,11 @@
 				SET
 					oldflag = 'Y'
 				WHERE
-					subcategorycode = #v_CATECODE#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_CATECODE#
 			]]>
 		</isEqual>
 	</update>
@@ -2049,9 +2219,11 @@
 				SET
 					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
-					deldate IS NULL
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					deldate IS NULL
 			]]>
 		</isEqual>
 		<isNotEqual property="v_SEALNUM" compareValue="">
@@ -2061,9 +2233,11 @@
 				SET
 					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
-					sealnum = #v_SEALNUM#
-				AND
 					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					sealnum = #v_SEALNUM#
 			]]>
 		</isNotEqual>
 	</update>
@@ -2083,11 +2257,13 @@
 				SET
 					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					deldate IS NULL
 				AND
 					deptid = #v_DEPTID#
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_SEALNUM" compareValue="">
@@ -2097,11 +2273,13 @@
 				SET
 					deldate = DATE_FORMAT(#v_pNow#, '%Y-%m-%d %H:%i:%s')
 				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
 					sealnum = #v_SEALNUM#
 				AND
 					deptid = #v_DEPTID#
-				AND
-					tenant_id = #tenantID#
 			]]>
 		</isNotEqual>
 	</update>
@@ -2122,9 +2300,11 @@
 			FROM
 				TBL_SEALINFO 
 			WHERE
-				sealnum = #v_SEALNUM#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
 		]]>
 	</select>
 
@@ -2142,6 +2322,7 @@
 				reguserid,
 				regusername,
 				regusername2,
+				companyid,
 				tenant_id)
         	VALUES
 				((SELECT
@@ -2149,7 +2330,9 @@
 				FROM
 					TBL_SEALINFO AS T1
 				WHERE
-					tenant_id = #tenantID#),
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#),
 				#v_SEALNAME#,
 				#v_SEALPATH#,
 				#v_SEALWIDTH#,
@@ -2159,6 +2342,7 @@
 				#v_REGUSERID#,
 				#v_REGUSERNAME#,
 				#v_REGUSERNAME2#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -2177,9 +2361,11 @@
 				regusername = #v_REGUSERNAME#,
 				regusername2 = #v_REGUSERNAME2#
 			WHERE
-				sealnum = #v_SEALNUM#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				sealnum = #v_SEALNUM#
 		]]>
 	</update>
 
@@ -2199,11 +2385,13 @@
 			FROM
 				TBL_SEALDEPTINFO
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				sealnum = #v_SEALNUM#
 			AND
 				deptid = #v_DEPTID#
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</select>
 
@@ -2222,6 +2410,7 @@
 				reguserid,
 				regusername,
 				regusername2,
+				companyid,
 				tenant_id)
 			VALUES
 				((SELECT
@@ -2229,9 +2418,11 @@
 				FROM
 					TBL_SEALDEPTINFO AS T1
 				WHERE
-					deptid = #v_DEPTID#
+					tenant_id = #tenantID#
 				AND
-					TENANT_ID = #tenantID#),
+					companyid = #companyID#
+				AND
+					deptid = #v_DEPTID#),
 				#v_DEPTID#,
 				#v_SEALNAME#,
 				#v_SEALPATH#,
@@ -2242,6 +2433,7 @@
 				#v_REGUSERID#,
 				#v_REGUSERNAME#,
 				#v_REGUSERNAME2#,
+				#companyID#,
 				#tenantID#)
 		]]>
 	</insert>
@@ -2260,11 +2452,13 @@
 				regusername = #v_REGUSERNAME#,
 				regusername2 = #v_REGUSERNAME2#
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				sealnum = #v_SEALNUM#
 			AND
 				deptid = #v_DEPTID#
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</update>
 
@@ -2281,11 +2475,13 @@
 			SET
 				formorder = #order#
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				formid = #v_pFormID#
 			AND
 				formcontid = #v_pFormContID#
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</update>
 
@@ -2301,9 +2497,11 @@
 			DELETE FROM
 				TBL_FORMCONTUSERGROUP
 			WHERE
-				formcontid = #v_FORMCONTID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
 		]]>
 	</delete>
 	<delete id="EzApprovalGAdmin.deleteFormContainer2"
@@ -2312,9 +2510,11 @@
 			DELETE FROM
 				TBL_FORMCONTAINER
 			WHERE
-				formcontid = #v_FORMCONTID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #v_FORMCONTID#
 		]]>
 	</delete>
 
@@ -2328,9 +2528,11 @@
 			DELETE FROM
 				TBL_FORMINFO
 			WHERE
-				formid = #v_FORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
 		]]>
 	</delete>
 	<delete id="EzApprovalGAdmin.deleteForm2" parameterClass="Map">
@@ -2338,9 +2540,11 @@
 			DELETE FROM
 				TBL_FORMUSERINFO
 			WHERE
-				formid = #v_FORMID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #v_FORMID#
 		]]>
 	</delete>
 
@@ -2359,9 +2563,11 @@
 			SET
 				containerid = #v_CONTID#
 			WHERE
-				docid = #v_DOCID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				docid = #v_DOCID#
 		]]>
 	</update>
 
@@ -2380,6 +2586,8 @@
 				TBL_FORMCONTAINER
 			WHERE
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 		]]>
 	</select>
 
@@ -2394,6 +2602,8 @@
         		TBL_CONTAINERTYPE
         	WHERE
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
         		
 	    ]]>
 	</select>
@@ -2407,6 +2617,8 @@
         		TBL_CONTAINER
         	WHERE
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
 	    ]]>
 	</select>
 
@@ -2416,10 +2628,12 @@
 			INSERT INTO TBL_CONTAINERTODOCSTATE
 				(containertypeid,
 				documentstate,
+				companyid,
 				tenant_id)
 			VALUES
 				(#data1#,
 				#data2#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2430,11 +2644,13 @@
 				(containerid,
 				containertypeid,
 				containerowndepid,
+				companyid,
 				tenant_id)
 			VALUES
 				(#contID#,
 				#contType#,
 				#deptID#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2445,10 +2661,12 @@
 			INSERT INTO TBL_CONTAINERUSEDEP
 				(containerid,
 				usedepid,
+				companyid,
 				tenant_id)
 			VALUES
 				(#contID#,
 				#deptID#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2465,6 +2683,7 @@
 				beforevalue,
 				aftervalue,
 				aftervalue2,
+				companyid,
 				tenant_id)
 			VALUES
 				(DATE_FORMAT(#v_APPLYDATE#, '%Y-%m-%d %H:%i:%s'),
@@ -2476,6 +2695,7 @@
 				#v_BEFOREVALUE#,
 				#v_AFTERVALUE#,
 				#v_AFTERVALUE2#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2501,6 +2721,7 @@
 				displayusage,
 				description,
 				subcategorycode,
+				companyid,
 				tenant_id)
 			VALUES
 				(#v_TASKCODE#,
@@ -2521,6 +2742,7 @@
 				#v_DISPLAYUSAGE#,
 				#v_DESCRIPTION#,
 				#v_SUBCATEGORYCODE#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2541,6 +2763,7 @@
 				delflag,
 				deletedate,
 				organcode,
+				companyid,
 				tenant_id
 			)
 			SELECT
@@ -2557,13 +2780,16 @@
 				'0',
 				NULL,
 				NULL,
-				#tenantID#
+				companyid,
+				tenant_id
 			FROM
 				TBL_TASKCODE
 			WHERE
-				taskcode = #taskCode#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
 	    ]]>
 	</insert>
 
@@ -2577,6 +2803,7 @@
 				formcontowndepid,
 				formcontparents,
 				formcontdescription,
+				companyid,
 				tenant_id)
 			VALUES
 				(#contID#,
@@ -2585,6 +2812,7 @@
 				#contDept#,
 				#contParent#,
 				#contDescript#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2595,10 +2823,12 @@
 			INSERT INTO TBL_FORMCONTUSERGROUP
 				(formcontid,
 				formcontuserdepid,
+				companyid,
 				tenant_id)
 			VALUES
 				(#contID#,
 				#deptID#,
+				#companyID#,
 				#tenantID#)
 	    ]]>
 	</insert>
@@ -2611,9 +2841,11 @@
 				containertypeid = #contType#,
 				containerowndepid = #deptID#
 			WHERE
-				containerid = #contID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				containerid = #contID#
 	    ]]>
 	</update>
 
@@ -2639,9 +2871,11 @@
 				description = #v_DESCRIPTION#,
 				subcategorycode = #v_SUBCATEGORYCODE#
 			WHERE
-				taskcode = #v_TASKCODE#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #v_TASKCODE#
 	    ]]>
 	</update>
 
@@ -2652,9 +2886,11 @@
 			SET
 				delflag = '1'
 			WHERE
-				taskcode = #taskCode#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
 	    ]]>
 	</update>
 
@@ -2666,9 +2902,11 @@
 				delflag = '1',
 				deletedate = DATE_FORMAT(#now#, '%Y-%m-%d %H:%i:%s')
 			WHERE
-				taskcode = #taskCode#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				taskcode = #taskCode#
 	    ]]>
 	</update>
 
@@ -2683,11 +2921,13 @@
 				delFlag = '0',
 				deletedate = NULL
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				taskcode = #taskCode#
 			AND
 				RTRIM(processdeptcode) = #deptCode#
-			AND
-				tenant_id = #tenantID#
 	    ]]>
 	</update>
 
@@ -2700,11 +2940,13 @@
 				delflag = '1',
 				deletedate = DATE_FORMAT(#v_pNow2#, '%Y-%m-%d %H:%i:%s')
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				taskcode = #taskCode#
 			AND
 				RTRIM(processdeptcode) = #deptCode#
-			AND
-				tenant_id = #tenantID#
 	    ]]>
 	</update>
 
@@ -2720,9 +2962,11 @@
 				formcontparents = #contParent#,
 				formcontdescription = #contDescript#
 			WHERE
-				formcontid = #contID#
-			AND
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formcontid = #contID#
 	    ]]>
 	</update>
 
@@ -2732,9 +2976,11 @@
 			DELETE FROM
         		TBL_CONTAINERUSEDEP
         	WHERE
-        		containerID = #contID#
-        	AND
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		containerID = #contID#
 	    ]]>
 	</delete>
 
@@ -2744,9 +2990,11 @@
 			DELETE FROM
         		TBL_FORMCONTUSERGROUP
         	WHERE
-        		formcontid = #contID#
-        	AND
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
+        	AND
+        		formcontid = #contID#
 	    ]]>
 	</delete>
 
@@ -2757,6 +3005,8 @@
         		TBL_CONTAINERTODOCSTATE
         	WHERE
         		tenant_id = #tenantID#
+        	AND
+        		companyid = #companyID#
         		
 	    ]]>
 	</delete>
@@ -2773,6 +3023,8 @@
 				TBL_FORMPROPERTY
 			WHERE
 				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
 			AND
 				uppercode = #upperCode#
 		]]>
@@ -2792,18 +3044,22 @@
 								FROM
 									TBL_FORMINFO
 								WHERE
-									formcontid = #selContID#
-								AND
 									tenant_id = #tenantID#
+								AND
+									companyid = #companyID#
+								AND
+									formcontid = #selContID#
 								)
 							AS T1
 							)
 			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 				formcontid = #contID#
 			AND
 				formid = #formID#
-			AND
-				tenant_id = #tenantID#
 		]]>
 	</update>
 </sqlMap>
