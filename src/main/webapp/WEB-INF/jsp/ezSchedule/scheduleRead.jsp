@@ -22,24 +22,25 @@
 			var creatorid = "<c:out value='${scheduleInfo.creatorId}' />";
 			var modifierid = "<c:out value='${scheduleInfo.modifierId}' />";
 			var scheduletype = "<c:out value='${scheduleInfo.scheduleType}' />";
-			var scheduleid = "<c:out value='${_scheduleid}' />";
-			<%-- var parentid = "<%= _parentid %>"; --%>
-			<%-- var repeatcount = "<%= _repeatcount %>"; --%>
-			<%-- var admin = "<%= _admin %>"; --%>
-			<%-- var userid = "<%= userinfo.UserID %>"; --%>
-			<%-- var groupname = "<%= groupname %>"; --%>
-			var datetype = "<c:out value='${scheduleInfo.dateType}' />";
-			<%-- var changekey = "<%= _changekey %>"; --%>
+			var scheduleid = "<c:out value='${_scheduleid}' />";			
+			var datetype = "<c:out value='${scheduleInfo.dateType}' />";			
 			var changekey = "";
 			var pattern = "<c:out value='${_pattern}' />";
-			var pageFrom = "<c:out value='${pageFrom}' />";
-			<%-- var s_DateForAttandant = "<%= s_DateForAttandant %>"; --%>
-			var s_DateForAttandant = "";
-			<%-- var e_DateForAttandant = "<%= e_DateForAttandant %>"; --%>
+			var pageFrom = "<c:out value='${pageFrom}' />";			
+			var s_DateForAttandant = "";			
 			var e_DateForAttandant = "";
 			var _otherid = "<c:out value='${otherid}' />";
 	        var pUse_Editor = "CK";
 	        var ResourceInfo = "<c:out value='${resourceCnt}' />";
+	        
+	        <%-- var parentid = "<%= _parentid %>"; --%>
+			<%-- var repeatcount = "<%= _repeatcount %>"; --%>
+			<%-- var admin = "<%= _admin %>"; --%>
+			<%-- var userid = "<%= userinfo.UserID %>"; --%>
+			<%-- var groupname = "<%= groupname %>"; --%>
+			<%-- var changekey = "<%= _changekey %>"; --%>
+			<%-- var s_DateForAttandant = "<%= s_DateForAttandant %>"; --%>
+			<%-- var e_DateForAttandant = "<%= e_DateForAttandant %>"; --%>
 	        
 	        window.onload = function () {	            
                 if (document.getElementById('managespan') && (scheduletype != "1" && scheduletype != "6")) {
@@ -414,7 +415,7 @@
 	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:20px">
-	                                    		<input type="checkbox" filename="${item.fileName}" filepath="${item.filePath}">
+	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
 	                                    			<c:set var="imagePath" value="/images/image.png" />
 	                                    		</c:if>
@@ -439,7 +440,7 @@
 	                                    		<c:if test="${item.fileType == 'ecm'}">
 	                                    			<c:set var="imagePath" value="/images/ecm.png" />
 	                                    		</c:if>
-	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (<fmt:formatNumber value='${item.fileSize}' type='number' />)</a>	                                    		
+	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (<fmt:formatNumber value='${item.fileSize}' type='number' />)</a>	                                    		
 	                                    	</div>
 	                                    </c:forEach>
 	                                </div>

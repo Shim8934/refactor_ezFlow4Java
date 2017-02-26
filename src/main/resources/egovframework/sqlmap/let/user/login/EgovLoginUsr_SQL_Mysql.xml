@@ -94,7 +94,7 @@
             VALUES(
                 #id#,          #displayName1#,     #displayName2#,     #deptID#,           #deptName1#,        #deptName2#,    
                 #title1#,       #title2#,           #companyID#,        #companyName1#,     #companyName2#,     #ip#,   
-                now(),        #browser#,          #os#,               #agent#,        #tenantId#  
+                #lastLogin#,        #browser#,          #os#,               #agent#,        #tenantId#  
             )               
         ]]>
     </insert>

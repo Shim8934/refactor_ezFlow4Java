@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezSchedule.vo;
 
 public class AttachListVO {
+	
 	private int		attachId;
 	private long 	fileSize;
 	private String 	fileName;
 	private String 	filePath;
 	private String 	fileType;
+	private String	fileEncodeName;
 	
 	
 	public int getAttachId() {
@@ -38,5 +40,12 @@ public class AttachListVO {
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
+	public String getFileEncodeName() {
+		return fileEncodeName;
+	}
+	public void setFileEncodeName(String fileEncodeName) {
+		this.fileEncodeName = fileEncodeName;
+	}
+	
 	
 }

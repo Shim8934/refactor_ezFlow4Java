@@ -4388,6 +4388,34 @@
                 D.TOTALCOUNT IS NULL 
 		]]>
   </select>
+  
+  <select id="EzBoardDAO.getExpiredItems" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT 
+				B.BOARDID, 
+				B.ITEMID, 
+			    B.TENANT_ID
+			FROM
+				TBL_BOARD_BOARDINFO A
+			JOIN
+				TBL_BOARD_ITEM B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BOARDID = B.BOARDID
+			WHERE
+				A.BOARDID IN ( SELECT
+									BOARDID
+								FROM
+									TBL_BOARD_BOARDINFO
+								WHERE
+									DELETEAFTER > -1
+								AND
+									BOARDID <> '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}')
+			AND
+				B.ENDDATE < SYS_EXTRACT_UTC(SYSTIMESTAMP) - A.DELETEAFTER
+		]]>
+  </select>
 	
 </sqlMap>
 

@@ -286,3 +286,13 @@ function utcDate2(offset){
 	today.setTime(today.getTime()+(1000*60*offset));
 	return new Date(today.toUTCString().replace(" GMT", ""));
 }
+
+function specialChk(val){
+	var special_pattern = /[`^|\\\'\"\/]/gi;
+	var rVal = false;
+	
+	if (special_pattern.test(val) == true ){	    
+	    rVal = true;
+	}
+	return rVal;
+}

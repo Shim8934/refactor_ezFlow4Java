@@ -475,19 +475,19 @@
 				
 				for (var i = 0; i < colType.length;i++){
 					if(must[i] == "Y"){
-		        		if(colType[i] == "radio"){
-		        			if(GetRadioVal(tableCol[i]) == ""){
+		        		if (colType[i] == "radio") {
+		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "text"){
+		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "check"){
+		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
@@ -506,7 +506,7 @@
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
 
-		            if (configEndDate <= currEndDate) {
+		            if (configEndDate < currEndDate) {
 		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
 		                return;
 		            }
@@ -2183,7 +2183,7 @@
 			                <table style="width: 100%; height: 100%">
 			                    <tr>
 			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 100%; overflow: auto;"></iframe>
+		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
 			                        </td>
 			                    </tr>
 			                </table>
@@ -2193,7 +2193,7 @@
 	        	<c:otherwise>
 			        <tr>
 			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+			                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
 			            </td>
 			        </tr>
 	        	</c:otherwise>

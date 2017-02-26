@@ -474,7 +474,7 @@
 		        }
 		
 		        function ItemRead_onclick(obj) {
-		            var feature = GetOpenWindowfeature(765, 820);
+		            var feature = GetOpenWindowfeature(765, 700);
 		            if(obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }

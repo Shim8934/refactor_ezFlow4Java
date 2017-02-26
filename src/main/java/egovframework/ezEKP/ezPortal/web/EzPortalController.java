@@ -815,6 +815,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			resetMyParentPageID = req.getParameter("resetMyParentPageID");
 		}
 		
+		logger.debug("mode="+mode + ", gubunFlag=" + gubunFlag + ", resetMyParentPageID=" + resetMyParentPageID);
+		
 		// 권한이 있는 Root페이지 정보를 가져온다.
 		String pUserPageList = ezPortalService.getUserInfo(userInfo.getId(), userInfo.getDisplayName1(), pageID, gubunFlag+"c", mode, userInfo, userInfo.getCompanyID(), locale, userInfo.getTenantId());
 		logger.debug("pUserPageList="+pUserPageList);
@@ -829,7 +831,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				pUserThemeUID = xmlDom.getElementsByTagName("THEMEUID").item(0).getTextContent();
 			} else {
 				String portalPageXml = ezPortalService.searchMyPortalPage(gubunFlag, mode, userInfo, userInfo.getCompanyID());
-				
+				logger.debug("portalPageXml="+portalPageXml);
 				xmlDom = commonUtil.convertStringToDocument(portalPageXml);
 				if (xmlDom.getElementsByTagName("ROW").getLength() > 1) {
 					for (int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
@@ -926,20 +928,16 @@ public class EzPortalController extends EgovFileMngUtil {
 				pMoveURL = mainUrl + "?mode=" + mode + "&pageID=" + pageID;
 			}
 			
-			
 			logger.debug("pMoveURL="+pMoveURL);
-			
-			
 		}
 		
 		resp.getWriter().write("<script>");
 		resp.getWriter().write("function window_onload() { window.location.href = \"" + pMoveURL + "\"; }");
 		resp.getWriter().write("window.onload = window_onload;");
 		resp.getWriter().write("</script>");
-		
 		resp.getWriter().flush();
+		resp.getWriter().close();
 		
-
 		logger.debug("myPortal ended");
 			
 		
@@ -2516,23 +2514,23 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		String pSearchString = "";
 		String portalGubun = "";
-		//String parentPageID = "";
-		//String pageID = "";
+		String parentPageID = "";
+		String pageID = "";
 		String gubunFlag = "";
-		//String newMyPortalPage = "";
-		//String newMyPortalPageList = "";
+		String newMyPortalPage = "";
+		String newMyPortalPageList = "";
 		String searchNewMyPortalPageList = "";
 		int recordCnt = 0;
 		int intPage = 1;
 		int totalPage = 1;
 		
 		if (req.getParameter("parentPageID") != null && !req.getParameter("parentPageID").equals("")) {
-			//parentPageID = req.getParameter("parentPageID");
+			parentPageID = req.getParameter("parentPageID");
 		} else {
 			if (req.getParameter("pageID") != null && !req.getParameter("pageID").equals("")) {
-				//parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
+				parentPageID = ezPortalService.getPortalConfigItem("parentUID", pageID, userInfo.getTenantId());
 			} else {
-				//parentPageID = "Top";
+				parentPageID = "Top";
 			}
 		}
 		
@@ -2542,10 +2540,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (myPortalList.size() > 0) {
 			gubunFlag = "1c";
-			//for (PortalMyPortalListVO myPortal : myPortalList) {
-				//parentPageID = myPortal.getuID_();
-				//newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
-			//}
+			for (PortalMyPortalListVO myPortal : myPortalList) {
+				parentPageID = myPortal.getuID_();
+				newMyPortalPage = ezPortalService.newMyPortalPageCreate(parentPageID, userInfo.getId(), gubunFlag, userInfo.getCompanyID(), "", userInfo.getTenantId());
+			}
 		}
 		
 		if (myPortalList.size() > 0) {
@@ -2569,7 +2567,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			sb.append("</DATA>");
-			//newMyPortalPageList = sb.toString();
+			newMyPortalPageList = sb.toString();
 		}
 		
 		if (req.getParameter("intPage") != null && !req.getParameter("intPage").equals("")) {
@@ -3173,6 +3171,114 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezPortal/help/leftMail";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftAddr 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftAddr.do")
+	public String leftAddr(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftAddr";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftAppr 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftAppr.do")
+	public String leftAppr(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftAppr";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftApprG 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftApprG.do")
+	public String leftApprG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftApprG";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftBoard 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftBoard.do")
+	public String leftBoard(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftBoard";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftCommunity 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftCommunity.do")
+	public String leftCommunity(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftCommunity";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftEnv 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftEnv.do")
+	public String leftEnv(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftEnv";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftPoll 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftPoll.do")
+	public String leftPoll(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftPoll";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftResource 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftResource.do")
+	public String leftResource(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftResource";
+	}
+	
+	/**
+	 * 포탈 - 도움말 leftSchedule 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezPortal/help/leftSchedule.do")
+	public String leftSchedule(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		return "/ezPortal/help/leftSchedule";
 	}
 	
 	/**
