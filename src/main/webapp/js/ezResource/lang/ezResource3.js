@@ -225,3 +225,8 @@ var strLang571 = "予約者";
 
 var strLang572 = "繰り返し";
 var strLang573 = "時間";
+
+var strLang535 = "データが存在しません。";
+var strLang580 = "繰り返し周期の設定範囲 : ";
+var strLang581 = "終了日を指定しない";
+var strLang582 = "回";

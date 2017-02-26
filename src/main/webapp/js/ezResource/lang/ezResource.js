@@ -228,3 +228,15 @@ var strLang571 = "예약자";
 
 var strLang572 = "반복";
 var strLang573 = "시간";
+
+
+var strLang535 = "데이터가 없습니다.";
+
+var strLang580 = "기간 : ";
+var strLang581 = "종료일 지정 안함"
+var strLang582 = "회"
+var strLang583 = "종료시간이 오늘보다 이전시간입니다.";
+
+var strLang584 = "승인 되었습니다.";
+var strLang585 = "승인취소 되었습니다.";
+
