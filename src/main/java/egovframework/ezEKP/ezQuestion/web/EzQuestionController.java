@@ -1895,7 +1895,6 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             		}
             	}
             	
-            	logger.debug("fieldName="+field.getName().toUpperCase());
             	Node newDataName = xmlMainDom.createElement(field.getName().toUpperCase());
             	Node newDataValue = null;
             	//""이라 Exception
@@ -1904,11 +1903,10 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             			newDataValue = xmlMainDom.createTextNode(Integer.toString((int)field.get(qstResponseVO)).trim());
             		}
             		else{
-            			newDataValue = xmlMainDom.createTextNode(((String)field.get(qstResponseVO)).trim());
+            			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
             		}
             	}
-            	logger.debug("newDataName="+String.valueOf(newDataName));
-            	logger.debug("newDataValue="+String.valueOf(newDataValue));
+            	
             	newDataName.appendChild(newDataValue);
                 newRow.appendChild(newDataName);
                 newDataName = null;
