@@ -1869,7 +1869,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String childBrd = "";
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<ResGetItemListVO> list = getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		List<ResGetItemListVO> list = getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		for(int i=0; i<list.size(); i++) {
 			childBrd += list.get(i).getBrd_ID() + "/" + commonUtil.cleanValue(list.get(i).getBrd_Nm()) + "/" + list.get(i).getApproveFlag() + ",";

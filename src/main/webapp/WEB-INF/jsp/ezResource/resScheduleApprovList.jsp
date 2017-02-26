@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
+			var userPrimary = "${userInfo.primary}";
 			var pBrdid = "${resID}";
 	    	var xmlhttp;
 	    	var ss_companyID = "${userInfo.companyID}";
@@ -173,7 +174,7 @@
 	                	list += "</CELL><CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "subject")[i]) + "]]></VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
-	                	if (lang == "1") {
+	                	if (userPrimary == "1") {
 		                    list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "</VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm")[i]) + "</VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "jobtitle")[i]) + "</VALUE></CELL>";

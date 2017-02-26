@@ -31,7 +31,7 @@
 	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
 	    	var ss_ownerNM		= "";
-	    	var lang = "${userInfo.lang}";
+	    	var lang = "${userInfo.primary}";
 	    	
 	    	if(lang == '2') {
 	        	ss_deptNM		= "${userInfo.deptName2}"; 

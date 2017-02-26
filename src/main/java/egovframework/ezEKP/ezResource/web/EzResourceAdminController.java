@@ -160,7 +160,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			selectFlag = req.getParameter("flag");
 		}
 		logger.debug("xmlStr="+xmlStr);
-		String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 		xmlRet = commonUtil.convertStringToDocument(ret);
 		
 		if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
@@ -182,7 +182,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			
 			ezResourceAdminService.addClsData(strXML.toString(), userInfo.getTenantId());
 			
-			ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+			ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 			
 			xmlRet = commonUtil.convertStringToDocument(ret);
 		}
@@ -538,7 +538,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 				tempStr2.append("<NODE>"+companyID+"</NODE>");
 				tempStr2.append("</PARA_DATA>");
 				
-				strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getLang(), userInfo.getTenantId());
+				strRtnXML = ezResourceAdminService.getSubClsList(tempStr2.toString(), userInfo.getPrimary(), userInfo.getTenantId());
 				
 				Document objXML2 = commonUtil.convertStringToDocument(strRtnXML);
 				

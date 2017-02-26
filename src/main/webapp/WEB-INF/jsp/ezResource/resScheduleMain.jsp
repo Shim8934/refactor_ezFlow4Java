@@ -34,7 +34,7 @@
 	    var ResID = "${resID}";
 	    var pDisplaySTime = "${displaySTIME}";
 	    var pDisplayETime = "${displayETIME}";
-		var uselang = "${userInfo.lang}";  
+		var uselang = "${userInfo.primary}";  
 		var folder_Url = "/ezResource/scheduleGet.do";
 	    var p_Type = "";
 	    var pBrdid = "${resID}";

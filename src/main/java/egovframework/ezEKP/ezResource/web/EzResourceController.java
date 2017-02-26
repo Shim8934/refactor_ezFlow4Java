@@ -520,7 +520,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String childBrd = ezResourceService.getItemList(loginCookie,brdID);
 		logger.debug("childBrd="+childBrd);
 		 
-		List<ResGetItemListVO>	list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		List<ResGetItemListVO>	list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 
 		brdCount = list.size();
 		logger.debug("brdCount="+brdCount);
@@ -835,7 +835,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 		String propList = "displayName1;displayName2;title1;title2;description1;description2";
-		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang(), userInfo.getTenantId());
+		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 		String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
@@ -910,7 +910,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String strOwnerID = xmlDom.getElementsByTagName("DATA").item(3).getTextContent().trim();
 		String propList = "displayName1;displayName2;title1;title2;description1;description2";
-		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getLang(), userInfo.getTenantId());
+		String infoXML = ezOrganService.getPropertyList(strOwnerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 		
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 		String deptName = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
@@ -956,7 +956,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		//임시
 		useOCS = config.getProperty("config.USE_OCS");
-		userLang = userInfo.getLang();
+		userLang = userInfo.getPrimary();
 		
 		model.addAttribute("useOCS", useOCS);
 		model.addAttribute("userLang", userLang);
@@ -995,7 +995,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			strBrdNm = resBrd.getBrdNm().trim();
 			strOwnDeptNm = resBrd.getOwnDeptNm();
 			strOwnerNm = resBrd.getOwnerNm();
@@ -1061,7 +1061,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("resID", resID);
 		model.addAttribute("ownerID", strOwnerID);
@@ -1177,16 +1176,16 @@ public class EzResourceController extends EgovFileMngUtil {
 			writerID = getSchedule.getWriterID();
 			
 			String propList = "displayName;description";
-			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang(), userInfo.getTenantId());
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			
-			if (userInfo.getLang().equals("1")) {
+			if (userInfo.getPrimary().equals("1")) {
 				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 			} else {
-				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getLang()).item(0).getTextContent();
-				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getLang()).item(0).getTextContent();
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getPrimary()).item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}
 			
 			title = getSchedule.getTitle();
@@ -1395,16 +1394,16 @@ public class EzResourceController extends EgovFileMngUtil {
 			writerID = getSchedule.getWriterID();
 	
 			String propList = "displayName;description";
-			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getLang(), userInfo.getTenantId());
+			String infoXML = ezOrganService.getPropertyList(writerID, propList, userInfo.getPrimary(), userInfo.getTenantId());
 			
 			Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
 			
-			if (userInfo.getLang().equals("1")) {
+			if (userInfo.getPrimary().equals("1")) {
 				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
 			} else {
-				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getLang()).item(0).getTextContent();
-				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getLang()).item(0).getTextContent();
+				deptNm = xmlDom2.getElementsByTagName("DESCRIPTION" + userInfo.getPrimary()).item(0).getTextContent();
+				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}
 			title = getSchedule.getTitle();
 			
@@ -1693,7 +1692,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			endDate = req.getParameter("endDate");
 		}
 		ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			brdNm = resBrd.getBrdNm();
 		} else {
 			brdNm = resBrd.getBrdNm2();
@@ -1941,7 +1940,7 @@ public class EzResourceController extends EgovFileMngUtil {
         String propList = doc.getElementsByTagName("prop").item(0).getTextContent();
         String listType = doc.getElementsByTagName("type").item(0).getTextContent();
         
-        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getLang(), userInfo.getTenantId());
+        String returnXML = ezOrganService.getDeptMemberList(deptID, cell, propList, listType, userInfo.getPrimary(), userInfo.getTenantId());
         
 		return returnXML;
 	}
@@ -2096,7 +2095,7 @@ public class EzResourceController extends EgovFileMngUtil {
 
         bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
         
-        if (userInfo.getLang().equals("1")) {
+        if (userInfo.getPrimary().equals("1")) {
         	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
         } else {
         	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
