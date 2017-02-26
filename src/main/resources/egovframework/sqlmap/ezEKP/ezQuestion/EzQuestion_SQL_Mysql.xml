@@ -2432,7 +2432,7 @@
    			AND
    				ITEM_NO = #v_pItemNo#
    			AND
-   				TENANT_ID = #tenantID#	
+   				TENANT_ID = #tenantID#
 		]]>
 	</delete>
 	
@@ -2460,13 +2460,13 @@
 			DELETE FROM
 				TBL_POLL_QUESTION
           	WHERE
-          		BRD_ID = #v_pstrBrdID#
+          		brd_id = #v_pstrBrdID#
           	AND
-          		ITEM_NO = #v_pItemNo#
+          		item_no = #v_pItemNo#
           	AND
-          		QUESTION_NO = #v_pQuesNo#
+          		question_no = #v_pQuesNo#
           	AND
-          		TENANT_ID = #tenantID#	
+          		tenant_id = #tenantID#
 		]]>
 	</delete>
 	

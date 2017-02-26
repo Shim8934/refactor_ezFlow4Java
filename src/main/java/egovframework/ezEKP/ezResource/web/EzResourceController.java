@@ -193,6 +193,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/callNodeTreeData.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callNodeTreeData(@RequestBody String xmlReq,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("callNodeTreeData started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectFlag = "";
 		
@@ -236,7 +238,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				if(nodes7.item(i).getTextContent().equals("")) {
 					nodes7.item(i).setTextContent("<![CDATA[]]>");
 				}
-		
+				
 				
 				if(selectFlag.equals("SELECT_NO")) {
 					if(nodes2.item(i) != null) {
@@ -247,7 +249,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-
+		
 		if (nodes8 != null && nodes10 != null) {
 			for (int i=0; i<nodes8.getLength(); i++) {
 				nodes8.item(i).setTextContent("TRUE");
@@ -263,6 +265,9 @@ public class EzResourceController extends EgovFileMngUtil {
 				}
 			}
 		}
+		
+
+		logger.debug("callNodeTreeData ended");
 		return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
 	
 	}

@@ -12,7 +12,10 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/ListView_list.js"></script>
 		
-	
+		<style type="text/css">
+			.mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; word-wrap:break-word;}
+		</style>
+		
 		<script type="text/javascript" >
 			var SelectedQuesNo = "";
 			var returnXML = "";
