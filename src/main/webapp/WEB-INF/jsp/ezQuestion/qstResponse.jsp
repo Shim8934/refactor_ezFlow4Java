@@ -64,7 +64,7 @@
 							
 							for(j=0; itemNodes.length>j; j++){
 								tableXml += "<tr>";
-								tableXml += "<td style='padding:3px 10px'>";
+								tableXml += "<td style='padding:3px 10px; word-wrap:break-word;'>";
 								tableXml += SelectSingleNodeValue(itemNode, 'TAG'+(j+1));
 								tableXml += "</td>";
 								tableXml += "</tr>";
