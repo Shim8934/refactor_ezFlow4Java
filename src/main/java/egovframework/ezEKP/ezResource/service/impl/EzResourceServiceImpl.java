@@ -1104,12 +1104,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		// tbl_schedulerepetition에서 정보 가져옴
 		ResGetRepDateTimesVO vo = getRepDateTimes(ownerID, companyID, Integer.parseInt(num), tenantID);
-		vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
-		vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
 		
 		List<String[]> returnList = new ArrayList<String[]>();
 		
 		if (vo != null) {
+			vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+			vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+			
 			String freq = vo.getReWay().substring(0, 1);
 			
 			if (vo.getReNum().equals("")) {
