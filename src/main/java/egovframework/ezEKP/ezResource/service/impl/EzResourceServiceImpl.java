@@ -1773,30 +1773,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnValue;
 	}
 	
-	@Override
-	public String getLocalTime(String pDateTime) {
-		String strDateTime = "";
-		if (pDateTime.equals("")) {
-			return strDateTime;
-		}
-		
-		try {
-			//TODO userInfo.Offset
-			//String pOffset = "+09:00";
-			strDateTime = EgovDateUtil.convertDate(addHours(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
-			strDateTime = EgovDateUtil.convertDate(addMinutes(pDateTime, 0, "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm", "");
-	
-			if (pDateTime.length() < 19) {
-				strDateTime = strDateTime.substring(0, pDateTime.length());
-			}
-
-			return strDateTime;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return pDateTime;
-		}
-	}
-	
 	public static String addHours(String sDate, int hour, String dateFormat) {		
 		Calendar cal = Calendar.getInstance();
 		
@@ -1859,39 +1835,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			cal.add(Calendar.SECOND, second);
 		}
 		return sdf.format(cal.getTime());
-	}
-	
-	@SuppressWarnings("deprecation")
-	@Override
-	public String convertToUTC(String pDate) throws Exception {
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String utcDate = (date.parse(pDate).getYear()+1900) + "-" + fedLeft(date.parse(pDate).getMonth()+1) + "-" + fedLeft(date.parse(pDate).getDate()) + "T" + fedLeft(date.parse(pDate).getHours()) + ":" + fedLeft(date.parse(pDate).getMinutes()) + ":01.000Z";
-
-		return utcDate;
-	}
-	
-	public String fedLeft(int pDatePart) throws Exception {
-		String datePart = String.valueOf(pDatePart);
-		
-		if (datePart.length() == 1) {
-			datePart = "0" + datePart;
-		}
-		
-		return datePart;
-	}
-	
-	//TODO HH:mm:ss 형식의 현재시간 출력 
-	@Override
-	public String getCurrentDate() {
-		Calendar aCalendar = Calendar.getInstance();
-		String strDate = "";
-		
-		int hour = aCalendar.get(Calendar.HOUR_OF_DAY);
-		int min = aCalendar.get(Calendar.MINUTE);
-		int sec = aCalendar.get(Calendar.SECOND);
-		
-		strDate = hour + ":" + min + ":" + sec;
-		return strDate;
 	}
 	
 	@Override
@@ -4949,5 +4892,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		return retStr;
 	}
+	
 }
 

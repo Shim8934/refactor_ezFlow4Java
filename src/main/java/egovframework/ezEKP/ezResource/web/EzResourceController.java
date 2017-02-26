@@ -336,10 +336,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			Document xmlDom2 = commonUtil.convertStringToDocument(reVal);
 				
 			for (int i=0; i<xmlDom2.getDocumentElement().getChildNodes().getLength(); i++) {
+				
+				String sDate = EgovDateUtil.convertDate(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd'T'HH:mm:ss.000'Z'", "");
+				String eDate = EgovDateUtil.convertDate(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd'T'HH:mm:ss.000'Z'", "");
 
-				String sDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtstart").item(i).getTextContent());
-				String eDate = ezResourceService.convertToUTC(xmlDom2.getElementsByTagName("dtend").item(i).getTextContent());
-					
 				xmlDom2.getElementsByTagName("dtstart").item(i).setTextContent(sDate);
 				xmlDom2.getElementsByTagName("dtend").item(i).setTextContent(eDate);
 			}
@@ -481,7 +481,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else if (cmd.equals("update")) {
 			reVal = ezResourceService.updateScheduleDateTime(commonUtil.convertDocumentToString(xmlDom), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		}
-			
+		
 		logger.debug("scheduleGet End");
 		logger.debug("reVal=" + reVal.toString());
 		return reVal.toString();

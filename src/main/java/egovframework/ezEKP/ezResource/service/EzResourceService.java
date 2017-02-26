@@ -71,15 +71,9 @@ public interface EzResourceService {
 
 	public String getScheduleXML(String xmlStr, String resID, String companyID, String groupID, String gubun, String type, String writerName, String writerDept, int tenantID, String offset) throws Exception;
 
-	public String getLocalTime(String substring) throws Exception;
-	
-	public String convertToUTC(String sDate) throws Exception;
-
 	public String getAdminFlag(String companyID, String brdID, String id, int tenantID) throws Exception;
 
 	public String getItemList(String loginCookie, String brdID) throws Exception;
-
-	public String getCurrentDate() throws Exception;
 
 	public String getSubClsTree(String xmlReq, String lang, String companyID, String deptID, String id, int tenantID) throws Exception;
 	
