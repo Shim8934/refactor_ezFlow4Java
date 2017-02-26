@@ -243,7 +243,7 @@ function ListView() {
     }
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang356);
+            alert(strLangLHM03);
             return;
         }
         if (_dataSource == null) {
@@ -314,7 +314,7 @@ function ListView() {
     }
     function RowDataBind() {
         if (_thisID == "") {
-            alert(strLang356);
+            alert(strLangLHM03);
             return;
         }
         if (_dataSource == null) {

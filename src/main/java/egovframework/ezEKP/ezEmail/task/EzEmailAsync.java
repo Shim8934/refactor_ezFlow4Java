@@ -70,7 +70,7 @@ public class EzEmailAsync {
 				try {
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							address, password, egovMessageSource, locale);
-					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 					folder.open(Folder.READ_WRITE);
 					
 					SearchTerm searchTerm= new SearchTerm() {

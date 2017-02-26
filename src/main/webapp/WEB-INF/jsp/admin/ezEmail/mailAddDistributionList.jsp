@@ -473,14 +473,14 @@
 	                return;
 	            }
 	            if (document.all("TextId").value.trim() == "") {
-	                alert("<spring:message code='ezEmail.t99000093' />");
+	                alert("<spring:message code='ezEmail.lhm10' />");
 	                document.all("TextId").focus();
 	                return;
 	            }
 	            
 	            var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
 	            if(regex.test(document.all("TextId").value.trim()) === false) {
-	            	alert("<spring:message code='ezEmail.t99000096' />");
+	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
 	            }
 	            
@@ -508,10 +508,10 @@
 	                window.close();
 	            }
 	            else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_NAME") {
-	            	alert("<spring:message code='ezEmail.t99000094' />");
+	            	alert("<spring:message code='ezEmail.lhm11' />");
 	            }
 	            else if (xmlHTTP.status == 200 && xmlHTTP.responseText == "GROUP_ID") {
-	            	alert("<spring:message code='ezEmail.t99000095' />");
+	            	alert("<spring:message code='ezEmail.lhm12' />");
 	            }
 	            else {
 	            	alert("<spring:message code='ezEmail.t23' />");
@@ -1160,7 +1160,7 @@
 	                </td>
 	            </tr>
 	            <tr>
-	                <th><spring:message code='ezEmail.t99000092' /></th>
+	                <th><spring:message code='ezEmail.lhm09' /></th>
 	                <td>
 	                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
 	                </td>

@@ -2825,7 +2825,7 @@
                 var InitTr = listview.GetDataRows();
                 for (var z = 0; z < InitTr.length; z++) {
                     if (InitTr[z].getAttribute("data2") == strEmail) {
-                        alert("<spring:message code='ezEmail.t99000098' />");
+                        alert("<spring:message code='ezEmail.lhm15' />");
                         return;
                     }
                 }

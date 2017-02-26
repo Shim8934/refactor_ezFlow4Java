@@ -146,7 +146,7 @@ public class IMAPAccess {
 		try {
 			Folder rootFolder = getStore().getDefaultFolder();
 			
-			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
 			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
 			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
@@ -155,7 +155,7 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084", locale) + " created");
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
@@ -187,7 +187,7 @@ public class IMAPAccess {
 		try{
 			Folder rootFolder = getStore().getDefaultFolder();
 			
-			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+			Folder inbox = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 			Folder sent = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t645", locale));
 			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
 			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
@@ -196,7 +196,7 @@ public class IMAPAccess {
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000084", locale) + " created");
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
@@ -227,7 +227,7 @@ public class IMAPAccess {
 			//add the other folders into top-level folder list
 			for (Folder folder : folderList) {
 				String folderName = folder.getName();
-				if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))
+				if (!folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))

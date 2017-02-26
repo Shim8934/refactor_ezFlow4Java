@@ -14,7 +14,7 @@
 					    var strLocation = strImagePath;
 					    parent.UploadComplete(strLocation);
 					} else {
-						alert("<spring:message code='ezEmail.t99000097' />");
+						alert("<spring:message code='ezEmail.lhm14' />");
 					}
 				};
 			</script>

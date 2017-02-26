@@ -1082,7 +1082,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 						Element folderName = doc.createElement("FOLDERNAME");
 
 						String folderNameStr = (String)obj.get("value");
-						if (folderNameStr.equals(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+						if (folderNameStr.equals(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 							folderNameStr = egovMessageSource.getMessage("ezEmail.t99000025", locale);
 						}
 						if (folderNameStr.lastIndexOf(".") > -1) {
@@ -1587,12 +1587,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				try {
 					pa = POP3Access.getInstance(host, port, dId, dPw, useSsl);
 					if (!pa.checkConnect()) {
-						out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.t99000091", locale));
+						out.write("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.lhm08", locale));
 						out.flush();
 						
-						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.t99000091", locale));
+						logger.debug("<BR>" + egovMessageSource.getMessage("ezEmail.t269", locale) + egovMessageSource.getMessage("ezEmail.lhm08", locale));
 					} else {
-						final Folder folder = pa.getFolder(egovMessageSource.getMessage("ezEmail.t99000084", locale));
+						final Folder folder = pa.getFolder(egovMessageSource.getMessage("ezEmail.lhm01", locale));
 	
 						if (deleteYN.equals("Y")) {
 							folder.open(Folder.READ_WRITE);

@@ -314,9 +314,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 		
 		//넘어온 folderPath가 보낸편지함이 아닐경우
 		if (!folderPath.equals(egovMessageSource.getMessage("ezEmail.t99000026", locale))) {
-			logger.debug(egovMessageSource.getMessage("ezEmail.t99000108", locale));
+			logger.debug(egovMessageSource.getMessage("ezEmail.lhm22", locale));
 			logger.debug("mailCancelSend ended.");
-			return egovMessageSource.getMessage("ezEmail.t99000108", locale);
+			return egovMessageSource.getMessage("ezEmail.lhm22", locale);
 		}
 		
 		String pEachCancel = "NO";
@@ -336,9 +336,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			Message message = ((IMAPFolder)folder).getMessageByUID(uid);
 			
 			if (message == null) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000109", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm23", locale));
 				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.t99000109", locale);
+				return egovMessageSource.getMessage("ezEmail.lhm23", locale);
 			}
 			
 			//메시지의 from이 user의 계정인지(또는 user의 alias mail)인지 검사
@@ -357,18 +357,18 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			}
 			
 			if (!isUserFrom) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000110", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm24", locale));
 				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.t99000110", locale);
+				return egovMessageSource.getMessage("ezEmail.lhm24", locale);
 			}
 			
 			//수신자 수가 max를 넘는 메일은 회수가 불가능
 			int maxRecAllCount = 500;
 			Address[] addresses = message.getAllRecipients();
 			if (addresses.length > maxRecAllCount) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000111", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.t99000112", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale));
 				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.t99000111", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.t99000112", locale);
+				return egovMessageSource.getMessage("ezEmail.lhm25", locale) + maxRecAllCount + egovMessageSource.getMessage("ezEmail.lhm26", locale);
 			}
 			
 			String internetMessageId = ((MimeMessage)message).getMessageID();
@@ -404,9 +404,9 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 			
 			//내부사용자 없을 경우 리턴
 			if (innerAddresses.size() == 0) {
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000113", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm27", locale));
 				logger.debug("mailCancelSend ended.");
-				return egovMessageSource.getMessage("ezEmail.t99000113", locale);
+				return egovMessageSource.getMessage("ezEmail.lhm27", locale);
 			}
 			
 			ezEmailService.setMailCancelSend(loginInfo.getTenantId(), internetMessageId, loginInfo.getId(), subject, innerAddresses);

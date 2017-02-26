@@ -84,7 +84,7 @@ function btn_AttachDel_onclick() {
             }
         }
         if (j) {
-            var pInformationContent = strLang358;
+            var pInformationContent = strLangLHM05;
             var Ans = confirm(pInformationContent);
             if (Ans) {
                 var pAttachDelSN;
@@ -227,7 +227,7 @@ function AppendFileAttachInfo(ret) {
 
                         var objTd2 = document.createElement("TD");
                         if(is_big == "Y")
-                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
+                            objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                         else
                             objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                         objTr.appendChild(objTd2);
@@ -280,7 +280,7 @@ function AppendFileAttachInfo(ret) {
 
                             var objTd2 = document.createElement("TD");
                             if (is_big == "Y")
-                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLang365 + "]</font>";
+                                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;" + "<font style='color:blue'>[" + strLangLHM10 + "]</font>";
                             else
                                 objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                             objTr.appendChild(objTd2);

@@ -287,7 +287,7 @@ function btn_AttachAdd_onclick() {
         frm.submit();
     }
     else {
-        alert(strLang360);
+        alert(strLangLHM07);
     }
 }
 
@@ -998,7 +998,7 @@ function event_SaveonClick() {
             }
             // 메일쓰기 도중 로그아웃된 경우
             else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
-	        	alert(strLang367);
+	        	alert(strLangLHM12);
 	        	MailSend_Hidden_Progress();
 	            g_saveHttp = null;
 	            MailStatus = "NO";
@@ -1007,11 +1007,11 @@ function event_SaveonClick() {
         	else if (pRtnMessage != "OK") {
         		// 편지함 용량 초과한 경우(처음부터 초과)
                 if (pRtnMessage.indexOf("OVERQUOTA") > -1) {
-                	alert(strLang363);
+                	alert(strLangLHM08);
                 }
             	// 편지함 용량 초과한 경우(도중에 초과)
                 else if (pRtnMessage.indexOf("NO APPEND failed.") > -1) {
-                    alert(strLang363);
+                    alert(strLangLHM08);
                 }
                 // 그 외
                 else {
@@ -1063,7 +1063,7 @@ function event_SaveonClick() {
             }
             // 메일쓰기 도중 로그아웃된 경우
             else if (g_saveHttp.responseText.indexOf("actionLogin()") > -1) {
-	        	alert(strLang367);
+	        	alert(strLangLHM12);
             }
         	// 비정상적으로 처리된 경우
         	else if (pRtnMessage != "OK") {

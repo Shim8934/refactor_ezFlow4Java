@@ -215,8 +215,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 
 			//예약발송 시간 30분 전에는 수정 불가
 			if (reservedSaveTime.before(currentTime)) { 
-				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000090", locale));
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000090", locale));
+				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.lhm07", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm07", locale));
 				logger.debug("mailEdit ended.");
 				return "ezEmail/mailMessage";
 			}
@@ -274,16 +274,16 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 				}
 				
 			} else { //eml파일이 저장소에 없는 경우
-				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
-				logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
+				model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.lhm06", locale));
+				logger.debug(egovMessageSource.getMessage("ezEmail.lhm06", locale));
 				logger.debug("mailEdit ended.");
 				return "ezEmail/mailMessage";
 			}
 			
 
 		} else { //messageId parameter가 비어있는 경우
-			model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.t99000089", locale));
-			logger.debug(egovMessageSource.getMessage("ezEmail.t99000089", locale));
+			model.addAttribute("pMessage", egovMessageSource.getMessage("ezEmail.lhm06", locale));
+			logger.debug(egovMessageSource.getMessage("ezEmail.lhm06", locale));
 			logger.debug("mailEdit ended.");
 			return "ezEmail/mailMessage";
 		}
@@ -334,8 +334,8 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		
 		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
-        String pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
+        String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
         		+ ",pAttachWarning=" + pAttachWarning);
         

@@ -136,7 +136,7 @@
 		        
 		        if (result != "OK") {
 		        	if (result == "ALREADY_EXISTS") {
-		        		alert("<spring:message code='ezEmail.t99000088' />");
+		        		alert("<spring:message code='ezEmail.lhm05' />");
 		        	} else {
 		        		alert("<spring:message code='ezEmail.t459' />");
 		        	}
@@ -186,7 +186,7 @@
 		            
 		            if (result != "OK") {
 		            	if (result == "ALREADY_EXISTS") {
-		            		alert("<spring:message code='ezEmail.t99000086' />");
+		            		alert("<spring:message code='ezEmail.lhm03' />");
 		            	} else {
 		            		alert("<spring:message code='ezEmail.t468' />");
 		            	}
@@ -198,7 +198,7 @@
 		            
 		            if (result != "OK") {
 		            	if (result == "ALREADY_EXISTS") {
-		            		alert("<spring:message code='ezEmail.t99000086' />");
+		            		alert("<spring:message code='ezEmail.lhm03' />");
 		            	} else if (result.indexOf("NO COPY processing failed.") > -1) {
 		            		alert(strLang241);
 		            	} else {
@@ -246,7 +246,7 @@
 		                
 		                if (result != "OK") {
 			            	if (result == "ALREADY_EXISTS") {
-			            		alert("<spring:message code='ezEmail.t99000087' />");
+			            		alert("<spring:message code='ezEmail.lhm04' />");
 			            	} else {
 			            		alert("<spring:message code='ezEmail.t464' />");
 			            	}

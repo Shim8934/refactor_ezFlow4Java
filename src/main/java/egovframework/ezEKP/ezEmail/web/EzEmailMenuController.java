@@ -101,26 +101,26 @@ public class EzEmailMenuController {
 				rootFolderXML.append("<node imgidx='1'");
 				
 				if (folderUnreadMessageCount > 0) {
-					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 						rootFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale) + "(" + folderUnreadMessageCount + ")'");
 					} else {
 						rootFolderXML.append(" caption='" + folderName + "(" + folderUnreadMessageCount + ")'");
 					}
 				} else {
-					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+					if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 						rootFolderXML.append(" caption='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
 					} else {
 						rootFolderXML.append(" caption='" + folderName+"'");
 					}
 				}
 				
-				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 					rootFolderXML.append(" foldername='" + egovMessageSource.getMessage("ezEmail.t99000025", locale) + "'");
 				} else {
 					rootFolderXML.append(" foldername='" + folderName+"'");
 				}
 
-				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+				if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 					rootFolderXML.append(" orgBoxName='0'");
 					rootFolderXML.append(" fullcaption='_INBOX'"); //수정
 				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))) {
@@ -252,32 +252,32 @@ public class EzEmailMenuController {
 					subFolderXML.append("<node imgidx='1'");
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount()>0) {
-							if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+							if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 								subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"("+fd.getUnreadMessageCount()+")'");
 							} else {
 								subFolderXML.append(" caption='"+fd.getName()+"("+fd.getUnreadMessageCount()+")'");
 							}
 						} else {
-							if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))){
+							if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))){
 								subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
 							} else {
 								subFolderXML.append(" caption='"+fd.getName()+"'");
 							}
 						}
 					} else {
-						if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))){
+						if(fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))){
 							subFolderXML.append(" caption='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
 						} else {
 							subFolderXML.append(" caption='"+fd.getName()+"'");
 						}
 					}
-					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 						subFolderXML.append(" foldername='"+egovMessageSource.getMessage("ezEmail.t99000025", locale)+"'");
 					} else {
 						subFolderXML.append(" foldername='"+fd.getName()+"'");
 					}
 
-					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000084", locale))) {
+					if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.lhm01", locale))) {
 						subFolderXML.append(" orgBoxName='0'");
 						subFolderXML.append(" fullcaption='_INBOX'"); //수정
 					} else if (fd.getName().equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t645", locale))) {

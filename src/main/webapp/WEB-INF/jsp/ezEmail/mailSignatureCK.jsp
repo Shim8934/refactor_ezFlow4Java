@@ -173,7 +173,7 @@
 		        for (var i = 1 ; i < 3; i++) {
 		            document.getElementById("SigState" + i).checked = false;
 		        }
-		        if (confirm("<spring:message code='ezEmail.t99000102' />")) {
+		        if (confirm("<spring:message code='ezEmail.lhm16' />")) {
 		            SetSig();
 		        }
 		    }

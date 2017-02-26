@@ -203,7 +203,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				/* 아직 이 값으로는 받는 부분 없음
 				|| tempStr.equals("DOCSENDDOC") || tempStr.equals("ACCESSNO") || tempStr.equals("REPORT") */
 			)) {
-			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
+			return egovMessageSource.getMessage("ezEmail.lhm17", locale);
 		}
 
 		if (request.getParameter("msgto") != null) {
@@ -213,7 +213,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		}
 
 		if (tempStr.indexOf("<") >= 0 && tempStr.indexOf(">") >= 0 && tempStr.indexOf("SCRIPT") >= 0) {
-			return egovMessageSource.getMessage("ezEmail.t99000103", locale);
+			return egovMessageSource.getMessage("ezEmail.lhm17", locale);
 		}
 
 		// get user credentials
@@ -266,8 +266,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		String bigSizeMailAttachDelDate = EgovDateUtil.addDay(EgovDateUtil.getToday("-"), Integer.parseInt(pBigAttachDownloadDay), "yyyy-MM-dd");
         String pBigAttachDownloadPeriod = EgovDateUtil.getToday("/") + " ~ " + EgovDateUtil.addDay(EgovDateUtil.getToday("/"), Integer.parseInt(pBigAttachDownloadDay), "yyyy/MM/dd");
-        String pAttachWarning = egovMessageSource.getMessage("ezEmail.t99000104", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000105", locale) 
-        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.t99000106", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.t99000107", locale);
+        String pAttachWarning = egovMessageSource.getMessage("ezEmail.lhm18", locale) + mailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm19", locale) 
+        	+ totBigSizeMailAttachLimit + egovMessageSource.getMessage("ezEmail.lhm20", locale) + pBigAttachDownloadDay + egovMessageSource.getMessage("ezEmail.lhm21", locale);
         logger.debug("bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate + ",pBigAttachDownloadPeriod=" + pBigAttachDownloadPeriod
         		+ ",pAttachWarning=" + pAttachWarning);
         

@@ -295,12 +295,12 @@ function ListView() {
     //리스트뷰 DataSource를 이용하여 DataBind 하기
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang356);
+            alert(strLangLHM03);
             return;
         }
 
         if (_dataSource == null) {
-            //alert(strLang357);
+            //alert(strLangLHM04);
             return;
         }
         var objElm = document.getElementById(pTagetID);
@@ -383,13 +383,13 @@ function ListView() {
     {
         if (_thisID == "")
         {
-            alert(strLang356);
+            alert(strLangLHM03);
             return;
         }
 
         if (_dataSource == null)
         {
-            alert(strLang357);
+            alert(strLangLHM04);
             return;
         }
         var oList = document.getElementById(_thisID);
@@ -418,7 +418,7 @@ function ListView() {
 
     function RowDataBind() {
         if (_thisID == "") {
-            alert(strLang356);
+            alert(strLangLHM03);
             return;
         }
 

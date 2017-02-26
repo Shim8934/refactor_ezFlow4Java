@@ -312,7 +312,7 @@ function event_CopyOrMoveMail() {
         }
         else {
             if (event_CopyOrMoveMail.cmd == "MOVE") {
-                alert(strLang359);
+                alert(strLangLHM06);
                 window.close();
                 try {
                     window.opener.MailListRefresh();
@@ -446,7 +446,7 @@ function func_addaddr_Complete(ret) {
                 return;
             }
             else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-            	alert(strLang355);
+            	alert(strLangLHM02);
             }
             else {
             	alert(strLang135);

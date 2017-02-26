@@ -49,7 +49,7 @@
 	                if (pMailAddress != "")
 	                    createNodeAndInsertText(xmlDom, objNode, "EMAILADDRESS", encodeURIComponent(pMailAddress));
 	                else {
-	                    alert(strLang366);
+	                    alert(strLangLHM11);
 	                    return;
 	                }
 	            }
