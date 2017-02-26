@@ -684,7 +684,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String companyID = request.getParameter("companyID");
 		
-		String initDate = ezResourceService.getLocalTime(EgovDateUtil.getTodayTime());
+		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
 		
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
