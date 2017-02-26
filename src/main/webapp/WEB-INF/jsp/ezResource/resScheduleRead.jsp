@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title></title>
+		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
@@ -379,76 +379,78 @@
 	                        <th><spring:message code='ezResource.t197' /></th>
     	                    <td colspan="3"><span id="AllDayDisplay"></span></td>
                     	</tr>
-            		</td>
-        		</tr>
-        		<tr>
-            		<th><spring:message code='ezResource.t213' /></th>
-            		<td colspan="3" style="width: 100%">
-                		<div id="importanceDIV">
-                			<c:choose>
-                				<c:when test="${importance eq '1'}">
-                					<spring:message code='ezResource.t214' />;  
-								</c:when>
-                				<c:when test="${importance eq '2'}">
-                					<spring:message code='ezResource.t215' />
-                				</c:when>
-                				<c:otherwise>
-                					<spring:message code='ezResource.t216' />
-                				</c:otherwise>
-                			</c:choose>
-                		</div>
-            		</td>
-        		</tr>
-        		<tr>
-            		<th><spring:message code='ezResource.t374' /></th>
-            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
-        		</tr>
-        		<tr>
-            		<th><spring:message code='ezResource.t224' /></th>
-            		<td colspan="3">
-                		<div id="titleDIV"> <c:out value='${title}' /></div>
-            		</td>
-        		</tr>
-        			<tr style="height:100%">
-            			<td colspan="4" style="height:100%;">
-                 			<div id="divCross" style="height:460px;overflow:auto;margin:5px 0px 0px 5px;"></div>
-            			</td>
-        			</tr>
-				</table>
-    			<input type="hidden" id="iReFlag" value="${reFlagVal}" />
-    			<input type="hidden" id="tmpReFlag" value="${tmpReFlag}" />
-    			<input type="hidden" id="gresFlag" value="${gresFlag}" />
-    			<input type="hidden" id="num" value="${num}" />
-    			<input type="hidden" id="pnum" value="${pNum}" />
-    			<input type="hidden" id="ownerID" value="${ownerID}" />
-    			<input type="hidden" id="writerID" value="${writerID}" />
-    
-				<table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
-  					<tr style="text-align:center">
-    					<td style="vertical-align:top">
-    						<table style="width:690px;border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
-      							<tr style="height:25px"> 
-        							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
-        							<td style="padding-left:10px"> <div id="printOwner" style="text-align:left;"></div></td> 
-      							</tr> 
-      							<tr style="height:25px"> 
-        							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
-        							<td style="padding-left:10px"> <div id="printImportance" style="text-align:left;"></div></td> 
-      							</tr> 
-      							<tr style="height:25px"> 
-        							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
-        							<td style="padding-left:10px"> <div id="printDate" style="text-align:left;"></div></td> 
-      							</tr> 
-      							<tr style="height:25px"> 
-        							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
-        							<td style="padding-left:10px"> <div id="printTitle" style="text-align:left;"></div></td> 
-      							</tr> 
-      							<tr> 
-        							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
-      							</tr> 
-   							</table>
-   						</td>
-  					</tr>
-				</table>
+		        		<tr>
+		            		<th><spring:message code='ezResource.t213' /></th>
+		            		<td colspan="3" style="width: 100%">
+		                		<div id="importanceDIV">
+		                			<c:choose>
+		                				<c:when test="${importance eq '1'}">
+		                					<spring:message code='ezResource.t214' />;  
+										</c:when>
+		                				<c:when test="${importance eq '2'}">
+		                					<spring:message code='ezResource.t215' />
+		                				</c:when>
+		                				<c:otherwise>
+		                					<spring:message code='ezResource.t216' />
+		                				</c:otherwise>
+		                			</c:choose>
+		                		</div>
+		            		</td>
+		        		</tr>
+		        		<tr>
+		            		<th><spring:message code='ezResource.t374' /></th>
+		            		<td colspan="7" id="itemList" style="padding-left: 4px;"></td>
+		        		</tr>
+		        		<tr>
+		            		<th><spring:message code='ezResource.t224' /></th>
+		            		<td colspan="3">
+		                		<div id="titleDIV"> <c:out value='${title}' /></div>
+		            		</td>
+		        		</tr>
+	        			<tr style="height:100%">
+	            			<td colspan="4" style="height:100%;">
+	                 			<div id="divCross" style="height:460px;overflow:auto;margin:5px 0px 0px 5px;"></div>
+	            			</td>
+	        			</tr>
+	        		</table>
+	        	</td>
+        	</tr>
+		</table>
+		
+		<input type="hidden" id="iReFlag" value="${reFlagVal}" />
+		<input type="hidden" id="tmpReFlag" value="${tmpReFlag}" />
+		<input type="hidden" id="gresFlag" value="${gresFlag}" />
+		<input type="hidden" id="num" value="${num}" />
+		<input type="hidden" id="pnum" value="${pNum}" />
+		<input type="hidden" id="ownerID" value="${ownerID}" />
+		<input type="hidden" id="writerID" value="${writerID}" />
+
+		<table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
+			<tr style="text-align:center">
+				<td style="vertical-align:top">
+					<table style="width:690px;border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
+ 							<td style="padding-left:10px"> <div id="printOwner" style="text-align:left;"></div></td> 
+						</tr> 
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
+ 							<td style="padding-left:10px"> <div id="printImportance" style="text-align:left;"></div></td> 
+						</tr> 
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
+ 							<td style="padding-left:10px"> <div id="printDate" style="text-align:left;"></div></td> 
+						</tr> 
+						<tr style="height:25px"> 
+ 							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
+ 							<td style="padding-left:10px"> <div id="printTitle" style="text-align:left;"></div></td> 
+						</tr> 
+						<tr> 
+ 							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
+						</tr> 
+					</table>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>
