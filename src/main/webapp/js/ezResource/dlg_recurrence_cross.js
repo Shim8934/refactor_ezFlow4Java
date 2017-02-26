@@ -18,19 +18,22 @@ function window_onload() {
     try {
         m_dlgArgs = parent.schedule_repetition_cross_dialogArguments[0];
         ReturnFunction = parent.schedule_repetition_cross_dialogArguments[1];
-    } catch (e) { }
- 
+    } catch (e) {
+        try {
+            m_dlgArgs = opener.schedule_repetition_cross_dialogArguments[0];
+            ReturnFunction = opener.schedule_repetition_cross_dialogArguments[1];
+        } catch (e) {
+            m_dlgArgs = dialogArguments;
+        }
+        
+    }
+
+
     try {
-    	try {
-            var recurrenceDoc = loadXMLString(m_dlgArgs["recurrence"]);       
-            var endDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/endDateTime")[0]);
-            var startDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/startDateTime")[0]);
-            
-         } catch (e) { }
         if (m_dlgArgs["alldaycheck"] == "1") {
             try {
-                m_objStartTime = new Date(startDateTime.split(' ')[0].split('-')[0], parseInt(startDateTime.split(' ')[0].split('-')[1]) - 1, startDateTime.split(' ')[0].split('-')[2], startDateTime.split(' ')[1].split(':')[0], startDateTime.split(' ')[1].split(':')[1], 0, 0);
-                m_objEndTime = new Date(endDateTime.split(' ')[0].split('-')[0], parseInt(endDateTime.split(' ')[0].split('-')[1]) - 1, endDateTime.split(' ')[0].split('-')[2], endDateTime.split(' ')[1].split(':')[0], endDateTime.split(' ')[1].split(':')[1], 0, 0);
+                m_objStartTime = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
+                m_objEndTime = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
             } catch (e) {
                 m_objStartTime = new Date(m_dlgArgs["startTime"]);
                 m_objEndTime = new Date(m_dlgArgs["endTime"]);
@@ -70,16 +73,15 @@ function window_onload() {
             var xmlinDoc = null;
             var xmlFrequency = null;
 
-            if (navigator.userAgent.indexOf('MSIE') == -1) {
+            if (CrossYN() || pNoneActiveX == "YES") {
                 xmlinDoc = createXmlDom();
-                xmlinDoc = loadXMLString(m_dlgArgs["recurrence"]);//new DOMParser().parseFromString(m_dlgArgs["recurrence"], "text/xml");
+                xmlinDoc = loadXMLString(m_dlgArgs["recurrence"]);
 
                 szType = xmlinDoc.getElementsByTagName("frequency").item(0).firstChild.nodeValue;
             }
             else {
-                xmlinDoc = new ActiveXObject("Microsoft.XMLDOM");
-                xmlinDoc.async = false;
-                xmlinDoc.loadXML(m_dlgArgs["recurrence"]);
+                xmlinDoc = createXmlDom();
+                xmlinDoc = loadXMLString(m_dlgArgs["recurrence"]);
 
                 szType = xmlinDoc.getElementsByTagName("frequency").item(0).text;
             }
@@ -234,12 +236,20 @@ function event_btnRemoveRecurrence_onclick()
 {
     if(ReturnFunction != null)
         ReturnFunction(0);
+    else {
+        window.returnValue = 0;
+        window.close();
+    }
 }
 
 function event_btnCancel_onclick()
 {
     if (ReturnFunction != null)
         ReturnFunction(-1);
+    else {
+        window.returnValue = -1;
+        window.close();
+    }
 }
 
 function putReturnData(szCommand, vData)
@@ -300,9 +310,9 @@ function CheckBeforeSave()
 		
 		if( !CheckStartDateTime() )
 		{
-//			alert("" + strLang101 + "");
-//			
-//			return false;
+			alert("" + strLang101 + "");
+			
+			return false;
 		}
 	}
 	else
@@ -368,7 +378,7 @@ function RepCheck( xmlStr )
 	xmlHttp.Open("POST","/ZHome/myoffice/controls/dlg_recurrence_proc.asp?from="+from+"&sDate="+start+"&eDate="+end+"&cmd="+cmd,false);
 	xmlHttp.Send(xmlDoc.xml);
 	
-	var result = xmlHttp.responseXML;
+	var result = loadXMLString(xmlHttp.responseText);
 	
 	if( trim(result.text) == "1" )
 		return true;
@@ -444,7 +454,8 @@ function AppendNode( xmlDom, item )
 	}
 }
 var rtvString = "";
-function event_btnOk_onclick() {
+function event_btnOk_onclick()
+{
 	var xmlDoc = null;
 	var Root = null;
 	
@@ -552,7 +563,12 @@ function event_btnOk_onclick() {
         var startDateTime, endDateTime, tmpEndDateTime;
         if (document.getElementById("alldaycheck").checked == true) {
             createNodeAndInsertText(xmlDoc, Root, "startDateTime", m_objStartTime.getFullYear() + "-" + setLength(m_objStartTime.getMonth() + 1) + "-" + setLength(m_objStartTime.getDate()) + " " + setLength(m_objStartTime.getHours()) + ":" + setLength(m_objStartTime.getMinutes()));
-            createNodeAndInsertText(xmlDoc, Root, "endDateTime", m_objEndTime.getFullYear() + "-" + setLength(m_objEndTime.getMonth() + 1) + "-" + setLength(m_objEndTime.getDate()) + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
+            if (document.getElementById("EndTimeSet").checked) {
+                createNodeAndInsertText(xmlDoc, Root, "endDateTime", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
+            }
+            else {
+                createNodeAndInsertText(xmlDoc, Root, "endDateTime", m_objEndTime.getFullYear() + "-" + setLength(m_objEndTime.getMonth() + 1) + "-" + setLength(m_objEndTime.getDate()) + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
+            }
         }
         else {
             createNodeAndInsertText(xmlDoc, Root, "startDateTime", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val());
@@ -575,6 +591,11 @@ function event_btnOk_onclick() {
 	
 	if (ReturnFunction != null)
 	    ReturnFunction(g_RetVal);
+    else {
+        window.returnValue = g_RetVal;
+        window.close();
+    }
+
 }
 
 function setLength(num) {
@@ -851,23 +872,19 @@ function saveNumber(elem)
 	m_iSavedNumber = event.srcElement.value;
 }
 
-//Validates	number by returning	the	valid number or	NaN	(unicode is	converted to ansi number)
+
 function validateNumber(inNum)
 {
 	var	iEntry = Number(inNum);
 	if(isNaN(iEntry))
 	{
-		//eval each	character looking for unicode and converting...
 		var	iCh,chCode,szNewNumber=""; 
 		for	(var x=0; x<inNum.length; x++)
 		{
-			//ASCII	  8	= 0000000000111000
-			//UNICODE 8	= 1111111100011000
-			//Need to mask off all but the last	5 bits (& 1F)
 
 			iCh	= inNum.charCodeAt(x);
 			chCode = Number(iCh.toString(10));
-			if (chCode > 0xFF) //unicode
+			if (chCode > 0xFF) 
 			{
 				chCode = (iCh &	0x001f)	| 0x20;
 			}
@@ -878,8 +895,6 @@ function validateNumber(inNum)
 	return (iEntry)
 }
 
-//returns: 0=daily 1=weekly	2=monthly 3=yearly
-//no error checking
 function getMainPattern()
 {
 	ePattern = window.document.getElementsByName("optMainPattern");
@@ -958,8 +973,8 @@ var	m_iMsDuration;
 function onTimeChanged(iWhich) {
 	switch (iWhich)
 	{
-		case 0:	//start
-			//adjust endtime to	maintain duration
+		case 0:	
+			
 			m_objStartTime.setHours(idDatepickers.startHours(),idDatepickers.startMinutes(),0,0);
 			
 			if (m_objEndTime.getTime() > m_objStartTime.getTime()) {
@@ -980,17 +995,7 @@ function onTimeChanged(iWhich) {
 			break;
 
 
-        case 1: //end
-
-            //quirk: +1 rounds to next full min (else you get 12:59:59)
-
-            /*
-
-            m_objEndTime.setTime(idDatepickers.vtLocalEndTime() + 1);			
-
-            m_iMsDuration = m_objEndTime.getTime() - m_objStartTime.getTime();
-
-            */
+        case 1: 
 
             m_objEndTime.setHours(idDatepickers.endHours());
 
@@ -1019,10 +1024,10 @@ function Remainder( Root, xmlDoc )
 	
 	try
 	{
-	    rtvString += "기간 : " + $('#Sdatepicker').val() + " ~ ";
+	    rtvString += strLang580 + $('#Sdatepicker').val() + " ~ ";
 		if( document.getElementById("Instances").checked )	
 		{
-		    rtvString += document.getElementById("list_ReCount").value + "회";
+		    rtvString += document.getElementById("list_ReCount").value + strLang582;
 			createNodeAndInsertText(xmlDoc, Root, "endRecurType", 1);
 		    createNodeAndInsertText(xmlDoc, Root, "instances",document.getElementById("list_ReCount").value);
 		}
@@ -1041,7 +1046,7 @@ function Remainder( Root, xmlDoc )
 		else
 		{
 		    createNodeAndInsertText(xmlDoc, Root, "endRecurType", 0);
-		    rtvString += "종료일 지정 안함";
+		    rtvString += strLang582;
 		}
 	}
 	catch(e)
@@ -1065,37 +1070,19 @@ function SetRemainder( xmlRe )
 		
 		if( typeof(m_dlgArgs["ptEndDate"]) != "undefined" )
 		{
-			objD = getLocalDateObjFromGMTTime( m_dlgArgs["ptEndDate"] );
+		    var eDate = new Date(m_dlgArgs["ptEndDate"]);
+		    var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+		    $("#Edatepicker").datepicker('setDate', SeteTime);
+
 		}
 		else if(typeof(m_dlgArgs["recurrence"]) != "undefined")
 		{
 			var tmpDate = getNodeText(SelectNodes(xmlRe,"recurrence/endDateTime")[0]);
 			
-			var y, m1, m2, m, d, h, mm, disp;
-			
-			y = tmpDate.substring( 0, 4 );
-			m1 = tmpDate.substring( 5, 6 );
-			m2 = tmpDate.substring( 6, 7 );
-			m = tmpDate.substring( 5, 7 )
-			d = tmpDate.substring( 8, 10 );
-			
-			disp = tmpDate.substring( 11, 13 );
-			var arrTime = tmpDate.substring( 14 ).split(":");
-			h =  arrTime(0);
-			mm = arrTime(1);
-			
-			if( m1 == "0" )
-				m = "0" + String( parseInt(m2) - 1 );
-			else
-				m = String( parseInt(m) - 1 );
-			
-			if( disp == "" + strLang15 + "" && parseInt(h) == 12 )
-				h = parseInt(h) - 12
-			
-			objD = new Date( y, m, d, h, mm );
+			var eDate = new Date(tmpDate);
+			var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
+			$("#Edatepicker").datepicker('setDate', SeteTime);
 		}
-		
-		idDatepickers.vtLocalEndDate(objD);	
 	}
 }
 
@@ -1147,3 +1134,20 @@ function TimeRevision(szTime)
 	return szTime
 }
 
+
+
+function getLocalDateObjFromGMTTime(szDtTime) {
+
+    var szDay = szDtTime.substring(8, 10);
+    var szMonth = Number(szDtTime.substring(5, 7)) - 1;
+    var szYear = szDtTime.substring(0, 4);
+    var szHr = szDtTime.substring(11, 13);
+    var szMin = szDtTime.substring(14, 16);
+    var szSec = szDtTime.substring(17, 19);
+
+    var objD = new Date();
+    objD.setUTCFullYear(szYear, szMonth, szDay);
+    objD.setUTCHours(szHr, szMin);
+
+    return (objD);
+}

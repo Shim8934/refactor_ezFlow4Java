@@ -212,7 +212,7 @@
 		        	// TODO : 2016-04-22 장진혁과장 --우선적으로 서명 1개만 등록할 수 있도록 구현
 		            if (document.getElementById('mode').value == "PHOTO") {
 		                if (document.getElementById("form").file1.files.length > 1) {
-				            alert("<spring:message code='ezOrgan.t9902' />");
+				            alert("<spring:message code='ezOrgan.x0001' />");
 				        }
 		            } 
 		            var extension = document.getElementById("file1").value.split('.');

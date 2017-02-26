@@ -105,7 +105,7 @@
 			function OK_Click(){
 	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
 	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                    alert("<spring:message code='ezOrgan.t3088' />");
+	                    alert("<spring:message code='ezOrgan.x0003' />");
 	                    return;
 	                }
 	            }

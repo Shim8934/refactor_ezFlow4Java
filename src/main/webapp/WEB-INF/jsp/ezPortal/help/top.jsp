@@ -62,7 +62,7 @@
 				}
 			
 				var pUrl = "";
-				if (lang == "jp")
+				if (lang == "3")
 				    pUrl = "jp_";
 				switch (objThis.id)
 				{
@@ -119,7 +119,7 @@
 		</head>
 		<body style="background-color:#606671">
 			<c:choose>
-				<c:when test="${userInfo.lang != 'jp'}">
+				<c:when test="${userInfo.lang != '3'}">
 					<div>
 			    		<img src="/images/help/help.gif" width="135">
 					</div>

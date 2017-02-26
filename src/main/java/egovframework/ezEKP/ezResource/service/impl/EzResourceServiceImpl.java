@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.ibm.icu.impl.LocaleDisplayNamesImpl.DataTable;
 
@@ -179,6 +180,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleListRepetitim(map);
 	}
 
+	@Override
+	public List<ResGetScheduleVO> getDeletedRepSchedule(String companyID, String ownerID, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_companyID", companyID);
+		map.put("v_P_ownerID", ownerID);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getDeletedRepSchedule(map);
+	}
+	
 	@Override
 	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -627,10 +637,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_insType", insType);
 		map.put("tenantID", tenantID);
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 		map.put("nowDate", nowDate);
+		
 		//ezResourceDAO.delResSch(map);
 		logger.debug("insType="+insType);
 		if (insType == 3) {
@@ -670,19 +679,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
 			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_P_ownerID", ownerID);
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		
 		if (pNum == null || pNum.equals("")) {
 			pNum = "0";
 		}
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_ownerID", ownerID);
 		map.put("v_P_pnum", pNum);
 		map.put("v_P_companyID", companyID);
 		map.put("v_P_writerID", writerID);
 		map.put("v_P_title", title);
 		map.put("v_P_location", location);
 		map.put("v_P_timeDisplay", timeDisplay);
-		map.put("v_P_startDate", commonUtil.getDateStringInUTC(startDate, offset, true));
-		map.put("v_P_endDate", commonUtil.getDateStringInUTC(endDate, offset, true));
+		map.put("v_P_startDate", startDate);
+		map.put("v_P_endDate", endDate);
 		map.put("v_P_allDay", allDay);
 		map.put("v_P_alertTime", alertTime);
 		map.put("v_P_content", content);
@@ -699,12 +713,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Num", "");
 		map.put("v_WriteDay", "");
 		map.put("tenantID", tenantID);
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
-		
+
 		String approveFlag = ezResourceDAO.addRessch_S1(map);
 		
 		if (approveFlag.equals("1")) {
@@ -950,7 +960,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
 		
-		//return할 xml string 생성(반복예약 제외)
+		// return할 xml string 생성(반복예약 제외)
 		StringBuilder returnStr = new StringBuilder();
 		returnStr.append("<DATA>");
 		
@@ -1011,20 +1021,37 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
 		
-		//return할 xml string 생성(반복예약)
+		// return할 xml string 생성(반복예약)
 		if (returnRepetitionDom != null) {
 			for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 				String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
 				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
-				String reFlag = returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent();
 				
-				//반복예약의 반복되는 날짜리스트 가져옴
+				// 반복예약 중에 삭제된 예약 가져옴
+				List<ResGetScheduleVO> deletedRepSchedule = getDeletedRepSchedule(reCompanyID, reOwnerID, tenantID);
+				
+				for (ResGetScheduleVO vo : deletedRepSchedule) {
+					vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false));
+				}
+				
+				// 반복예약의 반복되는 날짜리스트 가져옴
 				List<String[]> returnRepDateTimes = getRepDateTimes(reCompanyID, reNum, reOwnerID, sDate, eDate, tenantID, offset);
 				logger.debug("getRepDateTimes=" + returnRepDateTimes);
-					
+				
 				for (String[] dateArr : returnRepDateTimes) {
-					if (!reFlag.equals("4")) {
+					
+					// 삭제된 예약인지 확인한다.
+					boolean deleted = false;
+					for (int j=deletedRepSchedule.size()-1; j>-1; j--) {
+						if (deletedRepSchedule.get(j).getStartDate().equals(dateArr[0])) {
+							deletedRepSchedule.remove(j);
+							deleted = true;
+							break;
+						}
+					}
+					
+					if (!deleted) {
 						returnStr.append("<ROW>");
 						returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
 						returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
@@ -2589,45 +2616,46 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		logger.debug("addResSch Start");
-		logger.debug("xmlStr="+xmlStr);
+		logger.debug("xmlStr=" + xmlStr);
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		String attachFlag = "";
 		String scheduleID = "";
 		
-		String title = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
-		String location = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
-		String timeDisplay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(2).getTextContent().trim();
-		String startDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(3).getTextContent().trim();
-		String endDate = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(4).getTextContent().trim();
-		String allDay = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(5).getTextContent().trim();
-		String alertTime = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(6).getTextContent().trim();
-		String content = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(7).getTextContent().trim();
-		String writerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(8).getTextContent().trim();
-		String importance = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(9).getTextContent().trim();
-		String entryList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(10).getTextContent().trim();
-		String reFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(11).getTextContent().trim();
-		String gresFlag = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(12).getTextContent().trim();
-		String num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(13).getTextContent().trim();
-		String pNum = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(14).getTextContent().trim();
-		String ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(15).getTextContent().trim();
-		String attachFiles = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(16).getTextContent().trim();
-		String companyID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(17).getTextContent().trim();
-		String characterID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(18).getTextContent().trim();
-		String deptNm = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(20).getTextContent().trim();
-		String ownerNm = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(21).getTextContent().trim();
-		String strApprove = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(22).getTextContent().trim();
+		NodeList nodeList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes();
+		
+		String title = nodeList.item(0).getTextContent().trim();
+		String location = nodeList.item(1).getTextContent().trim();
+		String timeDisplay = nodeList.item(2).getTextContent().trim();
+		String startDate = nodeList.item(3).getTextContent().trim();
+		String endDate = nodeList.item(4).getTextContent().trim();
+		String allDay = nodeList.item(5).getTextContent().trim();
+		String alertTime = nodeList.item(6).getTextContent().trim();
+		String content = nodeList.item(7).getTextContent().trim();
+		String writerID = nodeList.item(8).getTextContent().trim();
+		String importance = nodeList.item(9).getTextContent().trim();
+		String entryList = nodeList.item(10).getTextContent().trim();
+		String reFlag = nodeList.item(11).getTextContent().trim();
+		String gresFlag = nodeList.item(12).getTextContent().trim();
+		String num = nodeList.item(13).getTextContent().trim();
+		String pNum = nodeList.item(14).getTextContent().trim();
+		String ownerID = nodeList.item(15).getTextContent().trim();
+		String attachFiles = nodeList.item(16).getTextContent().trim();
+		String companyID = nodeList.item(17).getTextContent().trim();
+		String characterID = nodeList.item(18).getTextContent().trim();
+		String deptNm = nodeList.item(20).getTextContent().trim();
+		String ownerNm = nodeList.item(21).getTextContent().trim();
+		String strApprove = nodeList.item(22).getTextContent().trim();
 			
-		if (xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().getLength() > 23) {
-			scheduleID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(23).getTextContent().trim();
+		if (nodeList.getLength() > 23) {
+			scheduleID = nodeList.item(23).getTextContent().trim();
 		}
-			
+		
 		if (attachFiles != null && !attachFiles.equals("")) {
 			attachFlag = "1";
 		} else {
 			attachFlag = "0";
 		}
-			
-		//timedisplay = 1
+		
 		timeDisplay = "1";
 		addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
 				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
@@ -2637,7 +2665,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         returnStr += "<OWNERID>" + writerID + "</OWNERID>";
         returnStr += "</RTN_DATA>";
         
-        logger.debug("returnStr="+returnStr);
+        logger.debug("returnStr=" + returnStr);
         logger.debug("addResSch End");
         return returnStr;
 	}

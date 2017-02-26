@@ -223,3 +223,13 @@ var strLang571 = "Subscriber";
 
 var strLang572 = "Repeat";
 var strLang573 = "Time";
+
+var strLang535 = "No Items";
+
+var strLang580 = "Period : ";
+var strLang581 = "Do not set the ending date"
+var strLang582 = " occurrences "
+var strLang583 = "End time is earlier than the time today.";
+
+var strLang584 = "It was approved.";
+var strLang585 = "Approval has been canceled.";

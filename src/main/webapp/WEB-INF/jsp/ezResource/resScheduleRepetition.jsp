@@ -33,6 +33,7 @@
 		        window_onload();
 	        	datepicker();
 	        	datetimepicker();
+        
 	        	try {
 		            var ua = navigator.userAgent;
 		            
@@ -90,13 +91,8 @@
 	        	var SDate, EDate;
 	        	if (m_dlgArgs["alldaycheck"] == "1") {
 	        		try {
-	                    var recurrenceDoc = loadXMLString(m_dlgArgs["recurrence"]);       
-	                    var endDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/endDateTime")[0]);
-	                    var startDateTime = getNodeText(SelectNodes(recurrenceDoc, "recurrence/startDateTime")[0]);     
-	                 } catch (e) { }
-		            try {
-		                SDate = new Date(startDateTime.split(' ')[0].split('-')[0], parseInt(startDateTime.split(' ')[0].split('-')[1]) - 1, startDateTime.split(' ')[0].split('-')[2], startDateTime.split(' ')[1].split(':')[0], startDateTime.split(' ')[1].split(':')[1], 0, 0);
-	                	EDate = new Date(endDateTime.split(' ')[0].split('-')[0], parseInt(endDateTime.split(' ')[0].split('-')[1]) - 1, endDateTime.split(' ')[0].split('-')[2], endDateTime.split(' ')[1].split(':')[0], endDateTime.split(' ')[1].split(':')[1], 0, 0);
+                SDate = new Date(m_dlgArgs["startTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["startTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["startTime"].split(' ')[0].split('-')[2], m_dlgArgs["startTime"].split(' ')[1].split(':')[0], m_dlgArgs["startTime"].split(' ')[1].split(':')[1], 0, 0);
+                EDate = new Date(m_dlgArgs["endTime"].split(' ')[0].split('-')[0], parseInt(m_dlgArgs["endTime"].split(' ')[0].split('-')[1]) - 1, m_dlgArgs["endTime"].split(' ')[0].split('-')[2], m_dlgArgs["endTime"].split(' ')[1].split(':')[0], m_dlgArgs["endTime"].split(' ')[1].split(':')[1], 0, 0);
 	            	} catch (e) {
 		                SDate = new Date(m_dlgArgs["startTime"]);
 	                	EDate = new Date(m_dlgArgs["endTime"]);
@@ -219,7 +215,7 @@
 						<input type="checkbox" name="day" id="day2" value="2"> <spring:message code="ezResource.t292"/>
 						<input type="checkbox" name="day" id="day3" value="3"> <spring:message code="ezResource.t293"/><br>
             			<input type="checkbox" name="day" id="day4" value="4"> <spring:message code="ezResource.t294"/>
-						<input type="checkbox" name="day" id="day5"  value="5"> <spring:message code="ezResource.t295"/>
+						<input type="checkbox" name="day" id="day5" value="5"> <spring:message code="ezResource.t295"/>
 						<input type="checkbox" name="day" id="day6" value="6"> <spring:message code="ezResource.t296"/></div></td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
@@ -316,7 +312,7 @@
   			<tr>
     			<th style="text-align:right"><spring:message code="ezResource.t313"/><u>S</u>)</th>
     			<td width="100%">
-        			<input type="text" id="Sdatepicker" style="width:80px;text-align:center">
+        			<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
      			</td>
   			</tr>
   			<tr>
@@ -327,7 +323,7 @@
     			<th align="right"></th>
     			<td>
     				<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton"> <spring:message code="ezResource.t315"/>
-      				<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" size="4" value='10'>
+      				<input id="list_ReCount" maxlength="3" size="4" value="10">
       					<spring:message code="ezResource.t316"/>
       			</td>
   			</tr>
@@ -335,7 +331,7 @@
     			<th align="right"></th>
     			<td>
     				<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton"><spring:message code="ezResource.t317"/>
-      				<input type="text" id="Edatepicker" style="width:80px;text-align:center" onFocus="EndTimeSet.checked = true">
+      				<input type="text" id="Edatepicker" style="width:80px;text-align:center">
       			</td>
   			</tr>
 		</table>

@@ -87,6 +87,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (List<ResGetRepResourceVO>) list("EzResourceDAO.getRepResource", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getDeletedRepSchedule(Map<String, Object> map) {
+		return (List<ResGetScheduleVO>) list("EzResourceDAO.getDeletedRepSchedule", map);
+	}
+	
 	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
 		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
@@ -302,7 +307,6 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void modifyResSch_D2(Map<String, Object> map) {
 		delete("EzResourceDAO.modifyResSch_D2", map);
 	}
-	
 	
 }
 

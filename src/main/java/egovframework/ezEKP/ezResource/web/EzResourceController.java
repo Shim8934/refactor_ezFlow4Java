@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezResource.web;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -192,6 +193,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezResource/callNodeTreeData.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String callNodeTreeData(@RequestBody String xmlReq,HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("callNodeTreeData started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String selectFlag = "";
 		
@@ -199,7 +202,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			selectFlag = req.getParameter("flag");
 		}
 		
-		String ret = ezResourceService.getSubClsTree(xmlReq, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		String ret = ezResourceService.getSubClsTree(xmlReq, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 		Document xmlRet = commonUtil.convertStringToDocument(ret);
 		
 		XPath xpath = XPathFactory.newInstance().newXPath();
@@ -235,7 +238,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				if(nodes7.item(i).getTextContent().equals("")) {
 					nodes7.item(i).setTextContent("<![CDATA[]]>");
 				}
-		
+				
 				
 				if(selectFlag.equals("SELECT_NO")) {
 					if(nodes2.item(i) != null) {
@@ -246,7 +249,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-
+		
 		if (nodes8 != null && nodes10 != null) {
 			for (int i=0; i<nodes8.getLength(); i++) {
 				nodes8.item(i).setTextContent("TRUE");
@@ -262,6 +265,9 @@ public class EzResourceController extends EgovFileMngUtil {
 				}
 			}
 		}
+		
+
+		logger.debug("callNodeTreeData ended");
 		return commonUtil.convertDocumentToString(xmlRet).replace("&lt;", "<").replace("&gt;", ">");
 	
 	}
@@ -1107,16 +1113,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		String reFlag = "";
 		String startDateTime = "";
 		String endDateTime = "";
-		String startDateTime2 = "";
-		String endDateTime2 = "";
 		String timeDisplay = "";
 		String content = "";
 		String ownerID = "";
 		String writerID = "";
-		String curStartDateTime = "";
-		String curEndDateTime = "";
-		/*String curStartDateTime2 = "";
-		String curEndDateTime2 = "";*/
 		String checkSDT = "";
 		String checkEDT = "";
 		String allDay = "";
@@ -1192,9 +1192,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			title = getSchedule.getTitle();
 			loc = getSchedule.getLocation();
 			
-			timeDisplay = getSchedule.getTimeDisplay();
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
 			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
+			
+			timeDisplay = getSchedule.getTimeDisplay();
 			reFlag = getSchedule.getReFlag();
 			gresFlag = getSchedule.getGresFlag();
 			content = getSchedule.getContent();
@@ -1203,96 +1204,42 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (importance.equals("")) {
 				importance = "2";
 			}
+			
 			entryList = getSchedule.getEntryList();
 			allDay = getSchedule.getAllDay();
 			saveApproveFlag = getSchedule.getApproveFlag();
 			
 			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
-			logger.debug("repDateTimes="+repDateTimes);
-			
 			if (repDateTimes != null) {
-				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());
-				endDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getEndDateTime());
+				startDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getStartDateTime(), userInfo.getOffset(), false);
+				endDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getEndDateTime(), userInfo.getOffset(), false);
 			}
+			
 		} else {
 			importance = "2";
-			String selSd = "";
-			String selEd = "";
-			String cDate = "";
-			String cTime = "";
 			
-			if (req.getParameter("selsd") != null) {
-				selSd = req.getParameter("selsd");
+			String cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+			String cTime = cDate.split(" ")[1].substring(0, 2);
+			
+			if (req.getParameter("startDate") != null) {
+				cDate = req.getParameter("startDate");
 			}
-			if (req.getParameter("seled") != null) {
-				selEd = req.getParameter("seled");
+			cDate = cDate.substring(0, 10);
+			startDateTime = cDate + " " + cTime + ":00:00";
+			
+			if (req.getParameter("endDate") != null) {
+				cDate = req.getParameter("endDate");
 			}
-			if (selSd.equals("") || selEd.equals("")) {
-				cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-				cTime = cDate.split(" ")[1].substring(0, 2);
-				
-				if (req.getParameter("startDate") != null) {
-					cDate = req.getParameter("startDate");
-				}
-				cDate = cDate.substring(0, 10);
-				startDateTime = cDate + " " + cTime + ":00:00";
-				
-				if (req.getParameter("endDate") != null) {
-					cDate = req.getParameter("endDate");
-				}
-				cDate = cDate.substring(0, 10);
-				endDateTime = cDate + " " + cTime + ":30:00";
-			} else {
-				if (selSd.length() == 10) {
-					cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-					cTime = cDate.split(" ")[1].substring(0, 2);
-					cDate = cDate.substring(0, 10);
-					startDateTime = selSd + " " + cTime + ":00:00";
-					endDateTime = selEd + " " + cTime + ":30:00";
-
-				} else {
-					startDateTime = selSd;
-					endDateTime = selEd;
-				}
-			}
+			cDate = cDate.substring(0, 10);
+			endDateTime = cDate + " " + cTime + ":30:00";
+			
 			if (req.getParameter("ownerID") != null) {
 				ownerID = req.getParameter("ownerID");
 			}
 		}
-		String curDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-		String curTime = curDate.split(" ")[1].substring(0, 2);
-			
-		if (req.getParameter("startDate") != null) {
-			curDate = req.getParameter("startDate");
-		}
-		if (curDate.length() == 9) {
-			curDate = curDate.substring(0, 9);
-		} else {
-			curDate = curDate.split(" ")[0];
-		}
-		curStartDateTime = curDate + " " + curTime + ":00:00";
-			
-		if (req.getParameter("endDate") != null) {
-			curDate = req.getParameter("endDate");
-		}
-		if (curDate.length() == 9) {
-			curDate = curDate.substring(0, 9);
-		} else {
-			curDate = curDate.split(" ")[0];
-		}
-		curEndDateTime = curDate + " " + curTime + ":30:00";
-		
-		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
-		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
-		
-		/*curStartDateTime2 = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");
-		curEndDateTime2 = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-M-d H:mm", "");*/
-		
+
 		startDateTime = ezResourceService.convertDate(startDateTime, "", "", "");
 		endDateTime = ezResourceService.convertDate(endDateTime, "", "", "");
-
-		startDateTime2 = ezResourceService.isoUTFDate(startDateTime, locale);
-		endDateTime2 = ezResourceService.isoUTFDate(endDateTime, locale);
 
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
@@ -1324,8 +1271,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("allDay", allDay);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
-		model.addAttribute("startDateTime2", startDateTime2);
-		model.addAttribute("endDateTime2", endDateTime2);
 		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
 		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
 		model.addAttribute("startDateVal", startDateVal);
@@ -1389,8 +1334,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String content = "";
 		String ownerID = "";
 		String writerID = "";
-		String curStartDateTime = "";
-		String curEndDateTime = "";
 		String checkSDT = "";
 		String checkEDT = "";
 		String allDay = "";
@@ -1488,16 +1431,15 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (importance.equals("")) {
 				importance = "2";
 			}
+			
 			entryList = getSchedule.getEntryList();
 			allDay = getSchedule.getAllDay();
 			saveApproveFlag = getSchedule.getApproveFlag();
 			
 			ResGetRepDateTimesVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
-			logger.debug("repDateTimes="+repDateTimes);
-			
 			if (repDateTimes != null) {
-				startDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getStartDateTime());
-				endDateTimeRepeat = ezResourceService.getLocalTime(repDateTimes.getEndDateTime());
+				startDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getStartDateTime(), userInfo.getOffset(), false);
+				endDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getEndDateTime(), userInfo.getOffset(), false);
 			}
 		} else {
 			importance = "2";
@@ -1513,7 +1455,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				selEd = req.getParameter("seled");
 			}
 			if (selSd.equals("") || selEd.equals("")) {
-				cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
+				cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 				cTime = cDate.split(" ")[1].substring(0, 2);
 				
 				if (req.getParameter("startDate") != null) {
@@ -1529,7 +1471,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				endDateTime = cDate + " " + cTime + ":30:00";
 			} else {
 				if (selSd.length() == 10) {
-					cDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
+					cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
 					cTime = cDate.split(" ")[1].substring(0, 2);
 					cDate = cDate.substring(0, 10);
 					startDateTime = selSd + " " + cTime + ":00:00";
@@ -1540,35 +1482,11 @@ public class EzResourceController extends EgovFileMngUtil {
 					endDateTime = selEd;
 				}
 			}
+			
 			if (req.getParameter("ownerID") != null) {
 				ownerID = req.getParameter("ownerID");
 			}
 		}
-		String curDate = ezResourceService.getLocalTime(EgovDateUtil.getToday("time"));
-		String curTime = curDate.split(" ")[1].substring(0, 2);
-			
-		if (req.getParameter("startDate") != null) {
-			curDate = req.getParameter("startDate");
-		}
-		if (curDate.length() == 9) {
-			curDate = curDate.substring(0, 9);
-		} else {
-			curDate = curDate.split(" ")[0];
-		}
-		curStartDateTime = curDate + " " + curTime + ":00:00";
-			
-		if (req.getParameter("endDate") != null) {
-			curDate = req.getParameter("endDate");
-		}
-		if (curDate.length() == 9) {
-			curDate = curDate.substring(0, 9);
-		} else {
-			curDate = curDate.split(" ")[0];
-		}
-		curEndDateTime = curDate + " " + curTime + ":30:00";
-		
-		curStartDateTime = EgovDateUtil.convertDate(curStartDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
-		curEndDateTime = EgovDateUtil.convertDate(curEndDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss", "");
 		
 		startDateTime2 = startDateTime;
 		endDateTime2 = endDateTime;
@@ -1927,7 +1845,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	/**
 	 * 자원관리 자원예약 저장 후 닫기 실행 함수
 	 */
-	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
@@ -1936,6 +1853,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String cmd = "";
 		String typeVal = "";
 		String companyID = "";
+		String ret = "";
 		
 		if (req.getParameter("cmd") != null && !req.getParameter("cmd").equals("")) {
 			cmd = req.getParameter("cmd");
@@ -1955,52 +1873,53 @@ public class EzResourceController extends EgovFileMngUtil {
 			rootNode.appendChild(objNode);
 				
 			boolean reVal = ezResourceService.delResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("reVal="+reVal);	
+			logger.debug("reVal=" + reVal);	
+			
 			if (reVal == true) {
-				return "OK";
+				ret = "OK";
 			} else {
-				return "NO";
+				ret = "NO";
 			}
 		} else if (cmd.equals("add")) {
 			logger.debug("add Start");
-			String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+			
 			String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-			SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				
-			//////////////////////////////추후 수정
-			if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
-				endDate = ezResourceService.addMinutes(endDate, -1, "yyyy-MM-dd HH:mm");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			cal.setTime(dateFormat.parse(endDate));
+			
+			if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {
+				cal.add(Calendar.MINUTE, -1);
+				endDate = dateFormat.format(cal.getTime());
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
-			dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
-			dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 
-			String ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("ret="+ret);
-			return ret;
+			ret = ezResourceService.addResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		} else if (cmd.equals("mod")) {
 			logger.debug("mod Start");
-			String startDate = dom.getElementsByTagName("STARTDATETIME").item(0).getTextContent();
+			
 			String endDate = dom.getElementsByTagName("ENDDATETIME").item(0).getTextContent();
-			SimpleDateFormat tempEndDate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			Calendar cal = Calendar.getInstance();
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			cal.setTime(dateFormat.parse(endDate));
 
-			//////////////////////////////추후 수정
-			if (String.valueOf(tempEndDate.parse(endDate).getHours()).equals("0") && String.valueOf(tempEndDate.parse(endDate).getMinutes()).equals("0")) {
-				endDate = ezResourceService.addMinutes(endDate, -1, "yyyy-MM-dd HH:mm");
+			if (cal.get(Calendar.HOUR_OF_DAY) == 0 && cal.get(Calendar.MINUTE) == 0) {
+				cal.add(Calendar.MINUTE, -1);
+				endDate = dateFormat.format(cal.getTime());
+				dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
 			}
-			dom.getElementsByTagName("STARTDATETIME").item(0).setTextContent(startDate);
-			dom.getElementsByTagName("ENDDATETIME").item(0).setTextContent(endDate);
-				
+			
 			Node rootNode = dom.getDocumentElement();
 			Node objNode = dom.createElement("TYPE_VAL");
 			objNode.setTextContent(typeVal);
 			rootNode.appendChild(objNode);
 
-			String ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
-			logger.debug("ret="+ret);
-			return ret;
+			ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		}
-		logger.debug("scheduleAddOk End");
-		return "";
+		
+		logger.debug("ret=" + ret);
+		logger.debug("scheduleAddOk End.");
+		return ret;
 	}
 	
 	/**
@@ -2110,41 +2029,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
-		
-//		StringBuilder strSQL = new StringBuilder();
-//		
-//		if (cmd.toLowerCase().equals("add")) {
-//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-//			strSQL.append("FROM TB_Schedule");
-//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-//			strSQL.append("AND ownerID ="+"'"+resID+"'");
-//			strSQL.append("AND reFlag ="+0);
-//			strSQL.append("AND approveFlag = '1'");
-//			strSQL.append("AND NOT(  ");
-//			strSQL.append("                (endDate <=  ");
-//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-//			strSQL.append("              ) or (");
-//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-//			strSQL.append("              )");
-//		} else {
-//			strSQL.append("SELECT ISNULL(COUNT(ownerID),0) AS cnt");
-//			strSQL.append("FROM TB_Schedule");
-//			strSQL.append("WHERE companyID ="+"'"+companyID+"'");
-//			strSQL.append("AND ownerID ="+"'"+resID+"'");
-//			strSQL.append("AND reFlag = 0");
-//			strSQL.append("AND approveFlag = '1'");
-//			strSQL.append("AND NOT IN ("+num+")");
-//			strSQL.append("AND NOT ( ");
-//			strSQL.append("                 (endDate <=  ");
-//			strSQL.append("                    (CASE allday WHEN '0' THEN "+"'"+sTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayStime+"'"+ "END)");
-//			strSQL.append("              ) or (");
-//			strSQL.append("                      (CASE allday WHEN '0' THEN "+ "'"+eTime+"'");
-//			strSQL.append("                     WHEN '1' THEN "+"'"+allDayEtime+"'"+ "END) <= startDate)");
-//			strSQL.append("              )");
-//		}
 		
 		boolean isDupRep = false;
 		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();

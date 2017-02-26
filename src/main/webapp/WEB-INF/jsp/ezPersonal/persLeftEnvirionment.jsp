@@ -148,7 +148,7 @@
 		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
 		    }
 		    function Pims_Config() {
-		        parent.frames["right"].location.href = "/myoffice/ezSchedule/PIMS_config.aspx";
+		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do";
 		    }
 		    function Approval_Config() {
 		        parent.frames["right"].location.href = "/ezPersonal/ezApprovalConfig.do";

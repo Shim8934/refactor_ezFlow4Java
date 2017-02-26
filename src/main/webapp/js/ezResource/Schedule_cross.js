@@ -800,8 +800,8 @@ function SaveSchedule_onClick( cmd , resItem) {
     var objNode4,objNode5,objNode6;
 	//하루종일이면 시간을 디폴트로 저장하고 그렇지 안으면 설정하여 저장
 	if (document.getElementById("AllDay").checked == true) {
-	    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-	    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:01";
+	    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+	    objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:00";
 		objNode6 = "1";
 	} else {
 	    objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -915,15 +915,10 @@ function SaveSchedule_onClick( cmd , resItem) {
 		    SaveRepetition( p_num, resItem );
 		}
 		
-//		if(!CrossYN())
-//		{
-
 		if (!setApprovFlag) {
 		    window_onUnload();
 		    window.close();
 		}
-		//}
-		
 	}else{
 		alert("" + strLang145 + "");
 	}
@@ -935,7 +930,6 @@ function OnlySaveSchedule(resItem) {
         alert("" + strLang132 + "");
         return;
     }
-    SessionCheck();
 
     if (trim_Cross(document.getElementById("title").value) == "") {
         alert("" + strLang138 + "");
@@ -970,8 +964,8 @@ function OnlySaveSchedule(resItem) {
 
     var objNode4, objNode5, objNode6;
     if (document.getElementById("AllDay").checked == true) {
-        objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:01";
+        objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
+        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:00";
         objNode6 = "1";
     } else {
         objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
@@ -1347,7 +1341,7 @@ function onbeforeprint() {
 		printInvite.style.display = "none";
 	}*/
 
-    document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
+    setNodeText(document.getElementById("printOwner"), getNodeText(document.getElementById("displayNM")));
 
     //중요도 낮음	importance1.value의 값음 schedule_add.asp 화면에서 직접가지고 온다.
     if (importance1.value == 1) {
@@ -1365,16 +1359,16 @@ function onbeforeprint() {
     }
 
     if (tr_Recur.style.display != "none") {
-        document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
+        setNodeText(document.getElementById("printDate"), getNodeText(document.getElementById("AllDayDisplay")));
     } else {
         if (!AllDay.checked) {
-            document.getElementById("printDate").textContent = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + strLang126 + ")";
+            setNodeText(document.getElementById("printDate"),$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + strLang126 + ")");
         } else {
-            document.getElementById("printDate").textContent = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+            setNodeText(document.getElementById("printDate"),$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
         }
     }
 
-    document.getElementById("printTitle").textContent = title.value + " ";		// 제목 인쇄하는 부분
+    setNodeText(document.getElementById("printTitle"),title.value + " ");		// 제목 인쇄하는 부분
 
     //var divTag = document.createElement("DIV");
 
@@ -1438,7 +1432,7 @@ function AttachAdd_onClick() {
 
 function show_progress(fileinfo) {
     var feature = GetShowModalPosition(390, 160);
-    g_progresswin = window.showModelessDialog("/ezEmail/showProgress.do?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:160px; center:yes; status:no; help:no; edge:sunken" + feature);
+    g_progresswin = window.showModelessDialog("/ezEmail/showProgress.do?fileinfo=" + encodeURIComponent(fileinfo), "", "dialogWidth=390px; dialogHeight:160px; center:yes; status:no; help:no; edge:sunken" + feature);
 
 	//Dialog 창이 완전히 Loding 되기까지 대기한다.
 	//for( ;window.g_progresswin.document.readyState!="complete";) ;//IE 9 지원안함.
@@ -1796,7 +1790,7 @@ function showAttachFile() {
 		//row.onclick = onselect;
 		//row.ondblclick = onFileSelect;
 		row.onclick = onFileSelect;
-		row.filename = elem[i].innerText;
+		row.filename = getNodeText(elem[i]);
 		row.org_filename = elem[i].org_filename;
 		row.parentID = elem[i].id;
 		row.height = "12px";

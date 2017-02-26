@@ -223,3 +223,13 @@ var strLang571 = "订户";
 
 var strLang572 = "重复";
 var strLang573 = "时间";
+
+var strLang535 = "No Items";
+
+var strLang580 = "期间 : ";
+var strLang581 = "不指定终结日"
+var strLang582 = "回复范例"
+var strLang583 = "结束时间比今天时间早。";
+
+var strLang584 = "它被批准。";
+var strLang585 = "认证已被取消。";

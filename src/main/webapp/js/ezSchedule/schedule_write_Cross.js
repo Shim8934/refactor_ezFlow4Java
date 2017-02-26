@@ -1326,7 +1326,7 @@ function SaveSchedule_onClick(cmd, resItem) {
     var objNode4, objNode5, objNode6;
     if (document.getElementById("alldaycheck").checked == true) {
         objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:00";
         objNode6 = "1";
     }
     else {

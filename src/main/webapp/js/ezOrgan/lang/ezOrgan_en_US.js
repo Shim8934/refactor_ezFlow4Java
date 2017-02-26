@@ -10,7 +10,6 @@ var strLang9 = "users have been Nordic."
 var strLang10 = "User has failed to recover."
 var strLang11 = "Signature images can not exceed the ";
 var strLang12 = ".";
-
 var strLang13 = "Choose your users.";
 var strLang14 = "Permission settings have been saved.";
 var strLang15 = "Failed to save the permission settings.";
@@ -30,5 +29,5 @@ var strLang28 = "Prev";
 var strLang29 = "Next";
 var strLang30 = "Are you sure you want to delete all the concurrent position?";
 var strLang31 = "You can not specify a full administrator privileges.";
-
+var strLang32 = "의 모든 권한을 삭제 하시겠습니까?";
 var strLang535 = "No Items";
