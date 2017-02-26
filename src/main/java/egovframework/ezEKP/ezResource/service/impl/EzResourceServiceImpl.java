@@ -569,6 +569,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, String typeVal,
 			String approve, int tenantID, String offset) throws Exception {
 		logger.debug("modifyResSch Start");
+		
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ownerID", ownerID);
 		map.put("v_P_num", num);
@@ -578,8 +583,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_title", title);
 		map.put("v_P_location", location);
 		map.put("v_P_timeDisplay", timeDisplay);
-		map.put("v_P_startDate", commonUtil.getDateStringInUTC(startDate, offset, true));
-		map.put("v_P_endDate", commonUtil.getDateStringInUTC(endDate, offset, true));
+		map.put("v_P_startDate", startDate);
+		map.put("v_P_endDate", endDate);
 		map.put("v_P_allDay", allDay);
 		map.put("v_P_alertTime", alertTime);
 		map.put("v_P_content", content);
@@ -593,16 +598,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Approve", approve);
 		map.put("maxNum", "");
 		map.put("tenantID", tenantID);
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date());
 		map.put("nowDate", nowDate);
-		logger.debug("typeVal="+typeVal);
+		
+		logger.debug("typeVal=" + typeVal);
+		
 		if (reFlag.equals("1") && typeVal.equals("MASTER")) {
 			String ownerNm = ezResourceDAO.modifyResSch_S1(map);
 			String deptNm = ezResourceDAO.modifyResSch_S2(map);
-			
 			ezResourceDAO.modifyResSch_D1(map);
 			
 			map.put("v_tmpOwnerNm", ownerNm);
@@ -612,17 +614,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} else {
 			if (typeVal.equals("INSTANCE")) {
 				int result = ezResourceDAO.modifyResSch_U1(map);
-				logger.debug("result="+result);
+				logger.debug("result=" + result);
+				
 				if (result == 0) {
 					ezResourceDAO.modifyResSch_I2(map);
 				}
-				
 			} else {
 				ezResourceDAO.modifyResSch_U2(map);
 			}
 		}
 		logger.debug("modifyResSch End");
-		//ezResourceDAO.modifyResSch(map);
 	}
 
 	@Override
