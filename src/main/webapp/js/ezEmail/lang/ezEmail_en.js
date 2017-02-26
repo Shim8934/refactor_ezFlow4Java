@@ -342,20 +342,18 @@ var strLang353 = "The same domain or e-mail address exists.";
 // ### 수신거부 추가
 
 //추가
-var strLang354 = "Please enter a domain name.";
-var strLang355 = "No admin.";
-var strLang356 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang357 = "데이터가 지정되지 않았습니다.";
-var strLang358 = "파일을 삭제 하시겠습니까?";
-var strLang359 = "이동하였습니다.";
-var strLang360 = "업로드 할 파일을 선택하시오";
-var strLang361 = "초과합니다.";
-var strLang362 = "초과했습니다.";
-var strLang363 = "메일 용량이 초과되어 메일 발송이 금지되었습니다.";
-var strLang364 = "외부로 발송되는 메일은 10MB를 넘을 수 없습니다.";
-var strLang365 = "대용량";
-var strLang366 = "회수할 대상을 선택해주세요.";
-var strLang367 = "세션에 문제가 생겼습니다.\n다시 로그인해주세요.";
+var strLangLHM01 = "Please enter a domain name.";
+var strLangLHM02 = "No admin.";
+var strLangLHM03 = "리스트의 ID가 지정되지 않았습니다.";
+var strLangLHM04 = "데이터가 지정되지 않았습니다.";
+var strLangLHM05 = "파일을 삭제 하시겠습니까?";
+var strLangLHM06 = "이동하였습니다.";
+var strLangLHM07 = "업로드 할 파일을 선택하시오";
+var strLangLHM08 = "메일 용량이 초과되어 메일 발송이 금지되었습니다.";
+var strLangLHM09 = "외부로 발송되는 메일은 10MB를 넘을 수 없습니다.";
+var strLangLHM10 = "대용량";
+var strLangLHM11 = "회수할 대상을 선택해주세요.";
+var strLangLHM12 = "세션에 문제가 생겼습니다.\n다시 로그인해주세요.";
 
 function GetLocalTime(Offset , pDateTime)
 {
