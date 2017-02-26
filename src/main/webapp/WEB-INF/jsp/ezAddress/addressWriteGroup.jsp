@@ -80,7 +80,10 @@
 	            var childxml = get_Address_childXML(AddressTreeView.getvalue(nodeIdx, "folderid"), AddressTreeView.getvalue(nodeIdx, "ownerid"), AddressTreeView.getvalue(nodeIdx, "type"))
 	            AddressTreeView.putchildxml(nodeIdx, childxml);
 	        }
+	        
 	        var tempfolderid = "";
+	        var tempownerid = "";
+	        
 	        function address_selectnode(pGubun) {
 	            var nodeIdx = AddressTreeView.selectedIndex();
 	            var folderid = AddressTreeView.getvalue(nodeIdx, "folderid");
@@ -92,12 +95,16 @@
 	                document.getElementById("addressFolderName").innerText = AddressTreeView.selectedNode().innerText;
 	
 	            var xmlDom = null;
-	            if (tempfolderid != folderid)
+
+	            if (tempfolderid != folderid || tempownerid != ownerid) {
 	                page = "1";
+	            }
+	            
 	            xmlDom = call_page_address_get_list_mailCall(folderid, ownerid, foldertype,
 	                "ADDRESSID,STYPE,SNAME,SCOMPANY,SEMAIL", "NOT SEMAIL=''", page, "25", searchgubun, "<spring:message code='ezAddress.t34' />");
 	
 	            tempfolderid = folderid;
+	            tempownerid = ownerid;
 	
 	            if (CrossYN()) {
 	                document.getElementById('addressFolderCnt').textContent = xmlDom.getElementsByTagName("TOTALCN").item(0).firstChild.nodeValue + strLang42;
@@ -932,7 +939,6 @@
 	            if (pListType == "IMG") {
 	                document.getElementById("DeptUserImgList").style.display = "";
 	                document.getElementById("txtlist_Layer").style.display = "none";
-	                document.getElementById("tblPageRayer2").style.display = "none";
 	                document.getElementById("txtlist_table").style.display = "none";
 	                document.getElementById("Search_txtlist_table").style.display = "none";
 	                if (pSeach) {
@@ -1793,9 +1799,8 @@
 	                                            </tr>
 	                                        </table>
 	                                    </div>
-	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6"></div>
-	                                    <div style="vertical-align: top; text-align: center; height: 473px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList">
-	                                    </div>
+                                        <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
+	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>

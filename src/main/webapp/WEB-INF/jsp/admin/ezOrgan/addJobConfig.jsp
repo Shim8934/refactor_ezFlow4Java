@@ -14,7 +14,7 @@
 	    <script type="text/javascript" src="/js/ezEmail/Controls/ListView_list.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezOrgan.e1' />"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 			var topid = "<c:out value='${topID}'/>";
 		    var cn = "<c:out value='${userID}'/>";
 		    var deptid = "<c:out value='${userInfo.deptID}'/>";
@@ -1042,11 +1042,11 @@
 	                    </tr>
 	                    <tr class="primary">
 	                        <th style="text-align:center"><c:out value='${primary}'/></th>
-	                        <td style="padding-left:1px;"><input id="txt_TitleName" type="text" style="width:98%"></td>
+	                        <td style="padding-left:1px;"><input id="txt_TitleName" type="text" style="width:98%" maxlength="50"></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th style="text-align:center"><c:out value='${secondary}'/></th>
-	                        <td style="padding-left:1px;"><input id="txt_TitleName2" type="text" style="width:98%"></td>
+	                        <td style="padding-left:1px;"><input id="txt_TitleName2" type="text" style="width:98%" maxlength="50"></td>
 	                    </tr>
 	                </table>
 	                <div class="btnposition" style="width:300px">

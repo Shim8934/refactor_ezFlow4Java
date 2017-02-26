@@ -99,6 +99,11 @@
 		    });
 		
 		    function save_holiday(type) {
+		    	if (specialChk(document.getElementById("holidayname").value) || specialChk(document.getElementById("holidayname2").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		    	
 		        if (document.getElementById("holidayname").value.trim() == "") {
 		            alert("<spring:message code='ezSchedule.t9990004' />");
 		            return;
@@ -144,13 +149,13 @@
 		                	<tr class="primary">
 		                        <th><spring:message code='ezSchedule.t4013' /></th>
 		                        <td>
-		                            <input id="holidayname" type="text" style="width: 98%" />
+		                            <input id="holidayname" type="text" style="width: 98%" maxlength="20"/>
 		                        </td>
 		                    </tr>
 		                    <tr class="secondary">
 		                        <th><spring:message code='ezSchedule.t4014' /></th>
 		                        <td>
-		                            <input id="holidayname2" type="text" style="width: 98%" />
+		                            <input id="holidayname2" type="text" style="width: 98%" maxlength="40"/>
 		                        </td>
 		                    </tr>
 		                </table>

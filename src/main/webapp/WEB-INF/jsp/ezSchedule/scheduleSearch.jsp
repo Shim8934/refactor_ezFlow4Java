@@ -110,13 +110,18 @@
 			    }
 		    });
 		
-		    function search() {
+		    function search() {		    	
+		    	if (specialChk(document.getElementById("keyword").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		    	
 		        if (document.getElementById("keyword").value == "" && document.getElementById("usedate").checked == false) {
 		            alert("<spring:message code='ezSchedule.t346'/>");
 		            document.getElementById("keyword").focus();
 		            return;
 		        }
-		
+		        		
 		        var sdate = "";
 		        var edate = "";
 		        var keyword = "";
@@ -125,6 +130,11 @@
 		        if (document.getElementById("usedate").checked) {
 		            sdate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		            edate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        }
+
+		        if (sdate > edate) {
+		        	alert("<spring:message code='ezResource.dateChk' />");
+		        	return;
 		        }
 			
 		        if (document.getElementById("keyword").value != "") {

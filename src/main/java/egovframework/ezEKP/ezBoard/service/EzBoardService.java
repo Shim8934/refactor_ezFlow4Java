@@ -208,8 +208,6 @@ public interface EzBoardService {
 	
 	public void deleteItem(String mode, String itemID, String boardID, String realPath, int tenantID) throws Exception;
 
-	public void deleteTempItem(String itemID, String boardID, String realPath, int tenantID) throws Exception;
-	
 	public void photoListDel(String boardID, String imageID, int tenantID) throws Exception;
 
 	public void setListOrder(LoginVO userInfo, String pBoardList, String pDelBoardList) throws Exception;
@@ -245,5 +243,11 @@ public interface EzBoardService {
 	public String getOneLinePassWord(String replyID, String itemID, int tenantID) throws Exception;
 
 	public String deleteItem(String itemList, String mode, String boardID, String realPath, LoginVO userInfo, BoardPropertyVO boardInfo) throws Exception;
+
+	public void deleteExpiredItems(String realPath) throws Exception;
+
+	public void deleteReservedBoard(String realPath) throws Exception;
+
+	public void deleteReservedBoardItem(String realPath) throws Exception;
 
 }

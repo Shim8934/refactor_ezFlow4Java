@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 			var ReturnFunction;
 			
 			$(document).ready(function(){
@@ -42,11 +42,11 @@
 		  <table class="content"> 
 		  <tr> 
 		    <th><spring:message code="ezOrgan.t232" /></th>
-		    <td><input id=NewPassword type=password style="width:98%"></td>
+		    <td><input id=NewPassword type=password style="width:98%" maxlength="50"></td>
 		  </tr>        
 		  <tr> 
 		    <th><spring:message code="ezOrgan.t233" /></th>
-		    <td><input id=ConfirmPassword type=password style="width:98%"></td>
+		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50"></td>
 		  </tr>        
 		</table>
 		  <div class="btnposition">

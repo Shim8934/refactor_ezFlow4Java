@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 			var ReturnFunction;
 			
 			$(document).ready(function(){
@@ -129,11 +129,11 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t121' /></th> 
-		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"></td> 
+		    	<td><input id=CompanyID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		  	</tr> 
 		  	<tr> 
 		  		<th><spring:message code='ezOrgan.t122' /></th> 
-		    	<td> <input id=ParentID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly></td> 
+		    	<td> <input id=ParentID style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" readonly="readonly"></td> 
 		  	</tr> 
 		  	<tr>
 			    <th><spring:message code='ezOrgan.t123' /></th>
@@ -141,11 +141,11 @@
 			    	<table style="width:100%;-moz-box-sizing:border-box;box-sizing:border-box;">
 			    		<tr class="primary">
 		        			<th><c:out value='${primary}'/></th>
-		        			<td><input name="Input" id=CompanyName style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" ></td>
+		        			<td><input name="Input" id=CompanyName style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td>
 		      			</tr>
 		      			<tr class="secondary">
 		        			<th><c:out value='${secondary}'/></th>
-		        			<td><input id=CompanyName2 type="text" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"></td> 
+		        			<td><input id=CompanyName2 type="text" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" maxlength="50"></td> 
 		      			</tr>
 		    		</table>
 		    	</td>

@@ -2,7 +2,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-
 <html>
 	<head>
 		<title>BoardItemList</title>
@@ -790,102 +789,106 @@
 	            getBoardList();
 	        }
 	
-	    function MakeSubCondition() {
-	        var TYPE = "";
-	        var DATA = "";
-	        if (document.getElementById("txt_keyword").value != "") {
-	            var radiosearch = document.getElementsByName('searchCheck');
-	            if (radiosearch.item(0).checked) {
-	                TYPE += "TITLE;";
-	                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
-	            }
-	            else if (radiosearch.item(1).checked) {
-	                TYPE += "WRITERNAME;";
-	                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
-	            }
-	        }
-	        else {
-	            if (document.getElementById("txtTitle").value != "")		// DocTitle
-	            {
-	                TYPE += "TITLE;";
-	                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
-	            }
-	
-	            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
-	            {
-	                TYPE += "ABSTRACT;";
-	                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
-	            }
-	
-	            if (document.getElementById("idDatepicker").value != "")		// StartDate
-	            {
-	                TYPE += "STARTDATE;";
-	                DATA += "<STARTDATE>" + document.getElementById("idDatepicker").value.substring(0, 10) + "</STARTDATE>";
-	            }
-	
-	            if (document.getElementById("_D2").value != "")		// EndDate
-	            {
-	                TYPE += "ENDDATE;";
-	                DATA += "<ENDDATE>" + document.getElementById("_D2").value.substring(0, 10) + "</ENDDATE>";
-	            }
-	        }
-	        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
-	    }
-	    function onkeydown_start_search(evt) {
-	        if (evt.keyCode == "13") {
-	            search("quick");
-	        }
-	    }
-	
-	    function NewItem_onclick() {
-	        var feature = GetOpenWindowfeature(765, 820);
-            window.open("/ezBoard/newBoardItem.do?mode=new&bType=SELECT", "", feature, "");
-	    }
-	
-	    function Appr_onclick(pFlag) {
-	        if (strListInfo == "") {
-	            alert("<spring:message code='ezBoard.t57'/>");
-	            return;
-	        }
-	        
-	        var strItemList = "";
-	        arrList = strListInfo.split(";");
-	        for (i = 0; i < arrList.length - 1; i++) {
-	            strItemList += arrList[i].split(",")[0] + ";";
-	        }
-	        
-	        if (pFlag == "C") {
-	            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
-	            try { OpenWin.focus(); } catch (e) { }
-	        }
-	        else {
-	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
-	            xmlhttp.send();
-	
-	            if (xmlhttp.responseText == "OK") {
-	                if (pFlag == "Y")
-	                    alert("<spring:message code='ezBoard.t999002'/>");
-	                else
-	                    alert("<spring:message code='ezBoard.t999009'/>");
-	
-	                if (CurPage == totalPage) {
-	                    var SelList = new ListView();
-	                    SelList.LoadFromID("BoardList");
-	                    var DeleteCount = strItemList.split(';').length - 1;
-	                    if (SelList.GetRowCount() == DeleteCount) {
-	                        CurPage = CurPage - 1;
-	                    }
-	                }
-	                if (CurPage == 0) CurPage = 1;
-	
-	                getBoardList();
-	            }
-	        }
-	    }
-	    function Appr_onclick_Complete() {
-	
-	    }
+		    function MakeSubCondition() {
+		        var TYPE = "";
+		        var DATA = "";
+		        if (document.getElementById("txt_keyword").value != "") {
+		            var radiosearch = document.getElementsByName('searchCheck');
+		            if (radiosearch.item(0).checked) {
+		                TYPE += "TITLE;";
+		                DATA += "<TITLE>" + document.getElementById("txt_keyword").value + "</TITLE>";
+		            }
+		            else if (radiosearch.item(1).checked) {
+		                TYPE += "WRITERNAME;";
+		                DATA += "<WRITERNAME>" + document.getElementById("txt_keyword").value + "</WRITERNAME>";
+		            }
+		        }
+		        else {
+		            if (document.getElementById("txtTitle").value != "")		// DocTitle
+		            {
+		                TYPE += "TITLE;";
+		                DATA += "<TITLE>" + document.getElementById("txtTitle").value + "</TITLE>";
+		            }
+		
+		            if (document.getElementById("txtAbstract").value != "")		// ABSTRACT
+		            {
+		                TYPE += "ABSTRACT;";
+		                DATA += "<ABSTRACT>" + document.getElementById("txtAbstract").value + "</ABSTRACT>";
+		            }
+		
+		            if (document.getElementById("idDatepicker").value != "")		// StartDate
+		            {
+		                TYPE += "STARTDATE;";
+		                DATA += "<STARTDATE>" + document.getElementById("idDatepicker").value.substring(0, 10) + "</STARTDATE>";
+		            }
+		
+		            if (document.getElementById("_D2").value != "")		// EndDate
+		            {
+		                TYPE += "ENDDATE;";
+		                DATA += "<ENDDATE>" + document.getElementById("_D2").value.substring(0, 10) + "</ENDDATE>";
+		            }
+		        }
+		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+		    }
+		    function onkeydown_start_search(evt) {
+		        if (evt.keyCode == "13") {
+		            search("quick");
+		        }
+		    }
+		
+		    function NewItem_onclick() {
+		        var feature = GetOpenWindowfeature(765, 820);
+		           window.open("/ezBoard/newBoardItem.do?mode=new&bType=SELECT", "", feature, "");
+		    }
+		
+		    function Appr_onclick(pFlag) {
+		        if (strListInfo == "") {
+		            alert("<spring:message code='ezBoard.t57'/>");
+		            return;
+		        }
+		        
+		        var strItemList = "";
+		        arrList = strListInfo.split(";");
+		        for (i = 0; i < arrList.length - 1; i++) {
+		            strItemList += arrList[i].split(",")[0] + ";";
+		        }
+		        
+		        if (pFlag == "C") {
+		            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+		            try { OpenWin.focus(); } catch (e) { }
+		        }
+		        else {
+		            var xmlhttp = createXMLHttpRequest();
+		            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
+		            xmlhttp.send();
+		
+		            if (xmlhttp.responseText == "OK") {
+		                if (pFlag == "Y")
+		                    alert("<spring:message code='ezBoard.t999002'/>");
+		                else
+		                    alert("<spring:message code='ezBoard.t999009'/>");
+		
+		                if (CurPage == totalPage) {
+		                    var SelList = new ListView();
+		                    SelList.LoadFromID("BoardList");
+		                    var DeleteCount = strItemList.split(';').length - 1;
+		                    if (SelList.GetRowCount() == DeleteCount) {
+		                        CurPage = CurPage - 1;
+		                    }
+		                }
+		                if (CurPage == 0) CurPage = 1;
+		                
+			            try {
+							leftCountRf();
+						} catch (e) {}
+		
+		                getBoardList();
+		            }
+		        }
+		    }
+		    function Appr_onclick_Complete() {
+		
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">

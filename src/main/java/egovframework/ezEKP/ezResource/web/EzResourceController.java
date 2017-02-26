@@ -200,7 +200,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			selectFlag = req.getParameter("flag");
 		}
 		
-		String ret = ezResourceService.getSubClsTree(xmlReq, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		String ret = ezResourceService.getSubClsTree(xmlReq, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
 		Document xmlRet = commonUtil.convertStringToDocument(ret);
 		
 		XPath xpath = XPathFactory.newInstance().newXPath();

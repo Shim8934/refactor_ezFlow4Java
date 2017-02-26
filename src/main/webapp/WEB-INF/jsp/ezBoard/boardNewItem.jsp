@@ -170,6 +170,7 @@
 			            RealImageName(pAttachListXml);
 			        }
 			    }
+
 			    if (pMode == "new") {
 			        btn_PostDate_Clear();
 			    } else {
@@ -474,19 +475,19 @@
 				
 				for (var i = 0; i < colType.length;i++){
 					if(must[i] == "Y"){
-		        		if(colType[i] == "radio"){
-		        			if(GetRadioVal(tableCol[i]) == ""){
+		        		if (colType[i] == "radio") {
+		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "text"){
+		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
 	                            return;
 		        			}
-		        		}else if(colType[i] == "check"){
+		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(colName1[i] + strLang79);
@@ -504,6 +505,7 @@
 		            var configEndDate = Number(ReplaceText("${endDateTime}", "-", ""));
 		            var currEndDate = Number(ReplaceText(pEndDate.substring(0, 10), "-", ""));
 		            var currReserveDate = Number(ReplaceText(pStartDate.substring(0, 10), "-", ""));
+
 		            if (configEndDate < currEndDate) {
 		                alert("<spring:message code='ezBoard.t382' />" + "${endDateTime}" + "<spring:message code='ezBoard.t383' />");
 		                return;
@@ -525,7 +527,7 @@
 		            alert("<spring:message code='ezBoard.t386' />");
 		            return;
 		        }
-		        if (pEndDate != "" && pEndDate < strNow) {
+		        if (pEndDate != "" && pEndDate <= strNow) {
 		            alert("<spring:message code='ezBoard.t387' />");
 		            return;
 		        }
@@ -809,8 +811,9 @@
 		                                    window.close();
 		                                    return;
 		                                }
-		                                if (checkboard.indexOf("mailReadContent.do") < 0)
-		                                    ReturnFunction();
+		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
+		                                    window.opener.getBoardList();
+		                                }
 		                            } catch (e) {
 		                            }
 			                    }
@@ -820,8 +823,9 @@
 			                    try {
 			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 			                            var checkboard = window.parent.location.toString();
-			                            if (checkboard.indexOf("mailReadContent.do") < 0)
+			                            if (checkboard.indexOf("mailReadContent.do") < 0) {
 			                                window.parent.parent.location.reload(false);
+			                            }
 			                        }
 			                    }
 			                    catch (e) { 
@@ -1842,10 +1846,10 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode == 'temp'}">
-			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t429' /></span></li>
+			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t321' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t429' /></span></li>
+			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t321' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">
@@ -2179,7 +2183,7 @@
 			                <table style="width: 100%; height: 100%">
 			                    <tr>
 			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 100%; overflow: auto;"></iframe>
+		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
 			                        </td>
 			                    </tr>
 			                </table>
@@ -2189,7 +2193,7 @@
 	        	<c:otherwise>
 			        <tr>
 			            <td style="vertical-align: top; height: 100%" id="EdtorSize">
-			                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+			                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0; height: 100%; width: 99.7%; overflow: auto; border-top-width: 0px;"></iframe>
 			            </td>
 			        </tr>
 	        	</c:otherwise>

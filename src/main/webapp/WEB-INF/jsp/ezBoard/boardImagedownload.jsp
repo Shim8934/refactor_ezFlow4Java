@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title></title>
+	    <title><spring:message code='ezBoard.t1007'/></title>
 	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
@@ -21,31 +21,27 @@
 	                if (checks[suffix].checked) {
 	                    location.href = GetAttribute(checks[suffix++], "filehref");
 	                    setTimeout(function () { downloadAll(checks); }, 1000);
-	                }
-	                else {
+	                } else {
 	                    suffix++;
 	                    downloadAll(checks);
 	                }
-	            }
-	            else
+	            } else
 	                suffix = 0;
 	        }
 	
 	        function btn_Save_Onclick() {
                 checks = document.getElementsByName('checkboxImg');
-                downloadAll(checks);               
+                downloadAll(checks);
 	        }
 	
 	        function btn_AllCheck_Onclick() {
-	
 	            if (document.getElementById("maincheck").checked == false) {
 	                document.getElementById("maincheck").checked = true;
 	
 	                for (var i = 0; i < ImageCount; i++) {
 	                    document.getElementById("check" + i).checked = true;
 	                }
-	            }
-	            else {
+	            } else {
 	                document.getElementById("maincheck").checked = false;
 	
 	                for (var i = 0; i < ImageCount; i++) {

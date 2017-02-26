@@ -941,6 +941,12 @@
 		    var issearch = false;
 		    function search_click(type) {
 		        listContentArry = new Array();
+		        
+		        if (specialChk(keyword.value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
+		        
 		        if (keyword.value == "") {
 		            alert("<spring:message code='ezSchedule.t8' />");
 		            keyword.focus();

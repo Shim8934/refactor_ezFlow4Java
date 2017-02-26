@@ -10,7 +10,6 @@ var strLang9 = "사원을 복구 하였습니다."
 var strLang10 = "사원을 복구에 실패하였습니다."
 var strLang11 = "서명이미지는 ";
 var strLang12 = "를 넘을 수 없습니다.";
-
 var strLang13 = "사원을 선택하세요.";
 var strLang14 = "권한 설정을 저장했습니다.";
 var strLang15 = "권한 설정 저장에 실패했습니다.";
@@ -30,5 +29,5 @@ var strLang28 = "이전";
 var strLang29 = "다음";
 var strLang30 = "모든 겸직을 삭제하시겠습니까?";
 var strLang31 = "전체관리자 권한을 지정할 수 없습니다.";
-
+var strLang32 = "의 모든 권한을 삭제 하시겠습니까?";
 var strLang535 = "데이터가 없습니다.";

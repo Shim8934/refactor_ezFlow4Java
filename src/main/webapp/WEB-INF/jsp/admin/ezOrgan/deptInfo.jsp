@@ -10,7 +10,7 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>	    
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 			var OldDeptName = "";
 			var OldDeptName2 = "";
 			var ReturnFunction;
@@ -105,7 +105,7 @@
 			function OK_Click(){
 	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
 	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                    alert("<spring:message code='ezOrgan.t3088' />");
+	                    alert("<spring:message code='ezOrgan.x0003' />");
 	                    return;
 	                }
 	            }
@@ -179,11 +179,11 @@
 		<table class="content"> 
 			<tr> 
 		    	<th><spring:message code='ezOrgan.t218' /><span style="color:red"> *</span></th> 
-		    	<td><input type="text" id=DeptID></td> 
+		    	<td><input type="text" id=DeptID maxlength="50"></td> 
 		  	</tr> 
 		  	<tr> 
 			    <th ><spring:message code='ezOrgan.t219' /></th> 
-		    	<td><input type="text" id=ParentID readonly ="true"> </td> 
+		    	<td><input type="text" id=ParentID readonly="readonly"> </td> 
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t220' /><span style="color:red"> *</span></th> 
@@ -191,83 +191,47 @@
 		    		<table style="width:100%">
 		        		<tr class="primary">
 		          			<th><c:out value='${primary}'/></th>
-		          			<td><input name="text" type="text" id=DeptName style="width:97%" maxLength="50"></td>
+		          			<td><input name="text" type="text" id=DeptName style="width:97%" maxlength="50"></td>
 		        		</tr>
 		        		<tr class="secondary">
 		          			<th><c:out value='${secondary}'/></th>
-		          			<td><input name="text" type="text" id=DeptName2 style="width:97%" maxLength="50"></td>
+		          			<td><input name="text" type="text" id=DeptName2 style="width:97%" maxlength="50"></td>
 		        		</tr>
 		      		</table>
 		      	</td> 
 		  	</tr>
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
-		    	<td><input type="text" id=SimpleName style="width:97%"></td> 
+		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t222' /></th> 
-		    	<td><input type="text" id=SusinSymbol style="width:97%"></td> 
+		    	<td><input type="text" id=SusinSymbol style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>>
 		    	<th><spring:message code='ezOrgan.t223' /></th> 
-		    	<td><input type="text" id=BalsinPerson style="width:97%"></td> 
+		    	<td><input type="text" id=BalsinPerson style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t224' /></th> 
-		    	<td><input type="text" id=DocManage style="width:97%"></td>		    	 
+		    	<td><input type="text" id=DocManage style="width:97%" maxlength="50"></td>		    	 
 		  	</tr> 
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
-		    	<td><input type="text" id=Manager style="width:97%"></td> 
+		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
 		  	</tr> 
-            </c:if>
-            <c:if test="${IsJMochaStandAlone == 'YES'}">
-            <tr style="display:none;"> 
-                <th><spring:message code='ezOrgan.t221' /></th> 
-                <td><input type="text" id=SimpleName style="width:97%"></td> 
-            </tr>
-            <tr style="display:none;"> 
-                <th><spring:message code='ezOrgan.t222' /></th> 
-                <td><input type="text" id=SusinSymbol style="width:97%"></td> 
-            </tr> 
-            <tr style="display:none;"> 
-                <th><spring:message code='ezOrgan.t223' /></th> 
-                <td><input type="text" id=BalsinPerson style="width:97%"></td> 
-            </tr> 
-            <tr style="display:none;"> 
-                <th><spring:message code='ezOrgan.t224' /></th> 
-                <td><input type="text" id=DocManage style="width:97%"></td>              
-            </tr> 
-            <tr style="display:none;"> 
-                <th><spring:message code='ezOrgan.t225' /></th> 
-                <td><input type="text" id=Manager style="width:97%"></td> 
-            </tr>             
-            </c:if>
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t226' /></th> 
 		    	<td><input type="text" id=SortNum style="width:97%" maxlength="10"></td> 
 		  	</tr> 
-            <c:if test="${IsJMochaStandAlone != 'YES'}">
-		  	<tr> 
+		  	<tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t227' /></th> 
 		    	<td><input type="checkbox" id=InsDept value="checkbox"></td> 
 		  	</tr> 
-		    <tr> 
+		    <tr <c:if test="${IsJMochaStandAlone == 'YES'}">style="display:none;"</c:if>> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
 		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
-		  	</tr>
-            </c:if> 
-            <c:if test="${IsJMochaStandAlone == 'YES'}">
-            <tr style="display:none;">
-                <th><spring:message code='ezOrgan.t227' /></th> 
-                <td><input type="checkbox" id=InsDept value="checkbox"></td> 
-            </tr> 
-            <tr style="display:none;">
-                <th><spring:message code='ezOrgan.t990' /></th> 
-                <td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
-            </tr>
-            </c:if>             
+		  	</tr> 
 		</table> 
 		<div class="btnposition">
 		    <a class="imgbtn" id=bt_OK  onClick="OK_Click()"><span><spring:message code='ezOrgan.t124' /></span></a>

@@ -220,7 +220,7 @@
             						</a>
             				</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="width:120px;padding-right:15px"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 100%"></td>
+          					<td style="width:120px;padding-right:15px"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

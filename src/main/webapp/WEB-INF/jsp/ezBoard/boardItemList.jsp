@@ -126,7 +126,6 @@
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        Window_resize();
-		        
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
@@ -165,15 +164,15 @@
 		            	listCount = 20;
 		            }
 		            
-		            if (pPreviewShow_HOW == "W"){
+		            if (pPreviewShow_HOW == "W") {
 		                divStyle = Math.round(pMailListDiv);
-		            }else if (pPreviewShow_HOW == "H") {
+		            } else if (pPreviewShow_HOW == "H") {
 		                divStyle = Math.round(pMailListDiv_H);
-		            }else {
+		            } else {
 		                divStyle = 0;
 		            }
 		            
-		            if (divStyle < 24){
+		            if (divStyle < 24) {
 		                divStyle = 24;
 		            }
 		
@@ -816,6 +815,10 @@
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
+		        
+		        try {
+					leftCountRf();
+				} catch (e) {}
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -866,6 +869,10 @@
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
+		                	try {
+								leftCountRf();
+							} catch (e) {}
+							
 		                    window.location.reload();
 		                    window.close();
 		                }
@@ -875,6 +882,9 @@
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
 		            if (ret == "OK") {
+			            try {
+							leftCountRf();
+						} catch (e) {}
 		                window.location.reload();
 		                window.close();
 		            }
@@ -926,6 +936,7 @@
 		    function window_reload() {
 		        window.location.href = window.location.href;
 		    }
+		    
 		    function doLayerPopup(obj) {
 		        btn_PostDate_Clear();
 		        document.getElementById("chkSearchSub").checked = false;
@@ -1177,7 +1188,6 @@
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>
 	
-	
 	    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
 	        <span class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
 	            <p class="hbar_dotted">
@@ -1205,7 +1215,6 @@
 	            </span>
 	        </span>
 	    </span>
-	
 	
 	    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
 	        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
@@ -1274,10 +1283,10 @@
 	            </td>
 	        </tr>
 	    </table>
-	            </div>
-	          </div>
-		        <div class="shadow">
-	            </div>
+           </div>
+         </div>
+        <div class="shadow">
+        </div>
 	</div>
 	</body>
 </html>

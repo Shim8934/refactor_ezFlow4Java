@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardConfigVO;
+import egovframework.ezEKP.ezBoard.vo.BoardDeleteItemVO;
 import egovframework.ezEKP.ezBoard.vo.BoardLineReplyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -613,12 +614,36 @@ public class EzBoardDAO extends EgovAbstractDAO{
         delete("EzBoardDAO.deleteImageItem", boardListVO);
 	}
 
-	public int photoViewDBCount(Map<String, Object> map) throws Exception{
+	public int photoViewDBCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzBoardDAO.photoViewDBCount", map);
 	}
 
 	public String getOneLinePassWord(Map<String, Object> map) throws Exception {
 		return (String) select("EzBoardDAO.getOneLinePassWord", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardDeleteItemVO> getExpiredItems() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.getExpiredItems");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardDeleteItemVO> getDeleteReservedBoard() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.getDeleteReservedBoard");
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<BoardDeleteItemVO> getDeleteReservedBoardItem() throws Exception {
+		return (List<BoardDeleteItemVO>) list("EzBoardDAO.getDeleteReservedBoardItem");
+	}
+
+	public void deleteReservedBoardItem(BoardDeleteItemVO boardDeleteItemVO) throws Exception {
+		delete("EzBoardDAO.deleteReservedBoardItem", boardDeleteItemVO);
+	}
+
+	public void deleteReservedBoard(BoardDeleteItemVO k) throws Exception {
+		delete("EzBoardDAO.deleteReservedBoard");
+	}
+	
     
 }

@@ -18,7 +18,7 @@
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css">
 		<!-- data picker -->
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 			var DeptID = "";
 			var OrgUserID = "";
 			var Tab1_flag = true;
@@ -501,11 +501,11 @@
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px">
-	                <input id="UserID" style="ime-mode: disabled; width: 98%;" />
+	                <input id="UserID" style="ime-mode: disabled; width: 98%;" maxlength="50"/>
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t277' /><span style="color:red"> *</span></th>
 	            <td style="width: 240px;">
-	                <input type="password" id="Password" style="width: 98%" />
+	                <input type="password" id="Password" style="width: 98%" maxlength="50"/>
 	            </td>
 	        </tr>
 	        <tr>
@@ -515,13 +515,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input" id="UserName" style="width: 98%" />
+	                            <input name="Input" id="UserName" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="UserName2" type="text" style="width: 98%" />
+	                            <input id="UserName2" type="text" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -532,13 +532,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input3" id="DeptName" style="width: 98%" readonly="readonly" />
+	                            <input name="Input3" id="DeptName" style="width: 98%" readonly="readonly" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="DeptName2" type="text" style="width: 98%" readonly="readonly" />
+	                            <input id="DeptName2" type="text" style="width: 98%" readonly="readonly" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -551,13 +551,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 98%" />
+	                            <input id="JobTitle" name="txtUserJobTitle" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="JobTitle2" type="text" style="width: 98%" />
+	                            <input id="JobTitle2" type="text" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -568,13 +568,13 @@
 	                    <tr class="primary">
 	                        <th><c:out value='${primary}'/></th>
 	                        <td>
-	                            <input name="Input2" id="JobPosition" style="width: 98%" />
+	                            <input name="Input2" id="JobPosition" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><c:out value='${secondary}'/></th>
 	                        <td>
-	                            <input id="JobPosition2" type="text" style="width: 98%" />
+	                            <input id="JobPosition2" type="text" style="width: 98%" maxlength="50"/>
 	                        </td>
 	                    </tr>
 	                </table>
@@ -590,13 +590,13 @@
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >
-	                <input id="SocialNum" style="width: 98%" />
+	                <input id="SocialNum" style="width: 98%" maxlength="50"/>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t284' /></th>
 	            <td style="width: 240px;">
-	                <input id="SecurityLevel" style="width: 98%" />
+	                <input id="SecurityLevel" style="width: 98%" maxlength="50"/>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t226' /></th>
 	            <td style="width: 240px;">
@@ -616,21 +616,21 @@
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t95' /></th>
 	            <td style="width: 186px">
-	                <input id="PhoneNumber" style="width: 98%" />
+	                <input id="PhoneNumber" style="width: 98%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t97' /></th>
 	            <td style="width: 186px">
-	                <input id="HomePhone" style="width: 98%" />
+	                <input id="HomePhone" style="width: 98%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t96' /></th>
 	            <td style="width: 186px">
-	                <input id="Mobile" style="width: 98%" />
+	                <input id="Mobile" style="width: 98%" maxlength="50"/>
 	            </td>
 	        </tr>
 	       <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t98' /></th>
 	            <td style="width: 190px">
-	                <input id="FaxNum" style="width: 98%" />
+	                <input id="FaxNum" style="width: 98%" maxlength="50"/>
 	            </td>
 	            <th style="width: 80px; text-align:center"></th>
 	            <td style="width: 190px"></td>
@@ -647,7 +647,7 @@
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t287' /></th>
 	            <td colspan="5">
-	                <input id="HomeAddr" style="WIDTH: 98%;" />
+	                <input id="HomeAddr" style="WIDTH: 98%;" maxlength="150"/>
 	            </td>
 	        </tr>
 	    </table>   
