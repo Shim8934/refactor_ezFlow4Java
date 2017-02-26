@@ -3621,20 +3621,18 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		String lastItemNo = "0";
 		String[] arrQuestion;
 		String strQuestion = "";
-		String temp = "";
+
 		if(req.getParameter("itemID") != null && req.getParameter("itemID").length() != 0) {
-			itemID = req.getParameter("itemID");
-			itemNo = Integer.parseInt(itemID);
+			itemNo = Integer.parseInt(req.getParameter("itemID"));
 		}
 
-		ezQuestionService.questionDelete2(5, Integer.parseInt(itemID), loginVO.getTenantId());
+		ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
 		arrQuestion = strQuestion.trim().split("\\;\\;");
 		
 		String[] arrLine;
 		String strResult = "";
-//		boolean chkType = false;
 
 		List<QstTempSaveVO> qstTempSaveVO = ezQuestionService.tempSave(5, itemNo, loginVO.getTenantId());
 		
@@ -3677,7 +3675,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					
 					QstAttachVO qstAttachVO = new QstAttachVO();
 					qstAttachVO.setBrdID(5);
-					qstAttachVO.setItemNo(Integer.parseInt(itemID));
+					qstAttachVO.setItemNo(itemNo);
 					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
 					
 					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo3(qstAttachVO, loginVO.getTenantId());
@@ -3687,7 +3685,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					if(qstAttach.size() > 0) {
 						for(int k=0; k<qstAttach.size(); k++) {
 							String rtv = commonUtil.getQueryResult(qstAttach.get(k));
-							xmlTemp = commonUtil.convertStringToDocument(rtv);		
+							xmlTemp = commonUtil.convertStringToDocument(rtv);
 						}
 					}
 					
@@ -3709,7 +3707,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					}
 					
 					if(arrLine[2].equals("5")) {
-						String tableAnswerValue = ezQuestionService.tableAnswerValue(5, Integer.parseInt(itemID), qstTempSaveVO.get(i).getQuestionNo(), loginVO.getTenantId());
+						String tableAnswerValue = ezQuestionService.tableAnswerValue(5, itemNo, qstTempSaveVO.get(i).getQuestionNo(), loginVO.getTenantId());
 						xmlTemp = null;
 						xmlTemp = commonUtil.convertStringToDocument(tableAnswerValue);
 						
@@ -3720,31 +3718,34 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 							Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
 							nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
 							nodeData2.appendChild(nodeTitle2);
-							
 						}
 					}
-					ezQuestionService.questionDelete1(5, Integer.parseInt(itemID), Integer.parseInt(arrLine[0]), loginVO.getTenantId());
+					
+					ezQuestionService.questionDelete1(5, itemNo, Integer.parseInt(arrLine[0]), loginVO.getTenantId());
+					
 					QstCompleteVO qstCompleteVO = new QstCompleteVO();
 					qstCompleteVO.setQuesContent(arrLine[1]);
 					qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
 					qstCompleteVO.setMultiSelect(arrLine[4]);
 					qstCompleteVO.setStrBrdID(5);
-					qstCompleteVO.setItemNo(Integer.parseInt(itemID));
+					qstCompleteVO.setItemNo(itemNo);
 					qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
 					qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
 					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 					
 					ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-				}	
+				}
+				
 				QstCompleteVO qstCompleteVO = new QstCompleteVO();
 				qstCompleteVO.setQuesContent(arrLine[1]);
 				qstCompleteVO.setAnswerType(Integer.parseInt(arrLine[2]));
 				qstCompleteVO.setMultiSelect(arrLine[4]);
 				qstCompleteVO.setStrBrdID(5);
-				qstCompleteVO.setItemNo(Integer.parseInt(itemID));
+				qstCompleteVO.setItemNo(itemNo);
 				qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
 				qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
 				qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+				
 				ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 				nodeData = resultXML.createElement("ANSWER");

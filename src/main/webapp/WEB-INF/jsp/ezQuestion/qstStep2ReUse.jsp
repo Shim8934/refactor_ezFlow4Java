@@ -449,86 +449,63 @@
 		    		}
 				}
 				
-				  function menuQst_tempSave_old() {
-				        var xmlHttp = createXMLHttpRequest();
-				        xmlHttp.open("POST", "callTempSave.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}", false);
-				            xmlHttp.send();
-				        //alert(xmlHttp.responseText);
-				            var tempxml = loadXMLString(xmlHttp.responseText);
-				            if (xmlHttp.responseText != "") {
-				                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
+				function menuQst_tempSave_old() {
+			        var xmlHttp = createXMLHttpRequest();
+			        xmlHttp.open("POST", "/ezQuestion/callTempSave.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}", false);
+		            xmlHttp.send();
+					var tempxml = loadXMLString(xmlHttp.responseText);
+					
+		            if (xmlHttp.responseText != "") {
+		                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
 
-				                if (result != "") {
-				                    return result;
-				                } else {
-				                    alert("<spring:message code='ezQuestion.t472' />");
-				                }
-				            } else {
-				                alert("<spring:message code='ezQuestion.t473' />");
-				            }
-				        }
+		                if (result != "") {
+		                    return result;
+		                } else {
+		                    alert("<spring:message code='ezQuestion.t472' />");
+		                }
+		            } else {
+		                alert("<spring:message code='ezQuestion.t473' />");
+		            }
+		        }
 				  
-				  function insert_item() {
-			            var olditem_data = menuQst_tempSave_old();
+				function insert_item() {
+			    	var olditem_data = menuQst_tempSave_old();
 
-			            if (olditem_data == "") {
-			                alert("현재 작성된 질문이 없습니다.");
-			            } else {
-			                olditem_Open(olditem_data);
+					if (olditem_data == "") {
+	        	        alert("현재 작성된 질문이 없습니다.");
+		            } else {
+		                olditem_Open(olditem_data);
+		            }
+		        }
+				  
+				function olditem_Open(item_data) {
+			        var strQuestion = "<DATA><![CDATA[" + item_data + " ]]></DATA>";
+
+			        var xmlHttp2 = createXMLHttpRequest();
+			        var xmlDom2 = createXmlDom();
+			
+			        xmlDom2 = loadXMLString(strQuestion);
+			
+			        xmlHttp2.open("POST","/ezQuestion/callTempLoad.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}" ,false);
+			        xmlHttp2.send(xmlDom2)	
+			
+			        if ( xmlHttp2.responseText == "" ) return;
+
+			        var strResult = getNodeText(loadXMLString(xmlHttp2.responseText).getElementsByTagName("QUESTION").item(0)).split("| ");
+
+			        removeQue()
+			        var cnt;
+			        var cnt2;
+			        var j = 0;
+
+			        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
+			            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
+			                strSeq = strResult[j+1].split(';');
+							AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
+			                j++;
 			            }
 			        }
-				  
-				  function olditem_Open(item_data) {
-				        //alert("olditem_Open : "+item_data);
-				        // 설문 불러 왔을때 마지막 설문 보기 오류 있어 수정 (2008.04.18 최주관)
-				        //var strQuestion = "<DATA>" + item_data + "</DATA>";
-				        // 설문 불러 왔을때 thml 테그 dom 로드시 오류 있어 수정 (2008.09.02 최주관)
-				        var strQuestion = "<DATA><![CDATA[" + item_data + " ]]></DATA>";
-
-				        //alert("strQuestion : "+strQuestion);
-				        
-				        var xmlHttp2 = createXMLHttpRequest();
-				        var xmlDom2 = createXmlDom();
-				
-				        xmlDom2 = loadXMLString(strQuestion);
-				
-				        xmlHttp2.open("POST","callTempLoad.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}" ,false);
-				        xmlHttp2.send(xmlDom2)	
-				
-				        if ( xmlHttp2.responseText == "" ) return;
-
-				        var strResult = getNodeText(loadXMLString(xmlHttp2.responseText).getElementsByTagName("QUESTION").item(0)).split("| ");
-
-				        removeQue()
-				        var cnt;
-				        var cnt2;
-				        var j = 0;
-
-
-				        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
-				            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
-				                strSeq = strResult[j+1].split(';');
-
-//alert("outerHTML:"+loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
-				                //if (CrossYN()) {
-				                    AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
-				                //} else {
-				                    //AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).xml);
-				                //}
-				                j++;
-				            }
-				        }
-
-			            //for (cnt = 1 ; cnt < strResult.length+1 ; cnt++) {
-			            //    for (cnt2 = 1; cnt2 < strResult.length; cnt2++) {
-			            //        strSeq = strResult[cnt2].split(';');
-			            //        if (cnt == strSeq[1]) {
-			            //            AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(cnt2-1).outerHTML);
-			            //        }
-			            //    }
-			            //}
-			        }
-
+				}
 		</script>
 	</head>
 	<body class="mainbody">

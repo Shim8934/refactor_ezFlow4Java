@@ -944,21 +944,29 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 	@Override
 	public void questionDelete2(int brdID, int itemNo, int tenantID) throws Exception {
+		logger.debug("questionDelete2 started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.questionDelete2(map);
+		
+		logger.debug("questionDelete2 ended.");
 	}
 
 	@Override
 	public void questionDelete1(int brdID, int itemNo, int quesNo, int tenantID) throws Exception {
+		logger.debug("questionDelete1 started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("v_pQuesNo", quesNo);
 		map.put("tenantID", tenantID);
-		ezQuestionDAO.questionDelete2(map);
+		ezQuestionDAO.questionDelete1(map);
+		
+		logger.debug("questionDelete1 ended.");
 	}
 
 	@Override
