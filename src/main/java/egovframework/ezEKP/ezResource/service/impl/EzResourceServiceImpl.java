@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,7 +53,6 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzResourceService")
@@ -181,8 +179,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleVO> getDeletedRepSchedule(String companyID, String ownerID, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getDeletedRepSchedule(int pNum, String companyID, String ownerID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_P_pNum", pNum);
 		map.put("v_P_companyID", companyID);
 		map.put("v_P_ownerID", ownerID);
 		map.put("tenantID", tenantID);
@@ -378,6 +377,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
 		
+		//TODO
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		map2.put("v_pCompanyID", companyID);
 		map2.put("v_pOwnerID", ownerID);
@@ -1031,7 +1031,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 				
 				// 반복예약 중에 삭제된 예약 가져옴
-				List<ResGetScheduleVO> deletedRepSchedule = getDeletedRepSchedule(reCompanyID, reOwnerID, tenantID);
+				List<ResGetScheduleVO> deletedRepSchedule = getDeletedRepSchedule(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
 				
 				for (ResGetScheduleVO vo : deletedRepSchedule) {
 					vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false));

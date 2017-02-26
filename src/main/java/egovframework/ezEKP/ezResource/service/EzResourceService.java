@@ -47,7 +47,7 @@ public interface EzResourceService {
 	
 	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleVO> getDeletedRepSchedule(String companyID, String ownerID, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getDeletedRepSchedule(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
 	
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID, int tenantID) throws Exception; 
 	
