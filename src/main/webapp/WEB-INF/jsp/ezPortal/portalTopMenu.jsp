@@ -32,6 +32,7 @@
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
 		
 		var skinnum = "${skinNum}";
@@ -312,18 +313,21 @@
 			xmlhttp = null;
 		}
 
-		function save()
-		{
-			if (txtDisplayName.value == "")
-			{				
+		function save() {
+			if (txtDisplayName.value == "") {				
 				alert("<spring:message code='ezPortal.t361' />");
 				txtDisplayName.focus();
 				return;		
 			}
-			if (txtDisplayName2.value == "")
-			{				
+			
+			if (txtDisplayName2.value == "") {				
 				txtDisplayName2.value = txtDisplayName.value;
 			}
+			
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+		    	alert("<spring:message code='ezResource.special' />");
+		    	return;
+		    }
 			
 			savesub(main_table, pageid, parentpageid, txtDisplayName.value, txtDisplayName2.value);
 			

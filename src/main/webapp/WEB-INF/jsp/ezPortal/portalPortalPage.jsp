@@ -31,6 +31,7 @@
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<c:url value='/js/ezPortal/showModalDialog.js'/>" ></script>
 		<script type="text/javascript">
 			var xmlhttp;
@@ -492,6 +493,12 @@ console.log("tdsub_item.uid="+tdsub_item.uid);
 			if (document.getElementById("txtDisplayName2").value == "") {
 			    document.getElementById("txtDisplayName2").value = document.getElementById("txtDisplayName").value;
 			}
+			
+			//유효성검사 특수문자 처리
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
 			
 			// 상속페이지인 경우 자신의 캐쉬정보를 바로 삭제한다.
 			if (parentpageid.toLowerCase() != "top") {

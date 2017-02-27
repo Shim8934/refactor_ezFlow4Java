@@ -55,6 +55,12 @@
 		}
 		
 		function Save() {
+			
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value) || specialChk(document.getElementById("txtNormalImage").value) || specialChk(document.getElementById("txtOverImage").value) || specialChk(document.getElementById("txtLinkURL").value) || specialChk(document.getElementById("txtLinkLocation").value) || specialChk(document.getElementById("txtWindowOption").value)) {
+	    		alert("<spring:message code='ezResource.special' />");
+	    		return;
+	    	}
+		
 		    var strXML = "<DATA>";
 
 		    if (pmode == "new") {
