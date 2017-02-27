@@ -568,6 +568,14 @@ public class EzAddressController{
         	deptAdmin = "Y";
         }
 		
+		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setCreateDate(dateInUserTimeZone);
+		
+		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setModifyDate(dateInUserTimeZone);
+				
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -730,9 +738,14 @@ public class EzAddressController{
         	}
         }
         
-        addressInfo.setCreateDate(commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false));
-        addressInfo.setModifyDate(commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false));
-        
+		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setCreateDate(dateInUserTimeZone);
+		
+		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setModifyDate(dateInUserTimeZone);
+                
         model.addAttribute("pFolderType", pFolderType);
         model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("userInfo", userInfo);
