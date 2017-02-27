@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6001' /></title>
+		<title><spring:message code='ezSchedule.t9990007' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezSchedule.e3' />" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css" />
@@ -69,7 +69,7 @@
 		</script>
 	</head>
 	<body class="mainbody"> 
-		<h1><spring:message code='ezSchedule.t6001' /></h1>
+		<h1><spring:message code='ezSchedule.t9990007' /></h1>
 		<form id="Form1" method="post">
 			<div id="mainmenu">
 			    <ul>

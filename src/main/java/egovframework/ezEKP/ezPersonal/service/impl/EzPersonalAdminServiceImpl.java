@@ -457,6 +457,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public String getSlider(String sliderID, LoginVO userInfo) throws Exception {
+		logger.debug("getSlider started");
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("v_MODE", "ADMIN");
@@ -513,6 +515,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("</DATA>");
 			}
 		}
+		
+		logger.debug("result="+result.toString());
+		logger.debug("getSlider ended");
 		
 		return result.toString();
 	}

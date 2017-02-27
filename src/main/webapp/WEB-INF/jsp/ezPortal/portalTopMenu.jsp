@@ -32,6 +32,7 @@
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript">
 		
 		var skinnum = "${skinNum}";
@@ -312,18 +313,21 @@
 			xmlhttp = null;
 		}
 
-		function save()
-		{
-			if (txtDisplayName.value == "")
-			{				
+		function save() {
+			if (txtDisplayName.value == "") {				
 				alert("<spring:message code='ezPortal.t361' />");
 				txtDisplayName.focus();
 				return;		
 			}
-			if (txtDisplayName2.value == "")
-			{				
+			
+			if (txtDisplayName2.value == "") {				
 				txtDisplayName2.value = txtDisplayName.value;
 			}
+			
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+		    	alert("<spring:message code='ezResource.special' />");
+		    	return;
+		    }
 			
 			savesub(main_table, pageid, parentpageid, txtDisplayName.value, txtDisplayName2.value);
 			
@@ -1562,11 +1566,11 @@
 				    <table style="width:100%;">
 			            <tr class="primary">
 				            <th style="width:80px;">${langPrimary}</th>
-				            <td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;"></td>	
+				            <td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
 			            </tr>
 			            <tr class="secondary">
 				            <th style="width:80px;">${langSecondary}</th>
-				            <td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;"></td>	
+				            <td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
 			            </tr>
 		            </table>
 				</td>
@@ -1576,8 +1580,8 @@
 		<br>
 		<table width="1020" class="box">
 			<tr>
-			  <td height="30" bgcolor="#F5f5f5"><spring:message code='ezPortal.t334' /><input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px">
-					px * <spring:message code='ezPortal.t335' /><input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code='ezPortal.t336' /></span></a>
+			  <td height="30" bgcolor="#F5f5f5"><spring:message code='ezPortal.t334' /><input type="text" id="txtWidth" name="txtWidth" style="WIDTH:50px" maxLength="10">
+					px * <spring:message code='ezPortal.t335' /><input type="text" id="txtHeight" name="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code='ezPortal.t336' /></span></a>
 			  </td>
                 <td bgcolor="#F5f5f5" ><spring:message code='ezPortal.t990022' />:</td>
                 <td bgcolor="#F5f5f5">

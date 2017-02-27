@@ -109,8 +109,12 @@
 			}
 			
 			function OK_Click() {
-				if (document.getElementById("Title").value == "")
-				{
+				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			   	}
+				
+				if (document.getElementById("Title").value == "") {
 					alert("<spring:message code = 'ezPersonal.t148' />");
 					return;
 				}

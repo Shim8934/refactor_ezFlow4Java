@@ -308,7 +308,7 @@
 
 		        if(g_UID != pDefaultPageUID && pDefaultPageUID !="")
 		        {
-		            alert("<spring:message code='ezPortal.t990031'/>");
+		            alert("<spring:message code='ezPortal.jjs09'/>");
 		            return;
 		        }
 		        if (confirm(pGubun=="Y"?"<spring:message code='ezPortal.t990020'/>":"<spring:message code='ezPortal.t990021'/>"))

@@ -121,6 +121,11 @@
 		    }
 		    
 		    function btnSave_click() {
+		    	if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+		    	
 		        if (document.getElementById("txtDisplayName").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t1027' />");
 		            return;

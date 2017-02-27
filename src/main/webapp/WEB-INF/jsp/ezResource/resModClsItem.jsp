@@ -174,7 +174,7 @@
 								<a class="imgbtn"><span onClick="btnTakeOwner_Click();"><spring:message code="ezResource.t154"/></span></a>
 							</td>
           					<th> <spring:message code="ezResource.t155"/></th>
-          					<td style="width:120px;padding-right:15px; white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px"></td>
+          					<td style="width:120px;padding-right:15px; white-space:nowrap"><input type="text" name="OwnerCall" id="OwnerCall" value="${ownerCall}" style="width: 120px" maxLength="20"></td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t39"/></th>

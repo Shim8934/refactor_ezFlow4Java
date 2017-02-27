@@ -31,6 +31,7 @@
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>			
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<c:url value='/js/ezPortal/showModalDialog.js'/>" ></script>
 		<script type="text/javascript">
 			var xmlhttp;
@@ -492,6 +493,12 @@ console.log("tdsub_item.uid="+tdsub_item.uid);
 			if (document.getElementById("txtDisplayName2").value == "") {
 			    document.getElementById("txtDisplayName2").value = document.getElementById("txtDisplayName").value;
 			}
+			
+			//유효성검사 특수문자 처리
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
 			
 			// 상속페이지인 경우 자신의 캐쉬정보를 바로 삭제한다.
 			if (parentpageid.toLowerCase() != "top") {
@@ -1706,11 +1713,11 @@ console.log("selectedSubCell="+selectedSubCell);
 					<table style="width:100%;">
 						<tr class="primary">
 							<th style="width:80px;">${langPrimary}</th>
-							<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;"></td>	
+							<td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
 						</tr>
 						<tr class="secondary">
 							<th style="width:80px;">${langSecondary}</th>
-							<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;"></td>	
+							<td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
 						</tr>
 					</table>
 				</td>
@@ -1719,8 +1726,8 @@ console.log("selectedSubCell="+selectedSubCell);
 
 		<table width="820" class="box">
 			<tr>
-				<td height="30" bgcolor="#F5f5f5">&nbsp;<spring:message code="ezPortal.t334" /><input type="text" name="txtWidth" id="txtWidth" style="WIDTH:50px">
-					px * <spring:message code="ezPortal.t335" /><input type="text" name="txtHeight" id="txtHeight" style="WIDTH:50px"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code="ezPortal.t336" /></span></a>
+				<td height="30" bgcolor="#F5f5f5">&nbsp;<spring:message code="ezPortal.t334" /><input type="text" name="txtWidth" id="txtWidth" style="WIDTH:50px" maxLength="10">
+					px * <spring:message code="ezPortal.t335" /><input type="text" name="txtHeight" id="txtHeight" style="WIDTH:50px" maxLength="10"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code="ezPortal.t336" /></span></a>
 				</td>
 				<td bgcolor="#F5f5f5" >테마설정</td>
                 <td bgcolor="#F5f5f5">

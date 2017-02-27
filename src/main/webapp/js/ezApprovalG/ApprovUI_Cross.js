@@ -2347,7 +2347,6 @@ function UpdateDocHistory(pHtml) {
 
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
-        alert(xmlhttp.responseXML);
         var DataNodes = GetChildNodes(xmlhttp.responseXML);
         if (getNodeText(DataNodes[0]) == "TRUE") {
         }

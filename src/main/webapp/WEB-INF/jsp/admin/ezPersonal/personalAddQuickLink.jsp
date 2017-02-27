@@ -287,6 +287,11 @@
 	        }
 	        
 	        function btn_ok() {
+	        	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) || specialChk(document.getElementById("txtURL").value) || specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+	        	
 	            if (document.getElementById("Title1").value.trim() == "") {
 	                document.getElementById("Title1").focus();
 	                alert("<spring:message code = 'ezPersonal.t1027' />");
@@ -410,22 +415,22 @@
 	                    <tr class="primary">
 	                        <th><spring:message code = 'ezPersonal.s81' /></th>
 	                        <td>
-	                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""></td>
+	                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><spring:message code = 'ezPersonal.s82' /></th>
 	                        <td>
-	                            <input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" /></td>
+	                            <input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><spring:message code = 'ezPersonal.s84' /></th>
 	                        <td>
-	                            <input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" /></td>
+	                            <input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
 	                    </tr>
 	                    <tr class="secondary">
 	                        <th><spring:message code = 'ezPersonal.s85' /></th>
 	                        <td>
-	                            <input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" /></td>
+	                            <input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"/></td>
 	                    </tr>
 	                </table>
 	            </td>
@@ -498,7 +503,7 @@
 	        <tr>
 	            <th style="text-align:center">URL <span style="color:red">*</span></th>
 	            <td colspan="2">
-	                <input type="text" id="txtURL" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" />
+	                <input type="text" id="txtURL" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="512"/>
 	            </td>
 	        </tr>
 	        <tr>
