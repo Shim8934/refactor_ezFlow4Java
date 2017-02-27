@@ -851,9 +851,8 @@ function RemoveDoc(pDocID) {
 			result = xml;
 		}        			
 	});
-
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
-    if (RtnVal == "false") {
+    
+    if (result == "FALSE") {
         var pAlertContent = strLang872;
         OpenAlertUI(pAlertContent);
     }
@@ -1184,7 +1183,7 @@ function setHeSongDocInfo(pCurSelRow) {
 		}        			
 	});
 
-    var RtnVal = getNodeText(loadXMLString(result).documentElement);
+    var RtnVal = getNodeText(loadXMLString(result));
 
     if (RtnVal == "FALSE") {
         var pAlertContent = strLang740;
