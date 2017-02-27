@@ -598,23 +598,24 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (reFlag.equals("1") && typeVal.equals("MASTER")) {
 			String ownerNm = ezResourceDAO.modifyResSch_S1(map);
 			String deptNm = ezResourceDAO.modifyResSch_S2(map);
+			
 			ezResourceDAO.modifyResSch_D1(map);
 			
 			map.put("v_tmpOwnerNm", ownerNm);
 			map.put("v_tmpDeptNm", deptNm);
-			ezResourceDAO.modifyResSch_I1(map);
 			
-		} else {
-			if (typeVal.equals("INSTANCE")) {
-				int result = ezResourceDAO.modifyResSch_U1(map);
-				logger.debug("result=" + result);
-				
-				if (result == 0) {
-					ezResourceDAO.modifyResSch_I2(map);
-				}
-			} else {
-				ezResourceDAO.modifyResSch_U2(map);
+			ezResourceDAO.modifyResSch_I1(map);
+		} else if (typeVal.equals("INSTANCE")) {
+			int result = ezResourceDAO.modifyResSch_U1(map);
+			
+			logger.debug("result=" + result);
+			
+			if (result == 0) {
+				ezResourceDAO.modifyResSch_I2(map);
 			}
+		} else {
+			ezResourceDAO.modifyResSch_D2(map);
+			ezResourceDAO.modifyResSch_U2(map);
 		}
 		logger.debug("modifyResSch End");
 	}
@@ -2334,10 +2335,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String num = "";
 		String ownerID = "";
 		
-	
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
 		ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
+		
 		deleteRepetition(ownerID, Integer.parseInt(num), tenantID);
 	
 		return true;
