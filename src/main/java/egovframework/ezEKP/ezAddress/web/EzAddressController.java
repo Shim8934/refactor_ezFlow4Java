@@ -183,7 +183,7 @@ public class EzAddressController{
 			sb.append("<FOLDERID>" + vo.getFolderId() + "</FOLDERID>");
 			sb.append("<OWNERID>" + vo.getOwnerId() + "</OWNERID>");
 			sb.append("<FOLDERTYPE>" + vo.getFolderType() + "</FOLDERTYPE>");
-			sb.append("<FOLDERNAME>" + vo.getFolderName() + "</FOLDERNAME>");
+			sb.append("<FOLDERNAME>" + commonUtil.cleanValue(vo.getFolderName()) + "</FOLDERNAME>");
 			sb.append("<CHILDCOUNT>" + vo.getChildCount() + "</CHILDCOUNT>");
 			sb.append("</ROW>");
 		}
@@ -321,11 +321,11 @@ public class EzAddressController{
 				sb.append("<MODIFIERID>" + vo.getModifierId() + "</MODIFIERID>");
 				sb.append("<HASATTACH>" + vo.getHasAttach() + "</HASATTACH>");
 				sb.append("<HASCOMMENT>" + vo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + vo.getsName() + "</SNAME>");
-				sb.append("<SCOMPANY>" + vo.getsCompany() + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + vo.getsCompanyPhone() + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + vo.getsMobile() + "</SMOBILE>");
-				sb.append("<SEMAIL>" + vo.getsEmail() + "</SEMAIL>");
+				sb.append("<SNAME>" + commonUtil.cleanValue(vo.getsName()) + "</SNAME>");
+				sb.append("<SCOMPANY>" + commonUtil.cleanValue(vo.getsCompany()) + "</SCOMPANY>");
+				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(vo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+				sb.append("<SMOBILE>" + commonUtil.cleanValue(vo.getsMobile()) + "</SMOBILE>");
+				sb.append("<SEMAIL>" + commonUtil.cleanValue(vo.getsEmail()) + "</SEMAIL>");
 				sb.append("<STYPE>" + vo.getsType() + "</STYPE>");
 				sb.append("</ROW>");
 			}
@@ -568,6 +568,14 @@ public class EzAddressController{
         	deptAdmin = "Y";
         }
 		
+		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setCreateDate(dateInUserTimeZone);
+		
+		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setModifyDate(dateInUserTimeZone);
+				
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useIE11Browser", useIE11Browser);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -730,9 +738,14 @@ public class EzAddressController{
         	}
         }
         
-        addressInfo.setCreateDate(commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false));
-        addressInfo.setModifyDate(commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false));
-        
+		String dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getCreateDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setCreateDate(dateInUserTimeZone);
+		
+		dateInUserTimeZone = commonUtil.getDateStringInUTC(addressInfo.getModifyDate(), userInfo.getOffset(), false);
+		dateInUserTimeZone = dateInUserTimeZone.substring(0, dateInUserTimeZone.indexOf(" "));
+		addressInfo.setModifyDate(dateInUserTimeZone);
+                
         model.addAttribute("pFolderType", pFolderType);
         model.addAttribute("pAddressId", pAddressId);
 		model.addAttribute("userInfo", userInfo);
@@ -953,7 +966,7 @@ public class EzAddressController{
 			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), addressId);
 			
 			sb.append("<NewDataSet>");
-			sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
+			sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
 			sb.append("<CHANGEKEY></CHANGEKEY>");
 			sb.append("<OWNERID>" + (folderType.equals("P") ? userInfo.getDeptID() : userInfo.getCompanyID()) + "</OWNERID>");
 			
@@ -965,9 +978,9 @@ public class EzAddressController{
 					InternetAddress internetAddress = new InternetAddress(addr);
 					
 					sb.append("<Table>");
-					sb.append("<NAME>" + internetAddress.getPersonal() + "</NAME>");
-					sb.append("<EMAIL>" + internetAddress.getAddress() + "</EMAIL>");
-					sb.append("<DLKEY>" + internetAddress.getAddress() + "</DLKEY>");
+					sb.append("<NAME>" + commonUtil.cleanValue(internetAddress.getPersonal()) + "</NAME>");
+					sb.append("<EMAIL>" + commonUtil.cleanValue(internetAddress.getAddress()) + "</EMAIL>");
+					sb.append("<DLKEY>" + commonUtil.cleanValue(internetAddress.getAddress()) + "</DLKEY>");
 					sb.append("<TYPE>email</TYPE>");
 					sb.append("</Table>");
 					
@@ -1414,11 +1427,11 @@ public class EzAddressController{
 				sb.append("<MODIFIERID>" + vo.getModifierId() + "</MODIFIERID>");
 				sb.append("<HASATTACH>" + vo.getHasAttach() + "</HASATTACH>");
 				sb.append("<HASCOMMENT>" + vo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + vo.getsName() + "</SNAME>");
-				sb.append("<SCOMPANY>" + vo.getsCompany() + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + vo.getsCompanyPhone() + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + vo.getsMobile() + "</SMOBILE>");
-				sb.append("<SEMAIL>" + vo.getsEmail() + "</SEMAIL>");
+				sb.append("<SNAME>" + commonUtil.cleanValue(vo.getsName()) + "</SNAME>");
+				sb.append("<SCOMPANY>" + commonUtil.cleanValue(vo.getsCompany()) + "</SCOMPANY>");
+				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(vo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+				sb.append("<SMOBILE>" + commonUtil.cleanValue(vo.getsMobile()) + "</SMOBILE>");
+				sb.append("<SEMAIL>" + commonUtil.cleanValue(vo.getsEmail()) + "</SEMAIL>");
 				sb.append("<STYPE>" + vo.getsType() + "</STYPE>");
 				sb.append("</ROW>");
 			}
@@ -1552,11 +1565,11 @@ public class EzAddressController{
 				sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
 				sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
 				sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
-				sb.append("<SCOMPANY>" + addressInfo.getsCompany() + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + addressInfo.getsCompanyPhone() + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + addressInfo.getsMobile() + "</SMOBILE>");
-				sb.append("<SEMAIL>" + addressInfo.getsEmail() + "</SEMAIL>");
+				sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
+				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
+				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
+				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
 				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + folderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");
@@ -1662,11 +1675,11 @@ public class EzAddressController{
 				sb.append("<MODIFIERID>" + addressInfo.getModifierId() + "</MODIFIERID>");
 				sb.append("<HASATTACH>" + addressInfo.getHasAttach() + "</HASATTACH>");
 				sb.append("<HASCOMMENT>" + addressInfo.getHasComment() + "</HASCOMMENT>");
-				sb.append("<SNAME>" + addressInfo.getsName() + "</SNAME>");
-				sb.append("<SCOMPANY>" + addressInfo.getsCompany() + "</SCOMPANY>");
-				sb.append("<SCOMPANYPHONE>" + addressInfo.getsCompanyPhone() + "</SCOMPANYPHONE>");
-				sb.append("<SMOBILE>" + addressInfo.getsMobile() + "</SMOBILE>");
-				sb.append("<SEMAIL>" + addressInfo.getsEmail() + "</SEMAIL>");
+				sb.append("<SNAME>" + commonUtil.cleanValue(addressInfo.getsName()) + "</SNAME>");
+				sb.append("<SCOMPANY>" + commonUtil.cleanValue(addressInfo.getsCompany()) + "</SCOMPANY>");
+				sb.append("<SCOMPANYPHONE>" + commonUtil.cleanValue(addressInfo.getsCompanyPhone()) + "</SCOMPANYPHONE>");
+				sb.append("<SMOBILE>" + commonUtil.cleanValue(addressInfo.getsMobile()) + "</SMOBILE>");
+				sb.append("<SEMAIL>" + commonUtil.cleanValue(addressInfo.getsEmail()) + "</SEMAIL>");
 				sb.append("<STYPE>" + addressInfo.getsType() + "</STYPE>");
 				sb.append("<FOLDERTYPE>" + pFolderType + "</FOLDERTYPE>");
 				sb.append("</ROW>");

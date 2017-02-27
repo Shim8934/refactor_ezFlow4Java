@@ -50,13 +50,18 @@
 		        if (compid == "") {
 		            return;
 		        }
+		        
+		        if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
+		    		alert("<spring:message code='ezResource.special' />");
+		    		return;
+		    	}
 			    
-		        if (document.getElementById("Title").value == "") {
+		        if (document.getElementById("Title").value == "" || document.getElementById("Title2").value == "") {
 		            alert("<spring:message code = 'ezPersonal.t148' />");
 		            return;
 				}
 	
-		        if (get_length(document.getElementById("Title").value) > 250) {
+		        if (get_length(document.getElementById("Title").value) > 250 || get_length(document.getElementById("Title2").value) > 250) {
 		            alert("<spring:message code = 'ezPersonal.t149' />");
 		            return;
 		        }

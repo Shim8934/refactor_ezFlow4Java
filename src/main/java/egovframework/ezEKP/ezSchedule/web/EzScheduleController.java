@@ -336,7 +336,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		}
 
 		String userID = loginVO.getId();
-		String lang = loginVO.getLang();
+		String lang = loginVO.getPrimary();
 		int tenantID = loginVO.getTenantId();
 		
 		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, lang, tenantID);
@@ -380,8 +380,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (scheduleConfigVO != null) {
             defaultView	= scheduleConfigVO.getDefaultView();
             startDay	= scheduleConfigVO.getStartDay();
-            startTime	= scheduleConfigVO.getStartTime();
-            endTime		= scheduleConfigVO.getEndTime();
+            startTime	= scheduleConfigVO.getStartTime() / 60;
+            endTime		= scheduleConfigVO.getEndTime() / 60;
 
             switch (defaultView) {
 	            case 0:
@@ -549,14 +549,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/getGroupDetail.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String getGroupDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String getGroupDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ getGroupDetail started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String gID = request.getParameter("groupID");
-		String xmlResult = ezScheduleService.getMyGroupMemberList(gID, loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+		String xmlResult = ezScheduleService.getMyGroupMemberList(gID, loginVO.getPrimary(), loginVO.getTenantId());
 		
 		return xmlResult;
 	}
@@ -727,16 +727,16 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/getDeptUserList.do", produces = "text/xml;charset=UTF-8")
 	@ResponseBody
-	public String getDeptUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String getDeptUserList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ getDeptUserList started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String deptId = request.getParameter("deptID");
 		String subDept = request.getParameter("subDept");		
 		
-		String result = ezScheduleService.getDeptMemberList(deptId, subDept, loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+		String result = ezScheduleService.getDeptMemberList(deptId, subDept, loginVO.getPrimary(), loginVO.getTenantId());
 				
 		return result;
 	}
@@ -1310,8 +1310,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				endDateTime = getUploadDate(cDate, false);
 			}
         }
-System.out.println(startDateTime);
-System.out.println(endDateTime);
+
         UploadSDate = startDateTime;
         UploadEDate = endDateTime;
 
@@ -2053,8 +2052,7 @@ System.out.println(endDateTime);
 		
 		userInfo = commonUtil.userInfoSimple(loginCookie);		
 
-		String filePath = request.getParameter("filePath");
-System.out.println(filePath);		
+		String filePath = request.getParameter("filePath");		
 		String fileName = request.getParameter("fileName");
 		String realPath = commonUtil.getRealPath(request);
 		String uploadFilePath = commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
@@ -2064,7 +2062,7 @@ System.out.println(filePath);
 		}
 		
 		String fullFilePath = realPath + uploadFilePath + filePath;
-System.out.println(fullFilePath);
+
 		downFile(request, response, fullFilePath, fileName);	
 	}
     

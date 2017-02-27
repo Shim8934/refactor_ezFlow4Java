@@ -10,8 +10,8 @@
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js?ver=0.2"></script>
-		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js?ver=0.5"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_thumbnail.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/Common.js"></script>
@@ -83,6 +83,7 @@
 		    var OrderCell = "";
 		    var pBoardType = "${boardType}";
 		    var USE_OCS = "${useOCS}";
+		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var pAdminType = "${adminType}";
 		    var lang = "${userInfo.lang}";
@@ -119,6 +120,10 @@
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload = function () {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
+		    	
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';

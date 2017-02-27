@@ -308,8 +308,8 @@ function save_schedule()
 	            alert(strLang17);
 	    }
 	}
-	else {
-	    if (ResourceSaveResult) {
+	else {		
+	    if (ResourceSaveResult) {	    	
 	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
 	            var rntVal = resource_save();
@@ -321,6 +321,7 @@ function save_schedule()
 	    }
 	    alert(strLang18);
 	    try { window.opener.RefreshView() } catch (e) { }
+
 	    window.close();
 	}
 }
@@ -554,7 +555,7 @@ var g_fileInfoList = new Array();
 function show_progress(fileinfo)
 {
     var feature = GetShowModalPosition(390, 170);
-    g_progresswin = window.showModelessDialog("schedule_progress.aspx?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken" + feature);
+    g_progresswin = window.showModelessDialog("/ezSchedule/scheduleProgress.do?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken" + feature);
 }
 
 function status_change(fileinfo)

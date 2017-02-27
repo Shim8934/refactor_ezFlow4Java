@@ -191,7 +191,7 @@
 		        var EDate = new Date();
 		        EDate.setFullYear(eYear, eMonth-1, eDay);
 		        EDate.setHours(eHour, eMin, 0, 0);
-		        		     
+		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		        $('#Stimepicker').timepicker();

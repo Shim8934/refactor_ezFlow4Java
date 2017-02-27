@@ -334,7 +334,7 @@
 
 		        var sdate, edate, datetype;
 
-		        if (GetAttribute(srcEl, "dispDate") == null) {
+		        if (GetAttribute(srcEl, "dispDate") == null || GetAttribute(srcEl, "dispDate") == "") {
 		            datetype = "1";
 		            sdate = GetAttribute(srcEl, "dispTime");
 		            edate = sdate.replace(":00:", ":30:");
@@ -343,6 +343,7 @@
 		            sdate = GetAttribute(srcEl, "dispDate") + " 00:00:00";
 		            edate = GetAttribute(srcEl, "dispDate") + " 23:59:00";
 		        }
+
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 760) / 2;

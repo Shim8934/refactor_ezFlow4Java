@@ -496,12 +496,11 @@
 	                pListImage += getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]) + ";";
 	                pImageID += getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]) + ";";
 	                pImagename += getNodeText(xmldom.getElementsByTagName("IMAGENAME")[i]) + ";";
-	                resultimage += getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[i]);
 	            }
 	
 	            ImageCount = xmldom.getElementsByTagName("ROW").length;
-	
-	            var result = resultimage.split(";");
+	            
+	            var result = pListImage.split(";");
 	            var resultcount = result.length - 1;
 	            var imagecontet = pListImageContent.split("\\");
 	            var imageid = pImageID.split(";");
@@ -509,7 +508,6 @@
 	
 	            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";
 	            for (var i = 0; i < ImageCount; i++) {
-	            	
 	                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
 	                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + imagecontet[i] + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 	                if (CrossYN())

@@ -177,7 +177,7 @@
 		    }
 			
 		    function RefreshView() {
-		        window.location.href = "schedule_search_Cross.aspx?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
+		        window.location.href = "/ezSchedule/scheduleSearch.do?sdate=" + startdate + "&edate=" + enddate + "&filter=" + encodeURIComponent(filter) + "&keyword=" + encodeURIComponent(keyword);
 		    }
 			
 		    function onmouseOver(elem) {

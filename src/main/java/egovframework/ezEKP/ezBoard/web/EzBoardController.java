@@ -494,6 +494,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
         String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
         String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         String use_oneLineCount = "";
         String pBoardID = boardPropertyVO.getBoardID();
         String pBoardName = boardPropertyVO.getBoardName();
@@ -554,6 +555,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
         model.addAttribute("boardID", pBoardID);
         model.addAttribute("userInfo", userInfo);
+        model.addAttribute("useRunTime", useRunTime);
         model.addAttribute("use_ocs", use_ocs);
         model.addAttribute("use_Editor", use_Editor);
         model.addAttribute("use_IE11Browser", use_IE11Browser);
@@ -4832,6 +4834,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = "new";
 		String apprFlag = "Y";
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String boardType = request.getParameter("boardType");
 		String adminType = request.getParameter("adminType");
@@ -4864,6 +4867,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("adminType", adminType);
@@ -5164,8 +5168,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
-		String g_ImageUrl = "";
 		String realPath = commonUtil.getRealPath(request);
+		String g_ImageUrl = "";
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page"));
 		int pStartRow = (page - 1) * imageCnt + 1;
@@ -5180,21 +5184,20 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("<DATA>");
         
         for (int k = 0; k < photoViewList.size(); k++) {
+        	int idx = photoViewList.get(k).getFilePath().lastIndexOf(commonUtil.separator);
+        	g_ImageUrl = photoViewList.get(k).getFilePath().substring(0, idx + 1) + photoViewList.get(k).getFilePath().substring(idx + 1).replace("+", "%20");
+        	
         	sb.append("<ROW>");
         	sb.append("<IMAGECOUNT>" + imageCount + "</IMAGECOUNT>");
         	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() + "</IMAGEID>");
-        	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() + "</FILEPATH>");
+        	sb.append("<FILEPATH>" + g_ImageUrl + "</FILEPATH>");
         	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) + "</FILECONTENT>");
         	sb.append("<FLAG>" + photoViewList.get(k).getFlag() + "</FLAG>");
         	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() + "</IMAGENAME>");
         	
         	String filePath = photoViewList.get(k).getFilePath();
-        	int idx = filePath.lastIndexOf(commonUtil.separator);
-        	g_ImageUrl = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-
-            String pDirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
-            String orgpDirPath = pDirPath + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
-            String despPath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(idx + 1);
+            String orgpDirPath = realPath + commonUtil.separator + filePath;
+            String despPath = filePath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
         	
             File file = new File(orgpDirPath);
             File file2 = new File(despPath);
@@ -5205,7 +5208,6 @@ public class EzBoardController extends EgovFileMngUtil{
             	FileUtils.copyFile(file, file3);
             }
             
-            sb.append("<IMAGEPATH>" + g_ImageUrl + ";" + "</IMAGEPATH>");
             sb.append("</ROW>");
         }
         
@@ -5286,7 +5288,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	if (imageID.equals(listImage)) {
         		imageContent = photoViewList.get(k).getFileContent();
-        		String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+        		String filePath = photoViewList.get(k).getFilePath();
         		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
         		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5381,7 +5383,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
             
             if (!filePath.equals("")) {
-            	file_Path = file_Path.replace(uploadFilePath + commonUtil.separator, "");
+            	file_Path = file_Path.replace(commonUtil.getRealPath(request), "");
             } else {
             	file_Path = "";
             }
@@ -5436,7 +5438,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5486,7 +5488,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5527,7 +5529,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		int page = 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
@@ -5535,6 +5538,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
 		
 		return "ezBoard/boardItemListMyList";
@@ -5599,6 +5603,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String orgBoardParameters = "";
 		int page = 1;
 		String sortBy = "";
@@ -5656,6 +5661,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         model.addAttribute("useEditor", useEditor);
+        model.addAttribute("useRunTime", useRunTime);
         model.addAttribute("orgBoardParameters", orgBoardParameters);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("boardType", boardType);
@@ -5680,6 +5686,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		int page = 1;
 
 		if (request.getParameter("page") != null) {
@@ -5690,6 +5697,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("page", page);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
 		
 		return "ezBoard/boardItemListTemp";
 	}

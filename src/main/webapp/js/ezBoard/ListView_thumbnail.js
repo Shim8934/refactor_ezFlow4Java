@@ -687,7 +687,7 @@ function ListView() {
                     var ImgElement = document.createElement("IMG");
                     //ImgElement.src = "/Upload_BoardSTD/" + getNodeText(oDatas[4]);
                     // {1e342793-61f7-9538-1906-1e213e7408f1}/UploadFile/s_{8fe616a9-dcf7-47d7-8624-73bd96043a70}.jpg
-                    var Filename = getNodeText(oDatas[4]).split('/')[2];
+                    var Filename = getNodeText(oDatas[4]).split('/')[7];
                     ImgElement.src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(getNodeText(oDatas[0])) + "&fileName=" + encodeURI(Filename);
                     ImgElement.style.height = "40px";
                     ImgElement.style.width = "60px";

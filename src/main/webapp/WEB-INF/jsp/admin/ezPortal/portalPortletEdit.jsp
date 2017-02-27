@@ -908,30 +908,30 @@
         			<table style="width:100%;">
             			<tr class="primary">
 	            			<th>${langPrimary}</th>
-	            			<td><input type="text" id="txtDisplayName" style="width:100%" value="${prop.displayName}"></td>	
+	            			<td><input type="text" id="txtDisplayName" style="width:100%" value="${prop.displayName}" maxLength="255"></td>	
             			</tr>
             			<tr class="secondary">
 	            			<th>${langSecondary}</th>
-	            			<td><input type="text" id="txtDisplayName2" style="width:100%" value="${prop.displayName2}"></td>	
+	            			<td><input type="text" id="txtDisplayName2" style="width:100%" value="${prop.displayName2}" maxLength="255"></td>	
             			</tr>
         			</table>
     			</td>
   			</tr>
   			<tr>
     			<th ><spring:message code='ezPortal.t151'/></th>
-    			<td><input type="text" id="txtURL" style="width:384px" value="${prop.url}"></td>
+    			<td><input type="text" id="txtURL" style="width:384px" value="${prop.url}" maxLength="512"></td>
   			</tr>  
     		<tr>
     			<th ><spring:message code='ezPortal.t990025'/></th>
     			<td>
-    				<input type="text" id="txtWidth" value="${prop.width}">
+    				<input type="text" id="txtWidth" value="${prop.width}" maxLength="10">
       					<spring:message code='ezPortal.t990026'/>
       			</td>
   			</tr>
   			<tr>
     			<th ><spring:message code='ezPortal.t153'/></th>
     			<td>
-    				<input type="text" id="txtHeight" value="${prop.height}"> px
+    				<input type="text" id="txtHeight" value="${prop.height}" maxLength="10"> px
     			</td>
   			</tr>
   			<tr>

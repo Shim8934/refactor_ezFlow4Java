@@ -522,11 +522,11 @@
 			    <table>
                     <tr class="primary">
 	                    <th>${langPrimary}</th>
-	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="${displayName}"></td>	
+	                    <td><input type="text" id="txtDisplayName" style="width: 100%" value="${displayName}" maxLength="255"></td>	
                     </tr>
                     <tr class="secondary">
 	                    <th>${langSecondary}</th>
-	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${displayName2}"></td>	
+	                    <td><input type="text" id="txtDisplayName2" style="width:100%" value="${displayName2}" maxLength="255"></td>	
                     </tr>
                 </table>
 			</td>
@@ -591,21 +591,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}" maxLength="255"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}" maxLength="50"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}" maxLength="150"></td>
 		</tr>
 		<% } else { %>
 		<tr>
@@ -653,21 +653,21 @@
 				<spring:message code='ezPortal.t68'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}"></td>
+				<input type="text" id="txtLinkURL" style="width: 100%" value="${linkURL}" maxLength="255"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t89'/>
 			</th>
 			<td>
-				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}"></td>
+				<input type="text" id="txtLinkLocation" style="width: 100%" value="${linkLocation}" maxLength="50"></td>
 		</tr>
 		<tr>
 			<th>
 				<spring:message code='ezPortal.t90'/>
 			</th>
 			<td>
-				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}"></td>
+				<input type="text" id="txtWindowOption" style="width: 100%" value="${windowOption}" maxLength="150"></td>
 		</tr>
 		<% } %>
 	</table>
