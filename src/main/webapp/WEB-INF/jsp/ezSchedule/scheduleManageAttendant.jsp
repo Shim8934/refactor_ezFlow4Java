@@ -25,13 +25,14 @@
 		        var feature = GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
-					
+			
+		    var OpenWin;
 		    var schedule_select_attendant_dialogArguments = new Array();
 		    function add_attendant() {
 		        schedule_select_attendant_dialogArguments[0] = "";
 		        schedule_select_attendant_dialogArguments[1] = add_attendant_Complete;
-		        var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t234' />") + "&StartTime=" + startTime + "&EndTime=" + endTime, "schedule_group_write", GetOpenWindowfeature(950, 680));
-		        try { OpenWin.focus(); } catch (e) { }
+		        OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t234' />") + "&StartTime=" + startTime + "&EndTime=" + endTime, "schedule_group_write", GetOpenWindowfeature(950, 680));
+		        try { OpenWin.focus(); } catch (e) { }     
 		    }
 			
 		    function add_attendant_Complete(rtn) {
@@ -42,12 +43,14 @@
 		            var memberList = new Array();
 		            var count = 0;
 		            
+		            OpenWin.focus();
+		            
 		            for (var i = 0; i < rtn["id"].length; i++) {
 		                var isExist = false;
 		                var checks = document.getElementById("receivelist").getElementsByTagName("input");
 		                for (var j = 0; j < checks.length; j++) {
 		                    if (GetAttribute(checks.item(j), "attendantid") == rtn["id"][i]) {
-		                        alert("'" + rtn["name"][i] + "'<spring:message code='ezSchedule.t235' />");
+		                    	OpenWin.alert("'" + rtn["name"][i] + "'<spring:message code='ezSchedule.t235' />");
 		                        isExist = true;
 		                        break;
 		                    }
@@ -69,7 +72,7 @@
 		            if (count == 0) {
 	                    return;
 	                }	
-		            
+     
 		            $.ajax({
 						type : "POST",
 						dataType : "text",
@@ -79,17 +82,19 @@
 							scheduleId 	 : scheduleid,						
 							memberList : JSON.stringify(memberList)
 						},
-						success: function(result) {
-							alert("<spring:message code='ezSchedule.t237' />");
+						success: function(result) {							
+							OpenWin.alert("<spring:message code='ezSchedule.t237' />");
+							OpenWin.close();
 							
 			                try {
 			                    window.opener.location.reload(false);
 			                } catch (e) { }
 		
-			                window.location.reload(false);
+			                window.location.reload(false);			              	
 						},
-						error: function() {
-							alert("<spring:message code='ezSchedule.t236' />");	
+						error: function() {							
+							OpenWin.alert("<spring:message code='ezSchedule.t236' />");
+							OpenWin.close();
 						}
 		            });	
 		        }

@@ -1152,7 +1152,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 500px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 426px" id="orglistView">
@@ -1185,7 +1185,7 @@
 	                                            </table>
 	                                        </div>
 	                                        <div style="vertical-align: top; text-align: center; height: 440px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6"></div>
+	                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6;height:30px"></div>
 	                                    </td>
 	                                </tr>
 	                            </table>
