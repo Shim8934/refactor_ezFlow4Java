@@ -83,6 +83,7 @@
 		    var OrderCell = "";
 		    var pBoardType = "${boardType}";
 		    var USE_OCS = "${useOCS}";
+		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var pAdminType = "${adminType}";
 		    var lang = "${userInfo.lang}";
@@ -119,6 +120,10 @@
 		    document.onselectstart = function () { return false; };
 		    
 		    window.onload = function () {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
+		    	
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';

@@ -23,8 +23,13 @@
 		    var pTotalCnt = "${totalCount}";
 		    var pUse_Editor = "${seEditor}";
 		    var pAdminType = "${adminType}";
+		    var useRunTime = "${useRunTime}";
 		    window.onload = function ()
 		    {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
+		    	
 		    	makePageSelPageBrd();
 		    };
 		
@@ -73,8 +78,7 @@
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
 		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + strListInfo, false);
-		        xmlhttp.send();
-		
+		        xmlhttp.send();		
 		        if (xmlhttp.responseText == "NO") {
 		            alert("<spring:message code='ezBoard.t265'/>");
 		            return;
@@ -251,10 +255,10 @@
 	<table class="mainlist" style ="width:100%">
 	  <form name="frmOutbox" action="/ezBoard/boardReservedItemList.do" method="post">
 	    <tr>
-	      <th width="20" align="center" style="padding:0"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+	      <th width="31" align="center" style="padding:0"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
 	      <c:choose>
 	      	<c:when test="${sortBy == 'B.BoardName'}">
-		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortup.gif" ></th>
+		      <th style="cursor:pointer" width="112" onClick="SortPage('B.BoardName desc')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortup.gif" ></th>
 	      	</c:when>
 	      	<c:when test="${sortBy == 'B.BoardName desc'}">
 		      <th style="cursor:pointer" width="160" onClick="SortPage('B.BoardName')"><spring:message code='ezBoard.t185'/><img src="/images/etc/view-sortdown.gif" ></th>
@@ -313,7 +317,7 @@
 	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
-		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.itemID}", event)'></td>
+		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.itemID}", event)'></td>
 		    	<td>${reservedList.boardName}</td>
 		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
