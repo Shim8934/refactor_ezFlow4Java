@@ -1566,11 +1566,11 @@
 				    <table style="width:100%;">
 			            <tr class="primary">
 				            <th style="width:80px;">${langPrimary}</th>
-				            <td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;"></td>	
+				            <td><input type="text" id="txtDisplayName" value="${displayName}" style="width:99%;" maxLength="255"></td>	
 			            </tr>
 			            <tr class="secondary">
 				            <th style="width:80px;">${langSecondary}</th>
-				            <td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;"></td>	
+				            <td><input type="text" id="txtDisplayName2" value="${displayName2}" style="width:99%;" maxLength="255"></td>	
 			            </tr>
 		            </table>
 				</td>
