@@ -642,7 +642,7 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	}
 
 	public void deleteReservedBoard(BoardDeleteItemVO k) throws Exception {
-		delete("EzBoardDAO.deleteReservedBoard");
+		delete("EzBoardDAO.deleteReservedBoard", k);
 	}
 	
     

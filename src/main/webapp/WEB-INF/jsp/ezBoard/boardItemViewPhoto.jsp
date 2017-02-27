@@ -83,7 +83,6 @@
 		            
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		
-		
 		            // GS 수정(2006.02.10) : 게시알림메일을 다시 게시하는 경우 url link와 게시물 link 기능이 겹치는 문제 수정
 		            AddLinkTarget();
 		
@@ -905,7 +904,7 @@
 		            }
 		
 		            ImageCount = xmldom.getElementsByTagName("ROW").length;
-		            var result = resultimage.split(";");
+		            var result = pListImage.split(";");
 		            var resultcount = result.length - 1;
 		            var imagecontet = pListImageContent.split(";:;");
 		            var imageid = pImageID.split(";");

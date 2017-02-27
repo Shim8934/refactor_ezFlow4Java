@@ -5164,7 +5164,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
-		String g_ImageUrl = "";
 		String realPath = commonUtil.getRealPath(request);
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page"));
@@ -5189,12 +5188,8 @@ public class EzBoardController extends EgovFileMngUtil{
         	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() + "</IMAGENAME>");
         	
         	String filePath = photoViewList.get(k).getFilePath();
-        	int idx = filePath.lastIndexOf(commonUtil.separator);
-        	g_ImageUrl = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-
-            String pDirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
-            String orgpDirPath = pDirPath + commonUtil.separator + filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
-            String despPath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + filePath.substring(idx + 1);
+            String orgpDirPath = realPath + commonUtil.separator + filePath;
+            String despPath = filePath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
         	
             File file = new File(orgpDirPath);
             File file2 = new File(despPath);
@@ -5205,7 +5200,6 @@ public class EzBoardController extends EgovFileMngUtil{
             	FileUtils.copyFile(file, file3);
             }
             
-            sb.append("<IMAGEPATH>" + g_ImageUrl + ";" + "</IMAGEPATH>");
             sb.append("</ROW>");
         }
         

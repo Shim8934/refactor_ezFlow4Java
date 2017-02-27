@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html>
+<html style="height: 99%;">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -1989,7 +1989,7 @@
 	                    <tr>
 	                        <th><spring:message code='ezBoard.t208' /></th>
 	                        <td colspan="3">
-	                            <input type="text" id="txtTitle" style="WIDTH: 98%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
+	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
 	                    </tr>
 	                    <c:if test="${boardInfo.guBun == '2'}">
 		                    <tr>

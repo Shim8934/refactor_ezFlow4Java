@@ -620,7 +620,7 @@ function btn_PhotoAlbumAttachAdd_onclick(file) {
     ezUtil = null;
     var fileNamelist = "";
     var fileName = "";
-    show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + "를 업로드 중입니다. " + "" + 1 + "/" + (g_fileList.length - 1));
+    show_progress_photo(g_fileList[0].substr(g_fileList[0].lastIndexOf("\\") + 1) + "" + strLang10 + "" + 1 + "/" + (g_fileList.length - 1));
 }
 
 
