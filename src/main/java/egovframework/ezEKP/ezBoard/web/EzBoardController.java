@@ -5169,6 +5169,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
 		String realPath = commonUtil.getRealPath(request);
+		String g_ImageUrl = "";
 		int imageCnt = 10;
 		int page = Integer.parseInt(request.getParameter("page"));
 		int pStartRow = (page - 1) * imageCnt + 1;
@@ -5183,10 +5184,13 @@ public class EzBoardController extends EgovFileMngUtil{
         sb.append("<DATA>");
         
         for (int k = 0; k < photoViewList.size(); k++) {
+        	int idx = photoViewList.get(k).getFilePath().lastIndexOf(commonUtil.separator);
+        	g_ImageUrl = photoViewList.get(k).getFilePath().substring(0, idx + 1) + photoViewList.get(k).getFilePath().substring(idx + 1).replace("+", "%20");
+        	
         	sb.append("<ROW>");
         	sb.append("<IMAGECOUNT>" + imageCount + "</IMAGECOUNT>");
         	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() + "</IMAGEID>");
-        	sb.append("<FILEPATH>" + photoViewList.get(k).getFilePath() + "</FILEPATH>");
+        	sb.append("<FILEPATH>" + g_ImageUrl + "</FILEPATH>");
         	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) + "</FILECONTENT>");
         	sb.append("<FLAG>" + photoViewList.get(k).getFlag() + "</FLAG>");
         	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() + "</IMAGENAME>");
@@ -5284,7 +5288,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	
         	if (imageID.equals(listImage)) {
         		imageContent = photoViewList.get(k).getFileContent();
-        		String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+        		String filePath = photoViewList.get(k).getFilePath();
         		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
         		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5379,7 +5383,7 @@ public class EzBoardController extends EgovFileMngUtil{
             }
             
             if (!filePath.equals("")) {
-            	file_Path = file_Path.replace(uploadFilePath + commonUtil.separator, "");
+            	file_Path = file_Path.replace(commonUtil.getRealPath(request), "");
             } else {
             	file_Path = "";
             }
@@ -5434,7 +5438,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
@@ -5484,7 +5488,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		int imageCount = photoViewList.size();
 		
 		for (int k = 0; k < imageCount; k++) {
-			String filePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + photoViewList.get(k).getFilePath();
+			String filePath = photoViewList.get(k).getFilePath();
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
