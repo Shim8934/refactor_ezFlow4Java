@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -15,6 +14,8 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,6 +56,8 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller("EzPersonalAdminController")
 public class EzPersonalAdminController extends EgovFileMngUtil {
+	private static final Logger logger = LoggerFactory.getLogger(EzPersonalAdminController.class);
+	
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -276,6 +279,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
 	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie) {
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
 		
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -857,6 +864,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getSlider started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String sliderID = " ";
 		
@@ -865,7 +874,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		
 		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
-		
+
+		logger.debug("getSlider ended");
 		return result;
 	}
 	
