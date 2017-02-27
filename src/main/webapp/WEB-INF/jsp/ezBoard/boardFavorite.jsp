@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
     	<link rel="stylesheet" href="/css/Tab.css" type="text/css" />
     	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
     	<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

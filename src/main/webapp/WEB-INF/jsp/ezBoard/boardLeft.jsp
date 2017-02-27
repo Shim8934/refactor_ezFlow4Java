@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	   	<link rel="stylesheet" href="/css/email_tree.css" type="text/css">
-	    <link rel="stylesheet" href="/css/default_kr.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -405,9 +405,7 @@
 		        xmldom = null;
 		        document.getElementById("TopBoardsList").innerHTML = strHTML;
 		    }
-		    function AdminMenu_onclick() {
-		        window.open("/myoffice/ezBoardSTD/admin/index_admin.aspx", "", "height=" + window.screen.availHeight + ",width=" + window.screen.availWidth + ", status = no, toolbar=no, menubar=no, location=no, resizable=1, left=0, top=0", "");
-		    }
+		    
 		    function DeleteMyBoard() {
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
@@ -424,17 +422,6 @@
 		            xmlhttp5.open("POST", "/ezBoard/deleteMyBoard.do?boardID=" + treeNode.GetNodeData("DATA1"), false);
 		            xmlhttp5.send();
 		            xmlhttp5 = null;
-		            document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
-		            treeView.DataSource(GetMyBoardItem());
-		            treeView.DataBind('TreeCtrl_MyBoardTree');
-		        }
-		    }
-		    function OrderMyBoard() {
-		        var treeView = new TreeView();
-		        treeView.LoadFromID("FromTreeView");
-		        var ret;
-		        ret = showModalDialog("MyBoardOrder_Cross.aspx", null, "dialogHeight:350px; dialogWidth:305px; status:no; help:no; scroll:no; edge:sunken");
-		        if (ret == 1) {
 		            document.getElementById('TreeCtrl_MyBoardTree').innerHTML = "";
 		            treeView.DataSource(GetMyBoardItem());
 		            treeView.DataBind('TreeCtrl_MyBoardTree');
@@ -514,7 +501,7 @@
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
 	    <div id="left" style="overflow: auto">
-	        <div class="left_board" title="PIMS"></div>
+	        <div class="left_board" title="BOARD"></div>
 	        <div id="{00000000-0000-0000-0000-000000000000}" onclick="ShowMyBoardItem()">
 	            <h2><spring:message code="ezBoard.t360"/></h2>
 	        </div>
