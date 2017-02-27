@@ -83,6 +83,7 @@
 		    var OrderCell = "";
 		    var pBoardType = "${boardInfo.boardType}";
 		    var USE_OCS = "${use_ocs}";
+		    var useRunTime = "${useRunTime}"
 		    var SQLPARADATA = "";
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pAdminType = "${boardInfo.adminType}";
@@ -120,6 +121,10 @@
 		    document.onselectstart = function () { return false; };
 		
 		    window.onload = function () {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
+		    	
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';

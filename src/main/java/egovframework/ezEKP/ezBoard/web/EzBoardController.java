@@ -494,6 +494,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String use_ocs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
         String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); 
         String use_IE11Browser = ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId());
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
         String use_oneLineCount = "";
         String pBoardID = boardPropertyVO.getBoardID();
         String pBoardName = boardPropertyVO.getBoardName();
@@ -554,6 +555,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
         model.addAttribute("boardID", pBoardID);
         model.addAttribute("userInfo", userInfo);
+        model.addAttribute("useRunTime", useRunTime);
         model.addAttribute("use_ocs", use_ocs);
         model.addAttribute("use_Editor", use_Editor);
         model.addAttribute("use_IE11Browser", use_IE11Browser);
@@ -4832,6 +4834,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String mode = "new";
 		String apprFlag = "Y";
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String boardID = request.getParameter("boardID");
 		String boardType = request.getParameter("boardType");
 		String adminType = request.getParameter("adminType");
@@ -4864,6 +4867,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("mode", mode);
 		model.addAttribute("apprFlag", apprFlag);
 		model.addAttribute("useOCS", useOCS);
+		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("adminType", adminType);
@@ -5521,7 +5525,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		int page = 1;
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId()); 
         String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-		
+        String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
+        
 		if (request.getParameter("page") != null && !request.getParameter("page").equals("")) {
 			page = Integer.parseInt(request.getParameter("page"));
 		}
@@ -5529,6 +5534,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("page", page);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
 		
 		return "ezBoard/boardItemListMyList";
@@ -5593,6 +5599,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		String orgBoardParameters = "";
 		int page = 1;
 		String sortBy = "";
@@ -5650,6 +5657,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
         
         model.addAttribute("useEditor", useEditor);
+        model.addAttribute("useRunTime", useRunTime);
         model.addAttribute("orgBoardParameters", orgBoardParameters);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("boardType", boardType);
@@ -5674,6 +5682,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useRunTime = ezCommonService.getTenantConfig("USERUNTIME", userInfo.getTenantId());
 		int page = 1;
 
 		if (request.getParameter("page") != null) {
@@ -5684,6 +5693,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("page", page);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("useOcs", useOcs);
+		model.addAttribute("useRunTime", useRunTime);
 		
 		return "ezBoard/boardItemListTemp";
 	}

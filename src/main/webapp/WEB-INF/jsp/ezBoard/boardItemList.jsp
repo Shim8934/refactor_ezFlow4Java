@@ -81,6 +81,7 @@
 		    var OrderCell = "";
 		    var pBoardType = "${boardInfo.boardType}";
 		    var USE_OCS = "${use_ocs}";
+		    var useRunTime = "${useRunTime}"
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pUse_Editor = "${use_Editor}";
 		    var pUse_IE11Browser = "${use_IE11Browser}";
@@ -129,7 +130,11 @@
 		    };
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
+		    	
+		    	if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';
 		            document.body.style.khtmlUserSelect = 'none';

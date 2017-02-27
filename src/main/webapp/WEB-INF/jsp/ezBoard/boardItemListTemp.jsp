@@ -53,6 +53,7 @@
 		    <script type="text/javascript">
 		        var ShowAdjacent = "";
 		        var USE_OCS = "${useOcs}";
+		        var useRunTime = "${useRunTime}"
 		        var SSUserID = "${userInfo.id}";
 		        var pBoardType = "";
 		        var CurPage = "${page}";
@@ -99,6 +100,10 @@
 		        };
 		        document.onselectstart = function () { return false; };
 		        window.onload = function () {
+		        	if (useRunTime != "YES") {
+		        		$("#runtime").css("display", "none");
+		        	}
+		        	
 		            if (navigator.userAgent.indexOf('Firefox') != -1) {
 		                document.body.style.MozUserSelect = 'none';
 		                document.body.style.WebkitUserSelect = 'none';
