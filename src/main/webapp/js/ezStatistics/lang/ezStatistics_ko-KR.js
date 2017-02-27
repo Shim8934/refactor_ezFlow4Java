@@ -1,5 +1,4 @@
-﻿
-var strLang1 = "시작일이 종료일 보다 클 수 없습니다.";
+﻿var strLang1 = "시작일이 종료일 보다 클 수 없습니다.";
 var strLang2 = "일자별 검색은 최대 3개월 입니다.";
 var strLang3 = "부서를 선택해 주세요.";
 var strLang4 = "년";
@@ -21,7 +20,6 @@ var strLang19 = "하위부서가 존재하지 않습니다.";
 var strLang20 = "해당 부서원이 없습니다.";
 var strLang21 = "검색 일자를 초과하였습니다.";
 var strLang535 = "데이터가 없습니다.";
-
 var strLang22 = "총";
 var strLang23 = "개";
 var strLang24 = "이전";
