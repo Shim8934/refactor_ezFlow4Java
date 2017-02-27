@@ -162,12 +162,12 @@
 	            </li>
 	            <li>
 	                <span onclick="MoveUp_onclick()">
-	                    <img src="/images/ImgIcon/prev.gif" style="margin-top: -2px;" alt="위로" />
+	                    <img src="/images/ImgIcon/prev.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp07'/>" />
 	                </span>
 	            </li>
 	            <li>
 	                <span onclick="MoveDown_onclick()">
-	                    <img src="/images/ImgIcon/next.gif" style="margin-top: -2px;" alt="아래로" />
+	                    <img src="/images/ImgIcon/next.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp08'/>" />
 	                </span>
 	            </li>
 	        </ul>

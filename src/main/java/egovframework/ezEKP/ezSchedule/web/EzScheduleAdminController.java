@@ -95,13 +95,13 @@ public class EzScheduleAdminController {
 	 */
 	@RequestMapping(value="/admin/ezSchedule/scheduleGetShareManage.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
-	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleGetShareManage started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		loginVO = commonUtil.userInfo(loginCookie);
 				
-		String result = ezScheduleAdminService.scheduleGetShareManage(loginSimpleVO.getLang(), loginSimpleVO.getTenantId());
+		String result = ezScheduleAdminService.scheduleGetShareManage(loginVO.getPrimary(), loginVO.getTenantId());
 		
 		return result;
 	}

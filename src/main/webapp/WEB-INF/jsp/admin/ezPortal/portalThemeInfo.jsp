@@ -326,22 +326,22 @@
                     		<tr class="primary">
                         		<th style="width:16%"><spring:message code='ezPortal.t403'/></th>
                         		<td style="border-bottom:1px solid #b6b6b6;">
-                            		<input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm1}" <%} %>/></td>
+                            		<input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm1}" <%} %> maxLength="255"/></td>
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t404'/></th>
                         		<td style="border-bottom:1px solid #b6b6b6;">
-                            		<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm2}" <%} %> /></td>
+                            		<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm2}" <%} %> maxLength="255"/></td>
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t4093'/></th>
                         		<td style="border-bottom:1px solid #b6b6b6;">
-                            		<input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm3}" <%} %> /></td>
+                            		<input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm3}" <%} %> maxLength="255"/></td>
                     		</tr>
                     		<tr class="secondary">
                         		<th style="width:16%"><spring:message code='ezPortal.t4094'/></th>
                         		<td>
-                            		<input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm4}" <%} %> /></td>
+                            		<input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm4}" <%} %> maxLength="255"/></td>
                     		</tr>
                 	</table>
             	</td>
@@ -353,7 +353,7 @@
     	                <tr class="secondary">
         	                <th style="width:16%;border-top:0px;">URL</th>
             	            <td style="border-bottom:1px solid #b6b6b6;">
-                	            <input type="text" id="TopURL" style="WIDTH: 100%; -moz-box-sizing: border-box; box-sizing: border-box;" <%if (mode.equals("new")) {%> value="" <%} else { %> value="${themeTopURL}" <%} %> />
+                	            <input type="text" id="TopURL" style="WIDTH: 100%; -moz-box-sizing: border-box; box-sizing: border-box;" <%if (mode.equals("new")) {%> value="" <%} else { %> value="${themeTopURL}" <%} %> maxLength="500"/>
                     	    </td>
                     	</tr>
                     	<tr class="secondary">
@@ -372,7 +372,7 @@
     	                <tr class="secondary">
         	                <th style="width:16%;border-top:0px;">URL</th>
             	            <td>
-                	            <input type="text" id="MainURL" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeMainURL}" <%} %> />
+                	            <input type="text" id="MainURL" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeMainURL}" <%} %> maxLength="500"/>
                     	    </td>
                     	</tr>
                 	</table>

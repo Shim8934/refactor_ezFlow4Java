@@ -183,6 +183,11 @@
 		        }
 		    }
 		    function search_click() {
+		    	if (specialChk(document.getElementById("keyword").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+		    	
 		        if (document.getElementById("keyword").value == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            document.getElementById("keyword").focus();
@@ -208,7 +213,11 @@
 		    var checkname2_cross_dialogArguments = new Array();
 		    var rgParams = new Array();
 		    function deptsearch_click() {
-		
+		    	if (specialChk(document.getElementById("deptkeyword").value)) {
+			    	alert("<spring:message code='ezResource.special' />");
+			    	return;
+			    }
+		    	
 		        if (deptkeyword.value == "") {
 		            alert("<spring:message code='ezPersonal.t61'/>");
 		            deptkeyword.focus();
@@ -413,7 +422,7 @@
 		  <tr>
 		    <td style="padding-right:5px">
 		    	<c:if test="${type != 'Proxy'}">
-				    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px">
+				    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:115px" maxLength="50">
 				    <a class="imgbtn" style="vertical-align:bottom"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>
 		    	</c:if>
 		    </td>
@@ -430,7 +439,7 @@
 			              <option value="mail"><spring:message code='ezPersonal.t75'/></option>
 			              <option value="streetAddress"><spring:message code='ezPersonal.t76'/></option>
 			        </select>
-			        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px">
+			        <input type="text" id="keyword" onKeyPress="search_press(event)" style="WIDTH:130px" maxLength="50">
 			        <a class="imgbtn" style="vertical-align:bottom"><span onClick="search_click()"><spring:message code='ezPersonal.t77'/></span></a>
 		    	</c:if> 
 		    </td>

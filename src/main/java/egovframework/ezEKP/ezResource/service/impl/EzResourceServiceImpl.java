@@ -3162,17 +3162,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		//종료일 지정
 		else if (recParam.getRecEndFlag() == 2) {
-			String compare1 = getYearMonthDay(EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-			String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
 			
-			Date day1 = date.parse(compare1);
-			Date day2 = date.parse(compare2);
-			int compare = day1.compareTo(day2);
-			
+			int compare = 0;
 			while (compare <= 0) {
 				String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
 				String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + String.valueOf(date1.parse(recParam.getRecStartDateTime()).getMonth()+1) + String.valueOf(date1.parse(recParam.getRecStartDateTime()).getDate())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes()) +String.valueOf(date1.parse(recParam.getRecEndDateTime()).getSeconds());
 				dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 1, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
+				
+				String compare1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+				String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
+				
+				Date day1 = date.parse(compare1);
+				Date day2 = date.parse(compare2);
+				compare = day1.compareTo(day2);
 				
 				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
 				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));

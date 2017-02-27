@@ -108,23 +108,9 @@
 		<textarea cols="80" id="editor1" name="editor1" rows="10"></textarea>
 		<script type="text/javascript">CKEDITOR.replace( 'editor1', {fullPage : false} );</script>
 		<script type="text/javascript">
-			if("${userInfo.lang}" == "1"){
-			    CKEDITOR.config.font_defaultLabel = '굴림';
-			    CKEDITOR.config.font_names = '맑은 고딕; 돋움; 굴림; 궁서; 바탕;' + CKEDITOR.instances.editor1.config.font_names;
-			    CKEDITOR.config.language = "ko";
-			}else if("${userInfo.lang}" == "2"){
-			    CKEDITOR.config.font_defaultLabel = 'Gulim';
-			    CKEDITOR.config.font_names = 'Malgun Gothic; Dotum; Gulim; Gungsuh; Batang;' + CKEDITOR.instances.editor1.config.font_names;
-			    CKEDITOR.config.language = "en";
-			}else if("${userInfo.lang}" == "3"){
-			    CKEDITOR.config.font_defaultLabel = 'Gulim';
-			    CKEDITOR.config.font_names = 'Malgun Gothic; Dotum; Gulim; Gungsuh; Batang;' + CKEDITOR.instances.editor1.config.font_names;
-			    CKEDITOR.config.language = "ja";
-			}else{
-			    CKEDITOR.config.font_defaultLabel = 'Gulim';
-			    CKEDITOR.config.font_names = 'Malgun Gothic; Dotum; Gulim; Gungsuh; Batang;' + CKEDITOR.instances.editor1.config.font_names;
-			    CKEDITOR.config.language = "zh";
-			}
+		    CKEDITOR.config.font_defaultLabel = "<spring:message code='main.t246' />";
+		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />" + CKEDITOR.instances.editor1.config.font_names;
+		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		</script>
 	</body>
 </html>

@@ -1731,8 +1731,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for(int i = 0; i < boardListVO.getImageCount(); i++){
 			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
-			strFilePath = boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
-			File mvFile = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
+			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
+			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
@@ -2256,7 +2256,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				FileUtils.deleteQuietly(file2);
 				
 				boardListVO.setImageID(imageIDs[k].trim());
-				boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
+				//filePath
+//				boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
 				
 				if (fileContents.length == 0) {
 					boardListVO.setFileContent("");
@@ -2712,7 +2713,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-						Files.deleteIfExists(docPath);
+						Files.deleteIfExists(file);
 						logger.debug("delete File :: " + docPath);
 						return FileVisitResult.CONTINUE;
 					}
@@ -2725,9 +2726,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 					@Override
 					public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-						Files.deleteIfExists(docPath);
-						logger.debug("delete Directory :: " + docPath);
-						return FileVisitResult.CONTINUE;
+						if (exc == null) {
+							Files.deleteIfExists(dir);
+							logger.debug("delete Directory :: " + docPath);
+							return FileVisitResult.CONTINUE;
+						} else {
+							throw exc;
+						}
 					}
 				});
 				

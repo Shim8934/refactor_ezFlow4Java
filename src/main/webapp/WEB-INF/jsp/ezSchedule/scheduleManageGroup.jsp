@@ -164,7 +164,7 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 450) / 2;
 		        var pLeft = (pwidth - 420) / 2;
-		        window.open("/myoffice/common/ShowPersonInfo_cross.aspx?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        window.open("/ezCommon/ShowPersonInfo.do?id=" + obj.id + "&dept=", "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		
 		    function ReplaceText(orgStr, findStr, replaceStr) {

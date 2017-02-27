@@ -59,32 +59,43 @@
 			}
 				
 			function OK_Click() {
+				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
+			    	alert("<spring:message code='ezResource.special'/>");
+			    	return;
+			    }
+				
 				if (compid == "") {
 					return;
 				}
 				
 				if( document.getElementById("Title").value == "" ) {
-					alert("<spring:message code = 'ezPersonal.t215' />");
+					alert("<spring:message code = 'ezPersonal.t215'/>");
 					document.getElementById("Title").focus();
 					return;
 				}
 				
 				if (get_length(document.getElementById("Title").value) > 500) {
-					alert("<spring:message code = 'ezPersonal.t216' />");
+					alert("<spring:message code = 'ezPersonal.t216'/>");
 					return;
 				}
 				
 				if (get_length(document.getElementById("Title2").value) > 500) {
-					alert("<spring:message code = 'ezPersonal.t216' />");
+					alert("<spring:message code = 'ezPersonal.t216'/>");
 					return;
 				}
 				
 				for (var i=1; i<11; i++) {
 					if (get_length(eval("answer" + i).value) > 100) {
-						alert("<spring:message code = 'ezPersonal.t217' />");
+						alert("<spring:message code = 'ezPersonal.t217'/>");
 						eval("answer" + i).focus();
 						return;
 					}
+					
+					if (specialChk(document.getElementById("answer" + i).value)) {
+						alert("<spring:message code='ezResource.special' />");
+						return;
+					}
+					
 				}
 				
 				//2017-02-19
