@@ -316,12 +316,12 @@ function ListView() {
     //리스트뷰 DataSource를 이용하여 DataBind 하기
     function DataBind(pTagetID) {
         if (_thisID == "") {
-            alert(strLang71);
+            alert(strLang171);
             return;
         }
 
         if (_dataSource == null) {
-            alert(strLang72);
+            alert(strLang172);
             return;
         }
         //RemoveDataBody()
@@ -418,12 +418,12 @@ function ListView() {
     //헤더없이 Row만 존재하는 DataSource를 위한 메소드
     function RowDataBind() {
         if (_thisID == "") {
-            alert(strLang71);
+            alert(strLang171);
             return;
         }
 
         if (_dataSource == null) {
-            alert(strLang72);
+            alert(strLang172);
             return;
         }
 

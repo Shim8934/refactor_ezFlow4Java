@@ -478,19 +478,19 @@
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang79);
+	                            alert(colName1[i] + strLang179);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "text") {
 		        			if(document.getElementById(tableCol[i]).value == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang79);
+	                            alert(colName1[i] + strLang179);
 	                            return;
 		        			}
 		        		} else if(colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
 		        				Tab1_MouseClick(document.getElementById("1tab1"));
-	                            alert(colName1[i] + strLang79);
+	                            alert(colName1[i] + strLang179);
 	                            return;
 		        			}
 		        		}
@@ -840,7 +840,7 @@
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
 		                alert("<spring:message code='ezBoard.t00001' />");
 		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE")
-		                alert(strLang73);
+		                alert(strLang173);
 		            else
 		                alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
 		        }

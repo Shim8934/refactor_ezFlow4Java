@@ -392,7 +392,7 @@ function event_ItemPreviewRead() {
             }
      
             if (SelectSingleNodeValue(xmlhttp.responseXML, "DATA") == "NO") {
-                alert(strLang73);
+                alert(strLang173);
                 return;
             }
             ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");

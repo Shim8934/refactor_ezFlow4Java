@@ -403,7 +403,7 @@
 					window.close();
 	            } else {
 	                if (loadXMLString(xmlhttp.responseText).text == "INACCESSIBLE")
-	                    alert(strLang73);
+	                    alert(strLang173);
 	                else
 	                    alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
 		        }

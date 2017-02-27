@@ -50,16 +50,15 @@ var strLang63 = "상위 폴더가 같습니다.";
 
 //2016 추가
 
-var strLang71 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang72 = "데이터가 지정되지 않았습니다.";
-var strLang73 = "권한이 없습니다";
-var strLang74 = "사진추가 도중 오류 발생";
-var strLang75 = "읽기 권한이 없습니다.";
-var strLang76 = "삭제 권한이 없습니다.";
-var strLang77 = "게시물을 선택해 주세요.";
-var strLang78 = "읽음 표시 하시겠습니까?";
-var strLang79 = "를(을) 선택하세요.";
-var strLang80 = "트리뷰의 ID가 지정되지 않았습니다.";
+var strLang171 = "리스트의 ID가 지정되지 않았습니다.";
+var strLang172 = "데이터가 지정되지 않았습니다.";
+var strLang173 = "권한이 없습니다";
+var strLang174 = "사진추가 도중 오류 발생";
+var strLang175 = "읽기 권한이 없습니다.";
+var strLang176 = "삭제 권한이 없습니다.";
+var strLang177 = "게시물을 선택해 주세요.";
+var strLang178 = "읽음 표시 하시겠습니까?";
+var strLang179 = "를(을) 선택하세요.";
 
 
 

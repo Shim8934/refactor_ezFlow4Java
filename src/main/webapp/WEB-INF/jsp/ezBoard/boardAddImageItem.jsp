@@ -259,7 +259,7 @@
 	                }
 	            }
 	            else{
-	                alert(strLang74);
+	                alert(strLang174);
 	                return;
 	            }
 	            

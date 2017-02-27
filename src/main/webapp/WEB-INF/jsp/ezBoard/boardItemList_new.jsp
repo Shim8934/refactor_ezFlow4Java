@@ -364,7 +364,7 @@
 		
 		    function ItemRead_onclick(obj) {
 		        if (Read_FG != "true") {
-		        	alert(strLang75);
+		        	alert(strLang175);
 		            return;
 		        }
 		
@@ -400,7 +400,7 @@
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
-		        	alert(strLang76);
+		        	alert(strLang176);
 		            return;
 		        }
 		
@@ -443,14 +443,14 @@
 		    var setReadFlag = false;
 		    function SetRead_onclick() {
 		        if (Read_FG != "true") {
-		            alert(strLang75);
+		            alert(strLang175);
 					return;
 				}
 		        if (strListInfo == "") {
-		            alert(strLang77);
+		            alert(strLang177);
 					return;
 				}
-		        var ret = confirm(strLang78);
+		        var ret = confirm(strLang178);
 				if (ret) {
 				    var arrList = new Array();
 				    var strItemList = "";
