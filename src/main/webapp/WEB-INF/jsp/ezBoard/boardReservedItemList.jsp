@@ -33,18 +33,18 @@
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
 		    }
 		
-		    function checkBox_checked(pItemID, evt) {
+		    function checkBox_checked(pBoardID, pItemID, evt) {
 		        if (CrossYN()) {
 		            if (evt.currentTarget.checked)
-		                strListInfo += pItemID + "," + SSUserID + ";";
+		                strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
 		            else
-		                strListInfo = ReplaceText(strListInfo, pItemID + "," + SSUserID + ";", "");
+		                strListInfo = ReplaceText(strListInfo, pBoardID + "@" + pItemID + "," + SSUserID + ";", "");
 		        }
 		        else {
 		            if (window.event.srcElement.checked) {
-		                strListInfo += pItemID + "," + SSUserID + ";";
+		                strListInfo += pBoardID + "@" + pItemID + "," + SSUserID + ";";
 		            } else {
-		                strListInfo = ReplaceText(strListInfo, pItemID + "," + SSUserID + ";", "");
+		                strListInfo = ReplaceText(strListInfo, pBoardID + "@" + pItemID + "," + SSUserID + ";", "");
 		            }
 		        }
 		    }
@@ -72,7 +72,7 @@
 		    }
 		    function DeleteItem() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + strListInfo.split("@")[0] + "&itemList=" + strListInfo.split("@")[1], false);
 		        xmlhttp.send();
 		
 		        if (xmlhttp.responseText == "NO") {
@@ -313,7 +313,7 @@
 	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
-		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.itemID}", event)'></td>
+		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
 		    	<td>${reservedList.boardName}</td>
 		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
