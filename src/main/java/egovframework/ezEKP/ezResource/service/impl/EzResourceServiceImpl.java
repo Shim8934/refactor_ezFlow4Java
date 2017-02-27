@@ -354,7 +354,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 
 	@Override
-	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("insertScheduleRepetition started");
 		
@@ -362,7 +362,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		endDateTime = commonUtil.getDateStringInUTC(endDateTime, offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_pNum", pNum);
+		map.put("v_pNum", num);
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pStartDateTime", startDateTime);
 		map.put("v_pEndDateTime", endDateTime);
@@ -377,14 +377,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		//TODO
-		Map<String,Object> map2 = new HashMap<String, Object>();
-		map2.put("v_pCompanyID", companyID);
-		map2.put("v_pOwnerID", ownerID);
-		map2.put("tenantID", tenantID);
-		int num = ezResourceDAO.insertScheduleRepetition_S(map2);
-		
-		map.put("v_Num", num);
 		ezResourceDAO.insertScheduleRepetition(map);
 
 		logger.debug("insertScheduleRepetition ended");
@@ -468,6 +460,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String result = "";
 		ownerID = ezResourceDAO.getAclTblBrd_S1(map);
 		logger.debug("ownerID="+ownerID);
+		
 		if (ownerID == null || ownerID.equals("")) {
 			brdUpper = ezResourceDAO.getAclTblBrd_S2(map);
 			map.put("v_BRD_UPPER", brdUpper);
@@ -677,7 +670,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
+	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
 			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
@@ -727,6 +720,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Approve", approveFlag);
 		
 		ezResourceDAO.addResSch(map);
+		
+		return ezResourceDAO.addRessch_S2(map);
 	}
 	
 	@Override
@@ -2279,7 +2274,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String[] entryArr;
 		String[] entryEmail;
 		String entryID = "";
-		//String entryName = "";
+//		String entryName = "";
 		
 		if (cmd.equals("add")) {
 			if (!orgGresFlag.equals("0") && !orgEntryList.equals("")) {
@@ -2290,7 +2285,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				for (int i=0; i<entryNum; i++) {
 					entryArr = entry[i].split("<");
-					//entryName = entryArr[0];
+//					entryName = entryArr[0];
 					entryEmail = entryArr[1].split("@");
 					entryID = entryEmail[0];
 					
@@ -2330,8 +2325,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 			updateScheduleRepetition(Integer.parseInt(num), ownerID, startDateTime, endDateTime, reWay, reDay, reNum, reYoil, reMonth, reOrd, endFlag, reCount, companyID, tenantID, offset);
 		}
-			
-		
 		
 		return true;
 	}
@@ -2562,7 +2555,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String entryList = nodeList.item(10).getTextContent().trim();
 		String reFlag = nodeList.item(11).getTextContent().trim();
 		String gresFlag = nodeList.item(12).getTextContent().trim();
-		String num = nodeList.item(13).getTextContent().trim();
 		String pNum = nodeList.item(14).getTextContent().trim();
 		String ownerID = nodeList.item(15).getTextContent().trim();
 		String attachFiles = nodeList.item(16).getTextContent().trim();
@@ -2583,7 +2575,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		timeDisplay = "1";
-		addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
+		int num = addResSch(ownerID, pNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
 				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset);
 		String returnStr = "";
 		returnStr += "<RTN_DATA>";

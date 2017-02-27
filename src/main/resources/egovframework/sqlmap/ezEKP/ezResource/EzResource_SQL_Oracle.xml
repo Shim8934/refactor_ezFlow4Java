@@ -1364,28 +1364,13 @@
 			#v_pReYoil#, #v_pReMonth#, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#)}
 		]]>
 	</procedure> -->
-	<select id="EzResourceDAO.insertScheduleRepetition_S" parameterClass="Map" resultClass="Integer">
-		<![CDATA[
-			SELECT
-				(NVL(MAX(num) , 1))
-	   		FROM
-	   			TBL_RS_SCHEDULE 
-	   		WHERE
-	   			COMPANYID = #v_pCompanyID# 
-	   		AND
-	   			OWNERID = #v_pOwnerID#
-	   		AND
-	      		TENANT_ID = #tenantID#
-      	]]>
-	</select>
-	
 	<insert id="EzResourceDAO.insertScheduleRepetition" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULEREPETITION (
 				NUM, OWNERID, STARTDATETIME, ENDDATETIME, REWAY, REDAY, RENUM, REYOIL, REMONTH, REORD, ENDFLAG, RECOUNT, COMPANYID, TENANT_ID
 			)
      		VALUES ( 
-     			#v_Num#, #v_pOwnerID#, TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
+     			#v_pNum#, #v_pOwnerID#, TO_DATE(#v_pStartDateTime#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDateTime#, 'YYYY-MM-DD HH24:MI:SS')
      			, #v_pReWay#, #v_pReDay#, #v_pReNum#, #v_pReYoil#, #v_pReMonth#
      			, #v_pReOrd#, #v_pEndFlag#, #v_pReCount#, #v_pCompanyID#, #tenantID# 
      		)
@@ -2003,6 +1988,19 @@
      		)
 		]]>
 	</insert>
+	
+	<select id="EzResourceDAO.addRessch_S2" parameterClass="Map"  resultClass="Integer">
+		SELECT
+			NVL(MAX(num), 0)
+     	FROM
+     		TBL_RS_SCHEDULE 
+    	WHERE  
+   			COMPANYID = #v_P_companyID#
+        AND 
+           	OWNERID = #v_P_ownerID#
+        AND
+           	TENANT_ID = #tenantID#
+	</select>
 	
 	<!-- <procedure id="EzResourceDAO.getSubCntOfCls" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
