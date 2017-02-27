@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/organ_tree.css" />
-		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
+		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>?ver=0.2"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>
 		<script type="text/javascript" src="/js/ezResource/control/ListView.htc.js"></script>
@@ -269,6 +269,7 @@
 		                    rtn = xmlHttp.responseText;
 
 		                    if (rtn == "FALSE") {
+alert(strLang261);
 		                        var pAlertContent = strLang261;
 		                        getForm = OpenInformationUI(pAlertContent);
 		                    } else {
