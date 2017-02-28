@@ -220,7 +220,7 @@ public interface EzBoardService {
 
 	public List<LoginVO> getSendApprMailList(String boardID, String lang, int tenantID) throws Exception;
 
-	public String saveImageItem(String requestXML, String uploadFilePath, LoginSimpleVO userInfo) throws Exception;
+	public String saveImageItem(String requestXML, String realPath, LoginSimpleVO userInfo) throws Exception;
 
 	public String newItemPhoto(Document doc, String mode, String realPath, LoginVO userInfo, String mainImageID) throws Exception;
 
