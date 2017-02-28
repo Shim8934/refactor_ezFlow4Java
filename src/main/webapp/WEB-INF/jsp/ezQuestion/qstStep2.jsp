@@ -93,7 +93,6 @@
         		}
     		}
     		function fun_OK() {
-    			
 				$('.imgbtn').prop("onclick","");
     			
     			setTimeout(function(){ 
@@ -106,10 +105,11 @@
             		alert("<spring:message code='ezQuestion.t456' />");
             		return;
         		}
+        		
         		if (frmCreate.selQues.options[0].text=="") {
         			alert("<spring:message code='ezQuestion.t456' />");	
             		return;
-        		}	
+        		}
 
         		var v_QuesID = "";
 
@@ -646,7 +646,7 @@
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="true" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="readonly" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
                    			
            			</tr>
            			<tr>
@@ -678,29 +678,30 @@
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
         		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value='${pStep1DataXML}'/>
-        	</form>	
-			</div>
-	    	<div id="Privew_List" style="display: none;">
-    	    	<div id="mainmenu">
-        	    	<ul>
-            	    	<li style="padding-left: 4px"><span onclick="Back_List()"><spring:message code="ezQuestion.t100002" /></span></li>
-            		</ul>
-        		</div>
-        		<div id="Preview_Content">
-        		</div>
-    		</div>
-			<form method="post" id="form_TempSave" name="form_TempSave" enctype="multipart/form-data" action="qstTempSave.do" target="_self">
-		    	<input type="hidden" name="TempSaveData" id="TempSaveData" />
-			</form>
-			<form method="post" action="" name="QstEdit" id="QstEdit">
-    			<input type="hidden" name="DataXML" id="DataXML" />
-    			<input type="hidden" name="DataIndex" id="DataIndex" />
-			</form>
-			<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
-    			<div id="AttachFile" style="width:1px; height:1px;">
-        			<input type="file" name="cmuds" hidden="true" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
-    			</div>
-			</form>
+       		</div>
+        </form>
+			
+    	<div id="Privew_List" style="display: none;">
+   	    	<div id="mainmenu">
+       	    	<ul>
+           	    	<li style="padding-left: 4px"><span onclick="Back_List()"><spring:message code="ezQuestion.t100002" /></span></li>
+           		</ul>
+       		</div>
+       		<div id="Preview_Content">
+       		</div>
+   		</div>
+		<form method="post" id="form_TempSave" name="form_TempSave" enctype="multipart/form-data" action="qstTempSave.do" target="_self">
+	    	<input type="hidden" name="TempSaveData" id="TempSaveData" />
+		</form>
+		<form method="post" action="" name="QstEdit" id="QstEdit">
+   			<input type="hidden" name="DataXML" id="DataXML" />
+   			<input type="hidden" name="DataIndex" id="DataIndex" />
+		</form>
+		<form method="post" id="form_TempLoad_Safari" name="form_TempLoad_Safari" enctype="multipart/form-data" action="formTempLoadSafari.do" target="ifrm_TempLoad_Safari" style="width:1px; height:1px;">
+   			<div id="AttachFile" style="width:1px; height:1px;">
+       			<input type="file" name="cmuds" hidden="true" onchange="javascript:TempFileOpen_onClick(this)" style="width:1px; height:1px;" />
+   			</div>
+		</form>
 		<iframe name="ifrm_TempLoad_Safari" src="about:blank" style="display:none"></iframe>
 	</body>
 </html>

@@ -291,7 +291,8 @@
 	                if (searchFlag) {
 	                    for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                        if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")) {
+	                        if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")
+	                                && moveUrl["foldertype"] == AddressObj.getAttribute("_FolderType")) {
 	                            alert("<spring:message code='ezAddress.t170' />");
 	                            return;
 	                        }
