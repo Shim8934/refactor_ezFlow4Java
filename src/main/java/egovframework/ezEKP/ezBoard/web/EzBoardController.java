@@ -642,9 +642,9 @@ public class EzBoardController extends EgovFileMngUtil{
  	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
 		    if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
-		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName2());
 		    } else {
-		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName());
 		    }
 		    
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
@@ -736,9 +736,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	    	boardInfo.setAttachSizeLimit(strProp.getAttachSizeLimit());
 	    	 
 	    	if (userInfo.getPrimary() != null && strProp.getBoardName2() != null && userInfo.getPrimary().equals("2") && !strProp.getBoardName2().equals("")) {
-		    	boardInfo.setBoardName(strProp.getBoardName2().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName2());
 		    } else {
-		    	boardInfo.setBoardName(strProp.getBoardName().replace("\"", "&quot;"));
+		    	boardInfo.setBoardName(strProp.getBoardName());
 		    }
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
@@ -4635,7 +4635,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		String showAdjacent = request.getParameter("showAdjacent");
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
-		String reservedItem = request.getParameter("pReservedItem");
 		String location = request.getParameter("location");
 		String useOCS = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String publicModulus = egovFileScrty.getPbm();
@@ -4674,15 +4673,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
 		
-		String nowTime = commonUtil.getTodayUTCTime("");
-		String parentTime = boardItem.getParentWriteDate();
-		//TODO 확인하라
-		if (parentTime.compareTo(nowTime) > 0) {
-			reservedItem = "true";
-		}
-		if (boardItem.getParentWriteDate().compareTo(boardItem.getWriteDate()) > 0) {
-			boardItem.setWriteDate(boardItem.getParentWriteDate());
-		}
 		if (boardItem.getEndDate().substring(0, 4).equals("9999")) {
 			boardItem.setEndDate(egovMessageSource.getMessage("ezBoard.t287", userInfo.getLocale()));
 		}
@@ -4732,7 +4722,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("adjacentItemsEnableFlag", adjacentItemsEnableFlag);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("reservedItem", reservedItem);
 		model.addAttribute("oneLineReplyFlag", boardProperty.getOneLineReply());
 		model.addAttribute("publicModulus", publicModulus);
         model.addAttribute("publicExponent", publicExponent);
@@ -5928,6 +5917,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String guBun = request.getParameter("guBun");
 		String replyID = request.getParameter("replyID");
+		
+		if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("n=1") > -1) {
+			guBun = "2";
+		}
+		
 		String result = ezBoardService.deleteOneLineReply(userInfo.getId(), replyID, guBun, userInfo.getTenantId());
 		
 		return result;

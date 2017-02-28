@@ -214,7 +214,7 @@
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 	            var strContent = "<html><head>";
 	            strContent = strContent + "<title>Print Preview</title>";
-	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/default_kr.css\" type=\"text/css\" />";
+	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
 	            strContent = strContent + "</head><body  style='overflow:hidden;height:100px;'onload='window.print();window.close();' >";
 	            strContent = strContent + "<div style='width:100%;text-align:right; margin-bottom:5px;'>";
 	            strContent = strContent + "</div>";

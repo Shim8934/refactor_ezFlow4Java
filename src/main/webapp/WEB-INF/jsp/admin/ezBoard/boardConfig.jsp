@@ -13,7 +13,7 @@
 			var pUse_Editor = "<c:out value='${use_Editor}'/>";	        
 	        var p_Use_IE11Browser = "<c:out value='${use_IE11Browser}'/>";
 	        var pBoardID = "<c:out value='${boardID}'/>";
-	        var pBoardName = "<c:out value='${boardName}'/>";
+	        var pBoardName = "${boardName}";
 	        var pBoardType = "<c:out value='${boardType}'/>";
 	        var pParentBoardID = "<c:out value='${parentBoardID}'/>";
 	        var TabId = "<c:out value='${tabID}'/>";
@@ -41,14 +41,14 @@
 	        }
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
-	            
+
 	            switch (pSelectTab) {
 	                case "BoardEnv_div1":
-	                    if (pBoardType == 3){
+	                    if (pBoardType == 3) {
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
-	                    }else if (pBoardType == 4){
+	                    } else if (pBoardType == 4) {
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
-	                    }else{	                    	
+	                    } else {	      
 	                        document.getElementById("BoardEnv_ifrm").src = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardType + "&adminType=y";
 	                    }
 	                    break;
@@ -115,7 +115,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">
-		<h1><p style="padding-left:5px"><c:out value='${boardName}' /></p></h1>
+		<h1><p style="padding-left:5px">${boardName}</p></h1>
 	    <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
 	            <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t338" /></span></p>
