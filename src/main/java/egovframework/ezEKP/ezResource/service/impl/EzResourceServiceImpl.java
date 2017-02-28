@@ -2817,7 +2817,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public boolean chkTableRepeat(List<ResMakeDupResultVO> dtS, List<ResMakeDupResultVO> dtT, List<ResGetRepResourceRepeatVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
-		logger.debug("chkTableRepeat started");
+		logger.debug("============ chkTableRepeat started ============");
 
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
@@ -2844,14 +2844,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		// 빠짐없이 반복은 아니라고 봄.
-		for (ResMakeDupResultVO drS : dtS) {
+		for (ResMakeDupResultVO drS : dtS) {  // S, 예약할
 			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
 			
-			for (ResMakeDupResultVO drT : dtT) {
-				logger.debug("drtStartDate="+drT.getStartDateTime());
+			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
+				logger.debug("drtStartDate="+drT.getStartDateTime());  
 				logger.debug("drtEndDate="+drT.getEndDateTime());
 				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
@@ -2861,8 +2861,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				int tAllDay = drT.getAllDay();
 				
 				isDel = false;
+				
 				if (dtTd != null) {
-					for (ResGetRepResourceRepeatVO drTd : dtTd) {
+					for (ResGetRepResourceRepeatVO drTd : dtTd) { // TD, 예약된 것 중 지워진 것
 						if (drTd.getStartDateTime().equals(drT.getStartDateTime()) && drTd.getEndDateTime().equals(drT.getEndDateTime())) {
 							isDel = true;
 							break;
@@ -2940,33 +2941,36 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public List<ResMakeDupResultVO> makeRepResource1(ResRecParamVO recParam) throws Exception {
+		logger.debug("makeRepResource1 started");
+
 		List<ResMakeDupResultVO> dtRec = new ArrayList<ResMakeDupResultVO>();
 		switch (recParam.getRecReWay()) {
-			case 40:
-				dtRec = chkDupReway40(recParam, dtRec, null);
-				break;
-			case 41:
-				dtRec = chkDupReway41(recParam, dtRec, null);
-				break;
-			case 51:
-				dtRec = chkDupReway51(recParam, dtRec, null);
-				break;
-			case 60:
-				dtRec = chkDupReway60(recParam, dtRec, null);
-				break;
-			case 61:
-				dtRec = chkDupReway61(recParam, dtRec, null);
-				break;
-			case 70:
-				dtRec = chkDupReway70(recParam, dtRec, null);
-				break;
-			case 71:
-				dtRec = chkDupReway71(recParam, dtRec, null);
-				break;
-			default:
-				break;
+		case 40:
+			dtRec = chkDupReway40(recParam, dtRec, null);
+			break;
+		case 41:
+			dtRec = chkDupReway41(recParam, dtRec, null);
+			break;
+		case 51:
+			dtRec = chkDupReway51(recParam, dtRec, null);
+			break;
+		case 60:
+			dtRec = chkDupReway60(recParam, dtRec, null);
+			break;
+		case 61:
+			dtRec = chkDupReway61(recParam, dtRec, null);
+			break;
+		case 70:
+			dtRec = chkDupReway70(recParam, dtRec, null);
+			break;
+		case 71:
+			dtRec = chkDupReway71(recParam, dtRec, null);
+			break;
+		default:
+			break;
 		}
-
+		
+		logger.debug("makeRepResource1 ended");
 		return dtRec;
 	}
 	
