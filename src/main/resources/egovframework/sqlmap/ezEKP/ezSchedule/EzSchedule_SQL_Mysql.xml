@@ -658,6 +658,19 @@
 				tenant_id = #v_TENANTID#
 		]]>
 	</select>
+	
+	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="String"> 
+		<![CDATA[
+			select 
+				startDate
+			from 
+				tbl_schedulerepetition_del
+			where
+				scheduleid = #v_SCHEDULEID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getReceiveList" parameterClass="Map" resultMap="receiveListVO">
 		<![CDATA[
@@ -741,6 +754,16 @@
 			) values (
 				#v_SCHEDULEID#,		#v_ATTENDANTID#,		#v_ATTENDANTNAME#,		#v_ATTENDANTNAME2#,		#v_ATTENDANTDEPTNAME#,	#v_ATTENDANTDEPTNAME2#,	
 				0,					#v_TENANTID#,			utc_timestamp()	
+			)
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertScheduleRepeDel" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id
+			) values (
+				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#
 			)
    		]]>
 	</insert>
@@ -884,6 +907,17 @@
 				tbl_schedulegroup
 	   		where  
 	   			groupid = #v_GROUPID#
+	   		and
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepe" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid = #v_SCHEDULEID#
 	   		and
 	   			tenant_id = #v_TENANTID#
 	   	]]>		

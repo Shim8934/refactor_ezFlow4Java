@@ -31,10 +31,9 @@
 			var e_DateForAttandant = "";
 			var _otherid = "<c:out value='${otherid}' />";
 	        var pUse_Editor = "CK";
-	        var ResourceInfo = "<c:out value='${resourceCnt}' />";
+	        var ResourceInfo = "<c:out value='${resourceCnt}' />";	        
 	        
-	        <%-- var parentid = "<%= _parentid %>"; --%>
-			<%-- var repeatcount = "<%= _repeatcount %>"; --%>
+	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
 			<%-- var userid = "<%= userinfo.UserID %>"; --%>
 			<%-- var groupname = "<%= groupname %>"; --%>
@@ -124,7 +123,7 @@
 			    } else
 			        suffix = 0;
 			}	
-				
+
 	        function manage_attendant() {	
 	            var pheight = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -133,8 +132,31 @@
 	            window.open("/ezSchedule/scheduleManageAttendant.do?ownerid=" + ownerid + "&id=" + encodeURIComponent(scheduleid) + "&changekey=" + encodeURIComponent(changekey) + "&type=" + scheduletype + "&dtype=" + datetype + "&pattern=" + pattern + "&StartTime=" + s_DateForAttandant + "&EndTime=" + e_DateForAttandant, "",
 	                "height = 355px, width = 530px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
+	        
+	        var schedule_delete_confirm_cross_dialogArguments = new Array();
+	        function repetiton_check() {	
+	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
+	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 400, 170);
+	        }
+	        
+	        function deleteSchedule_Complete(ret) {
+				if (ret == "0") {
+					once_delete_schedule();
+				} else {
+					delete_schedule();
+				}
+		    }
+	        
+	        function check_schedule() {
+	        	if ("${scheduleInfo.dateType}" == "3") {
+	        		repetiton_check();	        	
+	        	} else {
+	        		delete_schedule();
+	        	}
+	        }
 	
-	        function delete_schedule() {
+	        function delete_schedule() {	        	
 	            if (!confirm("<spring:message code='ezSchedule.t209' />"))
 	                return;
 	
@@ -150,7 +172,8 @@
 					url : "/ezSchedule/scheduleDelete.do",
 					data : { 
 						scheduleId : scheduleid,
-						resDel : ResourceDel						
+						resDel : ResourceDel,
+						dateType : datetype
 					},
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
@@ -165,6 +188,34 @@
 						alert("<spring:message code='ezSchedule.t212' />");
 					}
 				});	
+	        }
+	        
+	        function once_delete_schedule() {
+	        	if (!confirm("<spring:message code='ezSchedule.t209' />"))
+	                return;
+		            
+	            $.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleOnceDelete.do",
+					data : { 
+						scheduleId : scheduleid,
+						startDate : "${_date}"
+					},
+					success: function() {
+						alert("<spring:message code='ezSchedule.t213' />");
+						
+		                try { window.opener.RefreshView() } catch (e) { }
+		
+		                if (window.opener.reload != undefined)
+		                    window.opener.reload();
+		                window.close();
+					},
+					error: function(err) {
+						alert("<spring:message code='ezSchedule.t212' />");
+					}
+				});
 	        }
 				
 	        function edit_schedule() {
@@ -269,7 +320,7 @@
                                 	<span onclick="edit_schedule()"><spring:message code='ezSchedule.t302' /></span>
                                 </li>
                                 <li>
-                                	<span onclick="delete_schedule()"><spring:message code='ezSchedule.t215' /></span>
+                                	<span onclick="check_schedule()"><spring:message code='ezSchedule.t215' /></span>
                                 </li>	                                
                                 <li id ="manageli">
                                 	<span id=managespan onclick="manage_attendant()"><spring:message code='ezSchedule.t303' /></span>

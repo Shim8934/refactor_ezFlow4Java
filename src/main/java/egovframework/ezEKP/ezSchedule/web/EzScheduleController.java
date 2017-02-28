@@ -1673,6 +1673,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		        
 		String dateString = "";
+		String _date = "";
         String _repeatcount = "0";
         String _pattern = request.getParameter("pattern");
         String pageFrom = request.getParameter("pageFrom");
@@ -1683,11 +1684,11 @@ public class EzScheduleController extends EgovFileMngUtil {
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId);
-        
+         
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
-        	String _date = request.getParameter("date");
+        	_date = request.getParameter("date");
         	
         	if (vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
@@ -1743,7 +1744,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         	_editPosible = "N";
         }
         
-        model.addAttribute("scheduleInfo", vo);
+        model.addAttribute("scheduleInfo", vo);        
+        model.addAttribute("_date", _date);
         model.addAttribute("_scheduleid", _scheduleid);
         model.addAttribute("_pattern", _pattern);
         model.addAttribute("pageFrom", pageFrom);
@@ -1759,7 +1761,18 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 일정보기 > 일정삭제 
+	 * 일정보기 > 반복일정 선택 후 삭제시 팝업 
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleDeleteConfirm.do")	
+	public String scheduleDeleteConfirm() throws Exception {
+		
+		logger.debug("============ scheduleDeleteConfirm started ============");
+		
+		return "ezSchedule/scheduleDeleteConfirm";
+	}
+	
+	/**
+	 * 일정보기 > 모든 반복 일정삭제 (일반삭제) 
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleDelete.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
@@ -1771,14 +1784,38 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String scheduleId = request.getParameter("scheduleId");
 		String resDel = request.getParameter("resDel");
+		String dateType = request.getParameter("dateType");
 		
 		//일정데이터 삭제
 		ezScheduleService.deleteSchedule(scheduleId, loginSimpleVO.getTenantId());
+		
+		//반복일정 삭제
+		if (dateType.equals("3")) {
+			ezScheduleService.deleteScheduleRepe(scheduleId, loginSimpleVO.getTenantId());
+		}
 		
 		//자원예약 삭제
 		if (resDel.toUpperCase().equals("TRUE")) {
 			ezScheduleService.deleteResource(scheduleId, loginSimpleVO.getTenantId());
 		}		
+	}
+	
+	/**
+	 * 일정보기 > 해당 일정만 삭제
+	 */	
+	@RequestMapping(value="/ezSchedule/scheduleOnceDelete.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public void scheduleOnceDelete(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
+		
+		logger.debug("============ scheduleOnceDelete started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		String scheduleId = request.getParameter("scheduleId");
+		String startDate = request.getParameter("startDate");
+
+		//일정데이터 삭제
+		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, loginSimpleVO.getTenantId());
 	}
 	
 	/**
