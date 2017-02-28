@@ -920,9 +920,9 @@
 		    }
 		    function Reservation_onclick() {
 		        if (document.getElementById("chk_reservation").checked == true) {
-		            document.getElementById("reservation_date").style.display = "";
+		        	$("#reservation_date").css("display", "");
 		        } else {
-		            document.getElementById("reservation_date").style.display = "none";
+		        	$("#reservation_date").css("display", "none");
 		        }
 		    }
 		    function PreviewItem() {
@@ -2020,10 +2020,10 @@
 			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
 	                        		</c:otherwise>
 	                        	</c:choose>
-	                            <span id="reservation_date"></span>
-	                            <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
-	
+	                            <span id="reservation_date">
+		                            <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 	                                   &nbsp;<a class="imgbtn"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
+	                            </span>
 	                    </tr>
 	                    <tr id="tdEndDate">
 	                        <th><spring:message code='ezBoard.t156' /></th>
