@@ -318,11 +318,8 @@
 	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
-<<<<<<< HEAD
-		    	<td align=center style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
-=======
+		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
 		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.itemID}", event)'></td>
->>>>>>> c6961651269403289960578d5347ce0f02d7c460
 		    	<td>${reservedList.boardName}</td>
 		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
@@ -338,12 +335,10 @@
 	    		<c:when test="${reservedList.attachments != '0'}">
 	    			<td><img src='/images/i_save01.gif'></td>
 	    		</c:when>
-	    		<c:otherwise>
-	    			<td></td>
-	    		</c:otherwise>
+<%-- 	    		<c:otherwise> --%>
+<%-- 	    		</c:otherwise> --%>
 		    	</c:choose>
 	    	</tr>
-	    	<tr>
 <%-- 	    	<c:set target="${ListInfo}">${ListInfo} + ${reservedList.itemID} + "," + ${userInfo.id} + ";"}</c:set> --%>
 	    </c:forEach>
 	  </form>
