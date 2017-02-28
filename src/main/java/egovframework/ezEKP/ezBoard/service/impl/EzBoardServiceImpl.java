@@ -2210,7 +2210,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String saveImageItem(String requestXML, String uploadFilePath, LoginSimpleVO userInfo) throws Exception {
+	public String saveImageItem(String requestXML, String realPath, LoginSimpleVO userInfo) throws Exception {
 		logger.debug("saveImageItem started");
 		
 		String resultValue = "";
@@ -2241,23 +2241,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
 			
 			for (int k = 0; k < savecount; k++) {
-				File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
-				if (file.exists()) {
-					boardListVO.setFilePath(uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", ""));
-				}
-				FileUtils.copyFile(file, new File(boardListVO.getFilePath()));
-				FileUtils.deleteQuietly(file);
+				String uploadFilePath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
+				String tempFilePath = "";
 				
-				File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
-				if (file2.exists()) {
-					filePaths[k] = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
+				if (filePaths[k].indexOf("s_") == -1) {
+					File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
+					if (file.exists()) {
+						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", "");
+						FileUtils.copyFile(file, new File(tempFilePath));
+						FileUtils.deleteQuietly(file);
+					}
+				} else {
+					File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
+					if (file2.exists()) {
+						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
+						FileUtils.copyFile(file2, new File(tempFilePath));
+						FileUtils.deleteQuietly(file2);
+					}
 				}
-				FileUtils.copyFile(file2, new File(filePaths[k]));
-				FileUtils.deleteQuietly(file2);
 				
 				boardListVO.setImageID(imageIDs[k].trim());
-				//filePath
-//				boardListVO.setFilePath(boardListVO.getFilePath().replace(uploadFilePath + commonUtil.separator, ""));
+				boardListVO.setFilePath(tempFilePath.replace(realPath, ""));
 				
 				if (fileContents.length == 0) {
 					boardListVO.setFileContent("");

@@ -29,15 +29,7 @@
 			var xmlhttp;
 			var xmlhttp2;
 
-			document.onselectstart = function () { return false; };
 			window.onload = function () {
-			    if (navigator.userAgent.indexOf('Firefox') != -1) {
-			        document.body.style.MozUserSelect = 'none';
-			        document.body.style.WebkitUserSelect = 'none';
-			        document.body.style.khtmlUserSelect = 'none';
-			        document.body.style.oUserSelect = 'none';
-			        document.body.style.UserSelect = 'none';
-			    }
 			    if (screen.height < 1080) {
 			        if(screen.height <= 800){
 			            document.getElementById("MyCopList").style.height = "135px";

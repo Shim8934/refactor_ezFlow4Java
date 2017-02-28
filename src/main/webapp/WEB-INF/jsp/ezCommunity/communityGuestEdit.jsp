@@ -19,18 +19,6 @@
 		</c:if>
 		
 		<script type="text/javascript">
-			document.onselectstart = function () { return false; };
-	
-		    window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-		    }
-		    
 			function sendit() {
 				if (ReplaceText(document.forms[0].memo.value, " ", "") == "" ) {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체

@@ -114,13 +114,13 @@
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
 		                    self.resizeTo(765, (768 + addheight));
 		                else
-		                    self.resizeTo(765, (820 + addheight));
+		                    self.resizeTo(765, (795 + addheight));
 		            }
 		            else {
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
 		                    self.resizeTo(765, (690 + addheight));
 		                else
-		                    self.resizeTo(775, (740 + addheight));
+		                    self.resizeTo(775, (715 + addheight));
 		            }
 		
 		            var Div = document.createElement("DIV");
@@ -161,19 +161,58 @@
 		    };
 		
 		    window.onresize = function () {
-		        if (gubun == "2") {
-		            if(OneLineReplyFlag == "1")
-		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-		            else
-		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
+		        if (gubun != "3") { 
+			        if (OneLineReplyFlag == "1") {
+				        if (pAttributeYN == "Y") {
+				            var contentHeight;
+				            if (gubun == "2")
+				                contentHeight = document.documentElement.clientHeight - 290 - addheight;
+				            else
+				                contentHeight = document.documentElement.clientHeight - 320 - addheight;
+				            document.getElementById("message").style.height = contentHeight + "PX";
+				            document.getElementById("pad1").style.height = contentHeight + "PX";
+				        } else {
+				            var contentHeight;
+				            if (gubun == "2")
+				                contentHeight = document.documentElement.clientHeight - 290;
+				            else
+				                contentHeight = document.documentElement.clientHeight - 320;
+				            document.getElementById("message").style.height = contentHeight + "PX";
+				            document.getElementById("pad1").style.height = contentHeight + "PX";
+				        }
+				    } else {
+				        if (pAttributeYN == "Y") {
+				            var contentHeight;
+				            if (gubun == "2")
+				                contentHeight = document.documentElement.clientHeight - 230;
+				            else
+				                contentHeight = document.documentElement.clientHeight - 240 - addheight;
+				            document.getElementById("message").style.height = contentHeight + "PX";
+				            document.getElementById("pad1").style.height = contentHeight + "PX";
+				        } else {
+				            var contentHeight;
+				            if (gubun == "2")
+				                contentHeight = document.documentElement.clientHeight - 210;
+				            else
+				                contentHeight = document.documentElement.clientHeight - 240;
+				            document.getElementById("message").style.height = contentHeight + "PX";
+				            document.getElementById("pad1").style.height = contentHeight + "PX";
+				        }
+			        }
 		        }
-		        else {
-		            var trHeight = AtttributeCount * 30;
-		            if (OneLineReplyFlag == "1")
-		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-		            else
-		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
-		        }
+// 		        if (gubun == "2") {
+// 		            if(OneLineReplyFlag == "1")
+// 		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
+// 		            else
+// 		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
+// 		        }
+// 		        else {
+// 		            var trHeight = AtttributeCount * 30;
+// 		            if (OneLineReplyFlag == "1")
+// 		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
+// 		            else
+// 		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
+// 		        }
 		    };
 		
 		    function AddLinkTarget() {

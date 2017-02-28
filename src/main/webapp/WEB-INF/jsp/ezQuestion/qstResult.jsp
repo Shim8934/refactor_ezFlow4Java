@@ -10,16 +10,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 
 		<script type="text/javascript">
-			document.onselectstart = function (){ return false; };
-	    	window.onload = function (){
-	        	if(navigator.userAgent.indexOf('Firefox') != -1){
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-		    }
 		    function MM_reloadPage(init){
 		        if(init == true) with (navigator){
 		            if((appName == "Netscape") && (parseInt(appVersion) == 4)){

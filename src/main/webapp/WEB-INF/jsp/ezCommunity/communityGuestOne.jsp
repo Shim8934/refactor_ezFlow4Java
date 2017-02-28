@@ -32,20 +32,8 @@
 		    var strXML = "${strXML}";
 		    var lang = '<c:out value="${lang}" />';
 		    var xmlDoc = loadXMLString(strXML);
-		    
-		    document.onselectstart = function () {
-		    	return false;
-		    };
 
 		    window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-		        
 		        makePageSelPage();
 		        
 		        var html = "";

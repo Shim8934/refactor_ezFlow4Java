@@ -137,7 +137,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String parentBoardID = request.getParameter("boardType");
-		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, userInfo.getTenantId());
+		List<BoardTreeVO> list = ezBoardAdminService.get_Admin_TopBoardList(parentBoardID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 
 		for (int i = 0; i < list.size(); i++) {
 			BoardTreeVO vo = list.get(i);
@@ -157,7 +157,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public String boardGroupCreate(Model model, @CookieValue("loginCookie") String loginCookie,	LoginVO userInfo) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String lang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
 		String use_multiData = ezCommonService.getTenantConfig("Use_MultiData", userInfo.getTenantId());
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
@@ -199,7 +199,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public String boardCreate(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String lang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
 		String use_multiData = ezCommonService.getTenantConfig("Use_MultiData", userInfo.getTenantId());
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
@@ -608,7 +608,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	public String boardProperty(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request,	HttpServletResponse response, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String lang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();
 		String use_multiData = ezCommonService.getTenantConfig("Use_MultiData", userInfo.getTenantId());
 		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
 		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
