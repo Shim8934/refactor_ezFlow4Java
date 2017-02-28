@@ -326,7 +326,7 @@
 		        var length = listview.GetSelectedRows().length;
 
 		        if (length == 0) {
-		            alert(strLang91);
+		            alert("<spring:message code='ezResource.t169'/>");
 		            return;
 		        }
 
