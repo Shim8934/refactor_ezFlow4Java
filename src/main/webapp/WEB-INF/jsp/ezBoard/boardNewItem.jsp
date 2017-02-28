@@ -1328,7 +1328,7 @@
 		    				});	
 		                    var htmlData = message.SetEditorContentURL2(fullPath);
 		                    message.SetEditorContent(htmlData);
-		                }else {
+		                } else {
 		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
 		                    }
