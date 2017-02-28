@@ -256,7 +256,7 @@
     			</tr>            
   		</table>
   		<div class="btnposition"> 
-  			<a class="imgbtn" style = "padding-left:5px">
+  			<a class="imgbtn">
   				<span onclick="menu_Search()"><spring:message code='ezQuestion.t34' /></span>
   			</a>
   		</div>
