@@ -39,15 +39,7 @@
 			var L_SearchEndDt = new Date().yyyymmdd(); 
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31)
-			document.onselectstart = function () { return false; };
 			window.onload = function () {
-		    	if (navigator.userAgent.indexOf('Firefox') != -1) {
-		        	document.body.style.MozUserSelect = 'none';
-		        	document.body.style.WebkitUserSelect = 'none';
-		        	document.body.style.khtmlUserSelect = 'none';
-		        	document.body.style.oUserSelect = 'none';
-		        	document.body.style.UserSelect = 'none';
-		    	}
 		    	document.getElementById("txtSubject").focus();
 			}
 			$(function () {

@@ -51,19 +51,7 @@
 				window.location.reload(false);
 			}
 		</script>
-		<script type="text/javascript">
-		    document.onselectstart = function () { return false; };
-	
-		    window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-		    }
-		    
+		<script type="text/javascript">		    
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);

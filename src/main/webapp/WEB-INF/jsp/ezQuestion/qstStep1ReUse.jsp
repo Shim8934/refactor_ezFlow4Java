@@ -36,15 +36,7 @@
 		    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
 		}
 		
-		document.onselectstart = function () { return false; };
 		window.onload = function () {
-		    if (navigator.userAgent.indexOf('Firefox') != -1) {
-		        document.body.style.MozUserSelect = 'none';
-	    	    document.body.style.WebkitUserSelect = 'none';
-		        document.body.style.khtmlUserSelect = 'none';
-	        	document.body.style.oUserSelect = 'none';
-	        	document.body.style.UserSelect = 'none';
-	    	}
 	    	document.getElementById("txtSubject").focus();
 	    	document.getElementById("txtSubject").value = "${qstReuseQuestionVO.title}";
 		    document.getElementById("txtExpiredate").value = "${qstReuseQuestionVO.postTerm}";

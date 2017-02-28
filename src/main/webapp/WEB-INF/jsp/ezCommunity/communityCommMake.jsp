@@ -13,21 +13,7 @@
 		<script type="text/javascript" src="<spring:message code='ezCommunity.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 
-		<script type="text/javascript">
-			document.onselectstart = function () { 
-				return false;
-				};
-			
-			window.onload = function () {
-		        if (navigator.userAgent.indexOf('Firefox') != -1) {
-		            document.body.style.MozUserSelect = 'none';
-		            document.body.style.WebkitUserSelect = 'none';
-		            document.body.style.khtmlUserSelect = 'none';
-		            document.body.style.oUserSelect = 'none';
-		            document.body.style.UserSelect = 'none';
-		        }
-		    }
-			
+		<script type="text/javascript">			
 			function check() {
 		        var newID = "{" + GetGUID().toUpperCase() + "}";
 		        var new_subID = "{" + GetGUID().toUpperCase() + "}";
