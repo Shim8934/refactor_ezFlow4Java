@@ -1652,15 +1652,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public int number(String inputStr) {
-		try {
-			return Integer.parseInt(inputStr.replace("-", "").replace(" ", "").replace(":", "").trim());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return 0;
-		}
-	}
-	
 	@SuppressWarnings("deprecation")
 	public int weekDay(String inputStr) throws Exception {
 		int returnValue = 0;
