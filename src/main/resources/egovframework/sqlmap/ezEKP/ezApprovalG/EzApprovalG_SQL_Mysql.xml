@@ -1759,8 +1759,8 @@
 		</isEqual>
 		
 		<isEqual property="v_PMODE" compareValue="REC">
-			<isGreaterThan property="v_temp" compareValue="1">
-			<isGreaterThan property="v_temp2" compareValue="1">
+			<isGreaterEqual property="v_temp" compareValue="1">
+			<isGreaterEqual property="v_temp2" compareValue="1">
 			<![CDATA[
 				SELECT 
 						DOCID ,
@@ -1775,7 +1775,7 @@
                 AND
 						TENANT_ID = #v_TENANTID#  
 						]]>
-			</isGreaterThan>
+			</isGreaterEqual>
 			<isLessThan property="v_temp2" compareValue="1">
 			<![CDATA[
 			     SELECT 
@@ -1792,7 +1792,7 @@
 						TENANT_ID = #v_TENANTID#  	
 						]]>	
 			</isLessThan>
-		    </isGreaterThan>
+		    </isGreaterEqual>
 		<isLessThan property="v_temp" compareValue="1">
 			<isGreaterEqual property="v_temp3" compareValue="1">
 			<![CDATA[
