@@ -419,7 +419,7 @@
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;">
-	                 			<div id="divCross" style="height:460px;overflow:auto;margin:5px 0px 0px 5px;"></div>
+	                 			<div id="divCross" style="height:480px;overflow:auto;margin:5px 0px 0px 5px;"></div>
 	            			</td>
 	        			</tr>
 	        		</table>
