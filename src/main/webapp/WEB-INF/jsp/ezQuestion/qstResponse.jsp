@@ -11,9 +11,14 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 		<script type="text/javascript">
-		    window.onload = function (){
+			var receve= "<c:out value='${receve}'/>";
+			var brdID = "<c:out value='${qstUserPermissionVO.brdID}'/>";
+			var itemNo = "<c:out value='${qstUserPermissionVO.itemNo}'/>";
+			var btnSaveChk = false;
+			
+			$(document).ready(function(){
 		        tableXML();
-		    }
+		    });
 		    
 		    function MM_reloadPage(init){
 				if(init==true) with (navigator){
@@ -36,7 +41,7 @@
 
 				for(i=0;nodes.length>i; i++){
 					tableXml += "<tr>";
-					tableXml += "<th>";
+					tableXml += "<th title=\"" + SelectSingleNodeValue(nodes[i], 'QST') + "\">";
 					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 					tableXml += "</th>";
 					tableXml += "</tr>";
@@ -66,12 +71,7 @@
 				
 				$("#xmlTable").html(tableXml);
 			}
-		</script>
-		<script type="text/javascript">
-			var receve= "<c:out value='${receve}'/>";
-			var brdID = "<c:out value='${qstUserPermissionVO.brdID}'/>";
-			var itemNo = "<c:out value='${qstUserPermissionVO.itemNo}'/>";
-			var btnSaveChk = false;
+			
 		    function fun_Save(){
 		        if(form_check() == false)
 		            return;

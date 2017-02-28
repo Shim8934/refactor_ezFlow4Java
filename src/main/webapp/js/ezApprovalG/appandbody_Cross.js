@@ -28,7 +28,6 @@ function PrintClick(Type, DocID, Mode) {
 
 function addOpinion(DocID, pFlag) {
 	var rowidx, rtnString, colidx;
-	var pFlag = "";
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
@@ -52,6 +51,7 @@ function addOpinion(DocID, pFlag) {
 
     xmlrtn = loadXMLString(result);
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
+    alert(Rows.length);
     if (Rows.length == 0)
         eopi = "false";
 
@@ -83,8 +83,6 @@ function addOpinion(DocID, pFlag) {
 function addAttach(DocID, pFlag) {
     var rowidx, rtnString, colidx;
 	var result = "";
-	var pFlag = "";
-	
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
@@ -185,7 +183,7 @@ var temppFlag;
 function getdetail(DocID, pFlag) {
     var textOpi = addOpinion(DocID, pFlag);
     var textAttatch = addAttach(DocID, pFlag);
-
+    
     if (CrossYN()) {
         temptextOpi = textOpi;
         temptextAttatch = textAttatch;

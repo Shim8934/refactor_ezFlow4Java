@@ -1078,7 +1078,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
 		
 		model.addAttribute("boardID", boardID);
-		model.addAttribute("boardName", boardName);
+		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
 		model.addAttribute("boardType", boardType);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		

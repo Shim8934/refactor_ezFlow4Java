@@ -51,7 +51,6 @@
 				var Reply_FG = "${boardInfo.reply_FG}";
 				var Delete_FG = "${boardInfo.delete_FG}";
 				var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-				var pReservedItem = "${reservedItem}";
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
@@ -75,9 +74,9 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (CrossYN()) {
-		                    self.resizeBy(0, 140);
+		                	self.resizeTo(770, 980);
 		                } else {
-		                	self.resizeBy(0, 145);
+		                    self.resizeTo(770, 990);
 		                }
 		            }
 		            
@@ -108,7 +107,7 @@
 				        i = Math.floor(Math.random() * 16).toString(16).toUpperCase();
 				        result = result + i;
 				    }
-				    return "{" + result + "}";
+				    return "{"+ result + "}";
 				}
 				////
 		
@@ -517,7 +516,6 @@
 				    //게시판관리자 또는 게시판그룹관리자 또는 게시물작성자가 아니면 지울 수 없다
 					if(BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK") 
 					{
-					
 					    xmlhttp.open("POST", "/ezBoard/checkOneLineOwner.do?replyID=" + pReplyID, false);
 					    xmlhttp.send();
 		        			
@@ -527,11 +525,12 @@
 						    return;
 					    }
 		        			
-					    if (!confirm("<spring:message code='ezBoard.t311'/>")) return;
+					    if (!confirm("<spring:message code='ezBoard.t311'/>")) 
+					    	return;
 		
-					}else{
-					
-						    if(!confirm("<spring:message code='ezBoard.t311'/>")) return;
+					} else {
+						    if(!confirm("<spring:message code='ezBoard.t311'/>")) 
+						    	return;
 						}
 					
 					xmlhttp.open("POST", "/ezBoard/deleteOneLineReply.do?replyID=" + pReplyID+"&guBun="+gubun, false);

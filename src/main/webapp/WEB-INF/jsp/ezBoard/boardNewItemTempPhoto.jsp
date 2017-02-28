@@ -66,7 +66,6 @@
 		    var strWriterFakeName = "${strWriterFakeName}";
 	        var strTitle = "${strTitle}";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
-		    var pReservedItem = "${reservedItem}";
 		    var ExpireDays = "${expireDays}";
 		    var ExpireItem = "${expireItem}";
 		    var gubun = "${boardInfo.guBun}";
@@ -132,10 +131,8 @@
 
                 var attachXml = "<LISTVIEWDATA><ROWS>";
                 for (var i = 0; i < xmldom.getElementsByTagName("ROW").length; i++) {
-                    //var pListImageContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i]);
-                    //var pListImage = getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]);
+                    var imgpath = getNodeText(xmldom.getElementsByTagName("FILEPATH")[i]).replace("/s_", "/");
                     var imgID = getNodeText(xmldom.getElementsByTagName("IMAGEID")[i]);
-                    var imgpath = getNodeText(xmldom.getElementsByTagName("IMAGEPATH")[i]).replace(";", "").replace("/s_", "/");
                     var imgUniqueID = imgpath.substring(imgpath.lastIndexOf("/") + 1, imgpath.lastIndexOf("."));
                     var localFileName = getNodeText(xmldom.getElementsByTagName("IMAGENAME")[i]);
                     var fileContent = getNodeText(xmldom.getElementsByTagName("FILECONTENT")[i]);

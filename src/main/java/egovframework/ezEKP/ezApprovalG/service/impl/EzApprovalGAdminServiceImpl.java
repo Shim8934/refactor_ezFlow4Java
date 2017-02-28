@@ -1075,13 +1075,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
 				Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
 				
-				/*Map<String, Object> map3 = new HashMap<String, Object>();
-				map3.put("v_LISTTYPE", "094");
-				map3.put("v_LANGTYPE", userInfo.getLang());
-				map3.put("tenantID", userInfo.getCompanyID());
-				map3.put("companyID", userInfo.getCompanyID());
-				
-				List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGAdminDAO.getAdminListHeader(map3);*/
+//				Map<String, Object> map3 = new HashMap<String, Object>();
+//				map3.put("v_LISTTYPE", "094");
+//				map3.put("v_LANGTYPE", userInfo.getLang());
+//				map3.put("tenantID", userInfo.getCompanyID());
+//				map3.put("companyID", userInfo.getCompanyID());
+//				
+//				List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGAdminDAO.getAdminListHeader(map3);
 				
 				//094 tableName
 				String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
