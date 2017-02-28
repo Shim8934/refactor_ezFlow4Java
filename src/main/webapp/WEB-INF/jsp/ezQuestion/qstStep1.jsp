@@ -161,7 +161,7 @@
 	            	document.getElementById("hidStartDate").value = L_SearchStartDt + " 00:00:00";
 	            	document.getElementById("hidEndDate").value = L_SearchEndDt + " 23:59:59";
 	            	document.frmCreate.txtSubject = encodeURIComponent(document.frmCreate.txtSubject); 
-	            	document.frmCreate.txtSubject = encodeURIComponent(document.frmCreate.textContent); 
+	            	document.frmCreate.txtContent = encodeURIComponent(document.frmCreate.textContent); 
 	            	document.frmCreate.submit();
 	        	}
 	    	}

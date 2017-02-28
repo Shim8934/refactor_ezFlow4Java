@@ -55,7 +55,7 @@
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
-				
+
 				for(i=0;nodes.length>i; i++){
 					if("${pTotalCnt}" != 0){
 						tableXml += "<tr>";
