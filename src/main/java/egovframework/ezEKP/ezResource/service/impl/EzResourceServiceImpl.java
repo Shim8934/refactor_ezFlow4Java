@@ -1521,6 +1521,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		while (loopFlag) {
 			tsdList.clear();
 			
+			if (freq.equals("7")) {
+				tempStartCal.set(Calendar.MONTH, monthsOfYear - 1);
+			}
+			
 			// 날짜
 			if (selType.equals("0")) {
 				// daysOfMonth가 해당 달의 마지막날보다 크지 않으면 list에 추가
@@ -1636,7 +1640,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				tempStartCal.add(Calendar.MONTH, interval);
 			} else {
 				tempStartCal.add(Calendar.YEAR, 1);
-				tempStartCal.set(Calendar.MONTH, monthsOfYear - 1);
 			}
 			
 			temp--;
