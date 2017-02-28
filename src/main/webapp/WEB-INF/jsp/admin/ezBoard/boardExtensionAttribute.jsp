@@ -788,9 +788,9 @@
 		        <td style="width:25%">
 		            <select id="Type" onchange="radioType_onClick(this.value)" style="width:99%">
 		                <option value=""><spring:message code='ezBoard.t74'/></option>
-		                <option value="text">Text Box</option>
-		                <option value="radio">Radio Button</option>
-		                <option value="check">Check Box</option>
+		                <option value="text"><spring:message code='ezBoard.hyj06'/></option>
+		                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
+		                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
 		            </select>
 		        </td>
 		        <td colspan="4">
