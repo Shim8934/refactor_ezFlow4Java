@@ -3283,6 +3283,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
+		logger.debug("endFlag="+recParam.getRecEndFlag());
 		if (recParam.getRecEndFlag() == 1) {
 			while (recLoop < recParam.getRecReCount()) {
 				//주에서 월,화,수,목,금,토,일
@@ -3296,10 +3297,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 7), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsStartDateTime, (recMondayOffset + recMondayOffsetAdd), "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 					
+					logger.debug("recStart="+recParam.getRecStartDateTime());
+					logger.debug("recEnd"+recParam.getRecEndDateTime());
+					logger.debug("checkMonth="+checkMonth(recParam.getRecStartDateTime()));
+					logger.debug("checkDay="+checkDay(recParam.getRecStartDateTime()));
 					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
+					logger.debug("[51]dsEndDateTime1="+dsEndDateTime);
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-					
+					logger.debug("[51]dsEndDateTime2="+dsEndDateTime);
 					
 					//비교한 다음
 					String compare1 = dsStartDateTime;
@@ -4839,9 +4845,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String month = "";
 		if ((date1.parse(tempMonth).getMonth()+1) < 10) {
-			month = "0"+tempMonth;
+			month = "0"+String.valueOf(date1.parse(tempMonth).getMonth()+1);
 		} else {
-			month = tempMonth;
+			month = String.valueOf(date1.parse(tempMonth).getMonth()+1);
 		}
 		return month;
 	}
@@ -4851,9 +4857,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		String day = "";
 		if ((date1.parse(tempDay).getDate()) < 10) {
-			day = "0"+tempDay;
+			day = "0"+String.valueOf(date1.parse(tempDay).getDate());
 		} else {
-			day = tempDay;
+			day = String.valueOf(date1.parse(tempDay).getDate());
 		}
 		return day;
 	}
