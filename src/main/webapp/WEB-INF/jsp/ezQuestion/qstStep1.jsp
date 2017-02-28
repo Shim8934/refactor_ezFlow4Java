@@ -36,17 +36,10 @@
 			    return yyyy + (mm[1] ? mm : '0'+mm[0]) + (dd[1] ? dd : '0'+dd[0]);
 			}
 			
-			document.onselectstart = function () { return false; };
 			window.onload = function () {
-			    if (navigator.userAgent.indexOf('Firefox') != -1) {
-			        document.body.style.MozUserSelect = 'none';
-		    	    document.body.style.WebkitUserSelect = 'none';
-			        document.body.style.khtmlUserSelect = 'none';
-		        	document.body.style.oUserSelect = 'none';
-		        	document.body.style.UserSelect = 'none';
-		    	}
 		    	document.getElementById("txtSubject").focus();
 			}
+			
 			function Datepicker_DateInit() {
 			}
 			
@@ -442,11 +435,11 @@
 	            </tr> 
 	            <tr> <!----------- 설문제목 -------------> 
 	                <th><spring:message code="ezQuestion.t255" /></th> 
-	                <td><input type="text" maxlength="100" name="txtSubject" style="WIDTH:100%;" id="txtSubject" /> </td> 
+	                <td><input type="text" maxlength="100" name="txtSubject" style="WIDTH:100%;" id="txtSubject" /></td> 
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols="" maxlength="127"></textarea> </td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols="" maxlength="127"></textarea></td> 
 	            </tr>
 	        </table> 
 	        <div class="btnposition">
