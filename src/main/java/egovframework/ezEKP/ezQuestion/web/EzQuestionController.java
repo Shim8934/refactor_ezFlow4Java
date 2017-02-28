@@ -3863,13 +3863,13 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
     				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\"></th>";
     				
     				for(QstAnswerVO qstAnswerVO : qstAnswerAnswerList){
-    	    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
+    	    				strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">";
     	    				strTagData += commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
     	    				strTagData += "</th>";
     				}
     				
     				strTagData += "</tr><tr>";
-    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+    				strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
     				
     				for (QstAnswerVO qstAnswerVO : qstAnswerAnswerList) {
     					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
@@ -3878,7 +3878,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
     				strTagData += "</tr>";
     			} else {
     				strTagData += "<tr>";
-    				strTagData += "<th style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
+    				strTagData += "<th title=\"" + commonUtil.cleanValue(qstAnswer.getAnswerContent()) + "\" style=\"background-color:#f3f3f3; border:1px solid #b6b6b6; text-align:center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;\">"+commonUtil.cleanValue(qstAnswer.getAnswerContent())+"</th>";
     				
     				for (QstAnswerVO qstAnswerVO : qstAnswerAnswerList) {
     					strTagData += "<td style=\"border:1px solid #b6b6b6; text-align:center;\"><input type=\"radio\" name=\"radio" + qstNo + "_" + qstAnswer.getAnswerNo() +"\" value=\""+ qstAnswerVO.getAnswerNo()+"\"></td>";
@@ -4153,7 +4153,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+        strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
         
         if (multiSelect.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
@@ -4233,7 +4233,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 
 		strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th colspan=4>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+        strData += "<th colspan=4 title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
         
         if (strSel.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
@@ -4307,7 +4307,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
         strData += "<table class=\"question\">";
         strData += "<tr>\n";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+        strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
         strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t400", locale) + "</span>";
         strData += "</th>\n";
         strData += "<th style=\"text-align:right;width:150px;padding:0 10px\">";
@@ -4364,7 +4364,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
-        strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
+        strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
         
         if (strSel.equals("1")){
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
