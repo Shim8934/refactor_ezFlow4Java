@@ -2777,16 +2777,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 					
 				//
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
 				String compare2 = tStartDate; 
 
 				Date day1 = date.parse(compare1);
 				Date day2 = date.parse(compare2);
 
 				String compare3 = tEndDate;
-				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
+				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
+				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
 					
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -2873,7 +2873,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				
 				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
 				String compare2 = tStartDate; 
 				
 				Date day1 = date.parse(compare1);
@@ -2881,8 +2881,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				String compare3 = tEndDate;
 				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
-				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
+				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
 				
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -3407,10 +3407,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					dsStartDateTimeLoop = dsStartDateTime;
 					logger.debug("dsStartDateTimeLoop="+dsStartDateTimeLoop);
 					logger.debug("recEndDateTime="+recParam.getRecEndDateTime());
-					String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-					compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-					compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare1 = dsStartDateTimeLoop;
+					//compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+					//compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 					
 					logger.debug("compare1="+compare1);
 					logger.debug("compare2="+compare2);
@@ -3427,10 +3427,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					//String compare4 = recParam.getRecStartDateTime();
 					String compare4 = recStartDateTime;
-					String compare5 = getYearMonthDay(dsStartDateTime);
-					compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare6 = getYearMonthDay(recEndDateTime);
-					compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare5 = dsStartDateTime;
+					//compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare6 = recEndDateTime;
+					//compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 					logger.debug("compare3="+compare3);
 					logger.debug("compare4="+compare4);
 					logger.debug("compare5="+compare5);
