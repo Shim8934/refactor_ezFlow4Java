@@ -74,10 +74,10 @@
 		            
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
-		                if(CrossYN()){
-		                    self.resizeTo(770, 1000);
-		                }else{
-		                    self.resizeTo(770, 1010);
+		                if (CrossYN()) {
+		                    self.resizeBy(0, 140);
+		                } else {
+		                	self.resizeBy(0, 145);
 		                }
 		            }
 		            
@@ -108,7 +108,7 @@
 				        i = Math.floor(Math.random() * 16).toString(16).toUpperCase();
 				        result = result + i;
 				    }
-				    return "{"+ result + "}";
+				    return "{" + result + "}";
 				}
 				////
 		

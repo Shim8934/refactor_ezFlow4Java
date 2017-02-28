@@ -844,7 +844,7 @@ function tableListControl_today() {
 
                         for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
                             if (TCnt != pObjectSP) {
-                                document.getElementById(pObjectId + "_" + TCnt).remove();
+                            	try {document.getElementById(pObjectId + "_" + TCnt).remove();} catch (e) {}
                             } else {
                                 //tooltip 추가
                                 document.getElementById(pObjectId + "_" + TCnt).setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));

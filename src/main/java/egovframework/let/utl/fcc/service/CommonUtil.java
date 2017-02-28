@@ -622,6 +622,12 @@ public class CommonUtil {
 			} else {
 				pattern = "yyyy-MM-dd HH:mm";
 			}
+		} else if (dateStr.length() == 21) {
+			if (dateStr.indexOf("/") > -1) {
+				pattern = "yyyy/MM/dd aa h:mm:ss";
+			} else {
+				pattern = "yyyy-MM-dd aa h:mm:ss";
+			}
 		} else {
 			if (dateStr.indexOf("/") > -1) {
 				pattern = "yyyy/MM/dd HH:mm:ss";

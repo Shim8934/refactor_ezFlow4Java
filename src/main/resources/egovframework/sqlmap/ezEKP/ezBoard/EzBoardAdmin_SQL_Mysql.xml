@@ -586,12 +586,11 @@
 		]]>
 	</select>
 	
-	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultMap="brdBoardTree" parameterClass="Map">
+	<select id="EzBoardAdminDAO.get_Admin_TopBoardList" resultClass="BoardTreeVO" parameterClass="Map">
 		<![CDATA[
 			SELECT 
 				boardid,
-				boardname,
-				boardname2,
+				boardname$lang$ boardname,
 				treevieworder,
 				'' as boardcolor,
 				'' as gubun,

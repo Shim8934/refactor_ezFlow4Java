@@ -346,7 +346,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow: auto;" id="BodyTop">
+	<body class="popup" style="overflow: auto;" id="BodyTop">
 		<xml id="listviewheader" style="display:none">
       		<LISTVIEWDATA>
         		<HEADERS>

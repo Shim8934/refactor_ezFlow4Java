@@ -5248,8 +5248,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("saveImageItem started");
 
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String uploadFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
-		String result = ezBoardService.saveImageItem(requestXML, uploadFilePath, userInfo);
+		String realPath = commonUtil.getRealPath(request);
+		String result = ezBoardService.saveImageItem(requestXML, realPath, userInfo);
 
 		logger.debug("saveImageItem ended");
         
