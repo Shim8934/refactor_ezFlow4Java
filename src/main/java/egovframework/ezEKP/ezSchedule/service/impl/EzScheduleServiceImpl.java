@@ -162,6 +162,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 						
 			//반복일정 구현 시작
 			if (vo.getDateType().equals("3")) {
+				map.put("v_SCHEDULEID", vo.getScheduleId());
+				
+				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
+				
 				String endDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
 
@@ -209,11 +213,16 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							}
 
 							if (generated) {
-								count++;								
-								if (nsdf.format(date_cal.getTime()).compareTo(pStartDate.substring(0,10)) >= 0 && nsdf.format(date_cal.getTime()).compareTo(pEndDate.substring(0,10)) <= 0) {	
-									//row 추가
-									ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-									resultList.add(rVo);
+								count++;
+								
+								String calcuDate = nsdf.format(date_cal.getTime());
+								
+								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {	
+									//row 추가									
+									if (!rList.contains(calcuDate)) {
+										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
 								}
 							}
 							
@@ -240,10 +249,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							
 							if (generated) {
 								count++;
-								if (nsdf.format(date_cal.getTime()).compareTo(pStartDate.substring(0,10)) >= 0 && nsdf.format(date_cal.getTime()).compareTo(pEndDate.substring(0,10)) <= 0) {	
-									//row 추가									
-									ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-									resultList.add(rVo);
+								
+								String calcuDate = nsdf.format(date_cal.getTime());
+								
+								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {	
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+										resultList.add(rVo);
+									}
 								}
 							}
 							
@@ -303,10 +317,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							if (generated) {
 								count++;
 
-								if (nsdf.format(newCal.getTime()).compareTo(pStartDate.substring(0,10)) >= 0 && nsdf.format(newCal.getTime()).compareTo(pEndDate.substring(0,10)) <= 0) {
-									//row 추가									
-									ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-									resultList.add(rVo);
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
 								}
 							}
 							
@@ -368,10 +386,14 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							if (generated) {
 								count++;
 								
-								if (nsdf.format(newCal.getTime()).compareTo(pStartDate.substring(0,10)) >= 0 && nsdf.format(newCal.getTime()).compareTo(pEndDate.substring(0,10)) <= 0) {
-									//row 추가									
-									ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-									resultList.add(rVo);
+								String calcuDate = nsdf.format(newCal.getTime());
+								
+								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {
+									//row 추가
+									if (!rList.contains(calcuDate)) {
+										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+										resultList.add(rVo);
+									}
 								}
 							}
 							
@@ -961,6 +983,28 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		return iList;
 	}
+
+	@Override
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_STARTDATE", startDate);
+		map.put("v_TENANTID", tenantId);		
+		
+		ezScheduleDAO.insertScheduleRepeDel(map);
+	}
+
+	@Override
+	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("v_SCHEDULEID", scheduleId);		
+		map.put("v_TENANTID", tenantId);		
+		
+		ezScheduleDAO.deleteScheduleRepe(map);
+	}
+	
 	
 	
 	

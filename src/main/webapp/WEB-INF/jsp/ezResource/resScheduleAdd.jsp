@@ -620,21 +620,21 @@
 	    <table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
   			<tr style="text-align:center">
     			<td style="vertical-align:top">
-    				<table style="width:600px; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
+    				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 	      				<tr style="height:25px"> 
-        					<td style="padding-left:10px" width="80"><spring:message code="ezResource.t193"/></td> 
+        					<th style="padding-left:10px" width="80"><spring:message code="ezResource.t193"/></th> 
         					<td style="padding-left:10px"> <div id="printOwner"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<td style="padding-left:10px"><spring:message code="ezResource.t213"/></td> 
+	        				<th style="padding-left:10px"><spring:message code="ezResource.t213"/></th> 
         					<td style="padding-left:10px"> <div id="printImportance"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<td style="padding-left:10px"><spring:message code="ezResource.t197"/></td> 
+	        				<th style="padding-left:10px"><spring:message code="ezResource.t197"/></th> 
         					<td style="padding-left:10px"> <div id="printDate"></div></td> 
       					</tr> 
       					<tr style="height:25px"> 
-	        				<td style="padding-left:10px"><spring:message code="ezResource.t224"/></td> 
+	        				<th style="padding-left:10px"><spring:message code="ezResource.t224"/></th> 
         					<td style="padding-left:10px"> <div id="printTitle"></div></td> 
       					</tr> 
       					<tr> 

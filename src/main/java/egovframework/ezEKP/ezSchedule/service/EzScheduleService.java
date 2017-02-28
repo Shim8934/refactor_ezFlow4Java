@@ -99,6 +99,10 @@ public interface EzScheduleService {
 
 	public void updateAttendantSchedule(String hasAttendant, String scheduleId, int tenantId) throws Exception;	
 
-	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception;		
+	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId) throws Exception;
+
+	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId) throws Exception;
+
+	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception;
 	
 }

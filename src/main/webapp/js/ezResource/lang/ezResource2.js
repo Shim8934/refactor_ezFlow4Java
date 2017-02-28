@@ -233,3 +233,9 @@ var strLang583 = "End time is earlier than the time today.";
 
 var strLang584 = "It was approved.";
 var strLang585 = "Approval has been canceled.";
+
+//추가
+var strLangLHM01 = "default_us";
+var strLangLHM02 = "인쇄 미리보기";
+var strLangLHM03 = "인쇄";
+var strLangLHM04 = "취소";

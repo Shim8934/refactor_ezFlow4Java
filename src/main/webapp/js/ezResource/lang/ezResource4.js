@@ -233,3 +233,9 @@ var strLang583 = "结束时间比今天时间早。";
 
 var strLang584 = "它被批准。";
 var strLang585 = "认证已被取消。";
+
+//추가
+var strLangLHM01 = "default_cn";
+var strLangLHM02 = "인쇄 미리보기";
+var strLangLHM03 = "인쇄";
+var strLangLHM04 = "취소";
