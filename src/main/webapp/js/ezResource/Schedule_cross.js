@@ -1246,14 +1246,18 @@ function print_onClick( printTrueFalse )
         var feature = GetOpenPosition(700, 700);
         printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
         var strContent = "<html><head>"; // If you use this script inside <head> on the page, there might be error. So I am keeping inside body (becaue of <head>)        
-        strContent = strContent + "<title>Print Preview</title>";      
-        strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/default_kr.css\" type=\"text/css\" />";       
-        strContent = strContent + "</head><body class=\"popup\">";        
-        strContent = strContent + "<div style='width:100%;height:20;text-align:right; margin-bottom:25px;'>";        
-        strContent = strContent + "<input type='button' id='btnPrint' value='Print' style='width:100px' onclick='window.print()' />";       
-        strContent = strContent + "<input type='button' id='btnCancel' value='Cancel' style='width:100px' onclick='window.close()' />";        
-        strContent = strContent + "</div>";        
-        strContent = strContent + "<div style='width:100%;'><table id='printScreen' class=\"layout\" width='100%' border='0' cellspacing='0' cellpadding='10'>";          
+        strContent = strContent + "<title>" + strLangLHM02 + "</title>";      
+        strContent = strContent + "<link rel='stylesheet' href='/css/" + strLangLHM01 + ".css' type='text/css' />";       
+        strContent = strContent + "</head><body class='popup'>";        
+        strContent = strContent + "<table><tr><td height='20'>";    
+        strContent = strContent + "<div id='menu'><ul>";        
+        strContent = strContent + "<li><span onclick='window.print()'>" + strLangLHM03 + "</span></li>";       
+        strContent = strContent + "</ul></div>"; 
+        strContent = strContent + "<div id='close'><ul>";        
+        strContent = strContent + "<li><span onclick='window.close()'>" + strLangLHM04 + "</span></li>";        
+        strContent = strContent + "</ul></div>";    
+        strContent = strContent + "</td></tr></table>";
+        strContent = strContent + "<div style='width:100%;padding-top:30px;'><table id='printScreen' style='width:100%' border='0' cellspacing='0' cellpadding='10'>";          
         strContent = strContent + document.getElementById("printScreen").innerHTML ;        
         strContent = strContent + "</table></div>";        
         strContent = strContent + "</body>"; 
@@ -1313,7 +1317,7 @@ function onbeforeprint() {
     if (tr_Recur.style.display != "none") {
         setNodeText(document.getElementById("printDate"), getNodeText(document.getElementById("AllDayDisplay")));
     } else {
-        if (!AllDay.checked) {
+        if (AllDay.checked) {
             setNodeText(document.getElementById("printDate"),$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " (" + strLang126 + ")");
         } else {
             setNodeText(document.getElementById("printDate"),$("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
