@@ -8,7 +8,6 @@
 		<meta name="vs_defaultClientScript" content="JavaScript" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
