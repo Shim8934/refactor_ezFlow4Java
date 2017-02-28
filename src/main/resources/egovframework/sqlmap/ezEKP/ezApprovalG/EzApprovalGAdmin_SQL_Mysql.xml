@@ -3062,4 +3062,26 @@
 				formid = #formID#
 		]]>
 	</update>
+	
+	<select id ="EzApprovalGAdmin.getAdminListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO">
+		<![CDATA[
+			SELECT 
+				name,
+				name2,
+				name3,
+				name4, 
+				tablename
+	      	FROM 
+	      		TBL_LISTOPTION 
+	      	WHERE 
+	      		tenant_id = #tenantID#
+	      	AND
+	      		companyid = #companyID#
+	      	AND
+	      		listtype = #v_LISTTYPE#
+	      	AND 
+	      		dtype IS NULL
+	      	ORDER BY sn 
+		]]>
+	</select>
 </sqlMap>

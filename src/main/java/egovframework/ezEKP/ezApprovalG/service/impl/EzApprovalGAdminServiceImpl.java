@@ -1054,7 +1054,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 	}
 
-	//TODO 다국어가 영어로 고정되어 있음.
+	//TODO 이효진 2017-02-28 다국어지원하려면 밑에스트링배열 message로 집어넣어야함
 	@Override
 	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception {
 		logger.debug("setTaskCode started.");
@@ -1075,15 +1075,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
 				Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
 				
+				/*Map<String, Object> map3 = new HashMap<String, Object>();
+				map3.put("v_LISTTYPE", "094");
+				map3.put("v_LANGTYPE", userInfo.getLang());
+				map3.put("tenantID", userInfo.getCompanyID());
+				map3.put("companyID", userInfo.getCompanyID());
+				
+				List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGAdminDAO.getAdminListHeader(map3);*/
+				
+				//094 tableName
 				String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
 									"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", "DISPLAYRECTRASTIME",
 									"EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", "SC1", "SC2", 
 									"SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
+				
+				//094 Name1
 				String[] NAMEDESC = {"단위업무명(한글)","단위업무명(영문)", "보존연한", "보존연한책정사유", 
 									"보존방법", "보존장소", "비치기록물", "비치기록물이관시기", 
 									"이관후예상열람빈도", "특수목록위치", "제1특수목록", "제2특수목록", 
 									"제3특수목록", "주요열람용도", "단위업무설명", "소기능"};
-                // 2010.08.23 다국어
+				//094 Name2
                 String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KPREASON", 
 									"KeepingMethod", "KeepingPlace", "DisplayREC", "DisplayRECTrastime", 
 									"EXDisplayFrequency", "SCPlace", "SC1", "SC2", 
