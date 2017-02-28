@@ -20,7 +20,7 @@ public interface EzBoardAdminService {
 	
 	public List<BoardVO> getBoardTree_Get2(String pAccessID, String pRootBoardID, int tenantID) throws Exception;
 	
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, int tenantID) throws Exception;
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, int tenantID) throws Exception;
 	
 	public List<BoardTreeVO> brdBoardTree(String pRootBoardID, String pAccessID, int pMode, int pSelectBy, String pExcludeBoardID, int tenantID) throws Exception;
 	

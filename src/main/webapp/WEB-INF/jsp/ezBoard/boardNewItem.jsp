@@ -1918,7 +1918,7 @@
 	                        </td>
 	                        <th><spring:message code='ezBoard.t434' /></th>
 	                        <c:choose>
-	                        	<c:when test="${importance == '1'}">
+	                        	<c:when test="${boardListVO.importance == '1'}">
 			                        <td style="width: 300px"><span style="line-height: 20px; height: 20px; display: inline-block;">
 			                            <input type="checkbox" id="chkEmergent" checked></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t435' /></span>
 	                        	</c:when>

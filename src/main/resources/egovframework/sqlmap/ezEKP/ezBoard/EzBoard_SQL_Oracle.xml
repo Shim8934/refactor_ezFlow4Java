@@ -4418,5 +4418,45 @@
 		]]>
   </select>
 	
+  <select id="EzBoardDAO.getDeleteReservedBoard" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_BOARD_DELETERESERVEDBOARD
+		]]>
+  </select>
+  
+  <select id="EzBoardDAO.getDeleteReservedBoardItem" resultClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			SELECT
+  				*
+  			FROM
+  				TBL_BOARD_DELETERESERVEDITEM
+		]]>
+  </select>
+  
+  <delete id="EzBoardDAO.deleteReservedBoardItem" parameterClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_BOARD_DELETERESERVEDITEM
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+  			AND
+  				itemID = #itemID#
+		]]>
+  </delete>
+  
+  <delete id="EzBoardDAO.deleteReservedBoard" parameterClass="BoardDeleteItemVO">
+  		<![CDATA[
+  			DELETE FROM TBL_BOARD_DELETERESERVEDBOARD
+  			WHERE
+  				TENANT_ID = #tenantID#
+  			AND
+  				BOARDID = #boardID#
+		]]>
+  </delete>
+
 </sqlMap>
 

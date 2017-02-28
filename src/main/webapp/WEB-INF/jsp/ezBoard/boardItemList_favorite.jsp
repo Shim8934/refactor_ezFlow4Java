@@ -8,7 +8,7 @@
 	    <link rel="stylesheet" href="/css/tab_over.css" type="text/css">
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript">
-	        var userLang = "${userInfo.lang}";
+	        var userLang = "${userInfo.primary}";
 	        var xmlhttp = createXMLHttpRequest();
 	        window.onload = function () {
 	            GetMyBoardItem();
