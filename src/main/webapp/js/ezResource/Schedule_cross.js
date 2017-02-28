@@ -1257,7 +1257,7 @@ function print_onClick( printTrueFalse )
         strContent = strContent + "<li><span onclick='window.close()'>" + strLangLHM04 + "</span></li>";        
         strContent = strContent + "</ul></div>";    
         strContent = strContent + "</td></tr></table>";
-        strContent = strContent + "<div style='width:100%;padding-top:30px;'><table id='printScreen' style='width:100%' border='0' cellspacing='0' cellpadding='10'>";          
+        strContent = strContent + "<div style='width:100%'><table id='printScreen' style='width:100%' border='0' cellspacing='0' cellpadding='10'>";          
         strContent = strContent + document.getElementById("printScreen").innerHTML ;        
         strContent = strContent + "</table></div>";        
         strContent = strContent + "</body>"; 
