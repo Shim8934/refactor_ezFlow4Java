@@ -101,8 +101,16 @@
 					url : "/admin/ezBoard/saveBackGroundImage.do",					
 					success : function() {
 						 alert("<spring:message code='ezBoard.t79'/>");
-				         window.opener.GetBackGroundImage();
-				         window.close();	
+						 
+						 try {
+					         window.opener.GetBackGroundImage();
+						 } catch (e) {
+							 try {
+								 window.opener.location.reload(false);
+							 } catch (e) { }
+						 }
+						 
+				         window.close();
 					}
 				}); 
 			}
