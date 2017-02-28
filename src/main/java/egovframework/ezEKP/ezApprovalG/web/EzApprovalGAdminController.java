@@ -1499,7 +1499,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		
 		String listXML = ezApprovalGAdminService.getTaskFullList(deptCode, pageSize, pageNo, langType.trim(), companyID, userInfo.getTenantId());
-
+		
 		Document xmldoc = commonUtil.convertStringToDocument(listXML);
 	
 		if (xmldoc.getElementsByTagName("ROW") != null) {

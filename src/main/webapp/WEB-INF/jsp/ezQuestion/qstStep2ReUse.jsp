@@ -8,7 +8,6 @@
 		<meta name="vs_defaultClientScript" content="JavaScript" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
-		<link rel="stylesheet" href="/css/default_kr.css" type="text/css" />
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezQuestion/common.js"></script>
@@ -264,25 +263,12 @@
             		menuQst_List();
         		}
     		}
-    		document.onselectstart = function () { return false; };
+    		
     		window.onload = function () {
-    	        if (navigator.userAgent.indexOf('Firefox') != -1) {
-    	            document.body.style.MozUserSelect = 'none';
-    	            document.body.style.WebkitUserSelect = 'none';
-    	            document.body.style.khtmlUserSelect = 'none';
-    	            document.body.style.oUserSelect = 'none';
-    	            document.body.style.UserSelect = 'none';
-    	        }
     	        insert_item();  
     	    }
+    		
     		function window_onunload() {
-        		if (navigator.userAgent.indexOf('Firefox') != -1) {
-            		document.body.style.MozUserSelect = 'none';
-            		document.body.style.WebkitUserSelect = 'none';
-            		document.body.style.khtmlUserSelect = 'none';
-            		document.body.style.oUserSelect = 'none';
-            		document.body.style.UserSelect = 'none';
-        		}
         		if (self.screenTop > 9000) {
             		if (surveyState != "OK" && surveyState != "PREV" && surveyState != "CANCEL") {
                 		var xmlHttp = createXMLHttpRequest();
@@ -395,117 +381,117 @@
             		alert("<spring:message code='ezQuestion.t472' />");
         		}
     		}
-				function removeQue() {
-					var cnt;
-					var max = frmCreate.selQues.length;
-					for ( cnt = 0 ; cnt < max ; cnt ++ ) {
-						frmCreate.selQues.removeChild(frmCreate.selQues.childNodes[0]);
-					}
+			function removeQue() {
+				var cnt;
+				var max = frmCreate.selQues.length;
+				for ( cnt = 0 ; cnt < max ; cnt ++ ) {
+					frmCreate.selQues.removeChild(frmCreate.selQues.childNodes[0]);
 				}
-				function TempFileOpen_onClick(thisObj) {
-		    		if (typeof FileReader != "undefined") {
-		        		var reader = new FileReader();
-		        		reader.onloadend = function (evt) {
-		            		LoadTempQuestionData(evt.target.result);
-		        		};
-		        		reader.readAsText(thisObj.files[0]);
-		    		} else {
-		        		ifrm_TempLoad_Safari
-		        		form_TempLoad_Safari.submit();
-		    		}
-				}
-				function LoadTempQuestionData(DataXML) {
-		    		var xmlDom = createXmlDom();
-		    		xmlDom = loadXMLString(DataXML);
-		    		removeQue();
-		    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
-		        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
-		        		frmCreate.selQues.options[i] = TmpOption;
-		    		}
-		    		AttachFile.innerHTML = AttachFile.innerHTML;
-				}
+			}
+			function TempFileOpen_onClick(thisObj) {
+	    		if (typeof FileReader != "undefined") {
+	        		var reader = new FileReader();
+	        		reader.onloadend = function (evt) {
+	            		LoadTempQuestionData(evt.target.result);
+	        		};
+	        		reader.readAsText(thisObj.files[0]);
+	    		} else {
+	        		ifrm_TempLoad_Safari
+	        		form_TempLoad_Safari.submit();
+	    		}
+			}
+			function LoadTempQuestionData(DataXML) {
+	    		var xmlDom = createXmlDom();
+	    		xmlDom = loadXMLString(DataXML);
+	    		removeQue();
+	    		for (i = 0 ; i < SelectNodes(xmlDom, "ROW").length ; i++) {
+	        		var TmpOption = new Option((i + 1) + "." + SelectSingleNodeValue(SelectNodes(xmlDom, "ROW")[i], "QUESTIONCONTENT"), getXmlString(SelectNodes(xmlDom, "ROW")[i]), true);
+	        		frmCreate.selQues.options[i] = TmpOption;
+	    		}
+	    		AttachFile.innerHTML = AttachFile.innerHTML;
+			}
+			
+			function DelQuestion() {
+	    		if (surveyState != "OK" && surveyState != "PREV" && surveyState != "CANCEL") {
+	        		var xmlHttp = createXMLHttpRequest();
+	        		var xmlDoc = createXmlDom();
+	        		var objNode;
+	        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
+	        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}");
+               		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}");
+	        		xmlHttp.open("POST", "/ezQuestion/qstCancel.do", false);
+	        		xmlHttp.send(xmlDoc);
+	        		var resultXML = xmlHttp.responseXML;
+	        		State = SelectSingleNodeValue(resultXML, "DATA");
+	        		if (resultXML.xml == "") {
+	            		alert(desc10 + "\n" + desc2);
+	        		} else {
+	            		if (State != "DELETE_OK") {
+	                		alert(desc10 + "\n" + desc2);
+	            		} else {
+	                		menuQst_List();
+	            		}
+	        		}
+	    		}
+			}
+			
+			function menuQst_tempSave_old() {
+		        var xmlHttp = createXMLHttpRequest();
+		        xmlHttp.open("POST", "/ezQuestion/callTempSave.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}", false);
+	            xmlHttp.send();
+				var tempxml = loadXMLString(xmlHttp.responseText);
 				
-				function DelQuestion() {
-		    		if (surveyState != "OK" && surveyState != "PREV" && surveyState != "CANCEL") {
-		        		var xmlHttp = createXMLHttpRequest();
-		        		var xmlDoc = createXmlDom();
-		        		var objNode;
-		        		createNodeInsert(xmlDoc, objNode, "PARAMETER");
-		        		createNodeAndInsertText(xmlDoc, objNode, "BRD_ID", "${qstStep1VO.brdID}");
-                		createNodeAndInsertText(xmlDoc, objNode, "ITEM_ID", "${qstStep1VO.itemNo}");
-		        		xmlHttp.open("POST", "/ezQuestion/qstCancel.do", false);
-		        		xmlHttp.send(xmlDoc);
-		        		var resultXML = xmlHttp.responseXML;
-		        		State = SelectSingleNodeValue(resultXML, "DATA");
-		        		if (resultXML.xml == "") {
-		            		alert(desc10 + "\n" + desc2);
-		        		} else {
-		            		if (State != "DELETE_OK") {
-		                		alert(desc10 + "\n" + desc2);
-		            		} else {
-		                		menuQst_List();
-		            		}
-		        		}
-		    		}
-				}
-				
-				function menuQst_tempSave_old() {
-			        var xmlHttp = createXMLHttpRequest();
-			        xmlHttp.open("POST", "/ezQuestion/callTempSave.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}", false);
-		            xmlHttp.send();
-					var tempxml = loadXMLString(xmlHttp.responseText);
-					
-		            if (xmlHttp.responseText != "") {
-		                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
+	            if (xmlHttp.responseText != "") {
+	                var result = getNodeText(tempxml.getElementsByTagName("DATA").item(0));
 
-		                if (result != "") {
-		                    return result;
-		                } else {
-		                    alert("<spring:message code='ezQuestion.t472' />");
-		                }
-		            } else {
-		                alert("<spring:message code='ezQuestion.t473' />");
+	                if (result != "") {
+	                    return result;
+	                } else {
+	                    alert("<spring:message code='ezQuestion.t472' />");
+	                }
+	            } else {
+	                alert("<spring:message code='ezQuestion.t473' />");
+	            }
+	        }
+			  
+			function insert_item() {
+		    	var olditem_data = menuQst_tempSave_old();
+
+				if (olditem_data == "") {
+        	        alert("현재 작성된 질문이 없습니다.");
+	            } else {
+	                olditem_Open(olditem_data);
+	            }
+	        }
+			  
+			function olditem_Open(item_data) {
+		        var strQuestion = "<DATA><![CDATA[" + item_data + " ]]></DATA>";
+
+		        var xmlHttp2 = createXMLHttpRequest();
+		        var xmlDom2 = createXmlDom();
+		
+		        xmlDom2 = loadXMLString(strQuestion);
+		
+		        xmlHttp2.open("POST","/ezQuestion/callTempLoad.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}" ,false);
+		        xmlHttp2.send(xmlDom2)	
+		
+		        if ( xmlHttp2.responseText == "" ) return;
+
+		        var strResult = getNodeText(loadXMLString(xmlHttp2.responseText).getElementsByTagName("QUESTION").item(0)).split("| ");
+
+		        removeQue()
+		        var cnt;
+		        var cnt2;
+		        var j = 0;
+
+		        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
+		            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
+		                strSeq = strResult[j+1].split(';');
+						AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
+		                j++;
 		            }
 		        }
-				  
-				function insert_item() {
-			    	var olditem_data = menuQst_tempSave_old();
-
-					if (olditem_data == "") {
-	        	        alert("현재 작성된 질문이 없습니다.");
-		            } else {
-		                olditem_Open(olditem_data);
-		            }
-		        }
-				  
-				function olditem_Open(item_data) {
-			        var strQuestion = "<DATA><![CDATA[" + item_data + " ]]></DATA>";
-
-			        var xmlHttp2 = createXMLHttpRequest();
-			        var xmlDom2 = createXmlDom();
-			
-			        xmlDom2 = loadXMLString(strQuestion);
-			
-			        xmlHttp2.open("POST","/ezQuestion/callTempLoad.do?brdID=${brdID}&itemID=${qstStep1VO.itemNo}" ,false);
-			        xmlHttp2.send(xmlDom2)	
-			
-			        if ( xmlHttp2.responseText == "" ) return;
-
-			        var strResult = getNodeText(loadXMLString(xmlHttp2.responseText).getElementsByTagName("QUESTION").item(0)).split("| ");
-
-			        removeQue()
-			        var cnt;
-			        var cnt2;
-			        var j = 0;
-
-			        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
-			            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
-			                strSeq = strResult[j+1].split(';');
-							AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
-			                j++;
-			            }
-			        }
-				}
+			}
 		</script>
 	</head>
 	<body class="mainbody">

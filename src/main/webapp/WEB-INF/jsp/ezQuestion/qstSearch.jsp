@@ -39,15 +39,7 @@
 			var L_SearchEndDt = new Date().yyyymmdd(); 
 			var FixMonth=Array(0,1,2,3,4,5,6,7,8,9,10,11,12);
 			var FixDay=Array(0,31,28,31,30,31,30,31,31,30,31,30,31)
-			document.onselectstart = function () { return false; };
 			window.onload = function () {
-		    	if (navigator.userAgent.indexOf('Firefox') != -1) {
-		        	document.body.style.MozUserSelect = 'none';
-		        	document.body.style.WebkitUserSelect = 'none';
-		        	document.body.style.khtmlUserSelect = 'none';
-		        	document.body.style.oUserSelect = 'none';
-		        	document.body.style.UserSelect = 'none';
-		    	}
 		    	document.getElementById("txtSubject").focus();
 			}
 			$(function () {
@@ -253,10 +245,10 @@
             			<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~
             			<input type="text" id="Edatepicker" style="width:80px;text-align:center">
        				</td>
-    			</tr>            
+    			</tr>
   		</table>
-  		<div class="btnposition"> 
-  			<a class="imgbtn" style = "padding-left:5px">
+  		<div class="btnposition">
+  			<a class="imgbtn">
   				<span onclick="menu_Search()"><spring:message code='ezQuestion.t34' /></span>
   			</a>
   		</div>

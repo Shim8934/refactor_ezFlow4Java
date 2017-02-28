@@ -29,16 +29,7 @@
 			var pCurrPage = "<c:out value='${pCurrPage}'/>";
 			var pAnswerType = "<c:out value='${pAnswerType}'/>";
 			
-			document.onselectstart = function () { return false; };
 			window.onload = function () {
-			    if (navigator.userAgent.indexOf('Firefox') != -1) {
-			        document.body.style.MozUserSelect = 'none';
-			        document.body.style.WebkitUserSelect = 'none';
-			        document.body.style.khtmlUserSelect = 'none';
-			        document.body.style.oUserSelect = 'none';
-			        document.body.style.UserSelect = 'none';
-			    }
-				   
 				if(pAnswerType!=1){
 					alert("<spring:message code='ezQuestion.lhj1' />");
 				 	window.location.href = "/ezQuestion/qstList.do?brdID="+pBrdID+"&currPage="+pCurrPage;
@@ -167,7 +158,7 @@
 		        document.getElementById("message").innerHTML = "";
 		        if (xmlHttp.responseText != "") {
 		            xmlTemp = loadXMLString(xmlHttp.responseText);
-		            xmlTempT = loadXMLString(xmlHttp.responseText.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)"));
+		            xmlTempT = loadXMLString(xmlHttp.responseText.replace(/&lt;/gi, "<").replace(/&gt;/gi, ">").replace(/&#40;/gi, "\(").replace(/&#41;/gi, "\)").replace(/&#39;/gi, "\'").replace(/&amp;/gi, "&"));
 		            xmlRtn = SelectSingleNode(xmlTemp, "LISTVIEWDATA");
 		            xmlRtnT = SelectSingleNode(xmlTempT, "LISTVIEWDATA");
 		            var rows = SelectNodes(xmlRtn, "ROW");

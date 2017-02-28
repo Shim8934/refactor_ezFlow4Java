@@ -291,7 +291,8 @@
 	                if (searchFlag) {
 	                    for (var Cnt = 0; Cnt < listContentArry.length ; Cnt++) {
 	                        var AddressObj = document.getElementById(listContentArry[Cnt]);
-	                        if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")) {
+	                        if (moveUrl["folderid"] == AddressObj.getAttribute("_folderid")
+	                                && moveUrl["foldertype"] == AddressObj.getAttribute("_FolderType")) {
 	                            alert("<spring:message code='ezAddress.t170' />");
 	                            return;
 	                        }
@@ -437,6 +438,15 @@
 	            if (!check_length(document.getElementById("qmobile").value, 20, "<spring:message code='ezAddress.t223' />")) return;
 	            if (!check_length(document.getElementById("qemail").value, 250, "<spring:message code='ezAddress.t224' />")) return;
 	
+	            if (document.getElementById("qemail").value != "") {
+	                var AddressCnt = Get_SameAddressCnt();
+	
+	                if (parseInt(AddressCnt) > 0) {
+	                    alert("<spring:message code='ezAddress.t225' />");
+	                    return;
+	                }
+	            }
+	            
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlDom = createXmlDom();
 	

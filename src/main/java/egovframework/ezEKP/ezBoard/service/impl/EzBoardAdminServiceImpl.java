@@ -264,9 +264,10 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, int tenantID) throws Exception {
+	public List<BoardTreeVO> get_Admin_TopBoardList(String parentBoardID, String multiLang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("parentBoardID", parentBoardID);
+		map.put("lang", multiLang);
 		map.put("tenantID", tenantID);
 		
 		return ezBoardAdminDAO.get_Admin_TopBoardList(map);

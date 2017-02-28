@@ -410,7 +410,10 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    try {
 		    	in = new BufferedInputStream(new FileInputStream(file));	
 	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
-	    	    response.setBufferSize(fSize);
+	    	    
+	    	    // dhlee : 파일 크기가 큰 경우 메모리가 작은 시스템에서는 문제가 발생하여 BUFF_SIZE 만큼의 버퍼를 할당하도록 수정함.	    	    
+//	    	    response.setBufferSize(fSize);
+	    	    response.setBufferSize(BUFF_SIZE);	    	    
 				response.setContentType(mimetype);
 				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
 //				response.setHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(orgFileName, "UTF-8").replaceAll("\\+","\\ ") + ";");

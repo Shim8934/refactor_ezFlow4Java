@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
-		<script type="text/javascript" src="/js/ezResource/functionLib.js"></script>
+		<script type="text/javascript" src="/js/ezResource/functionLib_cross.js"></script>
 		<script type="text/javascript">
 			var strBrd_ID = "${brdID}";
 			var strCompanyID = "${companyID}";

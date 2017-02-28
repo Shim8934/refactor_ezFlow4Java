@@ -67,7 +67,7 @@
 		      	WHERE 
 		      		tenant_id = #v_TENANTID#
 		      	AND
-		      		listtype = #v_LANGTYPE# 
+		      		listtype = #v_LISTTYPE# 
 		      	AND 
 		      		dtype IS NULL
 		      	ORDER BY sn 

@@ -319,7 +319,6 @@
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
 		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.boardID}", "${reservedList.itemID}", event)'></td>
-		    	<td style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked("${reservedList.itemID}", event)'></td>
 		    	<td>${reservedList.boardName}</td>
 		    	<td title="${fn:replace(reservedList.ABSTRACT, '\'', '`') }" style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick="ItemRead_onclick('${reservedList.boardID}', '${reservedList.boardName}', '${reservedList.itemID}')"><nobr>${reservedList.title}</nobr></td>
 		    	<td>${fn:substring(reservedList.startDate, 0, 16)}</td>
