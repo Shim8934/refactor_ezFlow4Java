@@ -11,6 +11,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO;
@@ -364,5 +365,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void formMove(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdmin.formMove", map);
+	}
+
+	public List<ApprGListHeaderVO> getAdminListHeader(Map<String, Object> map) throws Exception {
+		return (List<ApprGListHeaderVO>) list("EzApprovalGAdmin.getAdminListHeader", map);
 	}
 }

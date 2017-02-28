@@ -455,7 +455,7 @@ function CabinetSearch_onclick() {
     		data : {
     			companyID : CompanyID,
     			processDeptCode : arr_userinfo[4],
-    			productionYear  : date.getFullYear(),
+    			productionYear  : "",
     			searchKeyword   : document.getElementById("Cabinetkeyword").value,
     			flag : "1",
     			langType : "1"
