@@ -192,6 +192,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (int)select("EzResourceDAO.delResSch_S2", map);
 	}
 	
+	public int addRessch_S2(Map<String , Object> map) {
+		return (int)select("EzResourceDAO.addRessch_S2", map);
+	}
+	
 	public void addResData(Map<String, Object> map) {
 		insert("EzResourceDAO.addResData", map);
 	}

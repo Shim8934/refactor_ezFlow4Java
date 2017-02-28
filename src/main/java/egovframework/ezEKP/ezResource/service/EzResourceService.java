@@ -112,12 +112,12 @@ public interface EzResourceService {
 
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 	
-	public void insertScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
+	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
 	
 	public void insertForm(String resID, String brdNm, String formText, int tenantID) throws Exception;
 	
-	public void addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
+	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
 			String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
 			String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception;
 	

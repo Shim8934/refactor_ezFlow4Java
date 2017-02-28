@@ -386,6 +386,8 @@ function Complete_Get_AddressList() {
                     }
                     MakeNoDateList();
                     HiddenMailProgress();
+                    pTotalCnt = 0;
+                    makePageSelPage();
                     return;
                 }
                 Get_SearchAddressList();
