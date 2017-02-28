@@ -205,6 +205,16 @@
 		        if (!check_length(document.getElementById("TextHomePage").value, 250, "<spring:message code='ezAddress.t293' />")) return;
 		        if (!check_length(document.getElementById("TextComAddr").value, 250, "<spring:message code='ezAddress.t295' />")) return;
 		        if (!check_length(document.getElementById("TextHomeAddr").value, 250, "<spring:message code='ezAddress.t296' />")) return;
+		        
+		        if ((document.getElementById("TextEmail").value != "" && addressid == "") ||
+					     (document.getElementById("TextEmail").value != "" && addressid != "" && document.getElementById("TextEmail").value != textEmail)) {
+		        	var AddressCnt = Get_SameAddressCnt();
+					
+		            if (parseInt(AddressCnt) > 0) {
+ 		                alert("<spring:message code='ezAddress.t225' />");
+ 		                return;
+		            }
+		        }
 				
 		        var pTextEmail = TrimText(document.getElementById("TextEmail").value);
 		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/;
@@ -256,6 +266,9 @@
 		            if (xmlHTTP.status != 200) {
 		            	alert("<spring:message code='ezAddress.t181' />");
 		            }
+		            else if (xmlHTTP.responseText == "PRE") {
+		            	alert("<spring:message code='ezAddress.t225' />");
+		            }		            
 		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
 		            	alert("<spring:message code='ezAddress.t1' />");
 		            }
@@ -286,7 +299,6 @@
 		        
 		    }
 		    
-		    /* 2017-02-10 이효민 : 메일 필드 중복체크 하지 않음.
 		    function Get_SameAddressCnt() {
 		        var xmlHTTP = createXMLHttpRequest();
 		        var xmlDom = createXmlDom();
@@ -303,7 +315,7 @@
 		            alert("<spring:message code='ezAddress.t230' />");
 		        else
 		            return xmlHTTP.responseText;
-		    } */
+		    }
 		    
 		    function close_onclick() {
 		        if (checkblankbox()) {

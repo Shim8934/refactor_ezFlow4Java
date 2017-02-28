@@ -2783,14 +2783,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 					
 				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
 				String compare2 = tStartDate; 
 
 				Date day1 = date.parse(compare1);
 				Date day2 = date.parse(compare2);
 
 				String compare3 = tEndDate;
-				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
+				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
+				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
 					
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -2853,8 +2855,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
 				logger.debug("drtStartDate="+drT.getStartDateTime());  
 				logger.debug("drtEndDate="+drT.getEndDateTime());
-				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				//String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				//String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+				String tStartDate = drT.getStartDateTime();
+				String tEndDate = drT.getEndDateTime();
 				logger.debug("tStartDate="+tStartDate);
 				logger.debug("tEndDate="+tEndDate);
 				
@@ -2875,7 +2879,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				
 				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
 				String compare2 = tStartDate; 
 				
 				Date day1 = date.parse(compare1);
@@ -2883,7 +2887,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				String compare3 = tEndDate;
 				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
-				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
 				
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
