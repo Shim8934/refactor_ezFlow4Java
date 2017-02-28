@@ -253,9 +253,9 @@
             			<input type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~
             			<input type="text" id="Edatepicker" style="width:80px;text-align:center">
        				</td>
-    			</tr>            
+    			</tr>
   		</table>
-  		<div class="btnposition"> 
+  		<div class="btnposition">
   			<a class="imgbtn">
   				<span onclick="menu_Search()"><spring:message code='ezQuestion.t34' /></span>
   			</a>

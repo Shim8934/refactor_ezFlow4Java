@@ -120,8 +120,9 @@
         		var xmlHttp = createXMLHttpRequest();
         		var xmlDoc = createXmlDom();
         		var objNode;
-        		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
-
+        		
+        		xmlDoc = loadXMLString("${pStep1DataXML}");
+        		
         		var QuestionNode = createNode(xmlDoc, "QUESTION"); 
         		var pQstCnt = document.frmCreate.selQues.length;
         		for(var i = 0;i < pQstCnt; i++) {
@@ -438,7 +439,7 @@
 		        var xmlDoc = createXmlDom();
 		        var objNode;
 
-        		xmlDoc = loadXMLString(frmCreate.STEP1DATA.value);
+        		xmlDoc = loadXMLString("${pStep1DataXML}");
         		var QuestionNode = createNode(xmlDoc, "QUESTION");
         		var pQstCnt = document.frmCreate.selQues.length;
         		for (var i = 0; i < pQstCnt; i++) {
@@ -677,7 +678,6 @@
             		<a class="imgbtn" name="Submit2" onclick="fun_OK()"><span><spring:message code="ezQuestion.t484" /></span></a>
             		<a class="imgbtn" name="Submit3" onclick="fun_Cancel()"><span><spring:message code="ezQuestion.t38" /></span></a>
         		</div>
-        		<input type="hidden" name="STEP1DATA" id="STEP1DATA" value='${pStep1DataXML}'/>
        		</div>
         </form>
 			
