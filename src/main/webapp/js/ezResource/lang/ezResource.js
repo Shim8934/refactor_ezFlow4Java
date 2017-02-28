@@ -240,3 +240,8 @@ var strLang583 = "종료시간이 오늘보다 이전시간입니다.";
 var strLang584 = "승인 되었습니다.";
 var strLang585 = "승인취소 되었습니다.";
 
+//추가
+var strLangLHM01 = "default_kr";
+var strLangLHM02 = "인쇄 미리보기";
+var strLangLHM03 = "인쇄";
+var strLangLHM04 = "취소";

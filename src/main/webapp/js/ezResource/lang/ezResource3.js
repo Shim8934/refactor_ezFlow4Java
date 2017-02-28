@@ -199,3 +199,9 @@ var strLang535 = "データが存在しません。";
 var strLang580 = "繰り返し周期の設定範囲 : ";
 var strLang581 = "終了日を指定しない";
 var strLang582 = "回";
+
+//추가
+var strLangLHM01 = "default_jp";
+var strLangLHM02 = "인쇄 미리보기";
+var strLangLHM03 = "인쇄";
+var strLangLHM04 = "취소";
