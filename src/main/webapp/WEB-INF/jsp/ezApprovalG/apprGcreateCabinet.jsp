@@ -165,7 +165,7 @@
 		<div id="cabinetdiv" style="height:100%;">
 		<table class="content">
 		  <tr>
-		    <th > <spring:message code='ezApprovalG.t577'/>(<spring:message code='ezApprovalG.t1746'/>)</th>
+		    <th > <spring:message code='ezApprovalG.t577'/>(<spring:message code='ezApprovalG.t1764'/>)</th>
 		  <td id="tdTaskName">  </tr>
 		   <tr>
 		    <th > <spring:message code='ezApprovalG.t577'/>(<spring:message code='ezApprovalG.t1765'/>)</th>

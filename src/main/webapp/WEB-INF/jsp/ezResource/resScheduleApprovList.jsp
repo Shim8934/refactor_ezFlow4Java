@@ -790,7 +790,7 @@
         			</HEADER>   
         			<HEADER>
             			<NAME><spring:message code='ezResource.t224'/></NAME>
-            			<WIDTH>51%</WIDTH>
+            			<WIDTH>40%</WIDTH>
         			</HEADER>
         			<HEADER>
             			<NAME><spring:message code='ezResource.t202'/></NAME>
