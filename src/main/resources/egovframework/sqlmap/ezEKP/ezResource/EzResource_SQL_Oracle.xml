@@ -11,7 +11,6 @@
 	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
-	<typeAlias  alias="ResGetRepResourceVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
 	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
@@ -238,7 +237,7 @@
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="27"/>
 	</resultMap>
 	
-	<resultMap class="ResGetRepResourceVO" 		id="resGetRepResourceVO">
+	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
 		<result property="num"					column="NUM"						columnIndex="2"/>
 		<result property="pNum"					column="PNUM"						columnIndex="3"  		nullValue="0"/>

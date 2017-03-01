@@ -35,7 +35,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -717,7 +716,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
+	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
 			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		logger.debug("getRepResource Start");
@@ -745,7 +744,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResGetRepResourceVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception {
+	public ResGetScheduleVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_p_ownerID", ownerID);
 		map.put("tenantID", tenantID);
@@ -2583,9 +2582,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? "" : strPcmd;
 			
-		List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
+		List<ResGetScheduleVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
 		
-		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 			
 		boolean isDup = false;
 			
@@ -2642,9 +2641,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
 		
-		List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
+		List<ResGetScheduleVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
 		
-		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 		
 		boolean isDup = false;
 		
@@ -2687,7 +2686,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return isDup;
 	}
 	
-	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetRepResourceVO> dtT, List<ResGetRepResourceVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
+	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetScheduleVO> dtT, List<ResGetScheduleVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
 		logger.debug("chkTable Start");
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
@@ -2723,7 +2722,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
-			for (ResGetRepResourceVO drT : dtT) {
+			for (ResGetScheduleVO drT : dtT) {
 				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				logger.debug("tStartDate="+tStartDate);
@@ -2732,7 +2731,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 				isDel = false;
 				if (dtTd != null) {
-					for (ResGetRepResourceVO drTd : dtTd) {
+					for (ResGetScheduleVO drTd : dtTd) {
 						if (drTd.getStartDate().equals(drT.getStartDate()) && drTd.getEndDate().equals(drT.getEndDate())) {
 							isDel = true;
 							break;

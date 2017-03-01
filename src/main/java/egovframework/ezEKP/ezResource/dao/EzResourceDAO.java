@@ -13,7 +13,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -79,8 +78,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetRepResourceVO> getRepResource(Map<String, Object> map) {
-		return (List<ResGetRepResourceVO>) list("EzResourceDAO.getRepResource", map);
+	public List<ResGetScheduleVO> getRepResource(Map<String, Object> map) {
+		return (List<ResGetScheduleVO>) list("EzResourceDAO.getRepResource", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -108,8 +107,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResSelectFormIDVO) select("EzResourceDAO.selectFormID", map);
 	}
 	
-	public ResGetRepResourceVO chkDeletedRepResource(Map<String, Object> map) {
-		return (ResGetRepResourceVO) select("EzResourceDAO.chkDeletedRepResource", map);
+	public ResGetScheduleVO chkDeletedRepResource(Map<String, Object> map) {
+		return (ResGetScheduleVO) select("EzResourceDAO.chkDeletedRepResource", map);
 	}
 	
 	public ResAdminVO getResourceAdminInfo(Map<String, Object> map) {
