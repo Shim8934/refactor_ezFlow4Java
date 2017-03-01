@@ -27,6 +27,8 @@ public class ResGetScheduleRepetitionVO {
 	private String endFlag;
 	/** 반복 회수*/
 	private String reCount;
+	/** 하루종일 여부*/
+	private String allDay;
 	
 	public String getOwnerID() {
 		return ownerID;
@@ -106,4 +108,11 @@ public class ResGetScheduleRepetitionVO {
 	public void setReCount(String reCount) {
 		this.reCount = reCount;
 	}
+	public String getAllDay() {
+		return allDay;
+	}
+	public void setAllDay(String allDay) {
+		this.allDay = allDay;
+	}
+	
 }

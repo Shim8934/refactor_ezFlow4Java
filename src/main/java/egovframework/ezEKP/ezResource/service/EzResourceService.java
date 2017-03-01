@@ -9,13 +9,6 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -29,13 +22,13 @@ public interface EzResourceService {
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListMainVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
 	
 	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception;
 
@@ -43,17 +36,15 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
+	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
 	
-	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
+	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
 	
 	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
 	
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID, int tenantID) throws Exception; 
 	
-	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception;
-	
-	public ResGetScheduleListTermVO getScheduleListTerm(int num,String companyID, String ownerID, String startDate, String endDate, String writerName, String writerDept, int tenantID) throws Exception;
+	public ResGetScheduleRepetitionVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception;
 	
 	public ResBrdVO getBrd(int brdID, String companyID, int tenantID) throws Exception;
 	
@@ -61,7 +52,7 @@ public interface EzResourceService {
 	
 	public ResSelectFormIDVO selectFormID(String resID, int tenantID) throws Exception;
 	
-	public ResGetRepResourceVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception;
+	public ResGetScheduleVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception;
 	
 	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
 	
