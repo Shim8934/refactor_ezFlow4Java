@@ -348,7 +348,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
   		//TODO: 개별발신
-		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
 		
 		//set cmdOwn
 		if (request.getParameter("cmd") != null) {

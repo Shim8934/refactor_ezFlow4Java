@@ -174,6 +174,8 @@
 		        Simple_Choice();
 			}
 			
+			var MailStatus = "NO";
+			
 		    window.onresize = function()
 			{
 	            if (document.getElementById("BccViewer").getAttribute("status") == "off") {

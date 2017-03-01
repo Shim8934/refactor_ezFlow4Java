@@ -12,10 +12,12 @@ import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.Address;
 import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.Transport;
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.MimeMessage;
 import javax.mail.search.AndTerm;
 import javax.mail.search.ComparisonTerm;
@@ -200,13 +202,18 @@ public class EzEmailScheduler {
 			        message.setSentDate(Calendar.getInstance().getTime());
 					logger.debug("Reset sentDate. sentDate=" + message.getSentDate().toString());
 			        
-			        Transport.send(message);
-			        logger.debug("Succeed in sending the reserved message.");
-			        
+					String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
+					String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
+					
+					if (eachMailHeader != null) {
+						message.removeHeader("X-JMocha-Each-Mail");
+					}
+					
 					//보낸편지함에 저장
 					ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 							userAccount, password, egovMessageSource, locale);
 					Folder folder = ia.getFolder(egovMessageSource.getMessage("ezEmail.t99000026", locale));
+					
 					if (folder.exists()) {
 						message.setFlag(Flags.Flag.SEEN, true);
 						folder.open(Folder.READ_WRITE);
@@ -214,7 +221,30 @@ public class EzEmailScheduler {
 						folder.close(true);
 						logger.debug("Succeed in saving a message in sent folder.");
 					}
-	
+					
+					// 개별발신
+					if (eachMailHeader != null) {
+		            	logger.debug("sending each recipient mail");
+		            	
+		            	Address[] allRecipients = message.getAllRecipients();
+		            	
+		            	message.removeHeader("TO");
+		        		message.removeHeader("CC");
+		        		message.removeHeader("BCC");
+		        		
+		            	for (Address a : allRecipients) {
+		            		logger.debug("address=" + a);
+		            		
+		            		message.setRecipient(RecipientType.TO, a);
+		            		
+		            		Transport.send(message);			            		
+		            	}						
+					} else {					
+						Transport.send(message);
+					}
+					
+			        logger.debug("Succeed in sending the reserved message.");
+			        	
 					//파일시스템의 eml파일 삭제
 					f.delete();
 					logger.debug("Succeed in deleting EML file.");
