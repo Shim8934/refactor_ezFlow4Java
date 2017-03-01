@@ -23,6 +23,8 @@
 			var g_bTreeLoad = false;
 			var bSearch = false;
         	var retArr = new Array();
+        	var langData = "${langData}";
+        	
         	window.onload = function () {
             	var InitData = "";
             	ListviewInit2("DListView", "DeptListView");
@@ -640,8 +642,7 @@
                 	var pVaule = "";
                 	
                 	//userInfo 부분 추가
-                	 <%String userLang = (String)request.getAttribute("userLang"); %>
-                	 if ("<%= userLang %>" == "1") {
+                	 if (langData != "2") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;
@@ -694,7 +695,7 @@
 	                //lastindex = memberlist.length;
     	            var pVaule = "";
     	             
-        	       if ("<%= userLang %>" == "1") {
+        	       if (langData != "2") {
             	        pVaule = CurrNM;
                 	} else {
 	                    pVaule = CurrNM2;

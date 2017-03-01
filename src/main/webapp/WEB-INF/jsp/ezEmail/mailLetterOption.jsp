@@ -133,6 +133,13 @@
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
 		        }		        
+		        
+		        if (rgParams["EachMail"] == "true") {
+		            document.getElementById("eachMailSend").checked = true;
+		        }
+		        else {
+		            document.getElementById("eachMailSend").checked = false;
+		        }
 		    }
 		    
 		    function cancel() {
@@ -167,7 +174,7 @@
 	                RetValue["replyReadTime"] = "0";
 	            }
 		    }
-		
+				    
 		    function msgCCDisplay_onClick() {
 	            RetValue["showMsgCC"] = msgCCDisplay.checked;
 	            if (typeof (RetValue["tagMsgCC"]) != "undefined") {
@@ -262,6 +269,13 @@
 	                return;
 	            }
 		
+		        if (eachMailSend.checked == true) {
+		            RetValue["EachMail"] = "true";
+		        }
+		        else {
+		            RetValue["EachMail"] = "false";
+		        }
+	            
 		        if (ReturnFunction != null)
 		            ReturnFunction(RetValue);
 		        else
@@ -358,6 +372,13 @@
 		      <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 		  </tr>
 		</table>
+        <br>
+        <h2 id="etcLang"><spring:message code='ezEmail.t748' /></h2>
+        <table width="100%" class="content">
+          <tr>
+            <td><input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox"><spring:message code='ezEmail.t748' /></td>
+          </tr>
+        </table>  
 		<div class="btnposition">
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>

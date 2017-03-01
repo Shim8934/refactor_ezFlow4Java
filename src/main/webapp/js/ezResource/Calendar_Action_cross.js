@@ -758,10 +758,15 @@ function tableListControl_today() {
             _TD.setAttribute("DATA1", title_name[k].split("/")[0]);
             _TD.setAttribute("DATA2", title_name[k].split("/")[1]);
             _TD.setAttribute("ondblclick", "newSchedule_onclick(event)");
-            //_TD.ondblclick = new Function("newSchedule_onclick(event);");
+            
             _TD.align = "left";
             _TD.onselectstart = function () { return false; };
-            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+            
+            if (title_name[k].split("/")[2] == "1")
+                _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+            else
+                _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1];
+            
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
             for (j = 0 ; j < 48; j++) {
