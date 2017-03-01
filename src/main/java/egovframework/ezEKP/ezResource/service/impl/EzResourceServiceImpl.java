@@ -33,7 +33,6 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -182,7 +181,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception {
+	public ResGetRepResourceRepeatVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pCompanyID", companyID);
@@ -1073,7 +1072,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("num=" + num);
 		
 		// tbl_schedulerepetition에서 정보 가져옴
-		ResGetRepDateTimesVO vo = getRepDateTimes(ownerID, companyID, Integer.parseInt(num), tenantID);
+		ResGetRepResourceRepeatVO vo = getRepDateTimes(ownerID, companyID, Integer.parseInt(num), tenantID);
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
@@ -1117,7 +1116,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getDailyRepDateTimes(ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception {
+	public List<Date[]> getDailyRepDateTimes(ResGetRepResourceRepeatVO vo, String sDate, String eDate) throws Exception {
 		String selType = vo.getReWay().substring(1);
 		int interval = Integer.parseInt(vo.getReNum());
 		String endRecurType = vo.getEndFlag();
@@ -1290,7 +1289,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getWeeklyRepDateTime (ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception  {
+	public List<Date[]> getWeeklyRepDateTime (ResGetRepResourceRepeatVO vo, String sDate, String eDate) throws Exception  {
 		int interval = Integer.parseInt(vo.getReNum());
 		String endRecurType = vo.getEndFlag();
 		int instances = Integer.parseInt(vo.getReCount());
@@ -1418,7 +1417,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getMonthlyRepDateTimes(ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception {
+	public List<Date[]> getMonthlyRepDateTimes(ResGetRepResourceRepeatVO vo, String sDate, String eDate) throws Exception {
 		logger.debug("getMonthlyRepDateTimes started.");
 		String freq = vo.getReWay().substring(0, 1);
 		String selType = vo.getReWay().substring(1);

@@ -6,7 +6,6 @@
 	<typeAlias  alias="ResGetAdminFlagVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
 	<typeAlias  alias="ResGetItemListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
-	<typeAlias  alias="ResGetRepDateTimesVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
 	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
@@ -94,7 +93,7 @@
 		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
 	</resultMap>
 	
-	<resultMap class="ResGetRepDateTimesVO" 	id="resGetRepDateTimesVO">
+	<resultMap class="ResGetRepResourceRepeatVO" 	id="resGetRepDateTimesVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
 		<result property="num"					column="NUM"					columnIndex="2" />
 		<result property="companyID"			column="COMPANYID"				columnIndex="3" />

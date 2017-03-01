@@ -11,7 +11,6 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -91,8 +90,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdmFlag", map);
 	}
 	
-	public ResGetRepDateTimesVO getRepDateTimes(Map<String, Object> map) {
-		return (ResGetRepDateTimesVO) select("EzResourceDAO.getRepDateTimes", map);
+	public ResGetRepResourceRepeatVO getRepDateTimes(Map<String, Object> map) {
+		return (ResGetRepResourceRepeatVO) select("EzResourceDAO.getRepDateTimes", map);
 	}
 	
 	public ResBrdVO getBrd(Map<String, Object> map) {
