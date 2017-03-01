@@ -246,10 +246,9 @@ function OpenQuestionUI_Complete(ret) {
     if (ret[0] == "0" && ret[1] == "0" && ret[2] == "0")
         return;
     var rtnVal = "";
-
     if (ret[0] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLang880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextOpi;
         rtnVal = rtnVal + "</table>";
     }
@@ -265,7 +264,7 @@ function OpenQuestionUI_Complete(ret) {
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
         rtnVal = rtnVal + "</table>";
     }
-
+    
     var bodycontent = "";
     if (tempType == "FormProc")
         bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;
