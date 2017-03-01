@@ -123,7 +123,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("qstList Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
-		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "", lang = "";
+		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "";
 		String currPage = "1";
 		int pageSize = 15;
 		qstListVO.setUserID(loginVO.getId());
@@ -145,9 +145,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pollEndDate = request.getParameter("pollEndDate");
 			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
-		if(request.getParameter("lang") != null){
-			lang = request.getParameter("lang");
-		}
 		if(request.getParameter("currPage") != null){
 			currPage = request.getParameter("currPage");
 		}
@@ -157,7 +154,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setResponseRange(responseRange);
 		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, loginVO.getOffset(), true));
 		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, loginVO.getOffset(), true));
-		qstListVO.setLang(lang);
+		qstListVO.setLang(commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()));
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
 		
@@ -1012,7 +1009,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		userInfoDeptCode = userInfo.getDeptID();
 		pCompanyID = userInfo.getCompanyID();
 		serverName = req.getServerName();
-		String userLang = userInfo.getLang();
+		String langData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		qstRangeSelectVO.setBrdID(brdID);
 		qstRangeSelectVO.setItemID(itemID);
@@ -1027,7 +1024,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		model.addAttribute("itemNo",qstRangeSelectVO.getItemID());
 		model.addAttribute("pCompanyID",pCompanyID);
 		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
-		model.addAttribute("userLang",userLang);
+		model.addAttribute("langData",langData);
 		return "/ezQuestion/qstRangeSelect";
 	}
 	
