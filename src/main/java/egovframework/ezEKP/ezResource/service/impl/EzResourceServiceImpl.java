@@ -1006,17 +1006,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 				
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
+				vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+				vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+				
+				// 반복예약의 반복되는 날짜리스트 뽑아옴
+				List<Date[]> returnRepDateTimes = getRepDateTimes(vo, sDate, eDate, offset);
+				logger.debug("getRepDateTimes=" + returnRepDateTimes);
+				
 				// 반복예약 중에 삭제된 예약 가져옴
 				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
-				List<Date> deletedDateList = new ArrayList<Date>();
-				for (String dateStr : deletedDateStrList) {
-					dateStr = commonUtil.getDateStringInUTC(dateStr, offset, false);
-					deletedDateList.add(format.parse(dateStr));
-				}
-				
-				// 반복예약의 반복되는 날짜리스트 가져옴
-				List<Date[]> returnRepDateTimes = getRepDateTimes(reCompanyID, reNum, reOwnerID, sDate, eDate, tenantID, offset);
-				logger.debug("getRepDateTimes=" + returnRepDateTimes);
 				
 				for (Date[] dateArr : returnRepDateTimes) {
 					
@@ -1066,21 +1066,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}
 	
-	public List<Date[]> getRepDateTimes(String companyID, String num, String ownerID, String sDate, String eDate, int tenantID, String offset) throws Exception {
+	public List<Date[]> getRepDateTimes(ResGetScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		logger.debug("getRepDeteTimes started");
-		logger.debug("ownerID=" + ownerID);
-		logger.debug("companyID=" + companyID);
-		logger.debug("num=" + num);
-		
-		// tbl_schedulerepetition에서 정보 가져옴
-		ResGetScheduleRepetitionVO vo = getRepDateTimes(ownerID, companyID, Integer.parseInt(num), tenantID);
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
 		if (vo != null) {
-			vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
-			vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
-			
 			ResScheduleRepetitionVO rvo = resStruct(vo);
 			
 			int freq = rvo.getFreq();
