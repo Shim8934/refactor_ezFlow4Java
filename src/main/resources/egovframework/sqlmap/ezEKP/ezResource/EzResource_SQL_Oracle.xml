@@ -10,7 +10,6 @@
 	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
-	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
 	
@@ -93,7 +92,7 @@
 		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
 	</resultMap>
 	
-	<resultMap class="ResGetRepResourceRepeatVO" 	id="resGetRepDateTimesVO">
+	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1" />
 		<result property="num"					column="NUM"					columnIndex="2" />
 		<result property="companyID"			column="COMPANYID"				columnIndex="3" />
@@ -263,7 +262,7 @@
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
 	</resultMap>
 	
-	<resultMap class="ResGetRepResourceRepeatVO" 		id="resGetRepResourceRepeatVO">
+	<resultMap class="ResGetScheduleRepetitionVO" 		id="resGetRepResourceRepeatVO">
 		<result property="ownerID"				column="OWNERID"				columnIndex="1"/>
 		<result property="num"					column="NUM"						columnIndex="2"/>
 		<result property="companyID"			column="COMPANYID"			columnIndex="3"/>

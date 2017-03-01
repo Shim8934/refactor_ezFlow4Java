@@ -11,7 +11,6 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -72,8 +71,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(Map<String, Object> map) {
-		return (List<ResGetRepResourceRepeatVO>) list("EzResourceDAO.getRepResourceRepeat", map);
+	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(Map<String, Object> map) {
+		return (List<ResGetScheduleRepetitionVO>) list("EzResourceDAO.getRepResourceRepeat", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -90,8 +89,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdmFlag", map);
 	}
 	
-	public ResGetRepResourceRepeatVO getRepDateTimes(Map<String, Object> map) {
-		return (ResGetRepResourceRepeatVO) select("EzResourceDAO.getRepDateTimes", map);
+	public ResGetScheduleRepetitionVO getRepDateTimes(Map<String, Object> map) {
+		return (ResGetScheduleRepetitionVO) select("EzResourceDAO.getRepDateTimes", map);
 	}
 	
 	public ResBrdVO getBrd(Map<String, Object> map) {
