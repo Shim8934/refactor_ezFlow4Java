@@ -88,8 +88,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetScheduleVO> getDeletedRepSchedule(Map<String, Object> map) {
-		return (List<ResGetScheduleVO>) list("EzResourceDAO.getDeletedRepSchedule", map);
+	public List<String> getDeletedRepScheduleDate(Map<String, Object> map) {
+		return (List<String>) list("EzResourceDAO.getDeletedRepScheduleDate", map);
 	}
 	
 	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){

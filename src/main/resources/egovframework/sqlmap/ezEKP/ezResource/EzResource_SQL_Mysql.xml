@@ -2276,34 +2276,10 @@
 		]]>
     </select>
     
-    <select id="EzResourceDAO.getDeletedRepSchedule" parameterClass="Map" resultMap="resGetScheduleVO">
+    <select id="EzResourceDAO.getDeletedRepScheduleDate" parameterClass="Map" resultClass="String">
         <![CDATA[
         	SELECT
-	        	OWNERID ,
-				NUM ,
-	        	PNUM ,
-	        	COMPANYID ,
-	        	WRITERID ,
-	        	DEPTNM ,
-	        	OWNERNM ,
-	        	TITLE ,
-	        	LOCATION ,
-	        	TIMEDISPLAY ,
-	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-	        	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-	        	ALLDAY ,
-	        	ALERTTIME ,
-	        	CONTENT ,
-	        	IMPORTANCE ,
-	        	REFLAG ,
-	         	GRESFLAG ,
-	        	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
-	        	ENTRYLIST ,
-	         	CHARACTERID ,
-	         	ATTACHFLAG ,
-	         	PUBLICFLAG ,
-	         	APPROVEFLAG ,
-	         	SCHEDULEID
+	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE
 	        FROM 
 	        	TBL_RS_SCHEDULE 
 			WHERE
