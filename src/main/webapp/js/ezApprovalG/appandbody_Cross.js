@@ -128,8 +128,7 @@ function addAttach(DocID, pFlag) {
 function addLineInfo(DocID, pFlag) {
     var rowidx, rtnString, colidx;
     var result = "";
-	var pFlag = "";
-	
+    
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
