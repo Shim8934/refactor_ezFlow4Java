@@ -51,7 +51,6 @@ function addOpinion(DocID, pFlag) {
 
     xmlrtn = loadXMLString(result);
     var Rows = SelectNodes(xmlrtn, "LISTVIEWDATA/ROWS/ROW");
-    alert(Rows.length);
     if (Rows.length == 0)
         eopi = "false";
 
