@@ -2835,12 +2835,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		// 빠짐없이 반복은 아니라고 봄.
+		logger.debug("dtSSize="+dtS.size());
 		for (ResMakeDupResultVO drS : dtS) {  // S, 예약할
 			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
 			
+			logger.debug("dtTSize="+dtT.size());
 			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
 				logger.debug("drtStartDate="+drT.getStartDateTime());  
 				logger.debug("drtEndDate="+drT.getEndDateTime());
@@ -2868,7 +2870,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				
 				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
+				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = sEndDate;
 				String compare2 = tStartDate; 
 				
 				Date day1 = date.parse(compare1);
@@ -2876,8 +2879,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				String compare3 = tEndDate;
 				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
-				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
+				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				String compare4 = sStartDate;
 				
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -3293,9 +3296,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					logger.debug("recStart="+recParam.getRecStartDateTime());
 					logger.debug("recEnd"+recParam.getRecEndDateTime());
-					logger.debug("checkMonth="+checkMonth(recParam.getRecStartDateTime()));
-					logger.debug("checkDay="+checkDay(recParam.getRecStartDateTime()));
-					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
+					
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date1.parse(recParam.getRecEndDateTime()));
+					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ ((cal.get(Calendar.HOUR) < 10) ? "0" + cal.get(Calendar.HOUR) : cal.get(Calendar.HOUR)) + ((cal.get(Calendar.MINUTE) < 10) ? "0" + cal.get(Calendar.MINUTE) : cal.get(Calendar.MINUTE));
 					logger.debug("[51]dsEndDateTime1="+dsEndDateTime);
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
