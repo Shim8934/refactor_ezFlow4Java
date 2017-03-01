@@ -1763,7 +1763,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResultSubjectiv Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brdID = "", itemNo = "", questionNo = "", lang="";
+		String brdID = "", itemNo = "", questionNo = "";
         int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
         int pPageSize = 0, pageCount = 0, pBlockSize = 0;
         String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
@@ -1777,11 +1777,6 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             questionNo = request.getParameter("questionNo");
         if (request.getParameter("pageCount") != null)
             pageCount = Integer.parseInt(request.getParameter("pageCount"));        
-        if(loginVO.getLang().equals("1")){
-        	lang ="";
-        }else{
-        	lang = loginVO.getLang();
-        }
         if (request.getParameter("page") != null){
             pCurrPage = Integer.parseInt(request.getParameter("page"));
         }else{
@@ -1802,7 +1797,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         logger.debug(brdID);
         logger.debug(itemNo);
         logger.debug(questionNo);
-        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), lang, loginVO.getTenantId());
+        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
         if (pageCount == 0){
@@ -1813,7 +1808,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
         int iStart = (pCurrPage - 1) * pPageSize;
         /** EZSP_RESULTSUBJECTIVELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, lang, loginVO.getTenantId());
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
