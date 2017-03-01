@@ -562,25 +562,25 @@
 			        	<td style="padding:0"> <input type="checkbox" id="menuCheck+<c:out value ="${list.itemNo}"/>+" value=<c:out value="${list.itemNo}"/>></td> 
 			          	<td style="overflow: hidden; cursor: pointer; text-overflow: ellipsis;" title=<c:out value ="${list.title}"/> onClick="title_OnClick('<c:out value ="${list.receve}"/>&itemNo=<c:out value ="${list.itemNo}"/>')" ><nobr><c:out value ="${list.title}"/></nobr></td>
 			          	<c:if test="${list.publicFlg == 0}">
-			          		<td> 기명 </td>	
+			          		<td><spring:message code = 'ezQuestion.t238' /></td>	
 			          	</c:if>
 			          	<c:if test="${list.publicFlg == 1}">
-			          		<td> 무기명 </td>	
+			          		<td><spring:message code = 'ezQuestion.t239' /></td>	
 			          	</c:if>
 			          	<c:set var="pollEndDate" value="${list.pollEndDate}" />
 			          	<td> ${fn:substring(pollEndDate,0,10) } </td>
 			          	<c:if test="${list.responseRange == 0}">
-			          		<td> 전체 </td>	
+			          		<td><spring:message code = 'ezQuestion.t251' /></td>	
 			          	</c:if>
 			          	<c:if test="${list.responseRange == 1}">
-			          		<td> 선정 </td>	
+			          		<td><spring:message code = 'ezQuestion.t252' /></td>	
 			          	</c:if>
 			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userID}')"> ${list.userNm} </a> </td> 
 			          	<c:if test="${list.publicResultFlg == 0}">
-			          		<td> 비공개 </td>	
+			          		<td<spring:message code = 'ezQuestion.t245' /></td>	
 			          	</c:if>
 			          	<c:if test="${list.publicResultFlg == 1}">
-			          		<td> 공개 </td>	
+			          		<td><spring:message code = 'ezQuestion.t244' /></td>	
 			          	</c:if>
 
 			        </tr>
