@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.ibm.icu.impl.LocaleDisplayNamesImpl.DataTable;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
@@ -2561,14 +2559,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         logger.debug("returnStr=" + returnStr);
         logger.debug("addResSch End");
         return returnStr;
-	}
-	
-	public DataTable makeDupResult() {
-		DataTable dtResult = null;
-		
-		dtResult = new DataTable();
-		
-		return dtResult;
 	}
 	
 	//반복예약일때
