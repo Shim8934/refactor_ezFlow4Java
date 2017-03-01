@@ -142,7 +142,7 @@
 	    	        ItemArray[1] = Array("<c:out value='${brdName}' />");
 
 	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' />";
+	            	document.getElementById('itemList').innerHTML = "${brdName}";
 	        	}
 		        
 	        	if (cmd == "add") {
