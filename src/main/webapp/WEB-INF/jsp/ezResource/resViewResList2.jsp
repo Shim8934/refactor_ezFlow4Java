@@ -35,7 +35,7 @@
 		</style>
 		<script type="text/javascript">
 			var pBrdid = "${brdID}";
-	    	var pBrdnm = "<c:out value='${brdNm}' />";
+	    	var pBrdnm = "<c:out value='${brdNm}' escapeXml='false'/>";
 	    	var pAccessCode = "${accessCode}";
 	    	var pCompanyID = "${companyID}";
 	    	var pUserID = "${userID}";
