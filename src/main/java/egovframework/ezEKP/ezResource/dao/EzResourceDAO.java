@@ -16,7 +16,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -90,10 +89,6 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<String> getDeletedRepScheduleDate(Map<String, Object> map) {
 		return (List<String>) list("EzResourceDAO.getDeletedRepScheduleDate", map);
-	}
-	
-	public ResGetScheduleListTermVO getScheduleListTerm(Map<String, Object> map){
-		return  (ResGetScheduleListTermVO) select("EzResourceDAO.getScheduleListTerm", map);
 	}
 	
 	public ResGetAdminFlagVO getAdmFlag(Map<String, Object> map) {

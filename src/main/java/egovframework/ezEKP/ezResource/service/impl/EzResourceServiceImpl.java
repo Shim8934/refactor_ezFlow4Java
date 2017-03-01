@@ -40,7 +40,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -196,20 +195,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_pNum", num);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getRepDateTimes(map);
-	}
-
-	@Override
-	public ResGetScheduleListTermVO getScheduleListTerm(int num, String companyID, String ownerID, String startDate, String endDate, String writerName, String writerDept, int tenantID) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_PNUM", num);
-		map.put("v_PCOMPANYID", companyID);
-		map.put("v_POWNERID", ownerID);
-		map.put("v_PSTARTDATE", startDate);
-		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
-		map.put("v_WRITERDEPT", writerDept);
-		map.put("tenantID", tenantID);
-		return ezResourceDAO.getScheduleListTerm(map);
 	}
 
 	@Override
