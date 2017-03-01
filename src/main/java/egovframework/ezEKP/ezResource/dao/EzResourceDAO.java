@@ -14,9 +14,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -42,8 +40,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetScheduleListVO> getScheduleList(Map<String, Object> map){
-		return  (List<ResGetScheduleListVO>) list("EzResourceDAO.getScheduleList", map);
+	public List<ResGetScheduleVO> getScheduleList(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -52,8 +50,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetScheduleListMainVO> getScheduleListMain(Map<String, Object> map){
-		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListMain", map);
+	public List<ResGetScheduleVO> getScheduleListMain(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleListMain", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,8 +60,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(Map<String, Object> map){
-		return  (List<ResGetScheduleListMainVO>) list("EzResourceDAO.getScheduleListRepetitim", map);
+	public List<ResGetScheduleVO> getScheduleListRepetitim(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleListRepetitim", map);
 	}
 	
 	@SuppressWarnings("unchecked")

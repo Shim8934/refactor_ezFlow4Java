@@ -12,9 +12,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -28,13 +26,13 @@ public interface EzResourceService {
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListMainVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
 	
 	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
 	
 	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception;
 

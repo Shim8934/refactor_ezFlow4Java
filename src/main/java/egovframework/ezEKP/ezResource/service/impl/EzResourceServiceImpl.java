@@ -36,9 +36,7 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -114,7 +112,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -130,7 +128,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListMainVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -163,7 +161,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -922,17 +920,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		String returnSchedule = "<DATA>";
 		if (pType.equals("")) {
-			List<ResGetScheduleListVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+			List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
 			logger.debug("getScheduleListSize=" + getScheduleList.size());
 			
-			for (ResGetScheduleListVO vo :  getScheduleList) {
+			for (ResGetScheduleVO vo :  getScheduleList) {
 				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 		} else if (pType.equals("MAIN")) {
-			List<ResGetScheduleListMainVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
+			List<ResGetScheduleVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
 			logger.debug("getScheduleListMainSize=" + getScheduleListMain.size());
 			
-			for (ResGetScheduleListMainVO vo :  getScheduleListMain) {
+			for (ResGetScheduleVO vo :  getScheduleListMain) {
 				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 		}
@@ -991,7 +989,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnRepetition += commonUtil.getQueryResult(getScheduleListRept.get(j));
 			}
 		} else {
-			List<ResGetScheduleListMainVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
+			List<ResGetScheduleVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
 
 			for(int j=0; j<getScheduleListReptMain.size(); j++) {
 				returnRepetition += commonUtil.getQueryResult(getScheduleListReptMain.get(j));

@@ -6,10 +6,7 @@
 	<typeAlias  alias="ResGetAdminFlagVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO"/>
 	<typeAlias  alias="ResGetItemListVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetItemListVO"/>
 	<typeAlias  alias="ResGetScheduleVO" 						type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
-	<typeAlias  alias="ResGetScheduleListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO"/>
-	<typeAlias  alias="ResGetScheduleListMainVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO"/>
 	<typeAlias  alias="ResGetRepDateTimesVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO"/>
-	<typeAlias  alias="ResGetScheduleListTermVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO"/>
 	<typeAlias  alias="ResGetScheduleRepetitionVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO"/>
 	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
@@ -44,7 +41,7 @@
 		<result property="accessLvl"				column="ACCESS_LVL"			columnIndex="2"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleListVO" 		id="resGetScheduleListVO">
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -55,7 +52,7 @@
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
-		<result property="gResFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
 		<result property="content"				column="CONTENT"				columnIndex="13"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
@@ -73,7 +70,7 @@
 		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleListMainVO" id="resGetScheduleListMainVO">
+	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -84,7 +81,7 @@
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"			nullValue=""/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
-		<result property="gResFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
 		<result property="content"				column="CONTENT"				columnIndex="13"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
@@ -113,33 +110,6 @@
 		<result property="reOrd"				column="REORD"					columnIndex="11"		nullValue="" />
 		<result property="endFlag"				column="ENDFLAG"				columnIndex="12" />
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue="" />
-	</resultMap>
-	
-	<resultMap class="ResGetScheduleListTermVO" id="resGetScheduleListTermVO">
-		<result property="num"					column="NUM"						columnIndex="1"/>
-		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
-		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
-		<result property="title"						column="TITLE"						columnIndex="4"/>
-		<result property="location"				column="LOCATION"				columnIndex="5"/>
-		<result property="timeDisplay"			column="TIMEDISPLAY"			columnIndex="6"/>
-		<result property="startDate"				column="STARTDATE"				columnIndex="7"/>
-		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
-		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
-		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
-		<result property="gResFlag"				column="GRESFLAG"				columnIndex="11"/>
-		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="content"				column="CONTENT"				columnIndex="13"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="15"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="16"/>
-		<result property="writeDay"				column="WRITEDAY"				columnIndex="17"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
-		<result property="jobTitle"					column="JOBTITLE"					columnIndex="23"/>
-		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="24"/>
 	</resultMap>
 	
 	<resultMap class="ResBrdListVO" 				id="resBrdListVO">
@@ -904,68 +874,6 @@
 				NUM = #v_pNum#
 			AND
 				TENANT_ID = #tenantID#	
-		]]>
-	</select>
-	
-	<!-- <procedure id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
-		<![CDATA[
-			{CALL EZSP_GETSCHEDULELISTTERM(#v_PNUM#, #v_PCOMPANYID#, #v_POWNERID#, #v_PSTARTDATE#, #v_PENDDATE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#, #v_WRITERNAME#, #v_WRITERDEPT#)}
-		]]>
-	</procedure> -->
-	<select id="EzResourceDAO.getScheduleListTerm" parameterClass="Map" resultMap="resGetScheduleListTermVO">
-		<![CDATA[
-			SELECT
-				NUM ,
-             	PNUM ,
-             	OWNERID ,
-             	A.title title  ,
-             	LOCATION ,
-             	TIMEDISPLAY ,
-             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
-             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
-             	ALERTTIME ,
-             	REFLAG ,
-             	GRESFLAG ,
-             	WRITERID ,
-             	CONTENT ,
-             	IMPORTANCE ,
-             	ENTRYLIST ,
-             	ALLDAY ,
-             	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
-             	ATTACHFLAG ,
-             	CHARACTERID ,
-             	APPROVEFLAG ,
-             	OWNERNM ,
-             	DEPTNM ,
-             	B.TITLE JOBTITLE  ,
-             	B.TITLE2 JOBTITLE2  
-        	FROM
-        		TBL_RS_SCHEDULE A
-			JOIN
-				TBL_USERMASTER B  
-			ON
-				A.WRITERID = B.CN
-			AND
-				A.TENANT_ID = B.TENANT_ID	
-        	WHERE
-        		COMPANYID = #v_PCOMPANYID#
-			AND
-				OWNERID = #v_POWNERID#
-			AND
-				PNUM = #v_PNUM#
-			AND 
-				STARTDATE <= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
-			AND
-				To_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
-			AND
-				( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
-			AND
-				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
-			AND
-				A.TENANT_ID = #tenantID#	
-			ORDER BY
-				STARTDATE ASC,
-                ENDDATE DESC
 		]]>
 	</select>
 	

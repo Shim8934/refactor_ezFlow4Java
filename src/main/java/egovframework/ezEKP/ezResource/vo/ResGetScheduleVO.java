@@ -11,10 +11,6 @@ public class ResGetScheduleVO {
 	private String companyID;
 	/** 등록자사번*/
 	private String writerID;
-	/** 등록자부서명*/
-	private String deptNm;
-	/** 등록자이름*/
-	private String ownerNm;
 	/** 제목*/
 	private String title;
 	/** 위치*/
@@ -51,13 +47,19 @@ public class ResGetScheduleVO {
 	private String approveFlag;
 	/** 스케줄ID*/
 	private String scheduleID;
+	/** 등록자부서명*/
+	private String deptNm;
+	/** 영문부서명*/
+	private String deptNm2;
+	/** 등록자이름*/
+	private String ownerNm;
+	/** 영문사용자명*/
+	private String ownerNm2;
+	/** 직급*/
+	private String jobTitle;
+	/** 영문직급*/
+	private String jobTitle2;
 	
-	public String getOwnerID() {
-		return ownerID;
-	}
-	public void setOwnerID(String ownerID) {
-		this.ownerID = ownerID;
-	}
 	public int getNum() {
 		return num;
 	}
@@ -70,6 +72,12 @@ public class ResGetScheduleVO {
 	public void setpNum(int pNum) {
 		this.pNum = pNum;
 	}
+	public String getOwnerID() {
+		return ownerID;
+	}
+	public void setOwnerID(String ownerID) {
+		this.ownerID = ownerID;
+	}
 	public String getCompanyID() {
 		return companyID;
 	}
@@ -81,18 +89,6 @@ public class ResGetScheduleVO {
 	}
 	public void setWriterID(String writerID) {
 		this.writerID = writerID;
-	}
-	public String getDeptNm() {
-		return deptNm;
-	}
-	public void setDeptNm(String deptNm) {
-		this.deptNm = deptNm;
-	}
-	public String getOwnerNm() {
-		return ownerNm;
-	}
-	public void setOwnerNm(String ownerNm) {
-		this.ownerNm = ownerNm;
 	}
 	public String getTitle() {
 		return title;
@@ -202,4 +198,41 @@ public class ResGetScheduleVO {
 	public void setScheduleID(String scheduleID) {
 		this.scheduleID = scheduleID;
 	}
+	public String getDeptNm() {
+		return deptNm;
+	}
+	public void setDeptNm(String deptNm) {
+		this.deptNm = deptNm;
+	}
+	public String getDeptNm2() {
+		return deptNm2;
+	}
+	public void setDeptNm2(String deptNm2) {
+		this.deptNm2 = deptNm2;
+	}
+	public String getOwnerNm() {
+		return ownerNm;
+	}
+	public void setOwnerNm(String ownerNm) {
+		this.ownerNm = ownerNm;
+	}
+	public String getOwnerNm2() {
+		return ownerNm2;
+	}
+	public void setOwnerNm2(String ownerNm2) {
+		this.ownerNm2 = ownerNm2;
+	}
+	public String getJobTitle() {
+		return jobTitle;
+	}
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+	public String getJobTitle2() {
+		return jobTitle2;
+	}
+	public void setJobTitle2(String jobTitle2) {
+		this.jobTitle2 = jobTitle2;
+	}
+	
 }
