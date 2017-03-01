@@ -30,13 +30,6 @@ public class ResGetRepResourceRepeatVO {
 	/** */
 	private String allDay;
 	/** */
-	private String writerID;
-	/** */
-	private String deptNm;
-	/** */
-	private String title;
-	/** */
-	private String writeDay;
 	
 	public String getOwnerID() {
 		return ownerID;
@@ -122,28 +115,5 @@ public class ResGetRepResourceRepeatVO {
 	public void setAllDay(String allDay) {
 		this.allDay = allDay;
 	}
-	public String getWriterID() {
-		return writerID;
-	}
-	public void setWriterID(String writerID) {
-		this.writerID = writerID;
-	}
-	public String getDeptNm() {
-		return deptNm;
-	}
-	public void setDeptNm(String deptNm) {
-		this.deptNm = deptNm;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public String getWriteDay() {
-		return writeDay;
-	}
-	public void setWriteDay(String writeDay) {
-		this.writeDay = writeDay;
-	}
+	
 }

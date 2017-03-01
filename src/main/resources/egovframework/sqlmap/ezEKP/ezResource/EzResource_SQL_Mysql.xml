@@ -278,10 +278,6 @@
 		<result property="endFlag"				column="ENDFLAG"					columnIndex="12"/>
 		<result property="reCount"				column="RECOUNT"				columnIndex="13"		nullValue=""/>
 		<result property="allDay"					column="ALLDAY"					columnIndex="14"		nullValue=""/>
-		<result property="writerID"				column="WRITERID"					columnIndex="15"		nullValue=""/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="16"		nullValue=""/>
-		<result property="title"						column="TITLE"						columnIndex="17"		nullValue=""/>
-		<result property="writeDay"				column="WRITEDAY"				columnIndex="18"		nullValue=""/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -2024,12 +2020,7 @@
              	C.reOrd as reOrd,
              	C.endFlag as endFlag,
              	C.reCount as reCount,
-             	B.allDay  as allDay,
-             	B.writerID ,
-             	B.deptNM ,
-             	B.ownerNM ,
-             	B.title ,
-             	DATE_FORMAT(B.writeDay, '%Y-%m-%d %T') writeDay 
+             	B.allDay  as allDay
         	FROM
         		TBL_RS_SCHEDULE B
 			JOIN
