@@ -28,7 +28,7 @@ function NavigateBrdAdmin_Res(pFlag) {
 	    var p_BrdExp = TreeView.getvalue(objSelected, "DATA9");
 
 		var rep = new RegExp( "&", "gi" );
-		p_BrdNm = p_BrdNm.replace(rep, "chr(38)");
+		//p_BrdNm = p_BrdNm.replace(rep, "chr(38)");
 		
 		var szUrl = "/admin/ezResource/" + g_AdminMenu[pFlag];
 		szUrl += "?brdID=" + p_BrdID + "&brdNm=" + encodeURIComponent(p_BrdNm);
