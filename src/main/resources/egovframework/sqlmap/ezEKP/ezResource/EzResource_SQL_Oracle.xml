@@ -11,7 +11,6 @@
 	<typeAlias  alias="ResBrdListVO" 							type="egovframework.ezEKP.ezResource.vo.ResBrdListVO"/>
 	<typeAlias  alias="ResBrdVO" 								type="egovframework.ezEKP.ezResource.vo.ResBrdVO"/>
 	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
-	<typeAlias  alias="ResGetScheduleListRepetitionVO" 			type="egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO"/>
 	<typeAlias  alias="ResGetRepResourceVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO"/>
 	<typeAlias  alias="ResGetRepResourceRepeatVO" 				type="egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO"/>
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
@@ -209,7 +208,7 @@
 		<result property="formText"				column="FORMTEXT"				columnIndex="3"			nullValue=""   	jdbcType="CLOB" 		javaType="java.lang.String"/>
 	</resultMap>
 	
-	<resultMap class="ResGetScheduleListRepetitionVO" 		id="resGetScheduleListRepetitionVO">
+	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleListRepetitionVO">
 		<result property="num"					column="NUM"						columnIndex="1"/>
 		<result property="pNum"					column="PNUM"						columnIndex="2" 		nullValue="0"/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="3"/>
@@ -220,7 +219,7 @@
 		<result property="endDate"				column="ENDDATE"				columnIndex="8"/>
 		<result property="alertTime"				column="ALERTTIME"				columnIndex="9"/>
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
-		<result property="gResFlag"				column="GRESFLAG"				columnIndex="11"/>
+		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
 		<result property="content"				column="CONTENT"				columnIndex="13"/>
 		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>

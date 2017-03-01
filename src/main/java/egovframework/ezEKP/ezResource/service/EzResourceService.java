@@ -12,7 +12,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -30,7 +29,7 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
 	
 	public List<ResGetScheduleVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
 	

@@ -14,7 +14,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
 import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -55,8 +54,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(Map<String, Object> map){
-		return  (List<ResGetScheduleListRepetitionVO>) list("EzResourceDAO.getScheduleListRepetiti", map);
+	public List<ResGetScheduleVO> getScheduleListRepetiti(Map<String, Object> map){
+		return  (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleListRepetiti", map);
 	}
 	
 	@SuppressWarnings("unchecked")
