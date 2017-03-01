@@ -387,9 +387,9 @@
 		            
 		            document.getElementById("rightfrm").style.height = "659px";
 		            if (chkPhotoBrd != "3") {
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + treeNode.GetNodeData("DATA1") + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            } else {
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + treeNode.GetNodeData("DATA1") + "&boardName=" + encodeURI(treeNode.GetNodeData("DATA2")) + "&code=" + code;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            }
 		            
 		            if (CrossYN()) {

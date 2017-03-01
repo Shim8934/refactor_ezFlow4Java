@@ -11,7 +11,6 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Random;
 
 import javax.annotation.Resource;
@@ -39,7 +38,6 @@ import com.ibm.icu.util.Calendar;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezCommon.web.EzCommonController;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityService;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityBoardItemReadVO;
@@ -83,12 +81,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	private CommonUtil commonUtil;
 	
 	@Autowired
-	private Properties config;
-	
-	@Autowired
-	private Properties globals;
-	
-	@Autowired
 	private EgovFileScrty egovFileScrty;
 	
 	@Resource(name="EzCommunityService")
@@ -102,9 +94,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
-	
-	@Autowired
-	private EzCommonController ezCommonController;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;

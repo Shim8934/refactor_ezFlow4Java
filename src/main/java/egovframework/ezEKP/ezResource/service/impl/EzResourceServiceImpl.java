@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import com.ibm.icu.impl.LocaleDisplayNamesImpl.DataTable;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
@@ -35,13 +33,6 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepDateTimesVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceRepeatVO;
-import egovframework.ezEKP.ezResource.vo.ResGetRepResourceVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListMainVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListRepetitionVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListTermVO;
-import egovframework.ezEKP.ezResource.vo.ResGetScheduleListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
@@ -49,6 +40,7 @@ import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
 import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
 import egovframework.ezEKP.ezResource.vo.ResRecParamVO;
+import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -117,7 +109,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -133,7 +125,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListMainVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -148,7 +140,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListRepetitionVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
@@ -166,7 +158,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleListMainVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
+	public List<ResGetScheduleVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -179,37 +171,23 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleVO> getDeletedRepSchedule(int pNum, String companyID, String ownerID, int tenantID) throws Exception {
+	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_pNum", pNum);
 		map.put("v_P_companyID", companyID);
 		map.put("v_P_ownerID", ownerID);
 		map.put("tenantID", tenantID);
-		return ezResourceDAO.getDeletedRepSchedule(map);
+		return ezResourceDAO.getDeletedRepScheduleDate(map);
 	}
 	
 	@Override
-	public ResGetRepDateTimesVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception {
+	public ResGetScheduleRepetitionVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pNum", num);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getRepDateTimes(map);
-	}
-
-	@Override
-	public ResGetScheduleListTermVO getScheduleListTerm(int num, String companyID, String ownerID, String startDate, String endDate, String writerName, String writerDept, int tenantID) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_PNUM", num);
-		map.put("v_PCOMPANYID", companyID);
-		map.put("v_POWNERID", ownerID);
-		map.put("v_PSTARTDATE", startDate);
-		map.put("v_PENDDATE", endDate);
-		map.put("v_WRITERNAME", writerName);
-		map.put("v_WRITERDEPT", writerDept);
-		map.put("tenantID", tenantID);
-		return ezResourceDAO.getScheduleListTerm(map);
 	}
 
 	@Override
@@ -726,7 +704,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<ResGetRepResourceRepeatVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception {
+	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_p_ownerID", ownerID);
 		map.put("v_p_num", num);
@@ -737,7 +715,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetRepResourceVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
+	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
 			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		logger.debug("getRepResource Start");
@@ -765,7 +743,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public ResGetRepResourceVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception {
+	public ResGetScheduleVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_p_ownerID", ownerID);
 		map.put("tenantID", tenantID);
@@ -939,17 +917,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약이 아닌 것만 가져옴)
 		String returnSchedule = "<DATA>";
 		if (pType.equals("")) {
-			List<ResGetScheduleListVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+			List<ResGetScheduleVO> getScheduleList = getScheduleList(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
 			logger.debug("getScheduleListSize=" + getScheduleList.size());
 			
-			for (ResGetScheduleListVO vo :  getScheduleList) {
+			for (ResGetScheduleVO vo :  getScheduleList) {
 				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 		} else if (pType.equals("MAIN")) {
-			List<ResGetScheduleListMainVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
+			List<ResGetScheduleVO> getScheduleListMain = getScheduleListMain(ownerID, companyID, startDateLimit, endDateLimit, offset, tenantID);
 			logger.debug("getScheduleListMainSize=" + getScheduleListMain.size());
 			
-			for (ResGetScheduleListMainVO vo :  getScheduleListMain) {
+			for (ResGetScheduleVO vo :  getScheduleListMain) {
 				returnSchedule += commonUtil.getQueryResult(vo);
 			}
 		}
@@ -1002,13 +980,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		// 스케줄 정보 가져옴(tbl_schedule에서 반복예약인 것만 가져옴)
 		String returnRepetition = "<DATA>";
 		if (pType.equals("")) {
-			List<ResGetScheduleListRepetitionVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
+			List<ResGetScheduleVO> getScheduleListRept = getScheduleListRepetiti(ownerID, companyID, startDateLimit, endDateLimit, pWriterName, pWriterDept, offset, tenantID);
 			
 			for(int j=0; j<getScheduleListRept.size(); j++) {
 				returnRepetition += commonUtil.getQueryResult(getScheduleListRept.get(j));
 			}
 		} else {
-			List<ResGetScheduleListMainVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
+			List<ResGetScheduleVO> getScheduleListReptMain = getScheduleListRepetitim(ownerID, companyID, startDateLimit, tenantID, offset);
 
 			for(int j=0; j<getScheduleListReptMain.size(); j++) {
 				returnRepetition += commonUtil.getQueryResult(getScheduleListReptMain.get(j));
@@ -1021,68 +999,64 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		// return할 xml string 생성(반복예약)
 		if (returnRepetitionDom != null) {
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			for (int i=0; i<returnRepetitionDom.getElementsByTagName("ROW").getLength(); i++) {
 				String reCompanyID = returnRepetitionDom.getElementsByTagName("COMPANYID").item(i).getTextContent();
 				String reNum = returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent();
 				String reOwnerID = returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent();
 				
-				// 반복예약 중에 삭제된 예약 가져옴
-				List<ResGetScheduleVO> deletedRepSchedule = getDeletedRepSchedule(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+				// tbl_schedulerepetition에서 정보 가져옴
+				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
+				vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+				vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
 				
-				for (ResGetScheduleVO vo : deletedRepSchedule) {
-					vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), offset, false));
-				}
-				
-				// 반복예약의 반복되는 날짜리스트 가져옴
-				List<String[]> returnRepDateTimes = getRepDateTimes(reCompanyID, reNum, reOwnerID, sDate, eDate, tenantID, offset);
+				// 반복예약의 반복되는 날짜리스트 뽑아옴
+				List<Date[]> returnRepDateTimes = getRepDateTimes(vo, sDate, eDate, offset);
 				logger.debug("getRepDateTimes=" + returnRepDateTimes);
 				
-				for (String[] dateArr : returnRepDateTimes) {
+				// 반복예약 중에 삭제된 예약 가져옴
+				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+				
+				for (Date[] dateArr : returnRepDateTimes) {
 					
-					// 삭제된 예약인지 확인한다.
-					boolean deleted = false;
-					for (int j=deletedRepSchedule.size()-1; j>-1; j--) {
-						if (deletedRepSchedule.get(j).getStartDate().equals(dateArr[0])) {
-							deletedRepSchedule.remove(j);
-							deleted = true;
-							break;
-						}
+					// 삭제된 예약이면 넘어감
+					if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+						continue;
 					}
 					
-					if (!deleted) {
-						returnStr.append("<ROW>");
-						returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
-						returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
-						returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
-						returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
-						returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
-						returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
-						returnStr.append("<startDate>" + dateArr[0] + "</startDate>");
-						returnStr.append("<endDate>" + dateArr[1] + "</endDate>");
-						returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
-						returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
-						returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
-						returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-						returnStr.append("<content><![CDATA[" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "]]></content>");
-						returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
-						returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
-						returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
-						returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
-						returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
-						returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
-						returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
-						returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
-						returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
-						
-						if (pType == null || pType.equals("")) {
-							returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
-							returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
-							returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
-							returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
-						}
-						
-						returnStr.append("</ROW>");
+					returnStr.append("<ROW>");
+					returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
+					returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
+					returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
+					returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
+					returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
+					returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
+					returnStr.append("<startDate>" + format.format(dateArr[0]) + "</startDate>");
+					returnStr.append("<endDate>" + format.format(dateArr[1]) + "</endDate>");
+					returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
+					returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
+					returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
+					returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
+					returnStr.append("<content><![CDATA[" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "]]></content>");
+					returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
+					returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
+					returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
+					returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
+					returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
+					returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
+					returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
+					returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
+					returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
+					
+					if (pType == null || pType.equals("")) {
+						returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
+						returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
+						returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
+						returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
 					}
+					
+					returnStr.append("</ROW>");
 				}
 			}
 		}
@@ -1092,48 +1066,22 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}
 	
-	public List<String[]> getRepDateTimes(String companyID, String num, String ownerID, String sDate, String eDate, int tenantID, String offset) throws Exception {
+	public List<Date[]> getRepDateTimes(ResGetScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		logger.debug("getRepDeteTimes started");
-		logger.debug("ownerID=" + ownerID);
-		logger.debug("companyID=" + companyID);
-		logger.debug("num=" + num);
 		
-		// tbl_schedulerepetition에서 정보 가져옴
-		ResGetRepDateTimesVO vo = getRepDateTimes(ownerID, companyID, Integer.parseInt(num), tenantID);
-		
-		List<String[]> returnList = new ArrayList<String[]>();
+		List<Date[]> returnList = new ArrayList<Date[]>();
 		
 		if (vo != null) {
-			vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
-			vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+			ResScheduleRepetitionVO rvo = resStruct(vo);
 			
-			String freq = vo.getReWay().substring(0, 1);
+			int freq = rvo.getFreq();
 			
-			if (vo.getReNum().equals("")) {
-				vo.setReNum("0");
-			}
-			if (vo.getReDay().equals("")) {
-				vo.setReDay("0");
-			}
-			if (vo.getReYoil().equals("")) {
-				vo.setReYoil("");
-			}
-			if (vo.getReOrd().equals("")) {
-				vo.setReOrd("0");
-			}
-			if (vo.getReCount().equals("")) {
-				vo.setReCount("0");
-			}
-			if (vo.getReMonth().equals("")) {
-				vo.setReMonth("0");
-			}
-			
-			if (freq.equals("4")) {
-				returnList = getDailyRepDateTimes(vo, sDate, eDate); 
-			} else if (freq.equals("5")) {
-				returnList = getWeeklyRepDateTime(vo, sDate, eDate);
-			} else if (freq.equals("6") || freq.equals("7")) {
-				returnList = getMonthlyRepDateTimes(vo, sDate, eDate);
+			if (freq == 4) {
+				returnList = getDailyRepDateTimes(rvo, sDate, eDate); 
+			} else if (freq == 5) {
+				returnList = getWeeklyRepDateTime(rvo, sDate, eDate);
+			} else if (freq == 6 || freq == 7) {
+				returnList = getMonthlyRepDateTimes(rvo, sDate, eDate);
 			}
 		}
 	
@@ -1143,30 +1091,30 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<String[]> getDailyRepDateTimes(ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception {
-		String selType = vo.getReWay().substring(1);
-		int interval = Integer.parseInt(vo.getReNum());
-		String endRecurType = vo.getEndFlag();
-		int instances = Integer.parseInt(vo.getReCount());
+	public List<Date[]> getDailyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception {
+		int selType = vo.getSelType();
+		int interval = vo.getInterval();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
 		int tempYoil = 0;
 		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		// 자원예약 기간
-		Date resStartDate = sdf.parse(vo.getStartDateTime());
-		Date resEndDate = sdf.parse(vo.getEndDateTime());
+		sDate += " 00:00:00";
+		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
 
-		String tmpStartDateStr = vo.getStartDateTime();
-		String tmpEndDateStr = vo.getStartDateTime().substring(0, 10) + " " + vo.getEndDateTime().substring(11);
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
-		Date tmpStartDate = sdf.parse(tmpStartDateStr);
+		Date tmpStartDate = vo.getStartDate();
 		Date tmpEndDate = sdf.parse(tmpEndDateStr);
 		
 		Calendar tempStartCal = Calendar.getInstance();
@@ -1196,43 +1144,43 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
 		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
 		
-		List<String[]> returnList = new ArrayList<String[]>();
+		List<Date[]> returnList = new ArrayList<Date[]>();
 		
 		int temp = 1000; //최대 1000번 반복
 		while (true) {
 			
 			// 40일 때(매 n일)
-			if (selType.equals("0")) {
+			if (selType == 0) {
 				// 종료일 지정 안했을 경우
-				if (endRecurType.equals("0")) {
+				if (endRecurType == 0) {
 					if (tmpStartDate.after(endDate)) {
 						break;
 					} else if (!tmpStartDate.before(startDate)) {
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 종료일 지정했을 경우
-				else if (endRecurType.equals("2")) {
+				else if (endRecurType == 2) {
 					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
 						break;
 					} else if (!tmpStartDate.before(startDate)) {
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 반복 횟수 지정했을 경우
-				else if (endRecurType.equals("1")) {
+				else if (endRecurType == 1) {
 					if (tmpStartDate.after(endDate) || instances <= 0) {
 						break;
 					} else {
@@ -1240,9 +1188,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.setTime(tmpStartDate);
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
-							returnList.add(new String[] {
-									sdf.format(tmpStartDate), 
-									sdf.format(tempEndCal.getTime())
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
 							});
 						}
 						
@@ -1255,35 +1203,35 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				tempYoil = tempStartCal.get(Calendar.DAY_OF_WEEK);
 				
 				// 종료일 지정 안했을 경우
-				if (endRecurType.equals("0")) {
+				if (endRecurType == 0) {
 					if (tmpStartDate.after(endDate)) {
 						break;
 					} else if (!tmpStartDate.before(startDate) && tempYoil > 1 && tempYoil < 7) {
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 종료일 지정했을 경우
-				else if (endRecurType.equals("2")) {
+				else if (endRecurType == 2) {
 					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
 						break;
 					} else if (!tmpStartDate.before(startDate) &&tempYoil > 1 && tempYoil < 7) {
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 반복 횟수 지정했을 경우
-				else if (endRecurType.equals("1")) {
+				else if (endRecurType == 1) {
 					if (tmpStartDate.after(endDate) || instances <= 0) {
 						break;
 					} else if (tempYoil > 1 && tempYoil < 7) {
@@ -1291,9 +1239,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.setTime(tmpStartDate);
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
-							returnList.add(new String[] {
-									sdf.format(tmpStartDate), 
-									sdf.format(tempEndCal.getTime())
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
 							});
 						}
 						
@@ -1316,29 +1264,29 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<String[]> getWeeklyRepDateTime (ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception  {
-		int interval = Integer.parseInt(vo.getReNum());
-		String endRecurType = vo.getEndFlag();
-		int instances = Integer.parseInt(vo.getReCount());
-		String[] wDay = vo.getReYoil().split(",");
+	public List<Date[]> getWeeklyRepDateTime (ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception  {
+		int interval = vo.getInterval();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
+		List<Integer> wDay = vo.getDaysOfWeek();
 		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		// 자원예약 기간
-		Date resStartDate = sdf.parse(vo.getStartDateTime());
-		Date resEndDate = sdf.parse(vo.getEndDateTime());
+		sDate += " 00:00:00";
+		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
 
-		String tmpStartDateStr = vo.getStartDateTime();
-		String tmpEndDateStr = vo.getStartDateTime().substring(0, 10) + " " + vo.getEndDateTime().substring(11);
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
-		Date tmpStartDate = sdf.parse(tmpStartDateStr);
+		Date tmpStartDate = vo.getStartDate();
 		Date tmpEndDate = sdf.parse(tmpEndDateStr);
 		
 		Calendar tempStartCal = Calendar.getInstance();
@@ -1367,19 +1315,19 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
 		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
 		
-		List<String[]> returnList = new ArrayList<String[]>();
+		List<Date[]> returnList = new ArrayList<Date[]>();
 		
 		int temp = 1000; // 최대 1000번 반복
 		
 		boolean loopFlag = true;
 		while (loopFlag) {
 			
-			for (int i=0; i<wDay.length; i++) {
-				tempStartCal.set(Calendar.DAY_OF_WEEK, Integer.parseInt(wDay[i]) + 1);
+			for (int i=0; i<wDay.size(); i++) {
+				tempStartCal.set(Calendar.DAY_OF_WEEK, wDay.get(i) + 1);
 				tmpStartDate = tempStartCal.getTime();
 				
 				// 종료일 지정 안했을 경우
-				if (endRecurType.equals("0")) {
+				if (endRecurType == 0) {
 					if (tmpStartDate.after(endDate)) {
 						loopFlag = false;
 						break;
@@ -1387,14 +1335,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 종료일 지정했을 경우
-				else if (endRecurType.equals("2")) {
+				else if (endRecurType == 2) {
 					if (tmpStartDate.after(endDate) || tmpStartDate.after(resEndDate)) {
 						loopFlag = false;
 						break;
@@ -1402,14 +1350,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.setTime(tmpStartDate);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tmpStartDate), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 반복 횟수 지정했을 경우
-				else if (endRecurType.equals("1")) {
+				else if (endRecurType == 1) {
 					if (tmpStartDate.after(endDate) || instances <= 0) {
 						loopFlag = false;
 						break;
@@ -1420,9 +1368,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.setTime(tmpStartDate);
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
-							returnList.add(new String[] {
-									sdf.format(tmpStartDate), 
-									sdf.format(tempEndCal.getTime())
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
 							});
 						}
 					}
@@ -1444,45 +1392,36 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<String[]> getMonthlyRepDateTimes(ResGetRepDateTimesVO vo, String sDate, String eDate) throws Exception {
+	public List<Date[]> getMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception {
 		logger.debug("getMonthlyRepDateTimes started.");
-		String freq = vo.getReWay().substring(0, 1);
-		String selType = vo.getReWay().substring(1);
-		int interval = Integer.parseInt(vo.getReNum().trim());
-		String daysOfWeek = vo.getReYoil().trim();
-		int daysOfMonth = Integer.parseInt(vo.getReDay().trim());
-		int monthsOfYear = Integer.parseInt(vo.getReMonth().trim());
-		int byPosition = Integer.parseInt(vo.getReOrd().trim());
-		String endRecurType = vo.getEndFlag();
-		int instances = Integer.parseInt(vo.getReCount().trim());
+		int freq = vo.getFreq();
+		int selType = vo.getSelType();
+		int interval = vo.getInterval();
+		int daysOfMonth = vo.getDaysOfMonth();
+		int monthsOfYear = vo.getMonthsOfYear();
+		int byPosition = vo.getByPosition();
+		int endRecurType = vo.getEndRecurType();
+		int instances = vo.getInstances();
 		
-		List<Integer> wDay = null;
-		if (!selType.equals("0")) {
-			String[] wDayArr = daysOfWeek.split(",");
-			wDay = new ArrayList<Integer>();
-			
-			for (int i=0; i<wDayArr.length; i++) {
-				wDay.add(Integer.parseInt(wDayArr[i].trim()));
-			}
-		}
+		List<Integer> wDay = vo.getDaysOfWeek();
 		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
+		// 자원예약 기간
+		Date resStartDate = vo.getStartDate();
+		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		// 자원예약 기간
-		Date resStartDate = sdf.parse(vo.getStartDateTime());
-		Date resEndDate = sdf.parse(vo.getEndDateTime());
+		sDate += " 00:00:00";
+		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
 
-		String tmpStartDateStr = vo.getStartDateTime();
-		String tmpEndDateStr = vo.getStartDateTime().substring(0, 10) + " " + vo.getEndDateTime().substring(11);
+		String tmpStartDateStr = sdf.format(vo.getStartDate());
+		String tmpEndDateStr = tmpStartDateStr.substring(0, 10) + sdf.format(vo.getEndDate()).substring(10);
 		
-		Date tmpStartDate = sdf.parse(tmpStartDateStr);
+		Date tmpStartDate = vo.getStartDate();
 		Date tmpEndDate = sdf.parse(tmpEndDateStr);
 		
 		Calendar tempStartCal = Calendar.getInstance();
@@ -1511,7 +1450,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("tmpStartDate=" + sdf.format(tmpStartDate));
 		logger.debug("tmpEndDate=" + sdf.format(tmpEndDate));
 		
-		List<String[]> returnList = new ArrayList<String[]>();
+		List<Date[]> returnList = new ArrayList<Date[]>();
 		
 		int temp = 1000; // 최대 1000번 반복
 		
@@ -1521,12 +1460,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		while (loopFlag) {
 			tsdList.clear();
 			
-			if (freq.equals("7")) {
+			if (freq == 7) {
 				tempStartCal.set(Calendar.MONTH, monthsOfYear - 1);
 			}
 			
 			// 날짜
-			if (selType.equals("0")) {
+			if (selType == 0) {
 				// daysOfMonth가 해당 달의 마지막날보다 크지 않으면 list에 추가
 				int lastDate = tempStartCal.getActualMaximum(Calendar.DAY_OF_MONTH);
 				if (daysOfMonth <= lastDate) {
@@ -1586,7 +1525,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			for (Date tsd : tsdList) {
 				// 종료일 지정 안했을 경우
-				if (endRecurType.equals("0")) {
+				if (endRecurType == 0) {
 					if (tsd.after(endDate)) {
 						loopFlag = false;
 						break;
@@ -1594,14 +1533,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.setTime(tsd);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tsd), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 종료일 지정했을 경우
-				else if (endRecurType.equals("2")) {
+				else if (endRecurType == 2) {
 					if (tsd.after(endDate) || tsd.after(resEndDate)) {
 						loopFlag = false;
 						break;
@@ -1609,14 +1548,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.setTime(tsd);
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
-						returnList.add(new String[] {
-								sdf.format(tsd), 
-								sdf.format(tempEndCal.getTime())
+						returnList.add(new Date[] {
+								tmpStartDate, 
+								tempEndCal.getTime()
 						});
 					}
 				}
 				// 반복 횟수 지정했을 경우
-				else if (endRecurType.equals("1")) {
+				else if (endRecurType == 1) {
 					if (tsd.after(endDate) || instances <= 0) {
 						loopFlag = false;
 						break;
@@ -1627,16 +1566,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.setTime(tsd);
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
-							returnList.add(new String[] {
-									sdf.format(tsd), 
-									sdf.format(tempEndCal.getTime())
+							returnList.add(new Date[] {
+									tmpStartDate, 
+									tempEndCal.getTime()
 							});
 						}
 					}
 				}
 			}
 			
-			if (freq.equals("6")) {
+			if (freq == 6) {
 				tempStartCal.add(Calendar.MONTH, interval);
 			} else {
 				tempStartCal.add(Calendar.YEAR, 1);
@@ -2583,14 +2522,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         return returnStr;
 	}
 	
-	public DataTable makeDupResult() {
-		DataTable dtResult = null;
-		
-		dtResult = new DataTable();
-		
-		return dtResult;
-	}
-	
 	//반복예약일때
 	@Override
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
@@ -2616,9 +2547,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? "" : strPcmd;
 			
-		List<ResGetRepResourceVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
+		List<ResGetScheduleVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
 		
-		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 			
 		boolean isDup = false;
 			
@@ -2641,8 +2572,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		recDuration.setFirstStartDateTime(firstStartDateTime);
 		recDuration.setLastStartDateTime(lastStartDateTime);
 			
-		List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		 for (ResGetRepResourceRepeatVO dr : retobjTable1) {
+		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		 for (ResGetScheduleRepetitionVO dr : retobjTable1) {
 			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
 			 if (dt2 == null || dt2.size() == 0) {
 				 continue;
@@ -2675,9 +2606,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
 		
-		List<ResGetRepResourceVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
+		List<ResGetScheduleVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
 		
-		ResGetRepResourceVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
 		
 		boolean isDup = false;
 		
@@ -2701,8 +2632,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		recDuration.setFirstStartDateTime(firstStartDateTime);
 		recDuration.setLastStartDateTime(lastStartDateTime);
 		
-		List<ResGetRepResourceRepeatVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		for (ResGetRepResourceRepeatVO dr : retobjTable1) {
+		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		for (ResGetScheduleRepetitionVO dr : retobjTable1) {
 			List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
 			if (dt2 == null || dt2.size() == 0) {
 				continue;
@@ -2720,7 +2651,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return isDup;
 	}
 	
-	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetRepResourceVO> dtT, List<ResGetRepResourceVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
+	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetScheduleVO> dtT, List<ResGetScheduleVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
 		logger.debug("chkTable Start");
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
 		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
@@ -2756,7 +2687,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
-			for (ResGetRepResourceVO drT : dtT) {
+			for (ResGetScheduleVO drT : dtT) {
 				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 				logger.debug("tStartDate="+tStartDate);
@@ -2765,7 +2696,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 				isDel = false;
 				if (dtTd != null) {
-					for (ResGetRepResourceVO drTd : dtTd) {
+					for (ResGetScheduleVO drTd : dtTd) {
 						if (drTd.getStartDate().equals(drT.getStartDate()) && drTd.getEndDate().equals(drT.getEndDate())) {
 							isDel = true;
 							break;
@@ -2777,16 +2708,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 					
 				//
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
 				String compare2 = tStartDate; 
 
 				Date day1 = date.parse(compare1);
 				Date day2 = date.parse(compare2);
 
 				String compare3 = tEndDate;
-				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
+				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
+				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
 					
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -2812,7 +2743,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return isDup;
 	}
 	
-	public boolean chkTableRepeat(List<ResMakeDupResultVO> dtS, List<ResMakeDupResultVO> dtT, List<ResGetRepResourceRepeatVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
+	public boolean chkTableRepeat(List<ResMakeDupResultVO> dtS, List<ResMakeDupResultVO> dtT, List<ResGetScheduleRepetitionVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
 
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
@@ -2840,12 +2771,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		// 빠짐없이 반복은 아니라고 봄.
+		logger.debug("dtSSize="+dtS.size());
 		for (ResMakeDupResultVO drS : dtS) {  // S, 예약할
 			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
 			logger.debug("sStartDate="+sStartDate);
 			logger.debug("sEndDate="+sEndDate);
 			
+			logger.debug("dtTSize="+dtT.size());
 			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
 				logger.debug("drtStartDate="+drT.getStartDateTime());  
 				logger.debug("drtEndDate="+drT.getEndDateTime());
@@ -2861,7 +2794,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				isDel = false;
 				
 				if (dtTd != null) {
-					for (ResGetRepResourceRepeatVO drTd : dtTd) { // TD, 예약된 것 중 지워진 것
+					for (ResGetScheduleRepetitionVO drTd : dtTd) { // TD, 예약된 것 중 지워진 것
 						if (drTd.getStartDateTime().equals(drT.getStartDateTime()) && drTd.getEndDateTime().equals(drT.getEndDateTime())) {
 							isDel = true;
 							break;
@@ -2873,7 +2806,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 				
 				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
+				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
+				String compare1 = sEndDate;
 				String compare2 = tStartDate; 
 				
 				Date day1 = date.parse(compare1);
@@ -2882,7 +2816,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				String compare3 = tEndDate;
 				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
 				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
+				String compare4 = sStartDate;
 				
 				Date day3 = date.parse(compare3);
 				Date day4 = date.parse(compare4);
@@ -2973,7 +2907,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return dtRec;
 	}
 	
-	public List<ResMakeDupResultVO> makeRepResource2(ResGetRepResourceRepeatVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration, String offset) throws Exception {
+	public List<ResMakeDupResultVO> makeRepResource2(ResGetScheduleRepetitionVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration, String offset) throws Exception {
 		logger.debug("makeRepResource2 started");
 
 		List<ResMakeDupResultVO> dtDest = new ArrayList<ResMakeDupResultVO>();
@@ -3130,6 +3064,74 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		result.setRecReWay(reWay);
 		result.setRecReYoil(reYoil);
 		result.setRecStartDateTime(startDateTime);
+		
+		logger.debug("resStruct ended");
+		
+		return result;
+	}
+	
+	public ResScheduleRepetitionVO resStruct(ResGetScheduleRepetitionVO vo) throws Exception {
+		logger.debug("resStruct started");
+
+		ResScheduleRepetitionVO result = new ResScheduleRepetitionVO();
+		
+		if (vo.getReWay() != null && vo.getReWay().length() == 2) {
+			result.setFreq(Integer.parseInt(vo.getReWay().substring(0, 1)));
+			result.setSelType(Integer.parseInt(vo.getReWay().substring(1)));
+		} else {
+			result.setSelType(-1);
+		}
+		
+		if (vo.getReNum() != null && !vo.getReNum().trim().equals("")) {
+			result.setInterval(Integer.parseInt(vo.getReNum()));
+		}
+		
+		if (vo.getEndFlag() != null && !vo.getEndFlag().trim().equals("")) {
+			result.setEndRecurType(Integer.parseInt(vo.getEndFlag()));
+		} else {
+			result.setEndRecurType(-1);
+		}
+		
+		if (vo.getReCount() != null && !vo.getReCount().trim().equals("")) {
+			result.setInstances(Integer.parseInt(vo.getReCount()));
+		}
+		
+		if (vo.getReYoil() != null && !vo.getReYoil().trim().equals("")) {
+			List<Integer> yoilList = new ArrayList<Integer>();
+			String[] yoilArr = vo.getReYoil().split(",");
+			
+			for (String yoil : yoilArr) {
+				yoilList.add(Integer.parseInt(yoil.trim())); 
+			}
+			
+			result.setDaysOfWeek(yoilList);
+		}
+		
+		if (vo.getReDay() != null && !vo.getReDay().trim().equals("")) {
+			result.setDaysOfMonth(Integer.parseInt(vo.getReDay()));
+		}
+		
+		if (vo.getReMonth() != null && !vo.getReMonth().trim().equals("")) {
+			result.setMonthsOfYear(Integer.parseInt(vo.getReMonth()));
+		}
+		
+		if (vo.getReOrd() != null && !vo.getReOrd().trim().equals("")) {
+			result.setByPosition(Integer.parseInt(vo.getReOrd()));
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		if (vo.getStartDateTime() != null && !vo.getStartDateTime().trim().equals("")) {
+			result.setStartDate(format.parse(vo.getStartDateTime()));
+		}
+		
+		if (vo.getEndDateTime() != null && !vo.getEndDateTime().trim().equals("")) {
+			result.setEndDate(format.parse(vo.getEndDateTime()));
+		}
+		
+		if (vo.getAllDay() != null && vo.getAllDay().equals("1")) {
+			result.setAllDay(true);
+		}
 		
 		logger.debug("resStruct ended");
 		
@@ -3298,9 +3300,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					logger.debug("recStart="+recParam.getRecStartDateTime());
 					logger.debug("recEnd"+recParam.getRecEndDateTime());
-					logger.debug("checkMonth="+checkMonth(recParam.getRecStartDateTime()));
-					logger.debug("checkDay="+checkDay(recParam.getRecStartDateTime()));
-					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
+					
+					Calendar cal = Calendar.getInstance();
+					cal.setTime(date1.parse(recParam.getRecEndDateTime()));
+					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ ((cal.get(Calendar.HOUR) < 10) ? "0" + cal.get(Calendar.HOUR) : cal.get(Calendar.HOUR)) + ((cal.get(Calendar.MINUTE) < 10) ? "0" + cal.get(Calendar.MINUTE) : cal.get(Calendar.MINUTE));
 					logger.debug("[51]dsEndDateTime1="+dsEndDateTime);
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
 					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
@@ -3407,10 +3410,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					dsStartDateTimeLoop = dsStartDateTime;
 					logger.debug("dsStartDateTimeLoop="+dsStartDateTimeLoop);
 					logger.debug("recEndDateTime="+recParam.getRecEndDateTime());
-					String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-					compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-					compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare1 = dsStartDateTimeLoop;
+					//compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
+					//compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 					
 					logger.debug("compare1="+compare1);
 					logger.debug("compare2="+compare2);
@@ -3427,10 +3430,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					//String compare4 = recParam.getRecStartDateTime();
 					String compare4 = recStartDateTime;
-					String compare5 = getYearMonthDay(dsStartDateTime);
-					compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare6 = getYearMonthDay(recEndDateTime);
-					compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare5 = dsStartDateTime;
+					//compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
+					String compare6 = recEndDateTime;
+					//compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
 					logger.debug("compare3="+compare3);
 					logger.debug("compare4="+compare4);
 					logger.debug("compare5="+compare5);

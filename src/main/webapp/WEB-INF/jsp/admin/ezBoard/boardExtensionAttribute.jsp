@@ -765,7 +765,7 @@
 						<WIDTH>150</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME>Width</NAME>
+						<NAME><spring:message code='ezBoard.t5002'/></NAME>
 						<WIDTH>150</WIDTH>
 					</HEADER>
 				</HEADERS>
@@ -834,7 +834,7 @@
 				        <tr>
 					        <th style="width:25%"><spring:message code='ezBoard.t999031'/></th>
 			                <td style="width:25%" id="HeadName"></td>
-					        <th style="width:25%">WIDTH</th>
+					        <th style="width:25%"><spring:message code='ezBoard.t5002'/></th>
 			                <td style="width:25%"><input id="HeadWidth" style="width:99%" /></td>
 				        </tr>
 			        </table>

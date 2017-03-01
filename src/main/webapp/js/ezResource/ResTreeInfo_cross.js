@@ -59,10 +59,10 @@ function GetTreeBrdsInfo() {
 		} else {
 			var rep = new RegExp( "&", "gi" );				// 정규식을 쓴이유는 ??????
 			var brd_nm = TreeView.getvalue(nodeIdx, "DATA2");
-			var brd_nm = brd_nm.replace(rep, "chr(38)");	
+			//var brd_nm = brd_nm.replace(rep, "chr(38)");	
 			
 			var strUrl = "/ezResource/viewResList2.do?brdID=" + brd_id + "&accessCode=" + g_AccessCode; 
-			strUrl = strUrl + "&brdNm=" + encodeURI(brd_nm);
+			strUrl = strUrl + "&brdNm=" + encodeURIComponent(brd_nm);
 			
 			Navigate( strUrl );
 		}

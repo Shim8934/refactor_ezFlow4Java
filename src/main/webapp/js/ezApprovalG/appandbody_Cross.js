@@ -28,7 +28,6 @@ function PrintClick(Type, DocID, Mode) {
 
 function addOpinion(DocID, pFlag) {
 	var rowidx, rtnString, colidx;
-	var pFlag = "";
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
@@ -83,8 +82,6 @@ function addOpinion(DocID, pFlag) {
 function addAttach(DocID, pFlag) {
     var rowidx, rtnString, colidx;
 	var result = "";
-	var pFlag = "";
-	
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
@@ -131,8 +128,7 @@ function addAttach(DocID, pFlag) {
 function addLineInfo(DocID, pFlag) {
     var rowidx, rtnString, colidx;
     var result = "";
-	var pFlag = "";
-	
+    
 	if (pFlag.toUpperCase() == "APR" || pFlag.toUpperCase() == "ING") {
 		pFlag = "APR";
 	} else {
@@ -185,7 +181,7 @@ var temppFlag;
 function getdetail(DocID, pFlag) {
     var textOpi = addOpinion(DocID, pFlag);
     var textAttatch = addAttach(DocID, pFlag);
-
+    
     if (CrossYN()) {
         temptextOpi = textOpi;
         temptextAttatch = textAttatch;
@@ -248,10 +244,9 @@ function OpenQuestionUI_Complete(ret) {
     if (ret[0] == "0" && ret[1] == "0" && ret[2] == "0")
         return;
     var rtnVal = "";
-
     if (ret[0] == "Y") {
         rtnVal = rtnVal + "<table style='font-style:굴림체; font-size:9pt; BORDER-COLLAPSE: collapse; width:625px; margin-left:11px'>";
-        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLan880 + " ◀" + "</P></TD></TR>";
+        rtnVal = rtnVal + "<TR><TD style='height:30px; padding-top:10px' colspan='5'><P>" + "▶ " + strLang880 + " ◀" + "</P></TD></TR>";
         rtnVal = rtnVal + temptextOpi;
         rtnVal = rtnVal + "</table>";
     }
@@ -267,7 +262,7 @@ function OpenQuestionUI_Complete(ret) {
         rtnVal = rtnVal + addLineInfo(tempDocID, temppFlag);
         rtnVal = rtnVal + "</table>";
     }
-
+    
     var bodycontent = "";
     if (tempType == "FormProc")
         bodycontent = pzFormProc.Editor.DOM.body.innerHTML + rtnVal;

@@ -516,6 +516,7 @@ public class CommonUtil {
 			value = pOrgString.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 	        value = value.replaceAll("\\(", "&#40;").replaceAll("\\)", "&#41;");
 	        value = value.replaceAll("'", "&#39;");
+	        value = value.replaceAll("\"", "&quot;");
 	        value = value.replaceAll("eval\\((.*)\\)", "");
 	        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");        
 	        //value = value.replaceAll("script", "");

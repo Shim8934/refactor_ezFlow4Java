@@ -11,7 +11,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -95,9 +94,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Autowired
-	private Properties config;
-
 	@Resource(name="loginService")
 	private LoginService loginService;
 
@@ -127,7 +123,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		logger.debug("qstList Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 
-		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "", lang = "";
+		String brdID = "5", title = "", responseRange = "", pollStartDate = "", pollEndDate = "";
 		String currPage = "1";
 		int pageSize = 15;
 		qstListVO.setUserID(loginVO.getId());
@@ -149,9 +145,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 			pollEndDate = request.getParameter("pollEndDate");
 			pollEndDate = commonUtil.makeDate(pollEndDate.substring(0,4), pollEndDate.substring(5,7), pollEndDate.substring(8,10), false);
 		}
-		if(request.getParameter("lang") != null){
-			lang = request.getParameter("lang");
-		}
 		if(request.getParameter("currPage") != null){
 			currPage = request.getParameter("currPage");
 		}
@@ -161,7 +154,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstListVO.setResponseRange(responseRange);
 		qstListVO.setPollStartDate(commonUtil.getDateStringInUTC(pollStartDate, loginVO.getOffset(), true));
 		qstListVO.setPollEndDate(commonUtil.getDateStringInUTC(pollEndDate, loginVO.getOffset(), true));
-		qstListVO.setLang(lang);
+		qstListVO.setLang(commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()));
 		qstListVO.setCurrPage(Integer.parseInt(currPage));
 		qstListVO.setPageSize(pageSize);
 		
@@ -1016,7 +1009,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		userInfoDeptCode = userInfo.getDeptID();
 		pCompanyID = userInfo.getCompanyID();
 		serverName = req.getServerName();
-		String userLang = userInfo.getLang();
+		String langData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		
 		qstRangeSelectVO.setBrdID(brdID);
 		qstRangeSelectVO.setItemID(itemID);
@@ -1031,7 +1024,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		model.addAttribute("itemNo",qstRangeSelectVO.getItemID());
 		model.addAttribute("pCompanyID",pCompanyID);
 		model.addAttribute("qstRangeSelectVO",qstRangeSelectVO);
-		model.addAttribute("userLang",userLang);
+		model.addAttribute("langData",langData);
 		return "/ezQuestion/qstRangeSelect";
 	}
 	
@@ -1770,7 +1763,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResultSubjectiv Start");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String brdID = "", itemNo = "", questionNo = "", lang="";
+		String brdID = "", itemNo = "", questionNo = "";
         int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
         int pPageSize = 0, pageCount = 0, pBlockSize = 0;
         String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
@@ -1784,11 +1777,6 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             questionNo = request.getParameter("questionNo");
         if (request.getParameter("pageCount") != null)
             pageCount = Integer.parseInt(request.getParameter("pageCount"));        
-        if(loginVO.getLang().equals("1")){
-        	lang ="";
-        }else{
-        	lang = loginVO.getLang();
-        }
         if (request.getParameter("page") != null){
             pCurrPage = Integer.parseInt(request.getParameter("page"));
         }else{
@@ -1809,7 +1797,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         logger.debug(brdID);
         logger.debug(itemNo);
         logger.debug(questionNo);
-        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), lang, loginVO.getTenantId());
+        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
         if (pageCount == 0){
@@ -1820,7 +1808,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         
         int iStart = (pCurrPage - 1) * pPageSize;
         /** EZSP_RESULTSUBJECTIVELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, lang, loginVO.getTenantId());
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);

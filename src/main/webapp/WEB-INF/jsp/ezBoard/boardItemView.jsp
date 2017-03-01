@@ -87,21 +87,6 @@
 					
 		            AddLinkTarget();
 		            SetAttachmentInfo();
-		            
-			        if (gubun == "2") {
-			            if(OneLineReplyFlag == "1")
-			            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-			            else
-			            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
-			        }
-			        else {
-			            var trHeight = AtttributeCount * 30;
-			            if (OneLineReplyFlag == "1") {
-			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-			            } else {
-			                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
-			            }
-			        }
 			        
 		            //추가항목 창 사이즈 조절
 		            var addheight = 0;
@@ -200,19 +185,6 @@
 				        }
 			        }
 		        }
-// 		        if (gubun == "2") {
-// 		            if(OneLineReplyFlag == "1")
-// 		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-// 		            else
-// 		            	document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
-// 		        }
-// 		        else {
-// 		            var trHeight = AtttributeCount * 30;
-// 		            if (OneLineReplyFlag == "1")
-// 		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (320 + trHeight) + "PX";
-// 		            else
-// 		                document.getElementById("message").style.height = (document.documentElement.clientHeight) - (240 + trHeight) + "PX";
-// 		        }
 		    };
 		
 		    function AddLinkTarget() {

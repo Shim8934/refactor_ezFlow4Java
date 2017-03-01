@@ -66,7 +66,7 @@
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
-	    	var brdName = "<c:out value='${brdName}' />";
+	    	var brdName = "<c:out value='${brdName}' escapeXml='false'/>";
 	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
@@ -142,7 +142,7 @@
 	    	        ItemArray[1] = Array("<c:out value='${brdName}' />");
 
 	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' />";
+	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' escapeXml='false'/>";
 	        	}
 		        
 	        	if (cmd == "add") {
@@ -548,7 +548,7 @@
            									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/dextEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
            								</c:when>
            								<c:otherwise>
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:97%; width:99.7%; overflow:auto;"></iframe>
            								</c:otherwise>
            							</c:choose>
            						</div>
