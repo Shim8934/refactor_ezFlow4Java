@@ -534,6 +534,10 @@
 		        }
 		        if (CurPage == 0) CurPage = 1;
 		        getBoardList();
+		        
+		        try {
+			    	window.opener.leftCountRf();
+				} catch (e) {}
 		    }
 		
 		    function event_HeaderCheckBoxClick(obj) {
@@ -768,6 +772,9 @@
 	
 	                if (typeof (ret) != "undefined") {
 	                    if (ret == "OK") {
+	                    	try {
+	    				    	window.opener.leftCountRf();
+	    					} catch (e) {}
 	                        window.location.reload();
 	                        window.close();
 	                    }
@@ -777,6 +784,9 @@
 	        function MoveItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                if (ret == "OK") {
+	                	try {
+					    	window.opener.leftCountRf();
+						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }
@@ -786,6 +796,9 @@
 	        function CopyItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                if (ret == "OK") {
+	                	try {
+					    	window.opener.leftCountRf();
+						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }

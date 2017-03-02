@@ -305,11 +305,6 @@
 	            }
 	            endtime = new Date().getTime();
 	            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-	            
-	            try {
-                	leftCountRf();
-				} catch (e) {
-				}
 		    }
 		
 		    var BlockSize = 10;
@@ -593,6 +588,10 @@
 		                DeleteItem();
 		        }
 		        
+		        try {
+                	leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") return;
@@ -626,6 +625,10 @@
                     if (CurPage == 0) CurPage = 1;
                     getBoardList();
                     
+                    try {
+                    	leftCountRf();
+    				} catch (e) {
+    				}
                 }
             }
 		    function CheckIfHasReplies() {

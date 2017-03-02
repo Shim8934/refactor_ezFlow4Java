@@ -384,11 +384,6 @@
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-		            
-		            try {
-				        leftCountRf();
-					} catch (e) {
-					}
 		        }
 		        catch (e) {
 		            alert("getBoardList_after : " + e.description);
@@ -667,6 +662,10 @@
 		                DeleteItem();
 		        }
 		        
+		        try {
+			        leftCountRf();
+				} catch (e) {
+				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") {
@@ -702,6 +701,11 @@
                     }
                     if (CurPage == 0) CurPage = 1;
                     getBoardList();
+                    
+                    try {
+    			        leftCountRf();
+    				} catch (e) {
+    				}
                 }
 		    }
 		    function CheckIfHasReplies() {
@@ -866,6 +870,10 @@
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
+		                	try {
+								leftCountRf();
+							} catch (e) {}
+							
 		                    window.location.reload();
 		                    window.close();
 		                }
@@ -875,6 +883,9 @@
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
 		            if (ret == "OK") {
+			            try {
+							leftCountRf();
+						} catch (e) {}
 		                window.location.reload();
 		                window.close();
 		            }

@@ -390,6 +390,10 @@
 		                alert("<spring:message code='ezBoard.t10033'/>");
 				    }
 				    
+				    try {
+				    	window.opener.leftCountRf();
+					} catch (e) {}
+					
 	                try {
 	                    window.opener.location.reload(false);
 	                }
