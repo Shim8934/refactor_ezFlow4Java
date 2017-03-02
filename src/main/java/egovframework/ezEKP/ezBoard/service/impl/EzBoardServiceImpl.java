@@ -13,10 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2605,12 +2607,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("deleteItem started");
 		
 		try {
-			String docPath = "";
+			String[] itemListArray = itemList.split(";");
 			
 			if (boardID != null && !boardID.equals("")) {
-				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
-				docPath = boardListVO.getContentLocation();
-				
 				if (!boardInfo.getDelete_FG().equals("true")) {
 					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
 						if (!boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
@@ -2625,7 +2624,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			} else {
 				BoardListVO boardListVO = getItemInfo(mode, itemList.split(";")[0].split(",")[0], userInfo.getLang(), userInfo.getTenantId());
 				boardID = boardListVO.getBoardID();
-				docPath = boardListVO.getContentLocation();
 				
 				if (!boardInfo.getDelete_FG().equals("true")) {
 					if (!boardInfo.getBoardAdmin_FG().equals("true")) {
@@ -2640,27 +2638,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 			
-			for (int i = 0; i < itemList.split(";").length; i++) {
-				String tempItem = itemList.split(";")[i].split(",")[0];
+			for (int i = 0; i < itemListArray.length; i++) {
+				//중복제거 구문
+				itemListArray = new HashSet<String>(Arrays.asList(itemListArray)).toArray(new String[0]);
+				
+				String tempItem = itemListArray[i].split(",")[0];
 				
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, userInfo.getTenantId());
-					if (docPath != null && !docPath.equals("")) {
-						File targetFile = new File(realPath + docPath);
-						
-						if (targetFile != null) {
-							targetFile.delete();
-						}
-					}
 				} else {
 					deleteItem(mode, tempItem, boardID, realPath, userInfo.getTenantId());
-					if (docPath != null && !docPath.equals("")) {
-						File targetFile = new File(realPath + docPath);
-						
-						if (targetFile != null) {
-							targetFile.delete();
-						}
-					}
 				}
 			}
 			
@@ -2786,6 +2773,409 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 
 		logger.debug("deleteReservedBoardItem ended");
+	}
+
+	@Override
+	public String moveItem(String orgItemIDList, String orgBoardID, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception {
+		logger.debug("moveItem started");
+
+		String result = "";
+		String destItemID = "";
+		String[] itemIDArray = orgItemIDList.split(";");
+		
+		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+		
+		for (int i = 0; i < itemIDArray.length; i++) {
+			String orgItemID = itemIDArray[i];
+			
+			destItemID = "{" + UUID.randomUUID() + "}";
+			
+			BoardListVO boardListVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			
+			//MHT 파일위치 변경
+			boardListVO.setContentLocation(boardListVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
+			boardListVO.setStartDate("");
+			boardListVO.setItemLevel("1");
+			
+			if (boardListVO.getExtensionAttribute1() == null) {
+				boardListVO.setExtensionAttribute1("0");
+			}
+			
+			if (boardListVO.getExtensionAttribute2() == null) {
+				boardListVO.setExtensionAttribute2("0");
+			}
+			
+			if (boardListVO.getExtensionAttribute3() == null) {
+				boardListVO.setExtensionAttribute3("0");
+			}
+			
+			if (boardListVO.getExtensionAttribute32() == null) {
+				boardListVO.setExtensionAttribute32("0");
+			}
+			
+			if (boardListVO.getExtensionAttribute4() == null) {
+				boardListVO.setExtensionAttribute4("0");
+			}
+			
+			if (boardListVO.getExtensionAttribute5() == null) {
+				boardListVO.setExtensionAttribute5("0");
+			}
+			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "move");
+			
+			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
+			String attachments = "";
+			
+			if (attachmentList != null) {
+				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "move", userInfo.getTenantId());
+			}
+			
+			StringBuilder sb = new StringBuilder();
+
+	        sb.append("<NODES>");
+	        sb.append("<NODE>");
+	        sb.append("<FILEPATH>" + uploadFilePath + "</FILEPATH>");
+	        sb.append("<ITEMID>" + destItemID + "</ITEMID>");
+	        sb.append("<BOARDID>" + destBoardID + "</BOARDID>");
+	        sb.append("<TOPWRITERID>" + boardListVO.getTopWriterID() + "</TOPWRITERID>");
+	        sb.append("<WRITERID>" + boardListVO.getWriterID() + "</WRITERID>");
+	        sb.append("<WRITERNAME>" + commonUtil.cleanValue(boardListVO.getWriterName()) + "</WRITERNAME>");
+	        sb.append("<WRITERNAME2>" + commonUtil.cleanValue(boardListVO.getWriterName2()) + "</WRITERNAME2>");
+	        sb.append("<DEPTID>" + boardListVO.getWriterDeptID() + "</DEPTID>");
+	        sb.append("<DEPTNAME>" + commonUtil.cleanValue(boardListVO.getWriterDeptName()) + "</DEPTNAME>");	
+	        sb.append("<DEPTNAME2>" + commonUtil.cleanValue(boardListVO.getWriterDeptName2()) + "</DEPTNAME2>");
+	        sb.append("<COMPANYID>" + boardListVO.getWriterCompanyID() + "</COMPANYID>");
+	        sb.append("<COMPANYNAME>" + commonUtil.cleanValue(boardListVO.getWriterCompanyName()) + "</COMPANYNAME>");	
+	        sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(boardListVO.getWriterCompanyName2()) + "</COMPANYNAME2>");
+	        sb.append("<IMPORTANCE>" + boardListVO.getImportance() + "</IMPORTANCE>");
+	        sb.append("<TITLE>" + commonUtil.cleanValue(boardListVO.getTitle()) + "</TITLE>");
+	        sb.append("<CONTENTLOCATION>" + boardListVO.getContentLocation() + "</CONTENTLOCATION>");
+	        sb.append("<STARTDATE>" + commonUtil.getDateStringInUTC(boardListVO.getStartDate(), userInfo.getOffset(), false) + "</STARTDATE>");
+	        sb.append("<ENDDATE>" + commonUtil.getDateStringInUTC(boardListVO.getEndDate(), userInfo.getOffset(), false) + "</ENDDATE>");
+	        sb.append("<ABSTRACT>" + commonUtil.cleanValue(boardListVO.getABSTRACT()) + "</ABSTRACT>");
+	        sb.append("<ATTACHMENTS>" + commonUtil.cleanValue(attachments) + "</ATTACHMENTS>");
+	        sb.append("<UPPERITEMIDTREE>" + destItemID + "</UPPERITEMIDTREE>");
+	        sb.append("<ITEMLEVEL>1</ITEMLEVEL>");
+	        sb.append("<EXTENSIONATTRIBUTE1>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute1()) + "</EXTENSIONATTRIBUTE1>");
+	        sb.append("<EXTENSIONATTRIBUTE2>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute2()) + "</EXTENSIONATTRIBUTE2>");
+	        sb.append("<EXTENSIONATTRIBUTE3>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute3()) + "</EXTENSIONATTRIBUTE3>");
+	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
+	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
+	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
+	        sb.append("</NODE>");
+	        sb.append("</NODES>");
+
+	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+	        
+	        if (result.equals("OK")) {
+	        	updateMoveItem(destItemID, orgItemID, userInfo.getTenantId());
+	        }
+		}
+
+		logger.debug("moveItem ended");
+		
+		return result;
+	}
+	
+	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception{
+		String orgFilePath = "";
+		String destFilePath = "";
+		String returnString = "";
+		
+        for (int i = 0; i < attachmentList.size(); i++) {
+            orgFilePath = attachmentList.get(i);
+            orgFilePath = path.replace(commonUtil.getUploadPath("upload_board.ROOT", tenantID), "") + orgFilePath;
+            
+            String fileName = "";
+            fileName = attachmentList.get(i).substring(attachmentList.get(i).lastIndexOf(commonUtil.separator + "uploadFile" + commonUtil.separator) + 12).substring(39);
+            fileName = "{" + UUID.randomUUID() + "}_" + fileName;
+
+            destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+
+            if (returnString.equals("")) {
+            	returnString += destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+            } else {
+            	returnString = returnString + ";" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+            }
+            //move 이면 지우고 옮기기
+            if (mode.equals("copy")) {
+            	FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+            } else {
+            	FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+            }
+        }
+        
+        return returnString;
+	}
+	
+	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception{
+		BoardListVO boardListVO = new BoardListVO();
+
+		boolean saveMHTResult = false;
+		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
+		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
+		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
+		boardListVO.setTopWriterID(doc.getElementsByTagName("TOPWRITERID").item(0).getTextContent());
+		boardListVO.setWriterName(doc.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+		boardListVO.setWriterName2(doc.getElementsByTagName("WRITERNAME2").item(0).getTextContent());
+		boardListVO.setWriterDeptID(doc.getElementsByTagName("DEPTID").item(0).getTextContent());
+		boardListVO.setWriterDeptName(doc.getElementsByTagName("DEPTNAME").item(0).getTextContent());
+		boardListVO.setWriterDeptName2(doc.getElementsByTagName("DEPTNAME2").item(0).getTextContent());
+		boardListVO.setWriterCompanyID(doc.getElementsByTagName("COMPANYID").item(0).getTextContent());
+		boardListVO.setWriterCompanyName(doc.getElementsByTagName("COMPANYNAME").item(0).getTextContent());
+		boardListVO.setWriterCompanyName2(doc.getElementsByTagName("COMPANYNAME2").item(0).getTextContent());
+		boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
+		boardListVO.setImportance(doc.getElementsByTagName("IMPORTANCE").item(0).getTextContent());
+		boardListVO.setTitle(doc.getElementsByTagName("TITLE").item(0).getTextContent());
+		boardListVO.setRealPath(realPath);
+		boardListVO.setTenantID(userInfo.getTenantId());
+		
+		if (pMode.equals("copy")) {
+			boardListVO.setContentLocation(doc.getElementsByTagName("CONTENTLOCATION").item(0).getTextContent());
+		} else {
+			boardListVO.setContentLocation(commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "doc" + commonUtil.separator + boardListVO.getItemID() + ".mht");
+		}
+		
+		if (doc.getElementsByTagName("STARTDATE").item(0).getTextContent() != null && !doc.getElementsByTagName("STARTDATE").item(0).getTextContent().equals("")) {
+			boardListVO.setStartDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+			boardListVO.setWriteDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("STARTDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+		} else {
+			boardListVO.setStartDate(commonUtil.getTodayUTCTime(""));
+		}
+		
+		boardListVO.setEndDate(commonUtil.getDateStringInUTC(doc.getElementsByTagName("ENDDATE").item(0).getTextContent(), userInfo.getOffset(), true));
+		boardListVO.setABSTRACT(doc.getElementsByTagName("ABSTRACT").item(0).getTextContent());
+		boardListVO.setAttachments(doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent());
+		boardListVO.setUpperItemIDTree(doc.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
+		
+		//답변의 경우 최근에 답변 달은 것이 최상위로 와야함(by design)
+		if (pMode.equals("reply")) {
+			boardListVO.setUpperItemIDTree(boardListVO.getUpperItemIDTree() + getReverseDateNow() + boardListVO.getItemID());
+		}
+		boardListVO.setItemLevel(doc.getElementsByTagName("ITEMLEVEL").item(0).getTextContent());
+
+		if (!pMode.equals("copy")) {
+			boardListVO.setMainContent(doc.getElementsByTagName("CONTENT").item(0).getTextContent().replace("@r!n@", "\r\n"));
+			
+			if (pMode.equals("reply") || pMode.equals("modify")) {
+				boardListVO.setParentWriteDate(doc.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
+			} else {
+				boardListVO.setParentWriteDate("docNO");
+			}
+		} else {
+			boardListVO.setParentWriteDate("docNO");
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent().equals("")) {
+			boardListVO.setExtensionAttribute1("0");
+		} else {
+			boardListVO.setExtensionAttribute1(doc.getElementsByTagName("EXTENSIONATTRIBUTE1").item(0).getTextContent());
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
+			boardListVO.setExtensionAttribute2("0");
+		} else {
+			boardListVO.setExtensionAttribute2(doc.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
+		}
+		
+		boardListVO.setExtensionAttribute3(doc.getElementsByTagName("EXTENSIONATTRIBUTE3").item(0).getTextContent());
+		boardListVO.setExtensionAttribute32(doc.getElementsByTagName("EXTENSIONATTRIBUTE32").item(0).getTextContent());
+		boardListVO.setExtensionAttribute4(doc.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent());
+		boardListVO.setExtensionAttribute5(doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent());
+		boardListVO.setDocPassword(doc.getElementsByTagName("DOCPASSWORD").item(0).getTextContent());
+		boardListVO.setReadFlag(doc.getElementsByTagName("READCOUNTFLAG").item(0).getTextContent());
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0) != null) {
+			boardListVO.setExtensionAttribute6(doc.getElementsByTagName("EXTENSIONATTRIBUTE6").item(0).getTextContent());
+		} else {
+			boardListVO.setExtensionAttribute6("");
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0) != null) {
+			boardListVO.setExtensionAttribute7(doc.getElementsByTagName("EXTENSIONATTRIBUTE7").item(0).getTextContent());
+		} else {
+			boardListVO.setExtensionAttribute7("");
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0) != null) {
+			boardListVO.setExtensionAttribute8(doc.getElementsByTagName("EXTENSIONATTRIBUTE8").item(0).getTextContent());
+		} else {
+			boardListVO.setExtensionAttribute8("");
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0) != null) {
+			boardListVO.setExtensionAttribute9(doc.getElementsByTagName("EXTENSIONATTRIBUTE9").item(0).getTextContent());
+		} else {
+			boardListVO.setExtensionAttribute9("");
+		}
+		
+		if (doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0) != null) {
+			boardListVO.setExtensionAttribute10(doc.getElementsByTagName("EXTENSIONATTRIBUTE10").item(0).getTextContent());
+		} else {
+			boardListVO.setExtensionAttribute10("");
+		}
+		
+		if (!pMode.equals("copy")) {
+			saveMHTResult = saveMHT(boardListVO.getMainContent(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath);
+			if (saveMHTResult == false) {
+				return egovMessageSource.getMessage("ezCommunity.lhj04", userInfo.getLocale());
+			}
+		}
+		
+		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
+			boardListVO.setHasAttach("1");
+		} else {
+			boardListVO.setHasAttach("0");
+		}
+		
+		if (boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")) {
+			boardListVO.setItemLevel("0");
+		}
+
+		if (pMode.equals("modify")) {
+			brdUpdateItem(boardListVO, "BOARD");
+		} else if (pMode.equals("temp")) {
+			brdNewItemTemp(boardListVO);
+		} else {
+			brdNewItem(boardListVO);
+		}
+		
+		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
+			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId())) {
+				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
+			}
+			boardListVO.setHasAttach("1");
+		} else {
+			boardListVO.setHasAttach("0");
+		}
+		
+		return "OK";
+	}
+	
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception{
+		String orgFilePath = "";
+        String destFilePath = "";
+
+        orgFilePath = path + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht";
+        destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
+
+        File file = new File(path + commonUtil.separator + destBoardID);
+        
+        if (!file.exists()) {
+            file.mkdir();
+            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
+            new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile").mkdir();
+        }
+        //move 이면 지우고 옮기기
+        if (mode.equals("copy")) {
+        	FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+        } else {
+        	FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+        }
+	}
+
+	@Override
+	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception {
+		logger.debug("copyItem started");
+
+		String result = "";
+		String destItemID = "";
+		String[] itemIDArray = orgItemIDList.split(";");
+		
+		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+		
+		for (int i = 0; i < itemIDArray.length; i++) {
+			String orgItemID = itemIDArray[i];
+			
+			destItemID = "{" + UUID.randomUUID() + "}";
+			
+			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
+			//MHT 파일위치 변경
+			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
+			boardLisitVO.setStartDate("");
+			boardLisitVO.setItemLevel("1");
+			
+			if (boardLisitVO.getExtensionAttribute1() == null) {
+				boardLisitVO.setExtensionAttribute1("0");
+			}
+			
+			if (boardLisitVO.getExtensionAttribute2() == null) {
+				boardLisitVO.setExtensionAttribute2("0");
+			}
+			
+			if (boardLisitVO.getExtensionAttribute3() == null) {
+				boardLisitVO.setExtensionAttribute3("0");
+			}
+			
+			if (boardLisitVO.getExtensionAttribute32() == null) {
+				boardLisitVO.setExtensionAttribute32("0");
+			}
+			
+			if (boardLisitVO.getExtensionAttribute4() == null) {
+				boardLisitVO.setExtensionAttribute4("0");
+			}
+			
+			if (boardLisitVO.getExtensionAttribute5() == null) {
+				boardLisitVO.setExtensionAttribute5("0");
+			}
+			copyFiles(orgItemID, orgBoardID, destItemID, destBoardID, realPath + uploadFilePath, "copy");
+			
+			List<String> attachmentList = getCopyItemAttach(orgItemID, userInfo.getTenantId());
+			String attachments = "";
+			
+			if (attachmentList != null) {
+				attachments = copyAttachments(orgBoardID, destItemID, destBoardID, attachmentList, realPath + uploadFilePath, "copy", userInfo.getTenantId());
+			}
+			
+			StringBuilder sb = new StringBuilder();
+
+	        sb.append("<NODES>");
+	        sb.append("<NODE>");
+	        sb.append("<FILEPATH>" + uploadFilePath + "</FILEPATH>");
+	        sb.append("<ITEMID>" + destItemID + "</ITEMID>");
+	        sb.append("<BOARDID>" + destBoardID + "</BOARDID>");
+	        sb.append("<TOPWRITERID>" + boardLisitVO.getTopWriterID() + "</TOPWRITERID>");
+	        sb.append("<WRITERID>" + boardLisitVO.getWriterID() + "</WRITERID>");
+	        sb.append("<WRITERNAME>" + commonUtil.cleanValue(boardLisitVO.getWriterName()) + "</WRITERNAME>");
+	        sb.append("<WRITERNAME2>" + commonUtil.cleanValue(boardLisitVO.getWriterName2()) + "</WRITERNAME2>");
+	        sb.append("<DEPTID>" + boardLisitVO.getWriterDeptID() + "</DEPTID>");
+	        sb.append("<DEPTNAME>" + commonUtil.cleanValue(boardLisitVO.getWriterDeptName()) + "</DEPTNAME>");	
+	        sb.append("<DEPTNAME2>" + commonUtil.cleanValue(boardLisitVO.getWriterDeptName2()) + "</DEPTNAME2>");
+	        sb.append("<COMPANYID>" + boardLisitVO.getWriterCompanyID() + "</COMPANYID>");
+	        sb.append("<COMPANYNAME>" + commonUtil.cleanValue(boardLisitVO.getWriterCompanyName()) + "</COMPANYNAME>");
+	        sb.append("<COMPANYNAME2>" + commonUtil.cleanValue(boardLisitVO.getWriterCompanyName2()) + "</COMPANYNAME2>");
+	        sb.append("<IMPORTANCE>" + boardLisitVO.getImportance() + "</IMPORTANCE>");
+	        sb.append("<TITLE>" + commonUtil.cleanValue(boardLisitVO.getTitle()) + "</TITLE>");
+	        sb.append("<CONTENTLOCATION>" + boardLisitVO.getContentLocation() + "</CONTENTLOCATION>");
+	        sb.append("<STARTDATE>" + commonUtil.getDateStringInUTC(boardLisitVO.getStartDate(), userInfo.getOffset(), false) + "</STARTDATE>");
+	        sb.append("<ENDDATE>" + commonUtil.getDateStringInUTC(boardLisitVO.getEndDate(), userInfo.getOffset(), false) + "</ENDDATE>");
+	        sb.append("<ABSTRACT>" + commonUtil.cleanValue(boardLisitVO.getABSTRACT()) + "</ABSTRACT>");
+	        sb.append("<ATTACHMENTS>" + commonUtil.cleanValue(attachments) + "</ATTACHMENTS>");
+	        sb.append("<UPPERITEMIDTREE>" + destItemID + "</UPPERITEMIDTREE>");
+	        sb.append("<ITEMLEVEL>1</ITEMLEVEL>");
+	        sb.append("<EXTENSIONATTRIBUTE1>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute1()) + "</EXTENSIONATTRIBUTE1>");
+	        sb.append("<EXTENSIONATTRIBUTE2>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute2()) + "</EXTENSIONATTRIBUTE2>");
+	        sb.append("<EXTENSIONATTRIBUTE3>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute3()) + "</EXTENSIONATTRIBUTE3>");
+	        sb.append("<EXTENSIONATTRIBUTE32>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute32()) + "</EXTENSIONATTRIBUTE32>");
+	        sb.append("<EXTENSIONATTRIBUTE4>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute4()) + "</EXTENSIONATTRIBUTE4>");
+	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
+	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
+	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
+	        sb.append("</NODE>");
+	        sb.append("</NODES>");
+
+	        result = insertNewItem(commonUtil.convertStringToDocument(sb.toString()), "copy", realPath, userInfo);
+	        
+	        if (result.equals("OK")) {
+	        	updateCopyItem(destItemID, userInfo.getTenantId());
+	        }
+		}
+
+		logger.debug("copyItem ended");
+		
+		return result;
 	}
 	
 }

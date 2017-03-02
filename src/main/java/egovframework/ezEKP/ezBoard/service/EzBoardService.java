@@ -250,4 +250,14 @@ public interface EzBoardService {
 
 	public void deleteReservedBoardItem(String realPath) throws Exception;
 
+	public String moveItem(String orgItemIDList, String orgBoardID, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception;
+
+	public String copyAttachments(String orgBoardID, String destItemID, String destBoardID, List<String> attachmentList, String path, String mode, int tenantID) throws Exception;
+
+	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception;
+
+	public void copyFiles(String orgItemID, String orgBoardID, String destItemID, String destBoardID, String path, String mode) throws Exception;
+
+	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception;
+
 }
