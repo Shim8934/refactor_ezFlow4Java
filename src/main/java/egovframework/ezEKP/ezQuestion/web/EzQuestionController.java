@@ -2076,7 +2076,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
         model.addAttribute("itemNo", itemNo);
         model.addAttribute("questionNo", questionNo);
         model.addAttribute("pTotalPage", pTotalPage);
-        model.addAttribute("pCurrPage", pCurPage);
+        model.addAttribute("pCurPage", pCurPage);
         model.addAttribute("pTotalCnt", pTotalCnt);
         model.addAttribute("pAnsType", pAnsType);
         model.addAttribute("publicFlg", publicFlg);

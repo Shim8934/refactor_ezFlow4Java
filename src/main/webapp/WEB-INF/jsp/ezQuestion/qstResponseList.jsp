@@ -82,9 +82,6 @@
 				$('#xmlTable').html($('#xmlTable').html() + tableXml);
 			}
 
-
-
-			
 			function fun_UserView(responseno) {
 			    var Para = window.showModalDialog("/ezQuestion/infoUser.do?brdID=" + '${brdID}' + "&itemNo=" + '${itemNo}' + "&questionNo=" + '${questionNo}' + "&responseno=" + responseno, "", "dialogwidth:467px;dialogheight:396px;toolbar:no;location:no;help:no;directories:no;status:no;menubar:no;scrollbars=no;resizable:no");
 			}
