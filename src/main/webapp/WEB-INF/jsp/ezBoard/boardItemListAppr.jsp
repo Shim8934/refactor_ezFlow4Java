@@ -878,10 +878,6 @@
 		                }
 		                if (CurPage == 0) CurPage = 1;
 		                
-			            try {
-							leftCountRf();
-						} catch (e) {}
-		
 		                getBoardList();
 		            }
 		        }

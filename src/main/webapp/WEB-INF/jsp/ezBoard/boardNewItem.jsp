@@ -783,11 +783,6 @@
 		            }
 		            
 		            try {
-						window.opener.leftCountRf();
-					} catch (e) {
-					}
-					
-		            try {
 			            if (window.parent != null && window.parent.SuccessBoard != undefined) {
 			                try {
 			                    window.parent.SuccessBoard();

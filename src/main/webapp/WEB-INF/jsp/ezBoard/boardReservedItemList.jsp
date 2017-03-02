@@ -87,11 +87,6 @@
 		
 		        xmlhttp = null;
 		        
-		        try {
-			        leftCountRf();
-				} catch (e) {
-				}
-				
 		        window.location.reload();
 		    }
 		    function ReplaceText(orgStr, findStr, replaceStr) {

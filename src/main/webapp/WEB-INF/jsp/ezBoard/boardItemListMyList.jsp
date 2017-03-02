@@ -678,7 +678,6 @@
 		    }
 		
 		    function DeleteItem_onclick() {
-		
 		        if (strListInfo == "") {
 		            alert("<spring:message code='ezBoard.t195'/>");
 		            return;
@@ -692,10 +691,6 @@
 		        if (ret)
 		            DeleteItem();
 		
-		        try {
-                	leftCountRf();
-				} catch (e) {
-				}
 		    }
 		    var copyboarditem_cross_dialogArguments = new Array();
 	        function CopyItem_onclick() {

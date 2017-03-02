@@ -384,6 +384,11 @@
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
+		            
+		            try {
+				        leftCountRf();
+					} catch (e) {
+					}
 		        }
 		        catch (e) {
 		            alert("getBoardList_after : " + e.description);
@@ -662,10 +667,6 @@
 		                DeleteItem();
 		        }
 		        
-		        try {
-			        leftCountRf();
-				} catch (e) {
-				}
 		    }
 		    function DeleteItem_onclick_Complete(ret) {
 		        if (typeof (ret) == "undefined" || ret == "cancel" || ret == "") {
@@ -701,11 +702,6 @@
                     }
                     if (CurPage == 0) CurPage = 1;
                     getBoardList();
-                    
-                    try {
-    			        leftCountRf();
-    				} catch (e) {
-    				}
                 }
 		    }
 		    function CheckIfHasReplies() {
@@ -820,10 +816,6 @@
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
-		        
-		        try {
-					leftCountRf();
-				} catch (e) {}
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
@@ -874,10 +866,6 @@
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {
-		                	try {
-								leftCountRf();
-							} catch (e) {}
-							
 		                    window.location.reload();
 		                    window.close();
 		                }
@@ -887,9 +875,6 @@
 		    function MoveItem_onclick_Complete(ret) {
 		        if (typeof (ret) != "undefined") {
 		            if (ret == "OK") {
-			            try {
-							leftCountRf();
-						} catch (e) {}
 		                window.location.reload();
 		                window.close();
 		            }

@@ -391,11 +391,6 @@
 				    }
 				    
 	                try {
-						window.opener.leftCountRf();
-					} catch (e) {
-					}
-					
-	                try {
 	                    window.opener.location.reload(false);
 	                }
 	                catch (e) { }
