@@ -654,6 +654,8 @@
 	        	TBL_BOARD_BOARDBACKGROUNDINFO	       
 	       WHERE
 	       		tenant_id = #tenantID#
+	       AND
+	       		isuse = 1
 		]]>
 			<isNotEmpty prepend="AND" property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
 		ORDER BY 
