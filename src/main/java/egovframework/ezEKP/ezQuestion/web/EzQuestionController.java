@@ -944,14 +944,11 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
 		logger.debug("qstStep1 started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = req.getParameter("brdID");
 		String brdNm = req.getParameter("brdNm");
-//		String brdPostterm = req.getParameter("brdPostterm");
 
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
-//		model.addAttribute("brdPostterm", brdPostterm);
 		
 		logger.debug("qstStep1 ended.");
 		
@@ -975,8 +972,9 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+
 		if(req.getParameter("RangeXMLStr") != null) {
-			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""));
+			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("\"", "\'"));
 		}
 		pStep1DataXML.append("</PARAMETER>");
 		
