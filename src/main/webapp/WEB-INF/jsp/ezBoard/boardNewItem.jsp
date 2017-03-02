@@ -1645,7 +1645,8 @@
 	                span.setAttribute("imgwidth", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "WIDTH")[i]));
 	                span.setAttribute("imgheight", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "HEIGHT")[i]));
 	                span.setAttribute("filemane", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]));
-	
+	                span.style.display = "inline-block";
+	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
 	                input.style.marginTop = "10px";
