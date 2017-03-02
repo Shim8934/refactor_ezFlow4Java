@@ -36,8 +36,6 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleVO> getRepResource(String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
-	
 	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
 	
 	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
@@ -51,8 +49,6 @@ public interface EzResourceService {
 	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
 	public ResSelectFormIDVO selectFormID(String resID, int tenantID) throws Exception;
-	
-	public ResGetScheduleVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception;
 	
 	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception;
 	
@@ -78,13 +74,9 @@ public interface EzResourceService {
 	
 	public String getBrdApproveFlag(int brdID, String companyID, int tenantID) throws Exception;
 	
-	public String isoUTFDate(String dateTimeStr, Locale locale);
-	
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public String modifyResSch(String xmlStr, int tenantID, String offset) throws Exception;
-	
-	public String addMinutes(String sDate, int minute, String dateFormat) throws Exception;
 	
 	public boolean deleteRepetition(String xmlStr, int tenantID) throws Exception;
 	
