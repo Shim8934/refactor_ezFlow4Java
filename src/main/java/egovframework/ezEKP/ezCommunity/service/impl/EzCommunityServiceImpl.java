@@ -3567,8 +3567,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	}
         	
         	if (i > comNoPerPage * curPage -5) {
-        		logger.debug("item.getWriteDay() : " + item.getWriteDay());
-        		
 	        	sb.append("<ROW>");
 	        	sb.append("<NO>" + item.getNo() + "</NO>");
 	        	sb.append("<ID>" + commonUtil.cleanValue(item.getId().trim()) + "</ID>");
@@ -3579,7 +3577,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	        	sb.append("<CONTENT>" + commonUtil.cleanValue(item.getContent().trim()) + "</CONTENT>");
 	        	sb.append("<CONTENTURL>" + commonUtil.cleanValue(item.getContentURL()) + "</CONTENTURL>");
 	        	sb.append("<READNUM>" + item.getReadNum() + "</READNUM>");
-	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay(), userInfo.getOffset(), false).substring(0, item.getWriteDay().lastIndexOf(".")) + "</WRITEDAY>");
+	        	sb.append("<WRITEDAY>" + commonUtil.getDateStringInUTC(item.getWriteDay().substring(0, item.getWriteDay().lastIndexOf(".")), userInfo.getOffset(), false) + "</WRITEDAY>");
 	        	
 	        	if (EgovDateUtil.getDaysDiff(commonUtil.getTodayUTCTime("").substring(0, 10), item.getWriteDay().substring(0, 10)) >= 0 ) {
 	        		sb.append("<NEW>" + "NEW" + "</NEW>");
