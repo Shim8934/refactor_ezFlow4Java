@@ -269,7 +269,6 @@
 		                    rtn = xmlHttp.responseText;
 
 		                    if (rtn == "FALSE") {
-alert(strLang261);
 		                        var pAlertContent = strLang261;
 		                        getForm = OpenInformationUI(pAlertContent);
 		                    } else {
