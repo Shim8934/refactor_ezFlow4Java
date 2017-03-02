@@ -64,7 +64,7 @@
 						tableXml += "\")'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
 						tableXml += "</td>";
-						tableXml += "<td style='text-align:center'>";
+						tableXml += "<td style='text-align:left'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'ANSWERSUBJECTIVITY');
 						tableXml += "</td>";
 						
