@@ -40,21 +40,28 @@
 				var tableXml="";
 
 				for(i=0;nodes.length>i; i++){
-					tableXml += "<tr>";
-					tableXml += "<th title=\"" + SelectSingleNodeValue(nodes[i], 'QST') + "\">";
-					tableXml += SelectSingleNodeValue(nodes[i], 'QST');
-					tableXml += "</th>";
-					tableXml += "</tr>";
-					tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
-					
 					var itemNode = SelectSingleNode(nodes[i], 'ITEM');
 					var answerType = SelectSingleNodeValue(nodes[i], 'ANSWERTYPE');
 					
 					if (answerType == '5') {
+						tableXml += "<tr>";
+						tableXml += "<th title=\"" + SelectSingleNodeValue(nodes[i], 'QST') + "\">";
+						tableXml += SelectSingleNodeValue(nodes[i], 'QST');
+						tableXml += "</th>";
+						tableXml += "</tr>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
+						
 						var itemNodes = GetChildNodes(itemNode);
 						
 						tableXml += SelectSingleNodeValue(itemNode, 'TAG');
 					} else {
+						tableXml += "<tr>";
+						tableXml += "<th>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'QST');
+						tableXml += "</th>";
+						tableXml += "</tr>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'SUBROW');
+						
 						if(itemNode != null){
 							var itemNodes = GetChildNodes(itemNode);
 							

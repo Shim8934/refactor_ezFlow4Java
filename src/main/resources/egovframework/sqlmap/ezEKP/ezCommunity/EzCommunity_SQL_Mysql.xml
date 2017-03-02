@@ -2612,7 +2612,7 @@
 	<select id="EzCommunityDAO.mainPageGet5"					parameterClass="Map"		resultClass="CommunityMyCommunityVO"  remapResults="true">
 		<![CDATA[
 			SELECT
-				(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname$v_USERINFO_LANG$,
+				(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname,
 				c_clubno,
 				c_clubgubun,
 				c_clubdesc,
@@ -2644,7 +2644,7 @@
 	<select id="EzCommunityDAO.mainPageGet6"					parameterClass="Map"		resultClass="CommunityMyCommunityVO" remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
 				c_clubno,
 				c_sysopid,
 				c_clubgubun,

@@ -706,7 +706,6 @@ function Send_onClick_Complete(ReturnValue) {
                 }
             }
             
-            var individualmailuserNum = 5;
             try {
             	individualmailuserNum = Number(individualmailuser);
             } catch (e) {}
@@ -2580,7 +2579,7 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[0] = m_rgParams4PostOption;
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
-    DivPopUpShow(410, 375, "/ezEmail/letterOption.do");
+    DivPopUpShow(410, 455, "/ezEmail/letterOption.do");
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {
@@ -2593,10 +2592,10 @@ function Option_onClick_Complete(m_rgParams4PostOption) {
         m_rgParams4PostOption["important"] = importantSelect.selectedIndex.toString();
     }
 
-    if (m_rgParams4PostOption["delaySendDate"] != "")
-        document.all("chkeachmail").disabled = true;
+    if (m_rgParams4PostOption["EachMail"] == "true")
+        iseachMail = "true";
     else
-        document.all("chkeachmail").disabled = false;
+        iseachMail = "false";    
 }
 function Subject_ReApply() {
     g_bDirty = true;

@@ -226,15 +226,20 @@
     		}
     		function fun_QuesDelete() {
         		if (index == -1 ) {
+        			alert("<spring:message code='ezQuestion.t463' />");
         			return;
         		}
+        		
         		if (frmCreate.selQues.length <= 0 ) {
+        			alert("<spring:message code='ezQuestion.t463' />");
         			return;
         		}
+        		
         		if (frmCreate.selQues[index].text=="") {
             		alert("<spring:message code='ezQuestion.t463' />");
             		return;
-        		}	
+        		}
+        		
         		var vdata=parseInt(frmCreate.selQues[index].value);
         		var curidxno=frmCreate.selQues.length 
         		for(jk = index;jk < curidxno - 1 ; jk++){
@@ -244,6 +249,7 @@
         		}
         		frmCreate.selQues.remove(curidxno-1);
     		}
+    		
     		function fun_SelClick() {
         		if(frmCreate.selQues.selectedIndex >= 0) {
             		index = frmCreate.selQues.selectedIndex

@@ -202,6 +202,6 @@ var strLang582 = "回";
 
 //추가
 var strLangLHM01 = "default_jp";
-var strLangLHM02 = "인쇄 미리보기";
-var strLangLHM03 = "인쇄";
-var strLangLHM04 = "취소";
+var strLangLHM02 = "印刷プレビュー";
+var strLangLHM03 = "印刷";
+var strLangLHM04 = "キャンセル";

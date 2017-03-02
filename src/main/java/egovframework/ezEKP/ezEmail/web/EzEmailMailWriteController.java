@@ -237,7 +237,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("folderDate=" + folderDate + ",stateName=" + stateName);
 		
 		String mailInnerDomain = ezCommonService.getTenantConfig("MailInnerDomain", loginInfo.getTenantId());
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", loginInfo.getTenantId());
 		logger.debug("mailInnerDomain=" + mailInnerDomain + ",useEditor=" + useEditor);
 		
 		String sendFrom = "";
@@ -309,7 +309,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
   				+ ",postType=" + postType);
   		
         //TODO: 개별발신
-		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
 		
 		String cmdOwn = "";
 		if (request.getParameter("cmd") != null) {
@@ -2692,6 +2692,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	                        draftUID = uids[0].uid;
 	                    } 
 			            
+	                    // 개별발신
+	                    if (isEachMailB) {
+		                	message.setHeader("X-JMocha-Each-Mail", "true");
+	                    }
+	                    
 			        	//예약발송
 			        	String delaySendTimeUTC = commonUtil.getDateStringInUTC(delaySendTime, userInfo.getOffset(), true);
 			            doDelaySend(userInfo.getTenantId(), message, isReserve, reservedId, subject, delaySendTimeUTC, userId, realPath);
@@ -2718,28 +2723,31 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     	                        sentFolderMessageUID = uids[0].uid;
     	                    } 
 			            }
-			            
-//		            	if (replyReadTime.equals("2") && strCheckReadUrl != "" && !iseachmail) //외부메일수신확인
-//		            		rtnStatus = OuterMailSend(esb, message, mailcmd, strCheckReadUrl, orgurl, messageid, newwindowid);
-//		            	else
-//		            		rtnStatus = InnterMailSend(esb, message, mailcmd, iseachmail, orgurl, newwindowid, messageid, strCheckReadUrl, xmldom);
-			            
+			            			            
+			            // 개별발신
 			            if (isEachMailB) {
-			            	//개별발송에 따른 "X-READCHECK" 값  Update
-			            	String strRecvGuid = UUID.randomUUID().toString();
-			            	message.setHeader("x-readcheck", strRecvGuid);
-			            	message.setHeader("x-eachmail", "true");
+			            	logger.debug("sending each recipient mail");
 			            	
-			            	Address[] allRecipients = message.getAllRecipients();
-			            	
-			            	message.removeHeader("TO");
-			        		message.removeHeader("CC");
-			        		message.removeHeader("BCC");
-			            	for(Address a : allRecipients){
-			            		message.setRecipient(RecipientType.TO, a);
-			            		
-			            		Transport.send(message);
-			            	}
+			                // mailSendCompleted가 true인 경우는 Transport.send가 완료된 이후에 예외가 발생하여 Retry하는 경우이다.
+			                // 이 경우에는 메일을 다시 전송하지 않는다.
+			                if (mailSendCompleted == false) {			     			                	
+				            	Address[] allRecipients = message.getAllRecipients();
+				            	
+				            	message.removeHeader("TO");
+				        		message.removeHeader("CC");
+				        		message.removeHeader("BCC");
+				        		
+				            	for (Address a : allRecipients) {
+				            		logger.debug("address=" + a);
+				            		
+				            		message.setRecipient(RecipientType.TO, a);
+				            		
+				            		Transport.send(message);
+				            		
+	    			            	sentFolderMessageUID = 0;
+	    			            	mailSendCompleted = true;				            		
+				            	}
+			                }
 			            	
 			                // this deletion code block has been moved here because
 			                // it needs to be kept in Drafts if an error occurs during the above process.

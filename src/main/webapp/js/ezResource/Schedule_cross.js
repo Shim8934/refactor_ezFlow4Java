@@ -1862,11 +1862,11 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	}
     
 	//TODO: 주석풀기
-//	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
-//	xmlHTTP.send(xmlDOM);
-//	
-//	var rtnValue = xmlHTTP.responseText;
-	var rtnValue = "False";
+	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
+	xmlHTTP.send(xmlDOM);
+	
+	var rtnValue = xmlHTTP.responseText;
+	//var rtnValue = "False";
 	
 	xmlDOM = null;
 	xmlHTTP = null;
