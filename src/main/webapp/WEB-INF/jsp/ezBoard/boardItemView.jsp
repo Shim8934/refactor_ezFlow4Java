@@ -462,6 +462,7 @@
 		        xmlhttp.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + pItemID, false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
+
 		        var i = 0;
 		        var pos = 0;
 		        var filename = "";
@@ -504,14 +505,25 @@
 		
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
-		
-		            strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
 		            
-		            strAttach = strAttach + "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath="+ encodeURIComponent(filepath) +"&fileName="+ encodeURIComponent(filename) +"'\">";
-		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")</a><br>";
+		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filename + "' >";
+		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filename) + "'\">";
+		            strAttach += filename + "&nbsp;(" + filesize + ")</a><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
+		    
+		    //무적의 자바 인코더
+		    function javaURLEncode(str) {
+		    	  return encodeURI(str)
+		    	    .replace(/%20/g, "+")
+		    	    .replace(/!/g, "%21")
+		    	    .replace(/'/g, "%27")
+		    	    .replace(/\(/g, "%28")
+		    	    .replace(/\)/g, "%29")
+		    	    .replace(/~/g, "%7E");
+		    	}
+		    
 		    function attach_SelectAll() {
 		        var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 		        for (var i = 0; i < checks.length; i++)

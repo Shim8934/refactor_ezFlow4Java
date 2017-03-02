@@ -3538,7 +3538,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
             resultXML.append("<NODE>");
             resultXML.append("<ItemID>" + pItemID + "</ItemID>");
-            resultXML.append("<FileName>" + pTitle + fileExtension + "</FileName>");
+            resultXML.append("<FileName>" + commonUtil.cleanValue(pTitle + fileExtension) + "</FileName>");
             resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
             resultXML.append("<FileSize>" + getProperSizeDisplay(String.valueOf(mhtSize)) + "</FileSize>");
             resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
@@ -3549,7 +3549,7 @@ public class EzBoardController extends EgovFileMngUtil{
             String pFilePath = boardAttachVOList.get(i).getFilePath();
             String newFilePath = pFilePath.split("/")[pFilePath.split("/").length - 1];
             
-            newFilePath = "tempUploadFile" +commonUtil.separator+ "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
+            newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}" + newFilePath.substring(newFilePath.indexOf("_"), newFilePath.length());
 
             File file = new File(filePath + commonUtil.separator + pFilePath);
             File fileMove = new File(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + newFilePath);
@@ -3557,7 +3557,7 @@ public class EzBoardController extends EgovFileMngUtil{
             
             resultXML.append("<NODE>");
             resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
-            resultXML.append("<FileName>" + boardAttachVOList.get(i).getFileName() + "</FileName>");
+            resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");
             resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
             resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
             resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
@@ -3582,8 +3582,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
 			resultXML.append("<GUID>" + boardAttachVOList.get(i).getGuid().trim() + "</GUID>");
-			resultXML.append("<FilePath>" + boardAttachVOList.get(i).getFilePath() + "</FilePath>");
-			resultXML.append("<FileName>" + boardAttachVOList.get(i).getFileName() + "</FileName>");
+			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFilePath()) + "</FilePath>");
+			resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
 			resultXML.append("</NODE>");
