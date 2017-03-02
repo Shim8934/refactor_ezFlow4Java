@@ -126,6 +126,7 @@
 		        document.onselectstart = function () { return false; };
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
+		        MailOptionHidden();
 		        Window_resize();
 		    };
 		    document.onselectstart = function () { return false; };
