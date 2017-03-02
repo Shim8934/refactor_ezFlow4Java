@@ -3403,6 +3403,7 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer strXML = new StringBuffer();
 
         strXML.append("<ROOT><NODES>");
+        
         for (int i = 0; i < cnt; i++) {
             if (pMode.equals("PHOTO")) {
                 strXML.append("<NODE><PUPLOADSN><![CDATA[" + pUploadSN[i] + pFileName[i].substring(pFileName[i].lastIndexOf('.')) + "]]></PUPLOADSN>");
@@ -3415,6 +3416,7 @@ public class EzBoardController extends EgovFileMngUtil{
             strXML.append("<FILELOCATION><![CDATA[" + fileLocation[i] + "]]></FILELOCATION>");
             strXML.append("</NODE>");
         }
+        
         strXML.append("</NODES></ROOT>");
         
         return strXML.toString();
