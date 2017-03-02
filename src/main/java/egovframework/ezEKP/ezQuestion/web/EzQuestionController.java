@@ -3126,12 +3126,10 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 							cell.setCellStyle(bodyStyle);
 							i++;
 						}
-						for(String valueSplit : ((String)tbl.get(key)).substring(1).split(",")){
-							cell = row.createCell(i);
-							cell.setCellValue(valueSplit);
-							cell.setCellStyle(bodyStyle);
-							i++;
-						}
+						
+						cell = row.createCell(i);
+						cell.setCellValue(((String)tbl.get(key)).substring(1));
+						cell.setCellStyle(bodyStyle);
 					}
 				}else{
 					for(String key : tbl.keySet()){

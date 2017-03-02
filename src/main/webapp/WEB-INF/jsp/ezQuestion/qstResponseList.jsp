@@ -18,16 +18,8 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
-		<STYLE> 
-			.pagetd{padding-top:6px; }
-			.pcol{padding-top:6px; }
-			.Right_Point01 {
-				font:bold;
-				color:#017bec;
-			}
-		</STYLE>
-		<script type="text/javascript">
 		
+		<script type="text/javascript">
 			var szBrdID = "<c:out value='${brdID}'/>";
 			var szItemNo = "<c:out value='${itemNo}'/>";
 			var szQuestionNo = "<c:out value='${questionNo}'/>";
@@ -113,7 +105,6 @@
 			
 			var BlockSize = 10;
 			function td_Create1(strtext) {
-			    //document.getElementById("tblPageRayer").innerHTML = strtext;
 			    $('#tblPageRayer').html(strtext);
 			}
 			
@@ -121,7 +112,6 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    $('#tblPageRayer').html();
-			    //document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
 			    $('#mailBoxInfo').html(" - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]");
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
