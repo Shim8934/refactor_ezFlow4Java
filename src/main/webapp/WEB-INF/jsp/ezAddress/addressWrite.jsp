@@ -490,14 +490,28 @@
 		    </tr>
 		    <tr>
 		      <th rowSpan="2"><spring:message code='ezAddress.t295' /></th>
-		      <td colSpan="3"><input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sCompanyZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a></td>
+		      <td colSpan="3">
+              <c:if test="${userLang == '1'}">
+              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sCompanyZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              </c:if>
+              <c:if test="${userLang != '1'}">
+              <input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="${addressInfo.sCompanyZip}">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
+              </c:if>
+              </td>
 		    </tr>
 		    <tr>
 		      <td colSpan="3"><input type="text" id="TextComAddr" name="TextComAddr" style="width:100%" class="txtClass" value="${addressInfo.sCompanyAddr}"></td>
 		    </tr>
 		    <tr>
 		      <th rowSpan="2"><spring:message code='ezAddress.t296' /></th>
-		      <td colSpan="3"><input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sHomeZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a></td>
+		      <td colSpan="3">
+              <c:if test="${userLang == '1'}">
+              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="${addressInfo.sHomeZip}">&nbsp;<a href="#" class="imgbtn" style="margin-top:2px;"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              </c:if>
+              <c:if test="${userLang != '1'}">
+              <input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="${addressInfo.sHomeZip}">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span>
+              </c:if>
+              </td>
 		    </tr>
 		    <tr>
 		      <td colSpan="3"><input type="text" id="TextHomeAddr" name="TextHomeAddr" style="width:100%" class="txtClass" value="${addressInfo.sHomeAddr}"></td>
