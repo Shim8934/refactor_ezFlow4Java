@@ -201,7 +201,8 @@
 					url : "/ezSchedule/scheduleOnceDelete.do",
 					data : { 
 						scheduleId : scheduleid,
-						startDate : "${_date}"
+						selectDate : "${_date}",
+						startDate : "${scheduleInfo.startDate}"						
 					},
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");
