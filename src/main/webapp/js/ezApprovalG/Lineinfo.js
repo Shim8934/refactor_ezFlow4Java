@@ -1137,13 +1137,31 @@ function DoDelete(pSelectedRow) {
         NIndex = pSelectedIndex;
 
         for (i = 0; i <= NIndex; i++) {
+        	var temptext = "";
             if (CrossYN()) {
-                RowDelCheck = pTotalRows[i].cells[0].innerText;
-                pTotalRows[i].childNodes[0].textContent = RowDelCheck - 1;
+            	RowDelCheck = pTotalRows[i].cells[0].innerText;
+            	if (RowDelCheck.indexOf("★") > -1) {
+                    temptext += "★";
+                    RowDelCheck = RowDelCheck.replace("★", "");
+                }
+                if (RowDelCheck.indexOf("⊙") > -1) {
+                    temptext += "⊙";
+                    RowDelCheck = RowDelCheck.replace("⊙", "");
+                }
+            	
+                pTotalRows[i].childNodes[0].textContent = temptext + (RowDelCheck - 1);
             }
             else {
-                RowDelCheck = pTotalRows[i].cells[0].innerText;
-                pTotalRows[i].cells[0].innerText = RowDelCheck - 1;
+            	RowDelCheck = pTotalRows[i].cells[0].innerText;
+            	if (RowDelCheck.indexOf("★") > -1) {
+                    temptext += "★";
+                    RowDelCheck = RowDelCheck.replace("★", "");
+                }
+                if (RowDelCheck.indexOf("⊙") > -1) {
+                    temptext += "⊙";
+                    RowDelCheck = RowDelCheck.replace("⊙", "");
+                }
+                pTotalRows[i].cells[0].innerText = temptext + (RowDelCheck - 1);
             }
 
             Rtnval = "Y";
