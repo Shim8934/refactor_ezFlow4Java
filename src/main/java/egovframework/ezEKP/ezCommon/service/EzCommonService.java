@@ -20,7 +20,7 @@ public interface EzCommonService {
 	
 	public String loadMHTFile(String path) throws Exception;
 	
-	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale) throws Exception;
+	public String startMHT2HTML(String filePath, String m_strMHT, String filePath2, String realPath, Locale locale, String domain) throws Exception;
 	
 	public String saveUserLocalInfo (String pUserID, LoginVO userInfo) throws Exception;
 	

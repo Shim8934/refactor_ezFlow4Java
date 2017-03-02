@@ -686,8 +686,11 @@
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+      
+		        strBody = strBody.replace(/&quot;/gi, "\'");
+		        
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody).replace("&amp;", "&") + "</BODY>" + "</HTML>");
+		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
 		        }
 		        else {
 		            if (pDocID == "")

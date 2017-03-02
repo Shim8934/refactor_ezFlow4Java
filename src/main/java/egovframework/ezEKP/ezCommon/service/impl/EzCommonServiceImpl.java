@@ -216,7 +216,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	//이미지 경로 추출 및 가상경로 매칭.
         	m_ImageList = extractImageSource(strHtml);
             //백그라운드 경로 추출 및 가상경로 매칭
-        	m_BackImageList = extractBackgroundSource(strHtml, m_ImageList);
+        	m_BackImageList = extractBackgroundSource(strHtml);
             //본문 인코딩
         	doHtmlEncoding(strHtml[0], m_strMHT, m_strBoundary);
             //이미지 인코딩
@@ -225,7 +225,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             }
             //백그라운드 인코딩
             if (m_BackImageList != null) {
-            	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary);
+            	doBackgrondEncding(m_ImageList, m_BackImageList, m_strMHT, m_strBoundary, realPath);
             }
 
             m_strMHT.append("--" + commonUtil.CRLF);
@@ -470,7 +470,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 배경화면추출 표출 Method
 	 */
-	private String[] extractBackgroundSource(String[] strHtml, String[] m_ImageList) throws Exception{
+	private String[] extractBackgroundSource(String[] strHtml) throws Exception{
         String strTempHtml = strHtml[0].toLowerCase();
         int npos = 0, nposStart = 0, nposEnd = 0;
         int nImgCount = 0;
@@ -482,11 +482,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         while (true) {
             npos = strTempHtml.indexOf("<body", npos);
             if (npos > 0) {
-                nposStart = strTempHtml.indexOf(" background=", npos + 5);
+                nposStart = strTempHtml.indexOf(" background-image:", npos + 5);
                 if (nposStart > 0) {
-                    nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-                    if ((nposEnd - nposStart - 13) > 0) {
-                        strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
+                    nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
+                    if ((nposEnd - nposStart - 24) > 0) {
+                        strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
                         L_BackImage.add(strImgsrc);
                         npos = nposEnd;
                     } else {
@@ -506,11 +506,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	if (strTempHtml.indexOf("background", npos) > 0) {
         		npos = strTempHtml.indexOf("<table", npos);
         		if (npos > 0) {
-        			nposStart = strTempHtml.indexOf(" background=", npos + 6);
+        			nposStart = strTempHtml.indexOf(" background-image:", npos + 6);
         			if (nposStart > 0) {
-        				nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-        				if ((nposEnd - nposStart - 13) > 0) {
-        					strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
+        				nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
+                        if ((nposEnd - nposStart - 24) > 0) {
+                            strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
         					L_BackImage.add(strImgsrc);
         					npos = nposEnd;
         				} else {
@@ -533,11 +533,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         	if (strTempHtml.indexOf("background", npos) > 0) {
         		npos = strTempHtml.indexOf("<td", npos);
         		if (npos > 0) {
-        			nposStart = strTempHtml.indexOf(" background=", npos + 3);
+        			nposStart = strTempHtml.indexOf(" background-image:", npos + 3);
         			if (nposStart > 0) {
-        				nposEnd = strTempHtml.indexOf("\"", nposStart + 13);
-        				if ((nposEnd - nposStart - 13) > 0) {
-        					strImgsrc = strHtml[0].substring(nposStart + 13, nposEnd - nposStart - 13);
+        				nposEnd = strTempHtml.indexOf("\"", nposStart + 24);
+                        if ((nposEnd - nposStart - 24) > 0) {
+                            strImgsrc = strHtml[0].substring(nposStart + 24, nposEnd - 3);
         					L_BackImage.add(strImgsrc);
         					npos = nposEnd;
         				} else {
@@ -596,7 +596,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         
             L_BackImage = null;
             int index = 1;
-            for (String strResource : m_ImageList) {
+            for (String strResource : m_BackImageList) {
             	strHtml[0] = strHtml[0].replace(strResource, "file:///C:/BACKGROUNDIMAGE" + index + ".gif");
                 index++;
             }
@@ -639,7 +639,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             InputStream in = null;
 
             if (strTemp.equals("http")) {
-            	URL url = new URL(m_ImageList[i].replace("&amp;", "&"));
+            	URL url = new URL(m_ImageList[i]);
             	in = url.openStream();
                 int len = 0;
                 byte[] buf = new byte[1024];
@@ -649,12 +649,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 }
             } else {
             	try {
-            		File file = new File(realPath + m_ImageList[i].replace("&amp;", "&"));
+            		File file = new File(realPath + m_ImageList[i]);
             		in = new FileInputStream(file);
 				} catch (Exception e) {
 					try {
-						logger.debug("not found image(" + m_ImageList[i].replace("&amp;", "&") + ") :::" + e.getMessage());
-						File file = new File(m_ImageList[i].replace("&amp;", "&"));
+						logger.debug("not found image(" + m_ImageList[i] + ") :::" + e.getMessage());
+						File file = new File(m_ImageList[i]);
 						in = new FileInputStream(file);
 						// 이미지 못찾을떄 사진없음 이미지 보여주기
 					} catch (FileNotFoundException e2) {
@@ -696,7 +696,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	/**
 	 * html -> mht 변환 배경화면인코딩 실행 Method
 	 */
-	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary) throws Exception{
+	private void doBackgrondEncding(String[] m_ImageList, String[] m_BackImageList, StringBuilder m_strMHT, String m_strBoundary, String realPath) throws Exception{
         for (int i = 0; i < m_BackImageList.length; i++) {
             m_strMHT.append(commonUtil.CRLF + "Content-Type: Image/gif" + commonUtil.CRLF);
             m_strMHT.append("Content-Transfer-Encoding: base64" + commonUtil.CRLF);
@@ -709,7 +709,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String strTemp = m_BackImageList[i].substring(0, 4);
             
             if (strTemp.equals("http")) {
-            	URL url = new URL(m_BackImageList[i].replace("&amp;", "&"));
+            	URL url = new URL(m_BackImageList[i]);
             	in = url.openStream();
                 int len = 0;
                 byte[] buf = new byte[1024];
@@ -718,7 +718,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
                 	byteOutStream.write(buf, 0, len);
                 }
             } else {
-            	File file = new File(m_BackImageList[i].replace("&amp;", "&"));
+            	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);
                 int len = 0;
                 byte[] buf = new byte[1024];
@@ -746,6 +746,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception{
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
+        String domain = request.getServerName();
         
         filePath = realPath + uploadModule;
         File file = new File(filePath);
@@ -771,7 +772,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			m_strMHT= "";
 		}
         
-        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale);
+        String strHTML = startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
         
         if (strHTML.trim().length() > 0) {
         	return strHTML;
@@ -782,9 +783,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	
 	/**
 	 * html -> mht 변환 실행 표출 Method
+	 * @param domain 
 	 */
 	@Override
-	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale) throws Exception{
+	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale, String domain) throws Exception{
 		String m_strHTML = "";
 		String strBoundary = "";
 		String[] m_Mimechunk = null;
@@ -820,7 +822,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						//절대경로에서 realPath "" 으로 대체
-						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), m_ListImageLocalLocation.get(i).replace(realPath, ""));
+						//Chrome 에서 도메인없으면 배경이미지 안뿌려줘서 추가시켰는데 맞는지 모르겄네
+						m_strHTML = m_strHTML.replace(m_ListImageLocation.get(i), "http://" + domain + m_ListImageLocalLocation.get(i).replace(realPath, ""));
 					}
 				} else {
 					return egovMessageSource.getMessage("main.t0601", locale);

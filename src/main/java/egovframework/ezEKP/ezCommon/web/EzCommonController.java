@@ -185,6 +185,7 @@ public class EzCommonController extends EgovFileMngUtil{
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
+        String domain = request.getServerName();
         
         filePath = realPath + uploadModule;
         
@@ -201,7 +202,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
         
         String result = "";
-        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale);
+        String strHTML = ezCommonService.startMHT2HTML(filePath, m_strMHT, filePath, realPath, locale, domain);
 
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
