@@ -750,7 +750,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		// 스케줄 정보 가져옴
 		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept, tenantID, offset);
-		logger.debug("getScheduleList=" + scheRs);
 		
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 		
@@ -875,7 +874,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		returnStr.append("</root>");
 		
-		logger.debug("returnStr=" + returnStr);
 		logger.debug("getScheduleXML End");
 		return returnStr.toString();
 	}
@@ -904,7 +902,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnSchedule += "</DATA>";
-		logger.debug("returnSchedule=" + returnSchedule);	
 		
 		Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
 		
@@ -927,7 +924,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<reFlag>" + returnDom1.getElementsByTagName("REFLAG").item(m).getTextContent() + "</reFlag>");
 				returnStr.append("<gresFlag>" + returnDom1.getElementsByTagName("GRESFLAG").item(m).getTextContent() + "</gresFlag>");
 				returnStr.append("<writerID>" + returnDom1.getElementsByTagName("WRITERID").item(m).getTextContent() + "</writerID>");
-				returnStr.append("<content><![CDATA[" + returnDom1.getElementsByTagName("CONTENT").item(m).getTextContent() + "]]></content>");
 				returnStr.append("<importance>" + returnDom1.getElementsByTagName("IMPORTANCE").item(m).getTextContent() + "</importance>");
 				returnStr.append("<entryList>" + returnDom1.getElementsByTagName("ENTRYLIST").item(m).getTextContent() + "</entryList>");
 				returnStr.append("<allDay>" + returnDom1.getElementsByTagName("ALLDAY").item(m).getTextContent() + "</allDay>");
@@ -965,7 +961,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnRepetition += "</DATA>";
-		logger.debug("returnRepetition=" + returnRepetition);
 		
 		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
 		
@@ -988,7 +983,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				// 반복예약의 반복되는 날짜리스트 뽑아옴
 				List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
-				logger.debug("getRepDateTimes=" + returnRepDateTimes);
 				
 				// 반복예약 중에 삭제된 예약 가져옴
 				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
@@ -1016,7 +1010,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
 					returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
 					returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-					returnStr.append("<content><![CDATA[" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "]]></content>");
 					returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
 					returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
 					returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
@@ -1040,7 +1033,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnStr.append("</DATA>");
-		logger.debug("returnStr="+returnStr.toString());
 		logger.debug("getScheduleList End");
 		return returnStr.toString();
 	}
@@ -2239,7 +2231,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		logger.debug("addResSch Start");
-		logger.debug("xmlStr=" + xmlStr);
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		String attachFlag = "";
 		String scheduleID = "";
@@ -2442,13 +2433,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public boolean chkTableRepeat(List<Date[]> dateList, List<Date[]> dateList2, List<String> deletedList, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
 		
+System.out.println("dateList.size=" + dateList.size());
+System.out.println("dateList2.size=" + dateList2.size());
+		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (deletedList == null || deletedList.size() == 0) {
 			for (Date[] dateVO : dateList) {
 				for (Date[] dateVO2 : dateList2) {
+System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
+System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
+					
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
-						logger.debug("new=" + dateVO[0] + ", " + dateVO[1]);
-						logger.debug("old=" + dateVO2[0] + ", " + dateVO2[1]);
 						logger.debug("chkTableRepeat ended.");
 						return true;
 					}
@@ -2459,6 +2454,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				for (Date[] dateVO2 : dateList2) {
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
 						if (!deletedList.contains(format.format(dateVO2[0]))) {
+System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
+System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
 							logger.debug("chkTableRepeat ended.");
 							return true;
 						}

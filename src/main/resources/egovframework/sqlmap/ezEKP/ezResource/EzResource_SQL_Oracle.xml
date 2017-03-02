@@ -51,20 +51,19 @@
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="content"				column="CONTENT"				columnIndex="13"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="15"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="16"/>
-		<result property="writeDay"				column="WRITEDAY"				columnIndex="17"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
-		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
-		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="24"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="25"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" id="resGetScheduleListMainVO">
@@ -80,17 +79,16 @@
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="content"				column="CONTENT"				columnIndex="13"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="15"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="16"/>
-		<result property="writeDay"				column="WRITEDAY"				columnIndex="17"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="19"		nullValue="0"/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="23"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="17"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
@@ -219,21 +217,20 @@
 		<result property="reFlag"					column="REFLAG"					columnIndex="10"/>
 		<result property="gresFlag"				column="GRESFLAG"				columnIndex="11"/>
 		<result property="writerID"				column="WRITERID"					columnIndex="12"/>
-		<result property="content"				column="CONTENT"				columnIndex="13"/>
-		<result property="importance"			column="IMPORTANCE"			columnIndex="14"/>
-		<result property="entryList"				column="ENTRYLIST"				columnIndex="15"		nullValue="0"/>
-		<result property="allDay"					column="ALLDAY"					columnIndex="16"/>
-		<result property="writeDay"				column="WRITEDAY"				columnIndex="17"/>
-		<result property="companyID"			column="COMPANYID"			columnIndex="18"/>
-		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="19"/>
-		<result property="characterID"			column="CHARACTERID"			columnIndex="20"/>
-		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="21"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="22"/>
-		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="23"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="24"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="25"/>
-		<result property="jobTitle"					column="JOBTITLE"					columnIndex="26"/>
-		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="27"/>
+		<result property="importance"			column="IMPORTANCE"			columnIndex="13"/>
+		<result property="entryList"				column="ENTRYLIST"				columnIndex="14"		nullValue="0"/>
+		<result property="allDay"					column="ALLDAY"					columnIndex="15"/>
+		<result property="writeDay"				column="WRITEDAY"				columnIndex="16"/>
+		<result property="companyID"			column="COMPANYID"			columnIndex="17"/>
+		<result property="attachFlag"				column="ATTACHFLAG"			columnIndex="18"/>
+		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
+		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="ownerNm2"			column="OWNERNM2"			columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
+		<result property="deptNm2"				column="DEPTNM2"				columnIndex="24"/>
+		<result property="jobTitle"					column="JOBTITLE"					columnIndex="25"/>
+		<result property="jobTitle2"				column="JOBTITLE2"				columnIndex="26"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetRepResourceVO">
@@ -608,7 +605,6 @@
                 REFLAG ,
                 GRESFLAG ,
                 WRITERID ,
-                CONTENT ,
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
@@ -691,7 +687,6 @@
             	REFLAG ,
             	GRESFLAG ,
             	WRITERID ,
-            	CONTENT ,
             	IMPORTANCE ,
             	ENTRYLIST ,
             	ALLDAY ,
@@ -748,7 +743,6 @@
             	REFLAG ,
             	GRESFLAG ,
             	WRITERID ,
-            	CONTENT ,
             	IMPORTANCE ,
             	ENTRYLIST ,
             	ALLDAY ,
@@ -822,7 +816,6 @@
              	REFLAG ,
              	GRESFLAG ,
              	WRITERID ,
-             	CONTENT ,
              	IMPORTANCE ,
              	ENTRYLIST ,
              	ALLDAY ,
@@ -1971,7 +1964,7 @@
 		<![CDATA[
 			{CALL EZSP_GETREPRESOURCE(#v_p_ownerID#, #v_p_num#, #v_p_cmd#, #v_p_companyID#,#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure> -->
+	</procedure>
 	<select id="EzResourceDAO.getRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
 		<![CDATA[
 			SELECT
@@ -2017,7 +2010,7 @@
 			AND
 				TENANT_ID = #tenantID#
 		]]>
-	</select>
+	</select> -->
 	
 	<!-- <procedure id="EzResourceDAO.getRepResourceRepeat" parameterClass="Map" resultMap="resGetRepResourceRepeatVO">
 		<![CDATA[
@@ -2071,7 +2064,7 @@
 		<![CDATA[
 			{CALL EZSP_CHKDELETEDREPRESOURCE(#v_p_ownerID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
-	</procedure> -->
+	</procedure>
 	
 	<select id="EzResourceDAO.chkDeletedRepResource" parameterClass="Map" resultMap="resGetRepResourceVO">
 		<![CDATA[
@@ -2117,7 +2110,7 @@
 			AND
 				B.TENANT_ID = #tenantID#				
 		]]>
-	</select>
+	</select> -->
 	
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
