@@ -143,7 +143,7 @@
 	        function deleteSchedule_Complete(ret) {
 				if (ret == "0") {
 					once_delete_schedule();
-				} else {
+				} else if (ret == "1") {
 					delete_schedule();
 				}
 		    }
