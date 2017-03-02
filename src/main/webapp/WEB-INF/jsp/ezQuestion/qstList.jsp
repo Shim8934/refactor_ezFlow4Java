@@ -550,7 +550,7 @@
 			<table id="QstList" class="mainlist" style="width:100%"> 
 			    <tr> 
 					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
-					<th width="1030px"><spring:message code="ezQuestion.t307" /></th> 
+					<th><spring:message code="ezQuestion.t307" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t308" /></th> 
 					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t310" /></th> 
@@ -587,7 +587,7 @@
 		        </c:forEach>
 			    <c:if test="${qstListVO.totalCnt == 0}"> 
 			        <tr> 
-						<td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
+						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
 		       		</tr> 
 		        </c:if> 
 			</table> 
