@@ -3004,16 +3004,6 @@
 					accessid = 'everyone'
 				)
 			AND
-				boardid = (	SELECT
-								boardgroupid
-             				FROM
-             					TBL_COMM_BOARDINFO 
-             				WHERE
-             					boardid = #v_pBoardID#
-             				AND
-             					tenant_id = #tenantID#
-							)
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
