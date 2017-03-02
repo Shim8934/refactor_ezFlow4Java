@@ -10,6 +10,12 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
+		<style type="text/css">
+			textarea {
+				padding: 0px;
+				overflow:hidden;
+			}
+		</style>
 		<script type="text/javascript">
 			window.resizeTo(410, 520);
 	        
@@ -324,7 +330,7 @@
 		      		<th><spring:message code = 'ezCommunity.t527' /></th>
 		    	</tr>
 	    		<tr>
-		      		<td><textarea name="cIntro" id="c_intro" style="width: 98%;height:110px" tabindex="10"></textarea></td>
+		      		<td><textarea name="cIntro" id="c_intro" style="width: 99.5%;height:110px" tabindex="10"></textarea></td>
 		    	</tr>
 		  	</table>
 		  	<!--커뮤니티 배너부분 -->
