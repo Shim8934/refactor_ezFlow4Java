@@ -2306,7 +2306,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
-		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, "2000-01-01 00:00:00", "2999-12-31 23:59:59", offset, tenantID);
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, "2999-12-31 23:59:59", "2000-01-01 00:00:00", offset, tenantID);
+		logger.debug("scheduleDateList.size=" + scheduleDateList.size());
+		
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
 		for (ResDateVO dateVO : scheduleDateList) {
 			dateList2.add(new Date[] {
@@ -2326,6 +2328,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
 		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
 			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
@@ -2338,6 +2341,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			// 반복예약 중에 삭제된 예약 가져옴
 			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+			
 			for (String date : deletedDateStrList) {
 				date = commonUtil.getDateStringInUTC(date, offset, false);
 			}
@@ -2380,7 +2385,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
-		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, strStartDateTime, strEndDateTime, offset, tenantID);
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, strEndDateTime, strStartDateTime, offset, tenantID);
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
 		for (ResDateVO dateVO : scheduleDateList) {
 			dateList2.add(new Date[] {
@@ -2400,6 +2405,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
 		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
 			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
@@ -2411,6 +2417,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			// 반복예약 중에 삭제된 예약 가져옴
 			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+			
 			for (String date : deletedDateStrList) {
 				date = commonUtil.getDateStringInUTC(date, offset, false);
 			}
@@ -2433,16 +2441,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	public boolean chkTableRepeat(List<Date[]> dateList, List<Date[]> dateList2, List<String> deletedList, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
 		
-System.out.println("dateList.size=" + dateList.size());
-System.out.println("dateList2.size=" + dateList2.size());
+		logger.debug("dateList.size=" + dateList.size());
+		logger.debug("dateList2.size=" + dateList2.size());
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		if (deletedList == null || deletedList.size() == 0) {
 			for (Date[] dateVO : dateList) {
 				for (Date[] dateVO2 : dateList2) {
-System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
-System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
-					
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
 						logger.debug("chkTableRepeat ended.");
 						return true;
@@ -2454,8 +2459,6 @@ System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
 				for (Date[] dateVO2 : dateList2) {
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
 						if (!deletedList.contains(format.format(dateVO2[0]))) {
-System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
-System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
 							logger.debug("chkTableRepeat ended.");
 							return true;
 						}
