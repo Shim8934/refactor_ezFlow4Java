@@ -6107,4 +6107,76 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		return "ezBoard/boardItemPreViewPhotoContent";
 	}
+	
+	@RequestMapping(value = "/ezBoard/imageUpload.do")
+	public String imageUpload() throws Exception {
+		logger.debug("imageUpload started");
+
+
+		logger.debug("imageUpload ended");
+		
+		return "ezBoard/boardImageUpload";
+	}
+	
+	@RequestMapping(value = "/ezBoard/uploadBackImage.do")
+	public void uploadBackImage(MultipartHttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("uploadBackImage started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		MultipartFile file = request.getFile("file1");
+
+		String realPath = commonUtil.getRealPath(request);
+		String serverPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+		String savePath = realPath + commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId());
+
+		if (file == null) {
+			if (!new File(savePath).exists()) {
+				new File(savePath).mkdirs();
+			}
+			
+			String filePath = request.getParameter("FILEPATH");
+			String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
+			int width = Integer.parseInt(request.getParameter("WIDTH"));
+			int height = Integer.parseInt(request.getParameter("HEIGHT"));
+			
+			File imageFile = new File(serverPath + commonUtil.separator + fileName);	
+			
+			if (imageFile.exists()) {			
+				BufferedImage bi = ImageIO.read(imageFile);			    
+                BufferedImage bufferedImage = new BufferedImage(width, height, bi.getType());
+                bufferedImage.createGraphics().drawImage(bi, 0, 0, width, height, null);
+                ImageIO.write(bufferedImage, "png", new File(savePath + commonUtil.separator + "S_" + fileName));
+			}
+			
+			response.getWriter().write(commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId()) + commonUtil.separator + "S_" + fileName);
+		} else {
+			String fileType = file.getContentType().split("/")[1];
+			String newFileName = "{" + UUID.randomUUID().toString() + "}." + fileType;
+			
+			if (!new File(serverPath).exists()) {
+				new File(serverPath).mkdirs();
+			}
+			
+			int width = 0;
+			int height = 0;
+			
+			writeUploadedFile(file, newFileName, serverPath);
+			
+			try {
+				File imageFile = new File(serverPath + commonUtil.separator + newFileName);
+				
+				if (imageFile.exists()) {
+					BufferedImage bi = ImageIO.read(new File(serverPath + commonUtil.separator + newFileName));
+					width = bi.getWidth();
+					height = bi.getHeight();
+					
+					response.getWriter().write(commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + newFileName + "|!|" + width + "|!|" + height);
+				}
+			} catch (Exception e) {
+				logger.debug("uploadBackImage error");
+			}
+		}
+		
+		logger.debug("uploadBackImage ended");
+	}
 }
