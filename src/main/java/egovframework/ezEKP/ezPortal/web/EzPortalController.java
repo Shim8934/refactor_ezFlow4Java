@@ -1687,7 +1687,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
 		
@@ -1698,13 +1697,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
-			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
-			
-			
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
 		} else {
 			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
 		}
+		
 		logger.debug("userPhoto="+userPhoto);
 		
 		model.addAttribute("displayName", displayName);
