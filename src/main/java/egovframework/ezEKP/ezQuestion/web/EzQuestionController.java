@@ -944,14 +944,11 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	public String qstStep1(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model)  {
 		logger.debug("qstStep1 started.");
 		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = req.getParameter("brdID");
 		String brdNm = req.getParameter("brdNm");
-//		String brdPostterm = req.getParameter("brdPostterm");
 
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
-//		model.addAttribute("brdPostterm", brdPostterm);
 		
 		logger.debug("qstStep1 ended.");
 		
@@ -975,8 +972,9 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		pStep1DataXML.append("<MULTIRESPONSE>" + req.getParameter("hidMultiResponse")+"</MULTIRESPONSE>");
 		pStep1DataXML.append("<IMPORTANT>" + req.getParameter("importance")+"</IMPORTANT>");
 		pStep1DataXML.append("<TARGET>" + req.getParameter("hidTarget")+"</TARGET>");
+
 		if(req.getParameter("RangeXMLStr") != null) {
-			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""));
+			pStep1DataXML.append(req.getParameter("RangeXMLStr").trim().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("\"", "\'"));
 		}
 		pStep1DataXML.append("</PARAMETER>");
 		
@@ -4004,16 +4002,18 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	            	break;
 	            	
 	            case "4":
+	            	//url
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\">" + strAttachName + "</a></td>");
 	            	break;
 	            	
 	            case "5":
 	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
-	            	
-	            default:
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID=" + brdID + "&itemID=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
+	            
+	            default :
+	            	//img URL 등등
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\" target=\"_blink\">" + strAttachName + "</a></td>");
 	            	break;
-	            	
 	            }
 	        }
         }
