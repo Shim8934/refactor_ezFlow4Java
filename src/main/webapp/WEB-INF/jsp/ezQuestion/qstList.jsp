@@ -14,14 +14,12 @@
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
-			.pagetd{padding-top:6px; }
-			.pcol{padding-top:6px; }
-			.Right_Point01 {
-				font:bold;
-				color:#017bec;
+			#QstList{
+				padding : 5px;
 			}
 		</style>
-		<script language="JavaScript" type="text/javascript">
+		
+		<script type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "<c:out value='${qstListVO.brdID}'/>";
 		    var szSelectedItemNo = "";
@@ -530,7 +528,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody" style="width:100%;">
+	<body class="mainbody">
 		<h1><spring:message code="ezQuestion.t300" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
