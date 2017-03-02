@@ -461,13 +461,17 @@ function ListView() {
             if(strWidth != "0"){ //2011.07.05 Header의 width가 0이면 td를 만들지 않는다.
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
                 
+                var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
+                
+                if(strColName == "DocTitle")
+                	_titleIdx = i;
+                
                 var strStyle = SelectSingleNodeValue(oHeaders[i], "STYLE");
-                strStyle += "overflow: hidden; white-space: nowrap; text-overflow: ellipsis;";
+                
+            	strStyle += "overflow: hidden; white-space: nowrap; text-overflow: ellipsis;";
+                
                 var strClass = "h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");	
                 
-                var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
-                if(strColName == "DocTitle")
-                    _titleIdx = i;
 
                 var objTd = document.createElement("TH");
                 objTd.id = _thisID + "_TH_" + i;
@@ -533,6 +537,10 @@ function ListView() {
 
                 if (strColName == "TITLE") {
                     objTd.style.width = "50%";
+                }
+                
+                if (strColName == "BOARDNAME") {
+                	objTd.style.width = "100px";
                 }
 
                 if (strColName == "ITEMID") {
@@ -715,18 +723,17 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
-                }
-                if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
+                } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERDEPTNAME') > -1) {
                     objTd.style.textAlign = "left";
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
+                } else {
+                	objTd.style.textAlign = "left";
+                	objTd.style.overflow = "hidden";
+                	objTd.style.whiteSpace = "nowrap";
+                	objTd.style.textOverflow = "ellipsis";
                 }
-
-                objTd.style.textAlign = "left";
-                objTd.style.overflow = "hidden";
-                objTd.style.whiteSpace = "nowrap";
-                objTd.style.textOverflow = "ellipsis";
 
                 if (SelectSingleNodeValue(oHeaders[j], "COLNAME") == "ATTACHMENTS") {
                     objTd.style.textAlign = "center";
