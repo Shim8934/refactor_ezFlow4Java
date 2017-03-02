@@ -1202,9 +1202,11 @@
 	        	TBL_BOARD_BOARDBACKGROUNDINFO	       
 	       WHERE
 	       		tenant_id = #tenantID#
-	       AND
-	       		isuse = 1
 		]]>
+			<isEqual property="type" compareValue="USE">
+		       AND
+		       		isuse = 1
+			</isEqual>	  
 			<isNotEmpty prepend="AND" property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
 		ORDER BY 
 				sn
