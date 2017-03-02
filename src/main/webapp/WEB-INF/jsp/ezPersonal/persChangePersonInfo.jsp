@@ -351,8 +351,14 @@
         <tr> 
             <th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
             <td colspan="3">
+                <c:if test="${userLang == '1'}">
                 <input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
                 <a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
+                </c:if>
+                <c:if test="${userLang != '1'}">
+                <input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
+                <span><spring:message code='ezPersonal.t181'/></span>
+                </c:if>
             </td> 
         </tr> 
         <tr> 

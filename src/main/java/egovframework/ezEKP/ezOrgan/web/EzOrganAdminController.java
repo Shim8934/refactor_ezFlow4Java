@@ -558,6 +558,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang", lang);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("userInfo ended");
 		
