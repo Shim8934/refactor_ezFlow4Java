@@ -171,7 +171,7 @@
 			        }
 			    }
 
-			    if (pMode == "new") {
+			    if (pMode == "new" || pMode == "new1") {
 			        btn_PostDate_Clear();
 			    } else {
 			        if (pReservedItem != "true") {
@@ -619,7 +619,7 @@
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
 		        }
 
-		        if (pMode == "new" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
+		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
@@ -705,7 +705,7 @@
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
-		        if (pMode != "new" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
+		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
 		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
 		            else
