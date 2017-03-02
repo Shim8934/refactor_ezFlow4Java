@@ -372,6 +372,7 @@
 		      <input type="text" id="Sdatepicker" style="width:80px;text-align:center"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" />
 		  </tr>
 		</table>
+        <c:if test="${individualMailUser != '0'}">
         <br>
         <h2 id="etcLang"><spring:message code='ezEmail.t748' /></h2>
         <table width="100%" class="content">
@@ -379,6 +380,7 @@
             <td><input type="checkbox" name="eachMailSend" id="eachMailSend" value="checkbox"><spring:message code='ezEmail.t748' /></td>
           </tr>
         </table>  
+        </c:if>
 		<div class="btnposition">
 		   <a class="imgbtn" onClick="confirm()" ><span><spring:message code='ezEmail.t38' /></span></a>
 		   <a class="imgbtn" onClick="cancel()" ><span><spring:message code='ezEmail.t39' /></span></a>

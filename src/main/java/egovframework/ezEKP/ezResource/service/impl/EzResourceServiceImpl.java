@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezResource.service.impl;
 
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +29,7 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -37,9 +37,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
-import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
-import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
-import egovframework.ezEKP.ezResource.vo.ResRecParamVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -107,7 +104,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getBrdMainList(map);
 	}
-
+	
+	public List<ResDateVO> getScheduleDateList(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getScheduleDateList(map);
+	}
+	
 	@Override
 	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
@@ -329,8 +339,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getSchedule(map);
 	}
 	
-	
-
 	@Override
 	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
@@ -713,42 +721,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getRepResourceRepeat(map);
 	}
-
-	@Override
-	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
-			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		logger.debug("getRepResource Start");
-		logger.debug("ownerID="+ownerID);
-		logger.debug("num="+num);
-		logger.debug("cmd="+cmd);
-		logger.debug("companyID="+companyID);
-		map.put("v_rec_frequency", frequency);
-		map.put("v_rec_selType", selType);
-		map.put("v_rec_endRecurType", endRecurType);
-		map.put("v_rec_startDateTime", startDateTime);
-		map.put("v_rec_endDateTime", endDateTime);
-		map.put("v_rec_interval", interval);
-		map.put("v_rec_daysOfWeek", daysOfWeek);
-		map.put("v_rec_instances", instances);
-		map.put("v_rec_byPosition", byPosition);
-		map.put("v_rec_daysOfMonth", daysOfMonth);
-		map.put("v_p_ownerID", ownerID);
-		map.put("v_p_num", num);
-		map.put("v_p_cmd", cmd);
-		map.put("v_p_companyID", companyID);
-		map.put("tenantID", tenantID);
-		logger.debug("getRepResource End");
-		return ezResourceDAO.getRepResource(map);
-	}
-	
-	@Override
-	public ResGetScheduleVO chkDeletedRepResource(String ownerID, int tenantID) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("v_p_ownerID", ownerID);
-		map.put("tenantID", tenantID);
-		return ezResourceDAO.chkDeletedRepResource(map);
-	}
 	
 	@Override
 	public ResAdminVO getResourceAdminInfo(String brdID, int tenantID) throws Exception {
@@ -778,7 +750,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		// 스케줄 정보 가져옴
 		String scheRs = getScheduleList(ownerID, companyID, groupID, gubun, sDate, eDate, pType, pWriterName, pWriterDept, tenantID, offset);
-		logger.debug("getScheduleList=" + scheRs);
 		
 		Document scheRSDom = commonUtil.convertStringToDocument(scheRs);
 		
@@ -903,7 +874,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		returnStr.append("</root>");
 		
-		logger.debug("returnStr=" + returnStr);
 		logger.debug("getScheduleXML End");
 		return returnStr.toString();
 	}
@@ -932,7 +902,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnSchedule += "</DATA>";
-		logger.debug("returnSchedule=" + returnSchedule);	
 		
 		Document returnDom1 = commonUtil.convertStringToDocument(returnSchedule);
 		
@@ -955,7 +924,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<reFlag>" + returnDom1.getElementsByTagName("REFLAG").item(m).getTextContent() + "</reFlag>");
 				returnStr.append("<gresFlag>" + returnDom1.getElementsByTagName("GRESFLAG").item(m).getTextContent() + "</gresFlag>");
 				returnStr.append("<writerID>" + returnDom1.getElementsByTagName("WRITERID").item(m).getTextContent() + "</writerID>");
-				returnStr.append("<content><![CDATA[" + returnDom1.getElementsByTagName("CONTENT").item(m).getTextContent() + "]]></content>");
 				returnStr.append("<importance>" + returnDom1.getElementsByTagName("IMPORTANCE").item(m).getTextContent() + "</importance>");
 				returnStr.append("<entryList>" + returnDom1.getElementsByTagName("ENTRYLIST").item(m).getTextContent() + "</entryList>");
 				returnStr.append("<allDay>" + returnDom1.getElementsByTagName("ALLDAY").item(m).getTextContent() + "</allDay>");
@@ -993,7 +961,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		returnRepetition += "</DATA>";
-		logger.debug("returnRepetition=" + returnRepetition);
 		
 		Document returnRepetitionDom = commonUtil.convertStringToDocument(returnRepetition);
 		
@@ -1011,12 +978,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
 				vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
 				
+				// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+				ResScheduleRepetitionVO rvo = resStruct(vo);
+				
 				// 반복예약의 반복되는 날짜리스트 뽑아옴
-				List<Date[]> returnRepDateTimes = getRepDateTimes(vo, sDate, eDate, offset);
-				logger.debug("getRepDateTimes=" + returnRepDateTimes);
+				List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
 				
 				// 반복예약 중에 삭제된 예약 가져옴
 				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+				for (String date : deletedDateStrList) {
+					date = commonUtil.getDateStringInUTC(date, offset, false);
+				}
 				
 				for (Date[] dateArr : returnRepDateTimes) {
 					
@@ -1038,7 +1010,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
 					returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
 					returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-					returnStr.append("<content><![CDATA[" + returnRepetitionDom.getElementsByTagName("CONTENT").item(i).getTextContent() + "]]></content>");
 					returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
 					returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
 					returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
@@ -1057,32 +1028,37 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					}
 					
 					returnStr.append("</ROW>");
+					
 				}
 			}
 		}
 		returnStr.append("</DATA>");
-		logger.debug("returnStr="+returnStr.toString());
 		logger.debug("getScheduleList End");
 		return returnStr.toString();
 	}
 	
-	public List<Date[]> getRepDateTimes(ResGetScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
+	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		logger.debug("getRepDeteTimes started");
 		
-		List<Date[]> returnList = new ArrayList<Date[]>();
+		int maxTemp = 100;
 		
-		if (vo != null) {
-			ResScheduleRepetitionVO rvo = resStruct(vo);
+		List<Date[]> returnList = new ArrayList<Date[]>();
 			
-			int freq = rvo.getFreq();
-			
-			if (freq == 4) {
-				returnList = getDailyRepDateTimes(rvo, sDate, eDate); 
-			} else if (freq == 5) {
-				returnList = getWeeklyRepDateTime(rvo, sDate, eDate);
-			} else if (freq == 6 || freq == 7) {
-				returnList = getMonthlyRepDateTimes(rvo, sDate, eDate);
-			}
+		int freq = vo.getFreq();
+		
+		if (sDate.length() == 10) {
+			sDate += " 00:00:00";
+		}
+		if (eDate.length() == 10) {
+			eDate += " 23:59:59";
+		}
+		
+		if (freq == 4) {
+			returnList = getDailyRepDateTimes(vo, sDate, eDate, maxTemp); 
+		} else if (freq == 5) {
+			returnList = getWeeklyRepDateTime(vo, sDate, eDate, maxTemp);
+		} else if (freq == 6 || freq == 7) {
+			returnList = getMonthlyRepDateTimes(vo, sDate, eDate, maxTemp);
 		}
 	
 		logger.debug("returnList.size()=" + returnList.size());
@@ -1091,7 +1067,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getDailyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception {
+	public List<Date[]> getDailyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
 		int selType = vo.getSelType();
 		int interval = vo.getInterval();
 		int endRecurType = vo.getEndRecurType();
@@ -1103,9 +1079,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
@@ -1146,7 +1119,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
-		int temp = 1000; //최대 1000번 반복
+		int temp = maxTemp; // 최대 maxTemp번 반복
 		while (true) {
 			
 			// 40일 때(매 n일)
@@ -1264,7 +1237,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getWeeklyRepDateTime (ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception  {
+	public List<Date[]> getWeeklyRepDateTime (ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception  {
 		int interval = vo.getInterval();
 		int endRecurType = vo.getEndRecurType();
 		int instances = vo.getInstances();
@@ -1275,9 +1248,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
@@ -1317,7 +1287,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
-		int temp = 1000; // 최대 1000번 반복
+		int temp = maxTemp; // 최대 maxTemp번 반복
 		
 		boolean loopFlag = true;
 		while (loopFlag) {
@@ -1392,7 +1362,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
-	public List<Date[]> getMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate) throws Exception {
+	public List<Date[]> getMonthlyRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, int maxTemp) throws Exception {
 		logger.debug("getMonthlyRepDateTimes started.");
 		int freq = vo.getFreq();
 		int selType = vo.getSelType();
@@ -1410,9 +1380,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
@@ -1452,7 +1419,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
 		
-		int temp = 1000; // 최대 1000번 반복
+		int temp = maxTemp; // 최대 maxTemp번 반복
 		
 		List<Date> tsdList = new ArrayList<Date>();
 		
@@ -1534,7 +1501,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
 						returnList.add(new Date[] {
-								tmpStartDate, 
+								tsd, 
 								tempEndCal.getTime()
 						});
 					}
@@ -1549,7 +1516,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
 						returnList.add(new Date[] {
-								tmpStartDate, 
+								tsd, 
 								tempEndCal.getTime()
 						});
 					}
@@ -1567,7 +1534,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
 							returnList.add(new Date[] {
-									tmpStartDate, 
+									tsd, 
 									tempEndCal.getTime()
 							});
 						}
@@ -1592,180 +1559,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		logger.debug("getMonthlyRepDateTimes End");
 		return returnList;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public int weekDay(String inputStr) throws Exception {
-		int returnValue = 0;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		
-		if (format.parse(inputStr).getDay() == 0) {
-			returnValue = 1;
-		}
-		
-		if (format.parse(inputStr).getDay() == 1) {
-			returnValue = 2;
-		}
-		
-		if (format.parse(inputStr).getDay() == 2) {
-			returnValue = 3;
-		}
-		
-		if (format.parse(inputStr).getDay() == 3) {
-			returnValue = 4;
-		}
-		
-		if (format.parse(inputStr).getDay() == 4) {
-			returnValue = 5;
-		}
-		
-		if (format.parse(inputStr).getDay() == 5) {
-			returnValue = 6;
-		}
-		
-		if (format.parse(inputStr).getDay() == 6) {
-			returnValue = 7;
-		}
-		
-		return returnValue;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public int dayOfWeek(String inputStr) throws Exception {
-		int returnValue = 0;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		
-		
-		if (format.parse(inputStr).getDay() == 0) {
-			returnValue = 1;
-		}
-		
-		if (format.parse(inputStr).getDay() == 1) {
-			returnValue = 2;
-		}
-		
-		if (format.parse(inputStr).getDay() == 2) {
-			returnValue = 3;
-		}
-		
-		if (format.parse(inputStr).getDay() == 3) {
-			returnValue = 4;
-		}
-		
-		if (format.parse(inputStr).getDay() == 4) {
-			returnValue = 5;
-		}
-		
-		if (format.parse(inputStr).getDay() == 5) {
-			returnValue = 6;
-		}
-		
-		if (format.parse(inputStr).getDay() == 6) {
-			returnValue = 7;
-		}
-	
-		return returnValue;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public int datePartLeftShift(String inputStr) throws Exception {
-		int returnValue = 0;
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		
-	
-		if (format.parse(inputStr).getDay() == 0) {
-			returnValue = 7;
-		}
-		
-		if (format.parse(inputStr).getDay() == 1) {
-			returnValue = 1;
-		}
-		
-		if (format.parse(inputStr).getDay() == 2) {
-			returnValue = 2;
-		}
-		
-		if (format.parse(inputStr).getDay() == 3) {
-			returnValue = 3;
-		}
-		
-		if (format.parse(inputStr).getDay() == 4) {
-			returnValue = 4;
-		}
-		
-		if (format.parse(inputStr).getDay() == 5) {
-			returnValue = 5;
-		}
-		
-		if (format.parse(inputStr).getDay() == 6) {
-			returnValue = 6;
-		}
-	
-		return returnValue;
-	}
-	
-	public static String addHours(String sDate, int hour, String dateFormat) {		
-		Calendar cal = Calendar.getInstance();
-		
-		if(dateFormat.equals("")){
-			dateFormat = "yyyy-MM-dd HH:mm:ss";
-		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
-		
-		try {
-			cal.setTime(sdf.parse(sDate));
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format: " + sDate);
-		}
-
-		if (hour != 0) {
-			cal.add(Calendar.HOUR, hour);
-		}
-		return sdf.format(cal.getTime());
-	}
-	
-	@Override
-	public String addMinutes(String sDate, int minute, String dateFormat) {		
-		Calendar cal = Calendar.getInstance();
-		
-		if(dateFormat.equals("")){
-			dateFormat = "yyyy-MM-dd HH:mm:ss";
-		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
-		
-		try {
-			cal.setTime(sdf.parse(sDate));
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format: " + sDate);
-		}
-
-		if (minute != 0) {
-			cal.add(Calendar.MINUTE, minute);
-		}
-		return sdf.format(cal.getTime());
-	}
-	
-	public String addSeconds(String sDate, int second, String dateFormat) {		
-		Calendar cal = Calendar.getInstance();
-		
-		if(dateFormat.equals("")){
-			dateFormat = "yyyy-MM-dd HH:mm:ss";
-		}
-		
-		SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.getDefault());		
-		
-		try {
-			cal.setTime(sdf.parse(sDate));
-		} catch (ParseException e) {
-			throw new IllegalArgumentException("Invalid date format: " + sDate);
-		}
-
-		if (second != 0) {
-			cal.add(Calendar.SECOND, second);
-		}
-		return sdf.format(cal.getTime());
 	}
 	
 	@Override
@@ -2371,37 +2164,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String isoUTFDate(String dateTimeStr, Locale locale) {
-        String timeSetStr = "";
-        String resultStr = "";
-
-        if (dateTimeStr != null && !dateTimeStr.trim().equals("")){
-            if (dateTimeStr.indexOf(" ") != -1){
-                if ((dateTimeStr.split(" ")[1].equals("PM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t205", locale))) && Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) < 12){
-                    timeSetStr = String.valueOf(Integer.parseInt((dateTimeStr.split(" ")[2].split(":")[0]))+ 12);
-                    timeSetStr += ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                } else if (dateTimeStr.split(" ")[1].equals("AM") || dateTimeStr.split(" ")[1].equals(egovMessageSource.getMessage("ezResource.t204", locale))) {
-                    if (dateTimeStr.split(" ")[2].split(":")[0].trim().length() <= 1){
-                        timeSetStr = "0" + dateTimeStr.split(" ")[2].split(":")[0] + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    } else if (Integer.parseInt(dateTimeStr.split(" ")[2].split(":")[0]) == 12){
-                        timeSetStr = "00" + ":" + dateTimeStr.split(" ")[2].split(":")[1] + ":" + dateTimeStr.split(" ")[2].split(":")[2];
-                    } else {
-                        timeSetStr = dateTimeStr.split(" ")[2];
-                    }
-                } else {
-                    timeSetStr = dateTimeStr.split(" ")[1];	// 20160909 by kgs: from [2] to [1]
-                }
-                resultStr = dateTimeStr.split(" ")[0] + "T" + timeSetStr + ".000Z";
-            } else {
-                resultStr = dateTimeStr + "T00:00:00.000Z";
-            }
-        } else {
-            resultStr = "";
-        }
-        return resultStr;
-    }
-	
-	@Override
 	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2469,7 +2231,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		logger.debug("addResSch Start");
-		logger.debug("xmlStr=" + xmlStr);
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		String attachFlag = "";
 		String scheduleID = "";
@@ -2525,64 +2286,74 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	//반복예약일때
 	@Override
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
+		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		logger.debug("getRepResource Start");
-		logger.debug("strStartDateTime="+strStartDateTime);
-		logger.debug("strEndDateTime="+strEndDateTime);
-		ResRecParamVO recParam = resStruct(strFrequency, strSelType, strEndRecurType, strStartDateTime, strEndDateTime, strInterval, strDaysOfWeek, strInstances, strByPosition, strDaysOfMonth);
-			
-		List<ResMakeDupResultVO> dt1 = makeRepResource1(recParam);
-			
-		int recFrequency = strFrequency.equals("") ? 0 : Integer.parseInt(strFrequency);
-		int recSelType = strSelType.equals("") ? 0 : Integer.parseInt(strSelType);
-		int recEndRecurType = strEndRecurType.equals("") ? 0 : Integer.parseInt(strEndRecurType);
-		String recStartDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
-		String recEndDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
-		int recInterval = strInterval.equals("") ? 0 : Integer.parseInt(strSelType);
-		String recDaysOfWeek = strDaysOfWeek.equals("") ? null : strDaysOfWeek;
-		int recInstances = strInstances.equals("") ? 0 : Integer.parseInt(strInstances);
-		int recByPosition = strByPosition.equals("") ? 0 : Integer.parseInt(strByPosition);
-		String recDaysOfMonth = strDaysOfMonth.equals("") ? null : strDaysOfMonth;
+		logger.debug("===반복예약일때===");
+		
+		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? "" : strPcmd;
-			
-		List<ResGetScheduleVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
 		
-		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
-			
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		ResScheduleRepetitionVO vo = resStruct(strFrequency, strSelType, strEndRecurType, strStartDateTime, strEndDateTime, strInterval, strDaysOfWeek, strInstances, strByPosition, strDaysOfMonth, strMonthsOfYear);
+		
+		//TODO: sDate,eDate setting
+		List<Date[]> dateList = getRepDateTimes(vo, "2000-01-01", "2999-12-31", offset);
+
 		boolean isDup = false;
-			
-		if (retobj != null) {
-			isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
-		}
-			
-		if (isDup) {
-			return isDup;
-		}
-			
-		//String firstStartDateTime = getYearMonthDay(recParam.getRecStartDateTime());
-		String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		logger.debug(firstStartDateTime);
-		//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
 		
-		System.out.println("dt1.size=" + dt1.size());
-		String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		ResRecDurationVO recDuration = new ResRecDurationVO();
-		recDuration.setFirstStartDateTime(firstStartDateTime);
-		recDuration.setLastStartDateTime(lastStartDateTime);
-			
-		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		 for (ResGetScheduleRepetitionVO dr : retobjTable1) {
-			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
-			 if (dt2 == null || dt2.size() == 0) {
-				 continue;
-			 }
-			 isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult, offset);
-		 }
+		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, "2000-01-01 00:00:00", "2999-12-31 23:59:59", offset, tenantID);
+		List<Date[]> dateList2 = new ArrayList<Date[]>();
+		for (ResDateVO dateVO : scheduleDateList) {
+			dateList2.add(new Date[] {
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
+			});
+		}
 		
-		logger.debug("isDup="+isDup);
-		logger.debug("getRepResource End");
+		if (dateList2.size() != 0) {
+			isDup = chkTableRepeat(dateList, dateList2, null, offset);
+			
+			if (isDup) {
+				logger.debug("getRepResource End. isDup=" + isDup);
+				return isDup;
+			}
+		}
+		
+		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		
+		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
+			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
+			schedule.setEndDateTime(commonUtil.getDateStringInUTC(schedule.getEndDateTime(), offset, false));
+			
+			ResScheduleRepetitionVO vo2 = resStruct(schedule);
+
+			//TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+			dateList2 = getRepDateTimes(vo2, "2000-01-01", "2999-12-31", offset);
+			
+			// 반복예약 중에 삭제된 예약 가져옴
+			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			for (String date : deletedDateStrList) {
+				date = commonUtil.getDateStringInUTC(date, offset, false);
+			}
+			
+			if (dateList2.size() == 0) {
+				continue;
+			}
+
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
+			
+			if (isDup) {
+				break;
+			}
+		}
+
+		logger.debug("getRepResource End. isDup=" + isDup);
 		return isDup;
 	}
 	
@@ -2592,481 +2363,175 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getRepResource started");
 		logger.debug("===일반예약일때===");
 		
-		String startDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
-		String endDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
-		logger.debug("startDateTime="+startDateTime);
-		logger.debug("endDateTime="+endDateTime);
+		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? null : strPcmd;
 		
-		ResRecParamVO recParam = new ResRecParamVO();
-		recParam.setRecStartDateTime(startDateTime);
-		recParam.setRecEndDateTime(endDateTime);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
-		
-		List<ResGetScheduleVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
-		
-		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		List<Date[]> dateList = new ArrayList<Date[]>();
+		dateList.add(new Date[] {
+				format.parse(strStartDateTime),
+				format.parse(strEndDateTime)
+		});
 		
 		boolean isDup = false;
 		
-		if (retobj != null && retobj.isEmpty() == false) {
-			isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
+		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, strStartDateTime, strEndDateTime, offset, tenantID);
+		List<Date[]> dateList2 = new ArrayList<Date[]>();
+		for (ResDateVO dateVO : scheduleDateList) {
+			dateList2.add(new Date[] {
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
+			});
 		}
 		
-		logger.debug("isDup="+isDup);
-		
-		if (isDup) {
-			return isDup;
+		if (dateList2.size() != 0) {
+			isDup = chkTableRepeat(dateList, dateList2, null, offset);
+			
+			if (isDup) {
+				logger.debug("getRepResource End. isDup=" + isDup);
+				return isDup;
+			}
 		}
 		
-		logger.debug("getRecStartDateTime="+recParam.getRecStartDateTime());
-		String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		logger.debug("firstStartDateTime="+firstStartDateTime);
-		//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
+		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
 		
-		String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		ResRecDurationVO recDuration = new ResRecDurationVO();
-		recDuration.setFirstStartDateTime(firstStartDateTime);
-		recDuration.setLastStartDateTime(lastStartDateTime);
-		
-		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		for (ResGetScheduleRepetitionVO dr : retobjTable1) {
-			List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
-			if (dt2 == null || dt2.size() == 0) {
+		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
+			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
+			schedule.setEndDateTime(commonUtil.getDateStringInUTC(schedule.getEndDateTime(), offset, false));
+			
+			ResScheduleRepetitionVO vo2 = resStruct(schedule);
+
+			dateList2 = getRepDateTimes(vo2, strStartDateTime, strEndDateTime, offset);
+			
+			// 반복예약 중에 삭제된 예약 가져옴
+			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			for (String date : deletedDateStrList) {
+				date = commonUtil.getDateStringInUTC(date, offset, false);
+			}
+			
+			if (dateList2.size() == 0) {
 				continue;
 			}
-			isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult, offset);
+
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
 			
 			if (isDup) {
 				break;
 			}
 		}
-		
 
-		logger.debug("getRepResource ended");
-			
+		logger.debug("getRepResource End. isDup=" + isDup);
 		return isDup;
 	}
 	
-	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetScheduleVO> dtT, List<ResGetScheduleVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
-		logger.debug("chkTable Start");
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
-		
-		if (dtT == null) {
-			logger.debug("drt == null");
-			return false;
-		}
-			
-		boolean isDup = false;
-		boolean isDel = false;
-		boolean isShowDup = true;
-		
-		//2016-12-06
-		/*dtT에 승인권한이 있는자원에 반복예약할때, 자꾸 널값이 들어와서 주석처리
-		String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");*/
-
-		/*String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
-			" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
-			" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
-			"~"+String.valueOf(date.parse(lastEndDateTime).getHours())+String.valueOf(date.parse(lastEndDateTime).getMinutes())+" "+"동안";*/
-
-		// 일정관리에서 예약한 시간이 필요함
-		if (dtS != null || dtS.size() != 0) {
-			//result.setStartDateTime(dtS.get(0).getStartDateTime());
-			//result.setEndDateTime(dtS.get(dtS.size()-1).getEndDateTime());
-		}
-			
-		// 빠짐없이 반복은 아니라고 봄.
-		for (ResMakeDupResultVO drS : dtS) {
-			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			logger.debug("sStartDate="+sStartDate);
-			logger.debug("sEndDate="+sEndDate);
-			for (ResGetScheduleVO drT : dtT) {
-				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				logger.debug("tStartDate="+tStartDate);
-				logger.debug("tEndDate="+tEndDate);
-				int tAllDay = Integer.parseInt(drT.getAllDay());
-					
-				isDel = false;
-				if (dtTd != null) {
-					for (ResGetScheduleVO drTd : dtTd) {
-						if (drTd.getStartDate().equals(drT.getStartDate()) && drTd.getEndDate().equals(drT.getEndDate())) {
-							isDel = true;
-							break;
-						}
-					}
-				}
-				if (isDel) {
-					continue;
-				}
-					
-				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
-				String compare2 = tStartDate; 
-
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-
-				String compare3 = tEndDate;
-				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
-					
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int compare = day1.compareTo(day2);
-				int secondCompare = day3.compareTo(day4);
-					
-				if (!(compare <= 0 || secondCompare <= 0)) {
-
-					isDup = true;
-						
-					if (isShowDup) {
-						//넣는다
-						//insertIntodt
-					}
-					break;
-				}
-			}
-			if (isDup) {
-				break;
-			}
-		}
-		logger.debug("chkTable End");
-		return isDup;
-	}
-	
-	public boolean chkTableRepeat(List<ResMakeDupResultVO> dtS, List<ResMakeDupResultVO> dtT, List<ResGetScheduleRepetitionVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
+	public boolean chkTableRepeat(List<Date[]> dateList, List<Date[]> dateList2, List<String> deletedList, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
 		
-		if (dtT == null) {
-			return false;
-		}
+System.out.println("dateList.size=" + dateList.size());
+System.out.println("dateList2.size=" + dateList2.size());
 		
-		boolean isDup = false;
-		boolean isDel = false;
-		boolean isShowDup = true;
-		
-		String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		/*String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
-				" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
-				" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
-				"~"+String.valueOf(date.parse(lastEndDateTime).getHours())+String.valueOf(date.parse(lastEndDateTime).getMinutes())+" "+"동안";*/
-		
-		// 일정관리에서 예약한 시간이 필요함
-		if (dtS != null || dtS.size() != 0) {
-			//result.setStartDateTime(dtS.get(0).getStartDateTime());
-			//result.setEndDateTime(dtS.get(dtS.size()-1).getEndDateTime());
-		}
-		
-		// 빠짐없이 반복은 아니라고 봄.
-		logger.debug("dtSSize="+dtS.size());
-		for (ResMakeDupResultVO drS : dtS) {  // S, 예약할
-			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			logger.debug("sStartDate="+sStartDate);
-			logger.debug("sEndDate="+sEndDate);
-			
-			logger.debug("dtTSize="+dtT.size());
-			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
-				logger.debug("drtStartDate="+drT.getStartDateTime());  
-				logger.debug("drtEndDate="+drT.getEndDateTime());
-				//String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				//String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tStartDate = drT.getStartDateTime();
-				String tEndDate = drT.getEndDateTime();
-				logger.debug("tStartDate="+tStartDate);
-				logger.debug("tEndDate="+tEndDate);
-				
-				int tAllDay = drT.getAllDay();
-				
-				isDel = false;
-				
-				if (dtTd != null) {
-					for (ResGetScheduleRepetitionVO drTd : dtTd) { // TD, 예약된 것 중 지워진 것
-						if (drTd.getStartDateTime().equals(drT.getStartDateTime()) && drTd.getEndDateTime().equals(drT.getEndDateTime())) {
-							isDel = true;
-							break;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if (deletedList == null || deletedList.size() == 0) {
+			for (Date[] dateVO : dateList) {
+				for (Date[] dateVO2 : dateList2) {
+System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
+System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
+					
+					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						logger.debug("chkTableRepeat ended.");
+						return true;
+					}
+				}
+			}
+		} else {
+			for (Date[] dateVO : dateList) {
+				for (Date[] dateVO2 : dateList2) {
+					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						if (!deletedList.contains(format.format(dateVO2[0]))) {
+System.out.println("new=" + dateVO[0] + ", " + dateVO[1]);
+System.out.println("old=" + dateVO2[0] + ", " + dateVO2[1]);
+							logger.debug("chkTableRepeat ended.");
+							return true;
 						}
 					}
 				}
-				if (isDel) {
-					continue;
-				}
-				
-				//
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
-				String compare1 = sEndDate;
-				String compare2 = tStartDate; 
-				
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				
-				String compare3 = tEndDate;
-				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
-				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare4 = sStartDate;
-				
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int compare = day1.compareTo(day2);
-				int secondCompare = day3.compareTo(day4);
-				
-				if (!(compare <= 0 || secondCompare <= 0)) {
-					isDup = true;
-					
-					if (isShowDup) {
-						//넣는다
-						//insertIntodt
-					}
-					break;
-				}
-			}
-			
-			if (isDup) {
-				break;
 			}
 		}
 
 		logger.debug("chkTableRepeat ended");
-		return isDup;
+		return false;
 	}
 	
-	public List<ResMakeDupResultVO> makeRepResource0(ResRecParamVO recParam) throws Exception {
-		List<ResMakeDupResultVO> dtOnce = new ArrayList<ResMakeDupResultVO>();
-		
-		String startDateTime = recParam.getRecStartDateTime();
-		String endDateTime = recParam.getRecEndDateTime();
-			
-//			dtOnce.get(0).setStartDateTime(startDateTime);
-//			dtOnce.get(0).setEndDateTime(endDateTime);
-		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-		s1.setStartDateTime(EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		s1.setEndDateTime(EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		dtOnce.add(0, s1);
-
-		/*StringBuilder sb = new StringBuilder();
-		for (ResMakeDupResultVO dr : dtOnce) {
-			String startDt = dr.getStartDateTime();
-			String endDt = dr.getEndDateTime();
-				
-			sb.append(startDt);
-			sb.append(" ");
-			sb.append(dayOfWeek(startDt)).substring(0, 3);
-			sb.append(" ~ ");
-			sb.append(endDt);
-			sb.append(" ");
-			sb.append(dayOfWeek(endDt)).substring(0, 3);
-		}*/
-	
-		return dtOnce;
-	}
-	
-	public List<ResMakeDupResultVO> makeRepResource1(ResRecParamVO recParam) throws Exception {
-		logger.debug("makeRepResource1 started");
-
-		List<ResMakeDupResultVO> dtRec = new ArrayList<ResMakeDupResultVO>();
-		switch (recParam.getRecReWay()) {
-		case 40:
-			dtRec = chkDupReway40(recParam, dtRec, null);
-			break;
-		case 41:
-			dtRec = chkDupReway41(recParam, dtRec, null);
-			break;
-		case 51:
-			dtRec = chkDupReway51(recParam, dtRec, null);
-			break;
-		case 60:
-			dtRec = chkDupReway60(recParam, dtRec, null);
-			break;
-		case 61:
-			dtRec = chkDupReway61(recParam, dtRec, null);
-			break;
-		case 70:
-			dtRec = chkDupReway70(recParam, dtRec, null);
-			break;
-		case 71:
-			dtRec = chkDupReway71(recParam, dtRec, null);
-			break;
-		default:
-			break;
-		}
-		
-		logger.debug("makeRepResource1 ended");
-		return dtRec;
-	}
-	
-	public List<ResMakeDupResultVO> makeRepResource2(ResGetScheduleRepetitionVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration, String offset) throws Exception {
-		logger.debug("makeRepResource2 started");
-
-		List<ResMakeDupResultVO> dtDest = new ArrayList<ResMakeDupResultVO>();
-		
-		logger.debug("getStartDateTime="+destDr.getStartDateTime());
-		logger.debug("getEndDateTime="+destDr.getEndDateTime());
-		
-		//ResRecParamVO destParam = resStruct();
-		ResRecParamVO destParam = new ResRecParamVO();
-		if (!destDr.getStartDateTime().equals("")) {
-			destParam.setRecStartDateTime(EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(destDr.getStartDateTime(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", ""));
-			logger.debug("UTCStartTime="+commonUtil.getDateStringInUTC(destDr.getStartDateTime(), offset, false));
-		}
-		if (!destDr.getEndDateTime().equals("")) {
-			destParam.setRecEndDateTime(EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(destDr.getEndDateTime(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", ""));
-			logger.debug("UTCEndTime="+commonUtil.getDateStringInUTC(destDr.getEndDateTime(), offset, false));
-		}
-		if (!destDr.getReWay().equals("")) {
-			destParam.setRecReWay(Integer.parseInt(destDr.getReWay()));
-		}
-		if (destDr.getReNum() != null && !destDr.getReNum().equals("")) {
-			destParam.setRecReNum(Integer.parseInt(destDr.getReNum()));
-		}
-		if (!destDr.getReDay().equals("")) {
-			destParam.setRecReDay(Integer.parseInt(destDr.getReDay()));
-		}
-		if (!destDr.getReYoil().equals("")) {
-			destParam.setRecReYoil(destDr.getReYoil());
-		}
-		if (!destDr.getReOrd().equals("")) {
-			destParam.setRecReOrd(Integer.parseInt(destDr.getReOrd()));
-		}
-		if (!destDr.getEndFlag().equals("")) {
-			destParam.setRecEndFlag(Integer.parseInt(destDr.getEndFlag()));
-		}
-		if (!destDr.getReCount().equals("")) {
-			destParam.setRecReCount(Integer.parseInt(destDr.getReCount()));
-		}
-		if (!destDr.getAllDay().equals("")) {
-			destParam.setRecAllDay(Integer.parseInt(destDr.getAllDay()));
-		}
-		
-		if (destParam.getRecEndFlag() == 0) {
-			destParam.setRecReCount(1000);
-			destParam.setRecEndFlag(1);
-		}
-		
-		String compare1 = EgovDateUtil.convertDate(recDuration.getFirstStartDateTime(), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-		String compare2 = EgovDateUtil.convertDate(getYearMonthDay(EgovDateUtil.convertDate(destParam.getRecStartDateTime(), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "")), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		Date day1 = date.parse(compare1);
-		Date day2 = date.parse(compare2);
-		int compare = day1.compareTo(day2);
-		
-		String interStartDateTime = compare > 0 ? recDuration.getFirstStartDateTime() : getYearMonthDay(EgovDateUtil.convertDate(destParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		String interEndDateTime = recDuration.getLastStartDateTime();
-		
-		ResObjArrayDestVO objArrayDest = new ResObjArrayDestVO();
-		objArrayDest.setInterStartDateTime(interStartDateTime);
-		objArrayDest.setInterEndDateTime(interEndDateTime);
-		//objArrayDest.setWriterID(dtDest.get(0).getWriterID());
-		//objArrayDest.setDeptNm(dtDest.get(0).getDeptNm());
-		//objArrayDest.setOwnerNm(dtDest.get(0).getOwnerNm());
-		//objArrayDest.setTitle(dtDest.get(0).getTitle());
-		//objArrayDest.setWriteDay(dtDest.get(0).getWriteDay());
-		
-		switch (destParam.getRecReWay()) {
-		case 40:
-			dtDest = chkDupReway40(destParam, dtDest, objArrayDest);
-			break;
-		case 41:
-			dtDest = chkDupReway41(destParam, dtDest, objArrayDest);
-			break;
-		case 51:
-			dtDest = chkDupReway51(destParam, dtDest, objArrayDest);
-			break;
-		case 60:
-			dtDest = chkDupReway60(destParam, dtDest, objArrayDest);
-			break;
-		case 61:
-			dtDest = chkDupReway61(destParam, dtDest, objArrayDest);
-			break;
-		case 70:
-			dtDest = chkDupReway70(destParam, dtDest, objArrayDest);
-			break;
-		case 71:
-			dtDest = chkDupReway71(destParam, dtDest, objArrayDest);
-			break;
-		default:
-			break;
-		}
-		
-
-		logger.debug("makeRepResource2 ended");
-
-	
-		return dtDest;
-	}
-	
-	public ResRecParamVO resStruct(String strFrequency, String strSelType, String strEndREcurType, String strStartDateTime, String strEndDateTime, String strInterval, String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth) {
+	public ResScheduleRepetitionVO resStruct(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, 
+			String strInterval, String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear) throws Exception {
 		logger.debug("resStruct started");
 
-		int reWay = -1;
-		int endFlag = -1;
-		int reCount = -1;
-		int reNum = 1;
-		String reYoil = "";
-		int reDay = -1;
-		int reOrd = -10;
-		String startDateTime = "";
-		String endDateTime = "";
-		int allDay = -1;
+		ResScheduleRepetitionVO result = new ResScheduleRepetitionVO();
 		
-		if (!strFrequency.equals("") && !strSelType.equals("")) {
-			reWay = Integer.parseInt(strFrequency) * 10 + Integer.parseInt(strSelType);
-		}
-		if (!strEndREcurType.equals("")) {
-			endFlag = Integer.parseInt(strEndREcurType);
-		}
-		if (!strInstances.equals("")) {
-			reCount = Integer.parseInt(strInstances);
-		}
-		/*if (!strInterval.equals("")) {
-			reNum = Integer.parseInt(strInstances);
-		}*/
-		if (!strDaysOfWeek.equals("")) {
-			reYoil = strDaysOfWeek;
-		}
-		if (!strDaysOfMonth.equals("")) {
-			reDay = Integer.parseInt(strDaysOfMonth);
-		}
-		if (!strByPosition.equals("")) {
-			reOrd = Integer.parseInt(strByPosition);
-		}
-		if (!strStartDateTime.equals("")) {
-			startDateTime = strStartDateTime;
-		}
-		if (!strEndDateTime.equals("")) {
-			endDateTime = strEndDateTime;
-		}
-		if (Integer.parseInt(strEndREcurType) == 0) {
-			reCount = 1000;
-			endFlag = 1;
+		if (strFrequency != null && !strFrequency.trim().equals("")) {
+			result.setFreq(Integer.parseInt(strFrequency));
 		}
 		
-		ResRecParamVO result = new ResRecParamVO();
-		result.setRecAllDay(allDay);
-		result.setRecEndDateTime(endDateTime);
-		result.setRecEndFlag(endFlag);
-		result.setRecReCount(reCount);
-		result.setRecReDay(reDay);
-		result.setRecReNum(reNum);
-		result.setRecReOrd(reOrd);
-		result.setRecReWay(reWay);
-		result.setRecReYoil(reYoil);
-		result.setRecStartDateTime(startDateTime);
+		if (strSelType != null && !strSelType.trim().equals("")) {
+			result.setSelType(Integer.parseInt(strSelType));
+		} else {
+			result.setSelType(-1);
+		}
+		
+		if (strInterval != null && !strInterval.trim().equals("")) {
+			result.setInterval(Integer.parseInt(strInterval));
+		}
+		
+		if (strEndRecurType != null && !strEndRecurType.trim().equals("")) {
+			result.setEndRecurType(Integer.parseInt(strEndRecurType));
+		} else {
+			result.setEndRecurType(-1);
+		}
+		
+		if (strInstances != null && !strInstances.trim().equals("")) {
+			result.setInstances(Integer.parseInt(strInstances));
+		}
+		
+		if (strDaysOfWeek != null && !strDaysOfWeek.trim().equals("")) {
+			List<Integer> yoilList = new ArrayList<Integer>();
+			String[] yoilArr = strDaysOfWeek.split(",");
+			
+			for (String yoil : yoilArr) {
+				yoilList.add(Integer.parseInt(yoil.trim())); 
+			}
+			
+			result.setDaysOfWeek(yoilList);
+		}
+		
+		if (strDaysOfMonth != null && !strDaysOfMonth.trim().equals("")) {
+			result.setDaysOfMonth(Integer.parseInt(strDaysOfMonth));
+		}
+		
+		if (strMonthsOfYear != null && !strMonthsOfYear.trim().equals("")) {
+			result.setMonthsOfYear(Integer.parseInt(strMonthsOfYear));
+		}
+		
+		if (strByPosition != null && !strByPosition.trim().equals("")) {
+			result.setByPosition(Integer.parseInt(strByPosition));
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		if (strStartDateTime != null && !strStartDateTime.trim().equals("")) {
+			result.setStartDate(format.parse(strStartDateTime));
+		}
+		
+		if (strEndDateTime != null && !strEndDateTime.trim().equals("")) {
+			result.setEndDate(format.parse(strEndDateTime));
+		}
 		
 		logger.debug("resStruct ended");
-		
 		return result;
 	}
 	
@@ -3134,1736 +2599,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		logger.debug("resStruct ended");
-		
 		return result;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway40 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		int recLoop = 0;
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		//반복회수 지정
-		if (recParam.getRecEndFlag() == 1) {
-			while (recLoop < recParam.getRecReCount()) {
-				String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-				dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 1, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				recLoop ++;
-			}
-		}
-		
-		//종료일 지정
-		else if (recParam.getRecEndFlag() == 2) {
-			
-			int compare = 0;
-			while (compare <= 0) {
-				String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime())+ checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-				dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 1, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				String compare1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-				
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				compare = day1.compareTo(day2);
-				
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				recLoop ++;
-			}
-		}
-	
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway41 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		int recLoop = 0;
-		int recLoopOffset = 0;
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		if (recParam.getRecEndFlag() == 1) {
-			while (recLoop < recParam.getRecReCount()) {
-				int addOffset = 0;
-				String temp = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 1), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				
-				switch (dayOfWeek(temp)) {
-				case 1:
-					addOffset = 1;
-					break;
-				case 7:
-					addOffset = 2;
-					break;
-				default:
-					addOffset = 0;
-					break;
-				}
-				recLoopOffset += addOffset;
-				
-				//구하고
-				String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recLoopOffset), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-				dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop + recLoopOffset, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				//넣는다
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop ++;
-			}
-		}
-		if (recParam.getRecEndFlag() == 2) {
-			
-			int compare = 0;
-			while (compare <= 0) {
-				int addOffest = 0;
-				String temp = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop + recLoopOffset), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				switch (dayOfWeek(temp)) {
-					case 1:
-						addOffest = 1;
-						break;
-					case 7:
-						addOffest = 1;
-						break;
-					default:
-						addOffest = 0;
-						break;
-				}
-				// 평일이 아닐 때, 전체일 수는 증가해야 하므로.
-				recLoopOffset += addOffest;   
-				
-				//평일이 아니면 다음
-				if (addOffest != 0) {
-					continue;
-				}
-				
-				//구하고
-				String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop + recLoopOffset), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear() + 1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-				dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop + recLoopOffset, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				String compare1 = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop + recLoopOffset), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				compare = day1.compareTo(day2);
-				//넣는다
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop ++;
-			}
-		}
-		
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway51 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway51 started");
-
-		int recLoop = 0;
-		int recLoopOffset = 0;
-		int recMondayOffset = 1-datePartLeftShift(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		int recMondayOffsetAdd = 0;
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		logger.debug("endFlag="+recParam.getRecEndFlag());
-		if (recParam.getRecEndFlag() == 1) {
-			while (recLoop < recParam.getRecReCount()) {
-				//주에서 월,화,수,목,금,토,일
-				while (recMondayOffsetAdd < 7) {
-					if (recParam.getRecReYoil().replace("0,", "7,").indexOf(String.valueOf(recMondayOffsetAdd+1)) == -1) {
-						recMondayOffsetAdd++;
-						continue;
-					}
-					
-					//구하고
-					String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 7), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsStartDateTime, (recMondayOffset + recMondayOffsetAdd), "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-					
-					logger.debug("recStart="+recParam.getRecStartDateTime());
-					logger.debug("recEnd"+recParam.getRecEndDateTime());
-					
-					Calendar cal = Calendar.getInstance();
-					cal.setTime(date1.parse(recParam.getRecEndDateTime()));
-					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime())+ ((cal.get(Calendar.HOUR) < 10) ? "0" + cal.get(Calendar.HOUR) : cal.get(Calendar.HOUR)) + ((cal.get(Calendar.MINUTE) < 10) ? "0" + cal.get(Calendar.MINUTE) : cal.get(Calendar.MINUTE));
-					logger.debug("[51]dsEndDateTime1="+dsEndDateTime);
-					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-					logger.debug("[51]dsEndDateTime2="+dsEndDateTime);
-					
-					//비교한 다음
-					String compare1 = dsStartDateTime;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					int compare = day1.compareTo(day2);
-					
-					if (compare < 0) {
-						recMondayOffsetAdd++;
-						continue;
-					}
-					
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recMondayOffsetAdd++;
-				}
-				recMondayOffsetAdd = 0;
-				recLoop++;
-			}			
-		}
-		
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			logger.debug("endFlag=2");
-			////2017-01-24
-			//date형식변경
-			String dsStartDateTimeLoop = "";
-			dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
-			/*logger.debug("dsStartDateTimeLoop="+dsStartDateTimeLoop);
-			logger.debug("recEndDateTime="+recParam.getRecEndDateTime());
-			String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-			compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-			String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-			compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-			
-			logger.debug("compare1="+compare1);
-			logger.debug("compare2="+compare2);
-			
-			Date day1 = date.parse(compare1);
-			Date day2 = date.parse(compare2);
-			int compare = day1.compareTo(day2);*/
-			
-			int compare = 0;
-			
-			while (compare <= 0) {
-				logger.debug("compare="+compare);
-				//주에서 월,화,수,목,금,토,일
-				logger.debug("recMondayOffsetAdd="+recMondayOffsetAdd);
-				while (recMondayOffsetAdd < 7) {
-					logger.debug("recMondayOffsetAdd1="+recMondayOffsetAdd);
-					if (recParam.getRecReYoil().replace("0,", "7,").indexOf(String.valueOf(recMondayOffsetAdd+1)) == -1) {
-						recMondayOffsetAdd++;
-						logger.debug("recMondayOffsetAdd2="+recMondayOffsetAdd);
-						continue;
-					}
-					
-					logger.debug("reNum="+recParam.getRecReNum());
-					logger.debug("recLoop="+recLoop);
-					
-					// 구하고
-					String dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(recParam.getRecStartDateTime(), (recLoop * recParam.getRecReNum() * 7), "yyyy-MM-dd HH:mm"), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					logger.debug("dsStartDatetime1="+dsStartDateTime);
-					dsStartDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsStartDateTime, (recMondayOffset + recMondayOffsetAdd), "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-					logger.debug("dsStartDateTime2="+dsStartDateTime);
-					
-					String tempMonth = "";
-					String month = "";
-					tempMonth = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getMonth()+1);
-					
-					if ((date1.parse(recParam.getRecStartDateTime()).getMonth()+1) < 10) {
-						month = "0"+tempMonth;
-					} else {
-						month = tempMonth;
-					}
-					
-					String tempDay = "";
-					String day = "";
-					tempDay = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getDate());
-					
-					if ((date1.parse(recParam.getRecStartDateTime()).getDate()) < 10) {
-						day = "0"+tempDay;
-					} else {
-						day = tempDay;
-					}
-					
-					logger.debug("recParam StartDate="+recParam.getRecStartDateTime());
-					logger.debug("recParam EndDate="+recParam.getRecEndDateTime());
-					String recStartDateTime = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					String recEndDateTime = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					//2017-01-25 
-					//데이트형식 yyyy-MM-dd HH:mm:ss 에서 yyyy-MM-dd aa h:mm:ss로 변경
-					String dsEndDateTime = String.valueOf(date.parse(recStartDateTime).getYear()+1900) + month + day+ String.valueOf(date.parse(recEndDateTime).getHours()) + String.valueOf(date.parse(recEndDateTime).getMinutes());
-					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recLoop * recParam.getRecReNum() * 7, "yyyyMMddHHmm"), "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					dsEndDateTime = EgovDateUtil.convertDate(EgovDateUtil.addDay(dsEndDateTime, recMondayOffset + recMondayOffsetAdd, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-					//compare 값 넣어줌
-					dsStartDateTimeLoop = dsStartDateTime;
-					logger.debug("dsStartDateTimeLoop="+dsStartDateTimeLoop);
-					logger.debug("recEndDateTime="+recParam.getRecEndDateTime());
-					String compare1 = dsStartDateTimeLoop;
-					//compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					//compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					
-					logger.debug("compare1="+compare1);
-					logger.debug("compare2="+compare2);
-					
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					compare = day1.compareTo(day2);
-					//
-					
-					logger.debug("dsStartDateTimeLoop1="+dsStartDateTimeLoop);
-					
-					// 비교한다음
-					String compare3 = dsStartDateTime;
-					
-					//String compare4 = recParam.getRecStartDateTime();
-					String compare4 = recStartDateTime;
-					String compare5 = dsStartDateTime;
-					//compare5 = EgovDateUtil.convertDate(compare5, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					String compare6 = recEndDateTime;
-					//compare6 = EgovDateUtil.convertDate(compare6, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-					logger.debug("compare3="+compare3);
-					logger.debug("compare4="+compare4);
-					logger.debug("compare5="+compare5);
-					logger.debug("compare6="+compare6);
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					Date day5 = date.parse(compare5);
-					Date day6 = date.parse(compare6);
-					int secondCompare = day3.compareTo(day4);
-					int thirdCompare = day5.compareTo(day6);
-					
-					logger.debug("recMondayOffsetAdd Start="+recMondayOffsetAdd);
-					if (secondCompare < 0 || thirdCompare > 0) {
-						recMondayOffsetAdd++;
-						logger.debug("recMondayOffsetAdd Ing="+recMondayOffsetAdd);
-						continue;
-					}
-					logger.debug("recMondayOffsetAdd End="+recMondayOffsetAdd);
-					
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recMondayOffsetAdd++;
-				}
-				recMondayOffsetAdd = 0;
-				recLoop++;
-			}
-		}
-
-		logger.debug("chkDupReway51 ended");
-
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway60 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway60 started");
-
-		int recLoop = 0;
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		logger.debug("endFlag="+recParam.getRecEndFlag());
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			while (recLoop < recParam.getRecReCount()) {
-				//구하고
-				String dsStartDateTime = getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""), recParam.getRecReDay());
-				String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getSeconds());
-				dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				//비교한다음
-				String compare1 = EgovDateUtil.convertDate(dsStartDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				
-				if (compare < 0) {
-					recLoop++;
-					recParam.getRecReCount();
-					continue;
-				}
-				//넣는다
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop++;
-			}
-		}
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			String dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
-			
-			/*String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-			compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-			String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-			compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-			Date day1 = date.parse(compare1);
-			Date day2 = date.parse(compare2);
-			int compare = day1.compareTo(day2);*/
-			int compare = 0;
-			while (compare <= 0) {
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				compare1 = EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-				compare2 = EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				compare = day1.compareTo(day2);
-				
-				//구하고
-				logger.debug("recStartDateTime="+recParam.getRecStartDateTime());
-				String dsStartDateTime = getSomeDay(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa hh:mm:ss", "")), recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa hh:mm:ss"), recParam.getRecReDay());
-				//String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date.parse(recParam.getRecEndDateTime()).getMinutes()) + String.valueOf(date.parse(recParam.getRecEndDateTime()).getSeconds());
-				logger.debug("dsStartDateTime="+dsStartDateTime);
-				
-				String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-				dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				//dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				logger.debug("dsEndDateTime="+dsEndDateTime);
-				dsStartDateTimeLoop = dsStartDateTime;
-				
-				//비교한 다음
-				/*String compare3 = dsStartDateTime;
-				String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int subCompare = day3.compareTo(day4);*/
-				
-				int subCompare = 0;
-				
-				if (subCompare < 0) {
-					String compare3 = dsStartDateTime;
-					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					subCompare = day3.compareTo(day4);
-					
-					recLoop++;
-					continue;
-				}
-				//넣는다
-				ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop++;
-			}
-		}
-		
-
-		logger.debug("chkDupReway60 ended");
-	
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway61 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway61 started");
-
-		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		if (recParam.getRecReOrd() == -1) {
-			dt = chkDupReway61_2(recParam, dt);
-			return dt;
-		}
-		
-		int recLoop = 0;
-		
-		// 시작일의 달 1일
-		String recFirstStartDate = getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		logger.debug("recFirstStartDate="+recFirstStartDate);
-		//recFirstStartDate = EgovDateUtil.convertDate(recFirstStartDate, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd HH:mm", "");
-		int recMondayOffsetAdd = 0;
-		// 단 하나의 요일일때 : 주말이나 평일일때
-		boolean isOneDay = (recParam.getRecReYoil().indexOf(",") == -1);
-		// 단 하나의 요일이므로 미리 구하여 불필요한 반복 없앰
-		int recReOneYoil = isOneDay ? Integer.parseInt(recParam.getRecReYoil()) : -1;
-		if (recReOneYoil == 0) {
-			//일요일
-			recReOneYoil = 7;
-		}
-		
-		logger.debug("endFlag="+recParam.getRecEndFlag());
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			//하나의 요일일때
-			if (isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss");
-					
-					//몇째 요일의 일
-					int recPartDay = (recParam.getRecReOrd()-1) * 7 + recReOneYoil + (1-datePartLeftShift(recFirstDate));
-					recPartDay += (recReOneYoil < datePartLeftShift(recFirstDate) ? 7:0);
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = String.valueOf(date1.parse(recParam.getRecStartDateTime()).getYear()+1900) + checkMonth(recParam.getRecStartDateTime()) + checkDay(recParam.getRecStartDateTime()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes());
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//비교한다음
-					String compare1 = dsStartDateTime;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					int compare = day1.compareTo(day2);
-					
-					if (isOneDay && compare < 0) {
-						recLoop++;
-						continue;
-					}
-					
-					logger.debug("!!dsStartDateTime="+dsStartDateTime);
-					//넣는다
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					int recReOrdOffset = 0;
-					//주말이지만 일요일로 시작하면 다음주부터
-					if (isWeekend && datePartLeftShift(recFirstDate) == 7)  {
-						recReOrdOffset = 1;
-					}
-					//평일에서 주말로 시작하면 다음주부터
-					if (!isWeekend && datePartLeftShift(recFirstDate) > 5) {
-						recReOrdOffset = 1;
-					}
-					//주말이나 평일일때 주에서 월,화,수,목,금,토,일로 반복
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//몇째 요일의 일
-						int recPartDay = (recParam.getRecReOrd()-1 + recReOrdOffset) * 7 + (recMondayOffsetAdd + 1) + (1 - datePartLeftShift(recFirstDate));
-						
-						if (recPartDay < 1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date.parse(recParam.getRecEndDateTime()).getHours() + date.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						
-						//비교한다음
-						String compare1 = dsStartDateTime;
-						String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-						Date day1 = date.parse(compare1);
-						Date day2 = date.parse(compare2);
-						int compare = day1.compareTo(day2);
-						
-						if (compare < 0) {
-							recMondayOffsetAdd++;
-							
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (datePartLeftShift(dsStartDateTime)) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						//넣는다
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			//하나의 요일일때
-			if (isOneDay) {
-				String dsStartDateTimeLoop = "";
-				dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
-				
-				int compare = 0;
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss");
-					
-					//몇째 요일의 일
-					int recPartDay = (recParam.getRecReOrd()-1) * 7 + recReOneYoil + (1-datePartLeftShift(recFirstDate));
-					recPartDay += (recReOneYoil < datePartLeftShift(recFirstDate) ? 7 : 0);
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//while 조건 비교
-					dsStartDateTimeLoop = dsStartDateTime;
-					
-					String compare1 = dsStartDateTimeLoop;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					compare = day1.compareTo(day2);
-					
-					//비교한 다음
-					String compare3 = dsStartDateTime;
-					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");  
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					int subCompare = day3.compareTo(day4);
-					
-					if (isOneDay && subCompare < 0) {
-						recLoop++;
-						continue;
-					}
-					//넣는다
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				String dsStartDateTimeLoop = "";
-				
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, ""),"yyyy-MM-dd HH:mm","yyyy-MM-dd HH:mm","");
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					int recReOrdOffset = 0;
-					//주말이지만 일요일로 시작하면 다음주부터
-					if (isWeekend && datePartLeftShift(recFirstDate) == 7) {
-						recReOrdOffset = 1;
-					}
-					if (!isWeekend && datePartLeftShift(recFirstDate) > 5) {
-						recReOrdOffset = 1;
-					}
-					
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//몇째 요일의 일
-						int recPartDay = (recParam.getRecReOrd()-1 + recReOrdOffset) * 7 + (recMondayOffsetAdd + 1) + (1 - datePartLeftShift(recFirstDate));
-						
-						if (recPartDay < 1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date.parse(recParam.getRecEndDateTime()).getHours() + date.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						//while조건비교
-						dsStartDateTimeLoop = dsStartDateTime;
-						
-						//비교한다음
-						String compare3 = EgovDateUtil.convertDate(dsStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-						String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-						Date day3 = date.parse(compare3);
-						Date day4 = date.parse(compare4);
-						String compare5 = getYearMonthDay(dsStartDateTime);
-						String compare6 = getYearMonthDay(recParam.getRecEndDateTime());
-						Date day5 = date.parse(compare5);
-						Date day6 = date.parse(compare6);
-						
-						int secondCompare = day3.compareTo(day4);
-						int thirdCompare = day5.compareTo(day6);
-						
-						if (secondCompare < 0 || thirdCompare > 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (secondCompare < 0) && datePartLeftShift(dsStartDateTime) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						logger.debug("========dsStartDateTime=========="+dsStartDateTime);
-						//넣는다
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-
-		logger.debug("chkDupReway61 ended");
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway70 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway70 started");
-
-		//반복예약 반복주기 매년 날짜
-		
-		int recLoop = 0;
-		
-		//int recMondayOffset = 1-datePartLeftShift(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		
-		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			while (recLoop < recParam.getRecReCount()) {
-				//구하고
-				String dsStartDateTime = getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""), recParam.getRecReDay());
-				String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getSeconds());
-				dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				//비교한다음
-				String compare1 = EgovDateUtil.convertDate(dsStartDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				
-				if (compare < 0) {
-					recLoop++;
-					// reCount ++
-					recParam.getRecReCount();
-					continue;
-				}
-				//넣는다
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop++;
-			}
-		}
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			String dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
-			
-			
-			int compare = 0;
-			while (compare <= 0) {
-				//구하고
-				String dsStartDateTime = getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""), recParam.getRecReDay());
-				String dsEndDateTime = getYearMonthDay(getSomeDay(EgovDateUtil.convertDate(EgovDateUtil.addMonth(getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")), recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"), "yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss",""),recParam.getRecReDay())) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getHours()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getMinutes()) + String.valueOf(date1.parse(recParam.getRecEndDateTime()).getSeconds());
-				dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-				dsStartDateTimeLoop = dsStartDateTime;
-				
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")); 
-				Date day1 = date.parse(EgovDateUtil.convertDate(compare1, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""));
-				Date day2 = date.parse(EgovDateUtil.convertDate(compare2, "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""));
-				compare = day1.compareTo(day2);
-				
-				//비교한 다음
-				String compare3 = EgovDateUtil.convertDate(dsStartDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-				
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int subCompare = day3.compareTo(day4);
-				
-				if (subCompare < 0) {
-					recLoop++;
-					
-					continue;
-				}
-				
-				//0802
-				if (date.parse(dsStartDateTime).getYear()+1900 > date1.parse(recParam.getRecStartDateTime()).getYear()+1900) {
-					dsStartDateTime = EgovDateUtil.addYear(dsStartDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-				}
-				
-				if (date.parse(dsStartDateTime).getYear()+1900 == date1.parse(recParam.getRecStartDateTime()).getYear()+1900) {
-					if (date.parse(dsStartDateTime).getMonth()+1 < date1.parse(recParam.getRecStartDateTime()).getMonth()+1) {
-						dsStartDateTime = EgovDateUtil.addMonth(dsStartDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-					}
-				}
-				if (date.parse(dsEndDateTime).getYear()+1900 > date1.parse(recParam.getRecEndDateTime()).getYear()+1900) {
-					dsEndDateTime = EgovDateUtil.addYear(dsEndDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-				}
-				if (date.parse(dsEndDateTime).getYear()+1900 == date1.parse(recParam.getRecEndDateTime()).getYear()+1900) {
-					if (date.parse(dsEndDateTime).getMonth()+1 < date1.parse(recParam.getRecEndDateTime()).getMonth()+1) {
-						dsEndDateTime = EgovDateUtil.addMonth(dsEndDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-					}
-				}
-				//넣는다
-				s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-				dt.add(s1);
-				
-				recLoop++;
-			}
-		}
-		
-		
-
-		logger.debug("chkDupReway70 ended");
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway71 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway71 started");
-
-		//반복예약 반복주기 매년, 요일
-		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-		if (recParam.getRecReOrd() == -1) {
-			dt =  chkDupReway71_2(recParam, dt, objParam);
-			return dt;
-		}
-		
-		int recLoop = 0;
-		
-		// 시작일의 달 1일
-		String recFirstStartDate = getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		
-		int recMondayOffsetAdd = 0;
-		// 단 하나의 요일일때 : 주말이나 평일일때
-		boolean isOneDay = (recParam.getRecReYoil().indexOf(",") == -1);
-		// 단 하나의 요일이므로 미리 구하여 불필요한 반복 없앰
-		int recReOneYoil = isOneDay ? Integer.parseInt(recParam.getRecReYoil()) : -1;
-		if (recReOneYoil == 0) {
-			//일요일
-			recReOneYoil = 7;
-		}
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			//하나의 요일일때
-			if (isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					logger.debug("recFirstStartDate="+recFirstStartDate);
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//몇째 요일의 일
-					int recPartDay = (recParam.getRecReOrd()-1) * 7 + recReOneYoil + (1-datePartLeftShift(recFirstDate));
-					recPartDay += (recReOneYoil < datePartLeftShift(recFirstDate) ? 7:0);
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					logger.debug("1111111=="+getYearMonthDay(dsStartDateTime));
-					logger.debug("2222222=="+recParam.getRecEndDateTime());
-					
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes() + date1.parse(recParam.getRecEndDateTime()).getSeconds();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//비교한다음
-					String compare1 = dsStartDateTime;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					int compare = day1.compareTo(day2);
-					if (isOneDay && compare < 0) {
-						recLoop++;
-						continue;
-					}
-					
-					//넣는다
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * 12 * 1, ""),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					int recReOrdOffset = 0;
-					//주말이지만 일요일로 시작하면 다음주부터
-					if (isWeekend && datePartLeftShift(recFirstDate) == 7)  {
-						recReOrdOffset = 1;
-					}
-					//평일에서 주말로 시작하면 다음주부터
-					if (!isWeekend && datePartLeftShift(recFirstDate) > 5) {
-						recReOrdOffset = 1;
-					}
-					//주말이나 평일일때 주에서 월,화,수,목,금,토,일로 반복
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//몇째 요일의 일
-						int recPartDay = (recParam.getRecReOrd()-1 + recReOrdOffset) * 7 + (recMondayOffsetAdd + 1) + (1 - datePartLeftShift(recFirstDate));
-						
-						if (recPartDay < 1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date.parse(recParam.getRecEndDateTime()).getHours() + date.parse(recParam.getRecEndDateTime()).getMinutes() + date.parse(recParam.getRecEndDateTime()).getSeconds();
-						//비교한다음
-						String compare1 = dsStartDateTime;
-						String compare2 = recParam.getRecStartDateTime(); 
-						Date day1 = date.parse(compare1);
-						Date day2 = date.parse(compare2);
-						int compare = day1.compareTo(day2);
-						
-						if (compare < 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (datePartLeftShift(dsStartDateTime)) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						//넣는다
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			//하나의 요일일때
-			if (isOneDay) {
-				String dsStartDateTimeLoop = "";
-				dsStartDateTimeLoop = "1900-01-01 오전 1:00:00";
-				//String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				//String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-				
-				int compare = 0;
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * 12 * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//몇째 요일의 일
-					int recPartDay = (recParam.getRecReOrd()-1) * 7 + recReOneYoil + (1-datePartLeftShift(recFirstDate));
-					recPartDay += (recReOneYoil < datePartLeftShift(recFirstDate) ? 7 : 0);
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes() + date1.parse(recParam.getRecEndDateTime()).getSeconds();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					
-					//while 조건 비교
-					dsStartDateTimeLoop = dsStartDateTime;
-					
-					String compare1 = dsStartDateTimeLoop;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					compare = day1.compareTo(day2);
-					
-					//비교한 다음
-					String compare3 = dsStartDateTime;
-					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					int subCompare = day3.compareTo(day4);
-					
-					if (isOneDay && subCompare < 0) {
-						recLoop++;
-						continue;
-					}
-					//0802
-					if (date.parse(dsStartDateTime).getYear() > date1.parse(recParam.getRecStartDateTime()).getYear()) {
-						dsStartDateTime = EgovDateUtil.addYear(dsStartDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-					}
-					
-					if (date.parse(dsStartDateTime).getYear() == date1.parse(recParam.getRecStartDateTime()).getYear()) {
-						if (date.parse(dsStartDateTime).getMonth()+1 < date1.parse(recParam.getRecStartDateTime()).getMonth()+1) {
-							dsStartDateTime = EgovDateUtil.addMonth(dsStartDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-						}
-					}
-					if (date.parse(dsEndDateTime).getYear() > date1.parse(recParam.getRecEndDateTime()).getYear()) {
-						dsEndDateTime = EgovDateUtil.addYear(dsEndDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-					}
-					if (date.parse(dsEndDateTime).getYear() == date1.parse(recParam.getRecEndDateTime()).getYear()) {
-						if (date.parse(dsEndDateTime).getMonth()+1 < date1.parse(recParam.getRecEndDateTime()).getMonth()+1) {
-							dsEndDateTime = EgovDateUtil.addMonth(dsEndDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-						}
-					}
-					//넣는다
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				String dsStartDateTimeLoop = "";
-				
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(recParam.getRecEndDateTime()); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * 12 * 1, ""),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					int recReOrdOffset = 0;
-					//주말이지만 일요일로 시작하면 다음주부터
-					if (isWeekend && datePartLeftShift(recFirstDate) == 7) {
-						recReOrdOffset = 1;
-					}
-					if (!isWeekend && datePartLeftShift(recFirstDate) > 5) {
-						recReOrdOffset = 1;
-					}
-					
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//몇째 요일의 일
-						int recPartDay = (recParam.getRecReOrd()-1 + recReOrdOffset) * 7 + (recMondayOffsetAdd + 1) + (1 - datePartLeftShift(recFirstDate));
-						
-						if (recPartDay < 1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date.parse(recParam.getRecEndDateTime()).getHours() + date.parse(recParam.getRecEndDateTime()).getMinutes() + date.parse(recParam.getRecEndDateTime()).getSeconds();
-						//while조건비교
-						dsStartDateTimeLoop = dsStartDateTime;
-						
-						//비교한다음
-						String compare3 = dsStartDateTime;
-						String compare4 = recParam.getRecStartDateTime();
-						Date day3 = date.parse(compare3);
-						Date day4 = date.parse(compare4);
-						String compare7 = dsStartDateTime;
-						String compare8 = recParam.getRecStartDateTime();
-						Date day7 = date.parse(compare7);
-						Date day8 = date.parse(compare8);
-						int secondCompare = day3.compareTo(day4);
-						
-						int fourCompare = day7.compareTo(day8);
-						if (secondCompare < 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (fourCompare < 0) && datePartLeftShift(dsStartDateTime) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						
-						//0802
-						if (date.parse(dsStartDateTime).getYear() > date.parse(recParam.getRecStartDateTime()).getYear()) {
-							dsStartDateTime = EgovDateUtil.addYear(dsStartDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-						}
-						
-						if (date.parse(dsStartDateTime).getYear() == date.parse(recParam.getRecStartDateTime()).getYear()) {
-							if (date.parse(dsStartDateTime).getMonth()+1 < date.parse(recParam.getRecStartDateTime()).getMonth()+1) {
-								dsStartDateTime = EgovDateUtil.addMonth(dsStartDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-							}
-						}
-						if (date.parse(dsEndDateTime).getYear() > date.parse(recParam.getRecEndDateTime()).getYear()) {
-							dsEndDateTime = EgovDateUtil.addYear(dsEndDateTime, -1, "yyyy-MM-dd aa h:mm:ss");
-						}
-						if (date.parse(dsEndDateTime).getYear() == date.parse(recParam.getRecEndDateTime()).getYear()) {
-							if (date.parse(dsEndDateTime).getMonth()+1 < date.parse(recParam.getRecEndDateTime()).getMonth()+1) {
-								dsEndDateTime = EgovDateUtil.addMonth(dsEndDateTime, 1, "yyyy-MM-dd aa h:mm:ss"); 
-							}
-						}
-						
-						//넣는다
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-
-		logger.debug("chkDupReway71 ended");
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway61_2 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt) throws Exception {
-		logger.debug("chkDupReway61_2 started");
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		int recLoop = 0;
-		
-		// 시작일의 달 1일
-		String recFirstStartDate = getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		
-		int recMondayOffsetAdd = 0;
-		// 단 하나의 요일일때 : 주말이나 평일일때
-		boolean isOneDay = (recParam.getRecReYoil().indexOf(",") == -1);
-		// 단 하나의 요일이므로 미리 구하여 불필요한 반복 없앰
-		int recReOneYoil = isOneDay ? Integer.parseInt(recParam.getRecReYoil()) : -1;
-		if (recReOneYoil == 0) {
-			//일요일
-			recReOneYoil = 7;
-		}
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			//하나의 요일일때
-			if (isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//마지막 요일의 일
-					int recPartDay = date.parse(recFirstDateEndDay).getDate();
-					recPartDay -= datePartLeftShift(recFirstDateEndDay) - recReOneYoil;
-					if (datePartLeftShift(recFirstDateEndDay) - (recReOneYoil) < 0) {
-						recPartDay -= 7; // 달력의 날이 아니면 7일 뺌
-					}
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//비교한다음
-					String compare1 = dsStartDateTime;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					int compare = day1.compareTo(day2);
-					if (isOneDay && compare < 0) {
-						recLoop++;
-						continue;
-					}
-					
-					//넣는다
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					int recMonday61_2 = date.parse(recFirstDateEndDay).getDate() + (1 - datePartLeftShift(recFirstDateEndDay));
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					//주말이지만 평일로 끝나면 이전주부터
-					if (isWeekend && datePartLeftShift(recFirstDateEndDay) <= 5) {
-						recMonday61_2 -= 7;
-					}
-					
-					//주말이나 평일일때 주에서 월,화,수,목,금,토,일로 반복
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//마지막 요일의 일
-						int recPartDay = recMonday61_2 + recMondayOffsetAdd;
-						
-						if (recPartDay < date.parse(recFirstDateEndDay).getDate()) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						//비교한다음
-						String compare1 = dsStartDateTime;
-						String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-						Date day1 = date.parse(compare1);
-						Date day2 = date.parse(compare2);
-						int compare = day1.compareTo(day2);
-						
-						if (compare < 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (datePartLeftShift(dsStartDateTime)) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						//넣는다
-						ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			//하나의 요일일때
-			if (isOneDay) {
-				String dsStartDateTimeLoop = "";
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd aa HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//마지막 요일의 일
-					int recPartDay = date.parse(recFirstDateEndDay).getDate();
-					recPartDay -= datePartLeftShift(recFirstDateEndDay) - recReOneYoil;
-					if (datePartLeftShift(recFirstDateEndDay) - (recReOneYoil) < 0) {
-						//달력의 날이 아니면 7일 뺌
-						recPartDay -= 7;
-					}
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//while 조건 비교
-					dsStartDateTimeLoop = dsStartDateTime;
-					//비교한 다음
-					String compare3 = dsStartDateTime;
-					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					int subCompare = day3.compareTo(day4);
-					
-					if (isOneDay && subCompare < 0) {
-						recLoop++;
-						continue;
-					}
-					//넣는다
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				String dsStartDateTimeLoop = "";
-				
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd aa HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					int recMonday61_2 = date.parse(recFirstDateEndDay).getDate() + (1 - datePartLeftShift(recFirstDateEndDay));
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					//주말이지만 평일로 끝나면 이전주부터
-					if (isWeekend && datePartLeftShift(recFirstDateEndDay) <= 5) { // 주말이지만 평일로 끝나면 이전주부터
-						recMonday61_2 -= 7;
-					}
-					
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//마지막 요일의 일
-						int recPartDay = recMonday61_2 + recMondayOffsetAdd;
-						
-						if (recPartDay > date.parse(recFirstDateEndDay).getDate()) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						//while조건비교
-						dsStartDateTimeLoop = dsStartDateTime;
-						
-						//비교한다음
-						String compare3 = dsStartDateTime;
-						String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "");
-						Date day3 = date.parse(compare3);
-						Date day4 = date.parse(compare4);
-						String compare5 = getYearMonthDay(dsStartDateTime);
-						String compare6 = getYearMonthDay(recParam.getRecEndDateTime());
-						Date day5 = date.parse(compare5);
-						Date day6 = date.parse(compare6);
-						
-						int secondCompare = day3.compareTo(day4);
-						int thirdCompare = day5.compareTo(day6);
-						
-						if (secondCompare < 0 || thirdCompare > 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (secondCompare < 0) && datePartLeftShift(dsStartDateTime) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						
-						//넣는다
-						ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-		logger.debug("chkDupReway61_2 ended");
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public List<ResMakeDupResultVO> chkDupReway71_2 (ResRecParamVO recParam, List<ResMakeDupResultVO> dt, ResObjArrayDestVO objParam) throws Exception {
-		logger.debug("chkDupReway71_2 started");
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
-		int recLoop = 0;
-		
-		// 시작일의 달 1일
-		String recFirstStartDate = getFirstDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		recFirstStartDate = EgovDateUtil.convertDate(recFirstStartDate, "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd HH:mm", "");
-		
-		int recMondayOffsetAdd = 0;
-		// 단 하나의 요일일때 : 주말이나 평일일때
-		boolean isOneDay = (recParam.getRecReYoil().indexOf(",") == -1);
-		// 단 하나의 요일이므로 미리 구하여 불필요한 반복 없앰
-		int recReOneYoil = isOneDay ? Integer.parseInt(recParam.getRecReYoil()) : -1;
-		if (recReOneYoil == 0) {
-			//일요일
-			recReOneYoil = 7;
-		}
-		//반복회수지정
-		if (recParam.getRecEndFlag() == 1) {
-			//하나의 요일일때
-			if (isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//마지막 요일의 일
-					int recPartDay = date.parse(recFirstDateEndDay).getDate();
-					recPartDay -= datePartLeftShift(recFirstDateEndDay) - recReOneYoil;
-					if (datePartLeftShift(recFirstDateEndDay) - (recReOneYoil) < 0) {
-						recPartDay -= 7; // 달력의 날이 아니면 7일 뺌
-					}
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//비교한다음
-					String compare1 = dsStartDateTime;
-					String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day1 = date.parse(compare1);
-					Date day2 = date.parse(compare2);
-					int compare = day1.compareTo(day2);
-					if (isOneDay && compare < 0) {
-						recLoop++;
-						continue;
-					}
-					
-					//넣는다
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				while (recLoop < recParam.getRecReCount()) {
-					//몇월 1일
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					int recMonday61_2 = date.parse(recFirstDateEndDay).getDate() + (1 - datePartLeftShift(recFirstDateEndDay));
-					
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					//주말이지만 평일로 끝나면 이전주부터
-					if (isWeekend && datePartLeftShift(recFirstDateEndDay) <= 5) {
-						recMonday61_2 -= 7;
-					}
-					
-					//주말이나 평일일때 주에서 월,화,수,목,금,토,일로 반복
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//마지막 요일의 일
-						int recPartDay = recMonday61_2 + recMondayOffsetAdd;
-						
-						if (recPartDay < date.parse(recFirstDateEndDay).getDate()) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						//비교한다음
-						String compare1 = dsStartDateTime;
-						String compare2 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-						Date day1 = date.parse(compare1);
-						Date day2 = date.parse(compare2);
-						int compare = day1.compareTo(day2);
-						
-						if (compare < 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (datePartLeftShift(dsStartDateTime)) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						//넣는다
-						ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-		
-		//종료일지정
-		if (recParam.getRecEndFlag() == 2) {
-			//하나의 요일일때
-			if (isOneDay) {
-				String dsStartDateTimeLoop = "";
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					//마지막 요일의 일
-					int recPartDay = date.parse(recFirstDateEndDay).getDate();
-					recPartDay -= datePartLeftShift(recFirstDateEndDay) - recReOneYoil;
-					if (datePartLeftShift(recFirstDateEndDay) - (recReOneYoil) < 0) {
-						//달력의 날이 아니면 7일 뺌
-						recPartDay -= 7;
-					}
-					
-					//구하고
-					String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-					String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-					dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-					//while 조건 비교
-					dsStartDateTimeLoop = dsStartDateTime;
-					//비교한 다음
-					String compare3 = dsStartDateTime;
-					String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-					Date day3 = date.parse(compare3);
-					Date day4 = date.parse(compare4);
-					int subCompare = day3.compareTo(day4);
-					
-					if (isOneDay && subCompare < 0) {
-						recLoop++;
-						continue;
-					}
-					//넣는다
-					ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-					s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-					dt.add(s1);
-					
-					recLoop++;
-				}
-			}
-			//주말이나 평일일때
-			if (!isOneDay) {
-				String dsStartDateTimeLoop = "";
-				
-				String compare1 = getYearMonthDay(dsStartDateTimeLoop);
-				String compare2 = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecEndDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", "")); 
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				int compare = day1.compareTo(day2);
-				while (compare <= 0) {
-					String recFirstDate = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					String recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstStartDate, recLoop * recParam.getRecReNum() * 1, "yyyy-MM-dd HH:mm"),"yyyy-MM-dd HH:mm","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addMonth(recFirstDateEndDay, 1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					recFirstDateEndDay = EgovDateUtil.convertDate(EgovDateUtil.addDay(recFirstDateEndDay, -1, "yyyy-MM-dd aa h:mm:ss"),"yyyy-MM-dd aa h:mm:ss","yyyy-MM-dd aa h:mm:ss","");
-					
-					int recMonday61_2 = date.parse(recFirstDateEndDay).getDate() + (1 - datePartLeftShift(recFirstDateEndDay));
-					boolean isWeekend = (recParam.getRecReYoil().indexOf("6,") != -1 || recParam.getRecReYoil().indexOf("0,") != -1);
-					
-					//주말이지만 평일로 끝나면 이전주부터
-					if (isWeekend && datePartLeftShift(recFirstDateEndDay) <= 5) { // 주말이지만 평일로 끝나면 이전주부터
-						recMonday61_2 -= 7;
-					}
-					
-					while (recMondayOffsetAdd < 7) {
-						if (recParam.getRecReYoil().replace("0,", "7,").indexOf(recMondayOffsetAdd+1) == -1) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//마지막 요일의 일
-						int recPartDay = recMonday61_2 + recMondayOffsetAdd;
-						
-						if (recPartDay > date.parse(recFirstDateEndDay).getDate()) {
-							recMondayOffsetAdd++;
-							continue;
-						}
-						
-						//구하고
-						String dsStartDateTime = getSomeDay(recFirstDate, recPartDay);
-						String dsEndDateTime = getYearMonthDay(dsStartDateTime) + date1.parse(recParam.getRecEndDateTime()).getHours() + date1.parse(recParam.getRecEndDateTime()).getMinutes();
-						dsEndDateTime = EgovDateUtil.convertDate(dsEndDateTime, "yyyyMMddHHmm", "yyyy-MM-dd aa h:mm:ss", "");
-						//while조건비교
-						dsStartDateTimeLoop = dsStartDateTime;
-						
-						//비교한다음
-						String compare3 = dsStartDateTime;
-						String compare4 = EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""); 
-						Date day3 = date.parse(compare3);
-						Date day4 = date.parse(compare4);
-						String compare5 = getYearMonthDay(dsStartDateTime);
-						String compare6 = getYearMonthDay(recParam.getRecEndDateTime());
-						Date day5 = date.parse(compare5);
-						Date day6 = date.parse(compare6);
-						
-						int secondCompare = day3.compareTo(day4);
-						int thirdCompare = day5.compareTo(day6);
-						
-						if (secondCompare < 0 || thirdCompare > 0) {
-							recMondayOffsetAdd++;
-							//주말이지만 토요일이 시작일 이전이면 일요일도 포함하면 안됨
-							if (isWeekend && (secondCompare < 0) && datePartLeftShift(dsStartDateTime) == 6) {
-								recMondayOffsetAdd++;
-							}
-							continue;
-						}
-						
-						//넣는다
-						ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-						s1.setStartDateTime(addSeconds(dsStartDateTime, -date.parse(dsStartDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						s1.setEndDateTime(addSeconds(dsEndDateTime, -date.parse(dsEndDateTime).getSeconds(), "yyyy-MM-dd aa h:mm:ss"));
-						dt.add(s1);
-						
-						recMondayOffsetAdd++;
-					}
-					recMondayOffsetAdd = 0;
-					recLoop++;
-				}
-			}
-		}
-
-		logger.debug("chkDupReway71_2 ended");
-		return dt;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public String getYearMonthDay(String strSource) throws Exception {
-		logger.debug("getYearMonthDay started");
-		logger.debug("strSource="+strSource);
-		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		
-		int tempMonth = date.parse(strSource).getMonth()+1;
-		String month = "";
-		
-		if (tempMonth < 10) {
-			month = "0"+String.valueOf(date.parse(strSource).getMonth()+1);
-		} else {
-			month = String.valueOf(date.parse(strSource).getMonth()+1);
-		}
-		
-		int tempDay = date.parse(strSource).getDate();
-		String day = "";
-		
-		if (tempDay < 10) {
-			day = "0"+String.valueOf(date.parse(strSource).getDate());
-		} else {
-			day = String.valueOf(date.parse(strSource).getDate());
-		}
-		String result = String.valueOf(date.parse(strSource).getYear()+1900) + month + day;
-		logger.debug("result="+result);
-		logger.debug("getYearMonthDay ended");
-		return result;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public String getSomeDay(String strSource, int day) throws Exception {
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		return EgovDateUtil.addDay(strSource, -(date.parse(strSource).getDate() - day), "yyyy-MM-dd aa h:mm:ss");
-	}
-	public String getFirstDay(String strSource) throws Exception {
-		
-		return getSomeDay(strSource, 1);
-	}
-	
-	public String korDayOfWeek(int dayOfWeek) throws Exception {
-		String retStr = "";
-		
-		switch (dayOfWeek) {
-		case 0:
-			retStr = "일요일";
-			break;
-		case 1:
-			retStr = "월요일";
-			break;
-		case 2:
-			retStr = "화요일";
-			break;				
-		case 3:
-			retStr = "수요일";
-			break;				
-		case 4:
-			retStr = "목요일";
-			break;
-		case 5:
-			retStr = "금요일";
-			break;				
-		case 6:
-			retStr = "토요일";
-			break;				
-		default:
-			break;
-		}
-		return retStr;
-	}
-	
-	@SuppressWarnings("deprecation")
-	String checkMonth (String tempMonth) throws Exception {
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String month = "";
-		if ((date1.parse(tempMonth).getMonth()+1) < 10) {
-			month = "0"+String.valueOf(date1.parse(tempMonth).getMonth()+1);
-		} else {
-			month = String.valueOf(date1.parse(tempMonth).getMonth()+1);
-		}
-		return month;
-	}
-	
-	@SuppressWarnings("deprecation")
-	String checkDay (String tempDay) throws Exception {
-		SimpleDateFormat date1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		String day = "";
-		if ((date1.parse(tempDay).getDate()) < 10) {
-			day = "0"+String.valueOf(date1.parse(tempDay).getDate());
-		} else {
-			day = String.valueOf(date1.parse(tempDay).getDate());
-		}
-		return day;
 	}
 	
 }

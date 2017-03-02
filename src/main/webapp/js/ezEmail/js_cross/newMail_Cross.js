@@ -2579,7 +2579,12 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[0] = m_rgParams4PostOption;
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
-    DivPopUpShow(410, 455, "/ezEmail/letterOption.do");
+    
+    if (individualmailuser != "0") {
+        DivPopUpShow(410, 455, "/ezEmail/letterOption.do");
+    } else {
+        DivPopUpShow(410, 375, "/ezEmail/letterOption.do");
+    }
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {

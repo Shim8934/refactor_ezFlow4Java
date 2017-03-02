@@ -307,12 +307,13 @@ function CheckBeforeSave()
 				return false;
 			}
 		}
-		
-		if( !CheckStartDateTime() )
-		{
-			alert("" + strLang101 + "");
+		if( document.getElementById("EndTimeSet").checked )	{		
+			if( !CheckStartDateTime() )
+			{
+				alert("" + strLang101 + "");
 			
-			return false;
+				return false;
+			}
 		}
 	}
 	else

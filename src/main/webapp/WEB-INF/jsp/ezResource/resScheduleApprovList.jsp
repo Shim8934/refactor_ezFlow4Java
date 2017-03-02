@@ -299,7 +299,7 @@
 	        	}
 	        	getCalendarList();
 	        	if (issave)
-		            alert("" + strLang33 + "");
+		            alert("" + strLang584 + "");
 	    	}
 
 	    	function btn_ApprovCancel() {
@@ -347,7 +347,7 @@
 	        	}
 	        	getCalendarList();
 	        	if (issave)
-		            alert("" + strLang33 + "");
+		            alert("" + strLang585 + "");
 	    	}
 
 	    	var schedule_repetition_del_cross_dialogArguments = new Array();

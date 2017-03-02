@@ -90,4 +90,12 @@ public class ResScheduleRepetitionVO {
 		this.allDay = allDay;
 	}
 	
+	@Override
+	public String toString() {
+		return "ResScheduleRepetitionVO [freq=" + freq + ", selType=" + selType + ", interval=" + interval
+				+ ", endRecurType=" + endRecurType + ", instances=" + instances + ", daysOfWeek=" + daysOfWeek
+				+ ", daysOfMonth=" + daysOfMonth + ", monthsOfYear=" + monthsOfYear + ", byPosition=" + byPosition
+				+ ", startDate=" + startDate + ", endDate=" + endDate + ", allDay=" + allDay + "]";
+	}
+	
 }
