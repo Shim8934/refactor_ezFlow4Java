@@ -161,7 +161,7 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
-	
+	        
 	        window.onload = function () {
 	            if (MACSAFARIYN()) {
 	                window.resizeBy(0, 35);
@@ -574,7 +574,7 @@
 	        try {
 	            if (!onlydocinfiview) {
 	                ret[0] = "OK";
-	
+
 	                var line = Checkline();
 	                if (line == false) {
 	                    return;
@@ -669,6 +669,7 @@
 
 	                if (document.getElementById("AprSecurity").checked)
 	                    ret[14] = document.getElementById("idDatepicker").value.substring(0, 10);
+
 	                else
 	                    ret[14] = "";
 	
@@ -700,7 +701,7 @@
 	        }
 	    }
 	
-	    function CheckAprPerson() {
+	    function CheckAprPerson() {  	
 	        var pAPRLINE = new ListView();
 	        pAPRLINE.LoadFromID("lvAPRLINE");
 	
@@ -1516,14 +1517,10 @@
 	                <th><spring:message code='ezApprovalG.t1210'/></th>
 	                <td>
 	                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
-	                    <input readonly="true" type="text" class="datepicker" id="idDatepicker" />
-	                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15"
-	                        style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
-	                    <input id='Post_D2'
-	                        class='datepicker_date'
-	                        readonly="true"
-	                        type="text"
-	                        style="width: 95px; display: none" name="Post_D2">
+	                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
+	                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
+<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
+	                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
 	                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
 	                </td>
 	            </tr>
