@@ -577,7 +577,7 @@
 			          	</c:if>
 			          	<td> <a style="cursor:pointer" onClick="menuQst_DetailUserInfo('${list.userID}')"> ${list.userNm} </a> </td> 
 			          	<c:if test="${list.publicResultFlg == 0}">
-			          		<td<spring:message code = 'ezQuestion.t245' /></td>	
+			          		<td><spring:message code = 'ezQuestion.t245' /></td>	
 			          	</c:if>
 			          	<c:if test="${list.publicResultFlg == 1}">
 			          		<td><spring:message code = 'ezQuestion.t244' /></td>	
