@@ -308,7 +308,6 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
   		logger.debug("useMultiLangMail=" + useMultiLangMail + ",pSecurity=" + pSecurity + ",charsetCheck=" + charsetCheck
   				+ ",postType=" + postType);
   		
-        //TODO: 개별발신
 		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", loginInfo.getTenantId());
 		
 		String cmdOwn = "";
@@ -3373,6 +3372,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//TODO: 변수들 setting
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String individualMailUser = ezCommonService.getTenantConfig("INDIVIDUALMAILUSER", userInfo.getTenantId());
 		
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		boolean outMailReadCheck = false;
@@ -3380,6 +3380,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("outMailReadCheck", outMailReadCheck);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("individualMailUser", individualMailUser);
 		
 		return "ezEmail/mailLetterOption";
 	}

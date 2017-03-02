@@ -1812,10 +1812,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
 		
 		String scheduleId = request.getParameter("scheduleId");
-		String startDate = request.getParameter("startDate");
+		String selectDate = request.getParameter("selectDate");
+		String startDate = request.getParameter("startDate");		
+		String realStartDate = selectDate + "" + startDate.substring(10, 16);		
+
+		String realDate = commonUtil.getDateStringInUTC(realStartDate, loginSimpleVO.getOffset(), true);
 
 		//일정데이터 삭제
-		ezScheduleService.insertScheduleRepeDel(scheduleId, startDate, loginSimpleVO.getTenantId());
+		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId());
 	}
 	
 	/**

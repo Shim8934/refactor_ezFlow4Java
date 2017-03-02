@@ -188,7 +188,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				Calendar eDate_cal = Calendar.getInstance();
 				Calendar date_cal = Calendar.getInstance();
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 				
 				sDate_cal.setTime(sdf.parse(pStartDate));
@@ -218,7 +218,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								String calcuDate = nsdf.format(date_cal.getTime());
 								
 								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {	
-									//row 추가									
+									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
 										resultList.add(rVo);

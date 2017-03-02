@@ -180,12 +180,15 @@ public class EzCommonController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommon/mhtToHTML.do", produces = "text/plain; charset=utf-8")
 	@ResponseBody
 	public String mhtToHTML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+		logger.debug("mhtToHTML started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
         String domain = request.getServerName();
+        logger.debug("strURL="+strURL + ",uploadModule="+uploadModule);
         
         filePath = realPath + uploadModule;
         
@@ -197,7 +200,9 @@ public class EzCommonController extends EgovFileMngUtil{
         
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
+        	logger.debug("m_strMHT="+m_strMHT);
 		} catch (Exception e) {
+			e.printStackTrace();
 			m_strMHT= "";
 		}
         
@@ -214,6 +219,7 @@ public class EzCommonController extends EgovFileMngUtil{
         		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
         		
         		String attribute = "orgdocnum";
+		
 				StringBuffer sb = new StringBuffer();
 				
 				sb.append("<NODE>");
@@ -226,10 +232,11 @@ public class EzCommonController extends EgovFileMngUtil{
 				sb.append("<NODEVALUE>" + strHTML + "</NODEVALUE>");
 				sb.append("</NODE>");
 				
-        		result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
-        	}
-        }
-        
+				result = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><ROOT><BODYATTS>" + commonUtil.cleanValue(sb.toString()) + "</BODYATTS>" + "<BODYDATA>" + strHTML + "</BODYDATA></ROOT>";
+			}
+		}
+
+		logger.debug("mhtToHTML ended");
 		return result;
 	}
 	

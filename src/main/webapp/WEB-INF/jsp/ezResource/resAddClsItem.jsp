@@ -24,7 +24,7 @@
 			}
 
 			function btnSave_Click() {
-				var re = /[\\/:*?\"<>|]/gi;
+				var re = /[\\/:*?\"<>|@&#`~]/gi;
 				if( re.test(document.getElementById("Brd_NM").value)){
 					alert("<spring:message code="ezResource.kms1" />");
 					return;

@@ -14,14 +14,12 @@
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<style>
-			.pagetd{padding-top:6px; }
-			.pcol{padding-top:6px; }
-			.Right_Point01 {
-				font:bold;
-				color:#017bec;
+			#QstList{
+				padding : 5px;
 			}
 		</style>
-		<script language="JavaScript" type="text/javascript">
+		
+		<script type="text/javascript">
 			var g_ezBoard = "/gwQuestion";
 		    var g_BrdID = "<c:out value='${qstListVO.brdID}'/>";
 		    var szSelectedItemNo = "";
@@ -530,7 +528,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody" style="width:100%;">
+	<body class="mainbody">
 		<h1><spring:message code="ezQuestion.t300" /><span id="mailBoxInfo"></span></h1>
 		<div id="mainmenu">
 			<ul>
@@ -550,7 +548,7 @@
 			<table id="QstList" class="mainlist" style="width:100%"> 
 			    <tr> 
 					<th width="30px" align="center"> <spring:message code="ezQuestion.t306" /></th> 
-					<th width="1030px"><spring:message code="ezQuestion.t307" /></th> 
+					<th><spring:message code="ezQuestion.t307" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t308" /></th> 
 					<th width="80px"><spring:message code="ezQuestion.t309" /></th> 
 					<th width="60px"><spring:message code="ezQuestion.t310" /></th> 
@@ -587,7 +585,7 @@
 		        </c:forEach>
 			    <c:if test="${qstListVO.totalCnt == 0}"> 
 			        <tr> 
-						<td colspan="13" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
+						<td colspan="7" align="center" height="30" bgcolor="#FFFFFF"> <spring:message code="ezQuestion.t312" /></td> 
 		       		</tr> 
 		        </c:if> 
 			</table> 

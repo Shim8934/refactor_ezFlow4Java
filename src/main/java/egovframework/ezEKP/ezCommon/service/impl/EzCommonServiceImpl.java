@@ -787,6 +787,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	@Override
 	public String startMHT2HTML(String m_strLPath, String m_strMHT, String m_strSPath, String realPath, Locale locale, String domain) throws Exception{
+		logger.debug("====== startMHT2HTML started ======");
 		String m_strHTML = "";
 		String strBoundary = "";
 		String[] m_Mimechunk = null;
@@ -794,12 +795,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		
 		strBoundary = getBoundaryText(m_strMHT);
-
+		logger.debug("strBoundary="+strBoundary);
+		
 		if (m_strMHT != null && !m_strMHT.equals("")) {
 			if (strBoundary.equals("error")) {
 				return egovMessageSource.getMessage("main.t0600", locale);
 			} else {
 				m_Mimechunk = m_strMHT.split(strBoundary);
+				logger.debug("m_Mimechunk="+m_Mimechunk);
+				
 				for (int i = 1; i < m_Mimechunk.length; i++) {
 					String[] strMimeChunk = m_Mimechunk[i].split(commonUtil.CRLF + commonUtil.CRLF);
 					String[] strMime_info_p = strMimeChunk[0].trim().split(commonUtil.CRLF);
@@ -818,7 +822,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 						}
 					}
 				}
-
+				
 				if (m_ListImageLocation.size() == m_ListImageLocalLocation.size()) {
 					for (int i = 0; i < m_ListImageLocation.size(); i++) {
 						//절대경로에서 realPath "" 으로 대체
@@ -832,10 +836,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 				return m_strHTML;
 			}
 		} else {
+			
 			return egovMessageSource.getMessage("main.t0602", locale);
 		}
 	}
-
+		
 	/**
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */

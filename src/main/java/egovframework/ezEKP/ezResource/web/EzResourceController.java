@@ -2009,6 +2009,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String daysOfWeek = xmlDom.getElementsByTagName("daysOfWeek").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfWeek").item(0).getTextContent();
 		String byPosition = xmlDom.getElementsByTagName("byPosition").getLength() == 0 ? "" : xmlDom.getElementsByTagName("byPosition").item(0).getTextContent();
 		String daysOfMonth = xmlDom.getElementsByTagName("daysOfMonth").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfMonth").item(0).getTextContent();
+		String monthsOfYear = xmlDom.getElementsByTagName("monthsOfYear").getLength() == 0 ? "" : xmlDom.getElementsByTagName("monthsOfYear").item(0).getTextContent();
 		String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
 		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
@@ -2022,7 +2023,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			if (cmd.equals("add")) {
 				num = null;
 			}
-			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 		} else {
 			logger.debug("===반복예약 데이터가 없을 때===");
 			if (cmd.equals("add")) {

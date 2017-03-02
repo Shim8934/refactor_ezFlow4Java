@@ -795,7 +795,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("myPortal started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		logger.debug("@@@@@@@@@@@@@@@@@@@myPortal"+userInfo.getCompanyID());
 		
 		String pageID = "";
 		String mode = "view";
@@ -893,10 +892,11 @@ public class EzPortalController extends EgovFileMngUtil {
 					"    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
 					"    <dd>" +
 					"        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-			logger.debug("@@@@@@@@@@@@@@rollInfo="+userInfo.getRollInfo());
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1) {
 				commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
 			}
+			
 			commentHtml += "    </dd>" +
 					"    </dl>" +
 					"    </div>" +
@@ -904,12 +904,12 @@ public class EzPortalController extends EgovFileMngUtil {
 					"</div>" +
 					"</BODY>" +
 					"</HTML>";
+			
 			resp.setCharacterEncoding("UTF-8");
 			resp.setContentType("text/html; charset=UTF-8");
 			resp.getWriter().write(commentHtml);
 			//resp.getWriter().flush();
 			resp.getWriter().close();
-			
 		}
 		
 		if (mode != null && mode.equals("edit") && gubunFlag.equals(rootGubunFlag)) {
@@ -939,10 +939,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		resp.getWriter().close();
 		
 		logger.debug("myPortal ended");
-			
-		
 	}
-	
 	
 	/**
 	 * 포탈 - urlPortlet 호출 함수
@@ -1014,15 +1011,15 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewImage.do")
 	public String wpNewImage(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+		logger.debug("wpNewImage started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
-			model.addAttribute("sliderList", sliderList);
-			return "/ezPortal/portalWpNewImage";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		
+		List<PersonalSliderImageVO> sliderList = ezPersonalService.getSilderList(userInfo.getCompanyID(), "", "", userInfo.getTenantId());
+		model.addAttribute("sliderList", sliderList);
+		
+		logger.debug("wpNewImage ended");
+		return "/ezPortal/portalWpNewImage";
 	}
 	
 	/**
@@ -1030,13 +1027,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpTime.do")
 	public String wpTime(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
-		try {
-			return "/ezPortal/portalWpTime";
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
+		return "/ezPortal/portalWpTime";
 	}
 	
 	/**
@@ -1048,7 +1039,7 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String noneActiveX = "";
+		String noneActiveX = "YES";
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useIE11Browser = "";
 		String mailAddress = "";
@@ -1060,17 +1051,15 @@ public class EzPortalController extends EgovFileMngUtil {
 		String lastLogin = "";
 		String pollNum = "";
 		String userPhoto = "";
-		
-		noneActiveX = "YES";
-		
-		//String userOffset = userInfo.getOs().split("\\|")[1];
-		String userOffset = "+09:00";
+		String userOffset = userInfo.getOffset().split("\\|")[1];
+		logger.debug("userOffset="+userOffset);
 		
 		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
 			useIE11Browser = "CK";
 		}
 		
 		mailAddress = userInfo.getEmail();
+		
 		if (userInfo.getLang().equals("1")) {
 			displayName = userInfo.getDisplayName1();
 			department = userInfo.getDeptName1();
@@ -1086,7 +1075,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
 		
@@ -1097,10 +1085,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
-			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
-			
-			
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
 		} else {
 			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
 		}
@@ -1184,11 +1169,13 @@ public class EzPortalController extends EgovFileMngUtil {
 			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
 			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
+		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 			pDeptBoardID = req.getParameter("deptBoardID");
 			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
 			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
+		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 			pNewsBoardID = req.getParameter("newsBoardID");
 			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
@@ -1211,7 +1198,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pNewsType", pNewsType);
 		model.addAttribute("result", result);
 		model.addAttribute("sliderList", sliderList);
-		
 
 		logger.debug("wpTotalSection2 ended");
 		return "/ezPortal/portalWpTotalSection2";	
@@ -1234,21 +1220,19 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pNewsBoardID = "";
 		String pNewsBDNM = "";
 		String pNewsType = "";
-		//String pItemID = "";
-		//String pDocTitle = "";
-		// String pDocContent = "";
-		//boolean pExist = true;
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 			pCompanyBoard = req.getParameter("companyBoardID");
 			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
 			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
+		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 			pDeptBoardID = req.getParameter("deptBoardID");
 			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
 			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
 		}
+		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 			pNewsBoardID = req.getParameter("newsBoardID");
 			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
@@ -1274,23 +1258,22 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewSide.do")
 	public String wpNewSide(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewSide started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String filePath = "";
 		String displayName = "";
 		String title = "";
 		String description = "";
-	
+		
 		Calendar cal = Calendar.getInstance();
 		String term = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)+1);
-		
 		
 		PersonalGetEmpOfMonthVO result = ezPersonalService.getEmpOfMonth(term, userInfo.getTenantId());
 		
 		if (result != null) {
 			if (result.getFilePath() != null && !result.getFilePath().equals("")) {
-				//<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>
-				//filePath = "/ezCommon/interface.do?type=personal&fileName="+result.getFilePath();
-				//filePath = "/ezCommon/downloadAttach.do?&filePath="+ URLEncoder.encode("/files/upload_personal/photo/" + result.getFilePath(), "UTF-8");
 				filePath = "/ezCommon/downloadAttach.do?&filePath="+ commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + result.getFilePath();
 			} else {
 				filePath = "/images/default_pic.jpg";
@@ -1312,6 +1295,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("description", description);
 		model.addAttribute("filePath", filePath);
 		model.addAttribute("result", result);
+		
+		logger.debug("wpNewSide ended");
 		return "/ezPortal/portalWpNewSide";
 	}
 	
@@ -1334,15 +1319,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewGWBanner.do")
 	public String wpNewGWbanner(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
-	
-		
-		try {
-			
-			return "/ezPortal/portalWpNewGWBanner";
-		} catch (Exception e) {
-			return "";
-		}
+		return "/ezPortal/portalWpNewGWBanner";
 	}
 	
 	/**
@@ -1365,14 +1342,10 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewBoardSTD.do")
 	public String wpNewBoardSTD(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
-	
-		try {
 			
-			model.addAttribute("userLang", userInfo.getLang());
-			return "/ezPortal/portalWpNewBoardSTD";
-		} catch (Exception e) {
-			return "";
-		}
+		model.addAttribute("userLang", userInfo.getLang());
+		
+		return "/ezPortal/portalWpNewBoardSTD";
 	}
 	
 	/**
@@ -1381,13 +1354,14 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewPoll.do")
 	public String wpNewPoll(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("wpNewPoll Start");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String votePoll = "";
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
 		String pPollResultContent = "";
-		logger.debug("userID="+userInfo.getId());
-		logger.debug("userCompanyID="+userInfo.getCompanyID());
+		
 		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
@@ -1410,12 +1384,14 @@ public class EzPortalController extends EgovFileMngUtil {
 					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
 					
 					int pTotalCnt = 0;
+					
 					for (int i=0; i<list.size(); i++) {
 						pTotalCnt = pTotalCnt + list.get(i).getCount();
 					}
-					//ArrayList pPollResultList
+					
 					List<Integer> pPollResultList = new ArrayList<Integer>();
 					int resultPrintCnt = 0;
+					
 					for (int i=0; i<list.size(); i++) {
 						if (i >= 4) {
 							break;
@@ -1445,6 +1421,7 @@ public class EzPortalController extends EgovFileMngUtil {
 									break;
 								}
 							}
+							
 							if (!isDuplication) {
 								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
 								if (strAnswer.length() > 13) {
@@ -1454,17 +1431,14 @@ public class EzPortalController extends EgovFileMngUtil {
 	                                    						"<strong>0</strong>명/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
 	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
 																resultPrintCnt++;
-								
 								if (resultPrintCnt == 4) {
 									break;
 								}
 							}
-							
 						}
 					}
 				}
 			}
-			
 		}
 
 		model.addAttribute("pPollTitle", pPollTitle);
@@ -1485,9 +1459,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		int dMaxCount = 0;
-		//int sMaxCount = 0;
-		//float draftPercent = 0;
-		//float susinPercent = 0;
 		
 		Calendar cal = Calendar.getInstance();
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
@@ -1502,12 +1473,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
-			//sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
 			
-			for (int i=0; i<list.size(); i++) {
-				//draftPercent = list.get(i).getDraftCount() / dMaxCount * 100;
-				//susinPercent = list.get(i).getSusinCount() / dMaxCount * 100;
-			}
 		} else {
 			dMax = "0";
 			dMaxCount = 0;
@@ -1517,8 +1483,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("list", list);
 		
 		return "/ezPortal/portalWpNewGraph";
-		
-	
 	}
 	
 	/**
@@ -1541,8 +1505,8 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
-		return "/ezPortal/portalWpNewPhoto";
 		
+		return "/ezPortal/portalWpNewPhoto";
 	}
 	
 	/**
@@ -1551,13 +1515,14 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/wpNewBirth.do")
 	public String wpNewBirth(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		Calendar cal = Calendar.getInstance();
 		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 	
 		model.addAttribute("curMon", curMon);	
 		model.addAttribute("userLang", userInfo.getLang());
+		
 		return "/ezPortal/portalWpNewBirth";
-	
 	}
 	
 	/**
@@ -1640,6 +1605,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		result.append("</DATA>");
 		logger.debug("quickLinkXML="+result.toString());
+		
 		return result.toString();
 	}
 	
@@ -1672,6 +1638,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		mailAddress = userInfo.getEmail();
+		
 		if (userInfo.getLang().equals("1")) {
 			displayName = userInfo.getDisplayName1();
 			department = userInfo.getDeptName1();
@@ -1687,7 +1654,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
-		//lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
 		
@@ -1698,13 +1664,11 @@ public class EzPortalController extends EgovFileMngUtil {
 		String result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute2", userInfo.getTenantId());
 		
 		if (result != null && !result.equals("")) {
-			//userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + URLEncoder.encode("/files/upload_personal/photo/" + result, "UTF-8") + "' width=61 height=64>";
-			userPhoto = "<IMG id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
-			
-			
+			userPhoto = "<img id=myimg src='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId())+ commonUtil.separator + result + "' width=61 height=64>";
 		} else {
 			userPhoto = "<img src='/images/default_pic.jpg' width='61' height='64'>";
 		}
+		
 		logger.debug("userPhoto="+userPhoto);
 		
 		model.addAttribute("displayName", displayName);
@@ -2193,7 +2157,6 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		logger.debug("theme1PortalPage ended");
 		return "/ezPortal/portalTheme1PortalPage";
-		//return "/ezPortal/portalPortalPage";
 	}
 	
 	/**
@@ -2633,7 +2596,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pSearchString", pSearchString);
 		model.addAttribute("portalGubun", portalGubun);
 		
-
 		logger.debug("environmentMain ended");
 		return "/ezPortal/portalMyPortalPageList";
 	}
@@ -2645,7 +2607,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/startPageUser.do")
 	public String startPageUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("startPageUser started");
+		
 		userInfo = commonUtil.userInfo(loginCookie);
+		
 		String pageID = "";
 		String pUserThemeUID = "";
 		String homeUID = "";
@@ -2683,9 +2647,11 @@ public class EzPortalController extends EgovFileMngUtil {
 			useTopMenuIDXml = ezPortalService.useTopMenuID(userInfo.getCompanyID(), "Y", pUserThemeUID, userInfo.getTenantId());
 		}
 		logger.debug("useTopMenuIDXml="+useTopMenuIDXml);
+		
 		Document xmlDom1 = commonUtil.convertStringToDocument(useTopMenuIDXml);
 		Document xmlDomTop = commonUtil.convertStringToDocument(ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
 		logger.debug("getUserInfo="+ezPortalService.getUserInfo(userInfo.getId(), userInfo.getLang(),userInfo.getTenantId()));
+		
 		if (xmlDomTop.getElementsByTagName("UID").getLength() != 0) {
 			myTopUID = xmlDomTop.getElementsByTagName("UID").item(0).getTextContent().trim();
 		}
@@ -2705,14 +2671,16 @@ public class EzPortalController extends EgovFileMngUtil {
 			imageUID = xmlDom1.getElementsByTagName("IMAGEUID").item(0).getTextContent().trim();
 			linkURL = xmlDom1.getElementsByTagName("LINKURL").item(0).getTextContent().trim();
 		}
-		
 		logger.debug("homeUID="+homeUID);
 		logger.debug("parentUID="+parentUID);
 		logger.debug("imageUID="+imageUID);
 		logger.debug("linkURL="+linkURL);
+		
 		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getTenantId());
 		logger.debug("useStartPage="+useStartPage);
+		
 		String deptPath = userInfo.getDeptPathCode();
+		
 		for (int ch = 0; ch < deptPath.split("\\,").length; ch++) {
 			if (ch ==0) {
 				deptPathOrgan += deptPath.split("\\,")[ch].trim();
@@ -2729,7 +2697,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("list", list);
 		
 		logger.debug("startPageUser ended");
-		
 		return "/ezPortal/portalStartPageUser";
 	}
 	
@@ -2959,9 +2926,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pClassID", pClassID);
 		model.addAttribute("pClassName", pClassName);
 		
-
 		logger.debug("myPortalPage ended");
-		
 		return "/ezPortal/portalMyPortalPage";
 	}
 	

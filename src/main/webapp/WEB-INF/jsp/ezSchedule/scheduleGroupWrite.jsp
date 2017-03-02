@@ -1460,7 +1460,7 @@
 		                                            </table>
 		                                        </div>
 		                                        <div style="vertical-align: top; text-align: center; height: 408px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>
-		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6"></div>
+		                                        <div id="tblPageRayer" style="text-align:center;border-top:1px solid #B6B6B6;height:32px"></div>
 		                                    </td>
 		                                </tr>
 		                            </table>
