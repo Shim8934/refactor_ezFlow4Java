@@ -286,17 +286,17 @@
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 	    </script>
 	    <div id="AnaylsisTable">
-		    <table id="xmlTable" class="mainlist" style="width: 100%">
-		        <tr>
-		            <th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
-		            <c:if test="${publicFlg == 0 }">
-		            	<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
-			            <th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
-			            <th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
-		            </c:if>
-		            <th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
-		        </tr>
-		    </table>
+			<table id="xmlTable" class="mainlist" style="width: 100%">
+				<tr>
+					<th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
+					<c:if test="${publicFlg == 0 }">
+						<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
+						<th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
+						<th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
+					</c:if>
+					<th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
+				</tr>
+			</table>
 	    </div>
 	    <div id="tblPageRayer"></div>
 		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="/ezQuestion/qstResultAnalysisSave.do" target="_self">
