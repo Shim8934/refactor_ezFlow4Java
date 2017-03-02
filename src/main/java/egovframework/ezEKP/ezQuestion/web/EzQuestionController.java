@@ -1415,7 +1415,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 					qstCompleteVO.setQuesNo(v_quesNo);
 					qstCompleteVO.setAnswerNo(iAns+1);
-					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
