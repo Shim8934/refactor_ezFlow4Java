@@ -30,6 +30,7 @@ import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -38,7 +39,6 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResObjArrayDestVO;
-import egovframework.ezEKP.ezResource.vo.ResRecDurationVO;
 import egovframework.ezEKP.ezResource.vo.ResRecParamVO;
 import egovframework.ezEKP.ezResource.vo.ResScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
@@ -107,7 +107,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getBrdMainList(map);
 	}
-
+	
+	public List<ResDateVO> getScheduleDateList(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
+		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PSTARTDATE", startDate);
+		map.put("v_PENDDATE", endDate);
+		map.put("tenantID", tenantID);
+		return ezResourceDAO.getScheduleDateList(map);
+	}
+	
 	@Override
 	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
@@ -329,8 +342,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getSchedule(map);
 	}
 	
-	
-
 	@Override
 	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
@@ -715,30 +726,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval,
-			String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
+	public List<ResGetScheduleVO> getRepResource(String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		logger.debug("getRepResource Start");
-		logger.debug("ownerID="+ownerID);
-		logger.debug("num="+num);
-		logger.debug("cmd="+cmd);
-		logger.debug("companyID="+companyID);
-		map.put("v_rec_frequency", frequency);
-		map.put("v_rec_selType", selType);
-		map.put("v_rec_endRecurType", endRecurType);
-		map.put("v_rec_startDateTime", startDateTime);
-		map.put("v_rec_endDateTime", endDateTime);
-		map.put("v_rec_interval", interval);
-		map.put("v_rec_daysOfWeek", daysOfWeek);
-		map.put("v_rec_instances", instances);
-		map.put("v_rec_byPosition", byPosition);
-		map.put("v_rec_daysOfMonth", daysOfMonth);
 		map.put("v_p_ownerID", ownerID);
 		map.put("v_p_num", num);
 		map.put("v_p_cmd", cmd);
 		map.put("v_p_companyID", companyID);
 		map.put("tenantID", tenantID);
-		logger.debug("getRepResource End");
 		return ezResourceDAO.getRepResource(map);
 	}
 	
@@ -1011,12 +1005,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
 				vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
 				
+				// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+				ResScheduleRepetitionVO rvo = resStruct(vo);
+				
 				// 반복예약의 반복되는 날짜리스트 뽑아옴
-				List<Date[]> returnRepDateTimes = getRepDateTimes(vo, sDate, eDate, offset);
+				List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
 				logger.debug("getRepDateTimes=" + returnRepDateTimes);
 				
 				// 반복예약 중에 삭제된 예약 가져옴
 				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+				for (String date : deletedDateStrList) {
+					date = commonUtil.getDateStringInUTC(date, offset, false);
+				}
 				
 				for (Date[] dateArr : returnRepDateTimes) {
 					
@@ -1057,6 +1057,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					}
 					
 					returnStr.append("</ROW>");
+					
 				}
 			}
 		}
@@ -1066,23 +1067,26 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnStr.toString();
 	}
 	
-	public List<Date[]> getRepDateTimes(ResGetScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
+	public List<Date[]> getRepDateTimes(ResScheduleRepetitionVO vo, String sDate, String eDate, String offset) throws Exception {
 		logger.debug("getRepDeteTimes started");
 		
 		List<Date[]> returnList = new ArrayList<Date[]>();
+			
+		int freq = vo.getFreq();
 		
-		if (vo != null) {
-			ResScheduleRepetitionVO rvo = resStruct(vo);
-			
-			int freq = rvo.getFreq();
-			
-			if (freq == 4) {
-				returnList = getDailyRepDateTimes(rvo, sDate, eDate); 
-			} else if (freq == 5) {
-				returnList = getWeeklyRepDateTime(rvo, sDate, eDate);
-			} else if (freq == 6 || freq == 7) {
-				returnList = getMonthlyRepDateTimes(rvo, sDate, eDate);
-			}
+		if (sDate.length() == 10) {
+			sDate += " 00:00:00";
+		}
+		if (eDate.length() == 10) {
+			eDate += " 23:59:59";
+		}
+		
+		if (freq == 4) {
+			returnList = getDailyRepDateTimes(vo, sDate, eDate); 
+		} else if (freq == 5) {
+			returnList = getWeeklyRepDateTime(vo, sDate, eDate);
+		} else if (freq == 6 || freq == 7) {
+			returnList = getMonthlyRepDateTimes(vo, sDate, eDate);
 		}
 	
 		logger.debug("returnList.size()=" + returnList.size());
@@ -1103,9 +1107,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		Date resEndDate = vo.getEndDate();
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
 		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
@@ -1276,9 +1277,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
-		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
@@ -1411,9 +1409,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		sDate += " 00:00:00";
-		eDate += " 23:59:59";
-		
 		// 요청 기간
 		Date startDate = sdf.parse(sDate);
 		Date endDate = sdf.parse(eDate);
@@ -1534,7 +1529,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
 						returnList.add(new Date[] {
-								tmpStartDate, 
+								tsd, 
 								tempEndCal.getTime()
 						});
 					}
@@ -1549,7 +1544,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 						
 						returnList.add(new Date[] {
-								tmpStartDate, 
+								tsd, 
 								tempEndCal.getTime()
 						});
 					}
@@ -1567,7 +1562,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							tempEndCal.add(Calendar.MILLISECOND, (int)diff);
 							
 							returnList.add(new Date[] {
-									tmpStartDate, 
+									tsd, 
 									tempEndCal.getTime()
 							});
 						}
@@ -2525,64 +2520,73 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	//반복예약일때
 	@Override
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
+		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		logger.debug("getRepResource Start");
-		logger.debug("strStartDateTime="+strStartDateTime);
-		logger.debug("strEndDateTime="+strEndDateTime);
-		ResRecParamVO recParam = resStruct(strFrequency, strSelType, strEndRecurType, strStartDateTime, strEndDateTime, strInterval, strDaysOfWeek, strInstances, strByPosition, strDaysOfMonth);
-			
-		List<ResMakeDupResultVO> dt1 = makeRepResource1(recParam);
-			
-		int recFrequency = strFrequency.equals("") ? 0 : Integer.parseInt(strFrequency);
-		int recSelType = strSelType.equals("") ? 0 : Integer.parseInt(strSelType);
-		int recEndRecurType = strEndRecurType.equals("") ? 0 : Integer.parseInt(strEndRecurType);
-		String recStartDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
-		String recEndDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
-		int recInterval = strInterval.equals("") ? 0 : Integer.parseInt(strSelType);
-		String recDaysOfWeek = strDaysOfWeek.equals("") ? null : strDaysOfWeek;
-		int recInstances = strInstances.equals("") ? 0 : Integer.parseInt(strInstances);
-		int recByPosition = strByPosition.equals("") ? 0 : Integer.parseInt(strByPosition);
-		String recDaysOfMonth = strDaysOfMonth.equals("") ? null : strDaysOfMonth;
+		logger.debug("===반복예약일때===");
+		
+		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? "" : strPcmd;
-			
-		List<ResGetScheduleVO> retobj = getRepResource(recFrequency, recSelType, recEndRecurType, EgovDateUtil.convertDate(recStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(recEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), recInterval, recDaysOfWeek, recInstances, recByPosition, recDaysOfMonth, pOwnerID, Integer.parseInt(pNum), pCmd, companyID, tenantID, offset);
 		
-		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
-			
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		ResScheduleRepetitionVO vo = resStruct(strFrequency, strSelType, strEndRecurType, strStartDateTime, strEndDateTime, strInterval, strDaysOfWeek, strInstances, strByPosition, strDaysOfMonth, strMonthsOfYear);
+		
+		List<Date[]> dateList = getRepDateTimes(vo, "2000-01-01", "2020-12-31", offset);
+
 		boolean isDup = false;
-			
-		if (retobj != null) {
-			isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
-		}
-			
-		if (isDup) {
-			return isDup;
-		}
-			
-		//String firstStartDateTime = getYearMonthDay(recParam.getRecStartDateTime());
-		String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		logger.debug(firstStartDateTime);
-		//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
 		
-		System.out.println("dt1.size=" + dt1.size());
-		String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		ResRecDurationVO recDuration = new ResRecDurationVO();
-		recDuration.setFirstStartDateTime(firstStartDateTime);
-		recDuration.setLastStartDateTime(lastStartDateTime);
-			
-		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		 for (ResGetScheduleRepetitionVO dr : retobjTable1) {
-			 List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
-			 if (dt2 == null || dt2.size() == 0) {
-				 continue;
-			 }
-			 isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult, offset);
-		 }
+		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, "2000-01-01 00:00:00", "2999-12-31 23:59:59", offset, tenantID);
+		List<Date[]> dateList2 = new ArrayList<Date[]>();
+		for (ResDateVO dateVO : scheduleDateList) {
+			dateList2.add(new Date[] {
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
+			});
+		}
 		
-		logger.debug("isDup="+isDup);
-		logger.debug("getRepResource End");
+		if (dateList2.size() != 0) {
+			isDup = chkTableRepeat(dateList, dateList2, null, offset);
+			
+			if (isDup) {
+				logger.debug("getRepResource End. isDup=" + isDup);
+				return isDup;
+			}
+		}
+		
+		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		
+		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
+			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
+			schedule.setEndDateTime(commonUtil.getDateStringInUTC(schedule.getEndDateTime(), offset, false));
+			
+			ResScheduleRepetitionVO vo2 = resStruct(schedule);
+
+			//TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+			dateList2 = getRepDateTimes(vo2, "2000-01-01", "2020-12-31", offset);
+			
+			// 반복예약 중에 삭제된 예약 가져옴
+			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			for (String date : deletedDateStrList) {
+				date = commonUtil.getDateStringInUTC(date, offset, false);
+			}
+			
+			if (dateList2.size() == 0) {
+				continue;
+			}
+
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
+			
+			if (isDup) {
+				break;
+			}
+		}
+
+		logger.debug("getRepResource End. isDup=" + isDup);
 		return isDup;
 	}
 	
@@ -2592,481 +2596,169 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getRepResource started");
 		logger.debug("===일반예약일때===");
 		
-		String startDateTime = strStartDateTime.equals("") ? null : strStartDateTime;
-		String endDateTime = strEndDateTime.equals("") ? null : strEndDateTime;
-		logger.debug("startDateTime="+startDateTime);
-		logger.debug("endDateTime="+endDateTime);
+		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
+
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pNum = strPnum == null ? "0" : strPnum;
 		String pCmd = strPcmd.equals("") ? null : strPcmd;
 		
-		ResRecParamVO recParam = new ResRecParamVO();
-		recParam.setRecStartDateTime(startDateTime);
-		recParam.setRecEndDateTime(endDateTime);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		List<ResMakeDupResultVO> dt1 = makeRepResource0(recParam);
-		
-		List<ResGetScheduleVO> retobj = getRepResource(0, 0, 0, EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""), 0, "", 0, 0, "", pOwnerID, 0, pCmd, companyID, tenantID, offset);
-		
-		ResGetScheduleVO retobj2 = chkDeletedRepResource(pOwnerID, tenantID);
+		List<Date[]> dateList = new ArrayList<Date[]>();
+		dateList.add(new Date[] {
+				format.parse(strStartDateTime),
+				format.parse(strEndDateTime)
+		});
 		
 		boolean isDup = false;
 		
-		if (retobj != null && retobj.isEmpty() == false) {
-			isDup = chkTable(dt1,retobj,null,dtResult, offset); // 일반예약 체크
+		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, strStartDateTime, strEndDateTime, offset, tenantID);
+		List<Date[]> dateList2 = new ArrayList<Date[]>();
+		for (ResDateVO dateVO : scheduleDateList) {
+			dateList2.add(new Date[] {
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
+			});
 		}
 		
-		logger.debug("isDup="+isDup);
-		
-		if (isDup) {
-			return isDup;
+		if (dateList2.size() != 0) {
+			isDup = chkTableRepeat(dateList, dateList2, null, offset);
+			
+			if (isDup) {
+				logger.debug("getRepResource End. isDup=" + isDup);
+				return isDup;
+			}
 		}
 		
-		logger.debug("getRecStartDateTime="+recParam.getRecStartDateTime());
-		String firstStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(recParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		logger.debug("firstStartDateTime="+firstStartDateTime);
-		//String lastStartDateTime = getYearMonthDay(dt1.get(dt1.size()-1).getStartDateTime());
+		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
 		
-		String lastStartDateTime = getYearMonthDay(EgovDateUtil.convertDate(dt1.get(dt1.size()-1).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		ResRecDurationVO recDuration = new ResRecDurationVO();
-		recDuration.setFirstStartDateTime(firstStartDateTime);
-		recDuration.setLastStartDateTime(lastStartDateTime);
-		
-		List<ResGetScheduleRepetitionVO> retobjTable1 = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
-		for (ResGetScheduleRepetitionVO dr : retobjTable1) {
-			List<ResMakeDupResultVO> dt2 = makeRepResource2(dr, recParam, recDuration, offset);
-			if (dt2 == null || dt2.size() == 0) {
+		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
+			schedule.setStartDateTime(commonUtil.getDateStringInUTC(schedule.getStartDateTime(), offset, false));
+			schedule.setEndDateTime(commonUtil.getDateStringInUTC(schedule.getEndDateTime(), offset, false));
+			
+			ResScheduleRepetitionVO vo2 = resStruct(schedule);
+
+			dateList2 = getRepDateTimes(vo2, strStartDateTime, strEndDateTime, offset);
+			
+			// 반복예약 중에 삭제된 예약 가져옴
+			List<String> deletedDateStrList = getDeletedRepScheduleDate(schedule.getNum(), companyID, pOwnerID, tenantID);
+			for (String date : deletedDateStrList) {
+				date = commonUtil.getDateStringInUTC(date, offset, false);
+			}
+			
+			if (dateList2.size() == 0) {
 				continue;
 			}
-			isDup = chkTableRepeat(dt1, dt2, retobjTable1, dtResult, offset);
+
+			isDup = chkTableRepeat(dateList, dateList2, deletedDateStrList, offset);
 			
 			if (isDup) {
 				break;
 			}
 		}
-		
 
-		logger.debug("getRepResource ended");
-			
+		logger.debug("getRepResource End. isDup=" + isDup);
 		return isDup;
 	}
 	
-	public boolean chkTable(List<ResMakeDupResultVO> dtS, List<ResGetScheduleVO> dtT, List<ResGetScheduleVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
-		logger.debug("chkTable Start");
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
-		
-		if (dtT == null) {
-			logger.debug("drt == null");
-			return false;
-		}
-			
-		boolean isDup = false;
-		boolean isDel = false;
-		boolean isShowDup = true;
-		
-		//2016-12-06
-		/*dtT에 승인권한이 있는자원에 반복예약할때, 자꾸 널값이 들어와서 주석처리
-		String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDate(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");*/
-
-		/*String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
-			" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
-			" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
-			"~"+String.valueOf(date.parse(lastEndDateTime).getHours())+String.valueOf(date.parse(lastEndDateTime).getMinutes())+" "+"동안";*/
-
-		// 일정관리에서 예약한 시간이 필요함
-		if (dtS != null || dtS.size() != 0) {
-			//result.setStartDateTime(dtS.get(0).getStartDateTime());
-			//result.setEndDateTime(dtS.get(dtS.size()-1).getEndDateTime());
-		}
-			
-		// 빠짐없이 반복은 아니라고 봄.
-		for (ResMakeDupResultVO drS : dtS) {
-			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			logger.debug("sStartDate="+sStartDate);
-			logger.debug("sEndDate="+sEndDate);
-			for (ResGetScheduleVO drT : dtT) {
-				String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDate(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				logger.debug("tStartDate="+tStartDate);
-				logger.debug("tEndDate="+tEndDate);
-				int tAllDay = Integer.parseInt(drT.getAllDay());
-					
-				isDel = false;
-				if (dtTd != null) {
-					for (ResGetScheduleVO drTd : dtTd) {
-						if (drTd.getStartDate().equals(drT.getStartDate()) && drTd.getEndDate().equals(drT.getEndDate())) {
-							isDel = true;
-							break;
-						}
-					}
-				}
-				if (isDel) {
-					continue;
-				}
-					
-				//
-				String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.convertDate(EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyyMMdd"), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(sEndDate, 1, "yyyy-MM-dd aa h:mm:ss");
-				String compare2 = tStartDate; 
-
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-
-				String compare3 = tEndDate;
-				String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-				//String compare4 = tAllDay == 0 ? sStartDate : sStartDate;
-					
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int compare = day1.compareTo(day2);
-				int secondCompare = day3.compareTo(day4);
-					
-				if (!(compare <= 0 || secondCompare <= 0)) {
-
-					isDup = true;
-						
-					if (isShowDup) {
-						//넣는다
-						//insertIntodt
-					}
-					break;
-				}
-			}
-			if (isDup) {
-				break;
-			}
-		}
-		logger.debug("chkTable End");
-		return isDup;
-	}
-	
-	public boolean chkTableRepeat(List<ResMakeDupResultVO> dtS, List<ResMakeDupResultVO> dtT, List<ResGetScheduleRepetitionVO> dtTd, List<ResMakeDupResultVO> dtResult, String offset) throws Exception {
+	public boolean chkTableRepeat(List<Date[]> dateList, List<Date[]> dateList2, List<String> deletedList, String offset) throws Exception {
 		logger.debug("============ chkTableRepeat started ============");
-
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		ResMakeDupResultVO result = new ResMakeDupResultVO(); 
 		
-		if (dtT == null) {
-			return false;
-		}
-		
-		boolean isDup = false;
-		boolean isDel = false;
-		boolean isShowDup = true;
-		
-		String firstStartDateTime = EgovDateUtil.convertDate(dtT.get(0).getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		String lastEndDateTime = EgovDateUtil.convertDate(dtT.get(dtT.size() - 1).getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		/*String dateTimeDuration = String.valueOf(date.parse(firstStartDateTime).getYear())+"-"+String.valueOf(date.parse(firstStartDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(firstStartDateTime).getDate()) +
-				" "+korDayOfWeek(dayOfWeek(firstStartDateTime)) + "부터"+" "+String.valueOf(date.parse(lastEndDateTime).getYear())+"-"+String.valueOf(date.parse(lastEndDateTime).getMonth()+1)+"-"+String.valueOf(date.parse(lastEndDateTime).getDate())+
-				" "+korDayOfWeek(dayOfWeek(lastEndDateTime))+"까지"+" "+String.valueOf(date.parse(firstStartDateTime).getHours())+String.valueOf(date.parse(firstStartDateTime).getMinutes())+
-				"~"+String.valueOf(date.parse(lastEndDateTime).getHours())+String.valueOf(date.parse(lastEndDateTime).getMinutes())+" "+"동안";*/
-		
-		// 일정관리에서 예약한 시간이 필요함
-		if (dtS != null || dtS.size() != 0) {
-			//result.setStartDateTime(dtS.get(0).getStartDateTime());
-			//result.setEndDateTime(dtS.get(dtS.size()-1).getEndDateTime());
-		}
-		
-		// 빠짐없이 반복은 아니라고 봄.
-		logger.debug("dtSSize="+dtS.size());
-		for (ResMakeDupResultVO drS : dtS) {  // S, 예약할
-			String sStartDate = EgovDateUtil.convertDate(drS.getStartDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			String sEndDate = EgovDateUtil.convertDate(drS.getEndDateTime(), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-			logger.debug("sStartDate="+sStartDate);
-			logger.debug("sEndDate="+sEndDate);
-			
-			logger.debug("dtTSize="+dtT.size());
-			for (ResMakeDupResultVO drT : dtT) { // T, 예약된
-				logger.debug("drtStartDate="+drT.getStartDateTime());  
-				logger.debug("drtEndDate="+drT.getEndDateTime());
-				//String tStartDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getStartDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				//String tEndDate = EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(drT.getEndDateTime(), offset, false), "yyyy-MM-dd aa h:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-				String tStartDate = drT.getStartDateTime();
-				String tEndDate = drT.getEndDateTime();
-				logger.debug("tStartDate="+tStartDate);
-				logger.debug("tEndDate="+tEndDate);
-				
-				int tAllDay = drT.getAllDay();
-				
-				isDel = false;
-				
-				if (dtTd != null) {
-					for (ResGetScheduleRepetitionVO drTd : dtTd) { // TD, 예약된 것 중 지워진 것
-						if (drTd.getStartDateTime().equals(drT.getStartDateTime()) && drTd.getEndDateTime().equals(drT.getEndDateTime())) {
-							isDel = true;
-							break;
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		if (deletedList == null || deletedList.size() == 0) {
+			for (Date[] dateVO : dateList) {
+				for (Date[] dateVO2 : dateList2) {
+					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						logger.debug("new=" + dateVO[0] + ", " + dateVO[1]);
+						logger.debug("old=" + dateVO2[0] + ", " + dateVO2[1]);
+						logger.debug("chkTableRepeat ended.");
+						return true;
+					}
+				}
+			}
+		} else {
+			for (Date[] dateVO : dateList) {
+				for (Date[] dateVO2 : dateList2) {
+					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						if (!deletedList.contains(format.format(dateVO2[0]))) {
+							logger.debug("chkTableRepeat ended.");
+							return true;
 						}
 					}
 				}
-				if (isDel) {
-					continue;
-				}
-				
-				//
-				//String compare1 = tAllDay == 0 ? sEndDate : EgovDateUtil.addDay(getYearMonthDay(sEndDate), 1, "yyyy-MM-dd aa h:mm:ss");
-				String compare1 = sEndDate;
-				String compare2 = tStartDate; 
-				
-				Date day1 = date.parse(compare1);
-				Date day2 = date.parse(compare2);
-				
-				String compare3 = tEndDate;
-				//String compare4 = tAllDay == 0 ? sStartDate : getYearMonthDay(sStartDate);
-				//String compare4 = tAllDay == 0 ? sStartDate : EgovDateUtil.convertDate(getYearMonthDay(sStartDate), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-				String compare4 = sStartDate;
-				
-				Date day3 = date.parse(compare3);
-				Date day4 = date.parse(compare4);
-				int compare = day1.compareTo(day2);
-				int secondCompare = day3.compareTo(day4);
-				
-				if (!(compare <= 0 || secondCompare <= 0)) {
-					isDup = true;
-					
-					if (isShowDup) {
-						//넣는다
-						//insertIntodt
-					}
-					break;
-				}
-			}
-			
-			if (isDup) {
-				break;
 			}
 		}
 
 		logger.debug("chkTableRepeat ended");
-		return isDup;
+		return false;
 	}
 	
-	public List<ResMakeDupResultVO> makeRepResource0(ResRecParamVO recParam) throws Exception {
-		List<ResMakeDupResultVO> dtOnce = new ArrayList<ResMakeDupResultVO>();
-		
-		String startDateTime = recParam.getRecStartDateTime();
-		String endDateTime = recParam.getRecEndDateTime();
-			
-//			dtOnce.get(0).setStartDateTime(startDateTime);
-//			dtOnce.get(0).setEndDateTime(endDateTime);
-		ResMakeDupResultVO s1 = new ResMakeDupResultVO();
-		s1.setStartDateTime(EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		s1.setEndDateTime(EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd aa h:mm:ss", ""));
-		dtOnce.add(0, s1);
-
-		/*StringBuilder sb = new StringBuilder();
-		for (ResMakeDupResultVO dr : dtOnce) {
-			String startDt = dr.getStartDateTime();
-			String endDt = dr.getEndDateTime();
-				
-			sb.append(startDt);
-			sb.append(" ");
-			sb.append(dayOfWeek(startDt)).substring(0, 3);
-			sb.append(" ~ ");
-			sb.append(endDt);
-			sb.append(" ");
-			sb.append(dayOfWeek(endDt)).substring(0, 3);
-		}*/
-	
-		return dtOnce;
-	}
-	
-	public List<ResMakeDupResultVO> makeRepResource1(ResRecParamVO recParam) throws Exception {
-		logger.debug("makeRepResource1 started");
-
-		List<ResMakeDupResultVO> dtRec = new ArrayList<ResMakeDupResultVO>();
-		switch (recParam.getRecReWay()) {
-		case 40:
-			dtRec = chkDupReway40(recParam, dtRec, null);
-			break;
-		case 41:
-			dtRec = chkDupReway41(recParam, dtRec, null);
-			break;
-		case 51:
-			dtRec = chkDupReway51(recParam, dtRec, null);
-			break;
-		case 60:
-			dtRec = chkDupReway60(recParam, dtRec, null);
-			break;
-		case 61:
-			dtRec = chkDupReway61(recParam, dtRec, null);
-			break;
-		case 70:
-			dtRec = chkDupReway70(recParam, dtRec, null);
-			break;
-		case 71:
-			dtRec = chkDupReway71(recParam, dtRec, null);
-			break;
-		default:
-			break;
-		}
-		
-		logger.debug("makeRepResource1 ended");
-		return dtRec;
-	}
-	
-	public List<ResMakeDupResultVO> makeRepResource2(ResGetScheduleRepetitionVO destDr,ResRecParamVO recParam, ResRecDurationVO recDuration, String offset) throws Exception {
-		logger.debug("makeRepResource2 started");
-
-		List<ResMakeDupResultVO> dtDest = new ArrayList<ResMakeDupResultVO>();
-		
-		logger.debug("getStartDateTime="+destDr.getStartDateTime());
-		logger.debug("getEndDateTime="+destDr.getEndDateTime());
-		
-		//ResRecParamVO destParam = resStruct();
-		ResRecParamVO destParam = new ResRecParamVO();
-		if (!destDr.getStartDateTime().equals("")) {
-			destParam.setRecStartDateTime(EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(destDr.getStartDateTime(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", ""));
-			logger.debug("UTCStartTime="+commonUtil.getDateStringInUTC(destDr.getStartDateTime(), offset, false));
-		}
-		if (!destDr.getEndDateTime().equals("")) {
-			destParam.setRecEndDateTime(EgovDateUtil.convertDate(commonUtil.getDateStringInUTC(destDr.getEndDateTime(), offset, false), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", ""));
-			logger.debug("UTCEndTime="+commonUtil.getDateStringInUTC(destDr.getEndDateTime(), offset, false));
-		}
-		if (!destDr.getReWay().equals("")) {
-			destParam.setRecReWay(Integer.parseInt(destDr.getReWay()));
-		}
-		if (destDr.getReNum() != null && !destDr.getReNum().equals("")) {
-			destParam.setRecReNum(Integer.parseInt(destDr.getReNum()));
-		}
-		if (!destDr.getReDay().equals("")) {
-			destParam.setRecReDay(Integer.parseInt(destDr.getReDay()));
-		}
-		if (!destDr.getReYoil().equals("")) {
-			destParam.setRecReYoil(destDr.getReYoil());
-		}
-		if (!destDr.getReOrd().equals("")) {
-			destParam.setRecReOrd(Integer.parseInt(destDr.getReOrd()));
-		}
-		if (!destDr.getEndFlag().equals("")) {
-			destParam.setRecEndFlag(Integer.parseInt(destDr.getEndFlag()));
-		}
-		if (!destDr.getReCount().equals("")) {
-			destParam.setRecReCount(Integer.parseInt(destDr.getReCount()));
-		}
-		if (!destDr.getAllDay().equals("")) {
-			destParam.setRecAllDay(Integer.parseInt(destDr.getAllDay()));
-		}
-		
-		if (destParam.getRecEndFlag() == 0) {
-			destParam.setRecReCount(1000);
-			destParam.setRecEndFlag(1);
-		}
-		
-		String compare1 = EgovDateUtil.convertDate(recDuration.getFirstStartDateTime(), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "");
-		String compare2 = EgovDateUtil.convertDate(getYearMonthDay(EgovDateUtil.convertDate(destParam.getRecStartDateTime(), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", "")), "yyyyMMdd", "yyyy-MM-dd aa h:mm:ss", ""); 
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd aa h:mm:ss");
-		Date day1 = date.parse(compare1);
-		Date day2 = date.parse(compare2);
-		int compare = day1.compareTo(day2);
-		
-		String interStartDateTime = compare > 0 ? recDuration.getFirstStartDateTime() : getYearMonthDay(EgovDateUtil.convertDate(destParam.getRecStartDateTime(), "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", ""));
-		String interEndDateTime = recDuration.getLastStartDateTime();
-		
-		ResObjArrayDestVO objArrayDest = new ResObjArrayDestVO();
-		objArrayDest.setInterStartDateTime(interStartDateTime);
-		objArrayDest.setInterEndDateTime(interEndDateTime);
-		//objArrayDest.setWriterID(dtDest.get(0).getWriterID());
-		//objArrayDest.setDeptNm(dtDest.get(0).getDeptNm());
-		//objArrayDest.setOwnerNm(dtDest.get(0).getOwnerNm());
-		//objArrayDest.setTitle(dtDest.get(0).getTitle());
-		//objArrayDest.setWriteDay(dtDest.get(0).getWriteDay());
-		
-		switch (destParam.getRecReWay()) {
-		case 40:
-			dtDest = chkDupReway40(destParam, dtDest, objArrayDest);
-			break;
-		case 41:
-			dtDest = chkDupReway41(destParam, dtDest, objArrayDest);
-			break;
-		case 51:
-			dtDest = chkDupReway51(destParam, dtDest, objArrayDest);
-			break;
-		case 60:
-			dtDest = chkDupReway60(destParam, dtDest, objArrayDest);
-			break;
-		case 61:
-			dtDest = chkDupReway61(destParam, dtDest, objArrayDest);
-			break;
-		case 70:
-			dtDest = chkDupReway70(destParam, dtDest, objArrayDest);
-			break;
-		case 71:
-			dtDest = chkDupReway71(destParam, dtDest, objArrayDest);
-			break;
-		default:
-			break;
-		}
-		
-
-		logger.debug("makeRepResource2 ended");
-
-	
-		return dtDest;
-	}
-	
-	public ResRecParamVO resStruct(String strFrequency, String strSelType, String strEndREcurType, String strStartDateTime, String strEndDateTime, String strInterval, String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth) {
+	public ResScheduleRepetitionVO resStruct(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, 
+			String strInterval, String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear) throws Exception {
 		logger.debug("resStruct started");
 
-		int reWay = -1;
-		int endFlag = -1;
-		int reCount = -1;
-		int reNum = 1;
-		String reYoil = "";
-		int reDay = -1;
-		int reOrd = -10;
-		String startDateTime = "";
-		String endDateTime = "";
-		int allDay = -1;
+		ResScheduleRepetitionVO result = new ResScheduleRepetitionVO();
 		
-		if (!strFrequency.equals("") && !strSelType.equals("")) {
-			reWay = Integer.parseInt(strFrequency) * 10 + Integer.parseInt(strSelType);
-		}
-		if (!strEndREcurType.equals("")) {
-			endFlag = Integer.parseInt(strEndREcurType);
-		}
-		if (!strInstances.equals("")) {
-			reCount = Integer.parseInt(strInstances);
-		}
-		/*if (!strInterval.equals("")) {
-			reNum = Integer.parseInt(strInstances);
-		}*/
-		if (!strDaysOfWeek.equals("")) {
-			reYoil = strDaysOfWeek;
-		}
-		if (!strDaysOfMonth.equals("")) {
-			reDay = Integer.parseInt(strDaysOfMonth);
-		}
-		if (!strByPosition.equals("")) {
-			reOrd = Integer.parseInt(strByPosition);
-		}
-		if (!strStartDateTime.equals("")) {
-			startDateTime = strStartDateTime;
-		}
-		if (!strEndDateTime.equals("")) {
-			endDateTime = strEndDateTime;
-		}
-		if (Integer.parseInt(strEndREcurType) == 0) {
-			reCount = 1000;
-			endFlag = 1;
+		if (strFrequency != null && !strFrequency.trim().equals("")) {
+			result.setFreq(Integer.parseInt(strFrequency));
 		}
 		
-		ResRecParamVO result = new ResRecParamVO();
-		result.setRecAllDay(allDay);
-		result.setRecEndDateTime(endDateTime);
-		result.setRecEndFlag(endFlag);
-		result.setRecReCount(reCount);
-		result.setRecReDay(reDay);
-		result.setRecReNum(reNum);
-		result.setRecReOrd(reOrd);
-		result.setRecReWay(reWay);
-		result.setRecReYoil(reYoil);
-		result.setRecStartDateTime(startDateTime);
+		if (strSelType != null && !strSelType.trim().equals("")) {
+			result.setSelType(Integer.parseInt(strSelType));
+		} else {
+			result.setSelType(-1);
+		}
+		
+		if (strInterval != null && !strInterval.trim().equals("")) {
+			result.setInterval(Integer.parseInt(strInterval));
+		}
+		
+		if (strEndRecurType != null && !strEndRecurType.trim().equals("")) {
+			result.setEndRecurType(Integer.parseInt(strEndRecurType));
+		} else {
+			result.setEndRecurType(-1);
+		}
+		
+		if (strInstances != null && !strInstances.trim().equals("")) {
+			result.setInstances(Integer.parseInt(strInstances));
+		}
+		
+		if (strDaysOfWeek != null && !strDaysOfWeek.trim().equals("")) {
+			List<Integer> yoilList = new ArrayList<Integer>();
+			String[] yoilArr = strDaysOfWeek.split(",");
+			
+			for (String yoil : yoilArr) {
+				yoilList.add(Integer.parseInt(yoil.trim())); 
+			}
+			
+			result.setDaysOfWeek(yoilList);
+		}
+		
+		if (strDaysOfMonth != null && !strDaysOfMonth.trim().equals("")) {
+			result.setDaysOfMonth(Integer.parseInt(strDaysOfMonth));
+		}
+		
+		if (strMonthsOfYear != null && !strMonthsOfYear.trim().equals("")) {
+			result.setMonthsOfYear(Integer.parseInt(strMonthsOfYear));
+		}
+		
+		if (strByPosition != null && !strByPosition.trim().equals("")) {
+			result.setByPosition(Integer.parseInt(strByPosition));
+		}
+		
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		if (strStartDateTime != null && !strStartDateTime.trim().equals("")) {
+			result.setStartDate(format.parse(strStartDateTime));
+		}
+		
+		if (strEndDateTime != null && !strEndDateTime.trim().equals("")) {
+			result.setEndDate(format.parse(strEndDateTime));
+		}
 		
 		logger.debug("resStruct ended");
-		
 		return result;
 	}
 	
@@ -3134,7 +2826,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		logger.debug("resStruct ended");
-		
 		return result;
 	}
 	

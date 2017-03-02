@@ -36,7 +36,7 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleVO> getRepResource(int frequency, int selType, int endRecurType, String startDateTime, String endDateTime, int interval, String daysOfWeek, int instances, int byPosition, String daysOfMonth, String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
+	public List<ResGetScheduleVO> getRepResource(String ownerID, int num, String cmd, String companyID, int tenantID, String offset) throws Exception;
 	
 	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
 	
@@ -99,7 +99,7 @@ public interface EzResourceService {
 	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
+			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 	

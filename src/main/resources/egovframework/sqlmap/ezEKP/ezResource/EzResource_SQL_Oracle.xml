@@ -12,6 +12,7 @@
 	<typeAlias  alias="ResSelectFormIDVO" 						type="egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO"/>
     <typeAlias  alias="ResGetSendMailToUserVO"         			type="egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO"/>
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
+    <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO" id="resGetAdmSubClsTreeVO">
 		<result property="brdID"					column="BRD_ID"					columnIndex="1"/>
@@ -639,6 +640,29 @@
                 ( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
 			AND 
 				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
+			AND
+				A.TENANT_ID = #tenantID#	
+			ORDER BY
+				STARTDATE ASC,
+				ENDDATE DESC 
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getScheduleDateList" parameterClass="Map" resultClass="ResDateVO">
+		<![CDATA[
+			SELECT 
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE
+           	FROM 
+           		TBL_RS_SCHEDULE A
+          	WHERE
+				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
+			AND 
+				COMPANYID = #v_PCOMPANYID#
+			AND 
+				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResDateVO;
+import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -38,6 +40,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ResGetScheduleVO> getScheduleList(Map<String, Object> map){
 		return  (List<ResGetScheduleVO>) list("EzResourceDAO.getScheduleList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResDateVO> getScheduleDateList(Map<String, Object> map){
+		return  (List<ResDateVO>) list("EzResourceDAO.getScheduleDateList", map);
 	}
 	
 	@SuppressWarnings("unchecked")
