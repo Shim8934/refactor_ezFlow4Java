@@ -4002,16 +4002,18 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 	            	break;
 	            	
 	            case "4":
+	            	//url
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\">" + strAttachName + "</a></td>");
 	            	break;
 	            	
 	            case "5":
 	            	strResult.append("<td nowrap style=\"padding:5px;cursor:hand\" onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
 	            	break;
-	            	
-	            default:
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID=" + brdID + "&itemID=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attID=" + strAttachNo + "\" target=\"_blink\">" + strAttachName + "</a></td>");
+	            
+	            default :
+	            	//img URL 등등
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\" target=\"_blink\">" + strAttachName + "</a></td>");
 	            	break;
-	            	
 	            }
 	        }
         }
