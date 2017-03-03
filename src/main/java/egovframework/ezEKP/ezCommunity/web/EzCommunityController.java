@@ -2781,13 +2781,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 게시판 관리메뉴 일반설정 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/saveBoardProperty.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
-	@ResponseBody
-	public String saveBoardProperty(@RequestBody String xmlData, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String ret = ezCommunityService.saveBoardProperty(userInfo, xmlData);
+	@RequestMapping(value = "/ezCommunity/saveBoardProperty.do")
+	public String saveBoardProperty(@CookieValue("loginCookie") String loginCookie, CommunityBoardInfoVO vo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("saveBoardProperty started.");
 		
-		return "<RESULT>" + ret + "</RESULT>";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String ret = ezCommunityService.saveBoardProperty(userInfo, vo);
+		
+		model.addAttribute("result", ret);
+		
+		logger.debug("saveBoardProperty ended. ret = " + ret);
+		
+		return "json";
 	}
 	
 	/**

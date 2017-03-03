@@ -206,7 +206,7 @@ public interface EzCommunityService {
 
 	public String adminSearchItemXML(LoginVO userInfo, String boardID, String title, String writerName, String abstracts, String searchStart, String searchEnd, int pStartRow, int pEndRow) throws Exception;
 	
-	public String saveBoardProperty(LoginVO userInfo, String xmlData) throws Exception;
+	public String saveBoardProperty(LoginVO userInfo, CommunityBoardInfoVO vo) throws Exception;
 	
 	public String checkOneLineOwner(String pReplyID, String id, int tenantID) throws Exception;
 	
