@@ -207,45 +207,40 @@
 			if (Expires == "") {
 				Expires = "30";
 			}
-
-			var strXML = "";
-			strXML += "<NODES>";
-			strXML += "<NODE>";
-			strXML += "<BOARDNAME>" + txtBoardName.value + "</BOARDNAME>";
-			strXML += "<BOARDNAME2>" + txtBoardName2.value + "</BOARDNAME2>";
-			strXML += "<BOARDID>" + BoardID + "</BOARDID>";
-			strXML += "<ATTACHMAX>" + AttachMax + "</ATTACHMAX>";
-			strXML += "<DESCRIPTION>" + encodeURIComponent(Description) + "</DESCRIPTION>";
-			strXML += "<EXPIRES>" + Expires + "</EXPIRES>";
-			strXML += "<URL>" + url + "</URL>";
-			strXML += "<GUBUN>" + gubun + "</GUBUN>";
-			strXML += "<REPLYNOTIFY>" + replynotify + "</REPLYNOTIFY>";	
-			strXML += "<DELETEAFTER>" + iDeleteAfter + "</DELETEAFTER>";	
-			strXML += "<BOARDCOLOR>" + brd_color + "</BOARDCOLOR>";	
-			strXML += "<VERSIONUSE>" + versionuse + "</VERSIONUSE>";
-			strXML += "<CHECKUSE>" + checkUse + "</CHECKUSE>";		
-			strXML += "</NODE>";
-			strXML += "</NODES>";
-
-		    var xmldom = loadXMLString(strXML);
-
-			var xmlhttp = createXMLHttpRequest();
-			xmlhttp.open("POST", "/ezCommunity/saveBoardProperty.do", false);
-			xmlhttp.setRequestHeader("Content-Type", "text/xml;charset=UTF-8");
-			xmlhttp.send(xmldom);
-
-			alert("<spring:message code = 'ezCommunity.t282' />");
-
-			xmldom = null;
-			xmlhttp = null;
 			
-			if (CrossYN()) {
-			    parent.window.frames.left.location.reload();
-			    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
-			} else {
-			    window.parent.frames.item(0).location.reload();
-				location.href = location.href;
-			}
+			
+			$.ajax({
+        		type : "POST",
+        		url : "/ezCommunity/saveBoardProperty.do",
+        		dataType : "json",
+        		async : false,
+        		data : {boardID : BoardID,
+        				boardName : encodeURIComponent(txtBoardName.value),
+        				boardName2 : encodeURIComponent(txtBoardName2.value),
+        				attachSizeLimit : AttachMax,
+        				boardDescription : encodeURIComponent(Description),
+        				itemExpires : Expires,
+        				gubun : gubun,
+        				replyNotify : replynotify,
+        				deleteAfter : iDeleteAfter,
+        				boardColor : encodeURIComponent(brd_color),
+        				versionUse : versionuse,
+        				checkUse : checkUse
+        				},
+        		success : function(result) {
+        			if (result["result"] == "OK") {
+        				alert("<spring:message code = 'ezCommunity.t282' />");
+        				
+        				if (CrossYN()) {
+        				    parent.window.frames.left.location.reload();
+        				    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
+        				} else {
+        				    window.parent.frames.item(0).location.reload();
+        					location.href = location.href;
+        				}
+        			}
+        		}
+        	});
 		}
 
 		function cancel() {
