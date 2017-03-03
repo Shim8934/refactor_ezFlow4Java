@@ -644,7 +644,7 @@
 		<table>
 		  <tr>
 		    <td style="text-align:center;"><div class="listview" style="width:515px;">
-		        <div id="ATTACH" STYLE="overflow:auto;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
+		        <div id="ATTACH" STYLE="overflow-x:hidden;WIDTH:510px;HEIGHT:130px;margin:1px 1px 1px 1px;"></div>					
 		      </div></td>
 		    <th style="display:none;width:75px;text-align:center;">
 		      <input id="btn_AttachEdit" type="button" name="btn_AttachEdit" onClick="return btn_AttachEdit_onclick()" value="<spring:message code='ezApprovalG.t269'/>" class="imginput" style="margin-top:3px;display:none;" /><br />
