@@ -872,6 +872,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("item") != null) {
 			sliderID = request.getParameter("item");
 		}
+		logger.debug("sliderID="+sliderID);
 		
 		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
 

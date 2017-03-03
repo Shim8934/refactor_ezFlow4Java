@@ -837,6 +837,8 @@ function Window_resize_photo() {
                 }
             }
         }
+        
+        MailOptionHidden();
     } catch (e) { }
 }
 var lCount;

@@ -143,7 +143,7 @@
 	        function deleteSchedule_Complete(ret) {
 				if (ret == "0") {
 					once_delete_schedule();
-				} else {
+				} else if (ret == "1") {
 					delete_schedule();
 				}
 		    }
@@ -201,7 +201,8 @@
 					url : "/ezSchedule/scheduleOnceDelete.do",
 					data : { 
 						scheduleId : scheduleid,
-						startDate : "${_date}"
+						selectDate : "${_date}",
+						startDate : "${scheduleInfo.startDate}"						
 					},
 					success: function() {
 						alert("<spring:message code='ezSchedule.t213' />");

@@ -534,6 +534,10 @@
 		        }
 		        if (CurPage == 0) CurPage = 1;
 		        getBoardList();
+		        
+		        try {
+			    	window.opener.leftCountRf();
+				} catch (e) {}
 		    }
 		
 		    function event_HeaderCheckBoxClick(obj) {
@@ -678,7 +682,6 @@
 		    }
 		
 		    function DeleteItem_onclick() {
-		
 		        if (strListInfo == "") {
 		            alert("<spring:message code='ezBoard.t195'/>");
 		            return;
@@ -692,10 +695,6 @@
 		        if (ret)
 		            DeleteItem();
 		
-		        try {
-                	leftCountRf();
-				} catch (e) {
-				}
 		    }
 		    var copyboarditem_cross_dialogArguments = new Array();
 	        function CopyItem_onclick() {
@@ -773,6 +772,9 @@
 	
 	                if (typeof (ret) != "undefined") {
 	                    if (ret == "OK") {
+	                    	try {
+	    				    	window.opener.leftCountRf();
+	    					} catch (e) {}
 	                        window.location.reload();
 	                        window.close();
 	                    }
@@ -782,6 +784,9 @@
 	        function MoveItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                if (ret == "OK") {
+	                	try {
+					    	window.opener.leftCountRf();
+						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }
@@ -791,6 +796,9 @@
 	        function CopyItem_onclick_Complete(ret) {
 	            if (typeof (ret) != "undefined") {
 	                if (ret == "OK") {
+	                	try {
+					    	window.opener.leftCountRf();
+						} catch (e) {}
 	                    window.location.reload();
 	                    window.close();
 	                }

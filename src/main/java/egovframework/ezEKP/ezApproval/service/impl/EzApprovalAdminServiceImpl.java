@@ -2787,8 +2787,6 @@ public class EzApprovalAdminServiceImpl implements EzApprovalAdminService {
 			mhtFile.mkdirs();
 		}
 		
-		String strHTML = ezCommonService.startMHT2HTML(mhtImagePath, ezCommonService.loadMHTFile(saveReFileName), mhtImagePath, realPath, locale);
-
 		logger.debug("mhtToHtmlReform ended");
 	}
 

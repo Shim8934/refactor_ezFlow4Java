@@ -662,8 +662,8 @@
 	
 	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="String"> 
 		<![CDATA[
-			SELECT 
-				STARTDATE
+			SELECT				
+				TO_CHAR((STARTDATE + #v_OFFSETMIN#/(24*60)), 'YYYY-MM-DD') AS STARTDATE
 			FROM 
 				TBL_SCHEDULEREPETITION_DEL
 			WHERE

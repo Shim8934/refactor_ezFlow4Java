@@ -409,6 +409,7 @@ public class EzAddressController{
 		model.addAttribute("userNM2", userNM2);
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
@@ -1882,6 +1883,7 @@ public class EzAddressController{
 	        stream = multiFile.get(0).getInputStream();
 	        
 	        String charset = "euc-kr";
+	        
 			if (userInfo.getLang().equals("3")) {
 				charset = "euc-jp";
 			}

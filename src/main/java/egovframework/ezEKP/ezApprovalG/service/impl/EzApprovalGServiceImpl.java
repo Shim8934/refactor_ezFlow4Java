@@ -4364,8 +4364,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		formURL = realPath + fileForder1;
 		
 		String loadMht = ezCommonService.loadMHTFile(formURL);
+		String domain = request.getServerName();
 		
-		content = ezCommonService.startMHT2HTML(realPath + config.getProperty("config.LocalPath"), loadMht, realPath + config.getProperty("config.LocalPath"), realPath, userInfo.getLocale());
+		content = ezCommonService.startMHT2HTML(realPath + config.getProperty("config.LocalPath"), loadMht, realPath + config.getProperty("config.LocalPath"), realPath, userInfo.getLocale(), domain);
 
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);

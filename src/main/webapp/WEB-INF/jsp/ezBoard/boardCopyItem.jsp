@@ -54,6 +54,11 @@
 		            alert("<spring:message code='ezBoard.t355'/>");
 		            window.returnValue = "OK";
 		            rtnVal = "OK";
+		            
+		            try {
+				        window.opener.leftCountRf();
+					} catch (e) {
+					}
 		            window.close();
 		        } else {
 		            window.returnValue = "ERROR";

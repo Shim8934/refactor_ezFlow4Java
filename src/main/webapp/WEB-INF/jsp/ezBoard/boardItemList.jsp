@@ -126,6 +126,7 @@
 		        document.onselectstart = function () { return false; };
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
+		        MailOptionHidden();
 		        Window_resize();
 		    };
 		    document.onselectstart = function () { return false; };
@@ -820,10 +821,6 @@
 		        var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(340,656);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&mode=COPY", "", feature, "");
-		        
-		        try {
-					leftCountRf();
-				} catch (e) {}
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();

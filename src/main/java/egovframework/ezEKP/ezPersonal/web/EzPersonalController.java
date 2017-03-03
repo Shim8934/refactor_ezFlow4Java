@@ -917,8 +917,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String timeZone(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+        logger.debug("primaryLang=" + primaryLang);					
+		
 		model.addAttribute("strTimeZone", userInfo.getOffset());
 		model.addAttribute("strLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
+		
 		return "/ezPersonal/persTimeZone";
 	}
 	

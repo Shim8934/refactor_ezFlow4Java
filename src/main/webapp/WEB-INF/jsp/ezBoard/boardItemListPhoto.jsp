@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>BoardItemList</title>
+		<title>BoardItemListPhoto</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1'/>" type="text/css">
 		<link href="/css/previewmail.css" rel="stylesheet" type="text/css">
