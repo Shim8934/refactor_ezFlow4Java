@@ -175,12 +175,12 @@
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtstart")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dtend")[i]).substring(0, 16).replace("T", " ") + "</VALUE></CELL>";
 	                	if (userPrimary == "1") {
-		                    list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "</VALUE></CELL>";
-	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "jobtitle")[i]) + "</VALUE></CELL>";
+		                    list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "dept_name")[i]) + "]]></VALUE></CELL>";
+	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "jobtitle")[i]) + "]]></VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm")[i]) + "</VALUE></CELL>";
 	                	} else {
-	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "dept_name2")[i]) + "</VALUE></CELL>";
-	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "jobtitle2")[i]) + "</VALUE></CELL>";
+	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "dept_name2")[i]) + "]]></VALUE></CELL>";
+	                    	list += "<CELL><VALUE><![CDATA[" + getNodeText(SelectNodes(listxml, "jobtitle2")[i]) + "]]></VALUE></CELL>";
 	                    	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "owner_nm2")[i]) + "</VALUE></CELL>";
 	                	}
 	                	list += "<CELL><VALUE>" + getNodeText(SelectNodes(listxml, "instancetype")[i]) + "</VALUE></CELL>";
