@@ -1974,7 +1974,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
 			@Override
 			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
-				return o1.getTreeViewOrder().compareTo(o2.getTreeViewOrder());
+				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
         
