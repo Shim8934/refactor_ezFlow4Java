@@ -484,7 +484,7 @@
 				<td id="calTD2" style="vertical-align:top;width:220px">
 					<span>
 						<div id="CalendarMini"></div>
-						<table id="ResourceInfo" name="ResourceInfo" style="height:335px; width:218px; border-collapse:collapse; border-spacing:0px; margin-top:10px;border:1px solid #b6b6b6">
+						<table id="ResourceInfo" name="ResourceInfo" style="max-height:498px; height:498px; width:218px; border-collapse:collapse; border-spacing:0px; margin-top:10px;border:1px solid #b6b6b6">
 							<tr>
 								<td height="30" bgcolor="#EFEFEF" class="subtxt" style="padding-left: 7px;border-bottom:1px solid #b6b6b6; color:#000;"><img src="/images/icon/check.gif" hspace="1" align="absmiddle"> <spring:message code='ezResource.t271'/></td>
 							</tr>

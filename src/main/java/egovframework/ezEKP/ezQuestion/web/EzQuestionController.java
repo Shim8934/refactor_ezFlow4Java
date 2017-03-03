@@ -562,7 +562,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				if(question.getAnswerType() == 2){
 					strTagData = "<tr>";
-					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\"><textarea style=\"Width:100%;height:85;\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
+					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\"><textarea style=\"width:100%;height:85;padding:0px;resize:none\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
                     strTagData += "</tr>";
                     Element subRow = doc.createElement("SUBROW");
                     subRow.appendChild(doc.createTextNode(strTagData));
@@ -1415,7 +1415,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 					qstCompleteVO.setItemNo(Integer.parseInt(vItemID));
 					qstCompleteVO.setQuesNo(v_quesNo);
 					qstCompleteVO.setAnswerNo(iAns+1);
-					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "''"));
+					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
@@ -2918,18 +2918,19 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		String StrAnalysisDate = request.getParameter("AnalysisData").replaceAll("&nbsp;", "").trim();
+		String StrAnalysisDate = request.getParameter("AnalysisData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 
 		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+		
 		Node tableNode = analysisData.getElementsByTagName("table").item(0);
 		Node tableHeadNode;
-		Node tableBodyNode ;
+		Node tableBodyNode;
 //		subjective
 		if(hidRType2.equals("A")){
 			pFileName = strDate+"_Report.xls";
 			sheet = workbook.createSheet("report");
-			tableHeadNode = tableNode.getChildNodes().item(1);
-			tableBodyNode = tableNode.getChildNodes().item(2);
+			tableHeadNode = tableNode.getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(1);
 			row = sheet.createRow(0);
 			
 			for(int i=0; i<tableHeadNode.getChildNodes().item(0).getChildNodes().getLength(); i++){
@@ -2938,9 +2939,9 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
 				cell.setCellStyle(headerStyle);
 			}
 			
-			for(int i=1; i<=tableBodyNode.getChildNodes().getLength(); i++){
-				row = sheet.createRow(i);
-				Node tr = tableBodyNode.getChildNodes().item(i-1);
+			for(int i=0; i<tableBodyNode.getChildNodes().getLength(); i++){
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i);
 				
 				for(int j=0; j<tr.getChildNodes().getLength(); j++){
 					cell = row.createCell(j);
