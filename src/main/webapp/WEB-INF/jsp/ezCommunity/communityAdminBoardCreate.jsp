@@ -81,6 +81,9 @@
 	
 				alert("<spring:message code='ezCommunity.t322' />");
 				
+				txtNewName.value = "";
+				txtNewName2.value = "";
+				
 			    if (CrossYN()) {
 			        window.parent.frames[0].location.href = "/ezCommunity/adminLeft.do?" + "code="+code+"&clickBoard=Y&boardID=" + BoardGroupID;
 			    } else {
