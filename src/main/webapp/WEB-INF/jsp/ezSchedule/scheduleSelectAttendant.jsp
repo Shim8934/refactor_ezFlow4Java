@@ -1044,19 +1044,21 @@
 		        if (!CrossYN()) {
 		            window.returnValue = rtn;
 		        }
-		        
+
 		        if (ReturnFunction != null)
 		            ReturnFunction(rtn);
 		        else
 		            window.returnValue = rtn;
+		        
+		        window.close();
 		    }
 		
-		    window.onunload = function () {
+		    /* window.onunload = function () {
 		        if (ReturnFunction != null)
 		            ReturnFunction(rtn);
 		        else
 		            window.returnValue = rtn;
-		    }
+		    } */
 		
 		    function onDragEnter(evt) {
 		        evt.stopPropagation();
@@ -1304,8 +1306,7 @@
 	                </table>
 	      		</td> 
 	    	</tr> 
-	 	</table> 
-	    <br />
+	 	</table>	    
 		<div class="btnposition">
 	    	<a id="btnAddUser" class="imgbtn" onClick="Add_UserInfo_onclick()" style="display:none" ><span><spring:message code='ezSchedule.t123' /></span></a>
 	    	<a class="imgbtn" onClick="btnok_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>

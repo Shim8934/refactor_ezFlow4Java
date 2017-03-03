@@ -1722,6 +1722,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         		String fileType = avo.getFileName().substring(avo.getFileName().lastIndexOf(".") + 1).toLowerCase();
         		avo.setFileType(fileType);        		
         		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
+        		
+        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
+        		avo.setFileTranSize(fileSize);
         	}
         	
         	model.addAttribute("attachList", aList);
