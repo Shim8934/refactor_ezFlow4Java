@@ -1651,7 +1651,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-			sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId())) + "</td>");
+			sb.append("<td>" + commonUtil.cleanValue(getClubMemberInfo(user.getC_ID().trim(), "DESCRIPTION", userInfo.getPrimary(), userInfo.getTenantId())) + "</td>");
 			sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
 			sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
 			sb.append("<td>");
@@ -6143,10 +6143,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 	
-	public String getClubMemberInfo(String pCN, String pSearch, String lang, int tenantID) throws Exception {
-		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, "1", tenantID));
+	public String getClubMemberInfo(String pCN, String pSearch, String primary, int tenantID) throws Exception {
+		Document xmlDoc = commonUtil.convertStringToDocument(ezOrganService.getPropertyList(pCN, pSearch, primary, tenantID));
 		
-		if (lang.equals("2")) {
+		if (primary.equals("2")) {
 			return xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 		} else {
 			return xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
