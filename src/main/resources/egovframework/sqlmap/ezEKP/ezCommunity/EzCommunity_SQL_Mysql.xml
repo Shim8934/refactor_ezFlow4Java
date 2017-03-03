@@ -1178,7 +1178,7 @@
 				username$v_userInfo_lang$ AS username,
 				userid,
 				content,
-				DATE_ADD(writedate, INTERVAL #offset# MINUTE) AS writedate
+				DATE_FORMAT(DATE_ADD(writedate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS writedate
 			FROM
 				TBL_COMM_ONELINEREPLY
 			WHERE
@@ -1207,7 +1207,7 @@
 				usercompanyname2,
 				usertitle,
 				usertitle2,
-				DATE_ADD(readdate, INTERVAL #offset# MINUTE) AS readdate
+				DATE_FORMAT(DATE_ADD(readdate, INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%s') AS readdate
 			FROM
 				TBL_COMM_ITEM_READ 
 			WHERE

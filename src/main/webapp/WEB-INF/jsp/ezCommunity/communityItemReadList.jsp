@@ -35,7 +35,7 @@
         	    <table style="width:100%" class="popuplist">
         	    	<c:forEach items="${readList}" var="item">
         	    		<c:choose>
-        	    			<c:when test="${userInfo.lang=='1' }">
+        	    			<c:when test="${userInfo.primary=='1' }">
         	    				<tr>
 			        	   			<td style="white-space:nowrap">[<c:out value = '${item.readDate}' />]</td>
 				                    <td style="cursor: pointer;white-space:nowrap" onclick="show_info('${item.userID}');"><font color="black"><b><c:out value = '${item.userName}' /></b>(<c:out value = '${item.userID}' />)</font></td>
