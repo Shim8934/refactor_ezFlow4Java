@@ -19,12 +19,13 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);		        
 		    }
 					
+		    var OpenWin;
 		    var schedule_select_attendant_dialogArguments = new Array();
 		    function add_member() {
 		        if (CrossYN()) {
 		            schedule_select_attendant_dialogArguments[0] = "";
 		            schedule_select_attendant_dialogArguments[1] = add_member_Complete;
-		            var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
+		            OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t171' />") + "&type=group", "schedule_group_write", GetOpenWindowfeature(980, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
@@ -96,7 +97,8 @@
 		            
 		            var memberList = new Array();
 	                var count = 0;
-	
+	                
+	                OpenWin.focus();	
 	
 		            for (var i = 0; i < rtn["id"].length; i++) {
 		                var isExist = false;
@@ -135,11 +137,14 @@
 			    		},
 			    		url : "/ezSchedule/scheduleAddMember.do",
 			    		success: function(text){
-			    			alert("<spring:message code='ezSchedule.t174' />");
+			    			OpenWin.alert("<spring:message code='ezSchedule.t174' />");
+							OpenWin.close();
+			    			
 		                    window.location.reload(false);		    				    			
 			    		},
 			    		error: function(err){
-			    			alert("<spring:message code='ezSchedule.t173' />");
+			    			OpenWin.alert("<spring:message code='ezSchedule.t173' />");
+							OpenWin.close();			    			
 			    		}
 			        });
 		        }

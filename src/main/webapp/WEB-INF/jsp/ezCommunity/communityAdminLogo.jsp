@@ -276,12 +276,12 @@
 	                    <c:if test="${isCrossBrowser == true}">
 	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    	<span id="filename" style="vertical-align:middle"></span>
-	                    	<input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()">
+	                    	<input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()" style="display:none">
 	                    </c:if>
 	                    <c:if test="${isCrossBrowser == false}">
 	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachAdd_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    	<span id="filename" style="vertical-align:middle"></span>
-	                    	<input type="file" id="logo" name="logo" accept="image/*">
+	                    	<input type="file" id="logo" name="logo" accept="image/*" style="display:none">
 	                    </c:if>
 	                </td>
 	            </tr>
