@@ -13,7 +13,12 @@
         <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>        
 		<title>
 			<spring:message code='ezSchedule.t298'/>
-			<c:out value="${title}" />
+			<c:if test="${scheduleInfo.scheduleType == 1}"><spring:message code='ezSchedule.t321' /></c:if>
+			<c:if test="${scheduleInfo.scheduleType == 2}"><spring:message code='ezSchedule.t322' /></c:if>
+			<c:if test="${scheduleInfo.scheduleType == 3}"><spring:message code='ezSchedule.t323' /></c:if>
+			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
+			<c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
+	        <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>)
 		</title>
 		<style> P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm; line-height:20px }</style>
 		<script>
@@ -347,7 +352,7 @@
 	                        <c:if test="${scheduleInfo.scheduleType == '7'}">
 	                        	<tr>
 		                            <th style="white-space:nowrap">
-		                                <spring:message code='ezSchedule.t159' />
+		                                <spring:message code='ezSchedule.jjh04' />
 		                            </th>
 		                            <td colspan="3" style="white-space:nowrap;">
 		                                <div style="cursor: pointer;width:270px">
@@ -358,7 +363,7 @@
 	                        </c:if>
 	                        <tr>
 	                            <th style="white-space:nowrap">
-	                                <spring:message code='ezSchedule.t161' />
+	                                <spring:message code='ezSchedule.jjh05' />
 	                            </th>
 	                            <td style="white-space:nowrap;">
 	                                <div style="cursor: pointer;width:270px;" onclick="show_personinfo('0')" id="LabelCreator">	                                    
@@ -367,7 +372,7 @@
 	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap; width:80px">
-	                                <spring:message code='ezSchedule.t306' />
+	                                <spring:message code='ezSchedule.jjh06' />
 	                            </th>
 	                            <td style="white-space:nowrap; width:100%">
 	                                <div id="LabelCreateDate">	                                    
@@ -386,7 +391,7 @@
 	                                </div>
 	                            </td>
 	                            <th style="white-space:nowrap">
-	                                <spring:message code='ezSchedule.t310' />
+	                                <spring:message code='ezSchedule.jjh07' />
 	                            </th>
 	                            <td>
 	                                <div id="LabelImportance">
@@ -452,7 +457,7 @@
 	            </tr>
 	            <tr>
 	                <td class="pad1" style="vertical-align: top; height: 100%" id="messagetd">
-	                    <div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 100%; padding-top: 6px; height: 370px; background-color: white"></div>
+	                    <div id="message" style="border: #b6b6b6 1px solid; padding-left: 5px; overflow: auto;width: 99.1%; padding-top: 6px; height: 370px; background-color: white"></div>
 	                </td>
 	            </tr>
 	            <tr>
@@ -491,8 +496,8 @@
 	                                    		</c:if>
 	                                    		<c:if test="${item.fileType == 'ecm'}">
 	                                    			<c:set var="imagePath" value="/images/ecm.png" />
-	                                    		</c:if>
-	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (<fmt:formatNumber value='${item.fileSize}' type='number' />)</a>	                                    		
+	                                    		</c:if>	                                    		
+	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}">${item.fileName} (${item.fileTranSize})</a>	                                    		
 	                                    	</div>
 	                                    </c:forEach>
 	                                </div>
@@ -513,8 +518,7 @@
 	        <div id="printScreen" style="display: none">
 	            <table class="popuplist" style="width:100%">
 	                <tr>
-	                    <th style="white-space:nowrap; width:80px">
-	                        <spring:message code='ezSchedule.t161' />
+	                    <th style="white-space:nowrap"><spring:message code='ezSchedule.t161' />
 	                    </th>
 	                    <td style="white-space:nowrap">
 	                        <div id="printCreator"></div>
@@ -537,16 +541,14 @@
 	                    </td>
 	                </tr>
 	                <tr>
-	                    <th style="white-space:nowrap">
-	                        <spring:message code='ezSchedule.t310' />
+	                    <th style="white-space:nowrap"><spring:message code='ezSchedule.t310' />
 	                    </th>
 	                    <td>
 	                        <div id="printImportance"></div>
 	                    </td>
 	                </tr>
 	                <tr>
-	                    <th style="white-space:nowrap">
-	                        <spring:message code='ezSchedule.t163' />
+	                    <th style="white-space:nowrap"><spring:message code='ezSchedule.t163' />
 	                    </th>
 	                    <td>
 	                        <div id="printAttendant"></div>

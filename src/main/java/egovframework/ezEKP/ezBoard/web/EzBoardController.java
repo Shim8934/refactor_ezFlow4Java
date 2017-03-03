@@ -3211,8 +3211,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 
         for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("+", "%2b");
-            pFileName[i] = pFileName[i].replace(";", "%3b");
+            pFileName[i] = pFileName[i].replace(";", "%3b").replace("+", "%2b");
         }
 
         String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());

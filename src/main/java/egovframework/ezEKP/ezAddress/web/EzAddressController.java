@@ -1866,6 +1866,7 @@ public class EzAddressController{
         logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId);
         
 		List<MultipartFile> multiFile = request.getFiles("file1");
+		
         if (multiFile == null || multiFile.get(0) == null) {
         	logger.error("cannot find file.");
         	model.addAttribute("result", "ERROR");
@@ -1885,8 +1886,10 @@ public class EzAddressController{
 	        String charset = "euc-kr";
 	        
 			if (userInfo.getLang().equals("3")) {
-				charset = "euc-jp";
+				charset = "shift-jis";
 			}
+			
+			logger.debug("charset=" + charset);
 			
 	        reader = new InputStreamReader(stream, charset);
 	        csvReader = new CSVReader(reader);
@@ -1900,11 +1903,13 @@ public class EzAddressController{
         			csvReader.close();
         		} catch (IOException e) {}
         	}
+        	
         	if (reader != null) {
         		try {
         			reader.close();
         		} catch (IOException e) {}
         	}
+        	
         	if (stream != null) {
         		try {
         			stream.close();
@@ -1915,13 +1920,14 @@ public class EzAddressController{
         if (csvList == null || csvList.get(0) == null || csvList.get(0).length == 0) {
         	logger.error("Check CSV file format.");
         	model.addAttribute("result", "ERROR");
+        	
             return "ezAddress/addressImportComplete";
         }
         
         String[] headerArr = new String[]{
-        		egovMessageSource.getMessage("ezAddress.t124", locale), //name
+        		egovMessageSource.getMessage("ezAddress.x0001", locale), //name
         		egovMessageSource.getMessage("ezAddress.t126", locale), //lastName
-        		egovMessageSource.getMessage("ezAddress.t51", locale), //company
+        		egovMessageSource.getMessage("ezAddress.x0002", locale), //company
         		egovMessageSource.getMessage("ezAddress.t54", locale), //dept
         		egovMessageSource.getMessage("ezAddress.t52", locale), //title
         		egovMessageSource.getMessage("ezAddress.t68", locale), //companyPhone
@@ -1941,11 +1947,12 @@ public class EzAddressController{
         String[] csvBody = null;
         Map<String, String> csvBodyMap = null;
         
-        for (int i=1; i<csvList.size(); i++) {
+        for (int i = 1; i < csvList.size(); i++) {
         	try {
         		csvBody = csvList.get(i);
 	        	
         		csvBodyMap = new HashMap<String, String>();
+        		
 	        	for (int j=0; j<csvBody.length; j++) {
 	        		csvBodyMap.put(csvHeader[j], csvBody[j]);
 	        	}

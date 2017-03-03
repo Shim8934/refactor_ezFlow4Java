@@ -2457,6 +2457,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			
         			if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
         				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        				
         				File fileinfo = new File(realPath + filePath2);
         				
         				if (!fileinfo.exists()) {
@@ -2464,8 +2466,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         				}
         			} else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath2 = strAttachments.split(";")[i];
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			} else {
         				filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			}
         			file = null;
         		} else {
@@ -2473,6 +2477,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			fileSize = file.length();
         			
         			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
+        			filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			
         			File fileinfo = new File(realPath + filePath2);
         			
@@ -2487,11 +2492,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         		fileName = strAttachments.split(";")[i].substring(54);
 //        		fileName = strAttachments.split(";")[i].substring(strAttachments.split(";")[i].lastIndexOf("_") + 1);
         		
+        		fileName = fileName.replace("%3b", ";").replace("%2b", "+");
+        		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         	}
         	
         	rtnValue = true;
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = false;
 		}

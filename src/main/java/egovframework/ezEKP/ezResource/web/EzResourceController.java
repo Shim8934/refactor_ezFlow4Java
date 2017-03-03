@@ -2018,22 +2018,21 @@ public class EzResourceController extends EgovFileMngUtil {
 		boolean isDupRep = false;
 		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
 		
+		if (cmd.equals("add")) {
+			num = "-1";
+		}
+		
 		if (isRep) {
 			logger.debug("===반복예약 데이터가 있을 때===");
-			if (cmd.equals("add")) {
-				num = null;
-			}
-			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+			
+			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 		} else {
 			logger.debug("===반복예약 데이터가 없을 때===");
-			if (cmd.equals("add")) {
-				num = null;
-			}
 			
 			if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
-				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			} else {
-				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, cmd, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 			}
 		}
 		
