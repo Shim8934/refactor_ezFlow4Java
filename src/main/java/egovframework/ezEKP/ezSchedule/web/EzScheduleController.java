@@ -1292,7 +1292,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			_datetype = request.getParameter("datetype");
     		if (_datetype == null) _datetype = "";
 			
-			if (request.getParameter("sdate") != null) {				
+			if (request.getParameter("sdate") != null) {
 				startDateTime = request.getParameter("sdate");
 			} else {				
 				if (request.getParameter("startdate") != null) {

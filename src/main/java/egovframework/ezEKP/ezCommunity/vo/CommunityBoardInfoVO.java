@@ -38,9 +38,9 @@ public class CommunityBoardInfoVO {
 	/** 게시판 순번*/
 	int boardNo;
 	/** 버전 사용유무*/
-	String versionUser;
+	String versionUse;
 	/** 체크 인/아웃 사용유무*/
-	String checkUser;
+	String checkUse;
 	/** 게시판 위치*/
 	String showPosition;
 	/** 순서*/
@@ -153,17 +153,17 @@ public class CommunityBoardInfoVO {
 	public void setBoardNo(int boardNo) {
 		this.boardNo = boardNo;
 	}
-	public String getVersionUser() {
-		return versionUser;
+	public String getVersionUse() {
+		return versionUse;
 	}
-	public void setVersionUser(String versionUser) {
-		this.versionUser = versionUser;
+	public void setVersionUse(String versionUse) {
+		this.versionUse = versionUse;
 	}
-	public String getCheckUser() {
-		return checkUser;
+	public String getCheckUse() {
+		return checkUse;
 	}
-	public void setCheckUser(String checkUser) {
-		this.checkUser = checkUser;
+	public void setCheckUse(String checkUse) {
+		this.checkUse = checkUse;
 	}
 	public String getShowPosition() {
 		return showPosition;
