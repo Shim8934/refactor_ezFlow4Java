@@ -187,7 +187,7 @@ public class EzCommonController extends EgovFileMngUtil{
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", userInfo.getTenantId()) + commonUtil.separator; 
         String realPath = commonUtil.getRealPath(request);
         String strURL = request.getParameter("strURL");
-        String domain = request.getServerName();
+        String domain = request.getServerName() +":" +request.getServerPort();
         logger.debug("strURL="+strURL + ",uploadModule="+uploadModule);
         
         filePath = realPath + uploadModule;
@@ -216,8 +216,9 @@ public class EzCommonController extends EgovFileMngUtil{
         		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6, strHTML.indexOf("</BODY>")));
         		result = "<BODYDATA>" + strHTML + "</BODYDATA>";
         	} else {
-        		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
-        		
+        		if (strHTML.indexOf("<body") > -1) {
+        			strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
+        		}
         		String attribute = "orgdocnum";
 		
 				StringBuffer sb = new StringBuffer();
