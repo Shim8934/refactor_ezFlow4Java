@@ -294,8 +294,8 @@
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>	
 	            	</td>
 		    	</tr>
-		    	</c:forEach>
-		    	<c:if test="${fn:length(scheduleList) == 0}">
+		    	</c:forEach>		    	
+		    	<c:if test="${fn:length(scheduleList) == 0 && idList != null}">
 		    	<tr> 
 		        	<td colspan="9" style="text-align:center"><spring:message code='ezSchedule.t297'/></td> 
 		      	</tr>

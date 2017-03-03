@@ -8,6 +8,7 @@ public class AttachListVO {
 	private String 	filePath;
 	private String 	fileType;
 	private String	fileEncodeName;
+	private String	fileTranSize;
 	
 	
 	public int getAttachId() {
@@ -45,6 +46,12 @@ public class AttachListVO {
 	}
 	public void setFileEncodeName(String fileEncodeName) {
 		this.fileEncodeName = fileEncodeName;
+	}
+	public String getFileTranSize() {
+		return fileTranSize;
+	}
+	public void setFileTranSize(String fileTranSize) {
+		this.fileTranSize = fileTranSize;
 	}
 	
 	

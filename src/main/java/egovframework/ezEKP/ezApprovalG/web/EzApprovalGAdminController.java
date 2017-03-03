@@ -1340,11 +1340,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCode.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String removeTaskCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("removeTaskCode started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String taskCode = request.getParameter("taskCode");
 		String companyID = request.getParameter("companyID");
 		
+		logger.debug("taskCode = " + taskCode + ", companyID = " + companyID);
+		
 		String result = ezApprovalGAdminService.removeTaskCode(taskCode, companyID, userInfo);
+		
+		logger.debug("removeTaskCode ended.");
 		
 		return result;
 	}
