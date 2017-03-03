@@ -2449,6 +2449,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         		if (strType.equals("BOARD")) {
         			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath = strAttachments.split(";")[i];
+        				filePath = filePath.replace("%3b", ";").replace("%2b", "+");
         			} else {
         				filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
         			}
@@ -2488,11 +2489,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			file = null;
         		}
         		
-        		//파일명에 변수가 많아서 그냥 고정값으로 해야할듯
-        		fileName = strAttachments.split(";")[i].substring(54);
-//        		fileName = strAttachments.split(";")[i].substring(strAttachments.split(";")[i].lastIndexOf("_") + 1);
-        		
-        		fileName = fileName.replace("%3b", ";").replace("%2b", "+");
+        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
         		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         	}
