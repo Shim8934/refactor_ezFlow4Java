@@ -109,14 +109,14 @@
 		                var boardid = selRow[count1].getAttribute("DATA1");
 		                var boardname = selRow[count1].cells[0].innerText;
 		                listdelete(listview, selRow[count1]);
+		                
 		                if (!listview2.ExistRow("DATA1", boardid)) {
 		                    var strXML = listAdd(boardid, boardname);
 		                    objTr = listview2.AddRow(length2);
 		                    SetAttribute(objTr, "id", addlist + "_TR_" + length2);
 		                    xmlRtn = loadXMLString(strXML);
 		                    listview2.AddDataRow(objTr, xmlRtn);
-		                }
-		                else {
+		                } else {
 		                    alert("<spring:message code = 'ezCommunity.t902' />");
 		                }
 		            }
@@ -176,7 +176,7 @@
 		        pparsingXML = pparsingXML + "<HEADER><NAME></NAME><WIDTH>70</WIDTH></HEADER>";
 		        pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
 
-		        pparsingXML = pparsingXML + "<VALUE>" + boardname + "</VALUE>";
+		        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + boardname + "]]></VALUE>";
 		        pparsingXML = pparsingXML + "<DATA1>" + boardid + "</DATA1>";
 		        pparsingXML = pparsingXML + "</CELL></ROW>";
 

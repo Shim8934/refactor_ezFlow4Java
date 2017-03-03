@@ -1735,7 +1735,8 @@ function compareExtension(check, extension) {
 //무적의 자바 인코더
 function javaURLEncode(str) {
 	  return encodeURI(str)
-	    .replace(/%20/g, "+")
+	    .replace(/\+/g, "%2b")
+	    .replace(/\;/g, "%3b")
 	    .replace(/!/g, "%21")
 	    .replace(/'/g, "%27")
 	    .replace(/\(/g, "%28")
