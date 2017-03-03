@@ -653,9 +653,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
 	public String progressAdmin(Model model) {
 	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String AdminActiveX = config.getProperty("config.AdminActiveX");
 	    
 	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
-	    
+		model.addAttribute("AdminActiveX", AdminActiveX);
+	    	    
 		return "/admin/ezApprovalG/apprGProgressAdmin";
 	}
 	

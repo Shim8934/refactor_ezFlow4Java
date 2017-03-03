@@ -19,10 +19,12 @@
 				</c:if>
 				
 				<c:if test="${IsJMochaStandAlone != 'YES'}">
+				<c:if test="${AdminActiveX == 'YES'}">
 				var ua = navigator.userAgent;
 		    	if ((/msie/i.test(ua)) || (/rv:11.0/i.test(ua))) {
 					GetObject();
 		    	}
+		    	</c:if>
 		    	</c:if>
 			}
 			function menu_change(width, e){
@@ -116,7 +118,9 @@
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
         <c:if test="${IsJMochaStandAlone != 'YES'}">
+        <c:if test="${AdminActiveX == 'YES'}">
 		<OBJECT id="i_icd2" style="DISPLAY: none" codeBase="/files/ezIcd2.cab#version=1,0,0,14" data="data:application/x-oleobject;base64,GvFdR8IrqUGKl+mJ4CPlFwADAADYEwAA2BMAAA=="classid="CLSID:9E1C0C21-48B8-455a-9005-48C8D78B7900" VIEWASTEXT></OBJECT>
+        </c:if>
         </c:if>
 		<form method="post">
 			<h1 title="logo"></h1>
