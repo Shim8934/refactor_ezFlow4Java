@@ -587,10 +587,10 @@ function Write() {
     var pLeft = (pwidth - 790) / 2;
     var feature = GetOpenPosition(790, 830);
     if (CrossYN()) {
-        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&sdate=" + startdate + "&edate=" + enddate + "", "", "height = 830px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     }
     else {
-        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&startdate=" + startdate + "&enddate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        window.open("/ezSchedule/scheduleWrite.do?defaultid=0&sdate=" + startdate + "&edate=" + enddate + "", "", "height = 660px, width = 790px,top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     }
     DragStartItemID = "";
     DragEndItemID = "";
