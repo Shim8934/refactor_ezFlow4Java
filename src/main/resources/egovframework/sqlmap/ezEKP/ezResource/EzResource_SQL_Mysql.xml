@@ -636,7 +636,9 @@
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
-				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
+				A.OWNERID = #v_POWNERID#
+			AND
+				REFLAG = '0'
 			AND 
                 ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND 
@@ -655,20 +657,26 @@
                 DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE,
                 DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE
            	FROM 
-           		TBL_RS_SCHEDULE A
+           		TBL_RS_SCHEDULE
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
 				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
-			AND 
-				COMPANYID = #v_PCOMPANYID#
-			AND 
-				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
 			AND
-				A.TENANT_ID = #tenantID#	
+				COMPANYID = #v_PCOMPANYID#
+			AND
+				OWNERID = #v_POWNERID#
+			AND
+				ApproveFlag = '1' 
+			AND
+				num <> #v_P_NUM#
+			AND
+				REFLAG = '0'
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				STARTDATE ASC,
-				ENDDATE DESC 
+				ENDDATE DESC
 		]]>
 	</select>
 	
@@ -717,7 +725,7 @@
         	AND
         		COMPANYID = #v_pCompanyID#
         	AND 
-        		( PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
+        		REFLAG = '0'
 			AND
 				BRD.BRD_UPPER = #v_pOwnerID#
 			AND
@@ -1595,7 +1603,7 @@
 	        	ALERTTIME ,
 	        	CONTENT ,
 	        	IMPORTANCE ,
-	        	4 reFlag ,
+	        	'4' reFlag ,
 	         	GRESFLAG ,
 	        	ENTRYLIST ,
 	        	ALLDAY ,
@@ -1724,7 +1732,7 @@
 					AND
 				  PNUM = #v_P_num#
 					AND
-				  REFLAG >= 3
+				  REFLAG = '4'
 					AND
 				  TENANT_ID = #tenantID# )
 		]]>
@@ -1811,7 +1819,7 @@
             AND 
             	PNUM = #v_P_num#
             AND 
-            	REFLAG >= 3
+            	REFLAG = '4'
             AND
             	TENANT_ID = #tenantID#	
 		]]>
@@ -2040,10 +2048,7 @@
 			AND
 				B.ApproveFlag = '1' 
 			AND
-				B.num <> ( CASE #v_p_cmd#
-							WHEN 'add' THEN -1
-							ELSE #v_p_num#
-                           END )
+				B.num <> #v_p_num#
 			AND
 				B.TENANT_ID = #tenantID#
 		]]>

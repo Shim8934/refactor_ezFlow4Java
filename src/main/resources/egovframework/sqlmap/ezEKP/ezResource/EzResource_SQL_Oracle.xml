@@ -618,7 +618,7 @@
                 B.DESCRIPTION2 DEPTNM2  ,
                 B.TITLE JOBTITLE  ,
                 B.TITLE2 JOBTITLE2  
-           	FROM 
+           	FROM
            		TBL_RS_SCHEDULE A
 			JOIN
 				TBL_USERMASTER B 
@@ -628,19 +628,21 @@
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
 				to_date(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
-			AND 
+			AND
 				COMPANYID = #v_PCOMPANYID#
-			AND 
-				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
-			AND 
+			AND
+				A.OWNERID = #v_POWNERID# 
+			AND
+				REFLAG = '0'
+			AND
                 ( B.DISPLAYNAME LIKE '%' || #v_WRITERNAME# || '%' OR B.DISPLAYNAME2 LIKE '%' || #v_WRITERNAME# || '%' )
-			AND 
+			AND
 				( B.DESCRIPTION LIKE '%' || #v_WRITERDEPT# || '%' OR B.DESCRIPTION2 LIKE '%' || #v_WRITERDEPT# || '%' )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
 				STARTDATE ASC,
-				ENDDATE DESC 
+				ENDDATE DESC
 		]]>
 	</select>
 	
@@ -650,7 +652,7 @@
                 TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE,
                 TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE
            	FROM 
-           		TBL_RS_SCHEDULE A
+           		TBL_RS_SCHEDULE
           	WHERE
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -658,9 +660,15 @@
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
-				( A.OWNERID = #v_POWNERID# AND PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
+				OWNERID = #v_POWNERID#
 			AND
-				A.TENANT_ID = #tenantID#	
+				ApproveFlag = '1' 
+			AND
+				num <> #v_P_NUM#
+			AND
+				REFLAG = '0'
+			AND
+				TENANT_ID = #tenantID#
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -712,7 +720,7 @@
         	AND
         		COMPANYID = #v_pCompanyID#
         	AND 
-        		( PNUM = 0 AND REFLAG <> '1' OR REFLAG = '2' )
+        		REFLAG = '0'
 			AND
 				BRD.BRD_UPPER = #v_pOwnerID#
 			AND
@@ -1600,7 +1608,7 @@
 				ALERTTIME ,
 				CONTENT ,
 				IMPORTANCE ,
-				4 reFlag,
+				'4' reFlag,
 				GRESFLAG ,
 				ENTRYLIST ,
 				ALLDAY ,
@@ -1729,7 +1737,7 @@
 					AND
 				  PNUM = #v_P_num#
 					AND
-				  REFLAG >= 3
+				  REFLAG = '4'
 					AND
 				  TENANT_ID = #tenantID# )
 		]]>
@@ -1821,7 +1829,7 @@
             AND 
             	PNUM = #v_P_num#
             AND 
-            	REFLAG >= '3'
+            	REFLAG = '4'
             AND
             	TENANT_ID = #tenantID#	
 		]]>
@@ -2051,10 +2059,7 @@
 			AND
 				B.ApproveFlag = '1' 
 			AND
-				B.num <> ( CASE #v_p_cmd#
-							WHEN 'add' THEN -1
-							ELSE #v_p_num#
-                           END )
+				B.num <> #v_p_num#
 			AND
 				B.TENANT_ID = #tenantID#
 		]]>
