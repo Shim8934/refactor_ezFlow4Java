@@ -6,7 +6,7 @@
 <html style="height: 99%;">
 	<head>
 		<c:choose>
-			<c:when test="${mode == 'new' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
+			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
 			    <title><spring:message code='ezBoard.t368' /></title>
 			</c:when>
 			<c:when test="${mode == 'reply'}">
@@ -1997,7 +1997,7 @@
 		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
 	                            	</c:otherwise>
 	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && reservedItem == '' }">
+								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && reservedItem == '' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
 		                        </td>
@@ -2052,7 +2052,7 @@
 	                </table>
 	                <table id="tab02" class="content" style="display: none;">
 	                	<c:choose>
-	                		<c:when test="${(mode== 'new' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
+	                		<c:when test="${(mode== 'new' || mode== 'new1' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
 			                    <tr id="tdReservationDate">
 	                		</c:when>
 	                		<c:otherwise>

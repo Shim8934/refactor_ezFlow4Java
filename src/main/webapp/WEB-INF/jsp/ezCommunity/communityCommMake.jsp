@@ -277,14 +277,13 @@
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick(1)"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id="filename" style="vertical-align:middle"></span>
-		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="width: 1px; height: 1px;">
+		                        <input type="file" id="file1" name="logo" onchange="btn_AttachAdd_onclick(this)" style="display:none">
 		                    </span>
 		                </c:if>
 		                
 		                <c:if test="${isCrossBrowser == false}">
 		                	<div style="display:inline-block;font-size:15px;vertical-align:middle">
-		                        <a class="imgbtn" onclick="return btn_AttachAdd_onclick(1)">
-		                        <span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
+		                        <a class="imgbtn" onclick="return btn_AttachAdd_onclick(1)"><span id="btn_AttachAdd_logo"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id ="filename"></span>
 		                    </div>
 		                </c:if>
@@ -299,7 +298,7 @@
 		                    <span style="vertical-align:middle">
 		                        <a class="imgbtn"><span id="btn_AttachAdd_banner" onclick="return btn_AttachSelect_onclick(2)"><spring:message code='ezCommunity.t1177' /></span></a>
 		                        <span id="filename2" style="vertical-align:middle"></span>
-		                        <input type="file" id="file2" name="banner" onchange="btn_AttachAdd_onclick(this)" style="width: 1px; height: 1px;">
+		                        <input type="file" id="file2" name="banner" onchange="btn_AttachAdd_onclick(this)" style="display:none;">
 		                    </span>
 		                </c:if>
 		                
