@@ -105,12 +105,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getBrdMainList(map);
 	}
 	
-	public List<ResDateVO> getScheduleDateList(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
+	@Override
+	public List<ResDateVO> getScheduleDateList(String ownerID, String num, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
 		
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_POWNERID", ownerID);
+		map.put("v_P_NUM", num);
 		map.put("v_PCOMPANYID", companyID);
 		map.put("v_PSTARTDATE", startDate);
 		map.put("v_PENDDATE", endDate);
@@ -712,11 +714,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception {
+	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, String num, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_p_ownerID", ownerID);
 		map.put("v_p_num", num);
-		map.put("v_p_cmd", cmd);
 		map.put("v_p_companyID", companyID);
 		map.put("tenantID", tenantID);
 		return ezResourceDAO.getRepResourceRepeat(map);
@@ -2295,7 +2296,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	//반복예약일때
 	@Override
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
+		String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		logger.debug("getRepResource Start");
 		logger.debug("===반복예약일때===");
 		
@@ -2303,7 +2304,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
 		
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pCmd = strPcmd.equals("") ? "" : strPcmd;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -2315,7 +2315,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
-		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, "2999-12-31 23:59:59", "2000-01-01 00:00:00", offset, tenantID);
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, strPnum, companyID, "2999-12-31 23:59:59", "2000-01-01 00:00:00", offset, tenantID);
 		logger.debug("scheduleDateList.size=" + scheduleDateList.size());
 		
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
@@ -2336,7 +2336,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
-		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, strPnum, companyID, tenantID);
 		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {
@@ -2373,7 +2373,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	//일반예약일때
 	@Override
-	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
+	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception {
 		logger.debug("getRepResource started");
 		logger.debug("===일반예약일때===");
 		
@@ -2381,7 +2381,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
 
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
-		String pCmd = strPcmd.equals("") ? null : strPcmd;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
@@ -2394,7 +2393,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
-		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, companyID, strEndDateTime, strStartDateTime, offset, tenantID);
+		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, strPnum, companyID, strEndDateTime, strStartDateTime, offset, tenantID);
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
 		for (ResDateVO dateVO : scheduleDateList) {
 			dateList2.add(new Date[] {
@@ -2413,7 +2412,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		//자원의 반복예약 스케줄을 가져옴 TODO: 이거 말고 딴거 타게 하자. sDate,eDate 조건있게
-		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, 0, pCmd, companyID, tenantID);
+		List<ResGetScheduleRepetitionVO> repScheduledList = getRepResourceRepeat(pOwnerID, strPnum, companyID, tenantID);
 		logger.debug("repScheduledList.size=" + repScheduledList.size());
 		
 		for (ResGetScheduleRepetitionVO schedule : repScheduledList) {

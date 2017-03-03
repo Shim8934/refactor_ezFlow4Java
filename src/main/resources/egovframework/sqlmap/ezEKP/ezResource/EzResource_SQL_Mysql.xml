@@ -657,7 +657,7 @@
                 DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE,
                 DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE
            	FROM 
-           		TBL_RS_SCHEDULE A
+           		TBL_RS_SCHEDULE
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -665,11 +665,15 @@
 			AND
 				COMPANYID = #v_PCOMPANYID#
 			AND
-				A.OWNERID = #v_POWNERID#
+				OWNERID = #v_POWNERID#
+			AND
+				ApproveFlag = '1' 
+			AND
+				num <> #v_P_NUM#
 			AND
 				REFLAG = '0'
 			AND
-				A.TENANT_ID = #tenantID#
+				TENANT_ID = #tenantID#
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC

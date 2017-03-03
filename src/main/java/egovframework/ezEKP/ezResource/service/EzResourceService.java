@@ -6,6 +6,7 @@ import java.util.Locale;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
+import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
@@ -36,9 +37,11 @@ public interface EzResourceService {
 	
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, int num, String cmd, String companyID, int tenantID) throws Exception;
+	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, String num, String companyID, int tenantID) throws Exception;
 	
 	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
+	
+	public List<ResDateVO> getScheduleDateList(String ownerID, String num, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
 	
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID, int tenantID) throws Exception; 
 	
@@ -91,9 +94,9 @@ public interface EzResourceService {
 	public boolean delResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
 	public boolean getRepResource(String strFrequency, String strSelType, String strEndRecurType, String strStartDateTime, String strEndDateTime, String strInterval,
-			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
+			String strDaysOfWeek, String strInstances, String strByPosition, String strDaysOfMonth, String strMonthsOfYear, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 
-	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String strPcmd, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
+	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 	
 	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
@@ -128,4 +131,5 @@ public interface EzResourceService {
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
 	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception;
+	
 }

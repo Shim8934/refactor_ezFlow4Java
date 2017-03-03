@@ -652,7 +652,7 @@
                 TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE,
                 TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE
            	FROM 
-           		TBL_RS_SCHEDULE A
+           		TBL_RS_SCHEDULE
           	WHERE
 				STARTDATE <= to_date(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
@@ -660,11 +660,15 @@
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
-				A.OWNERID = #v_POWNERID#
+				OWNERID = #v_POWNERID#
+			AND
+				ApproveFlag = '1' 
+			AND
+				num <> #v_P_NUM#
 			AND
 				REFLAG = '0'
 			AND
-				A.TENANT_ID = #tenantID#
+				TENANT_ID = #tenantID#
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -2055,10 +2059,7 @@
 			AND
 				B.ApproveFlag = '1' 
 			AND
-				B.num <> ( CASE #v_p_cmd#
-							WHEN 'add' THEN -1
-							ELSE #v_p_num#
-                           END )
+				B.num <> #v_p_num#
 			AND
 				B.TENANT_ID = #tenantID#
 		]]>
