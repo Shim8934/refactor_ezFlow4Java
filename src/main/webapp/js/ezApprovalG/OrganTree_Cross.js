@@ -40,7 +40,7 @@ function RequestData(obj) {
     var treeView = new TreeView();
     treeView.LoadFromID("treeView");
 
-    xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
+    xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
     xmlHTTP.send(strQuery);
 
     var listNode = SelectSingleNodeNew(xmlHTTP.responseXML, "NODES");
