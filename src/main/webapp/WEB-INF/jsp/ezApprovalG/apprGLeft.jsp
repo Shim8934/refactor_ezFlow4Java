@@ -212,51 +212,51 @@
 		            else {
 		                if (listtype == "1") {
 		                    parent.frames["right"].passValLeftMenu("1");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "3") {
 		                    parent.frames["right"].passValLeftMenu("3");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "2") {
 		                    parent.frames["right"].passValLeftMenu("2");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "4") {
 		                    parent.frames["right"].passValLeftMenu("4");
-		                    parent.frames["right"].getReceivedDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "6") {
 		                    parent.frames["right"].passValLeftMenu("6");
-		                    parent.frames["right"].getSimsaDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "7") {
 		                    parent.frames["right"].passValLeftMenu("7");
-		                    parent.frames["right"].getSendOutDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "8") {
 		                    parent.frames["right"].passValLeftMenu("8");
-		                    parent.frames["right"].getSendOutDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "9") {
 		                    parent.frames["right"].passValLeftMenu("9");
-		                    parent.frames["right"].getSendOutDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "10") {
 		                    parent.frames["right"].passValLeftMenu("10");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "99") {
 		                    parent.frames["right"].passValLeftMenu("99");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else if (listtype == "21") {
 		                    parent.frames["right"].passValLeftMenu("21");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		                else {
 		                    parent.frames["right"].passValLeftMenu("1");
-		                    parent.frames["right"].getDocList();
+		                    parent.frames["right"].checkBujaeInfo();
 		                }
 		            }
 		            try { parent.frames["right"].document.getElementById("txt_keyword").value = ""; } catch (e) { }
