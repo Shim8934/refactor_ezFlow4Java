@@ -159,9 +159,9 @@
 	
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 				                }
 				            }
 			            }
@@ -1335,7 +1335,8 @@
 		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
 		                    }
-		                    message.SetEditorContent("<p></p>");
+		                    
+		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1545,7 +1546,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p></p>");
+		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1606,7 +1607,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p></p>");
+	                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {
