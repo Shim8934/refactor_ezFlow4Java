@@ -1245,6 +1245,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int instances = vo.getInstances();
 		List<Integer> wDay = vo.getDaysOfWeek();
 		
+		if (wDay != null && wDay.size() > 0) {
+			instances = instances * wDay.size();
+		}
+		
 		// 자원예약 기간
 		Date resStartDate = vo.getStartDate();
 		Date resEndDate = vo.getEndDate();
@@ -1374,8 +1378,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		int byPosition = vo.getByPosition();
 		int endRecurType = vo.getEndRecurType();
 		int instances = vo.getInstances();
-		
 		List<Integer> wDay = vo.getDaysOfWeek();
+		
+		if (wDay != null && wDay.size() > 0) {
+			instances = instances * wDay.size();
+		}
 		
 		// 자원예약 기간
 		Date resStartDate = vo.getStartDate();
