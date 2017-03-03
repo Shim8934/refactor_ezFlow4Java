@@ -144,7 +144,7 @@
 				var pTop = (pheight - 720) / 2;
 				var pLeft = (pwidth - 765) / 2;
 				
-				window.open("/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", GetOpenWindowfeature(), "");
+				window.open("/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&mode=new", "", GetOpenWindowfeature(720, 765));
 			    
 			}
     		 
