@@ -1805,7 +1805,7 @@ CREATE TABLE `tbl_board_onelinereply` (
   `USERID` varchar(100) DEFAULT NULL,
   `USERNAME` varchar(100) DEFAULT NULL,
   `USERNAME2` varchar(100) DEFAULT NULL,
-  `WRITEDATE` datetime DEFAULT NULL,
+  `WRITEDATE` varchar(25) DEFAULT NULL,
   `CONTENT` varchar(600) DEFAULT NULL,
   `PASSWORD` varchar(1368) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,

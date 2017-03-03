@@ -1787,7 +1787,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
 		map.put("TENANTID", userInfo.getTenantId());
-		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("nowDate", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss.SSS"));
 		
 		ezBoardDAO.saveOneLineReply(map);
 	}

@@ -986,8 +986,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				// 반복예약 중에 삭제된 예약 가져옴
 				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
-				for (String date : deletedDateStrList) {
-					date = commonUtil.getDateStringInUTC(date, offset, false);
+				logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+				
+				for (int j=0; j<deletedDateStrList.size(); j++) {
+					deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
 				}
 				
 				for (Date[] dateArr : returnRepDateTimes) {
@@ -1060,7 +1062,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} else if (freq == 6 || freq == 7) {
 			returnList = getMonthlyRepDateTimes(vo, sDate, eDate, maxTemp);
 		}
-	
+		
 		logger.debug("returnList.size()=" + returnList.size());
 		logger.debug("getRepDeteTimes ended");
 		

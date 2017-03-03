@@ -695,19 +695,19 @@
 			SELECT 
 				A.itemid,
 				A.writerid,
-				A.writername$v_USERINFO_LANG$,
-				A.writerdeptname$v_USERINFO_LANG$,
-				A.writercompanyname$v_USERINFO_LANG$,
+				A.writername$v_USERINFO_LANG$ AS writername,
+				A.writerdeptname$v_USERINFO_LANG$ AS writerdeptname,
+				A.writercompanyname$v_USERINFO_LANG$ AS writercompanyname,
 				A.startdate,
 				A.writedate,
 				A.parentwritedate,
-  					A.importance,
-  					A.title,
-  					A.readcount,
-  					A.attachments,
-  					A.itemlevel,
-  					A.abstract,
-  					CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG
+  				A.importance,
+  				A.title,
+  				A.readcount,
+  				A.attachments,
+  				A.itemlevel,
+  				A.abstract,
+  				CASE WHEN D.totalcount IS NULL THEN 0 ELSE 1 END READFLAG
 			FROM
 				TBL_COMM_ITEM A 
 			LEFT OUTER JOIN
@@ -737,21 +737,21 @@
 				enddate > #v_pNow#
 		]]>
 		
-		<isEmpty property="v_PSORTBY">
+		<isEqual property="v_PSORTBY" compareValue="">
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
 					STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
 					A.startdate ASC
 			]]>
-		</isEmpty>
+		</isEqual>
 		
-		<isNotEmpty property="v_PSORTBY">
+		<isNotEqual property="v_PSORTBY" compareValue="">
 			<![CDATA[
 				ORDER BY
 					$v_PSORTBY$
 			]]>
-		</isNotEmpty>
+		</isNotEqual>
 		
 		<![CDATA[
 			LIMIT
@@ -767,9 +767,9 @@
 			SELECT
 				A.itemid,
 				A.writerid,
-				A.writername$v_strLang$,
-				A.writerdeptname$v_strLang$,
-				A.writercompanyname$v_strLang$, 
+				A.writername$v_strLang$ AS writername,
+				A.writerdeptname$v_strLang$ AS writerdeptname,
+				A.writercompanyname$v_strLang$ AS writercompanyname,
 				A.parentwritedate,
 				A.writedate,
 				A.startdate,
@@ -3736,7 +3736,7 @@
 	<select id="EzCommunityDAO.join1Get"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$
+				c_clubname$v_USERINFO_LANG$ AS c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -3752,7 +3752,7 @@
 	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$
+				c_clubname$v_USERINFO_LANG$ AS c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
@@ -3768,7 +3768,7 @@
 	<select id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$
+				username$v_USERINFO_LANG$ AS username 
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE

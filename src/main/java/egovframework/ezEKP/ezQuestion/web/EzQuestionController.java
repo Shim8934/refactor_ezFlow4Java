@@ -562,7 +562,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				
 				if(question.getAnswerType() == 2){
 					strTagData = "<tr>";
-					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\"><textarea style=\"Width:100%;height:85;\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
+					strTagData +=	"<td style=\"word-break:break-all;padding:10px;\"><textarea style=\"width:100%;height:85;padding:0px;resize:none\" id=\"txt" + question.getQuestionNo() + "\" name=\"txt" + question.getQuestionNo() + "\"></textarea></td>";
                     strTagData += "</tr>";
                     Element subRow = doc.createElement("SUBROW");
                     subRow.appendChild(doc.createTextNode(strTagData));
