@@ -709,9 +709,9 @@
 				(SELECT 
 					A.itemid,
 					A.writerid,
-					A.writername$v_USERINFO_LANG$,
-					A.writerdeptname$v_USERINFO_LANG$,
-					A.writercompanyname$v_USERINFO_LANG$,
+					A.writername$v_USERINFO_LANG$ AS writername,
+					A.writerdeptname$v_USERINFO_LANG$ AS writerdeptname,
+					A.writercompanyname$v_USERINFO_LANG$ AS writercompanyname,
 					A.startdate,
 					A.writedate,
 					A.parentwritedate,
@@ -786,9 +786,9 @@
 				(SELECT
 					A.itemid,
 					A.writerid,
-					A.writername$v_strLang$,
-					A.writerdeptname$v_strLang$,
-					A.writercompanyname$v_strLang$, 
+					A.writername$v_strLang$ AS writername,
+					A.writerdeptname$v_strLang$ AS writerdeptname,
+					A.writercompanyname$v_strLang$ AS writercompanyname,
 					A.parentwritedate,
 					A.writedate,
 					A.startdate,
@@ -3820,27 +3820,11 @@
 	<select id="EzCommunityDAO.join1Get"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				c_clubname$v_USERINFO_LANG$
+				c_clubname$v_USERINFO_LANG$ AS c_clubname
 			FROM
 				TBL_C_CLUB
 			WHERE
 				RTRIM(c_clubno) = #v_NO#
-			AND
-				tenant_id = #tenantID#
-		]]>
-	</select>
-	
-<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
-<!-- 		{CALL EZSP_JOIN_GET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
-<!-- 	</procedure> -->
-	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
-		<![CDATA[
-			SELECT
-				c_clubname$v_USERINFO_LANG$
-			FROM
-				TBL_C_CLUB
-			WHERE
-				RTRIM(c_clubno) = #v_CODE#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -3852,7 +3836,7 @@
 	<select id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"	remapResults="true">
 		<![CDATA[
 			SELECT
-				username$v_USERINFO_LANG$
+				username$v_USERINFO_LANG$ AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
