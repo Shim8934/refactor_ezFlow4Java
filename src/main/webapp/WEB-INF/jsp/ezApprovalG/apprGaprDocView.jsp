@@ -328,7 +328,7 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            OpenInformationUI("<spring:message code='ezApprovalG.t815'/>", btncallback_onclick_Complete);
+	            OpenInformationUI("<spring:message code='ezApprovalG.t67'/>", btncallback_onclick_Complete);
 	        }
 	        function btncallback_onclick_Complete(ans) {
 	            if (ans && ConnExist("DRAFT_CALLBACK", "")) {
