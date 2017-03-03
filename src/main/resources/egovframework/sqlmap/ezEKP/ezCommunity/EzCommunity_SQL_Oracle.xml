@@ -3830,6 +3830,22 @@
 		]]>
 	</select>
 	
+	<!-- 	<procedure id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"> -->
+<!-- 		{CALL EZSP_JOIN_GET1(#v_CODE#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
+<!-- 	</procedure> -->
+	<select id="EzCommunityDAO.joinGet1"						parameterClass="Map"		resultClass="String"	remapResults="true">
+		<![CDATA[
+			SELECT
+				c_clubname$v_USERINFO_LANG$ AS c_clubname
+			FROM
+				TBL_C_CLUB
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</select>
+	
 <!-- 	<procedure id="EzCommunityDAO.joinGet2"						parameterClass="Map"		resultClass="String"> -->
 <!-- 		{CALL EZSP_JOIN_GET2(#v_SYSOPID#, #v_COMPANYID#, #v_USERINFO_LANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
