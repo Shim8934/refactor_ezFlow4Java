@@ -513,17 +513,6 @@
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
 		    
-		    //무적의 자바 인코더
-		    function javaURLEncode(str) {
-		    	  return encodeURI(str)
-		    	    .replace(/%20/g, "+")
-		    	    .replace(/!/g, "%21")
-		    	    .replace(/'/g, "%27")
-		    	    .replace(/\(/g, "%28")
-		    	    .replace(/\)/g, "%29")
-		    	    .replace(/~/g, "%7E");
-		    	}
-		    
 		    function attach_SelectAll() {
 		        var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 		        for (var i = 0; i < checks.length; i++)

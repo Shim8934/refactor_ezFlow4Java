@@ -2493,6 +2493,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
+		logger.debug("multiDate="+commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
 		boolean readTF = false;
@@ -2510,8 +2512,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					} else {
 						strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
 					}
+					logger.debug("userPrimary="+userInfo.getPrimary());
+					logger.debug("clubName="+list.get(i).getC_ClubName());
+					logger.debug("clubName2="+list.get(i).getC_ClubName2());
 					strData.append("<strong>");
-					if (userInfo.getLang().equals("1")) {
+					if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()) == null || commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
 						strData.append(list.get(i).getC_ClubName());
 					} else {
 						strData.append(list.get(i).getC_ClubName2());
@@ -2548,7 +2553,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
                     }
                     
                     strData.append("<strong>");
-					if (userInfo.getLang().equals("1")) {
+					if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()) == null || commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
 						strData.append(list.get(i).getC_ClubName());
 					} else {
 						strData.append(list.get(i).getC_ClubName2());

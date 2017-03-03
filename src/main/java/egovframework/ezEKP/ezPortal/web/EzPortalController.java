@@ -1060,7 +1060,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		mailAddress = userInfo.getEmail();
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			displayName = userInfo.getDisplayName1();
 			department = userInfo.getDeptName1();
 			title = userInfo.getTitle1();

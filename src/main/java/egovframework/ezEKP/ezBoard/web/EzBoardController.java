@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -5099,11 +5100,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			if (photoViewList.get(k).getImageName().split("/").length > 1) {
 				fileName += photoViewList.get(k).getImageName().split("/")[3] + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[7]).replace("s_", "") +
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
                         "&attID=" + photoViewList.get(k).getImageName().split("/")[3] + ";";
 			} else {
 				fileName += photoViewList.get(k).getImageName() + ";";
-				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + filePath + "&fileName=" + (g_ImageUrl.split("/")[7]).replace("s_", "") +
+				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
                         "&attID=" + photoViewList.get(k).getImageName() + ";";
 			}
 		}
