@@ -18,7 +18,7 @@
 	        var xmlhttp4 = null;
 	        var xmlhttp5 = null;
 	        var str = "<c:out value = '${strXML}' />";
-	        var strlang = "<c:out value = '${userInfo.lang}' />";
+	        var strlang = "<c:out value = '${strLang}' />";
 	        var totalPage = "<c:out value = '${totalPage}' />";
 	        var temptotalPage = totalPage;
 	        var CurPage = "1";

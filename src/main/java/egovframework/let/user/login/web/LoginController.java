@@ -198,22 +198,27 @@ public class LoginController {
 				
 				returnValue = commonUtil.getTwoLetterLangFromLangNum(lang);
 				
+				// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)				
 				if (returnValue == null || returnValue.equals("")) {
-					// userLocalInfo 테이블에 정보가 없을 때 (첫 로그인)
+			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+			        logger.debug("primaryLang=" + primaryLang);					
+					
+			        // 당분간 시스템 기본언어가 일본어일 때는 사용자 초기 사용 언어를 무조건 일본어로 설정한다. TODO: 추후변경
+			        if (primaryLang.equals("3")) {
+			        	acceptLanguage = "ja";
+			        }
+			        
 				    if (acceptLanguage != null) {
 				        returnValue = acceptLanguage.substring(0, 2);
 				    // 이유는 정확히 알 수 없지만 로그를 확인한 결과 윗 라인에서 acceptLanguage가 null인 경우가 발생하여 추가함.
-				    } else {
-				        String primary = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
-				        logger.debug("primaryLang=" + primary);
-				        
-				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primary);
+				    } else {				        
+				        returnValue = commonUtil.getTwoLetterLangFromLangNum(primaryLang);
 				    }
 					
 				    lang = commonUtil.getLangNumFromTwoLetterLang(returnValue);
 				    
-				    if (lang.equals("")) {
-						//브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+				    // 브라우저 언어가 한국어,영어,일본어,중국어가 아닐 때 config의 primary 언어를 가져옴.
+				    if (lang.equals("")) {						
 						lang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 					}
 					

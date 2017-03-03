@@ -379,7 +379,7 @@
             function ismaxlength(obj) {
                 var mlength = 200;
                 if (obj.value.length > mlength) {
-                    alert("<spring:message code='ezCommunity.lhj02' />");
+                    alert("<spring:message code='ezCommunity.t614' />");
                     obj.value = obj.value.substring(0, mlength);
                 }
             }

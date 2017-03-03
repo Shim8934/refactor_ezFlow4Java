@@ -45,7 +45,7 @@
 					
 					if (answerType == '5') {
 						tableXml += "<tr>";
-						tableXml += "<th title=\"" + SelectSingleNodeValue(nodes[i], 'QST') + "\">";
+						tableXml += "<th>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'QST');
 						tableXml += "</th>";
 						tableXml += "</tr>";

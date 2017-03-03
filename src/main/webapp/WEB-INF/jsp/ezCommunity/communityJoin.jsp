@@ -12,8 +12,7 @@
 		
 		<script type="text/javascript">
 			window.resizeTo(410, 520);
-	        
-			<!--
+			
 			function birthYear_onfocus() {
 				join.birthYear.value = "";
 			}
@@ -249,8 +248,6 @@
 			function join_cancel() {
 				window.location.href="/ezCommunity/joinCancel.do?code=<c:out value = '${code}' />";
 			}
-	
-			//-->
 		</script>
 	</head>
 	<body class="popup" onLoad="return window_onload()">
@@ -284,11 +281,11 @@
 		        		
 		        		<input type="checkbox" name="openBirth" id="openbirth" value="1" onclick="return openbirth_onchange()" tabindex="6">
 		        		<spring:message code = 'ezCommunity.t519' />
-		        		<input type="text" name="birthYear" id="birthYear" value="YYYY" size="4" maxlength="4" onFocus="return birthYear_onfocus()" onChange="return birthYear_onchange()" tabindex="7">
+		        		<input type="text" name="birthYear" id="birthYear" value="YYYY" size="5" maxlength="4" onFocus="return birthYear_onfocus()" onChange="return birthYear_onchange()" tabindex="7">
 		        		<spring:message code = 'ezCommunity.t1073' />
-		        		<input type="text" name="birthMonth" id="birthMonth" value="MM" size="2" maxlength="2"  onFocus="return birthMonth_onfocus()" onChange="return birthMonth_onchange()" tabindex="8">
+		        		<input type="text" name="birthMonth" id="birthMonth" value="MM" size="3" maxlength="2"  onFocus="return birthMonth_onfocus()" onChange="return birthMonth_onchange()" tabindex="8">
 		        		<spring:message code = 'ezCommunity.t806' />
-				        <input type="text" name="birthDay" id="birthDay" value="DD" size="2" maxlength="2" onFocus="return birthDay_onfocus()" onChange="return birthDay_onchange()" tabindex="9">
+				        <input type="text" name="birthDay" id="birthDay" value="DD" size="3" maxlength="2" onFocus="return birthDay_onfocus()" onChange="return birthDay_onchange()" tabindex="9">
 				        <spring:message code = 'ezCommunity.t1074' /><br>
 				        
 				        <c:choose>
@@ -324,7 +321,7 @@
 		      		<th><spring:message code = 'ezCommunity.t527' /></th>
 		    	</tr>
 	    		<tr>
-		      		<td><textarea name="cIntro" id="c_intro" style="width: 98%;height:110px" tabindex="10"></textarea></td>
+		      		<td style="padding: 0px;"><textarea name="cIntro" id="c_intro" style="width:99.5%; height:110px; padding: 0px; outline: none; border: 0; overflow:hidden; resize : none;" tabindex="10"></textarea></td>
 		    	</tr>
 		  	</table>
 		  	<!--커뮤니티 배너부분 -->

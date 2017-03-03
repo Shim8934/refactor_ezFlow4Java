@@ -371,7 +371,7 @@ function event_ItemPreviewRead_photo() {
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             setNodeText(document.getElementById("PreH_date"), WriteDate);
-            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + encodeURIComponent(ContentLocation);
+            var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             if (location.href.toLowerCase().indexOf('temp') > -1)
                 document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
             else
@@ -837,6 +837,8 @@ function Window_resize_photo() {
                 }
             }
         }
+        
+        MailOptionHidden();
     } catch (e) { }
 }
 var lCount;
@@ -880,4 +882,15 @@ function leftCountRf() {
             break;
         }
     }
+}
+
+//무적의 자바 인코더
+function javaURLEncode(str) {
+	  return encodeURI(str)
+	    .replace(/%20/g, "+")
+	    .replace(/!/g, "%21")
+	    .replace(/'/g, "%27")
+	    .replace(/\(/g, "%28")
+	    .replace(/\)/g, "%29")
+	    .replace(/~/g, "%7E");
 }

@@ -1203,6 +1203,10 @@
 	       WHERE
 	       		tenant_id = #tenantID#
 		]]>
+			<isEqual property="type" compareValue="USE">
+		       AND
+		       		isuse = 1
+			</isEqual>	  
 			<isNotEmpty prepend="AND" property="backgroundID"> backgroundid = #backgroundID#</isNotEmpty>
 		ORDER BY 
 				sn

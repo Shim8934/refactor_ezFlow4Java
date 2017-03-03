@@ -171,7 +171,7 @@
 			        }
 			    }
 
-			    if (pMode == "new") {
+			    if (pMode == "new" || pMode == "new1") {
 			        btn_PostDate_Clear();
 			    } else {
 			        if (pReservedItem != "true") {
@@ -619,7 +619,7 @@
 	            	createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ATTACHMENTS", MakeXMLString(AttachFileList()));
 		        }
 
-		        if (pMode == "new" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
+		        if (pMode == "new" || pMode == "new1" || pMode == "boardContent" || pMode == "boardAttach" || pUrl != "" || orgMode == "temp") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "UPPERITEMIDTREE", newID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "TOPWRITERID", SSUserID);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "PARENTWRITEDATE", "");
@@ -686,8 +686,11 @@
 		        setTimeout(JSleep, 1000);
 
 		        var strBody = message.GetEditorContent();
+		        
+				strBody = strBody.replace(/&quot;/gi, "\'");
+      
 		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody).replace("&amp;", "&") + "</BODY>" + "</HTML>");
+		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>");
 		        }
 		        else {
 		            if (pDocID == "")
@@ -705,7 +708,7 @@
 		        else
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCPASSWORD", "");
 
-		        if (pMode != "new" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
+		        if (pMode != "new" && pMode != "new1" && pMode != "reply" && pMode != "temp" && pMode != "boardContent" && pMode != "boardContent" && pReservedItem == false) {
 		            if (document.getElementById("readCount") != undefined && document.getElementById("readCount").checked)
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "READCOUNTFLAG", "Y");
 		            else
@@ -1645,7 +1648,8 @@
 	                span.setAttribute("imgwidth", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "WIDTH")[i]));
 	                span.setAttribute("imgheight", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "HEIGHT")[i]));
 	                span.setAttribute("filemane", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]));
-	
+	                span.style.display = "inline-block";
+	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
 	                input.style.marginTop = "10px";
@@ -1662,7 +1666,7 @@
 	                }
 	                
 	                img.height = 30;
-	                img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
+	                img.src = document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
 	                img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	                img.style.cursor = "pointer";
 	
@@ -1731,7 +1735,7 @@
 		                Td.setAttribute("free", "");
 		
 		                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                    Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
+		                    Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" + document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";
 		                    Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
 		                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
 		                }
@@ -1763,7 +1767,54 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 330) / 2;
 		        var pLeft = (pwidth - 610) / 2;
-		        window.open("/admin/ezBoard/selectBackGroundImage.do?type=NEW", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=385,width=610,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/imageUpload.do?", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=355,width=610,top=" + pTop + ",left=" + pLeft, "");
+		    }
+		    
+		    function BackImageUp_After(rtn) {
+		        var xmlhttp = null;
+		        xmlhttp = createXMLHttpRequest();
+
+		        var fd = new FormData();
+	            fd.append("FILEPATH", rtn[0]);
+	            fd.append("WIDTH", rtn[1]);
+	            fd.append("HEIGHT", rtn[2]);
+	            
+		        xmlhttp.open("POST", "/ezBoard/uploadBackImage.do", false);
+		        xmlhttp.send(fd);
+
+		        var imgSrc = xmlhttp.responseText;
+		        var imgWidth = rtn[1];
+		        var imgHeight = rtn[2];
+
+		        var Table = document.createElement("TABLE");
+		        var Tr = document.createElement("TR");
+		        var Td = document.createElement("TD");
+		        Tr.appendChild(Td);
+		        Table.appendChild(Tr);
+		        Td.innerHTML = message.GetEditorContent();
+		        var temp = Td.getElementsByTagName("TD");
+
+		        Td.id = "imagediv";
+		        Td.style.verticalAlign = "top";
+		        Td.style.fontSize = "10pt";
+		        Td.style.lineHeight = "20px";
+		        Td.style.wordBreak = "break-all";
+
+		        Td.style.backgroundImage = "URL(" + document.location.protocol + "//" + document.location.hostname + imgSrc + ")";
+		        Table.style.width = imgWidth + "px";
+		        Table.style.height = imgHeight + "px";
+
+		        if (temp.length > 0) {
+		            for (var j = 0; j < temp.length; j++) {
+		                if (temp[j].id == "imagediv") {
+		                    Td.innerHTML = temp[j].innerHTML;
+		                    message.SetEditorContent(Table.outerHTML);
+		                    break;
+		                }
+		            }
+		        }
+
+		        message.SetEditorContent(Table.outerHTML);
 		    }
 		
 	        //추가항목 관련 Function 추가

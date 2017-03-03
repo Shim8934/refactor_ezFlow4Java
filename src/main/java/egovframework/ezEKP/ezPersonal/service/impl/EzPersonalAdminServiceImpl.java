@@ -508,11 +508,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			result.append("</ROWS>");
 			result.append("</LISTVIEWDATA>");
 		} else {
-			if (list.size() == 1) {
-				list.get(0).setImagePath(list.get(0).getImagePath());
-				result.append("<DATA>");
-				result.append(commonUtil.getQueryResult(list.get(0)));
-				result.append("</DATA>");
+			for (PersonalSliderImageVO vo : list) {
+				if (vo.getSliderID().equals(sliderID)) {
+					vo.setImagePath(vo.getImagePath());
+					result.append("<DATA>");
+					result.append(commonUtil.getQueryResult(vo));
+					result.append("</DATA>");
+				}
 			}
 		}
 		

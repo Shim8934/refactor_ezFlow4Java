@@ -793,6 +793,10 @@ function InitlvAprLine() {
     if (oArrRows.length != 0) {
         var tr = oArrRows[0];
 
+        if (pListTypeValue == "1") {
+            document.getElementById("tbtnforcecallback").style.display = "none";
+        }
+
         if (pListTypeValue == "2") {
             var DocID = GetAttribute(tr, "DATA1");
             cancelYN(DocID);

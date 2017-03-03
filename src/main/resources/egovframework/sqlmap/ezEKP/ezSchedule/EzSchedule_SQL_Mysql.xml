@@ -662,7 +662,7 @@
 	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="String"> 
 		<![CDATA[
 			select 
-				startDate
+				date_format(date_add(startDate, interval +#v_OFFSETMIN# minute), '%Y-%m-%d') as startDate
 			from 
 				tbl_schedulerepetition_del
 			where

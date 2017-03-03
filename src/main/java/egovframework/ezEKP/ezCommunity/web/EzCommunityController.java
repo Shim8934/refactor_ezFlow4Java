@@ -158,7 +158,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("checkSysop",checkSysop);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("code", code);
-		model.addAttribute("lang",userInfo.getLang());
+		model.addAttribute("lang",commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		
 		logger.debug("communityLeftCommunity ended.");
@@ -464,6 +464,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("code", code);
 		model.addAttribute("copType", copType);
 		model.addAttribute("userLevel", userLevel);
@@ -3458,6 +3459,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("useIE11Brower", useIE11Browser);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
 		logger.debug("mainPage ended.");
 		

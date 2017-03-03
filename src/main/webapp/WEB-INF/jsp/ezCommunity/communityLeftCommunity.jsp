@@ -105,7 +105,7 @@
 		            var memberCnt1 = clubVO.c_MemberCnt;
 		            var code2 = clubVO.c_ClubNo.trim();
 		            var copName =clubVO.c_ClubName;
-		            if (lang != "1")
+		            if (lang == "2")
 		                copName = clubVO.c_ClubName2;
 		            var copLogo = clubVO.c_Logo_Thumbnail;
 		            

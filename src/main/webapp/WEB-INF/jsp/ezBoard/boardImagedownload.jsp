@@ -54,6 +54,15 @@
 	        {
 	            SetAttribute(obj, "checked", "true");
 	        }
+	        
+	        function img_onClick(obj)
+	        {
+	        	if (obj.parentNode.children[0].checked) {
+	        		obj.parentNode.children[0].checked = false;
+	        	} else {
+	        		obj.parentNode.children[0].checked = true;
+	        	}
+	        }
 	    </script>
 	</head>
 	<body  class="popup">
@@ -82,9 +91,9 @@
 	                	<c:set var="encodeFileHref" value="${fn:split(encodeFileHref, ';')}"/>
 	                	<c:set var="resultCount" value="${fn:length(result)}"/>
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
-		                    <span>
-		                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" />
-		                        <img src='${result[vs.count-1]}' width='70px' height ='70px' title='${content[vs.count-1]}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer;' >
+		                    <span style="display:inline-block; padding:3px">
+		                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" style="position:fixed"/>
+		                        <img src='${result[vs.count-1]}' width='85px' height ='85px' title='${content[vs.count-1]}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer;' onclick="img_onClick(this)">
 		                    </span>
 	                	</c:forEach>
 	                </div>

@@ -558,6 +558,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang", lang);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
+		model.addAttribute("userLang", userInfo.getLang());
 		
 		logger.debug("userInfo ended");
 		
@@ -1211,10 +1212,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", tenantID);
 		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", tenantID);
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -1250,7 +1250,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("tenantID=" + tenantID);
 	    
 		String companyID = request.getParameter("companyID");
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+		String strLang = userInfo.getPrimary();
 				
 		List<OrganUserVO> list = ezOrganAdminService.getAddJobList(companyID, strLang, tenantID);
 		
@@ -1304,7 +1304,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         logger.debug("tenantID=" + tenantID);
 	    
 		String cn = request.getParameter("cn");
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+		String strLang = userInfo.getPrimary();
 		
 		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(cn, strLang, tenantID);
 		
@@ -1511,13 +1511,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", user.getTenantId());
 		String use_editor = ezCommonService.getTenantConfig("EDITOR", user.getTenantId());
 		String use_ie11Browser = ezCommonService.getTenantConfig("IE11EDITOR", user.getTenantId());
 		
         String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(strLang, user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
@@ -1556,7 +1555,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		String companyID = request.getParameter("companyID");
 		String type = request.getParameter("type");
-		String strLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+		String strLang = userInfo.getPrimary();
 		int pageNum = Integer.parseInt(request.getParameter("pageNum"));
 		int pageSize = Integer.parseInt(request.getParameter("pageSize"));		
 		int startRow = (pageSize * (pageNum - 1)) + 1;
