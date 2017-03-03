@@ -1715,6 +1715,8 @@ public class EzAddressController{
 		String folderType = request.getParameter("foldertype");
 		String ownerId = request.getParameter("ownerid");
 		
+        logger.debug("folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId);
+        
 		String fileName = "excelExport.csv";
 		
 		response.setContentType("application/x-msexcel; charset=utf-8");
@@ -1727,8 +1729,9 @@ public class EzAddressController{
 		
 		try {
 			String charset = "euc-kr";
+			
 			if (userInfo.getLang().equals("3")) {
-				charset = "euc-jp";
+				charset = "shift-jis";
 			}
 			
 			writer = new OutputStreamWriter(response.getOutputStream(), charset);
@@ -1736,9 +1739,9 @@ public class EzAddressController{
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headArray = new String[87];
-	        headArray[0] = egovMessageSource.getMessage("ezAddress.t123", locale); headArray[1] = egovMessageSource.getMessage("ezAddress.t124", locale);
+	        headArray[0] = egovMessageSource.getMessage("ezAddress.t123", locale); headArray[1] = egovMessageSource.getMessage("ezAddress.x0001", locale);
 	        headArray[2] = egovMessageSource.getMessage("ezAddress.t125", locale); headArray[3] = egovMessageSource.getMessage("ezAddress.t126", locale);
-	        headArray[4] = egovMessageSource.getMessage("ezAddress.t127", locale); headArray[5] = egovMessageSource.getMessage("ezAddress.t51", locale);
+	        headArray[4] = egovMessageSource.getMessage("ezAddress.t127", locale); headArray[5] = egovMessageSource.getMessage("ezAddress.x0002", locale);
 	        headArray[6] = egovMessageSource.getMessage("ezAddress.t54", locale); headArray[7] = egovMessageSource.getMessage("ezAddress.t52", locale);
 	        headArray[8] = egovMessageSource.getMessage("ezAddress.t203", locale); headArray[9] = egovMessageSource.getMessage("ezAddress.t130", locale);
 	        headArray[10] = egovMessageSource.getMessage("ezAddress.t131", locale); headArray[11] = egovMessageSource.getMessage("ezAddress.t202", locale);
