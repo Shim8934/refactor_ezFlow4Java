@@ -29,9 +29,8 @@
 			var totalPage = '<c:out value="${totalPage}" />';
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
-		    var strXML = "${strXML}";
 		    var lang = '<c:out value="${lang}" />';
-		    var xmlDoc = loadXMLString(strXML);
+		    var xmlDoc = loadXMLString('${strXML}');
 
 		    window.onload = function () {
 		        makePageSelPage();
