@@ -14,6 +14,6 @@ var strLang102 = "有没有发现部门。";
 var strLang103 = "输入您的搜索字词。";
 
 //추가
-var strLang91002 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang91003 = "데이터가 지정되지 않았습니다.";
-var strLang91004 = "트리뷰의 ID가 지정되지 않았습니다.";
+var strLang91002 = "リストのIDが指定されていません。";
+var strLang91003 = "データが指定されていません。";
+var strLang91004 = "ツリービューのIDが指定されていません。";
