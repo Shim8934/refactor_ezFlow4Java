@@ -300,6 +300,8 @@ function CalendarView(pTagetID) {
     }
 
     CalViewSource();
+    
+    Window_resize();
 }
 
 ///////////// 월보기 Calendar 생성 시작 /////////////
