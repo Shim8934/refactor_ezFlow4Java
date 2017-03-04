@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="/js/ezResource/CalendarMini_Cross.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/calendar_cross.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
 	    var pAdminFg = "${adminFg}";
@@ -45,51 +46,6 @@
 	    var pStartday = "7";
 	    var LunarUse = false;
 	    document.onselectstart = function () { return false; };
-
-	    var memorialDays = Array(
-	             new memorialDay("신정", "New Year's Day", 1, 1, 1, true),
-	             new memorialDay("", "", 12, 0, 2, true, true),
-	             new memorialDay("설날", "Lunar New Year", 1, 1, 2, true),
-	             new memorialDay("", "", 1, 2, 2, true),
-	             new memorialDay("3·1절", "Samiljeol", 3, 1, 1, true),
-	             new memorialDay("석가탄신일", "Buddha's Birthday", 4, 8, 2, true),
-	             new memorialDay("어린이날", "Children's Day", 5, 5, 1, true),
-	             new memorialDay("현충일", "Memorial Day", 6, 6, 1, true),
-	             new memorialDay("광복절", "National Liberation Day", 8, 15, 1, true),
-	             new memorialDay("", "", 8, 14, 2, true),
-	             new memorialDay("추석", "Thanksgiving Day", 8, 15, 2, true),
-	             new memorialDay("", "", 8, 16, 2, true),
-	             new memorialDay("개천절", "Foundation Day", 10, 3, 1, true),
-	             new memorialDay("성탄절", "Christmas", 12, 25, 1, true),
-	             new memorialDay("한글날", "Hangul Proclamation Day", 10, 9, 1, true)
-	            );
-
-	    var yearmemorialDays = Array(
-	     );
-
-	    function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, type) {
-	        this.name = name;
-	        this.name2 = name2;
-	        this.year = year;
-	        this.month = month;
-	        this.day = day;
-	        this.solarLunar = solarLunar;
-	        this.holiday = holiday;
-	        this.type = type;
-	        this.techneer = true;
-	    }
-
-	    function memorialDay(name, name2, month, day, solarLunar, holiday, type) {
-	        this.name = name;
-	        this.name2 = name2;
-	        this.month = month;
-	        this.day = day;
-	        this.solarLunar = solarLunar;
-	        this.holiday = holiday;
-	        this.type = type;
-	        this.techneer = true;
-	    }
-
 
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
@@ -186,9 +142,9 @@
 	    
 	    function Window_resize() {
 	        if (typeCal == "2")
-	            var w = document.documentElement.clientHeight - 280;
+	            var w = document.documentElement.clientHeight - 278;
 	        else if (typeCal == "1")
-	            var w = document.documentElement.clientHeight - 310;
+	            var w = document.documentElement.clientHeight - 308;
 
 	        var objDiv = document.getElementById('CalDiv');
 	        if (objDiv)
