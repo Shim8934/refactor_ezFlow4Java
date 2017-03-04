@@ -1302,7 +1302,7 @@
 							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
 						</tr>
                         <c:if test="${IsJMochaStandAlone != 'YES'}">      
-						<tr>
+						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td height="15"><img <spring:message code='ezOrgan.i1' />></td>
 						</tr>
 						<%--<tr>
@@ -1314,7 +1314,7 @@
 						<%--<tr>
 							<td><a class="imgbtn" id="usermenu13"><span onClick="set_subtitle()"><spring:message code='ezOrgan.t88' /></span></a></td>
 						</tr>--%>                         
-						<tr>
+						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
 							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
 						</tr>
                         </c:if>
