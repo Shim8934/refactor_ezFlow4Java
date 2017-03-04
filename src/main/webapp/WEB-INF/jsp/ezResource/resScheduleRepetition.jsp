@@ -193,7 +193,7 @@
       					<label for="mpYealy"><spring:message code="ezResource.t283"/></label>
     			</td>
   			</tr>
-  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
+  			<tr id='divRecurPatterns' style="display:none">
     			<td style="padding:10px;height:85px">
     				<input id="id0D1" type="radio" name="optDaily" checked>
     				<label for="txt_De">
@@ -206,7 +206,7 @@
 					<label for="id0D2"><spring:message code="ezResource.t287"/></label>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns' name="divRecurPatterns">
+  			<tr id='divRecurPatterns'>
     			<td  style="padding:10px;height:85px">&nbsp;<spring:message code="ezResource.t288"/>
       				<label for="txt_We">
       					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1"> <spring:message code="ezResource.t289"/>
@@ -222,7 +222,7 @@
 					</div>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
+  			<tr id='divRecurPatterns' style="display:none">
     			<td style="padding:10px;height:85px">
     				<input type="radio" name='optMonthly' id="idOM1" checked>
             		<label for="idOM1"><spring:message code="ezResource.t297"/>&nbsp;</label>
@@ -256,7 +256,7 @@
 					<spring:message code="ezResource.t309"/>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
+  			<tr id='divRecurPatterns' style="display:none">
     			<td  style="padding:10px;height:85px"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked>
             		<label for="optY1"><spring:message code="ezResource.t297"/>&nbsp;</label>
             		<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
