@@ -172,6 +172,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
 		
+		//양식목록에 특수문자처리, 양식등록/수정 양식명1,2 둘다 넣어야 저장되는지 확인필요
 		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), companyID, userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);

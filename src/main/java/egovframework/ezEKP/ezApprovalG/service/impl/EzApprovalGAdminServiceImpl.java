@@ -1292,11 +1292,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		for (ApprGTaskDeptInfoVO vo : listBody) {
 			sb.append("<ROW><CELL>");
-			sb.append("<VALUE>" + vo.getProcessDeptCode() + "</VALUE>");
-			sb.append("<DATA1>" + vo.getProcessDeptName() + "</DATA1>");
-			sb.append("<DATA2>" + vo.getProcessDeptName2() + "</DATA2>");
+			sb.append("<VALUE>" + commonUtil.cleanValue(vo.getProcessDeptCode()) + "</VALUE>");
+			sb.append("<DATA1>" + commonUtil.cleanValue(vo.getProcessDeptName()) + "</DATA1>");
+			sb.append("<DATA2>" + commonUtil.cleanValue(vo.getProcessDeptName2()) + "</DATA2>");
 			sb.append("</CELL><CELL>");
-			sb.append("<VALUE>" + (lang.equals("1") ? vo.getProcessDeptName() : vo.getProcessDeptName2()) + "</VALUE>");
+			sb.append("<VALUE>" + (lang.equals("1") ? commonUtil.cleanValue(vo.getProcessDeptName()) : commonUtil.cleanValue(vo.getProcessDeptName2())) + "</VALUE>");
 			sb.append("</CELL></ROW>");
 		}
 		sb.append("</ROWS></LISTVIEWDATA>");
