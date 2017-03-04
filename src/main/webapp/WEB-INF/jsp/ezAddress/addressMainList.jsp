@@ -145,6 +145,21 @@
 	                        subxmlHTTP.send(xmlDom);
 	                        xmlDom = subxmlHTTP.responseXML;
 	                        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
+	                        
+	                        if (emailRows.length > 0) {
+	                            var addrname = AddressObj.getAttribute("_Sname");
+	                            if (pFolderType == "P")
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|P";
+	                            else
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|D";
+
+	                            if (email == "")
+	                                email = "\"" + addrname + "\" <" + addremail + ">";
+	                            else
+	                                email += ",\"" + addrname + "\" <" + addremail + ">";
+	                        }
+	                        
+	                        /*
 	                        for (var Cnt2 = 0; Cnt2 < emailRows.length; Cnt2++) {
 	                            var name = SelectSingleNodeValue(emailRows[Cnt2], "NAME");
 	                            var useremail = SelectSingleNodeValue(emailRows[Cnt2], "EMAIL");
@@ -153,6 +168,8 @@
 	                            else
 	                                email += ",\"" + name + "\" <" + useremail + ">";
 	                        }
+	                        */
+	                        
 	                    }
 	                }
 	                if (email == "") {

@@ -67,6 +67,21 @@
 		        xmlDom = loadXMLString(xmlHTTP.responseText);
 		        var email = "";
 		        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
+		        
+                if (emailRows.length > 0) {
+                    var addrname = getNodeText(document.getElementById("TextName"));
+                    if (foldertype == "P")
+                        var addremail = addressid + "|!|P";
+                    else
+                        var addremail = addressid + "|!|D";
+
+                    if (email == "")
+                        email = "\"" + addrname + "\" <" + addremail + ">";
+                    else
+                        email += ",\"" + addrname + "\" <" + addremail + ">";
+                }
+		        
+                /*
 		        for (var Cnt = 0; Cnt < emailRows.length; Cnt++) {
 		            var name = SelectSingleNodeValue(emailRows[Cnt], "NAME");
 		            var useremail = SelectSingleNodeValue(emailRows[Cnt], "EMAIL");
@@ -75,6 +90,8 @@
 		            else
 		                email += ",\"" + name + "\" <" + useremail + ">";
 		        }
+                */
+		        
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
@@ -91,10 +108,7 @@
 		            else
 		                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
 		                    "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        }
-		
-		
-		
+		        }						
 		    }
 		</script>
 	</head>
