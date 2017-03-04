@@ -47,7 +47,7 @@
 					return;
 				}
 				
-				xmlhttp.open("POST", "/ezCommunity/moveBoard.do?orgBoardID=" + OrgBoardID + "&newParentBoardID=" + SelectedBoardID + "&newBoardGroupID=" + selectedBoardGroupID + "&code=" + code, false);
+				xmlhttp.open("POST", "/ezCommunity/moveBoard.do?orgBoardID=" + encodeURIComponent(OrgBoardID) + "&newParentBoardID=" + encodeURIComponent(SelectedBoardID) + "&newBoardGroupID=" + encodeURIComponent(selectedBoardGroupID) + "&code=" + encodeURIComponent(code), false);
 				xmlhttp.send();
 				
 				if(xmlhttp.responseText.indexOf("OK") > -1) {

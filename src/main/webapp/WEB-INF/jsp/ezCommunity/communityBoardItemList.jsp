@@ -170,7 +170,7 @@
     		    var pTop = (pheight - 720) / 2;
     		    var pLeft = (pwidth - 765) / 2; */
     		    
-   		    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardName) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 800);
+   		    	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 800);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -542,7 +542,7 @@
     			var left = (width - wWeight) / 2;
     			var top = (heigth - wHeight) / 2;
     			
-    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&code=" + code, "", "height=656,width=340, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+    			window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(code), "", "height=656,width=340, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
     		}
     		
     		function SetRead_onclick() {
@@ -610,8 +610,8 @@
     				return;
     			}
     				
-    			var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			window.location.href = "/ezCommunity/boardReservedItemList.do?orgBoardParameters=" + encodeURIComponent(OrgBoardParameters);
+    			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
+    			window.location.href = "/ezCommunity/boardReservedItemList.do?orgBoardParameters=" + OrgBoardParameters;
     		}
 
     		document.onselectstart = function () {
@@ -625,8 +625,8 @@
     				return;
     			}
     					
-    			var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=" + pSortBy + "&code=" + code;
-    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + code;
+    			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
+    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + OrgBoardParameters + "&code=" + encodeURIComponent(code);
     		}
 
     		function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
@@ -689,33 +689,6 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-
-		<%-- <table border="0" cellspacing="0" cellpadding="0" class="micon">
-			<tr>
-				<td><span onClick="SetRead_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t915' /></span></td>
-
-				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
-					<td><span onClick="NewItem_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t910' /></span></td>
-					<td style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></td>
-					<td><span onClick="DeleteItem_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t208' /></span></td>
-				</c:if>
-				
-				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' && gubun != '2' }">
-					<td><span onClick="CopyItem_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t911' /></span></td>
-				</c:if>
-				
-				<li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li>
-				<td><span onClick="refresh_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t912' /></span></td>
-				
-				
-				<c:if test="${pBoardID != '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' && boardInfo.read_FG == 'true'}">
-					<td><span onClick="search_onclick()" style="cursor:pointer" class="ic"><spring:message code='ezCommunity.t31' /></span></td>
-					<td><span style="cursor:pointer;display:none" onClick="AddToMyBoards()" class="ic"><spring:message code='ezCommunity.t916' /></span></td>
-				</c:if>
-				
-				<td><span style="cursor:pointer" onClick="ReservationItem_onclick()" class="ic"><spring:message code='ezCommunity.t913' /></span></td>
-			</tr>
-		</table> --%>
 		
 		<table  id="tblList" class="cmhomelist" style="width:100%">
 			<form name="frmOutbox" action="/ezCommunity/boardItemList.do" method="post">
