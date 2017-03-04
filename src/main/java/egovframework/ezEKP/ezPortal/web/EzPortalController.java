@@ -1343,7 +1343,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String wpNewBoardSTD(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 			
-		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezPortal/portalWpNewBoardSTD";
 	}
@@ -1520,7 +1520,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
 	
 		model.addAttribute("curMon", curMon);	
-		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezPortal/portalWpNewBirth";
 	}

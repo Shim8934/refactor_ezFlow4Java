@@ -287,7 +287,7 @@
 	        }
 	        
 	        function btn_ok() {
-	        	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) || specialChk(document.getElementById("txtURL").value) || specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
+	        	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
