@@ -719,12 +719,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 		usePortal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		
 		model.addAttribute("usePortal", usePortal);
 		model.addAttribute("ezInfoSSL", ezInfoSSL);
 		model.addAttribute("funCode", funCode);
 		model.addAttribute("SSL", SSL);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		model.addAttribute("use_approvalG", use_approvalG);
 		
 		return "/ezPersonal/persLeftEnvirionment";
 	}
@@ -920,9 +922,12 @@ public class EzPersonalController extends EgovFileMngUtil {
         String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
         logger.debug("primaryLang=" + primaryLang);					
 		
+        String usePrimaryLangOnly = config.getProperty("config.UsePrimaryLangOnly");
+        
 		model.addAttribute("strTimeZone", userInfo.getOffset());
 		model.addAttribute("strLang", userInfo.getLang());
 		model.addAttribute("primaryLang", primaryLang);
+		model.addAttribute("usePrimaryLangOnly", usePrimaryLangOnly);
 		
 		return "/ezPersonal/persTimeZone";
 	}

@@ -3211,8 +3211,7 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 
         for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace("+", "%2b");
-            pFileName[i] = pFileName[i].replace(";", "%3b");
+            pFileName[i] = pFileName[i].replace(";", "%3b").replace("+", "%2b");
         }
 
         String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
@@ -3246,7 +3245,7 @@ public class EzBoardController extends EgovFileMngUtil{
                         	fTemp.mkdirs();
                         }
                         writeUploadedFile(multiFile.get(i), pUploadSN[i] + "_" + pFileName[i], pAttachPath);
-                        fileLocation[i] = pAttachPath + pUploadSN[i] + "_" + pFileName[i];
+                        fileLocation[i] = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + pUploadSN[i] + "_" + pFileName[i];
                         resultUpload[i] = "true";
                     }
                 }
@@ -5370,9 +5369,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		String retXML = "";
 		
 		if (!mode.equals("temp")) {
-			retXML = ezBoardService.getItemXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
+			retXML = ezBoardService.getItemXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		} else {
-			retXML = ezBoardService.getItemTempXML(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getTenantId());
+			retXML = ezBoardService.getItemTempXML(boardID, itemID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
 		}
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);

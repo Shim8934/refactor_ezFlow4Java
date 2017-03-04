@@ -159,9 +159,9 @@
 	
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 				                }
 				            }
 			            }
@@ -934,14 +934,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=772,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=640,width=772,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=690,width=772,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1335,7 +1335,8 @@
 		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
 		                    }
-		                    message.SetEditorContent("<p></p>");
+		                    
+		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1545,7 +1546,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p></p>");
+		                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1606,7 +1607,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p></p>");
+	                    message.SetEditorContent("<p style='font-size:13px;font-family:Gulim'></p>");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {

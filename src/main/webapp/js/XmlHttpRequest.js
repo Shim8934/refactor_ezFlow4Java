@@ -1,4 +1,4 @@
-﻿﻿//XMLHttpRequest객체를 생성합니다.
+﻿/* XMLHttpRequest객체를 생성합니다. */ 
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -898,17 +898,21 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 }
 
 function GetOpenWindowfeature(popUpW, popUpH) {
-    var heigth = window.screen.availHeight;
-    var width = window.screen.availWidth;
-    var left = 0;
-    var top = 0;
-    var pleftpos;
-    pleftpos = parseInt(width) - popUpW;
-    heigth = parseInt(heigth) - popUpH;
-    width = parseInt(width) - pleftpos;
-    left = pleftpos / 2;
-    top = heigth / 2;
-    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+//    var heigth = window.screen.availHeight;
+//    var width = window.screen.availWidth;
+//    var left = 0;
+//    var top = 0;
+//    var pleftpos;
+//    pleftpos = parseInt(width) - popUpW;
+//    heigth = parseInt(heigth) - popUpH;
+//    width = parseInt(width) - pleftpos;
+//    left = pleftpos / 2;
+//    top = heigth / 2;
+    var xPos = (document.body.clientWidth / 2) - (popUpW / 2); 
+    xPos += window.screenLeft;  //듀얼 모니터일때....
+    var yPos = (screen.availHeight / 2) - (popUpH / 2);
+
+    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + xPos + ",top=" + yPos + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
     return feature;
 }
 
@@ -1732,13 +1736,16 @@ function compareExtension(check, extension) {
     return check;
 }
 
+
 //무적의 자바 인코더
 function javaURLEncode(str) {
-	  return encodeURI(str)
-	    .replace(/%20/g, "+")
+	  return encodeURIComponent(str)
+	    .replace(/\+/g, "%2b")
+	    .replace(/\;/g, "%3b")
 	    .replace(/!/g, "%21")
 	    .replace(/'/g, "%27")
 	    .replace(/\(/g, "%28")
 	    .replace(/\)/g, "%29")
 	    .replace(/~/g, "%7E");
 }
+

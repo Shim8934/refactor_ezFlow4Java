@@ -5,11 +5,13 @@
 
     var SelDocList = new ListView();
     SelDocList.LoadFromID("lvTDocLV");
-
-    if (SelDocList.GetDataRows().length == 1){
-        if (SelDocList.GetDataRows()[0].id == "lvTDocLV_TR_noItems") {
-            SelDocList.DeleteRow("lvTDocLV_TR_noItems");
-        }
+    
+    if (SelDocList.GetDataRows()[0].textContent != strLang944) {
+	    if (SelDocList.GetDataRows().length == 1){
+	        if (SelDocList.GetDataRows()[0].id == "lvTDocLV_TR_noItems") {
+	            SelDocList.DeleteRow("lvTDocLV_TR_noItems");
+	        }
+	    }
     }
 
     var countsel = SelDocList.GetDataRows();
@@ -17,7 +19,7 @@
     var DocList = new ListView();
     DocList.LoadFromID("DocList");
     pCulSel = DocList.GetSelectedRows();
-
+    
     if (pCulSel.length <= 0) {
         OpenAlertUI(strLang257);
     }

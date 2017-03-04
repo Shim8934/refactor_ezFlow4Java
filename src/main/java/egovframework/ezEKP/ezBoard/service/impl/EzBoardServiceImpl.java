@@ -1974,7 +1974,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         Collections.sort(brdBoardTreeList, new Comparator<BoardTreeVO>() {
 			@Override
 			public int compare(BoardTreeVO o1, BoardTreeVO o2) {
-				return o1.getTreeViewOrder().compareTo(o2.getTreeViewOrder());
+				return Integer.parseInt(o1.getTreeViewOrder()) > Integer.parseInt(o2.getTreeViewOrder()) ? 1 : 0;
 			}
 		});
         
@@ -2449,6 +2449,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         		if (strType.equals("BOARD")) {
         			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath = strAttachments.split(";")[i];
+        				filePath = filePath.replace("%3b", ";").replace("%2b", "+");
         			} else {
         				filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
         			}
@@ -2457,6 +2458,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			
         			if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
         				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        				
         				File fileinfo = new File(realPath + filePath2);
         				
         				if (!fileinfo.exists()) {
@@ -2464,8 +2467,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         				}
         			} else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
         				filePath2 = strAttachments.split(";")[i];
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			} else {
         				filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
+        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			}
         			file = null;
         		} else {
@@ -2473,6 +2478,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			fileSize = file.length();
         			
         			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
+        			filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
         			
         			File fileinfo = new File(realPath + filePath2);
         			
@@ -2483,15 +2489,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         			file = null;
         		}
         		
-        		//파일명에 변수가 많아서 그냥 고정값으로 해야할듯
-        		fileName = strAttachments.split(";")[i].substring(54);
-//        		fileName = strAttachments.split(";")[i].substring(strAttachments.split(";")[i].lastIndexOf("_") + 1);
+        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
         		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         	}
         	
         	rtnValue = true;
 		} catch (Exception e) {
+			logger.debug(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = false;
 		}

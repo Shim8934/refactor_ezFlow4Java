@@ -135,7 +135,7 @@
 		        for (var i = 0; i < filecnt - 1; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i + 1].getAttribute("DATA2");
 		            if (filepath.indexOf(pBoardID) != -1) {
-		                strRet += filepath + ";";
+		                strRet += filepath.replace(/;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 		            } else {
 		                strRet += "tempUploadFile/" + filepath.replace(/;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
 		            }

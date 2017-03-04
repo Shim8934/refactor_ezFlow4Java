@@ -4657,25 +4657,23 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String saveBoardProperty(LoginVO userInfo, String xmlData) throws Exception {
+	public String saveBoardProperty(LoginVO userInfo, CommunityBoardInfoVO vo) throws Exception {
 		logger.debug("saveBoardProperty started.");
 		
-		Document xmlDom = commonUtil.convertStringToDocument(xmlData);
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_pBoardName", xmlDom.getElementsByTagName("BOARDNAME").item(0).getTextContent());
-		map.put("v_pBoardName2", xmlDom.getElementsByTagName("BOARDNAME2").item(0).getTextContent());
-		map.put("v_pBoardID", xmlDom.getElementsByTagName("BOARDID").item(0).getTextContent());
-		map.put("v_pAttachMax", xmlDom.getElementsByTagName("ATTACHMAX").item(0).getTextContent());
-		map.put("v_pDescription", xmlDom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
-		map.put("v_pExpires", xmlDom.getElementsByTagName("EXPIRES").item(0).getTextContent());
-		map.put("v_pURL", xmlDom.getElementsByTagName("URL").item(0).getTextContent());
-		map.put("v_pGubun", xmlDom.getElementsByTagName("GUBUN").item(0).getTextContent());
-		map.put("v_pReplyNotify", xmlDom.getElementsByTagName("REPLYNOTIFY").item(0).getTextContent());
-		map.put("v_pDeleteAfter", xmlDom.getElementsByTagName("DELETEAFTER").item(0).getTextContent());
-		map.put("v_pBoardColor", xmlDom.getElementsByTagName("BOARDCOLOR").item(0).getTextContent());
-		map.put("v_pVersionUse", xmlDom.getElementsByTagName("VERSIONUSE").item(0).getTextContent());
-		map.put("v_pCheckUse", xmlDom.getElementsByTagName("CHECKUSE").item(0).getTextContent());
+		map.put("v_pBoardName", URLDecoder.decode(vo.getBoardName(), "utf-8"));
+		map.put("v_pBoardName2", URLDecoder.decode(vo.getBoardName2(), "utf-8"));
+		map.put("v_pBoardID", URLDecoder.decode(vo.getBoardID(), "utf-8"));
+		map.put("v_pAttachMax", vo.getAttachSizeLimit());
+		map.put("v_pDescription", URLDecoder.decode(vo.getBoardDescription(), "utf-8"));
+		map.put("v_pExpires", vo.getItemExpires());
+		map.put("v_pURL", vo.getUrl());
+		map.put("v_pGubun", vo.getGubun());
+		map.put("v_pReplyNotify", vo.getReplyNotify());
+		map.put("v_pDeleteAfter", vo.getDeleteAfter());
+		map.put("v_pBoardColor", URLDecoder.decode(vo.getBoardColor(), "utf-8"));
+		map.put("v_pVersionUse", vo.getVersionUse());
+		map.put("v_pCheckUse", vo.getCheckUse());
 		map.put("tenantID", userInfo.getTenantId());
 		
 		try {

@@ -537,7 +537,7 @@ public class EzOrganServiceImpl implements EzOrganService {
                             propvalue = "";
                         }
                         
-                        nodeInfo.append("<DATA" + (j + 3) + ">" + propvalue + "</DATA" + (j + 3) + ">");
+                        nodeInfo.append("<DATA" + (j + 3) + ">" + commonUtil.cleanValue(propvalue) + "</DATA" + (j + 3) + ">");
                     }
                 }
             }

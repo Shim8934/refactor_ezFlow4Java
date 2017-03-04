@@ -975,7 +975,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <td class="pad1" style="height:300px">
+	            <td class="pad1" style="height:400px">
 	            
 <%-- 	            	<c:choose> --%>
 <%-- 	            		<c:when test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
