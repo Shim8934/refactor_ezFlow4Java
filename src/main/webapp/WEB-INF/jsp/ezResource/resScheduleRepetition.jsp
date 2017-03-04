@@ -119,43 +119,39 @@
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
 	    	}
 	    	
-	    	if (lang == "1") {
-	    		function datetimepicker() {
-	        		$.datepicker.regional['ko'] = {
-	            		closeText: '닫기',
-	            		prevText: '이전달',
-	            		nextText: '다음달',
-	            		currentText: '오늘',
-	            		monthNames: ['1<spring:message code="main.t00049"/>', '2<spring:message code="main.t00049"/>', '3<spring:message code="main.t00049"/>', '4<spring:message code="main.t00049"/>', '5<spring:message code="main.t00049"/>', '6<spring:message code="main.t00049"/>',
-	            		'7<spring:message code="main.t00049"/>', '8<spring:message code="main.t00049"/>', '9<spring:message code="main.t00049"/>', '10<spring:message code="main.t00049"/>', '11<spring:message code="main.t00049"/>', '12<spring:message code="main.t00049"/>'],
-	            		monthNamesShort: ['1<spring:message code="main.t00049"/>', '2<spring:message code="main.t00049"/>', '3<spring:message code="main.t00049"/>', '4<spring:message code="main.t00049"/>', '5<spring:message code="main.t00049"/>', '6<spring:message code="main.t00049"/>',
-	            		'7<spring:message code="main.t00049"/>', '8<spring:message code="main.t00049"/>', '9<spring:message code="main.t00049"/>', '10<spring:message code="main.t00049"/>', '11<spring:message code="main.t00049"/>', '12<spring:message code="main.t00049"/>'],
-	            		dayNames: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
-	            		dayNamesShort: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
-	            		dayNamesMin: ['일', '<spring:message code="main.t00049"/>', '화', '수', '목', '금', '토'],
-	            		weekHeader: 'Wk',
-	            		dateFormat: 'yy-mm-dd',
-	            		firstDay: 0,
-	            		isRTL: false,
-	            		duration: 200,
-	            		showAnim: 'show',
-	            		showMonthAfterYear: true
-	        		};
-	        		$.datepicker.setDefaults($.datepicker.regional['ko']);
-	    		} 
-	    	} else {
-	    		function datetimepicker() {
-			        $.datepicker.regional['en'] = {
-	    		        dateFormat: 'yy-mm-dd',
-			            firstDay: 0,
-	            		isRTL: false,
-	            		duration: 200,
-	            		showAnim: 'show',
-	            		showMonthAfterYear: true
-	        		};
-	        		$.datepicker.setDefaults($.datepicker.regional['en']);
-	    		}
-	    	}
+	    	$(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		            closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+		            currentText: "<spring:message code='main.t0606' />",
+		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+		                       "<spring:message code='main.t0627' />"],
+		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+				                       "<spring:message code='main.t0627' />"],
+		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+			                       "<spring:message code='main.t0627' />"],
+		            weekHeader: "Wk",
+		            dateFormat: "yy-mm-dd",
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: "show",
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
 
 		</script>
 	</head>
