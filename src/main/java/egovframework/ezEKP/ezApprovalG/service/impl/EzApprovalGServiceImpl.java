@@ -6053,11 +6053,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			recordListVO.setRegType(makeRightField(doc.getElementsByTagName("REGTYPE").item(0).getTextContent()));
 		}
 		if (doc.getElementsByTagName("SREGDATE").item(0) != null && doc.getElementsByTagName("SREGDATE").item(0).getTextContent().length() > 0) {
-			recordListVO.setRegStartDate(makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent()));
+			recordListVO.setRegStartDate(commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("SREGDATE").item(0).getTextContent().substring(0, 19)), offset , true));
 		}
 		
 		if (doc.getElementsByTagName("EREGDATE").item(0) != null && doc.getElementsByTagName("EREGDATE").item(0).getTextContent().length() > 0) {
-			recordListVO.setRegEndDate(makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent()));
+			recordListVO.setRegEndDate(commonUtil.getDateStringInUTC(makeRightField(doc.getElementsByTagName("EREGDATE").item(0).getTextContent().substring(0, 19)), offset , true));
 		}
 		
 		if (doc.getElementsByTagName("SC").item(0) != null && doc.getElementsByTagName("SC").item(0).getTextContent().length() > 0) {

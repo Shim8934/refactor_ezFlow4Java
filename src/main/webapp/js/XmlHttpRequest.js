@@ -910,7 +910,7 @@ function GetOpenWindowfeature(popUpW, popUpH) {
 //    top = heigth / 2;
     var xPos = (document.body.clientWidth / 2) - (popUpW / 2); 
     xPos += window.screenLeft;  //듀얼 모니터일때....
-    var yPos = (screen.availHeight / 2) - (popUpH / 2);
+    var yPos = (screen.availHeight - popUpH) / 2;
 
     var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + xPos + ",top=" + yPos + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
     return feature;
