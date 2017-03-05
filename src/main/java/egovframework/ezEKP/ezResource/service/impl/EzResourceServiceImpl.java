@@ -2111,6 +2111,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			startDateTime = commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false);
 			endDateTime = commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false);
 			reWay = vo.getReWay();
+			reDay = vo.getReDay();
 			reNum = vo.getReNum();
 			reYoil = vo.getReYoil();
 			reMonth = vo.getReMonth();
@@ -2139,7 +2140,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		} else if (freq.equals("6")) {
 			if (sel.equals("0")) {
 				resultXml.append("<interval>" + reNum + "</interval>");
-				resultXml.append("<daysOfWeek>" + reDay + "</daysOfWeek>");
+				resultXml.append("<daysOfMonth>" + reDay + "</daysOfMonth>");
 			} else {
 				resultXml.append("<interval>" + reNum + "</interval>");
 				resultXml.append("<byPosition>" + reOrd + "</byPosition>");
