@@ -1873,7 +1873,7 @@ logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
             			newRow.appendChild(option);
             			targetNode.appendChild(newRow);
             		}else{
-            			String strTag = "<td>" + pAnsSubjectivity + "</td>";
+            			String strTag = "<td style=\"word-wrap:break-word;\">" + pAnsSubjectivity + "</td>";
             			Node option = xmlMainDom.createElement("OPTIOIN");
             			option.appendChild(xmlMainDom.createTextNode(strTag));
             			newRow.appendChild(option);
