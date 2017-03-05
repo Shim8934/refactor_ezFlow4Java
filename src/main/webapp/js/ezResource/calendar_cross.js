@@ -136,9 +136,9 @@ function event_onRSC_searchMasterStart()
 			return;
 		}
 		
-		if (null != m_objXMLhttp_search.responseXML.SelectSingleNodeNew("a:multistatus/a:response"))
+		if (null != loadXMLString(m_objXMLhttp_search.responseText).SelectSingleNodeNew("a:multistatus/a:response"))
 		{
-			var dtstart = m_objXMLhttp_search.responseXML.SelectSingleNodeNew("a:multistatus/a:response/a:propstat/a:prop/dtstart").text;	
+		    var dtstart = loadXMLString(m_objXMLhttp_search.responseText).SelectSingleNodeNew("a:multistatus/a:response/a:propstat/a:prop/dtstart").text;
 			var oDate = GetISODateObj(dtstart);
 			
 			var feature = GetOpenPosition(560, 540);
@@ -507,12 +507,12 @@ function onrscGetDeclineRequest()
 		m_xmlHTTP.onreadystatechange = event_nop;
 		if(m_xmlHTTP.status	< 300)
 		{
-			var	nErrno = m_xmlHTTP.responseXML.SelectSingleNodeNew("result/errorcode")
+			var nErrno = loadXMLString(m_xmlHTTP.responseText).SelectSingleNodeNew("result/errorcode")
 			if (null !=	nErrno && 0	!= nErrno.text)
 			{
-				if (null !=	m_xmlHTTP.responseXML.SelectSingleNodeNew("result/errortext"))
+			    if (null != loadXMLString(m_xmlHTTP.responseText).SelectSingleNodeNew("result/errortext"))
 				{
-					alert(m_xmlHTTP.responseXML.SelectSingleNodeValueNew("result/errortext"));
+			        alert(loadXMLString(m_xmlHTTP.responseText).SelectSingleNodeValueNew("result/errortext"));
 				}
 				else
 				{
@@ -522,10 +522,10 @@ function onrscGetDeclineRequest()
 			else
 			{
 				RefreshMessageList();
-				if (null !=	m_xmlHTTP.responseXML.SelectSingleNodeNew("result/redirecturl"))
+				if (null != loadXMLString(m_xmlHTTP.responseText).SelectSingleNodeNew("result/redirecturl"))
 				{
 					// 삭제시 답장 보내지 않음 대화상자 
-					szUrl = m_xmlHTTP.responseXML.SelectSingleNodeValueNew("result/redirecturl");
+					szUrl = loadXMLString(m_xmlHTTP.responseText).SelectSingleNodeValueNew("result/redirecturl");
 				}
 			}	
 		}
@@ -683,7 +683,7 @@ function CallApptDlg(szUrl, szCmd, szType )
 		xmlHttp.open("POST", "/EmailApp/ezSchedule/rcvSch.asp", false);
 		xmlHttp.send(xmlpara);
 		
-		xmlResult = xmlHttp.responseXML;
+		xmlResult = loadXMLString(xmlHttp.responseText);
 		if( typeof( xmlResult ) != "undefined" || xmlResult )
 		{
 			szError = g_szXmlError;
@@ -729,7 +729,7 @@ function getAttendees( szUrl )
 		xmlHttp.setRequestHeader( "Content-Type:", "text/xml" );
 		xmlHttp.send( xmlpara );
 		
-		xmlResult = xmlHttp.responseXML;
+		xmlResult = loadXMLString(xmlHttp.responseText);
 		//var xnAttendees = selectSingleNode(xmlResult, "attendees" );
 		
 		xncAddress = SelectSingleNodeNew(xmlResult, "attendees/address");//xnAttendees.getElementsByTagName( "address" );

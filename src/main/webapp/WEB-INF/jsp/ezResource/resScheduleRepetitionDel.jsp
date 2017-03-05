@@ -50,10 +50,14 @@
   			<spring:message code="ezResource.t322" />
   		</div>
 		<div class="box" style="padding:10px">
-  			<input id=chk_Instance type="radio" name="chk_Open" value="Instance" checked>
-  				<spring:message code="ezResource.t323" /><br>
-  			<input type="radio" name="chk_Open" value="Master">
+  			<label>
+  				<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
+  				<spring:message code="ezResource.t323" />
+  			</label><br>
+  			<label>
+  				<input type="radio" name="chk_Open" value="Master">
   				<spring:message code="ezResource.t324" />
+  			</label>
   		</div>
 		<div class="btnposition">
   			<input type="submit" value="<spring:message code="ezResource.t15" />" onClick="btnOk_Click();">

@@ -359,7 +359,7 @@ public class EzCommonController extends EgovFileMngUtil{
         }
         
         if (id != null && !id.equals("")) {
-        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getLang(), loginVO.getTenantId());
+        	String infoXML = ezOrganService.getPropertyList(id, proplist, loginVO.getPrimary(), loginVO.getTenantId());
         	
         	Document xmldom = commonUtil.convertStringToDocument(infoXML);
         	if (xmldom.getElementsByTagName("MAIL") == null) {

@@ -67,34 +67,28 @@
 		        xmlDom = loadXMLString(xmlHTTP.responseText);
 		        var email = "";
 		        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-		        for (var Cnt = 0; Cnt < emailRows.length; Cnt++) {
-		            var name = SelectSingleNodeValue(emailRows[Cnt], "NAME");
-		            var useremail = SelectSingleNodeValue(emailRows[Cnt], "EMAIL");
-		            if (email == "")
-		                email = "\"" + name + "\" <" + useremail + ">";
-		            else
-		                email += ",\"" + name + "\" <" + useremail + ">";
-		        }
+		        
+                if (emailRows.length > 0) {
+                    var addrname = getNodeText(document.getElementById("TextName"));
+                    if (foldertype == "P")
+                        var addremail = addressid + "|!|P";
+                    else
+                        var addremail = addressid + "|!|D";
+
+                    if (email == "")
+                        email = "\"" + addrname + "\" <" + addremail + ">";
+                    else
+                        email += ",\"" + addrname + "\" <" + addremail + ">";
+                }
+		        		        
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
 		        
-		        if (CrossYN() || pNoneActiveX == "YES")
-		            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
-		            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        else {
-		            if (pUse_Editor == "")
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
-		                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            else
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
-		                    "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        }
-		
-		
-		
+	            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+	            	"top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 		</script>
 	</head>

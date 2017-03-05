@@ -186,7 +186,7 @@
     		}
     		function fun_QuesAdd() {
         		if (!WinRef || WinRef.closed) {
-            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brdID=5" + "&itemID='<c:out value='${qstStep1VO.itemID}'/>'" , "addques", 700, 440); 
+            		 WinRef = GetOpenWindow("qstStep2QuestionAdd.do?brdID=5" + "&itemID=" + encodeURIComponent('${qstStep1VO.itemID}') , "addques", 700, 440); 
 		        } else {
             		WinRef.focus();
             		return;
@@ -208,7 +208,7 @@
                 		document.QstEdit.DataXML.value = frmCreate.selQues[index].value;
                 		document.QstEdit.DataIndex.value = index.toString();
                 		document.QstEdit.method="post";
-                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=${qstStep1VO.brdID}&itemID=${qstStep1VO.itemID}";
+                		document.QstEdit.action = "qstStep2QuestionAdd.do?brdID=" + encodeURIComponent('${qstStep1VO.brdID}') + "&itemID=" + encodeURIComponent('${qstStep1VO.itemID}');
                 		document.QstEdit.target="addques";
                 		document.QstEdit.submit();
             		} else {
@@ -483,7 +483,7 @@
         		        for (var j = 0; j < QuestionNode.childNodes[i].getElementsByTagName("ANSWER").length; j++) {
                 		    oTr = document.createElement("tr");
                     		oTd = document.createElement("td");
-                    		oTd.setAttribute("style", "padding:3px 10px")
+                    		oTd.setAttribute("style", "padding:3px 10px; word-wrap:break-word;")
                     		oInput = document.createElement("input");
                     		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("MULTISELECT")[0]) == "0") {
                         		oInput.setAttribute("type", "radio");
@@ -502,7 +502,7 @@
                             		pFileName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("HREF")[0]);
                             		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
 		                            oTd = document.createElement("td");
-        		                    oTd.setAttribute("style", "padding:5px;");
+        		                    oTd.setAttribute("style", "padding:5px; word-wrap:break-word;");
                 		            oTr.appendChild(oTd);
 		                            oImg = document.createElement("img");
         		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
@@ -523,7 +523,7 @@
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px;");
 		                var oTextarea = document.createElement("textarea");
-                		oTextarea.setAttribute("style", "Width:100%;height:85");
+                		oTextarea.setAttribute("style", "width:99.7%;height:85; padding:0px; resize:none;");
                 		oTextarea.disabled = "true";
                 		oTd.appendChild(oTextarea);
                 		oTr.appendChild(oTd);
@@ -535,7 +535,7 @@
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px");
                 		oInput = document.createElement("input");
                 		oInput.setAttribute("type", "text");
-                		oInput.setAttribute("style", "Width:760");
+                		oInput.setAttribute("style", "width:760");
                 		oInput.setAttribute("readOnly", true);
                 		oTd.appendChild(oInput);
                 		oTr.appendChild(oTd);

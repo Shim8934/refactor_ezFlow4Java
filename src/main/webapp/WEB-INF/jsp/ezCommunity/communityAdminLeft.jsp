@@ -207,31 +207,31 @@
 				
 				switch(pIndex) {	
 					case 1:
-						window.open("/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 2:
-					    window.open("/ezCommunity/boardCreate.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+					    window.open("/ezCommunity/boardCreate.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 3:
-						window.open("/ezCommunity/boardACL.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardACL.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 4:
-						window.open("/ezCommunity/boardOrder.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardOrder.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 5:
-						window.open("/ezCommunity/boardMove.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 6:
-						window.open("/ezCommunity/boardDelete.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardDelete.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 7:
-						window.open("/ezCommunity/adminSearchBoardItem.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/adminSearchBoardItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;
 					case 9:
-						window.open("/ezCommunity/boardGroupCreate.do?code=" + code, "right");
+						window.open("/ezCommunity/boardGroupCreate.do?code=" + encodeURIComponent(code), "right");
 						break;
 					default:
-						window.open("/ezCommunity/boardProperty.do?boardID=" + SelectedBoardID + "&parentBoardID=" + SelectedBoardParentBoardID + "&boardGroupID=" + SelectedBoardGroupID + "&code=" + code, "right");
+						window.open("/ezCommunity/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&code=" + encodeURIComponent(code), "right");
 						break;		
 				}
 			}
@@ -248,11 +248,11 @@
 				var url = "";
 				switch(idx) {
 					case 1:
-						url = "/ezCommunity/adminBasic.do?code=${code}&flag=${flag}"  ;
+						url = "/ezCommunity/adminBasic.do?code=${code}"  ;
 						break;
 					
 					case 2:
-						url = "/ezCommunity/adminLogo.do?code=${code}&flag=${flag}";
+						url = "/ezCommunity/adminLogo.do?code=${code}";
 						break;
 						
 					case 3:

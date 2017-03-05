@@ -203,9 +203,13 @@ public class LoginController {
 			        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 			        logger.debug("primaryLang=" + primaryLang);					
 					
-			        // 당분간 시스템 기본언어가 일본어일 때는 사용자 초기 사용 언어를 무조건 일본어로 설정한다. TODO: 추후변경
-			        if (primaryLang.equals("3")) {
-			        	acceptLanguage = "ja";
+			        // UsePrimaryLangOnly가 YES일 때는 무조건 PrimaryLang 언어로 설정한다.
+			        if (config.getProperty("config.UsePrimaryLangOnly").equals("YES")) {
+				        if (primaryLang.equals("1")) {
+				        	acceptLanguage = "ko";
+				        } else if (primaryLang.equals("3")) {
+				        	acceptLanguage = "ja";
+				        }
 			        }
 			        
 				    if (acceptLanguage != null) {

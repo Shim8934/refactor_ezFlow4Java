@@ -118,7 +118,19 @@ function CalendarView(pTagetID) {
                     else if (holidayname == "" && holidayname2 != "")
                         holidayname = holidayname2;
 
-                    var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    var dayText;
+                    if (LunarUse)
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    else
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+
+
+                    var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
+                    if (current_day.getDay() == "0" || isholiday)
+                        oTh.style.color = "#ee1c25";
+                    else if (current_day.getDay() == "6")
+                        oTh.style.color = "#0032cf";
+
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
@@ -288,6 +300,8 @@ function CalendarView(pTagetID) {
     }
 
     CalViewSource();
+    
+    Window_resize();
 }
 
 ///////////// 월보기 Calendar 생성 시작 /////////////
@@ -458,7 +472,7 @@ function MonthData(oThisDate, TDIndex) {
     objTd.setAttribute("day", cell_ID);
     objTd.onmousedown = function () { MultiSelectStart(this); };
     objTd.onmouseup = function () { MultiSelectEnd(this); };
-    objTd.onmouseover = function () { MultiSelectItems(this); };
+    //objTd.onmouseover = function () { MultiSelectItems(this); };
 
     // 일자 영역
     var subTable = document.createElement("TABLE")
@@ -475,7 +489,10 @@ function MonthData(oThisDate, TDIndex) {
     subTd.setAttribute("dispDate", cell_ID);
     //subTd.innerHTML = pDateData;
     if (tempyear > 1800 && tempyear <= 2101) {
-        subTd.innerHTML = pDateData + " (" + LunarDate2 + ") " + holidayname;
+		if (LunarUse)
+            subTd.innerHTML = pDateData + " (" + LunarDate2 + ") " + holidayname;
+        else
+            subTd.innerHTML = pDateData + " " + holidayname;
     }
     else
         subTd.innerHTML = pDateData;
@@ -511,12 +528,12 @@ var DragEndItemID = "";
 var IsDrag = false;
 function MultiSelectStart(obj) {
     IsDrag = true;
-    DragStartItemID = obj.getAttribute("id");
+    DragStartItemID = GetAttribute(obj,"id");
 }
 function MultiSelectItems(obj) {
     if (IsDrag) {
         var StartIdex = parseInt(DragStartItemID.replace("index_", ""));
-        var Endidex = parseInt(obj.getAttribute("id").replace("index_", ""));
+        var Endidex = parseInt(GetAttribute(obj,"id").replace("index_", ""));
 
         if (StartIdex > Endidex) {
             var tempIndex = Endidex;
@@ -534,7 +551,7 @@ function MultiSelectItems(obj) {
 }
 function MultiSelectEnd(obj) {
     IsDrag = false;
-    DragEndItemID = obj.getAttribute("id");
+    DragEndItemID = GetAttribute(obj,"id");
     if (DragStartItemID == DragEndItemID) {
         document.getElementById(DragEndItemID).style.backgroundColor = "";
         DragStartItemID = "";
@@ -553,8 +570,8 @@ function Write() {
         DragEndItemID = DragStartItemID;
         DragStartItemID = tempIndex;
     }
-    var startdate = document.getElementById(DragStartItemID).getAttribute("day");
-    var enddate = document.getElementById(DragEndItemID).getAttribute("day");
+    var startdate = GetAttribute(document.getElementById(DragStartItemID),"day");
+    var enddate = GetAttribute(document.getElementById(DragEndItemID),"day");
 
     var feature = GetOpenPosition(820, 700);
     if (CrossYN() || pNoneActiveX == "YES") {
@@ -654,7 +671,7 @@ function GetWeekBodyObj() {
     var startMonth = startOfWeek.getMonth();
     var startDate = startOfWeek.getDate();
 
-    sStartDate = startYear + "-" + leadingZeros((startMonth + 1), 2) + "-" + leadingZeros(startDate, 2)
+    sStartDate = startYear + "-" + (startMonth + 1) + "-" + startDate
     endOfWeek = new Date(sDate);
     endOfWeek.setDate(sDate.getDate() + (6 - sDate.getDay()) + DefaultView);
 
@@ -662,7 +679,7 @@ function GetWeekBodyObj() {
     var endMonth = endOfWeek.getMonth();
     var endDate = endOfWeek.getDate();
 
-    sEndDate = endYear + "-" + leadingZeros((endMonth + 1), 2) + "-" + leadingZeros((endDate + 1), 2);
+    sEndDate = endYear + "-" + (endMonth + 1) + "-" + (endDate + 1);
     var oTbody = document.createElement("TBODY");
     var oTr = document.createElement("TR");
     var oTD = document.createElement("TD");
@@ -806,10 +823,17 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
         else if (holidayname == "" && holidayname2 != "")
             holidayname = holidayname2;
 
-        var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
+        if (LunarUse)
+            weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
+        else
+            weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname;
 
-        if (isholiday)
-            document.getElementById("list_Title" + pCnt).className += " sun";
+        if (isholiday) {
+            if (document.getElementById("list_Title" + pCnt).className.indexOf("sat") > -1)
+                document.getElementById("list_Title" + pCnt).className = ReplaceText(document.getElementById("list_Title" + pCnt).className, "sat", "sun");
+            else
+                document.getElementById("list_Title" + pCnt).className += " sun";
+        }
     }
     else
         var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "]";
@@ -945,9 +969,10 @@ function GetDayBodyObj() {
 
     objTr = null;
     sDate.setDate(sDate.getDate() - 1);
-    sStartDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate() + 1, 2);
-    sDate.setDate(sDate.getDate() + 1);
-    sEndDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate() + 1, 2);
+    sStartDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+    sDate.setDate(sDate.getDate() + 2);
+    sEndDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2)
+    sDate.setDate(sDate.getDate() - 1);
 
     return oTbody;
 }

@@ -40,11 +40,13 @@ public class EzMainAdminController {
 		String use_portal = ezCommonService.getTenantConfig("Use_Portal", userInfo.getTenantId());
 		
 		String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+		String AdminActiveX = config.getProperty("config.AdminActiveX");
 
 		model.addAttribute("use_approvalG", use_approvalG);
 		model.addAttribute("use_ezDMS", use_ezDMS);
 		model.addAttribute("use_portal", use_portal);
 		model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+		model.addAttribute("AdminActiveX", AdminActiveX);
 		
 		return "admin/adminTop";
 	}	

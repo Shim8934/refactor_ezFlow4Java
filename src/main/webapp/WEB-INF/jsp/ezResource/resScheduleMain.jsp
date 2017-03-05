@@ -19,6 +19,7 @@
 		<script type="text/javascript" src="/js/ezResource/CalendarMini_Cross.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/calendar_cross.js"></script>
+		<script type="text/javascript" src="/js/Holiday.js"></script>
 		<script type="text/javascript">
 		var timeZoneStr = "${timeZoneStr}";
 	    var pAdminFg = "${adminFg}";
@@ -42,147 +43,91 @@
 	    title_name[0] = pBrdid + "/" + "<c:out value='${brdNm}' />";
 	    var pUse_Editor = "${useEditor}";
 	    var pNoneActiveX = "${nonActiveX}";
+	    var pStartday = "7";
+	    var LunarUse = false;
 	    document.onselectstart = function () { return false; };
-
-	    var memorialDays = Array(
-	             new memorialDay("신정", "New Year's Day", 1, 1, 1, true),
-	             new memorialDay("", "", 12, 0, 2, true, true),
-	             new memorialDay("설날", "Lunar New Year", 1, 1, 2, true),
-	             new memorialDay("", "", 1, 2, 2, true),
-	             new memorialDay("3·1절", "Samiljeol", 3, 1, 1, true),
-	             new memorialDay("석가탄신일", "Buddha's Birthday", 4, 8, 2, true),
-	             new memorialDay("어린이날", "Children's Day", 5, 5, 1, true),
-	             new memorialDay("현충일", "Memorial Day", 6, 6, 1, true),
-	             new memorialDay("광복절", "National Liberation Day", 8, 15, 1, true),
-	             new memorialDay("", "", 8, 14, 2, true),
-	             new memorialDay("추석", "Thanksgiving Day", 8, 15, 2, true),
-	             new memorialDay("", "", 8, 16, 2, true),
-	             new memorialDay("개천절", "Foundation Day", 10, 3, 1, true),
-	             new memorialDay("성탄절", "Christmas", 12, 25, 1, true),
-	             new memorialDay("한글날", "Hangul Proclamation Day", 10, 9, 1, true)
-	            );
-
-	    var yearmemorialDays = Array(
-	     );
-
-	    function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, type) {
-	        this.name = name;
-	        this.name2 = name2;
-	        this.year = year;
-	        this.month = month;
-	        this.day = day;
-	        this.solarLunar = solarLunar;
-	        this.holiday = holiday;
-	        this.type = type;
-	        this.techneer = true;
-	    }
-
-	    function memorialDay(name, name2, month, day, solarLunar, holiday, type) {
-	        this.name = name;
-	        this.name2 = name2;
-	        this.month = month;
-	        this.day = day;
-	        this.solarLunar = solarLunar;
-	        this.holiday = holiday;
-	        this.type = type;
-	        this.techneer = true;
-	    }
-
 
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
-	       /*  xmlhttp2 = createXMLHttpRequest();
-	        var xmlDom = createXmlDom();
-	        var objNode;
-	        createNodeInsert(xmlDom, objNode, "DATA");
-	        createNodeAndInsertText(xmlDom, objNode, "COMPANYID", "VIEW");
-
-	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do", true);
+	        xmlhttp2 = createXMLHttpRequest();
+	        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 	        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
-	        xmlhttp2.send(xmlDom); */
-	        
-	        $.ajax({
-	    		type : "POST",
-	    		dataType : "text",
-	    		async : true,
-	    		url : "/ezSchedule/scheduleGetHoliday.do",
-	    		data : {
-	    			COMPANYID  : "VIEW"		    			
-	    		},
-	    		success: function(text){
-	    			XmlNodeText = text;
-		            XmlNode = loadXMLString(XmlNodeText);
-		            
-		            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-		                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
-		                    var issolar;
-		                    var holiday;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
-		                        issolar = "1";
-		                    else
-		                        issolar = "2";
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
-		                        holiday = true;			                    
-		                    else
-		                        holiday = false;
-		                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-		                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                    else {                   	
-		                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-		                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
-		                    }
-		                }
-		            }			            
-		            CalendarView("Calendar");
-	    		}		    		
-	        });
-	        
+	        xmlhttp2.send();
 	    }
 
-	/*     function event_schedule_get_holiday() {
+	    function event_schedule_get_holiday() {
 	        if (xmlhttp2 == null || xmlhttp2.readyState != 4)
 	            return;
 	        if (xmlhttp2.status >= 200 && xmlhttp2.status < 300) {
 	            XmlNodeText = xmlhttp2.responseText;
 	            XmlNode = loadXMLString(XmlNodeText);
 	            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
-	                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+	                if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1") {
 	                    var issolar;
 	                    var holiday;
-	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0]) == "1")
 	                        issolar = "1";
 	                    else
 	                        issolar = "2";
-	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")
+	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0]) == "1")
 	                        holiday = true;
 	                    else
 	                        holiday = false;
-	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
-	                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                    if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0]) == "1") {
+	                        memorialDays.push(new memorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
 	                    }
 	                    else {
-	                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
-	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
-	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                        yearmemorialDays.push(new yearmemorialDay(getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0]), getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0]),
+	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(0, 4),
+	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(5, 7),
+	                            getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0]).substring(0, 10).substring(8, 10), issolar, holiday));
 	                    }
 	                }
 	            }
 	            xmlhttp2 = null;
+	            CalendarMiniView("CalendarMini");
 	            CalendarView("Calendar");
 	        }
-	    } */
+	    }
+		
+	    function schedule_get_lunaruse() {
+	        xmlhttp = createXMLHttpRequest();
+	        var xmlDom = createXmlDom();
+	        var objNode;
 
+	        var xmlpara = createXmlDom();
+	        var objNode;
+	        createNodeInsert(xmlpara, objNode, "DATA");
+	        createNodeAndInsertText(xmlpara, objNode, "COMPANYID", "${userInfo.companyID}");
+
+	        xmlhttp.open("POST", "/ezSchedule/scheduleGetLunarUse.do", true);
+	        xmlhttp.onreadystatechange = event_schedule_get_lunaruse;
+	        xmlhttp.send(xmlpara);
+	    }
+
+	    function event_schedule_get_lunaruse() {
+	        if (xmlhttp == null || xmlhttp.readyState != 4)
+	            return;
+
+	        if (xmlhttp.responseText == "0")
+	            LunarUse = true;
+	        else if (xmlhttp.responseText == "1")
+	            LunarUse = true;
+	        else
+	            LunarUse = false;
+
+	        schedule_get_holiday();
+	    }
+	    
 	    window.onload = function () {
-
-	        schedule_get_holiday();     
+	    	if (pStartday == 1)
+	            DefaultView = 1;
+	        else
+	            DefaultView = 0;
+	    	
+	        schedule_get_lunaruse();     
 	        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            document.body.style.MozUserSelect = 'none';
 	            document.body.style.WebkitUserSelect = 'none';
@@ -190,16 +135,16 @@
 	            document.body.style.oUserSelect = 'none';
 	            document.body.style.UserSelect = 'none';
 	        }
-	        CalendarMiniView("CalendarMini");
+	        
 	        Window_resize();
 	    }
 	    window.onresize = Window_resize;
-	    //window.onresize = function () {
+	    
 	    function Window_resize() {
 	        if (typeCal == "2")
-	            var w = document.documentElement.clientHeight - 280;
+	            var w = document.documentElement.clientHeight - 278;
 	        else if (typeCal == "1")
-	            var w = document.documentElement.clientHeight - 310;
+	            var w = document.documentElement.clientHeight - 308;
 
 	        var objDiv = document.getElementById('CalDiv');
 	        if (objDiv)
@@ -207,7 +152,7 @@
 
 	        var objRInfo = document.getElementById('ResourceInfo');
 	        if (objRInfo)
-	            objRInfo.style.height = document.documentElement.clientHeight - 368 + "px";
+	            objRInfo.style.height = document.documentElement.clientHeight - 376 + "px";
 	    }
 
 	    function btnDel_onclick() {
@@ -246,15 +191,15 @@
 	        }
 	        var selsd = "", seled = "";
 
-	        if (srcEl.getAttribute("dispDate") == null) {
-	            if (srcEl.getAttribute("dispTime") != null) {
+	        if (GetAttribute(srcEl,"dispDate") == null) {
+	            if (GetAttribute(srcEl,"dispTime") != null) {
 
-	                selsd = srcEl.getAttribute("dispTime");
+	                selsd = GetAttribute(srcEl,"dispTime");
 	                seled = selsd.replace(":00:", ":30:");
 	            }
 	        } else {
-	            selsd = srcEl.getAttribute("dispDate");
-	            seled = srcEl.getAttribute("dispDate");
+	            selsd = GetAttribute(srcEl,"dispDate");
+            	seled = GetAttribute(srcEl,"dispDate");
 	        }
 	        var feature = GetOpenPosition(820, 700);
 	        if (CrossYN() || pNoneActiveX == "YES") {
@@ -482,53 +427,51 @@
 				</td>
 				<td style="vertical-align:top;width:10px">&nbsp;</td>
 				<td id="calTD2" style="vertical-align:top;width:220px">
-					<span>
-						<div id="CalendarMini"></div>
-						<table id="ResourceInfo" name="ResourceInfo" style="max-height:498px; height:498px; width:218px; border-collapse:collapse; border-spacing:0px; margin-top:10px;border:1px solid #b6b6b6">
-							<tr>
-								<td height="30" bgcolor="#EFEFEF" class="subtxt" style="padding-left: 7px;border-bottom:1px solid #b6b6b6; color:#000;"><img src="/images/icon/check.gif" hspace="1" align="absmiddle"> <spring:message code='ezResource.t271'/></td>
-							</tr>
-							<tr>
-								<td style="padding: 5px; vertical-align:top">
-									<table style="height:100%">
-										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t153'/></b> :<a href="#" onClick="MemberInfo_onClick('${ownerID}')"> ${ownerNm}(${ownerPosition}) </a> </td>
-										</tr>
-										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t151'/></b> :  ${ownerDeptNm} </td>
-										</tr>
-										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t148'/></b></td>
-										</tr>
-										<tr>
-											<td style="padding:2px 10px; word-break:break-all; height:20px">${resLocation}</td>
-										</tr>
-										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
-										</tr>
-										<tr>
-											<td style="padding-left:10px; height:24px">
-												<c:choose>
-													<c:when test="${approveFlag eq 1}">
-														<spring:message code='ezResource.t272'/>
-													</c:when>
-													<c:otherwise>
-														<spring:message code='ezResource.t273'/>
-													</c:otherwise>
-												</c:choose>
-											</td>
-										</tr>
-										<tr>
-											<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
-										</tr>
-										<tr>
-											<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
-										</tr>
-									</table>
-		                    	</td>
-                			</tr>
-            			</table>
-					</span>
+					<div id="CalendarMini"></div>
+					<table id="ResourceInfo" name="ResourceInfo" style="width:218px; border-collapse:collapse; border-spacing:0px; margin-top:10px;border:1px solid #b6b6b6">
+						<tr>
+							<td height="30" bgcolor="#EFEFEF" class="subtxt" style="padding-left: 7px;border-bottom:1px solid #b6b6b6; color:#000;"><img src="/images/icon/check.gif" hspace="1" align="absmiddle"> <spring:message code='ezResource.t271'/></td>
+						</tr>
+						<tr>
+							<td style="padding: 5px; vertical-align:top">
+								<table style="height:100%">
+									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t153'/></b> :<a href="#" onClick="MemberInfo_onClick('${ownerID}')"> ${ownerNm}(${ownerPosition}) </a> </td>
+									</tr>
+									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t151'/></b> :  ${ownerDeptNm} </td>
+									</tr>
+									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t148'/></b></td>
+									</tr>
+									<tr>
+										<td style="padding:2px 10px; word-break:break-all; height:20px">${resLocation}</td>
+									</tr>
+									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t149'/></b></td>
+									</tr>
+									<tr>
+										<td style="padding-left:10px; height:24px">
+											<c:choose>
+												<c:when test="${approveFlag eq 1}">
+													<spring:message code='ezResource.t272'/>
+												</c:when>
+												<c:otherwise>
+													<spring:message code='ezResource.t273'/>
+												</c:otherwise>
+											</c:choose>
+										</td>
+									</tr>
+									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t271'/></b></td>
+									</tr>
+									<tr>
+										<td style="padding:2px 10px"><div style="overflow: auto; height: 100%;word-break:break-all"><c:out value='${brdExplain}' /></div></td>
+									</tr>
+								</table>
+	                    	</td>
+               			</tr>
+           			</table>
 				</td>
 			</tr>
 		</table>

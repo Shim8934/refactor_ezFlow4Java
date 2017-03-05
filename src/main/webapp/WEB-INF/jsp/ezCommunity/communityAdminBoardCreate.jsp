@@ -75,7 +75,7 @@
 			    }
 					
 			    var xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/ezCommunity/createBoard.do?boardID=" + "{" + GetGUID().toUpperCase() + "}" + "&boardName=" + encodeURIComponent(txtNewName.value) + "&boardName2=" + encodeURIComponent(txtNewName2.value) + "&parentBoardID=" + BoardID + "&boardGroupID=" + BoardGroupID + "&code=" + code, false);
+			    xmlhttp.open("POST", "/ezCommunity/createBoard.do?boardID=" + encodeURIComponent("{" + GetGUID().toUpperCase() + "}") + "&boardName=" + encodeURIComponent(txtNewName.value) + "&boardName2=" + encodeURIComponent(txtNewName2.value) + "&parentBoardID=" + encodeURIComponent(BoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + encodeURIComponent(code), false);
 				xmlhttp.send();
 				xmlhttp = null;
 	

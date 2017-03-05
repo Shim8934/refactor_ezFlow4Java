@@ -27,7 +27,7 @@ function createXMLHttpRequest() {
     }
     catch (trymicrosoft) {
         try {
-            oXmlRequest = new ActiveXObject("Microsoft.XMLHTTP");
+            oXmlRequest = createXMLHttpRequest();
         }
         catch (failed) {
             oXmlRequest = false;
@@ -253,7 +253,7 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
-        document.getElementById("divViewHeader").textContent = weekStartDatename + " ~ " + weekEndDatename;
+        setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
         var b = 0;
@@ -265,7 +265,7 @@ function tableListControl_Week()
         var _mtd = document.createElement("TD");
         _mth.style.width = "200px";
         _mth.setAttribute("style", "vertical-align:middle");
-        _mth.textContent = strLang266;
+        setNodeText(_mth,strLang266);
         _mtr.appendChild(_mth);
         _mtable.appendChild(_mtr);
 
@@ -293,8 +293,13 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-                _mth.style.width = "14.2%";
-                _mth.setAttribute("style", "vertical-align:middle");
+
+                if (countdayname == "6")
+                    _mth.style.color = "#0032cf";
+                else if (countdayname == "0")
+                    _mth.style.color = "#ee1c25";
+
+                _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
@@ -321,8 +326,13 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-                _mth.style.width = "14.2%";
-                _mth.setAttribute("style", "vertical-align:middle");
+
+                if (countdayname == "6")
+                    _mth.style.color = "#0032cf";
+                else if (countdayname == "0")
+                    _mth.style.color = "#ee1c25";
+
+                _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
@@ -440,9 +450,9 @@ function tableListControl_Week()
                 _span.style.color = "#0090d0";
 
                 if (alldayevent == "0")
-                    _span.textContent = Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1];
+                    setNodeText(_span, Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
                 else
-                    _span.textContent = strLang126;
+                    setNodeText(_span, strLang126);
 
                 _td.appendChild(_span);
                 _tr.appendChild(_td);
@@ -482,12 +492,9 @@ function tableListControl_Week()
                 _span.onmouseover = function (event) { onmouse_over(this, event); };
                 _span.onmouseout = new Function("onmouse_out(this);");
                 var pResourceName = "";
-                if (CrossYN())
-                    pResourceName = selObj.parentNode.childNodes[0].textContent.trim();
-                else
-                    pResourceName = selObj.parentNode.childNodes[0].innerText.trim();
-                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                _span.textContent = getNodeText(xmldom.getElementsByTagName("subject")[j]);
+                pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
+                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + escape(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
                 _td.appendChild(_span);
                 _tr.appendChild(_td);
                 _table.appendChild(_tr);
@@ -564,7 +571,7 @@ function makeTable(xmldom, pNum, dayType) {
 
     _td = document.createElement("TD");
     _span.style.color = "#0090d0";
-    _span.textContent = Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1];
+    setNodeText(_span,Content_Sp_Start[0] + ":" + Content_Sp_Start[1] + " ~ " + Content_Sp_End[0] + ":" + Content_Sp_End[1]);
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
@@ -602,13 +609,9 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseover = function (event) { onmouse_over(this, event); };
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
-    if (CrossYN()) {
-    	pResourceName = selObj.parentNode.childNodes[0].textContent.trim();
-    } else {
-    	pResourceName = selObj.parentNode.childNodes[0].innerText.trim();
-    }
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
-    _span.textContent = getNodeText(xmldom.getElementsByTagName("subject")[pNum]);
+    pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
+    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + escape(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
     _td.appendChild(_span);
     _tr.appendChild(_td);
     _table.appendChild(_tr);
@@ -626,27 +629,27 @@ function newSchedule_onclick(e) {
     }
     var selsd = "", seled = "";
 
-    if (srcEl.getAttribute("dispDate") == null) {
-        if (srcEl.getAttribute("dispTime") != null) {
+    if (GetAttribute(srcEl,"dispDate") == null) {
+        if (GetAttribute(srcEl,"dispTime") != null) {
 
-            selsd = srcEl.getAttribute("dispTime");
+            selsd = GetAttribute(srcEl,"dispTime");
             seled = selsd.replace(":00:", ":30:");
         }
     } else {
-        selsd = srcEl.getAttribute("dispDate");
-        seled = srcEl.getAttribute("dispDate");
+        selsd = GetAttribute(srcEl,"dispDate");
+        seled = GetAttribute(srcEl,"dispDate");
     }
     
     if (CrossYN() || pNoneActiveX == "YES") {
         var feature = GetOpenPosition(820, 700);
-        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + encodeURIComponent(srcEl.getAttribute("DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
     } else {
         if (pUse_Editor == "" || pUse_Editor == "CK") {
             var feature = GetOpenPosition(770, 700);
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + encodeURIComponent(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl,"DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl,"DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         } else {
             var feature = GetOpenPosition(770, 700);
-            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + srcEl.getAttribute("DATA1") + "&brdName=" + encodeURIComponent(srcEl.getAttribute("DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            window.open("/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selsd + "&seled=" + seled + "&dayView=&ownerID=" + GetAttribute(srcEl, "DATA1") + "&brdName=" + encodeURIComponent(GetAttribute(srcEl, "DATA2")), "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
         }
     }
 }
@@ -723,13 +726,23 @@ function tableListControl_today() {
         xmldom = loadXMLString(XMLstring);
 
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
-        document.getElementById("divViewHeader").textContent = datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER");
+
+        var current_day = new Date(TodayDatename);
+        if (current_day.getDay() == "6")
+            document.getElementById("divViewHeader").style.color = "#0032cf";
+        else if (current_day.getDay() == "0")
+            document.getElementById("divViewHeader").style.color = "#ee1c25";
+        else
+            document.getElementById("divViewHeader").style.color = "";
+
+
+        setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");
         var _Tr = document.createElement("TR");
         var _Th = document.createElement("TH");
         _Th.style.width = "250px";
-        _Th.textContent = strLang266;
+        setNodeText(_Th,strLang266);
         _Th.style.verticalAlign = "middle";
         _Tr.appendChild(_Th);
         for (var i = 0; i < 24; i++) {
@@ -932,7 +945,7 @@ function tableListControl_today() {
         _th.style.textAlign = "center";
         _th.style.verticalAlign = "middle";
         _th.style.width = "250px";
-        _th.textContent = strLang266;
+        setNodeText(_th,strLang266);
         _tr.appendChild(_th);
         for (var i = 0; i < 24; i++) {
 
@@ -1269,7 +1282,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.textContent = obj.getAttribute("subject").split("&apos;").join("'");
+    setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
     tTable.appendChild(tTr);
 
@@ -1289,7 +1302,7 @@ function showTooltip_MouseOver(obj, e) {
 
     var sSpan = document.createElement("SPAN");
     var _img = document.createElement("IMG");
-    if (obj.getAttribute("approveFlag") == "1") {
+    if (GetAttribute(obj,"approveFlag") == "1") {
         _img.src = "/images/calendar/icon_resource_ok.png"
         _img.style.verticalAlign = "middle";
         sSpan.appendChild(_img);
@@ -1308,12 +1321,12 @@ function showTooltip_MouseOver(obj, e) {
     //자원시간
     //반복이면 반복이라고 표현한다.
     var reFlag = "";
-    if (obj.getAttribute("instancetype") == "1") {
+    if (GetAttribute(obj,"instancetype") == "1") {
         reFlag = " (" + strLang572 + ")";
     }
 
     //하루종일이면
-    if (obj.getAttribute("alldayevent") == "1") {
+    if (GetAttribute(obj,"alldayevent") == "1") {
         var sTr = document.createElement("TR");
         var sTd = document.createElement("TD");
         var sSpan = document.createElement("SPAN");
@@ -1331,7 +1344,19 @@ function showTooltip_MouseOver(obj, e) {
         var sSpan = document.createElement("SPAN");
         //sSpan.className = "width_16";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += "[" + strLang569 + "]<br />" + obj.getAttribute("dtstart").replace('T', ' ').substring(0, 16) + reFlag;
+
+
+        var cTime1 = "";
+        try {
+            if (GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
+                cTime1 = ChangeTime(GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
+                cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime1;
+            }
+        } catch (e) {
+            cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16);
+        }
+
+        sTd.innerHTML += "[" + strLang569 + "]<br />" + cTime1 + reFlag;
         sTr.appendChild(sTd);
         sTable.appendChild(sTr);
         tTd.appendChild(sTable);
@@ -1343,7 +1368,18 @@ function showTooltip_MouseOver(obj, e) {
         var sSpan = document.createElement("SPAN");
         //sSpan.className = "width_16";
         sTd.appendChild(sSpan);
-        sTd.innerHTML += "[" + strLang570 + "]<br />" + obj.getAttribute("dtend").replace('T', ' ').substring(0, 16) + reFlag;
+
+        var cTime2 = "";
+        try {
+            if (GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
+                cTime2 = ChangeTime(GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
+                cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime2;
+            }
+        } catch (e) {
+            cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16);
+        }
+
+        sTd.innerHTML += "[" + strLang570 + "]<br />" + cTime2 + reFlag;
         sTr.appendChild(sTd);
         sTable.appendChild(sTr);
         tTd.appendChild(sTable);
@@ -1357,7 +1393,7 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "[" + strLang571 + "]<br />" + obj.getAttribute("owner_nm");
+    sTd.innerHTML += "[" + strLang571 + "]<br />" + GetAttribute(obj,"owner_nm");
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);
@@ -1434,4 +1470,27 @@ function getMouseYLocation(e) {
     }
 
     return locationY
+}
+
+
+function ChangeTime(h, n) {
+    var reVal = "";
+
+    h = parseInt(h);
+
+    if (h == 0) {
+        reVal = strLang15 + " " + "12:" + n;
+    }
+    else if (h == 12) {
+        reVal = strLang116 + " " + String(h) + ":" + n;
+    }
+    else if (h < 12) {
+        reVal = strLang15 + " " + String(h) + ":" + n;
+    }
+    else if (h > 12) {
+        h -= 12;
+        reVal = strLang116 + " " + String(h) + ":" + n;
+    }
+
+    return reVal;
 }

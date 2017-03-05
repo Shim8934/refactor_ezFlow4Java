@@ -1057,7 +1057,7 @@ form{display:inline;margin:0}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist tr th.title{width:100%; text-align:left;}
 
-.mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0;}
+.mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td img{vertical-align:middle;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
