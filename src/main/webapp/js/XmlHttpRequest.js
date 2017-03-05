@@ -897,7 +897,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     }
 }
 
-function GetOpenWindow(popUpW, popUpH) {
+function GetOpenWindowJun(popUpW, popUpH) {
     var xPos = (document.body.clientWidth / 2) - (popUpW / 2); 
     xPos += window.screenLeft;  //듀얼 모니터일때....
     var yPos = (screen.availHeight - popUpH) / 2;
