@@ -31,7 +31,6 @@
 	    	window.onload = function () {
 		        window_onload();
 	        	datepicker();
-	        	datetimepicker();
         
 	        	try {
 		            var ua = navigator.userAgent;
@@ -69,6 +68,7 @@
 	                	return false;
 	        	};
 	    	}
+	    	
 	    	function datepicker() {
 		        $("#Sdatepicker").datepicker({
 	            	changeMonth: true,
@@ -152,7 +152,16 @@
 		        };
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    });
-
+			
+	    	function changeDate(isStartDate) {
+	    		if (($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > ($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+					if (isStartDate) {
+						$("#Edatepicker").datepicker('setDate', $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+					} else {
+						$("#Sdatepicker").datepicker('setDate', $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+					}
+	    		}
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -193,7 +202,7 @@
       					<label for="mpYealy"><spring:message code="ezResource.t283"/></label>
     			</td>
   			</tr>
-  			<tr id='divRecurPatterns' style="display:none">
+  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
     			<td style="padding:10px;height:85px">
     				<input id="id0D1" type="radio" name="optDaily" checked>
     				<label for="txt_De">
@@ -206,7 +215,7 @@
 					<label for="id0D2"><spring:message code="ezResource.t287"/></label>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns'>
+  			<tr id='divRecurPatterns' name="divRecurPatterns">
     			<td  style="padding:10px;height:85px">&nbsp;<spring:message code="ezResource.t288"/>
       				<label for="txt_We">
       					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1"> <spring:message code="ezResource.t289"/>
@@ -222,13 +231,13 @@
 					</div>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns' style="display:none">
+  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
     			<td style="padding:10px;height:85px">
     				<input type="radio" name='optMonthly' id="idOM1" checked>
             		<label for="idOM1"><spring:message code="ezResource.t297"/>&nbsp;</label>
             		<input name="Input" id="list_MonthInterval" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">&nbsp;
 					<spring:message code="ezResource.t298"/>
-            		<input name="Input" id="list_MonthlyDays" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">&nbsp;
+            		<input name="Input" id="list_MonthlyDays" style="Width:40px;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="" maxlength="2">&nbsp;
 					<spring:message code="ezResource.t299"/>
 					<br>
 					<input id="id0M2" type="radio" name='optMonthly'>
@@ -256,7 +265,7 @@
 					<spring:message code="ezResource.t309"/>
 				</td>
   			</tr>
-  			<tr id='divRecurPatterns' style="display:none">
+  			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
     			<td  style="padding:10px;height:85px"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked>
             		<label for="optY1"><spring:message code="ezResource.t297"/>&nbsp;</label>
             		<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
@@ -321,7 +330,7 @@
   			<tr>
     			<th style="text-align:right"><spring:message code="ezResource.t313"/></th>
     			<td width="100%">
-        			<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+        			<input type="text" id="Sdatepicker" onchange="changeDate(true)" style="width:80px;text-align:center" readonly="readonly">
      			</td>
   			</tr>
   			<tr>
@@ -348,13 +357,13 @@
     				<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton">
     				<label for="EndTimeSet">
     					<spring:message code="ezResource.t317"/>
-      					<input type="text" id="Edatepicker" onFocus='window.document.all["optRangeEnd"][2].checked=true;' style="width:80px;text-align:center">
+      					<input type="text" id="Edatepicker" onchange="changeDate(false)" onFocus='window.document.all["optRangeEnd"][2].checked=true;' style="width:80px;text-align:center">
       				</label>
       			</td>
   			</tr>
 		</table>
 		<div class="btnposition">
-		    <a class="imgbtn"  onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>
+		    <a class="imgbtn" onclick='event_btnOk_onclick()'><span><spring:message code="ezResource.t15"/></span></a>
     		<a class="imgbtn" onclick='event_btnCancel_onclick()'><span><spring:message code="ezResource.t16"/></span></a>
     		<a class="imgbtn" onclick='event_btnRemoveRecurrence_onclick()'><span><spring:message code="ezResource.t318"/></span></a>
 		</div>

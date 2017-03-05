@@ -314,15 +314,10 @@ function Schedule_Repetition_onclick_Complete(retVal) {
 
         g_data["recurrence"] = retVal["xml"];
         
-        
-        var ptDate = new Date(retVal["ptEndDate"]);
-        var SetsTime = ptDate.getFullYear() + "-" + (ptDate.getMonth() + 1) + "-" + ptDate.getDate();
-        g_data["ptEndDate"] = SetsTime;
-
-        var sDate = new Date(retVal["startTime"]);
+        var sDate = retVal["startTime"];
         var SetsTime = sDate.getFullYear() + "-" + (sDate.getMonth() + 1) + "-" + sDate.getDate();
 
-        var eDate = new Date(retVal["endTime"]);
+        var eDate = retVal["endTime"];
         var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
         
         $("#Sdatepicker").datepicker('setDate', SetsTime);
@@ -1861,12 +1856,10 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 		xmlDOMrec = null;*/
 	}
     
-	//TODO: 주석풀기
 	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
 	xmlHTTP.send(xmlDOM);
 	
 	var rtnValue = xmlHTTP.responseText;
-	//var rtnValue = "False";
 	
 	xmlDOM = null;
 	xmlHTTP = null;

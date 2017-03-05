@@ -58,7 +58,7 @@ function window_onload() {
 
         SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
         SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
-
+        
         document.getElementById("list_MonthlyDays").value = iDateNumber;
         document.getElementById("list_YearlyDays").value = iDateNumber;
 
@@ -334,14 +334,16 @@ function CheckBeforeSave()
 
 function RepCheck( xmlStr )
 {
-	var start = idDatepickers.startFullYear() + "-"
-				+ TimeRevision((parseInt(idDatepickers.startMonth()) + 1)) + "-"
-				+ TimeRevision(idDatepickers.startDate());
+//	var start = idDatepickers.startFullYear() + "-"
+//				+ TimeRevision((parseInt(idDatepickers.startMonth()) + 1)) + "-"
+//				+ TimeRevision(idDatepickers.startDate());
 	
-	var end  = idDatepickers.endFullYear() + "-"
-				+ TimeRevision((parseInt(idDatepickers.endMonth()) + 1)) + "-"
-				+ TimeRevision(idDatepickers.endDate());
+//	var end  = idDatepickers.endFullYear() + "-"
+//				+ TimeRevision((parseInt(idDatepickers.endMonth()) + 1)) + "-"
+//				+ TimeRevision(idDatepickers.endDate());
 
+	var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
    
 	if(start == end) {
 		return false;
@@ -376,6 +378,7 @@ function RepCheck( xmlStr )
 	else
 		from = "task";
 
+	//???
 	xmlHttp.Open("POST","/ZHome/myoffice/controls/dlg_recurrence_proc.asp?from="+from+"&sDate="+start+"&eDate="+end+"&cmd="+cmd,false);
 	xmlHttp.Send(xmlDoc.xml);
 	
@@ -487,7 +490,7 @@ function event_btnOk_onclick()
     if(NumCheck(document.getElementById("list_MonthlyDays").value) == false)
     {
         alert(g_Error);
-        document.getElementById("list_MonthlyDays").value = idDatepickers.startDate();
+        //document.getElementById("list_MonthlyDays").value = idDatepickers.startDate();
 	    return;
     }
     
@@ -501,7 +504,7 @@ function event_btnOk_onclick()
     if(NumCheck(document.getElementById("list_YearlyDays").value) == false)
     {
         alert(g_Error);
-        document.getElementById("list_YearlyDays").value = idDatepickers.startDate();
+        //document.getElementById("list_YearlyDays").value = idDatepickers.startDate();
 	    return;
     }
     
@@ -530,13 +533,15 @@ function event_btnOk_onclick()
         else {
             pAlldaycheck = "0";
             rtvString = $('#Stimepicker').val() + " ~ " + $('#Etimepicker').val() + ", ";
+            
+            m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T" + $('#Stimepicker').val() + ":00Z");
+            m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T" + $('#Etimepicker').val() + ":00Z");
         }
 
         putReturnData("alldaycheck", pAlldaycheck);
         putReturnData("startTime", m_objStartTime);
         putReturnData("endTime", m_objEndTime);
-        putReturnData("ptEndDate", new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val()));
-
+        
         Remainder(Root, xmlDoc);
 
         switch (getMainPattern()) {
@@ -954,70 +959,71 @@ function checkYear(YF)
 	}
 }
 
-function onDateChanged(iWhich)
-{
-	if (0==iWhich)
-	{
-		var iMs1 = m_objStartOnDate.getTime();
-		m_objStartOnDate.setFullYear( idDatepickers.startFullYear(),idDatepickers.startMonth(),idDatepickers.startDate() );
-		var msDiff = m_objStartOnDate.getTime()-iMs1;
-		m_objStartTime.setTime(m_objStartTime.getTime()+msDiff);
-		m_objEndTime.setTime(m_objEndTime.getTime()+msDiff);
-	}
-	else
-	{
-		m_objEndByDate.setFullYear(idDatepickers.endFullYear(),idDatepickers.endMonth(),idDatepickers.endDate() );
-	}
-}
+//2017-03-06 이효민 사원 : 필요없는 코드
+//function onDateChanged(iWhich)
+//{
+//	if (0==iWhich)
+//	{
+//		var iMs1 = m_objStartOnDate.getTime();
+//		m_objStartOnDate.setFullYear( idDatepickers.startFullYear(),idDatepickers.startMonth(),idDatepickers.startDate() );
+//		var msDiff = m_objStartOnDate.getTime()-iMs1;
+//		m_objStartTime.setTime(m_objStartTime.getTime()+msDiff);
+//		m_objEndTime.setTime(m_objEndTime.getTime()+msDiff);
+//	}
+//	else
+//	{
+//		m_objEndByDate.setFullYear(idDatepickers.endFullYear(),idDatepickers.endMonth(),idDatepickers.endDate() );
+//	}
+//}
 
-var	m_iMsDuration;
-function onTimeChanged(iWhich) {
-	switch (iWhich)
-	{
-		case 0:	
-			
-			m_objStartTime.setHours(idDatepickers.startHours(),idDatepickers.startMinutes(),0,0);
-			
-			if (m_objEndTime.getTime() > m_objStartTime.getTime()) {
-
-                m_iMsDuration = m_objEndTime.getTime() - m_objStartTime.getTime();
-
-            }
-            else {
-                m_iMsDuration = m_objStartTime.getTime() - m_objEndTime.getTime();
-            }
-
-            if (m_iMsDuration < CONST_MS_IN_24HRS) {
-
-                idDatepickers.setEndtimePicker24hours(true);
-
-            }
-			
-			break;
-
-
-        case 1: 
-
-            m_objEndTime.setHours(idDatepickers.endHours());
-
-            if (m_objEndTime.getTime() > m_objStartTime.getTime()) {
-
-                m_iMsDuration = m_objEndTime.getTime() - m_objStartTime.getTime();
-
-            }
-            else {
-                m_iMsDuration = m_objStartTime.getTime() - m_objEndTime.getTime();
-            }
-
-            if (m_iMsDuration < CONST_MS_IN_24HRS) {
-
-                idDatepickers.setEndtimePicker24hours(true);
-
-            }
-
-            break;
-	}
-}
+//var	m_iMsDuration;
+//function onTimeChanged(iWhich) {
+//	switch (iWhich)
+//	{
+//		case 0:	
+//			
+//			m_objStartTime.setHours(idDatepickers.startHours(),idDatepickers.startMinutes(),0,0);
+//			
+//			if (m_objEndTime.getTime() > m_objStartTime.getTime()) {
+//
+//                m_iMsDuration = m_objEndTime.getTime() - m_objStartTime.getTime();
+//
+//            }
+//            else {
+//                m_iMsDuration = m_objStartTime.getTime() - m_objEndTime.getTime();
+//            }
+//
+//            if (m_iMsDuration < CONST_MS_IN_24HRS) {
+//
+//                idDatepickers.setEndtimePicker24hours(true);
+//
+//            }
+//			
+//			break;
+//
+//
+//        case 1: 
+//
+//            m_objEndTime.setHours(idDatepickers.endHours());
+//
+//            if (m_objEndTime.getTime() > m_objStartTime.getTime()) {
+//
+//                m_iMsDuration = m_objEndTime.getTime() - m_objStartTime.getTime();
+//
+//            }
+//            else {
+//                m_iMsDuration = m_objStartTime.getTime() - m_objEndTime.getTime();
+//            }
+//
+//            if (m_iMsDuration < CONST_MS_IN_24HRS) {
+//
+//                idDatepickers.setEndtimePicker24hours(true);
+//
+//            }
+//
+//            break;
+//	}
+//}
 
 function Remainder( Root, xmlDoc )
 {
@@ -1037,12 +1043,13 @@ function Remainder( Root, xmlDoc )
 		    rtvString += $('#Edatepicker').val()
 			createNodeAndInsertText(xmlDoc, Root, "endRecurType", 2);
 			
-			szEndDate = (parseInt(idDatepickers.endMonth()) + 1) + "/"
-									+ idDatepickers.endDate() + "/"
-									+ idDatepickers.endFullYear() + " " 
-									+ TimeRevision(idDatepickers.endHours()) + ":"
-									+ TimeRevision(idDatepickers.endMinutes());
-	         createNodeAndInsertText(xmlDoc, Root, "patternEndDate",szEndDate);
+		    // 2017-03-06 이효민 사원 : 필요없는 코드
+//			szEndDate = (parseInt(idDatepickers.endMonth()) + 1) + "/"
+//									+ idDatepickers.endDate() + "/"
+//									+ idDatepickers.endFullYear() + " " 
+//									+ TimeRevision(idDatepickers.endHours()) + ":"
+//									+ TimeRevision(idDatepickers.endMinutes());
+//	         createNodeAndInsertText(xmlDoc, Root, "patternEndDate",szEndDate);
 		}
 		else
 		{
@@ -1069,14 +1076,7 @@ function SetRemainder( xmlRe )
 	{
 		document.getElementById("EndTimeSet").checked = true;
 		
-		if( typeof(m_dlgArgs["ptEndDate"]) != "undefined" )
-		{
-		    var eDate = new Date(m_dlgArgs["ptEndDate"]);
-		    var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
-		    $("#Edatepicker").datepicker('setDate', SeteTime);
-
-		}
-		else if(typeof(m_dlgArgs["recurrence"]) != "undefined")
+		if(typeof(m_dlgArgs["recurrence"]) != "undefined")
 		{
 			var tmpDate = getNodeText(SelectNodes(xmlRe,"recurrence/endDateTime")[0]);
 			
