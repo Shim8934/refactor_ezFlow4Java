@@ -145,14 +145,19 @@
 	                        subxmlHTTP.send(xmlDom);
 	                        xmlDom = subxmlHTTP.responseXML;
 	                        var emailRows = SelectNodes(xmlDom, "DATA/ROW");
-	                        for (var Cnt2 = 0; Cnt2 < emailRows.length; Cnt2++) {
-	                            var name = SelectSingleNodeValue(emailRows[Cnt2], "NAME");
-	                            var useremail = SelectSingleNodeValue(emailRows[Cnt2], "EMAIL");
-	                            if (email == "")
-	                                email = "\"" + name + "\" <" + useremail + ">";
+	                        
+	                        if (emailRows.length > 0) {
+	                            var addrname = AddressObj.getAttribute("_Sname");
+	                            if (pFolderType == "P")
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|P";
 	                            else
-	                                email += ",\"" + name + "\" <" + useremail + ">";
-	                        }
+	                                var addremail = AddressObj.getAttribute("_AddressID") + "|!|D";
+
+	                            if (email == "")
+	                                email = "\"" + addrname + "\" <" + addremail + ">";
+	                            else
+	                                email += ",\"" + addrname + "\" <" + addremail + ">";
+	                        }	                        
 	                    }
 	                }
 	                if (email == "") {
@@ -165,19 +170,9 @@
 	                var pwidth = window.screen.availWidth;
 	                var pTop = (pheight - conHeight) / 2;
 	                var pLeft = (pwidth - 890) / 2;
-	
-	
-	                if (CrossYN() || pNoneActiveX == "YES")
-	                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
-	                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                else {
-	                    if (pUse_Editor == "")
-	                        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
-	                                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                    else
-	                        window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + escape(email), "",
-	                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                }
+		
+                    window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
+                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            }
 	        }
 	        function isValidEmail(email_address) {

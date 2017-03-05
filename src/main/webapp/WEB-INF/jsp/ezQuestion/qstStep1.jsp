@@ -435,11 +435,11 @@
 	            </tr> 
 	            <tr> <!----------- 설문제목 -------------> 
 	                <th><spring:message code="ezQuestion.t255" /></th> 
-	                <td><input type="text" maxlength="100" name="txtSubject" style="WIDTH:100%;" id="txtSubject" /></td> 
+	                <td><input type="text" maxlength="100" name="txtSubject" style="WIDTH:100%;" maxlength = "250" id="txtSubject" /></td> 
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%" rows="10" cols="" maxlength="127"></textarea></td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.85%; padding:0px; resize:none; overflow:auto;" rows="10" cols="" maxlength="250"></textarea></td> 
 	            </tr>
 	        </table> 
 	        <div class="btnposition">

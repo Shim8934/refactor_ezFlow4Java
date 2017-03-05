@@ -54,7 +54,7 @@ public interface EzApprovalGService {
 	
 	public String delUserFormInfo(String formID, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String getApprovalPWD(String userID, int tenantID) throws Exception;
+	public String getApprovalPWD(String userID, int tenantID, String companyID) throws Exception;
 	
 	public String getSecurityType(String selected, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -153,7 +153,7 @@ public interface EzApprovalGService {
 	
 	public String receiverChk(String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getEA5Value(String msg, int tenantID) throws Exception;
+	public String getEA5Value(String msg, int tenantID, String companyID) throws Exception;
 	
 	public String getMyTaskCode(String userID, String deptID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -187,11 +187,11 @@ public interface EzApprovalGService {
 	public String updateHistoryForLine(String docID, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName,
 			String userDeptName2, String chkFlag, String companyID, int tenantID) throws Exception;
 	
-	public String getApprovalPWD1(String dUserID, int tenantID) throws Exception;
+	public String getApprovalPWD1(String dUserID, int tenantID, String companyID) throws Exception;
 	
 	public String getApproveDocInfo(String docID, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getLastOpinionContent(String docID, String companyID, String lang) throws Exception;
+	public String getLastOpinionContent(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getSignInfo(String docID, String companyID, int tenantID) throws Exception;
 	
@@ -293,15 +293,15 @@ public interface EzApprovalGService {
 	
 	public String doSendOfferReject(String docID, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String getApprovalPWD2(String dUserID, int tenantID) throws Exception;
+	public String getApprovalPWD2(String dUserID, int tenantID, String companyID) throws Exception;
 	
 	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID, int tenantID) throws Exception;
 	
 	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
 	
-	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
+	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
-	public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
+	public String gongRamSaveEnd(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
 	public String makeTmp2IngDocInfo(String userID, String sn, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -351,13 +351,13 @@ public interface EzApprovalGService {
 
 	public String getCabinetSimpleInfo(Document xmlDom, int tenantID) throws Exception;
 
-	public String changeCabinetInfo(Document xmlDom, int tenantID) throws Exception;
+	public String changeCabinetInfo(Document xmlDom, int tenantID, String companyID) throws Exception;
 
 	public String getCabinetHistory(Document xmlDom, LoginVO userInfo) throws Exception;
 
 	public String getTaskCharger(Document xmlDom, String lang, int tenantID) throws Exception;
 
-	public String saveCabRoleInfo(Document xmlDom, int tenantID) throws Exception;
+	public String saveCabRoleInfo(Document xmlDom, int tenantID, String companyID) throws Exception;
 
 	public String updateReceiptOffer(String docID, String orgDocID, String companyID, int tenantID)throws Exception;
 
@@ -380,5 +380,7 @@ public interface EzApprovalGService {
 	public String doCancelForce(String docID, String userID, String companyID, int tenantId) throws Exception;
 
 	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
+
+	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, String pw, HttpServletRequest request, LoginVO userInfo) throws Exception;
 
 }

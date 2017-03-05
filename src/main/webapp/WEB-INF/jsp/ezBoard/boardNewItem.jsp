@@ -642,6 +642,8 @@
 		        }
 
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "FILEPATH", pUploadFilePath);
+		        //gubun 사용해야되서 추가
+		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "GUBUN", gubun);
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE1", "");
 
 		        if (gubun != "3" && document.getElementById('noticePost').checked) {

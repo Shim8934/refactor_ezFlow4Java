@@ -1298,6 +1298,12 @@ img { border:0px;}
 	width:335px;
 }
 
+.f_right + .f_right {
+	clear:both;
+	float:right;
+	width:335px;
+}
+
 /* btype_list */
 .btype_list {
 	margin:0px; 

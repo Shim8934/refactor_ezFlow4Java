@@ -194,7 +194,7 @@
 		        idDatepicker.isoEndDateUTF = "<c:out value = '${endDateTime}' />";
 		        idDatepicker.ready();
 		    }
-	
+		    
 		    function DateFormat(obj) {
 		        var yy = String(obj.getFullYear()).substring(0, 4);
 		        

@@ -68,8 +68,6 @@ public class ApprGCabinetVO{
 	/** */
 	private String tempFlag;
 	/** */
-	private String diplayRecFlag;
-	/** */
 	private String sc1;
 	/** */
 	private String sc2;
@@ -88,6 +86,7 @@ public class ApprGCabinetVO{
 	private String docTransferYear;
 	private String cabDeptCode;
 	private String cabTitle;
+	private String row_id;
 	/** 순서*/
 	private String rowNum_;
 	private String dispClassNo;
@@ -105,6 +104,12 @@ public class ApprGCabinetVO{
 	private String recordID;
 	private String serialNO;
 	
+	public String getRow_id() {
+		return row_id;
+	}
+	public void setRow_id(String row_id) {
+		this.row_id = row_id;
+	}
 	public String getProdReportFlag() {
 		return prodReportFlag;
 	}
@@ -165,12 +170,7 @@ public class ApprGCabinetVO{
 	public void setDelayFlag(String delayFlag) {
 		this.delayFlag = delayFlag;
 	}
-	public String getDisplayRecFlag() {
-		return displayRecFlag;
-	}
-	public void setDisplayRecFlag(String displayRecFlag) {
-		this.displayRecFlag = displayRecFlag;
-	}
+	
 	public String getEndYear() {
 		return endYear;
 	}
@@ -375,11 +375,11 @@ public class ApprGCabinetVO{
 	public void setTempFlag(String tempFlag) {
 		this.tempFlag = tempFlag;
 	}
-	public String getDiplayRecFlag() {
-		return diplayRecFlag;
+	public String getDisplayRecFlag() {
+		return displayRecFlag;
 	}
-	public void setDiplayRecFlag(String diplayRecFlag) {
-		this.diplayRecFlag = diplayRecFlag;
+	public void setDisplayRecFlag(String displayRecFlag) {
+		this.displayRecFlag = displayRecFlag;
 	}
 	public String getSc1() {
 		return sc1;

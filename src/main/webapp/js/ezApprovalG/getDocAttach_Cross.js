@@ -55,9 +55,9 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 			result = xml;
 		}        			
 	});
-
-    var xmlRtn = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
-
+    var xmldom = createXmlDom();
+    xmldom =loadXMLString(result);
+    var xmlRtn = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
     if (xmlRtn.length > 0) {
         var strAttach = " &nbsp ";
         var rep = /'/g;

@@ -2994,20 +2994,24 @@ function getEmailAddressList(ReceiverList) {
         receiverPart = receiver.split(" <");
         var pName = receiverPart[0];
         var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-
-
-        //length2 = receiverPart.length;		
+		
         if (g_cmd != "EDIT") {
             if (pEmail == g_myemail)
                 continue;
         }
 
-
-        retVal["type"][count3] = "email";
         retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
-        retVal["email"][count3] = pEmail;
-        retVal["href"][count3] = "";
-
+        
+        if (receiverPart[1].indexOf('@') > 0) {
+            retVal["type"][count3] = "email";
+            retVal["email"][count3] = pEmail;
+            retVal["href"][count3] = "";
+        } else {
+            retVal["type"][count3] = "mailgroup";
+            retVal["email"][count3] = strLang126;
+            retVal["href"][count3] = pEmail;
+        }
+        
         count3++;
     }
 
