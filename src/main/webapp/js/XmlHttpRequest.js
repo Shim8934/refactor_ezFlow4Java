@@ -897,17 +897,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     }
 }
 
-function GetOpenWindowfeature(popUpW, popUpH) {
-//    var heigth = window.screen.availHeight;
-//    var width = window.screen.availWidth;
-//    var left = 0;
-//    var top = 0;
-//    var pleftpos;
-//    pleftpos = parseInt(width) - popUpW;
-//    heigth = parseInt(heigth) - popUpH;
-//    width = parseInt(width) - pleftpos;
-//    left = pleftpos / 2;
-//    top = heigth / 2;
+function GetOpenWindow(popUpW, popUpH) {
     var xPos = (document.body.clientWidth / 2) - (popUpW / 2); 
     xPos += window.screenLeft;  //듀얼 모니터일때....
     var yPos = (screen.availHeight - popUpH) / 2;
@@ -916,6 +906,21 @@ function GetOpenWindowfeature(popUpW, popUpH) {
     return feature;
 }
 
+function GetOpenWindowfeature(popUpW, popUpH) {
+
+	var heigth = window.screen.availHeight;
+	var width = window.screen.availWidth;
+	var left = 0;
+	var top = 0;
+	var pleftpos;
+	pleftpos = parseInt(width) - popUpW;
+	heigth = parseInt(heigth) - popUpH;
+	width = parseInt(width) - pleftpos;
+	left = pleftpos / 2;
+	top = heigth / 2;
+	var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=no, scrollbars=yes";
+	return feature;
+}
 function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
     var resize;
     if (MACSAFARIYN())
