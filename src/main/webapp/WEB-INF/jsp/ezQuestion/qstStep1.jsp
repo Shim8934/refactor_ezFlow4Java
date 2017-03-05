@@ -439,7 +439,7 @@
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.3%; resize:none; overflow:auto;" rows="10" cols="" maxlength="250"></textarea></td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:99.85%; padding:0px; resize:none; overflow:auto;" rows="10" cols="" maxlength="250"></textarea></td> 
 	            </tr>
 	        </table> 
 	        <div class="btnposition">
