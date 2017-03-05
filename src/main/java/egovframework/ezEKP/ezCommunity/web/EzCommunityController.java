@@ -493,7 +493,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 	
 	/**
-	 * 커뮤니티 메인 오른쪽화면 게시판 목록 조회 함수
+	 * 커뮤니티 메인 오른쪽화면 게시판 조회 함수
 	 */
 	@RequestMapping(value = "/ezCommunity/commHome/commHomeBoardInfo.do")
 	public String commHomeBoardInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {

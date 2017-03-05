@@ -279,7 +279,7 @@
 					        <input type="checkbox" name="openSex" checked value="1" tabindex="5"><spring:message code = 'ezCommunity.t1072' /><br>
 		        		</div>
 		        		
-		        		<input type="checkbox" name="openBirth" id="openbirth" value="1" onclick="return openbirth_onchange()" tabindex="6">
+		        		<input type="checkbox" name="openBirth" id="openbirth" value="1" onclick="return openbirth_onchange()" tabindex="6" style="vertical-align:middle">
 		        		<spring:message code = 'ezCommunity.t519' />
 		        		<input type="text" name="birthYear" id="birthYear" value="YYYY" size="5" maxlength="4" onFocus="return birthYear_onfocus()" onChange="return birthYear_onchange()" tabindex="7">
 		        		<spring:message code = 'ezCommunity.t1073' />

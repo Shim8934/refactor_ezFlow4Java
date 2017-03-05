@@ -34,6 +34,14 @@
 	    <script src="/js/ezApprovalG/Docinfo.js" type="text/javascript"></script>
 	    <script src="/js/ezApprovalG/composeappt.js" type="text/javascript" ></script>
 	    <script src="/js/ezApprovalG/datepicker.htc.js" type="text/javascript" ></script>
+<!-- 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" /> -->
+<!-- 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script> -->
+<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"> -->
+<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"> -->
+
 	    <script src="/js/Common.js" type="text/javascript"></script>
 	    <script type="text/javascript">
 	        var OrderCell = "";
@@ -161,6 +169,69 @@
 	        /* 2015-06-23 추가 - KSK */
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
+// 	        $(function () {
+// 	        	$("#idDatepicker").val('${startDateTime}'.substring(0, 10));
+// 	        	if (document.getElementById("AprSecurity").checked){
+// 	        		$("#idDatepicker").attr('disabled',false);
+// 	        	} else {
+// 	        		$("#idDatepicker").attr('disabled',true);
+// 	        	}
+// 		        $("#idDatepicker").datepicker({
+// 		            changeMonth: true,
+// 		            changeYear: true,
+// 		            autoSize: true,
+// 		            showOn: "both",
+// 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+// 		            buttonImageOnly: true
+// 		        });
+// 			    if ("${userInfo.lang}" == "1") {
+// 				    $(function () {
+// 				        $.datepicker.regional['ko'] = {
+// 				        		closeText: "<spring:message code='main.t3' />",
+// 					            prevText: "<spring:message code='main.t0604' />",
+// 					            nextText: "<spring:message code='main.t0605' />",
+// 					            currentText: "<spring:message code='main.t0606' />",
+// 					            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+// 					                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+// 					                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+// 					                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+// 					            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+// 					                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+// 					                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+// 					                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+// 					            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+// 					                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+// 					                       "<spring:message code='main.t0627' />"],
+// 					            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+// 							                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+// 							                       "<spring:message code='main.t0627' />"],
+// 					            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+// 						                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+// 						                       "<spring:message code='main.t0627' />"],
+// 				            weekHeader: 'Wk',
+// 				            dateFormat: 'yy-mm-dd (DD)',
+// 				            firstDay: 0,
+// 				            isRTL: false,
+// 				            duration: 200,
+// 				            showAnim: 'show',
+// 				            showMonthAfterYear: true
+// 				        };
+// 				        $.datepicker.setDefaults($.datepicker.regional['ko']);
+// 				    });
+// 			    } else {
+// 				    $(function () {
+// 				        $.datepicker.regional['en'] = {
+// 				            dateFormat: 'yy-mm-dd (DD)',
+// 				            firstDay: 0,
+// 				            isRTL: false,
+// 				            duration: 200,
+// 				            showAnim: 'show',
+// 				            showMonthAfterYear: true
+// 				        };
+// 				        $.datepicker.setDefaults($.datepicker.regional['en']);
+// 				    });
+// 			    }
+// 	        });
 	        
 	        window.onload = function () {
 	            if (MACSAFARIYN()) {
@@ -264,7 +335,7 @@
 	            try {
 	                //2015-06-30 표준모듈:추가(외부수신자요약) - KSK
 	                SummaryOuterReceiverList = RetValue[40];
-	                if (SummaryOuterReceiverList != "") {
+	                if (SummaryOuterReceiverList != "" && SummaryOuterReceiverList != undefined) {
 	                    document.getElementById("inputSummaryOuterReceiverList").value = SummaryOuterReceiverList;
 	                    document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	                }
@@ -1355,7 +1426,7 @@
 	                        </tr>
 	                        <tr>
 	                            <td style="text-align:left">
-	                                <a style="margin-top: 5px; display: none" class="imgbtn" id="btnaddress"><span onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+	                                <a style="margin-top: 5px; display: none;"  class="imgbtn" id="btnaddress"><span onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
 	                                <a style="margin-top: 5px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><spring:message code='ezApprovalG.t348'/></span></a>
 	                            </td>
 	                            <td style="text-align:right">

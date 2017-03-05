@@ -23,6 +23,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -54,6 +55,9 @@ public class EzApprovalGarchiveController {
 
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
+	
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private EgovMessageSource messageSource;
@@ -262,7 +266,6 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecReadHistory(xmlDom, userInfo.getTenantId());
-		
 		return result;
 	}
 	
@@ -270,9 +273,7 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/viewRecInfo.do", produces = "text/xml;charset=utf-8")
 	public String viewRecInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
 		model.addAttribute("userInfo", userInfo);
-		
 		return "ezApprovalG/apprGviewRecInfo";
 	}
 	
@@ -280,10 +281,14 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "/ezApprovalG/getRecClassInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getRecClassInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		logger.debug("getRecClassInfo Started");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String result = ezApprovalGService.getRecordClassInfo(xmlDom, userInfo.getTenantId());
 		
+		logger.debug("getRecClassInfo result = " + result);
+		logger.debug("getRecClassInfo Ended");
+
 		return result;
 	}
 	
@@ -930,7 +935,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.changeCabinetInfo(xmlDom, userInfo.getTenantId());
+		String result = ezApprovalGService.changeCabinetInfo(xmlDom, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return result ;
 	}
@@ -1006,7 +1011,7 @@ public class EzApprovalGarchiveController {
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
-		String result = ezApprovalGService.saveCabRoleInfo(xmlDom, userInfo.getTenantId());
+		String result = ezApprovalGService.saveCabRoleInfo(xmlDom, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return result;
 	}
@@ -1205,6 +1210,18 @@ public class EzApprovalGarchiveController {
 		result = ezOrganService.getDeptReceipterIDs(deptID, userInfo.getTenantId());
 		
 		return result;
+	}
+	
+	/** 전자결재 G 서명등록*/
+	@RequestMapping(value = "ezApprovalG/saveSingInfo.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String saveSingInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String fileName = request.getParameter("extensionAttribute3");
+		
+		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute3", fileName, "user", userInfo.getTenantId());
+
+		return "OK";
 	}
 	
 	/** 전자결재 G 한글 양식 기안*/

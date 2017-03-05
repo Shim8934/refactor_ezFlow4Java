@@ -412,8 +412,7 @@ function AppendFileAttachInfo_List(ret)
 			
 		    if (is_newfile != "DEL"){
 
-		        strAttach = strAttach + "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(objAttachNodes(i).childNodes.item(0).childNodes.item(5)) + "' value='" + realFileNM + "'>";
-			    strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='#' target='_self'>" 
+		        strAttach = strAttach + "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(objAttachNodes(i).childNodes.item(0).childNodes.item(5)) + "' value='" + realFileNM + "' style='vertical-align:middle;'>";
 			    strAttach = strAttach + getNodeText(objAttachNodes(i).childNodes.item(0).childNodes.item(0)) + "&nbsp;</a><br>"
 		    }
 	    }

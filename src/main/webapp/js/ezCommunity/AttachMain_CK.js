@@ -338,13 +338,8 @@ function AppendFileAttachInfo(ret)
 	        realFileNM = ReplaceText(realFileNM, "'", "&apos;")
 
 	        if (is_newfile != "DEL") {
-	            // 20091021 : drag&drop 중간결재자 첨부삭제 시 자신의 것이 아닌경우 삭제 안되도록 처리
-	            //strAttach = strAttach + "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value='" + realFileNM + "'>";
-	            //strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='#' target='_self'>"
-	            strAttach = strAttach + "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value='" + ServerFile + "'>";
-	            //strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='" + document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/downloadattach.aspx" + "?filename=" + encodeURIComponent(realFileNM) + "&filepath=" + encodeURIComponent(ServerFile) + "&regData=" + GetbrowserLanguage() + "' target='_self'>"
-	            strAttach = strAttach + "<img src='/images/email/mail_006.gif'>"
-	            strAttach = strAttach + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;</a>&nbsp;<br>"
+	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value='" + ServerFile + "' style='vertical-align:middle;'>";
+	            strAttach += getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;</a>&nbsp;<br>"
 	        }
 	    }
 	    document.getElementById("lstAttachLink").innerHTML = strAttach;	   
