@@ -2023,11 +2023,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		if (isRep) {
-			logger.debug("===반복예약 데이터가 있을 때===");
+			logger.debug("===반복예약일 때===");
 			
 			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
 		} else {
-			logger.debug("===반복예약 데이터가 없을 때===");
+			logger.debug("===일반예약일 때===");
 			
 			if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
 				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
