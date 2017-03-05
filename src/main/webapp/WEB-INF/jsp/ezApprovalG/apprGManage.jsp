@@ -401,7 +401,7 @@
 		            else if (pListTypeValue == "21") //한양대 임시저장
 		            {
 		                pDocID = pCurSelRow.getAttribute("DATA1");
-		                var newDocID = MakeTmp2Ing(pDocID);
+// 		                var newDocID = MakeTmp2Ing(pDocID);
 		                pURL = pCurSelRow.getAttribute("DATA3");
 		                btnRedraft_onclick();
 		            }
@@ -1425,8 +1425,8 @@
 				<li id="tbtnRegList"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
 				<li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
-				<li id="tbtncallback"><span id="btncallback" onclick="return btncallback_onclick()" ><spring:message code='ezApprovalG.t66'/></span></li>
-		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
+				<li id="tbtncallback"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
+		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btncallback_onclick('FORCECALLBACK')"><spring:message code='ezApprovalG.t2005'/></span></li>
 				<li id="tbtnRemoveDoc" ><span id="btnRemoveDoc" onclick="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 				<li id="tbtnViewDoc"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
 				<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>

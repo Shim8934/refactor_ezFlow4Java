@@ -607,11 +607,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGRecordVO>) list("EzApprovalG.selectUserName", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<ApprGAprLineVO> permissAprLineInfo(Map<String, Object> map) throws Exception{
-		return (List<ApprGAprLineVO>) select("EzApprovalG.permissAprLineInfo", map);
-	}
-	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
@@ -662,10 +657,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public String getSepAttachSN(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getSepAttachSN", map);
-	}
-	
-	public String doApproveDocState(Map<String, Object> map1) throws Exception{
-		return (String) select("EzApprovalG.doApproveDocState", map1);
 	}
 	
 	public String getDocTitle(Map<String, Object> map) throws Exception{
@@ -1817,18 +1808,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateSerialNo", map);
 	}
 	
-	public void updateOpinionInfo(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateOpinionInfo", map);
-	}
-	
 	public void updateAttachFileInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateAttachFileInfo", map);
 	}
 	
-	public void updateAttachDocInfo(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateAttachDocInfo", map);
-	}
-
 	public void changeRecordInfo2(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.changeRecordInfo2", map);
 	}
@@ -1919,10 +1902,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateAprDocOptionInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateAprDocOptionInfo", map);
-	}
-	
-	public void updateAprDocAttachInfo(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateAprDocAttachInfo", map);
 	}
 	
 	public void updateAprDocInfo(Map<String, Object> map) throws Exception{
@@ -2023,10 +2002,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void updateGongRamAprDocInfo(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.updateGongRamAprDocInfo", map);
-	}
-	
-	public void updateGianAprDocInfo(Map<String, Object> map) throws Exception{
-		update("EzApprovalG.updateGianAprDocInfo", map);
 	}
 	
 	public void updateBebuDocDeivery(Map<String, Object> map) throws Exception{

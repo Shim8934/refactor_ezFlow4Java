@@ -415,8 +415,8 @@
 	                </div>
 	            </td>
 	            <td style="text-align: center; width: 25px">
-	                <img src="/images/arr_right.gif" name="Image191" width="16" height="16" onclick="return AddCabList_onclick()" style="cursor: pointer">
-	                <img src="/images/arr_left.gif" name="Image201" width="16" height="16" onclick="return DelCabList_onclick()" style="padding-top: 5px; padding-left: 0px; cursor: pointer;">
+	                <img src="/images/arr_right.gif" name="Image191" width="16" height="16" onclick="return AddCabList_onclick()" style="padding-left: 0px cursor: pointer">
+	                <img src="/images/arr_left.gif" name="Image201" width="16" height="16" onclick="return DelCabList_onclick()" style="padding-top: 5px; -webkit-padding-start:2px; cursor: pointer;">
 	                <br>
 	                <br>
 	                <br>

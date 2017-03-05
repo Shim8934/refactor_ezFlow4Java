@@ -197,7 +197,7 @@
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
-					url : "/admin/ezOrgan/saveUserInfo.do",
+					url : "/ezApprovalG/saveSingInfo.do",
 					data : {
 							parentCn 	: "", 
 							cn 			: userid, 
