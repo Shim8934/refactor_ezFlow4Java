@@ -3632,6 +3632,10 @@
 	          	EndDate = #endDate#,
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
+	          	<isEqual property="guBun" compareValue="2">
+	          		WriterName = #writerName#,
+	          		WriterName2 = #writerName2#,
+	          	</isEqual>
 	          	ExtensionAttribute5 = #extensionAttribute5#,
 	          	DocPassWord = #docPassword#,
 	          	extensionAttribute6 = #extensionAttribute6#,

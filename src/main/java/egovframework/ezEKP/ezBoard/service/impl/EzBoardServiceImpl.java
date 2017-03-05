@@ -3038,6 +3038,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getItemLevel() == null || boardListVO.getItemLevel().equals("")) {
 			boardListVO.setItemLevel("0");
 		}
+		//구분 추가
+		boardListVO.setGuBun(doc.getElementsByTagName("GUBUN").item(0).getTextContent());
 
 		if (pMode.equals("modify")) {
 			brdUpdateItem(boardListVO, "BOARD");
