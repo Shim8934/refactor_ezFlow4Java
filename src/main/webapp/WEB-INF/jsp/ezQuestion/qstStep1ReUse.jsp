@@ -216,7 +216,7 @@
         L_SearchEndDt = L_SearchEndDt.substring(0, 10);
 
         if (L_SearchStartDt > L_SearchEndDt) {
-        	alert('<spring:message code="ezQuestion.t420" />');
+        	alert('<spring:message code="ezQuestion.t448" />');
             return false;
         }
 
