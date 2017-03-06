@@ -754,6 +754,7 @@ function ListView() {
                         oInput.id = oDatas[0].text + ";";
 
                     oInput.type = "checkbox";
+                    oInput.onclick = new Function("chk_onselect(this)");                   
                     objTd.appendChild(oInput);
                 }
                 else {
@@ -1527,4 +1528,16 @@ function chk_onselect(obj) {
         strListInfo = ReplaceText(strListInfo, obj.id, "");
     }
     listEventCheckbox = true;
+
+    if (obj.checked) {
+        obj.checked = true;
+        obj.parentElement.parentElement.setAttribute("selected", "true");
+        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+    }
+    else {
+        obj.checked = false;
+        obj.parentElement.parentElement.setAttribute("selected", "false");
+        obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+    }
+
 }
