@@ -399,6 +399,9 @@
 		                }
 						else {
 		                    alert((listContentArry.length) + "<spring:message code='ezAddress.t215' />");
+		                    
+		                    document.getElementById("HeaderAllCheckBox").checked = false;
+		                    
 		                    pTotalCnt = parseInt(pTotalCnt) - listContentArry.length;
 		                    if (pCurrentPage != 1 && pTotalCnt == (pCurrentPage - 1) * pPageSize) {
 		                    	pCurrentPage--;
