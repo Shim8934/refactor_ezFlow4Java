@@ -17730,7 +17730,7 @@
           AND
           	 TENANT_ID = #v_TENANTID#
           AND
-          	 COMPNAYID = #companyID#)
+          	 COMPANYID = #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertRejectEndAprLineInfo" parameterClass="Map"> 
