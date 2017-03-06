@@ -131,7 +131,7 @@
     		<article class="time">
     			<p class="title"><spring:message code='main.t00023' /></p>
     			<div id="clock_id" style="width: 120px; height: 120px; background: url(/images/WebPartSliderCI/analogu.png) no-repeat ; "></div>    
-    			<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:1px solid #205f61; background:url(/images/WebPartSliderCI/digitaltime_bg.gif);font-weight:bold; color:#FFF; letter-spacing:4px; font-size:15px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>
+    			<div id="timeinput" style=" margin-left:10px ;width:104px; height:25px; border:0px; font-weight:bold; color: black; letter-spacing:4px; font-size:18px; font-family:Arial, Helvetica, sans-serif; text-align:center; line-height:25px;"></div>    			
    			</article>
 		</section>
 			
