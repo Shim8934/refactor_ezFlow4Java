@@ -50,7 +50,7 @@
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_04" target="right"><span>PIMS環境設定</span></a></h2>
 				<ul>
 				</ul>
-				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_05" target="right"><span>電子決済の環境設定</span></a></h2>
+				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_05" target="right"><span>電子決裁の環境設定</span></a></h2>
 				<ul>
 				</ul>
 				<h2><a style="width:100%; display:inline-block" href="/ezPortal/help/main.do?id=/images/help/env_jp_06" target="right"><span>掲示板の環境設定</span></a></h2>

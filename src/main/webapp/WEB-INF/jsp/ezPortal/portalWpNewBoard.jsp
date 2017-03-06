@@ -43,7 +43,7 @@
       		</article>
 		</section>
 
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";

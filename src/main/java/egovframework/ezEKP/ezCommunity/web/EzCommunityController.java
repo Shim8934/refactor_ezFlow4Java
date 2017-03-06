@@ -2905,7 +2905,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		ret = "<RESULT>" + ret + "</RESULT>";
 
-		logger.debug("saveBoardOrder started.");
+		logger.debug("saveBoardOrder ended.");
 		
 		return ret;
 	}

@@ -42,7 +42,7 @@
 			</article>
 		</section>
 		
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
 			window.onload = window_onload_NewGraph;
 	    	function window_onload_NewGraph(){

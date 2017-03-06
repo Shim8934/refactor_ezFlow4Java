@@ -2971,10 +2971,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			ezCommunityDAO.brdNewItemInsert(map);
 		}
 		
-		map = new HashMap<String, Object>();
-		map.put("v_PITEMID", item.getItemID());
-		map.put("tenantID", userInfo.getTenantId());
-		
 		ezCommunityDAO.newItemDel(map);
 		
 		if (item.getAttachments().length() > 0) {
@@ -6294,9 +6290,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				filePath = attachmentsArr[i];
 				
 				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + attachmentsArr[i].replace("tempUploadFile", ""));
+					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath.replace("tempUploadFile", ""));
 					FileUtils.moveFile(file, destFile);
-					filePath = attachmentsArr[i].replace("tempUploadFile", "");
+					filePath = filePath.replace("tempUploadFile", "");
 				}
 				
 				if (!thumbPath.equals("")) {

@@ -94,7 +94,7 @@
 		    var flag = false;
 		    
 		    window.onresize = function () {
-		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
+		        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
 		    }
 		    
 		    window.onload = function () {
@@ -1017,7 +1017,7 @@
       			</td>
 			</tr>
 			<tr>
-    			<td style="padding-bottom:10px;height:100%" id="EdtorSize">
+    			<td style="height:100%" id="EdtorSize">
 	    			<c:choose>
 	    				<c:when test="${editor == 'TAGFREE' }">
 	    					<iframe id="message" class="viewbox"  name="message" src="TagFree_TFX_Editor.aspx" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
@@ -1028,7 +1028,7 @@
 	    				</c:when>
 	    				
 	    				<c:otherwise>
-	    					<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/ckEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+	    					<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/ckEditor.do" frameborder="0" style="padding:0; height:100%; width:99.7%; overflow:auto;"></iframe>
 	    				</c:otherwise>
 	    			</c:choose>
     			</td>
@@ -1045,7 +1045,7 @@
 		<div id="txtAttachList"></div>
    		<iframe name="ifrm" src="about:blank" style="display:none"></iframe>
 		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezCommunity/upload.do" target="ifrm" >
-			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px;" multiple="true" />
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width:1px; height:1px; display:none" multiple="true" />
 			<input type="hidden" name="boardID" id="boardID" />
 			<input type="hidden" name="maxSize" id="maxSize" />
 			<input type="hidden" name="mode" id="mode" />
@@ -1054,7 +1054,7 @@
 		</form>
 		
 		<script type="text/javascript">
-		    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 150 + "PX";
+		    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 160 + "PX";
 		</script>
 	</body>
 </html>

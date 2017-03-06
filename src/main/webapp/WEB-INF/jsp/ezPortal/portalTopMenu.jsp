@@ -15,7 +15,7 @@
 		 <!-- 관리자 -->
 		 <link href="<spring:message code="ezPortal.i2" />" rel="stylesheet" type="text/css">
 		 <%} else {%>	
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<%} %>
 		
 		<style type="text/css">

@@ -5,10 +5,8 @@
 <html>
     <head>
         <title>TopMenu</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-            
-        <link href="/css/main.css" rel="stylesheet" type="text/css">
-        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />               
+        <link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
         <style type="text/css">
             <c:if test="${lang == '2'}">
                 #input_search { background:#333437 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
@@ -19,8 +17,7 @@
             <c:if test="${lang == '4'}">
                 #input_search { background:#333437 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
-        </style>        
-    
+        </style>    
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
         <script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>          
         <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

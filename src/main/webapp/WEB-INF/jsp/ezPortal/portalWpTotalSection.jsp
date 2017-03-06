@@ -140,12 +140,12 @@
 			 String userAgent = request.getHeader("User-Agent");		 		
 		 %>
 		
-		<link rel="stylesheet" href="/css/main.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/selectbox.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/scrollbox.js"></script>
-		<script type="text/javascript" src="/js/ezSchedule/lang/ezSchedule3.js"></script>
+		<script type="text/javascript" src="<spring:message code='ezSchedule.e1' />"></script>
 		<%if (request.getHeader("User-Agent").indexOf("Trident") < 0 && request.getHeader("User-Agent").toUpperCase().indexOf("MSIE") > 0){ %>
 			<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_IEEIP.js"></script>
     	<%} else { %>
