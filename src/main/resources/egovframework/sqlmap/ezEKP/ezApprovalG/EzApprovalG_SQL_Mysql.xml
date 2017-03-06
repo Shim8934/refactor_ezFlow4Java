@@ -10734,7 +10734,7 @@
     					#v_CurSN#, 
     					1 ,
     					#v_TENANTID#,
-    					#companyDI#)
+    					#companyID#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
