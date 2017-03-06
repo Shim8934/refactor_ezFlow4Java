@@ -526,9 +526,12 @@ function event_btnOk_onclick()
         if (document.getElementById("alldaycheck").checked == true) {
             pAlldaycheck = "1";
             rtvString = strLang126 + ", ";
-
-            var m_objStartTime_temp = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T00:00:00Z");
-            var m_objEndTime_temp = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T23:59:59Z");
+            
+            m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+            m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+            m_objEndTime.setHours(23);
+            m_objEndTime.setMinutes(59);
+            
             m_objStartTime = m_objStartTime_temp;
             m_objEndTime = m_objEndTime_temp;
         }
@@ -536,8 +539,13 @@ function event_btnOk_onclick()
             pAlldaycheck = "0";
             rtvString = $('#Stimepicker').val() + " ~ " + $('#Etimepicker').val() + ", ";
             
-            m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T" + $('#Stimepicker').val() + ":00Z");
-            m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T" + $('#Etimepicker').val() + ":00Z");
+            m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+            m_objStartTime.setHours(Number($('#Stimepicker').val().split(":")[0]));
+            m_objStartTime.setMinutes(Number($('#Stimepicker').val().split(":")[1]));
+            
+            m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+            m_objEndTime.setHours(Number($('#Etimepicker').val().split(":")[0]));
+            m_objEndTime.setMinutes(Number($('#Etimepicker').val().split(":")[1]));
         }
 
         putReturnData("alldaycheck", pAlldaycheck);
