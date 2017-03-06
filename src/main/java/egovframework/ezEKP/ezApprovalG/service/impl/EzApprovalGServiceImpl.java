@@ -2009,6 +2009,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_FORMID", formID);
 		map.put("v_USERID", userID);
+		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGLineTempletVO> apprGLineTempletVOList = ezApprovalGDAO.getLineTempletInfo(map);
@@ -6825,6 +6826,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TASKCODE", taskCode);
 		map.put("v_TYPE", type);
 		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
 
 		try {
 			ezApprovalGDAO.setMyTaskCode(map);
@@ -7136,7 +7138,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(orderOption1.length() > 0) {
 			map.put("v_ORDEROPTIONVALUE", orderOption1.toLowerCase().substring(0, 10));
 		}
-		map.put("v_TENANTID", tenantID);
 
 		List<ApprGHistoryAttachVO> apprGHistoryAttachVOList = ezApprovalGDAO.getHistoryForAttach(map);
 		
@@ -7543,6 +7544,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_DEPTNAME2", userDeptName2.trim());
 			map.put("v_TENANTID", tenantID);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("companyID", companyID);
 
 			try {
 				ezApprovalGDAO.updateHistoryForLine(map);
@@ -11679,20 +11681,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String receiptMemberJobTitle2 = "";
 		String receiptCompanyID = "";
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
-		
-
 		String flag = getCode2Name("A35", "002", companyID, lang, tenantID).toUpperCase().trim();
-		
-
 		String orgDocID = docID;
 		String tempOrgDocID = "";
 		
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("companyID", companyID);
-		map1.put("v_DOCID", docID);
-		map1.put("v_TENANTID", tenantID);
-		
-		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doSendDocAprDocInfo(map1);
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.doSendDocAprDocInfo(map);
 		
 		StringBuffer sb1 = new StringBuffer();
         sb1.append("<DATA>");

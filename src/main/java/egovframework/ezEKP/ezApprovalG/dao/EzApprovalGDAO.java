@@ -314,8 +314,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> doSendDocAprDocInfo(Map<String, Object> map1) throws Exception{
-		return (List<ApprGDocListVO>) list("EzApprovalG.doSendDocAprDocInfo", map1);
+	public List<ApprGDocListVO> doSendDocAprDocInfo(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.doSendDocAprDocInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
