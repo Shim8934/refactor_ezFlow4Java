@@ -700,7 +700,7 @@
 
 	        function OpenItem(strItemID) {
 	            if (strItemID != "") {
-	            	window.location.href = window.location.href.replace(pItemID, strItemID);
+	            	window.location.href = window.location.href.replace(encodeURIComponent(pItemID), encodeURIComponent(strItemID));
 	            }
 	        }
 
