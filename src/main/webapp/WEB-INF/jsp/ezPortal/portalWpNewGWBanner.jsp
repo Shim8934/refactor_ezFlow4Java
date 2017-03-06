@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript">
 			function Img_OnClick() {
             	var pheight = window.screen.availHeight;

@@ -253,6 +253,7 @@ function tableListControl_Week()
         var weekStartDatename = datanameweek(weekStartDate.getFullYear(), weekStartDate.getMonth() + 1, weekStartDate.getDate(), "HEARDER");
         var weekEndDatename = datanameweek(weekEndDate.getFullYear(), weekEndDate.getMonth() + 1, weekEndDate.getDate(), "HEARDER");
         //상단에 해더 출력 ex)2012년 9월 10일 ~ 20120 9월 16일
+        document.getElementById("divViewHeader").setAttribute("style", "color:black;")
         setNodeText(document.getElementById("divViewHeader"),weekStartDatename + " ~ " + weekEndDatename);
         //테이블구조에서 날짜를 출력한 후 날짜를 담을 변수
         var weekdatename = new Array();
@@ -774,7 +775,7 @@ function tableListControl_today() {
             
             _TD.align = "left";
             _TD.onselectstart = function () { return false; };
-            
+
             if (title_name[k].split("/")[2] == "1")
                 _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             else
@@ -814,123 +815,92 @@ function tableListControl_today() {
 
                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
-                              
-
-                if ((pObjectSPDay == pObjectEPDay && pObjectSP == pObjectEP) && getNodeText(xmldom.getElementsByTagName("alldayevent")[j]) != "1") {
-                    //tooltip 추가
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dtend", getNodeText(xmldom.getElementsByTagName("dtend")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dstartTime", getNodeText(xmldom.getElementsByTagName("dstartTime")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dendTime", getNodeText(xmldom.getElementsByTagName("dendTime")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dsDaytype", getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("deDaytype", getNodeText(xmldom.getElementsByTagName("deDaytype")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("alldayevent", getNodeText(xmldom.getElementsByTagName("alldayevent")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("busystatus", getNodeText(xmldom.getElementsByTagName("busystatus")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("groupflag", getNodeText(xmldom.getElementsByTagName("groupflag")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("gubunFlag", getNodeText(xmldom.getElementsByTagName("gubunFlag")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("importance", getNodeText(xmldom.getElementsByTagName("importance")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("approveFlag", getNodeText(xmldom.getElementsByTagName("approveFlag")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
-                    document.getElementById(pObjectId + "_" + pObjectSP).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
-
-                    document.getElementById(pObjectId + "_" + pObjectSP).style.backgroundColor = "#0090d0";
-                    document.getElementById(pObjectId + "_" + pObjectSP).style.border = "1px solid #0090d0";
-                    document.getElementById(pObjectId + "_" + pObjectSP).style.cursor = "pointer";
-                    document.getElementById(pObjectId + "_" + pObjectSP).onmouseover = function (event) { onmouse_over_today(this, event); };// new Function("onmouse_over_today(this);");
-                    document.getElementById(pObjectId + "_" + pObjectSP).onmouseout = new Function("onmouse_out_today(this);");
-                    document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                } else {
-                    var alldayevent = getNodeText(xmldom.getElementsByTagName("alldayevent")[j]);
-                    if (alldayevent != "1") {
-
-                        if (TodayDatename == pObjectSPDay) {
+                
+                var alldayevent = getNodeText(xmldom.getElementsByTagName("alldayevent")[j]);
+                
+                if (alldayevent != "1") {
+                	if (!(TodayDatename == pObjectSPDay) || !(TodayDatename == pObjectEPDay)) {
+                		if (TodayDatename == pObjectSPDay) {
                             pObjectEP = 48;
                         } else if (TodayDatename == pObjectEPDay) {
                             pObjectSP = 1;
-                        } else if (TodayDatename != pObjectSPDay && TodayDatename != pObjectEPDay) {
+                        } else {
                             pObjectSP = 1;
                             pObjectEP = 48;
                         }
+                	}
 
-                        for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
-                            if (TCnt != pObjectSP) {
-                            	try {document.getElementById(pObjectId + "_" + TCnt).remove();} catch (e) {}
-                            } else {
-                                //tooltip 추가
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dtend", getNodeText(xmldom.getElementsByTagName("dtend")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dstartTime", getNodeText(xmldom.getElementsByTagName("dstartTime")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dendTime", getNodeText(xmldom.getElementsByTagName("dendTime")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dsDaytype", getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("deDaytype", getNodeText(xmldom.getElementsByTagName("deDaytype")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("alldayevent", getNodeText(xmldom.getElementsByTagName("alldayevent")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("busystatus", getNodeText(xmldom.getElementsByTagName("busystatus")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("groupflag", getNodeText(xmldom.getElementsByTagName("groupflag")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("gubunFlag", getNodeText(xmldom.getElementsByTagName("gubunFlag")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("importance", getNodeText(xmldom.getElementsByTagName("importance")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("approveFlag", getNodeText(xmldom.getElementsByTagName("approveFlag")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
-                                document.getElementById(pObjectId + "_" + TCnt).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
+                    for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
+                        if (TCnt != pObjectSP) {
+                        	try {document.getElementById(pObjectId + "_" + TCnt).remove();} catch (e) {}
+                        } else {
+                            //tooltip 추가
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dtend", getNodeText(xmldom.getElementsByTagName("dtend")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dstartTime", getNodeText(xmldom.getElementsByTagName("dstartTime")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dendTime", getNodeText(xmldom.getElementsByTagName("dendTime")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dsDaytype", getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("deDaytype", getNodeText(xmldom.getElementsByTagName("deDaytype")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("alldayevent", getNodeText(xmldom.getElementsByTagName("alldayevent")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("busystatus", getNodeText(xmldom.getElementsByTagName("busystatus")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("groupflag", getNodeText(xmldom.getElementsByTagName("groupflag")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("gubunFlag", getNodeText(xmldom.getElementsByTagName("gubunFlag")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("importance", getNodeText(xmldom.getElementsByTagName("importance")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("approveFlag", getNodeText(xmldom.getElementsByTagName("approveFlag")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
+                            document.getElementById(pObjectId + "_" + TCnt).setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-                                document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "#0090d0";
-                                document.getElementById(pObjectId + "_" + TCnt).style.border = "1px solid #0090d0";
-                                document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
-                                document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
-                                document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
-                                document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                                document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
-                            }
+                            document.getElementById(pObjectId + "_" + TCnt).style.backgroundColor = "#0090d0";
+                            document.getElementById(pObjectId + "_" + TCnt).style.border = "1px solid #0090d0";
+                            document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
+                            document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
+                            document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
+                            document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                            document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1;
                         }
-                    } else {
-                        //tooltip 추가
-                        document.getElementById(pObjectId + "_1").setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dtend", getNodeText(xmldom.getElementsByTagName("dtend")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dstartTime", getNodeText(xmldom.getElementsByTagName("dstartTime")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dendTime", getNodeText(xmldom.getElementsByTagName("dendTime")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dsDaytype", getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("deDaytype", getNodeText(xmldom.getElementsByTagName("deDaytype")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("alldayevent", getNodeText(xmldom.getElementsByTagName("alldayevent")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("busystatus", getNodeText(xmldom.getElementsByTagName("busystatus")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("groupflag", getNodeText(xmldom.getElementsByTagName("groupflag")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("gubunFlag", getNodeText(xmldom.getElementsByTagName("gubunFlag")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("importance", getNodeText(xmldom.getElementsByTagName("importance")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("approveFlag", getNodeText(xmldom.getElementsByTagName("approveFlag")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
-                        document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
-
-                            document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
-                            document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
-                            document.getElementById(pObjectId + "_1").style.cursor = "pointer";
-                            document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
-                            document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
-                            document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                            document.getElementById(pObjectId + "_1").colSpan = 48;
                     }
+                } else {
+                    //tooltip 추가
+                    document.getElementById(pObjectId + "_1").setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("writer_id", getNodeText(xmldom.getElementsByTagName("writer_id")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("subject", getNodeText(xmldom.getElementsByTagName("subject")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("instancetype", getNodeText(xmldom.getElementsByTagName("instancetype")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("location", getNodeText(xmldom.getElementsByTagName("location")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dtstart", getNodeText(xmldom.getElementsByTagName("dtstart")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dtend", getNodeText(xmldom.getElementsByTagName("dtend")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dstartTime", getNodeText(xmldom.getElementsByTagName("dstartTime")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dendTime", getNodeText(xmldom.getElementsByTagName("dendTime")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dsDaytype", getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("deDaytype", getNodeText(xmldom.getElementsByTagName("deDaytype")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("alldayevent", getNodeText(xmldom.getElementsByTagName("alldayevent")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("busystatus", getNodeText(xmldom.getElementsByTagName("busystatus")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("groupflag", getNodeText(xmldom.getElementsByTagName("groupflag")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("gubunFlag", getNodeText(xmldom.getElementsByTagName("gubunFlag")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("importance", getNodeText(xmldom.getElementsByTagName("importance")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("approveFlag", getNodeText(xmldom.getElementsByTagName("approveFlag")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
+                    document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
+
+                        document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
+                        document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
+                        document.getElementById(pObjectId + "_1").style.cursor = "pointer";
+                        document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
+                        document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
+                        document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                        document.getElementById(pObjectId + "_1").colSpan = 48;
                 }
+                
             }
         }
         var dateresult = "";
@@ -980,9 +950,9 @@ function tableListControl_today() {
                         _TD.setAttribute("class", "todaytd_01");
                         _TD.align = "left";
                         _TD.onselectstart = function () { return false; };
-                        
+
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         else
                             _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         

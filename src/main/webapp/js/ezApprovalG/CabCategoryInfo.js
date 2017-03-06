@@ -260,16 +260,16 @@ function GetmakeXml(selCate, selSub, selSimple, SearchFlag) {
     }
     else {
         strXml = strXml + "<CELL>";
-        strXml = strXml + "<VALUE>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[0]) + "</VALUE>"; // TBCABINETCLASS.TITLE
-        strXml = strXml + "<DATA1>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[1]) + "</DATA1>"; // TBCABINET.CABINETID
-        strXml = strXml + "<DATA2>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[2]) + "</DATA2>"; // TBCABINETCLASS.TASKCODE
-        strXml = strXml + "<DATA3>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[3]) + "</DATA3>"; // TBCABINET.CABINETCLASSNO
+        strXml = strXml + "<VALUE><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[0]) + "]]></VALUE>"; // TBCABINETCLASS.TITLE
+        strXml = strXml + "<DATA1><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[1]) + "]]></DATA1>"; // TBCABINET.CABINETID
+        strXml = strXml + "<DATA2><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[2]) + "]]></DATA2>"; // TBCABINETCLASS.TASKCODE
+        strXml = strXml + "<DATA3><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[3]) + "]]></DATA3>"; // TBCABINET.CABINETCLASSNO
         strXml = strXml + "<DATA4>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[4]) + "</DATA4>"; // TBCABINETCLASS.OWNERID
-        strXml = strXml + "<DATA5>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[5]) + "</DATA5>"; // TBCABINETCLASS.TITLE
-        strXml = strXml + "<DATA6>" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[6]) + "</DATA6>"; // TBCABINETCLASS.TITLE2
+        strXml = strXml + "<DATA5><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[5]) + "]]></DATA5>"; // TBCABINETCLASS.TITLE
+        strXml = strXml + "<DATA6><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSimple)[0])[6]) + "]]></DATA6>"; // TBCABINETCLASS.TITLE2
     }
     //첫번째 Cell값에 단위분류 DATA값을 넣는다 
-    strXml = strXml + "<DATA7>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[1]) + "</DATA7>"; // VTASKCLASS.TASKCODE
+    strXml = strXml + "<DATA7><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[1]) + "]]></DATA7>"; // VTASKCLASS.TASKCODE
     strXml = strXml + "<DATA8>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[2]) + "</DATA8>"; // VTASKCLASS.KEEPINGPERIOD
     strXml = strXml + "<DATA9>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[3]) + "</DATA9>"; // VTASKCLASS.TEMPFLAG
     strXml = strXml + "<DATA10>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[4]) + "</DATA10>"; // VTASKCLASS.DISPLAYRECFLAG
@@ -279,27 +279,27 @@ function GetmakeXml(selCate, selSub, selSimple, SearchFlag) {
     strXml = strXml + "<DATA14>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[8]) + "</DATA14>"; // VTASKCLASS.SC3
     strXml = strXml + "<DATA15>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[9]) + "</DATA15>"; // VTASKCLASS.KEEPINGMETHOD
     strXml = strXml + "<DATA16>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[10]) + "</DATA16>"; // VTASKCLASS.KEEPINGPLACE
-    strXml = strXml + "<DATA17>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[11]) + "</DATA17>"; // VTASKCLASS.TASKNAME
-    strXml = strXml + "<DATA18>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[12]) + "</DATA18>"; // VTASKCLASS.TASKNAME2
+    strXml = strXml + "<DATA17><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[11]) + "]]></DATA17>"; // VTASKCLASS.TASKNAME
+    strXml = strXml + "<DATA18><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[12]) + "]]></DATA18>"; // VTASKCLASS.TASKNAME2
     strXml = strXml + "</CELL>";
 
     //소뷴류 검색할때와 값이 다르다.
     if (SearchFlag) {
         strXml = strXml + "<CELL>";
-        strXml = strXml + "<VALUE>" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA13")[0]) + "(" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA15")[0]) + ")" + "</VALUE>"; //소분류 & 코드 SCNAME(
-        strXml = strXml + "<DATA1>" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA1")[0]) + "</DATA1>";
+        strXml = strXml + "<VALUE><![CDATA[" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA13")[0]) + "(" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA15")[0]) + ")" + "]]></VALUE>"; //소분류 & 코드 SCNAME(
+        strXml = strXml + "<DATA1><![CDATA[" + getNodeText(SelectNodes(selCate, "LISTVIEWDATA/ROWS/ROW/CELL/DATA1")[0]) + "]]></DATA1>";
         strXml = strXml + "</CELL>";
     }
     else {
         strXml = strXml + "<CELL>";
-        strXml = strXml + "<VALUE>" + getNodeText(GetChildNodes(GetChildNodes(selCate)[1])[0]) + "(" + getNodeText(GetChildNodes(GetChildNodes(selCate)[0])[0]) + ")" + "</VALUE>"; // SCNAME(SUBCATEGORYCODE)
-        strXml = strXml + "<DATA1>" + getNodeText(GetChildNodes(GetChildNodes(selCate)[0])[1]) + "</DATA1>";
+        strXml = strXml + "<VALUE><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selCate)[1])[0]) + "(" + getNodeText(GetChildNodes(GetChildNodes(selCate)[0])[0]) + ")" + "]]></VALUE>"; // SCNAME(SUBCATEGORYCODE)
+        strXml = strXml + "<DATA1><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selCate)[0])[1]) + "]]></DATA1>";
         strXml = strXml + "</CELL>";
     }
     
 
     //단위업무
-    strXml = strXml + "<CELL><VALUE>" + getNodeText(GetChildNodes(GetChildNodes(selSub)[1])[0]) + "(" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[0]) + ")" + "</VALUE>"; //VTASKCLASS.TASKNAME(VTASKCLASS.TASKCODE)
+    strXml = strXml + "<CELL><VALUE><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(selSub)[1])[0]) + "(" + getNodeText(GetChildNodes(GetChildNodes(selSub)[0])[0]) + ")" + "]]></VALUE>"; //VTASKCLASS.TASKNAME(VTASKCLASS.TASKCODE)
     strXml = strXml + "</CELL>";
     if (!selSimple) {
         strXml = strXml + "<CELL><VALUE>-</VALUE></CELL>";

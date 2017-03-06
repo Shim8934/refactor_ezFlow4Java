@@ -205,9 +205,9 @@
             		return;
         		}
         		var idx = 0;
-        		if( Ques_Answer.input_Ans[0].text != "" )
+        		if( document.Ques_Answer.input_Ans[0].text != "" )
             		idx = Ques_Answer.input_Ans.length;
-        		if( Ques_Answer.txtAnswer.value != "" ) {
+        		if( document.Ques_Answer.txtAnswer.value != "" ) {
             		var v_ans =  Ques_Answer.txtAnswer.value;
             		var TmpOption= new Option((idx+1) + "." + v_ans, v_ans, true);
             		Ques_Answer.input_Ans.options[idx] = TmpOption;
