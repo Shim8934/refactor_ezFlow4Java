@@ -158,6 +158,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("subCode", subCode);
 		model.addAttribute("defautView", defaultView);
 		model.addAttribute("startDay", startDay);
+		model.addAttribute("lang", loginSimpleVO.getLang());
 		
 		return "/ezSchedule/scheduleLeft";
 	}

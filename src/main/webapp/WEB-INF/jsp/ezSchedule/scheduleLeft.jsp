@@ -26,9 +26,11 @@
 	        var _subCode = "<c:out value='${subCode}'/>";
 	        var defaultView = "<c:out value='${defaultView}'/>";
 	        var pStartday = "<c:out value='${startDay}'/>";
+	        var uselang = "<c:out value='${lang}'/>";
 	        var xmlDom_treeview = createXmlDom();	        
 	        var ch_selected = false;
-			var totalCnt = 0;						
+			var totalCnt = 0;
+			select_memorialDays(uselang);
 				   	    
 		    function schedule_get_holiday() {
 		        $.ajax({
