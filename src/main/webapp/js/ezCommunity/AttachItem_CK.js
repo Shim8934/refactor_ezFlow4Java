@@ -83,7 +83,7 @@ function DelAttachFileAtList(pNewNodeName)
 	
 	var totalcnt = objAttachNodes.length;
 
-	for (var i = 0; i < objAttachNodes.length; i++) {	    
+	for (var i = 0; i < objAttachNodes.length; i++) {
 		
 		for (var k = 0; k < pDelCount-1; k++) {
 
@@ -179,7 +179,6 @@ function AddAttachFileInfoXmlParsing(pfilename, pSaveFileName, pfilesize)
 }
 */
 function AddAttachFileInfoXmlParsing(resultXML) {
-    
     try {
         var xml = loadXMLString(resultXML);
         var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
@@ -196,7 +195,7 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         for (i = 0; i < nodes.length; i++) {
             if (SelectSingleNodeValue(nodes[i], "RESULTUPLOADA") != "denied") {
                 pstrXML += "<ROW><CELL><VALUE>" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "</VALUE>";//파일명
-                pstrXML += "<DATA1>" + SelectSingleNodeValue(nodes[i], "PFILENAME") + "</DATA1>"; //파일명
+                pstrXML += "<DATA1>" + SelectSingleNodeValue(nodes[i], "PFILENAME").replace(re, "&amp;") + "</DATA1>"; //파일명
                 pstrXML += "<DATA2>" + SelectSingleNodeValue(nodes[i], "PUPLOADSN").replace(re, "&amp;") + "</DATA2>"; //저장될 파일명
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
@@ -208,29 +207,24 @@ function AddAttachFileInfoXmlParsing(resultXML) {
             }
         }
         pstrXML += "</ROWS></LISTVIEWDATA>";
-        //Rtnxml = loadXMLString(getXmlString(pAttachListXml));	
-        //var objAttachNodes = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
         
-        //objXML.loadXML(pstrXML);
         objXML = loadXMLString(pstrXML);
 
-        //if (objAttachNodes.length == 0)
         if (document.getElementById('mode').value == "PHOTO") {
             pAttachListXml = objXML;
-        }
-        else {
+        } else {
             if (pAttachListXml == "") {
-                //pAttachListXml = objXML.xml;
-                pAttachListXml = objXML; //objXML.xml;
-            }
-            else {
-                if (typeof (pAttachListXml) == "string")
+                pAttachListXml = objXML;
+            } else {
+                if (typeof (pAttachListXml) == "string") {
                     Rtnxml = loadXMLString(pAttachListXml);
-                else
+                } else {
                     Rtnxml = loadXMLString(getXmlString(pAttachListXml));
-             
+                }
+                
                 for (var i = 0; i < SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW").length; i++) {
                     var objNewAttachNodes = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW")[i];
+                    
                     try {
                         var Node = Rtnxml.importNode(objNewAttachNodes, true);
                         GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(Node);
@@ -238,15 +232,14 @@ function AddAttachFileInfoXmlParsing(resultXML) {
                         GetChildNodes(GetChildNodes(Rtnxml)[0])[1].appendChild(objNewAttachNodes);
                     }
                 }
-                pAttachListXml = Rtnxml;	
+                pAttachListXml = Rtnxml;
             }
         }
-
+        
         AppendFileAttachInfo(pAttachListXml);
         return;
 
     } catch (ErrMsg) {
-
         alert(ErrMsg.description);
     }
 }

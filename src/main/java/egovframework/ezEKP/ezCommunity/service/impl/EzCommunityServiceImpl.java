@@ -825,7 +825,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			if (!pMode.equals("PHOTO")) {
 				strXML += "<NODE><PUPLOADSN>" + commonUtil.cleanValue(pUploadSN + "_" + pFileName) + "</PUPLOADSN>";
 			}
-			
+
 			strXML += "<RESULTUPLOADA>" + commonUtil.cleanValue(resultUpload) + "</RESULTUPLOADA>";
             strXML += "<PFILENAME>" + commonUtil.cleanValue(pFileName) + "</PFILENAME>";
             strXML += "<FILESIZE>" + fileSize + "</FILESIZE>";
