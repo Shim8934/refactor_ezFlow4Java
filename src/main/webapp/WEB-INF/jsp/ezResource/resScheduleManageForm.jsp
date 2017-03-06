@@ -179,10 +179,10 @@
  		</div>
  			<c:choose>
  				<c:when test="${pNoneActiveX eq 'YES'}">
- 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:620px;">
+ 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:630px;">
  				</c:when>
  				<c:otherwise>
- 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:600px;">
+ 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:630px;">
  				</c:otherwise>
  			</c:choose>
  			
