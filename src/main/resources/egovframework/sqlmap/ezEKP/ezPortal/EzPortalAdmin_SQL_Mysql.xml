@@ -872,7 +872,9 @@
 			WHERE 
 				UID_ = #v_PPUID# 
 			AND
-				OWNERPAGEID = #v_PPAGEID#	
+				OWNERPAGEID = #v_PPAGEID#
+            AND
+                TENANT_ID = #tenantID#	
 		]]>
 	</update>
 	
@@ -885,7 +887,9 @@
 			WHERE 
 				UID_ = #v_PPUID#
 			AND
-				OWNERPAGEID = #v_PPAGEID# 	
+				OWNERPAGEID = #v_PPAGEID#
+            AND
+                TENANT_ID = #tenantID# 	
 		]]>
 	</update>
 	
