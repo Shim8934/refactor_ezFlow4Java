@@ -30,7 +30,8 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 {background: #dfdfdf;
 }
 /*------------ Layout ------------*/
-#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#525761; border-bottom:1px solid #4a4c51;}
+/*#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#525761; border-bottom:1px solid #4a4c51;}*/
+#top {top:0px; left:0px; height:99px; width:100%;clear:both; z-index:10; background:#304d7f; border-bottom:1px solid #4a4c51;}
 #Center {min-height:600px; margin:0px; padding:0px 0px 30px 0px; background:url(../images/kr/main/backimg.jpg) no-repeat center bottom; }
 header{height:42px; background:url(../images/kr/cm/header_bg.gif) repeat-x; clear:both; overflow:hidden;}
 nav {height:33px; background:url(../images/kr/cm/nav_bg.gif) repeat-x; clear:both;}
@@ -50,9 +51,10 @@ header .logo {float:left;margin:0px; padding:0px; width:200px;height:42px;  disp
 
 .topsearch_btn {float:right;vertical-align:top; }
 
-#input_search { float:left; width:178px; background:#333437 url(../images/kr/cm/input_search_bg.gif) no-repeat 0 0 ; border:0px ;padding:5px 0px 0px 3px; margin:3px 0px 0px 3px;  color:#fff; font-size:12px;}
+#input_search { float:left; width:178px; background:#15335f url(../images/kr/cm/input_search_bg.gif) no-repeat 0 0 ; border:0px ;padding:5px 0px 0px 3px; margin:3px 0px 0px 3px;  color:#fff; font-size:12px;}
 .input_text.focus,
-.input_text.focusnot { background:#333437 !important; }
+/*.input_text.focusnot { background:#333437 !important; }*/
+.input_text.focusnot { background:#15335f !important; }
 
 /*-- utmenu --*/
 .utmenu {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif ; float:right; margin:9px 0px 0px; padding:0px; height:26px;}
