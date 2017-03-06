@@ -774,7 +774,7 @@ function tableListControl_today() {
             
             _TD.align = "left";
             _TD.onselectstart = function () { return false; };
-            
+
             if (title_name[k].split("/")[2] == "1")
                 _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             else
@@ -949,9 +949,9 @@ function tableListControl_today() {
                         _TD.setAttribute("class", "todaytd_01");
                         _TD.align = "left";
                         _TD.onselectstart = function () { return false; };
-                        
+
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_ok.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
+                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         else
                             _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:middle;'>" + title_name[k].split("/")[1] + " [ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "]";
                         
