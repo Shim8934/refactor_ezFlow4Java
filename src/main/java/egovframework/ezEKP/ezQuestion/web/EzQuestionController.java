@@ -1714,7 +1714,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezQuestion/getPollAttachInfo.do")
 	public void getPollAttachInfo(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		logger.debug("getPollAttachInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pType = "";
 		String pBoardID = "";
@@ -1737,18 +1739,19 @@ public class EzQuestionController extends EgovFileMngUtil {
         }
         
         if(pType.equals("QUESTION")){
-            if (!pFileName.equals("")){
-            	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", loginVO.getTenantId())+commonUtil.separator+pFileName;
-            }else{
-            	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, loginVO.getTenantId());
+            if (!pFileName.equals("")) {
+            	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", userInfo.getTenantId())+commonUtil.separator+pFileName;
+            } else {
+            	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, userInfo.getTenantId());
                 pFilePath = qstAttachVO.getAttachUrl();
                 pFileName = qstAttachVO.getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
             }
+            
             if (pFilePath != null && !pFilePath.equals("")){
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
             }
         }
-   
+        logger.debug("getPollAttachInfo ended.");
 	}
 
 	/**
@@ -1758,7 +1761,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezQuestion/qstResultSubjective.do")
 	public String qstResultSubjective(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		logger.debug("qstResultSubjectiv Start");
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "", itemNo = "", questionNo = "";
         int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
         int pPageSize = 0, pageCount = 0, pBlockSize = 0;
@@ -1784,7 +1788,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
         qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
         qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
-        qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
+        qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
         publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
         publicFlg = qstUserPermissionVO.getPublicFlg();
         multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
@@ -1793,7 +1797,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         logger.debug(brdID);
         logger.debug(itemNo);
         logger.debug(questionNo);
-        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
+        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
         
         if (pageCount == 0){
@@ -1804,7 +1808,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         
         int iStart = (pCurrPage - 1) * pPageSize;
         /** EZSP_RESULTSUBJECTIVELIST*/
-        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(loginVO.getLang(), loginVO.getTenantId()), loginVO.getTenantId());
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveList(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
         
         String data = "<DATA></DATA>";
         Document xmlMainDom = commonUtil.convertStringToDocument(data);
@@ -1833,7 +1837,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             	if(field.getName().equals("ANSWER_SUBJECTIVITY")){
             		pAnsSubjectivity = (String) field.get(qstResponseVO);
             		//////////////////////////
-            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, loginVO.getTenantId());
+            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
             		pAnsType = Integer.toString(qstVO.getAnswerType());
             		
             		if(pAnsType.equals("4")){
@@ -1909,7 +1913,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         model.addAttribute("publicFlg", publicFlg);
         model.addAttribute("pageCount", pageCount);
         model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
+        
         logger.debug("qstResultSubjectiv End");
+        
 		return "/ezQuestion/qstResultSubjective";
 	}
 	
