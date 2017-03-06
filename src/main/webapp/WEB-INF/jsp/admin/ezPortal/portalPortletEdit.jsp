@@ -196,7 +196,7 @@
 			}
 			
 			//유효성검사 특수문자
-			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value) || specialChk(document.getElementById("txtURL").value) || specialChk(document.getElementById("txtMaxURL").value) || specialChk(document.getElementById("txtMoveURL").value)) {
+			if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
 		    	alert("<spring:message code='ezResource.special' />");
 		    	return;
 		    }
