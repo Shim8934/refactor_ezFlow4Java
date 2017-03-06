@@ -17,7 +17,7 @@
 			<c:if test="${scheduleInfo.scheduleType == 2}"><spring:message code='ezSchedule.t322' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 3}"><spring:message code='ezSchedule.t323' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
-			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t996' />(</c:if>
+			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t322' /></c:if>
 			<c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
 	        <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>)
 		</title>
