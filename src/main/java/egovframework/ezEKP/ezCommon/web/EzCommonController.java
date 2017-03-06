@@ -200,7 +200,6 @@ public class EzCommonController extends EgovFileMngUtil{
         
         try {
         	m_strMHT = ezCommonService.loadMHTFile(realPath + strURL);
-        	logger.debug("m_strMHT="+m_strMHT);
 		} catch (Exception e) {
 			e.printStackTrace();
 			m_strMHT= "";

@@ -1279,7 +1279,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				filePath = "/images/default_pic.jpg";
 			}
 			
-			if (userInfo.getLang().equals("1")) {
+			if (userInfo.getPrimary().equals("1")) {
 				displayName = result.getDisplayName();
 				title = result.getTitle();
 				description = result.getDescription();
