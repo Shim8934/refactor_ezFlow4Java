@@ -6145,7 +6145,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String fieldName = arrList.getElementsByTagName("COLALIAS").item(p).getTextContent().trim().toUpperCase();
 				
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>");
+				resultXML.append("<VALUE><![CDATA[");
 				
 				switch (arrList.getElementsByTagName("DTYPE").item(p).getTextContent().trim()) {
 				case "dtSerialNum" :						// 순번
@@ -6194,27 +6194,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					break;
 				}
 				
-				resultXML.append("</VALUE>");
+				resultXML.append("]]></VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("RECORDID").item(k).getTextContent()) + "</DATA6>");
-					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "</DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(k).getTextContent()) + "</DATA8>");
-					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(k).getTextContent()) + "</DATA9>");
-					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "</DATA10>");
-					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(k).getTextContent()) + "</DATA11>");
-					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "</DATA12>");
+					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent()) + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("RECORDID").item(k).getTextContent()) + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(k).getTextContent()) + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(k).getTextContent()) + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(k).getTextContent()) + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "]]></DATA12>");
 					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent()) + "</DATA13>");
 					
 					if (recordListVO.isUsePublicFlag()) {
-						resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+						resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "]]></DATA14>");
 					}
-					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "</DATA15>");
+					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
 				}
 				
 				
