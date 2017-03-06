@@ -630,10 +630,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String strLangFile = getCode2Name("L01", "001", companyID, lang, tenantID);
-		
-
 		String strLangDocument = getCode2Name("L01", "002", companyID, lang, tenantID);
-		
 
 		String docList = getAttachInfoDB(docID, flag, commonUtil.getMultiData(lang, tenantID), strLangFile, strLangDocument, orderOption1, companyID, tenantID);
 		
@@ -659,7 +656,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "</DATA2>");
 					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA3>");
 					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("ATTACHTYPE").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("REALATTACHNAME").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA5>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("REALATTACHNAME").item(k).getTextContent())) + "</DATA5>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -6538,37 +6535,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		String rtnVal = deleteAttachDocInfo(docID, companyID, lang, tenantID);
 		int tempSN = 0;
+		
 		try {
-		if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
-			for (int k = 0; k < docXML.getElementsByTagName("DATA1").getLength(); k++) {
-				tempSN = docXML.getElementsByTagName("DATA1").getLength() - k;
-				map.put("v_DOCID", docID);
-				map.put("v_TEMPSN", tempSN);
-				map.put("v_AttachDocName", makeRightField(docXML.getElementsByTagName("DATA10").item(k).getTextContent()));
-				map.put("v_AttachDocURL", makeRightField(docXML.getElementsByTagName("DATA1").item(k).getTextContent()));
-				map.put("v_SubAttachYN", makeRightField(docXML.getElementsByTagName("DATA9").item(k).getTextContent()));
-				map.put("v_AttachUserID", makeRightField(docXML.getElementsByTagName("DATA4").item(k).getTextContent()));
-				map.put("v_AttachUserName", makeRightField(docXML.getElementsByTagName("DATA11").item(k).getTextContent()));
-				map.put("v_AttachUserName2", makeRightField(docXML.getElementsByTagName("DATA12").item(k).getTextContent()));
-				map.put("v_AttachUserJobTitle", makeRightField(docXML.getElementsByTagName("DATA13").item(k).getTextContent()));
-				map.put("v_AttachUserJobTitle2", makeRightField(docXML.getElementsByTagName("DATA14").item(k).getTextContent()));
-				map.put("v_AttachUserDeptID", makeRightField(docXML.getElementsByTagName("DATA6").item(k).getTextContent()));
-				map.put("v_AttachUserDeptName", makeRightField(docXML.getElementsByTagName("DATA15").item(k).getTextContent()));
-				map.put("v_AttachUserDeptName2", makeRightField(docXML.getElementsByTagName("DATA16").item(k).getTextContent()));
-				map.put("FLAG", "Y");
-				map.put("companyID", companyID);
-				map.put("v_TENANTID", tenantID);
-
-				ezApprovalGDAO.insertGianAprDocAttachInfo(map);
-			}
-			
-			ezApprovalGDAO.updateAttachFileInfo(map);
+			if (rtnVal.equals("<RESULT>TRUE</RESULT>")) {
+				for (int k = 0; k < docXML.getElementsByTagName("DATA1").getLength(); k++) {
+					tempSN = docXML.getElementsByTagName("DATA1").getLength() - k;
+					map.put("v_DOCID", docID);
+					map.put("v_TEMPSN", tempSN);
+					map.put("v_AttachDocName", makeRightField(docXML.getElementsByTagName("DATA10").item(k).getTextContent()));
+					map.put("v_AttachDocURL", makeRightField(docXML.getElementsByTagName("DATA1").item(k).getTextContent()));
+					map.put("v_SubAttachYN", makeRightField(docXML.getElementsByTagName("DATA9").item(k).getTextContent()));
+					map.put("v_AttachUserID", makeRightField(docXML.getElementsByTagName("DATA4").item(k).getTextContent()));
+					map.put("v_AttachUserName", makeRightField(docXML.getElementsByTagName("DATA11").item(k).getTextContent()));
+					map.put("v_AttachUserName2", makeRightField(docXML.getElementsByTagName("DATA12").item(k).getTextContent()));
+					map.put("v_AttachUserJobTitle", makeRightField(docXML.getElementsByTagName("DATA13").item(k).getTextContent()));
+					map.put("v_AttachUserJobTitle2", makeRightField(docXML.getElementsByTagName("DATA14").item(k).getTextContent()));
+					map.put("v_AttachUserDeptID", makeRightField(docXML.getElementsByTagName("DATA6").item(k).getTextContent()));
+					map.put("v_AttachUserDeptName", makeRightField(docXML.getElementsByTagName("DATA15").item(k).getTextContent()));
+					map.put("v_AttachUserDeptName2", makeRightField(docXML.getElementsByTagName("DATA16").item(k).getTextContent()));
+					map.put("FLAG", "Y");
+					map.put("companyID", companyID);
+					map.put("v_TENANTID", tenantID);
+	
+					ezApprovalGDAO.insertGianAprDocAttachInfo(map);
+				}
+				
+				ezApprovalGDAO.updateAttachFileInfo(map);
 				rtnVal = "<RESULT>TRUE</RESULT>";
 			} 
-			}catch (Exception e) {
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-				rtnVal = "<RESULT>FALSE</RESULT>";
-			}
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			rtnVal = "<RESULT>FALSE</RESULT>";
+		}
 		
 		return rtnVal;
 	}
