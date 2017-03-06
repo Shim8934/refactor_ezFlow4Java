@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/ezResource/Calendar_Action_cross.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/ezResource/Calendar_Action_cross.js?ver=2.4"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}

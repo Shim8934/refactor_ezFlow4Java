@@ -89,41 +89,31 @@
 	        $("#Edatepicker").datepicker('setDate', EDate);
 	    });
 	    
+	    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+	    var monthStr = monthMsg.split(";");		    
+	    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+	    var dayStr = dayMsg.split(";");
+	    
 	    $(function () {
-	    	if("${lang == '1'}") {
-		        $.datepicker.regional['ko'] = {
-		            closeText: '닫기',
-		            prevText: '이전달',
-		            nextText: '다음달',
-		            currentText: '오늘',
-		            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월',
-		            '7월', '8월', '9월', '10월', '11월', '12월'],
-		            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월',
-		            '7월', '8월', '9월', '10월', '11월', '12월'],
-		            dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-		            dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-		            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional['ko']);
-	    	}
-	    	if("${lang != '1'}") {
-	    		$.datepicker.regional['en'] = {
-    	            dateFormat: 'yy-mm-dd',
-    	            firstDay: 0,
-    	            isRTL: false,
-    	            duration: 200,
-    	            showAnim: 'show',
-    	            showMonthAfterYear: true
-    	        };
-    	        $.datepicker.setDefaults($.datepicker.regional['en']);
-	    	}
+	        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+	        	closeText: "<spring:message code='main.t3' />",
+	            prevText: "<spring:message code='main.t0604' />",
+	            nextText: "<spring:message code='main.t0605' />",
+				currentText: "<spring:message code='main.t0606' />",
+	            monthNames: monthStr,
+	            monthNamesShort: monthStr,
+	            dayNames: dayStr,
+	            dayNamesShort: dayStr,
+	            dayNamesMin: dayStr,
+	            weekHeader: 'Wk',
+	            dateFormat: 'yy-mm-dd',
+	            firstDay: 0,
+	            isRTL: false,
+	            duration: 200,
+	            showAnim: 'show',
+	            showMonthAfterYear: true
+	        };
+	        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 	    });
 	    
 	    function search() {

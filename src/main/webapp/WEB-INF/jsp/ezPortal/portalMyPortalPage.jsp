@@ -1699,14 +1699,22 @@
 		        document.getElementById("btn_quick_Up").style.display = "none";
 		        document.getElementById("QuickUl").style.display = "none";
 		        document.getElementById("btn_quick_Down").style.display = "none";
-		        document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
+		        if ("${userInfo.lang}" == "3") {
+		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title_hidden.gif";	
+		        } else {
+		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
+		        }
 		        OpenFlag = true;
 		    }
 		    else {
 		        document.getElementById("btn_quick_Up").style.display = "block";
 		        document.getElementById("QuickUl").style.display = "block";
 		        document.getElementById("btn_quick_Down").style.display = "block";
-		        document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title.gif";
+		        if ("${userInfo.lang}" == "3") {
+		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title.gif";	
+		        } else {
+		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title.gif";
+		        }
 		        OpenFlag = false;
 		    }
 		}
@@ -1815,7 +1823,14 @@
 	<% } %>
      <% if (mode.equals("view")) { %>
     <aside style="position:fixed;">
-    <p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+       <c:choose>
+    	<c:when test="${userInfo.lang == 3}">
+    		<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    	</c:when>
+    	<c:otherwise>
+    		<p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    	</c:otherwise>
+    </c:choose>
     <p class="btn_quick" id="btn_quick_Up" onclick="QuickMove('UP')"><img src="/images/kr/main/quickmenu_btn_up.gif" ></p>
     <ul class="quickmenu" id="QuickUl">
      </ul>

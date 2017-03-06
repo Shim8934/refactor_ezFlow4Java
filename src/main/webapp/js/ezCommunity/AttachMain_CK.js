@@ -92,7 +92,7 @@ function btn_ImgDel_onclick(){
 				if (Rtnval == "TRUE"){
 					// iframe 및 각종변수 설정 변경
 
-					DelAttachFileAtList( pNewNodeName );
+					DelAttachFileAtList(pNewNodeName);
 				
 					var Rtnxml = new ActiveXObject("Microsoft.XMLDOM");
 					Rtnxml.loadXML(pAttachImgListXml);
@@ -233,7 +233,6 @@ function btn_AttachSaveSure_onclick()
 //}
 
 function AttachFileInfo(resultXML) {
-
     var xml = loadXMLString(resultXML);
     var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
     var i = 0;
@@ -309,11 +308,12 @@ function chkFileNMFilter(cur_ExtName){
 function AppendFileAttachInfo(ret)
 {
 	try {
-	    if (typeof (ret) == "string")
+	    if (typeof (ret) == "string") {
 	        pAttachListXml = loadXMLString(ret);
-	    else
+	    } else {
 	        pAttachListXml = loadXMLString(getXmlString(ret));
-	        
+	    }
+	    
 		// 20070228  포토게시판은 해당 내용 건너 뜀
 		if(PhotoBoard == "Y") return;
 
@@ -339,7 +339,7 @@ function AppendFileAttachInfo(ret)
 
 	        if (is_newfile != "DEL") {
 	            strAttach += "<input type='checkbox' name='fileSelect' newfile='" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "' value='" + ServerFile + "' style='vertical-align:middle;'>";
-	            strAttach += getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;</a>&nbsp;<br>"
+	            strAttach += getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(/%2b/gi, "+").replace(/%3b/gi, ";") + "&nbsp;</a>&nbsp;<br>"
 	        }
 	    }
 	    document.getElementById("lstAttachLink").innerHTML = strAttach;	   

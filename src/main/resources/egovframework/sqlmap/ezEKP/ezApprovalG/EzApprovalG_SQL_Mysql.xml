@@ -1582,10 +1582,7 @@
 	<select id ="EzApprovalG.getAttachInfoDB" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		<!--결재할 문서-->
 		<isEqual property="v_MODE" compareValue="APR">
-			SELECT 
-				* 
-			FROM (
-				SELECT   
+			  SELECT   
 					#v_LANGFILE# AS ATTACHTYPE, 
 					'file' AS ATTACHTYPECODE, 
 					ATTACHFILESN AS ATTACHSN, 
@@ -1600,7 +1597,13 @@
       				COMPANYID
       			FROM 
       				TBL_APRATTACHINFO  
-      				
+      			WHERE
+      				DOCID = #v_DOCID# 
+      			AND
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#	
+            		
       		UNION ALL 
       		
       			SELECT 
@@ -1617,13 +1620,14 @@
       				TENANT_ID,
       				COMPANYID
       			FROM 
-      				TBL_APRDOCATTACHINFO ) A 
+      				TBL_APRDOCATTACHINFO
       			WHERE 
       				DOCID = #v_DOCID#
       			AND 
             		TENANT_ID = #v_TENANTID# 
             	AND
-            		COMPANYID = #companyID#
+            		COMPANYID = #companyID# 
+      			
 		</isEqual>
 		<!-- 기안한 문서-->
 		<isEqual property="v_MODE" compareValue="END">
@@ -1645,7 +1649,11 @@
       					COMPANYID
          			FROM 
          				TBL_ENDATTACHINFO  
-         				
+         			WHERE 
+	            		TENANT_ID = #v_TENANTID# 
+	            	AND
+	            		COMPANYID = #companyID#	
+	            		
          		UNION ALL 
          		
          		SELECT 
@@ -1689,7 +1697,11 @@
       			COMPANYID
             FROM 
             	TBL_TMPATTACHINFO  
-            
+            WHERE 
+           		TENANT_ID = #v_TENANTID# 
+           	AND
+           		COMPANYID = #companyID#
+           		
             UNION ALL 
             
             SELECT 
@@ -1734,7 +1746,11 @@
       				COMPANYID
             	FROM 
             		TBL_APRATTACHINFO  
-            	
+            	WHERE 
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#
+            		
             	UNION ALL 
             	
             	SELECT 
@@ -10718,7 +10734,7 @@
     					#v_CurSN#, 
     					1 ,
     					#v_TENANTID#,
-    					#companyDI#)
+    					#companyID#)
 	</insert>
 	
 <!-- 	<procedure id="EzApprovalG.getWebPartListCount" parameterClass="Map" resultClass="int"> -->
@@ -16903,7 +16919,7 @@
 				, ReceivedDate = #nowDate#
 			</isEqual>
 		WHERE
-			TENANT_ID= #tenantID#
+			TENANT_ID = #tenantID#
 		AND
 			COMPANYID = #companyID# 
 		AND
@@ -17730,7 +17746,7 @@
           AND
           	 TENANT_ID = #v_TENANTID#
           AND
-          	 COMPNAYID = #companyID#)
+          	 COMPANYID = #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertRejectEndAprLineInfo" parameterClass="Map"> 
@@ -17832,9 +17848,9 @@
    <insert id="EzApprovalG.insertRejectExpendAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_EXPENDAPRDOCINFO
-	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID, COMPANYID )
+	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
 	       FROM 
 	       		TBL_EXPAPRDOCINFO A
 	       WHERE  
@@ -17915,6 +17931,8 @@
         	AprState = #v_STAASJINHANG# 
         AND 
         	TENANT_ID= #v_TENANTID#
+        AND
+   			COMPANYID = #companyID#
    </update>
    
    <update id="EzApprovalG.updateBoryuAprDocInfo" parameterClass="Map">
@@ -17926,6 +17944,8 @@
    			DocID = #v_DOCID# 
    		AND 
    			TENANT_ID= #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
    </update>
    
    <delete id="EzApprovalG.deleteReSendEndReceiptPointInfo" parameterClass="Map">
@@ -18054,6 +18074,8 @@
         	ReceiptPointID = #v_DEPTID#
         AND 
         	TENANT_ID = #v_TENANTID#
+        AND
+   	    	COMPANYID = #companyID#
    </update>
    
    <update id="EzApprovalG.updateProEndReceiptPointInfo2" parameterClass="Map">
@@ -18068,6 +18090,8 @@
         	ProcessYN = 'O'  
         AND 
         	TENANT_ID = #v_TENANTID#
+        AND
+   	    	COMPANYID = #companyID#
    </update>
    
    <insert id="EzApprovalG.insertProHistoryReceiptInfo" parameterClass="Map">
@@ -18103,6 +18127,8 @@
    			DocID = #v_DOCID#
    		AND 
    			TENANT_ID= #v_TENANTID#
+   		AND
+	   		 COMPANYID = #companyID#
    </update>
    
    <update id="EzApprovalG.updateReceiptPointInfo" parameterClass="Map">
@@ -18114,6 +18140,8 @@
    			DocID = #v_DOCID# 
    		AND 
    			TENANT_ID= #v_TENANTID#
+   		AND
+	   		 COMPANYID = #companyID#
    </update>
    
    <update id="EzApprovalG.updateSusinEndReceiptPointInfo" parameterClass="Map">
@@ -18130,6 +18158,8 @@
 			ReceiptMemberID = #v_USERID#
 		AND 
 			TENANT_ID = #v_TENANTID#
+		AND
+	   		 COMPANYID = #companyID#
    </update>
    
    <update id="EzApprovalG.updateSusinEndReceiptPointInfo2" parameterClass="Map">
@@ -18150,6 +18180,8 @@
 			ProcessYN <> #v_PROCESSFLAG# 
 		AND 
 			TENANT_ID = #v_TENANTID#
+		AND
+	   		 COMPANYID = #companyID#
 		]]>
    </update>
    
@@ -18168,15 +18200,17 @@
 			ProcessYN = 'N' 
 		AND 
 			TENANT_ID= #v_TENANTID#
+		AND
+	   		 COMPANYID = #companyID#
    </update>
    
    <insert id="EzApprovalG.insertHesongAprReceiptProcessInfo" parameterClass="Map">
    		<![CDATA[
    		INSERT INTO 
    			TBL_APRRECEIPTPROCESSINFO 
-   		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID) 
+   		(  ReceiveSN, DocID, SentDeptID,      SentDeptName,    SentDeptName2,       ReceivedDeptID,    ReceivedDeptName, ReceivedDeptName2,  DocState,   AprState,     ProcessDate,                                  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
 	   	(SELECT 
-	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID 
+	   			#v_PSN# , DocID, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, 	#v_WRITERDEPTID#, #v_WRITERDEPTNAME#, #v_WRITERDEPTNAME2#, DocState, #v_APRSTATE#, STR_TO_DATE(#v_SYSDATE#,'%Y-%m-%d %H:%i:%s'), 'N',           '',           '',           '',            '',              '',               '',               DocID, TENANT_ID ,COMPANYID
 	   		 FROM 
 	   		 	TBL_APRRECEIPTPROCESSINFO 
 	   		 WHERE 
@@ -18185,6 +18219,8 @@
 	   		 	ReceiveSN = #v_RECEIVESN#
 	   		 AND 
 	   		 	TENANT_ID = #v_TENANTID# 
+	   		 AND
+	   		 	COMPANYID = #companyID#
 	   		 order by ProcessDate desc	
 	   		  LIMIT 1 )
    		 	]]>
@@ -18276,6 +18312,7 @@
    		 AND
         	COMPANYID = #companyID#)
    </insert>
+   
    <insert id="EzApprovalG.insertHesongAprOpinionInfo" parameterClass="Map">
    		INSERT INTO 
    				TBL_APROPINIONINFO 

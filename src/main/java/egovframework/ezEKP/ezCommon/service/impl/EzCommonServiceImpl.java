@@ -746,7 +746,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public String getMHTtoHTML(String type, String itemID, int tenantID, String realPath, HttpServletRequest request, Locale locale) throws Exception{
         String filePath = "";
         String uploadModule = commonUtil.getUploadPath("upload_common.MHTIMAGE", tenantID) + commonUtil.separator;
-        String domain = request.getServerName();
+        String domain = request.getServerName() +":" +request.getServerPort();
         
         filePath = realPath + uploadModule;
         File file = new File(filePath);
