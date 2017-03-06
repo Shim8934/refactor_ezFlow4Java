@@ -333,12 +333,12 @@
                         		<td style="border-bottom:1px solid #b6b6b6;">
                             		<input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm2}" <%} %> maxLength="255"/></td>
                     		</tr>
-                    		<tr class="secondary">
+                    		<tr class="secondary" style='display:none'">
                         		<th style="width:16%"><spring:message code='ezPortal.t4093'/></th>
                         		<td style="border-bottom:1px solid #b6b6b6;">
-                            		<input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm3}" <%} %> maxLength="255"/></td>
+                            		<input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm3}" <%} %> maxLength="255" /></td>
                     		</tr>
-                    		<tr class="secondary">
+                    		<tr class="secondary" style='display:none'>
                         		<th style="width:16%"><spring:message code='ezPortal.t4094'/></th>
                         		<td>
                             		<input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;"  <%if(mode.equals("new")){%> value=""<%}else{ %> value="${themeNm4}" <%} %> maxLength="255"/></td>

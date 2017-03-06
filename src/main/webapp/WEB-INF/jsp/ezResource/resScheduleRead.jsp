@@ -229,7 +229,7 @@
 
 	        function onbeforeprint2() {
 	            document.getElementById("printOwner").textContent = document.getElementById("displayNM").textContent;
-	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent
+	            document.getElementById("printImportance").textContent = document.getElementById("importanceDIV").textContent;
 	            document.getElementById("printDate").textContent = document.getElementById("AllDayDisplay").textContent;
 	            document.getElementById("printTitle").textContent = document.getElementById("titleDIV").textContent;
 	        }
@@ -395,7 +395,7 @@
 		                		<div id="importanceDIV">
 		                			<c:choose>
 		                				<c:when test="${importance eq '1'}">
-		                					<spring:message code='ezResource.t214' />;  
+		                					<spring:message code='ezResource.t214' />
 										</c:when>
 		                				<c:when test="${importance eq '2'}">
 		                					<spring:message code='ezResource.t215' />

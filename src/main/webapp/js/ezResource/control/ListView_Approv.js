@@ -1353,7 +1353,8 @@ function tr_selectBlock(pRowID, pTableID) {
         var objTr = document.getElementById(strID);
 
         if (objTr) {
-            objTr.setAttribute("selected", true);
+        	objTr.firstChild.firstChild.checked = true;
+            objTr.setAttribute("selected", "true");
             objTr.style.backgroundColor = m_strColorSelect;
         }
 
