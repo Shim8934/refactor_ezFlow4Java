@@ -287,7 +287,8 @@
 		            createNodeInsert(xmlpara, objNode, "PARAMETER");
 		            createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoardSTD);
 		            createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
-		            xmlhttp_getContent_NewBoardSTD.open("POST", "/ezBoard/getItemInfo.do", true);
+		           
+		            xmlhttp_getContent_NewBoardSTD.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID_NewBoardSTD + "&itemID=" + pItemID ,false);
 		            xmlhttp_getContent_NewBoardSTD.onreadystatechange = getContent_after;
 		            xmlhttp_getContent_NewBoardSTD.send(xmlpara);
 		        }
@@ -299,8 +300,7 @@
 		                xmldom = xmlhttp_getContent_NewBoardSTD.responseXML;
 		                xmlhttp_getContent_NewBoardSTD = null;
 		                var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
-		                var ConverContentUrl = location.protocol + "//" + location.host + "/ezCommon/downloadAttach.do?filePath=" + strContentHref;
-		                var tempStr = ConvertMHTtoHTML(ConverContentUrl);
+		                var tempStr = ConvertMHTtoHTML(strContentHref);
 		                var DocContentObject = document.createElement("DIV");
 		                DocContentObject.innerHTML = tempStr;
 		                var DocContentObject_Div = document.createElement("DIV");

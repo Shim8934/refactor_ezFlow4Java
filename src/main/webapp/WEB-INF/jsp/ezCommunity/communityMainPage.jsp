@@ -858,6 +858,7 @@
                 var img = document.createElement("IMG");
                 img.style.width = "156px";
                 img.style.height = "28px";
+                //이효진 2017-03-06 분기타서 언어별 이미지따와야함
                 img.src = "/images/kr/community/title_todayCommunity.png";
                 img.alt = "today Community";
 

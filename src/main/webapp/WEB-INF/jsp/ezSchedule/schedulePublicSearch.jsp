@@ -191,7 +191,7 @@
 
 	        var feature = GetOpenPosition(760, 660);
 	        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&ownerid=" + ownerid + "&date=" + date + "&datetype=" + dateType, "",
-				"height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+				"height = 670px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 
 	    
@@ -242,7 +242,7 @@
 		    </h2>
 			<table class="mainlist" style="table-layout:fixed;width:100%"> 
 				<tr>
-			    	<th colspan=2 style="padding:0 2px; width:30px"><img src="/images/i_important.gif"></th>      
+			    	<th colspan=2 style="padding:0 2px; width:30px;text-align:center;"><img src="/images/i_important.gif" /></th>      
 			    	<th style="width:50px"><spring:message code='ezSchedule.t270' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t271' /></th>
 			    	<th style="width:80px"><spring:message code='ezSchedule.t161' /></th>
@@ -253,7 +253,7 @@
 			  	</tr>
 			  	<c:forEach var="item" items="${scheduleList}">
 		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','REPEATCOUNT','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
-		    		<td colspan=2 style="padding:0 2px;width:30px">
+		    		<td colspan=2 style="padding:0 2px;width:30px;text-align:center;">
 		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
 		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>
 		    			<c:if test="${item.importance == '3'}"><img src='/images/calendar/i_h.png' width='13' height='13'/></c:if>

@@ -65,7 +65,7 @@
 		
 		<table class="content" style="margin-bottom:10px" >
 			<tr>
-		    	<th>Community <spring:message code='ezCommunity.t10'/></th>
+		    	<th><spring:message code='ezCommunity.t9991'/></th>
 		        <td>${club.c_ClubName}</td>
 		    </tr>
 		    <tr>

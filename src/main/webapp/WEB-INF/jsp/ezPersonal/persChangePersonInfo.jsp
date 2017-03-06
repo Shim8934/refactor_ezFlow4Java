@@ -409,7 +409,7 @@
     </table> 
     <div class="btnposition">
         <a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
-        <a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPortal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
+        <a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
     </div>
 </form>
 <br/>

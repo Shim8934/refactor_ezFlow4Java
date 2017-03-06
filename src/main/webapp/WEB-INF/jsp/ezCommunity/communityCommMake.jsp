@@ -211,7 +211,7 @@
 	                    <input type="text" name="userName" value="<c:out value='${userInfoDisplayName }' />" readonly="true" size="40"></td>
 	            </tr>
 	            <tr>
-	                <th>Community <spring:message code='ezCommunity.t10' /></th>
+	                <th><spring:message code='ezCommunity.t9991' /></th>
 	                <td colspan="2" style="padding: 0">
 	                    <table style="width:100%">
 	                        <tr class="primary">

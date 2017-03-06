@@ -204,7 +204,7 @@
 				  	<td>
 				  		<select name="s_radio" style="Width:115px; Height:19px;vertical-align:middle"  class="text">
 							<option value = "1"><spring:message code = 'ezCommunity.t29' /></option>
-							<option value = "2" selected ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t10' /></option>
+							<option value = "2" selected ><spring:message code = 'ezCommunity.t9991' /></option>
 						</select>
 						
 						<input style="width:165px;vertical-align:middle" name="keyword" onKeyDown="return keyword_onkeydown()">
@@ -219,7 +219,7 @@
 		<table class="mainlist" style="width:100%">
 			<tr> 
 				<th style="width:70px"><spring:message code = 'ezCommunity.t32' /></th>
-				<th><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio }' />&keyword=<c:out value = '${keyword }' />&goToPage=<c:out value = '${curPage }' />&block=<c:out value = '${nowBlock}' />&s=1<c:out value = '${sc1 }' />"><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t10' /></a></th>
+				<th><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio }' />&keyword=<c:out value = '${keyword }' />&goToPage=<c:out value = '${curPage }' />&block=<c:out value = '${nowBlock}' />&s=1<c:out value = '${sc1 }' />"><spring:message code = 'ezCommunity.t9991' /></a></th>
 				<th style="width:200px;"><spring:message code = 'ezCommunity.t33' /></th>
 				<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=3<c:out value = '${sc3}' />"><spring:message code = 'ezCommunity.t24' /></a></th>
 				<th style="width:150px"><a href="/admin/ezCommunity/closeCom.do?sRadio=<c:out value = '${sRadio}' />&keyword=<c:out value = '${keyword}' />&goToPage=<c:out value = '${curPage}' />&block=<c:out value = '${nowBlock}' />&s=4<c:out value = '${sc4}' />"><spring:message code = 'ezCommunity.t42' /></a></th>
