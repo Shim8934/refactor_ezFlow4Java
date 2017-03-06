@@ -649,7 +649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE><![CDATA[" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "]]></VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "]]></VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHHREF").item(k).getTextContent()) + "]]></DATA1>");
@@ -5825,8 +5825,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				map.put("v_DOCID", docID);
 				map.put("v_ATTACHFILESN", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(2).getTextContent());
-				map.put("v_ATTACHFILENAME", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent()));
-				map.put("v_ATTACHFILEHREF", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent()));
+				map.put("v_ATTACHFILENAME", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent());
+				map.put("v_ATTACHFILEHREF", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent());
 				map.put("v_ATTACHFILESIZE", size);
 				map.put("v_ATTACHUSERID", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(4).getTextContent()));
 				map.put("v_ATTACHUSERNAME", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent()));
