@@ -1648,10 +1648,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
 			
 			if (file.exists()) {
-				FileUtils.moveFile(file, new File(upd + fileName));
-			} else {
-				file.mkdirs();
-			}
+				FileUtils.copyFile(file, new File(upd + fileName));
+			}  
 			
 			xmlDom.getElementsByTagName("DATA1").item(k).setTextContent(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator + fileName);
 		}

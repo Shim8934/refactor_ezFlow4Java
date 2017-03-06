@@ -158,11 +158,11 @@
 		        var feature = GetOpenPosition(770, 660);
 		        if (recurring == "1") {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=Y" + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&recurring=" + recurring + "&pageFrom=search&pattern=0", "",
-							    "height = 660px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+							    "height = 670px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        }
 		        else {
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&repeatcount=" + repeatcount + "&type=" + scheduletype + "&date=" + date + "&datetype=" + datetype + "&recurring=" + recurring + "&pattern=0", "",
-					            "height = 656px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					            "height = 670px, width = 770px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		        }
 		    }
 			
@@ -241,7 +241,7 @@
 		    	</tr>
 		    	<c:forEach var="item" items="${scheduleList}">
 		    	<tr style="cursor:pointer;padding:0" onClick="open_schedule('${item.scheduleId}','REPEATCOUNT','${item.startDate}','${item.scheduleType}','${item.dateType}','')" bgcolor=#ffffff>
-		    		<td colspan=2 style="padding:0 2px;width:30px">
+		    		<td colspan=2 style="padding:0 2px;width:30px;text-align:center;">
 		    			<c:if test="${item.importance == '1'}"><img src='/images/calendar/i_l.png' width='13' height='13'/></c:if>
 		    			<c:if test="${item.importance == '2'}">&nbsp;</c:if>
 		    			<c:if test="${item.importance == '3'}"><img src='/images/calendar/i_h.png' width='13' height='13'/></c:if>

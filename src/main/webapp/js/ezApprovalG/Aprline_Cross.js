@@ -267,7 +267,7 @@ function AprLineTypeCheck(p_AprLineValue, CurSelRow) {
                                     else {
                                         Row.cells[4].innerText = "" + strLang21 + "";
                                     }
-                                    GetAttribute(Row, "DATA11") = strAprType19
+                                    GetAttribute(Row, "DATA11");
                                 }
                             }
                         }
@@ -328,7 +328,7 @@ function ReasonNocheck(CurSelRow, p_AprlineTypeVal, p_AprLineValue) {
         var Ans = OpenInformationUI(pInformationContent);
         if (Ans) {
             checkvalue = "YES";
-            GetAttribute(CurSelRow[0], "DATA7") = "";
+            GetAttribute(CurSelRow[0], "DATA7");
             ReasonNoAprTxt.value = "";
         } else {
             checkvalue = "NO";
