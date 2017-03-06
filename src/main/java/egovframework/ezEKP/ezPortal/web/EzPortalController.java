@@ -1110,6 +1110,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userOffset", userOffset);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("refreshSecond", refreshSecond);
+		model.addAttribute("host", userInfo.getServerName());
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
@@ -1310,6 +1311,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("host", userInfo.getServerName());
 		
 		return "/ezPortal/portalWpNewApprMail";
 	}

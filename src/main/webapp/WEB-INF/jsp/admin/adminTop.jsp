@@ -4,8 +4,8 @@
 <!DOCTYPE html>
 <html>
 	<head>		
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/admin.css" type="text/css">
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="<spring:message code='main.e4' />" type="text/css" />
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script>
 			function window_onload(){

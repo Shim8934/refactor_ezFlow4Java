@@ -19,8 +19,6 @@
 	        }
 	    }
     }
-
-
     
     if (pCulSel.length <= 0) {
         OpenAlertUI(strLang257);
