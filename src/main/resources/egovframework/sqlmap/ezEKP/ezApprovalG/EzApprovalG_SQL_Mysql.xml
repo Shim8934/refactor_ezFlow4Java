@@ -1582,10 +1582,7 @@
 	<select id ="EzApprovalG.getAttachInfoDB" parameterClass="Map" resultClass="ApprGAttachInfoVO" remapResults="true">
 		<!--결재할 문서-->
 		<isEqual property="v_MODE" compareValue="APR">
-			SELECT 
-				* 
-			FROM (
-				SELECT   
+			  SELECT   
 					#v_LANGFILE# AS ATTACHTYPE, 
 					'file' AS ATTACHTYPECODE, 
 					ATTACHFILESN AS ATTACHSN, 
@@ -1600,7 +1597,13 @@
       				COMPANYID
       			FROM 
       				TBL_APRATTACHINFO  
-      				
+      			WHERE
+      				DOCID = #v_DOCID# 
+      			AND
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#	
+            		
       		UNION ALL 
       		
       			SELECT 
@@ -1617,13 +1620,14 @@
       				TENANT_ID,
       				COMPANYID
       			FROM 
-      				TBL_APRDOCATTACHINFO ) A 
+      				TBL_APRDOCATTACHINFO
       			WHERE 
       				DOCID = #v_DOCID#
       			AND 
             		TENANT_ID = #v_TENANTID# 
             	AND
-            		COMPANYID = #companyID#
+            		COMPANYID = #companyID# 
+      			
 		</isEqual>
 		<!-- 기안한 문서-->
 		<isEqual property="v_MODE" compareValue="END">
@@ -1645,7 +1649,11 @@
       					COMPANYID
          			FROM 
          				TBL_ENDATTACHINFO  
-         				
+         			WHERE 
+	            		TENANT_ID = #v_TENANTID# 
+	            	AND
+	            		COMPANYID = #companyID#	
+	            		
          		UNION ALL 
          		
          		SELECT 
@@ -1689,7 +1697,11 @@
       			COMPANYID
             FROM 
             	TBL_TMPATTACHINFO  
-            
+            WHERE 
+           		TENANT_ID = #v_TENANTID# 
+           	AND
+           		COMPANYID = #companyID#
+           		
             UNION ALL 
             
             SELECT 
@@ -1734,7 +1746,11 @@
       				COMPANYID
             	FROM 
             		TBL_APRATTACHINFO  
-            	
+            	WHERE 
+            		TENANT_ID = #v_TENANTID# 
+            	AND
+            		COMPANYID = #companyID#
+            		
             	UNION ALL 
             	
             	SELECT 
@@ -17730,7 +17746,7 @@
           AND
           	 TENANT_ID = #v_TENANTID#
           AND
-          	 COMPNAYID = #companyID#)
+          	 COMPANYID = #companyID#)
    </insert>
    
    <insert id="EzApprovalG.insertRejectEndAprLineInfo" parameterClass="Map"> 
@@ -17832,9 +17848,9 @@
    <insert id="EzApprovalG.insertRejectExpendAprDocInfo" parameterClass="Map">
    		INSERT INTO 
    			TBL_EXPENDAPRDOCINFO
-	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID, COMPANYID )
+	     ( 		DocID,        SecurityCode, StoragePeriod, FormName, FormName2, companyID, keyword, ItemCode, ItemName, ItemName2, UrgentApproval, TempAttribute, STATUS, SpecialRecordCode, PublicityCode, LimitRange, PageNum, CabinetID, TaskCode, DocNumCode, OrgDocNumCode, SeperateAttachXML, Summary, TENANT_ID )
 	     ( SELECT 
-	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID, COMPANYID 
+	     		#v_NEWDOCID#, SecurityCode, storagePeriod , FormName , FormName2 , companyID , keyword , ItemCode ,ItemName , ItemName2 , UrgentApproval , TempAttribute , STATUS , SpecialRecordCode , PublicityCode , LimitRange ,PageNum , CabinetID , TaskCode , #v_DOCNUMCODE# , OrgDocNumCode , SeperateAttachXML , Summary, TENANT_ID 
 	       FROM 
 	       		TBL_EXPAPRDOCINFO A
 	       WHERE  
