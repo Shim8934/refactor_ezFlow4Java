@@ -170,7 +170,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .calendar_mini_title .calendar_mini_day{width:100%; text-align:center; font-size:13px; font-weight:bold;}
 .calendar_mini_title .btn_next{width:21px; padding:0px 1px;}
 .calendar_mini{table-layout:fixed; border-top:1px solid #cfcfcf;border-left:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; font-size:12px; font-family:Meiryo UI, Arial, Helvetica, sans-serif; font-weight: bold;}
-.calendar_mini th{color:#fff; width:14.2%; height:17px; background:#878a93; margin:0; padding:0; border-top:0 none; border-left:0 none; font-size:9px; font-weight:normal;border-bottom:1px solid #cfcfcf; }
+.calendar_mini th{color:#fff; width:14.2%; height:17px; background:#878a93; margin:0; padding:0; border-top:0 none; border-left:0 none; font-size:11px; font-weight:normal;border-bottom:1px solid #cfcfcf; }
 .calendar_mini th.sun{color:#fff; background:#f05f5a;}
 .calendar_mini th.sat{color:#fff;}
 .calendar_mini td {width:14.2%; height:21px; text-align:center; cursor:pointer; background:url(/images/kr/main/cal_td_bg.gif) right; color:#oaoaoa;}

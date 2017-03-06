@@ -130,9 +130,9 @@ function GetTableMiniBodyObj() {
     var month = parseInt(document.getElementById("iMon").value, 10);
 
     if (DefaultView == 0)
-        dayOfWeeks = strLang5_1; // 일>토
+        dayOfWeeks = strLang5; // 일>토
     else if (DefaultView == 1)
-        dayOfWeeks = strLang6_1; // 월>일
+        dayOfWeeks = strLang6; // 월>일
 
     oBeforeDate = new Date(new Date(year, month - 1, 1) - 86400000);  // 이전달
     oThisDate = new Date(year, month - 1, 1); // 현재달
