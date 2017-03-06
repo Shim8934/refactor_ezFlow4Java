@@ -1051,6 +1051,7 @@ function config_repeat_resource() {
 
 function config_repeat_resource_Complete(rgParams) {
     DivPopUpHidden();
+    
     if (typeof (rgParams) == "undefined" || (typeof (rgParams) == "number" && rgParams == -1)) return;
 
     if (typeof (rgParams) == "number" && rgParams == 0) {
@@ -1060,106 +1061,95 @@ function config_repeat_resource_Complete(rgParams) {
             g_data["recur_del"] = resourcexmlDoc.xml;
         }
         document.getElementById("resourcerepeatinfo").innerHTML = "";
-        document.getElementById("iReFlag").value = "";
+        document.getElementById("iReFlag").value = "0";
     }
     else {
         g_data["recurrence"] = rgParams["xml"];
-        g_data["ptEndDate"] = rgParams["ptEndDate"];
         g_data["str"] = rgParams["str"];
-
-        $("#Sdatepicker").datepicker('setDate', g_data["startTime"]);
-        $('#Stimepicker').timepicker('setTime', g_data["startTime"]);
-        $("#Edatepicker").datepicker('setDate', g_data["endTime"]);
-        $('#Etimepicker').timepicker('setTime', g_data["endTime"]);
-
+        g_data["startTime"] = rgParams["startTime"];
+        g_data["endTime"] = rgParams["endTime"];
+        
         document.getElementById("iReFlag").value = "1";
 
         if (rgParams["alldaycheck"] == "1")
             document.getElementById("alldaycheck").checked = true;
         else
             document.getElementById("alldaycheck").checked = false;
-
-        show_resource_repetition_info();
+        
+        document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
+//        show_resource_repetition_info();
 
     }
 }
 
-function show_resource_repetition_info() {
-    var repeatinfo = "" + strLang101 + "";
-    xmlinDoc = createXmlDom();
-    xmlinDoc.async = false;
-    xmlinDoc = loadXMLString(g_data["recurrence"]);
-    szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
-    switch (szType) {
-        case "4":
-            repeatinfo += "" + strLang102 + "";
-            break;
-        case "5":
-            repeatinfo += "" + strLang103 + "";
-            break;
-        case "6":
-            repeatinfo += "" + strLang106 + "";
-            break;
-        case "7":
-            repeatinfo += "" + strLang107 + "";
-            break;
-    }
-
-    repeatinfo += ", " + strLang104 + "";
-
-    if (document.getElementById("alldaycheck").checked == true)
-        repeatinfo += "" + strLang105 + "";
-    else {
-        var sdate, edate, tempstr;
-
-        sdate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val());
-        edate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
-
-        tempSstr = sdate.toLocaleTimeString().split(" ")[1];
-        tempEstr = edate.toLocaleTimeString().split(" ")[1];
-
-        var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
-        var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
-
-        var reStartHour = reStartDate.split(" ")[1].split(":")[0];
-        var reEndHour = reEndDate.split(" ")[1].split(":")[0];
-
-        var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
-        var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
-
-        if (Number(reStartHour) < 12) {
-            repeatinfo += "" + strLang1 + " ";
-
-            if (Number(reStartHour) == 0)
-                reStartHour = 12;
-        }
-        else {
-            repeatinfo += "" + strLang2 + " ";
-
-            if (Number(reStartHour) > 12)
-                reStartHour = Number(reStartHour) - 12;
-        }
-
-        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
-
-        if (Number(reEndHour) < 12) {
-            repeatinfo += "" + strLang1 + " ";
-
-            if (Number(reEndHour) == 0)
-                reEndHour = 12;
-        }
-        else {
-            repeatinfo += "" + strLang2 + " ";
-
-            if (Number(reEndHour) > 12)
-                reEndHour = Number(reEndHour) - 12;
-        }
-
-        repeatinfo += reEndHour + ":" + reEndMinute;
-    }
-    //document.getElementById("resourcerepeatinfo").innerHTML = repeatinfo;
-    document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
-}
+//function show_resource_repetition_info() {
+//    var repeatinfo = "" + strLang101 + "";
+//    xmlinDoc = createXmlDom();
+//    xmlinDoc.async = false;
+//    xmlinDoc = loadXMLString(g_data["recurrence"]);
+//    szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
+//    switch (szType) {
+//        case "4":
+//            repeatinfo += "" + strLang102 + "";
+//            break;
+//        case "5":
+//            repeatinfo += "" + strLang103 + "";
+//            break;
+//        case "6":
+//            repeatinfo += "" + strLang106 + "";
+//            break;
+//        case "7":
+//            repeatinfo += "" + strLang107 + "";
+//            break;
+//    }
+//
+//    repeatinfo += ", " + strLang104 + "";
+//
+//    if (document.getElementById("alldaycheck").checked == true)
+//        repeatinfo += "" + strLang105 + "";
+//    else {
+//        var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
+//        var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
+//
+//        var reStartHour = reStartDate.split(" ")[1].split(":")[0];
+//        var reEndHour = reEndDate.split(" ")[1].split(":")[0];
+//
+//        var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
+//        var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
+//
+//        if (Number(reStartHour) < 12) {
+//            repeatinfo += "" + strLang1 + " ";
+//
+//            if (Number(reStartHour) == 0)
+//                reStartHour = 12;
+//        }
+//        else {
+//            repeatinfo += "" + strLang2 + " ";
+//
+//            if (Number(reStartHour) > 12)
+//                reStartHour = Number(reStartHour) - 12;
+//        }
+//
+//        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
+//
+//        if (Number(reEndHour) < 12) {
+//            repeatinfo += "" + strLang1 + " ";
+//
+//            if (Number(reEndHour) == 0)
+//                reEndHour = 12;
+//        }
+//        else {
+//            repeatinfo += "" + strLang2 + " ";
+//
+//            if (Number(reEndHour) > 12)
+//                reEndHour = Number(reEndHour) - 12;
+//        }
+//
+//        repeatinfo += reEndHour + ":" + reEndMinute;
+//    }
+//    
+//    document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
+//}
 
 function resource_Check() {
     var check = true;
@@ -1335,6 +1325,12 @@ function SaveSchedule_onClick(cmd, resItem) {
         objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val()
         objNode6 = "0";
     }
+    
+    var resReflag = document.getElementById("iReFlag").value;
+    if (resReflag == "") {
+    	resReflag = "0";
+    }
+    
     createNodeAndInsertText(xmlDoc, objNode, "STARTDATETIME", objNode4);
     createNodeAndInsertText(xmlDoc, objNode, "ENDDATETIME", objNode5);
     createNodeAndInsertText(xmlDoc, objNode, "ALLDAY", objNode6);
@@ -1343,7 +1339,7 @@ function SaveSchedule_onClick(cmd, resItem) {
     createNodeAndInsertText(xmlDoc, objNode, "WRITERID", userid);
     createNodeAndInsertText(xmlDoc, objNode, "IMPORTANCE1", document.getElementById("importantSelect").value);
     createNodeAndInsertText(xmlDoc, objNode, "ENTRY", "");
-    createNodeAndInsertText(xmlDoc, objNode, "REFLAG", document.getElementById("iReFlag").value);
+    createNodeAndInsertText(xmlDoc, objNode, "REFLAG", resReflag);
     createNodeAndInsertText(xmlDoc, objNode, "GRESFLAG", "");
     createNodeAndInsertText(xmlDoc, objNode, "NUM", "");
     createNodeAndInsertText(xmlDoc, objNode, "PNUM", "");
