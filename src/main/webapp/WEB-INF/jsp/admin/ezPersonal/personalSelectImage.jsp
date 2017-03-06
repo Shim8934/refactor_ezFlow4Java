@@ -121,7 +121,7 @@
 		    }
 		    
 		    function btnSave_click() {
-		    	if (specialChk(document.getElementById("txtDisplayName").value) || specialChk(document.getElementById("txtDisplayName2").value)) {
+		    	if (specialChk(document.getElementById("txtDisplayName").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
