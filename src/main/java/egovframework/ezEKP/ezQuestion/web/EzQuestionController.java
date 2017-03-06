@@ -601,8 +601,6 @@ public class EzQuestionController extends EgovFileMngUtil {
 		cal.setTime(publicDate.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)));
 		cal.add(Calendar.SECOND, 1);
 		
-logger.debug("xmlResult = " + commonUtil.convertDocumentToString(doc));
-		
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
 		model.addAttribute("pollStartDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false));
 		model.addAttribute("pollEndDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
