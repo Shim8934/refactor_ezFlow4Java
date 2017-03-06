@@ -6,9 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<%
-		String userLang = (String)request.getAttribute("userLang");
-		%>
+		
 		<section  class="body_bg1">
       		<article class="portletbox boardbox ">
       		  <div id="BoardTab" class="title" runat="server"></div>
@@ -78,7 +76,7 @@
 
 		            for (var i = 0; i < BoardCnt_NewBoardSTD; i++) {
 		                var BoardName = "";
-		                if ("<%=userLang%>" == "1")
+		                if ("${userInfo.primary}" == "1")
 		                        BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME"));
 		                    else
 		                        BoardName = getNodeText(SelectSingleNode(xmlnode[i], "BOARDNAME2"));
@@ -296,12 +294,13 @@
 
 		        function getContent_after() {
 		            if (xmlhttp_getContent_NewBoardSTD == null || xmlhttp_getContent_NewBoardSTD.readyState != 4) return;
-		            try {
+		          
 		                var xmldom = createXmlDom();
 		                xmldom = xmlhttp_getContent_NewBoardSTD.responseXML;
 		                xmlhttp_getContent_NewBoardSTD = null;
 		                var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
 		                var ConverContentUrl = location.protocol + "//" + location.host + "/ezCommon/downloadAttach.do?filePath=" + strContentHref;
+alert(ConverContentUrl);
 		                var tempStr = ConvertMHTtoHTML(ConverContentUrl);
 		                var DocContentObject = document.createElement("DIV");
 		                DocContentObject.innerHTML = tempStr;
@@ -317,9 +316,7 @@
 		                    DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
 
 		                document.getElementById("content").appendChild(DocContentObject);
-		            }
-		            catch (e) {
-		            }
+		          
 		        }
 
 		        function boardChangeTab(obj) {
