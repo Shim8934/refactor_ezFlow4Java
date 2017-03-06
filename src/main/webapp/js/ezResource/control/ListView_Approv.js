@@ -1516,6 +1516,7 @@ function event_HeaderCheckBoxClick(obj) {
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].setAttribute("selected", "false")
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+            strListInfo = "";
         }
     }
 }

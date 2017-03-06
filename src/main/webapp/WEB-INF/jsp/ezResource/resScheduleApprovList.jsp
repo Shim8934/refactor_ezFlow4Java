@@ -14,7 +14,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
-		<script type="text/javascript" src="/js/ezResource/control/ListView_Approv.js?ver=0.2"></script>
+		<script type="text/javascript" src="/js/ezResource/control/ListView_Approv.js?ver=0.5"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
