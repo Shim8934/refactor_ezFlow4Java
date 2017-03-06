@@ -265,11 +265,6 @@
 				    return;	
 			    }
 	            
-	            if (document.getElementsByName('checkmenuSub').length > 100) {
-	            	alert("<spring:message code='ezBoard.hyj05'/>");
-				    return;
-	            }
-			    
 			    newID = "{" + GetGUID() + "}";
 	
 			    var xmlhttp = createXMLHttpRequest();

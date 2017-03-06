@@ -794,8 +794,7 @@
 		
 		var FormEditor	= null;
 		var bEditorLoaded = false;
-		function objFormEditor_DocumentComplete()
-		{
+		function objFormEditor_DocumentComplete() {
 			if (bEditorLoaded == true) return;
 			
 			FormEditor	= objFormEditor.object;
@@ -804,8 +803,7 @@
 
 			FormEditor.Editor.DOM.body.free = "";			// 에디터의 편집 가능 설정 (초기값 : 편집불가)
 			
-			if (portlet_type.toString() == "2" && pDocPath != "")
-			{
+			if (portlet_type.toString() == "2" && pDocPath != "") {
 				FormEditor.LoadURL(document.location.protocol+"//" + location.hostname + pDocPath);				
 			}
 			
@@ -816,8 +814,12 @@
 		        //var fullPath = document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(pDocPath);				
 		        //var htmlData = message.SetEditorContentURL2(fullPath);
 		        //2016-10-09 mht파일 저장경로 수정
-		        var htmlData = message.SetEditorContentURL2(escape(pDocPath));
-			    message.SetEditorContent(htmlData);
+				
+		        //2017-03-06 null처리 추가
+		        if (pDocPath != null && pDocPath != "") {
+		        	var htmlData = message.SetEditorContentURL2(escape(pDocPath));
+		        	message.SetEditorContent(htmlData);
+		        }
  
             }
 		

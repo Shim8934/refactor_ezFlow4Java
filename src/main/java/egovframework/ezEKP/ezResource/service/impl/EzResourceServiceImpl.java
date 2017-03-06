@@ -685,9 +685,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_content", content);
 		map.put("v_P_importance", importance);
 		map.put("v_P_reFlag", reFlag);
-		map.put("v_P_gresFlag", gresFlag);
+		map.put("v_P_gresFlag", "0");
 		map.put("v_P_entryList", entryList);
-		map.put("v_P_characterID", characterID);
+		map.put("v_P_characterID", "0");
 		map.put("v_P_attachFlag", attachFlag);
 		map.put("v_P_deptNM", deptNm);
 		map.put("v_P_ownerNM", ownerNm);

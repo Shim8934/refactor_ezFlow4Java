@@ -649,7 +649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE><![CDATA[" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "]]></VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "]]></VALUE>");
 				
 				if (p == 0) {
 					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHHREF").item(k).getTextContent()) + "]]></DATA1>");
@@ -5825,8 +5825,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				map.put("v_DOCID", docID);
 				map.put("v_ATTACHFILESN", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(2).getTextContent());
-				map.put("v_ATTACHFILENAME", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent()));
-				map.put("v_ATTACHFILEHREF", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent()));
+				map.put("v_ATTACHFILENAME", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(10).getTextContent());
+				map.put("v_ATTACHFILEHREF", xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(1).getTextContent());
 				map.put("v_ATTACHFILESIZE", size);
 				map.put("v_ATTACHUSERID", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(4).getTextContent()));
 				map.put("v_ATTACHUSERNAME", makeRightField(xmlDom.getElementsByTagName("ROW").item(k).getChildNodes().item(13).getTextContent()));
@@ -6485,22 +6485,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
+				resultXML.append("<VALUE><![CDATA["+ getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "]]></VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "</DATA6>");
-					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "</DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "</DATA8>");
-					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "</DATA9>");
-					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "</DATA10>");
-					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "</DATA11>");
-					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "</DATA12>");
-					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "</DATA13>");
+					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA13>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -13247,6 +13247,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.insertRegAudioVisualExInfo(map);
 		} catch(Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			System.out.println(e.getMessage());
 			return "FALSE";
 		}
 		return "TRUE";
@@ -13670,8 +13671,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</VALUE>");
-			resultXML.append("<DATA1>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</DATA1>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA1>");
 			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</DATA2>");
 			if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
 				resultXML.append("<DATA3>" + "0" + "</DATA3>");
@@ -13695,14 +13696,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "</DATA8>");
 			resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "</DATA9>");
 			resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "</DATA10>");
-			resultXML.append("<DATA11>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent())) + "</DATA11>");
-			resultXML.append("<DATA12>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent())) + "</DATA12>");
+			resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA11>");
+			resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA12>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			if (commonUtil.getPrimaryData(strType, tenantID).equals("1")) {
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent())) + "</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
 			} else {
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent())) + "</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></VALUE>");
 			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
