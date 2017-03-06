@@ -1343,10 +1343,11 @@ public class EzBoardController extends EgovFileMngUtil{
         boardMyFavoriteVO.setBoardId(boardVO.getBoardId());
         boardMyFavoriteVO.setUserId(userInfo.getId());
         boardMyFavoriteVO.setType(type);
+        boardMyFavoriteVO.setBoardAdmin_FG(adminType);
         boardMyFavoriteVO.setTenantID(userInfo.getTenantId());
         boardMyFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
         
-        int boardCount = ezBoardService.getBrdTotalItemCount(boardMyFavoriteVO);
+        int boardCount = ezBoardService.getQNABrdTotalItemCount(boardMyFavoriteVO);
    
         int startRow = 1;
         int endRow = 0;

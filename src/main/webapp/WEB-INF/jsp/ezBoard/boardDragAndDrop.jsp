@@ -7,7 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezBoard.i1' />" type="text/css">
 		<style>
 			#lstAttachLink {
-			height: 117px;
+			height: 115px;
 			border: 1px solid #3C2F2E;
 			}
 		</style>
