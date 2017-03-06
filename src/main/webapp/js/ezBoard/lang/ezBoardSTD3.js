@@ -50,12 +50,12 @@ var strLang63 = "親フォルダがあります。";
 
 //2016 추가
 
-var strLang171 = "리스트의 ID가 지정되지 않았습니다.";
-var strLang172 = "데이터가 지정되지 않았습니다.";
-var strLang173 = "권한이 없습니다";
-var strLang174 = "사진추가 도중 오류 발생";
-var strLang175 = "읽기 권한이 없습니다.";
-var strLang176 = "삭제 권한이 없습니다.";
-var strLang177 = "게시물을 선택해 주세요.";
-var strLang178 = "읽음 표시 하시겠습니까?";
-var strLang179 = "를(을) 선택하세요.";
+var strLang171 = "リストのIDが指定されていません。";
+var strLang172 = "データが指定されていません。";
+var strLang173 = "権限がありません。";
+var strLang174 = "写真を追加中にエラー発生";
+var strLang175 = "閲覧権限がありません。";
+var strLang176 = "削除権限がありません。";
+var strLang177 = "掲示物を選択してください。";
+var strLang178 = "選択した掲示物を既読処理しますか？";
+var strLang179 = "を選択してください。";

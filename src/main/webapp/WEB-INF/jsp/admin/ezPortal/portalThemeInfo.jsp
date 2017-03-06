@@ -98,7 +98,7 @@
                 document.getElementById("Title4").value = document.getElementById("Title1").value + "_zh";
             }
             
-            if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) || specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value) || specialChk(document.getElementById("TopURL").value) || specialChk(document.getElementById("MainURL").value)) {
+            if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) || specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
 	    		alert("<spring:message code='ezResource.special' />");
 	    		return;
 	    	}

@@ -151,29 +151,38 @@ public class IMAPAccess {
 			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
 			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
 			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
+			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
 			
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
+			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
+			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
+			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
+			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
 			
+			if (!junk.exists()) {
+				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
+			}			
 		} catch(MessagingException e) {
 			e.printStackTrace();
 		}
@@ -192,28 +201,38 @@ public class IMAPAccess {
 			Folder draft = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t646", locale));
 			Folder trash = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t647", locale));
 			Folder personal = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t648", locale));
+			Folder junk = rootFolder.getFolder(egovMessageSource.getMessage("ezEmail.t99000029", locale));
 			
 			// if default folders are not exist, create the folders.
 			if (!inbox.exists()) {
 				inbox.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.lhm01", locale) + " created");
 			}
+			
 			if (!sent.exists()) {
 				sent.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t645", locale) + " created");
 			}
+			
 			if (!draft.exists()) {
 				draft.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t646", locale) + " created");
 			}
+			
 			if (!trash.exists()) {
 				trash.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t647", locale) + " created");
 			}
+			
 			if (!personal.exists()) {
 				personal.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
 				logger.debug(egovMessageSource.getMessage("ezEmail.t648", locale) + " created");
 			}
+			
+			if (!junk.exists()) {
+				junk.create(Folder.HOLDS_FOLDERS|Folder.HOLDS_MESSAGES);
+				logger.debug(egovMessageSource.getMessage("ezEmail.t99000029", locale) + " created");
+			}						
 			
 			//add default folders into top-level folder list
 			topLevelFolders.add(inbox);
@@ -221,6 +240,7 @@ public class IMAPAccess {
 			topLevelFolders.add(draft);
 			topLevelFolders.add(trash);
 			topLevelFolders.add(personal);
+			topLevelFolders.add(junk);
 			
 			Folder[] folderList = rootFolder.list();
 			
@@ -232,6 +252,7 @@ public class IMAPAccess {
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t646", locale))
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t647", locale))
 						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))
+						&& !folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))
 						) {
 					topLevelFolders.add(folder);
 				}

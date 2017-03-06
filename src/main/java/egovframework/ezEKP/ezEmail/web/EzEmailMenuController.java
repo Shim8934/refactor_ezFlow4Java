@@ -135,6 +135,9 @@ public class EzEmailMenuController {
 				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t648", locale))) {
 					rootFolderXML.append(" orgBoxName='4'");
 					rootFolderXML.append(" fullcaption='_PERSONAL'"); //수정
+				} else if (folderName.equalsIgnoreCase(egovMessageSource.getMessage("ezEmail.t99000029", locale))) {
+					rootFolderXML.append(" orgBoxName='5'");
+					rootFolderXML.append(" fullcaption='_JUNK'"); //수정
 				} else {
 					rootFolderXML.append(" orgBoxName='" + ((j++) + 6) + "'");
 					rootFolderXML.append(" fullcaption='_NONE'"); //수정
