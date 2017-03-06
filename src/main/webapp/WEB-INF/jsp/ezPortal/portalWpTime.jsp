@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code="ezPortal.t232" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" href="/css/main.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	</head>
 	<body class="body_bg2">

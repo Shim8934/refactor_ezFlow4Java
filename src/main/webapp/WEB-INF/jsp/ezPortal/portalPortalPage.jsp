@@ -21,7 +21,7 @@
 		<!-- <link href="/css/main.css" rel="stylesheet" type="text/css"> -->
 		
 				 <% if(tableViewOption.equals("D")){ %>
-                	<link href="/css/main.css" rel="stylesheet" type="text/css">
+                	<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
             	<% } else{ %>
                 	<link href="/css/theme01.css" rel="stylesheet" type="text/css">
             <% } %>

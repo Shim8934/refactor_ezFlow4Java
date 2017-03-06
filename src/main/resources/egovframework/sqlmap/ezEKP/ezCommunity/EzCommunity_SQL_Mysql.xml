@@ -742,7 +742,7 @@
 				ORDER BY
 					A.parentwritedate DESC,
 					STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-					A.startdate ASC
+					A.itemlevel ASC
 			]]>
 		</isEqual>
 		
@@ -6240,7 +6240,7 @@
 			DELETE FROM
 				TBL_COMM_ITEM_ATTACHMENTS
 			WHERE
-				itemid = #v_PITEMID#
+				itemid = #v_pItemID#
 			AND
 				tenant_id = #tenantID#
 		]]>

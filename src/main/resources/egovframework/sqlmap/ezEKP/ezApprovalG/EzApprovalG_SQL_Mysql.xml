@@ -14428,7 +14428,7 @@
          FROM 
          	TBL_ENDAPRDOCINFO 
          WHERE  
-         	DocID = #v_DOCID#
+         	DocID = #v_OrgDocID#
          AND
          	TENANT_ID = #v_TENANTID#
          AND
@@ -14441,7 +14441,7 @@
          FROM 
          	TBL_ENDAPRDOCINFO 
          WHERE  
-         	DocID = #v_DOCID#
+         	DocID = #v_OrgDocID#
          AND
          	TENANT_ID = #v_TENANTID#
          AND
