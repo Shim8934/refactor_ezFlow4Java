@@ -17,6 +17,7 @@
 			<c:if test="${scheduleInfo.scheduleType == 2}"><spring:message code='ezSchedule.t322' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 3}"><spring:message code='ezSchedule.t323' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
+			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t996' />(</c:if>
 			<c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
 	        <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>)
 		</title>
@@ -472,6 +473,7 @@
 	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:20px">
+	                                    		<c:set var="imagePath" value="/images/file.gif" />
 	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
 	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
 	                                    			<c:set var="imagePath" value="/images/image.png" />
