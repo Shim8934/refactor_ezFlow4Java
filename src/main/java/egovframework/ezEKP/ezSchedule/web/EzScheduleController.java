@@ -1241,19 +1241,22 @@ public class EzScheduleController extends EgovFileMngUtil {
             String strLabelOwner = "";                
             
         	if (_scheduletype.equals("1") || _scheduletype.equals("6")) {
-                 strLabelOwner = msg.getMessage("ezSchedule.t372", locale);
-                 strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
+                strLabelOwner = msg.getMessage("ezSchedule.t372", locale);
+                strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
             } else if (_scheduletype.equals("2")) {
-                 strLabelOwner = msg.getMessage("ezSchedule.t373", locale);
-                 strLabelOwner += (primary.equals("1") ? loginVO.getDeptName() : loginVO.getDeptName2());
+                strLabelOwner = msg.getMessage("ezSchedule.t373", locale);
+                strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
             } else if (_scheduletype.equals("3")) {
-                 strLabelOwner = msg.getMessage("ezSchedule.t374", locale);
-                 strLabelOwner += (primary.equals("1") ? loginVO.getCompanyName() : loginVO.getCompanyName2());
+                strLabelOwner = msg.getMessage("ezSchedule.t374", locale);
+                strLabelOwner += (primary.equals("1") ? loginVO.getCompanyName() : loginVO.getCompanyName2());
             } else if (_scheduletype.equals("4")) {
-                 //HQ관련
+                //HQ관련
             } else if (_scheduletype.equals("7")) {
-                 strLabelOwner = msg.getMessage("ezSchedule.t375", locale);
-                 strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
+                strLabelOwner = msg.getMessage("ezSchedule.t375", locale);
+                strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
+            } else if (_scheduletype.equals("8")) {
+            	strLabelOwner = msg.getMessage("ezSchedule.t373", locale);
+                strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
             }
         	model.addAttribute("strLabelOwner", strLabelOwner);
         	model.addAttribute("strAttach", strAttach.toString());
