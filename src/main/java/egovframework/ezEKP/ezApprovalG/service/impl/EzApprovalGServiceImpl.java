@@ -9698,6 +9698,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_USERID", userID);
 		map.put("v_STAASJINHANG", staASJinHang);
 		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
 		
 		try{
 			ezApprovalGDAO.updateBoryuAprLineInfo(map);
@@ -11114,7 +11115,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String receiptUserID = makeListField(ezApprovalGDAO.updateSusinResultReceipt(map));
 		
-		try{
+		try {
 		if (receiptUserID.toUpperCase().equals(userID.toUpperCase())) {
 			map.put("v_PROCESSFLAG", processFlag);
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
