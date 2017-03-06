@@ -23,17 +23,6 @@
         		</div>
         		<div class="birthcont" id="birthcont">
             		<ul class="fl" id="userlist">
-                		<asp:Repeater ID="BirthListRepeater" runat="server">  
-                			<ItemTemplate>
-                    			<%-- <li style="cursor:pointer;display:block;" onclick="OpenUserInfo('<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("CN")[0].InnerText %>')"
-                        			<%# Container.ItemIndex > 11 ? "style='display:none;'" : "style='display:block'" %>>
-                        			[<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("BIRTH")[0].InnerText %>]<%# userinfo.lang == "1" ? ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DISPLAYNAME")[0].InnerText  :
-                        			((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DISPLAYNAME2")[0].InnerText %>
-                        			&nbsp;<%# userinfo.lang == "1" ? ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("TITLE")[0].InnerText  :
-                        			((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("TITLE2")[0].InnerText %>
-                    			</li> --%>
-                			</ItemTemplate>
-                		</asp:Repeater>
             		</ul>
         		</div>
         		<div class="birthcont" id="nodata_NewBirth" style="display:none;">
@@ -50,10 +39,6 @@
     		</article>
 		</section>
 		
-		<%
-			String userLang = (String)request.getAttribute("userLang");
-		%>
-		
 		<link href="/css/main.css" rel="stylesheet" type="text/css">
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
 		<script type="text/javascript">
@@ -65,8 +50,9 @@
 	    	var timer;
 	    	var xmlhttp;
 	    	window.onload = window_onload_NewBirth;
-	    	var strLang1_NewBirth = "<spring:message code='main.t00026' />";
+	    	var strLang1_NewBirth = "<spring:message code='main.t00026'/>";
 	    	document.onselectstart = function () { return false; };
+	    	
 	    	function window_onload_NewBirth(){
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            	document.body.style.MozUserSelect = 'none';
@@ -78,45 +64,6 @@
 		        
 		        getbirthUserList();
 
-		        if ("<%=userLang%>" != "1") {
-		            document.getElementById("kordisplay").style.display = "none";
-
-	    	        var txtmonth;
-	        	    switch (month.toString()) {
-	            	    case "01": txtmonth = "January birthdays";
-	                	    break;
-		                case "02": txtmonth = "February birthdays";
-		                    break;
-	    	            case "03": txtmonth = "March birthdays";
-	        	            break;
-	            	    case "04": txtmonth = "April birthdays";
-	                	    break;
-	                	case "05": txtmonth = "May birthdays";
-							break;
-	                	case "06": txtmonth = "June birthdays";
-		                    break;
-		                case "07": txtmonth = "July birthdays";
-	    	                break;
-	        	        case "08": txtmonth = "August birthdays";
-	            	        break;
-	                	case "09": txtmonth = "September birthdays";
-		                    break;
-	                	case "10": txtmonth = "October birthdays";
-		                    break;
-		                case "11": txtmonth = "November birthdays";
-	    	                break;
-	        	        case "12": txtmonth = "December birthdays";
-	            	        break;
-	                	default: txtmonth = "birthdays";
-		                    break;
-		            }
-
-		            if (CrossYN())
-	    	            document.getElementById("curMontxt").textContent = txtmonth;
-	        	    else
-	            	    document.getElementById("curMontxt").innerText = txtmonth;
-	        	}
-
 		        if (CrossYN())
 		            document.getElementById("curMon").textContent = month;
 	    	    else
@@ -125,13 +72,8 @@
 	        	try { top.onresize() } catch (e) { }
 	        	getbirthUserList();
 	    	}
+	    	
 	    	function getbirthUserList() {
-		        /* window.clearTimeout(timer);
-		        xmlhttp_getbirthUserList_NewBirth = createXMLHttpRequest();
-	    	    xmlhttp_getbirthUserList_NewBirth.open("POST", "/ezPersonal/mainBirthUserList.do?mon=" + month, true);
-		        xmlhttp_getbirthUserList_NewBirth.onreadystatechange = getbirthUserList_after;
-	        	xmlhttp_getbirthUserList_NewBirth.send(); */
-	        	
 	        	 $.ajax({
 	    	        	type : "POST",
 	    	        	dataType : "text",
@@ -148,7 +90,7 @@
 	    	    });
 	        	
 	    	}
-	    	var userLang = "<%=userLang%>";
+	    	var userPrimary = "${userInfo.primary}";
 	    	function getbirthUserList_after(xml) {
 
 		        if (xml == null) return;
@@ -168,11 +110,12 @@
 	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
 	                    
 	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
-	            	    if (userLang != "1")
+
+	            	    if (userPrimary != "1")
 	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
 
 	                	var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");
-	                	if (userLang != "1")
+	                	if (userPrimary != "1")
 		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2");
 	                    
 		                var _li = document.createElement("li");
@@ -236,44 +179,6 @@
 	        	if (month < 10 && String(month).length == 1)
 		            month = "0" + month;
 
-		        if ("<%=userLang%>" != "1") {
-		            document.getElementById("kordisplay").style.display = "none";
-
-	    	        var txtmonth;
-	        	    switch (month.toString()) {
-	            	    case "01": txtmonth = "January birthdays";
-	                    	break;
-	                	case "02": txtmonth = "February birthdays";
-		                    break;
-	                	case "03": txtmonth = "March birthdays";
-		                    break;
-	                	case "04": txtmonth = "April birthdays";
-		                    break;
-	                	case "05": txtmonth = "May birthdays";
-		                    break;
-	                	case "06": txtmonth = "June birthdays";
-		                    break;
-	                	case "07": txtmonth = "July birthdays";
-		                    break;
-	                	case "08": txtmonth = "August birthdays";
-		                    break;
-	                	case "09": txtmonth = "September birthdays";
-		                    break;
-	                	case "10": txtmonth = "October birthdays";
-		                    break;
-	                	case "11": txtmonth = "November birthdays";
-		                    break;
-	                	case "12": txtmonth = "December birthdays";
-		                    break;
-	                	default: txtmonth = "birthdays";
-		                    break;
-		            }
-
-		            if (CrossYN())
-	    	            document.getElementById("curMontxt").textContent = txtmonth;
-	        	    else
-	            	    document.getElementById("curMontxt").innerText = txtmonth;
-	        	}
 
 	        	if(CrossYN())
 		            document.getElementById("curMon").textContent = month;
@@ -282,6 +187,7 @@
 	        	curPage = 0;
 	        	getbirthUserList();
 	    	}
+	    	
 	    	function OpenUserInfo(pUserID) {
 		        var heigth = window.screen.availHeight;
 	        	var width = window.screen.availWidth;
