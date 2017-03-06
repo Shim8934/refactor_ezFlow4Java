@@ -11,7 +11,7 @@ var sz_DayOfWeek = "";
 var weekStartDate = "";
 var weekEndDate = "";
 
-var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
+var dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
 
 var resource_text = "";
 var tdcount = 0;
@@ -90,15 +90,15 @@ function weekonload(s_Year, s_Month, s_Date)
     }
     //오늘의 날짜를 기준으로 요번주의 시작날짜 0~6 / 일~토 를 구한다. 지금현재는 월요일시작기준으로 date에 + 1을 해주었다.
     if (sz_DayOfWeek == 0)
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 6);
+        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
     else
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 1);
+        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
     //오늘의 날짜를 기준으로 요번주의 마지막날짜를 가져온다.
 
     if (sz_DayOfWeek == 0)
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek));
+        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
     else
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 1);
+        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
     
     mfGetSearchDate(weekStartDate);
     
@@ -166,14 +166,14 @@ function nextWeek_onclick(result) {
     if(result == "PREV")
     {
         //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 6); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 6); 
+        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 7); 
+        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 7); 
     }
     else if(result == "NEXT")
     {
         //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 8); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 8); 
+        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 7); 
+        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 7); 
     }
     
     //weekStartDate에 대한 값이 설정되었으면 mfGetSearchDate함수를 통해 변수에 값을 저장해놓는다.
@@ -295,11 +295,11 @@ function tableListControl_Week()
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
 
-                if (countdayname == "6")
-                    _mth.style.color = "#0032cf";
-                else if (countdayname == "0")
-                    _mth.style.color = "#ee1c25";
-
+                if (countdayname == "0")
+                    _mth.style.color = "#0032cf";//blue
+                else if (countdayname == "1")
+                    _mth.style.color = "#ee1c25";//red
+//                "#0032cf";
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
@@ -328,9 +328,9 @@ function tableListControl_Week()
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
 
-                if (countdayname == "6")
+                if (countdayname == "0")
                     _mth.style.color = "#0032cf";
-                else if (countdayname == "0")
+                else if (countdayname == "1")
                     _mth.style.color = "#ee1c25";
 
                 _mth.style.verticalAlign = "middle";
@@ -377,7 +377,7 @@ function tableListControl_Week()
                 _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
 
-            for (var i = 1; i < 8; i++) {
+            for (var i = 0; i < 7; i++) {
                 var y = i;
                 if (i == 7) y = 0;
 
