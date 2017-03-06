@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='main.t1006' /></title>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<link href="/css/main.css" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
 		<script type="text/javascript">
 		 document.onselectstart = function () { return false; };

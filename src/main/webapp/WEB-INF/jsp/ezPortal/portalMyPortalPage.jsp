@@ -15,7 +15,7 @@
 		<% if (!mode.equals("view")) { %>
 			<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<% } else { %>
-        	<link rel="stylesheet" href="/css/main.css" type="text/css" />
+        	<link rel="stylesheet" href="<spring:message code='main.e6'/>" type="text/css" />
 		<% } %>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>

@@ -7,7 +7,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title></title>
-		<link rel="stylesheet" href="/css/main.css" type="text/css" />
+		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<link rel="stylesheet" href="/css/orbit-1.2.3.css" type="text/css" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.7.2.min.js"></script>
