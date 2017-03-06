@@ -127,7 +127,7 @@
 			</article>
 		</section>
 		
-		<link href="<spring:message code="main.e6" />" rel="stylesheet" type="text/css">
+		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1' />"></script>
 		<script type="text/javascript">
