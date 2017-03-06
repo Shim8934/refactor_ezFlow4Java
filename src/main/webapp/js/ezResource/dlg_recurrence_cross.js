@@ -332,6 +332,8 @@ function CheckBeforeSave()
 	return true;
 }
 
+
+/* 2017-03-06 이효민 : 안쓰는 함수
 function RepCheck( xmlStr )
 {
 //	var start = idDatepickers.startFullYear() + "-"
@@ -353,42 +355,42 @@ function RepCheck( xmlStr )
 		return true;
 	}
 	
-	var cmd = getMainPattern();
-	var from;
-	
-	var xmlHttp = createXMLHttpRequest();
-	var xmlDoc = createXmlDom();
-	
-	xmlDoc = xmlStr;
-	
-	AppendNode( xmlDoc, "frequency" );				
-	AppendNode( xmlDoc, "selType" );				
-	AppendNode( xmlDoc, "startDateTime" );			
-	AppendNode( xmlDoc, "endDateTime" );			
-	AppendNode( xmlDoc, "interval" );				
-	AppendNode( xmlDoc, "daysOfWeek" );				
-	AppendNode( xmlDoc, "daysOfMonth" );			
-	AppendNode( xmlDoc, "byPosition" );				
-	AppendNode( xmlDoc, "monthsOfYear" );			
-	AppendNode( xmlDoc, "endRecurType" );			
-	AppendNode( xmlDoc, "instances" );				
-	
-	if( TB_Promise.style.display != "none" )
-		from = "schedule";
-	else
-		from = "task";
-
-	//???
-	xmlHttp.Open("POST","/ZHome/myoffice/controls/dlg_recurrence_proc.asp?from="+from+"&sDate="+start+"&eDate="+end+"&cmd="+cmd,false);
-	xmlHttp.Send(xmlDoc.xml);
-	
-	var result = loadXMLString(xmlHttp.responseText);
-	
-	if( trim(result.text) == "1" )
-		return true;
-	else
-		return false;
-}
+	// 2017-03-06 이효민 : 필요없는 코드
+//	var cmd = getMainPattern();
+//	var from;
+//	
+//	var xmlHttp = createXMLHttpRequest();
+//	var xmlDoc = createXmlDom();
+//	
+//	xmlDoc = xmlStr;
+//	
+//	AppendNode( xmlDoc, "frequency" );				
+//	AppendNode( xmlDoc, "selType" );				
+//	AppendNode( xmlDoc, "startDateTime" );			
+//	AppendNode( xmlDoc, "endDateTime" );			
+//	AppendNode( xmlDoc, "interval" );				
+//	AppendNode( xmlDoc, "daysOfWeek" );				
+//	AppendNode( xmlDoc, "daysOfMonth" );			
+//	AppendNode( xmlDoc, "byPosition" );				
+//	AppendNode( xmlDoc, "monthsOfYear" );			
+//	AppendNode( xmlDoc, "endRecurType" );			
+//	AppendNode( xmlDoc, "instances" );				
+//	
+//	if( TB_Promise.style.display != "none" )
+//		from = "schedule";
+//	else
+//		from = "task";
+//
+//	xmlHttp.Open("POST","/ZHome/myoffice/controls/dlg_recurrence_proc.asp?from="+from+"&sDate="+start+"&eDate="+end+"&cmd="+cmd,false);
+//	xmlHttp.Send(xmlDoc.xml);
+//	
+//	var result = loadXMLString(xmlHttp.responseText);
+//	
+//	if( trim(result.text) == "1" )
+//		return true;
+//	else
+//		return false;
+}*/
 
 function trim(parm_str)
 {
@@ -583,13 +585,14 @@ function event_btnOk_onclick()
 
         putReturnData("xml", getXmlString(xmlDoc));
         putReturnData("str", rtvString);
-
-        if (document.getElementById("EndTimeSet").checked) {
-            if (!RepCheck(getXmlString(xmlDoc))) {
-                alert(strLang111 + "\n" + "" + strLang112 + "");
-                return false;
-            }
-        }
+        
+        // 2017-03-06 이효민 : RepCheck함수 이상해서 주석
+//        if (document.getElementById("EndTimeSet").checked) {
+//            if (!RepCheck(getXmlString(xmlDoc))) {
+//                alert(strLang111 + "\n" + "" + strLang112 + "");
+//                return false;
+//            }
+//        }
     }
 	catch(e)
 	{
