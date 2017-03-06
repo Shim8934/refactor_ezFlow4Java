@@ -742,7 +742,7 @@
 				ORDER BY
 					A.parentwritedate DESC,
 					STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-					A.startdate ASC
+					A.itemlevel ASC
 			]]>
 		</isEqual>
 		
