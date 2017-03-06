@@ -13670,8 +13670,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</VALUE>");
-			resultXML.append("<DATA1>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</DATA1>");
+			resultXML.append("<VALUE><![CDATA[" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "]]></DATA1>");
 			resultXML.append("<DATA2>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent())) + "</DATA2>");
 			if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
 				resultXML.append("<DATA3>" + "0" + "</DATA3>");

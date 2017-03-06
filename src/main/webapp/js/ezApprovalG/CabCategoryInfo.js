@@ -174,7 +174,7 @@ function GetTaskSubCategory(pCode, pSubCategoryCode)
 	    headerData = loadXMLString(Category_h.innerHTML.toUpperCase());
 
 	    var GetXml = "<LISTVIEWDATA>";
-        GetXml = GetXml + "<ROWS>";
+        GetXml += "<ROWS>";
         var CateCnt = GetChildNodes(GetChildNodes(rtnXml.childNodes[0])[1]).length;
 	    for (var i = 0; i < CateCnt; i++) {
 	        var pcode = getNodeText(GetChildNodes(GetChildNodes(SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW").item(i))[0])[0]);
@@ -189,15 +189,15 @@ function GetTaskSubCategory(pCode, pSubCategoryCode)
 	            var curCategory = SelectNodes(rtnXml, "LISTVIEWDATA/ROWS/ROW")[i];
 	            var curSubCategory = SelectNodes(SubXml, "LISTVIEWDATA/ROWS/ROW")[y];
 	            if (!simpleCnt) {
-	                GetXml = GetXml + GetmakeXml(curCategory, curSubCategory, false, false);
+	                GetXml += GetmakeXml(curCategory, curSubCategory, false, false);
 	            }
 	            for (var z = 0; z < simpleCnt; z++) {
 	                var curSimple = SelectNodes(simpleXml, "LISTVIEWDATA/ROWS/ROW")[z];
-	                GetXml = GetXml + GetmakeXml(curCategory, curSubCategory, curSimple, false);
+	                GetXml += GetmakeXml(curCategory, curSubCategory, curSimple, false);
 	            }
 	        }
 	    }
-	    GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
+	    GetXml += "</ROWS></LISTVIEWDATA>";
 
 	    var xmldoc = loadXMLString(GetXml);
 	    if (CrossYN()) {
