@@ -300,7 +300,6 @@
 		                xmlhttp_getContent_NewBoardSTD = null;
 		                var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
 		                var ConverContentUrl = location.protocol + "//" + location.host + "/ezCommon/downloadAttach.do?filePath=" + strContentHref;
-alert(ConverContentUrl);
 		                var tempStr = ConvertMHTtoHTML(ConverContentUrl);
 		                var DocContentObject = document.createElement("DIV");
 		                DocContentObject.innerHTML = tempStr;
