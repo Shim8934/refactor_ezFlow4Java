@@ -45,8 +45,11 @@
 	    var pNoneActiveX = "${nonActiveX}";
 	    var pStartday = "7";
 	    var LunarUse = false;
+	    
 	    document.onselectstart = function () { return false; };
-
+		
+	    select_memorialDays("${userInfo.lang}");
+	    
 	    var xmlhttp2 = createXMLHttpRequest();
 	    function schedule_get_holiday() {
 	        xmlhttp2 = createXMLHttpRequest();
