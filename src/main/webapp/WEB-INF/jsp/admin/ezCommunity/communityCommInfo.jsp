@@ -73,7 +73,7 @@
 					</c:choose>
 				</tr>
 				<tr> 
-					<th>Community<spring:message code = 'ezCommunity.t10' /></th>
+					<th><spring:message code = 'ezCommunity.t9991' /></th>
 					<td>
 		                <table style="table-layout:fixed;width:240px;">
 		                    <tr>

@@ -133,7 +133,7 @@
 				  (${club.userName})</td>
 				</tr>
 				<tr>
-					<th>Community <spring:message code = 'ezCommunity.t10' />					</th>
+					<th><spring:message code = 'ezCommunity.t9991' /></th>
 					<td><input type="text" style="width:100%" name="txt_CommunityName" value="${club.c_ClubName}"></td>
 				</tr>
 				<tr>

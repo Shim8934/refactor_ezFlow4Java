@@ -73,7 +73,7 @@
 					<td><c:out value = '${club.c_SysopID}' /> (<c:out value = '${name1}' />)</td>
 				</tr>
 				<tr>
-					<th><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t10' /></th>
+					<th><spring:message code ='ezCommunity.t9991' /></th>
 					<td style="padding:0">
 						<table style="width:100%">
 							<tr class="primary">

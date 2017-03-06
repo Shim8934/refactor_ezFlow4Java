@@ -209,7 +209,7 @@
 			  	<td>
 			  		<select name="s_radio" style="WIDTH:115px; HEIGHT:19px;vertical-align:middle" class="text">
 						<option value="1"><spring:message code = 'ezCommunity.t29' /></option>
-						<option value="2" selected><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t10' /></option>
+						<option value="2" selected><spring:message code = 'ezCommunity.t9991' /></option>
 					</select>
 					<input name="keyword" onkeydown="return keyword_onkeydown()" style="vertical-align:middle">
 					<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
@@ -223,7 +223,7 @@
         <table class="mainlist" style="width:100%">
 			<tr>
 				<th style="width:70px;"><spring:message code = 'ezCommunity.t32' /></th>
-				<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t10' /></th>
+				<th><spring:message code = 'ezCommunity.t9991' /></th>
 				<th style="width:200px"><spring:message code = 'ezCommunity.t33' /></th>
 				<th style="width:150px"><spring:message code = 'ezCommunity.t24' /></th>
 			</tr>

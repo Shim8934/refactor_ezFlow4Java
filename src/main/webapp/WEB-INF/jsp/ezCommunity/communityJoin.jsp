@@ -254,7 +254,7 @@
 		<h1>Community <spring:message code = 'ezCommunity.t1066' /></h1>
 		<table class="content">
 		  	<tr>
-			    <th>Community <spring:message code = 'ezCommunity.t10' /></th>
+			    <th><spring:message code = 'ezCommunity.t9991' /></th>
 			    <td><div style="OVERFLOW-Y: auto;HEIGHT: 17px;"><c:out value = '${clubVO.c_ClubName}' /></div></td>
 		  	</tr>
 		  	<tr>
