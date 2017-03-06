@@ -152,7 +152,6 @@
     		<script type="text/javascript" src="/js/ezSchedule/Calendar/CalendarMini_EIP.js"></script>
     	<%} %>
 		
-		<script type="text/javascript" src="<spring:message code='main.t00024'/>"></script>
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
 		<script type="text/javascript">
@@ -179,7 +178,7 @@
 			    draw_clock();
 			    yourClock();
 
-			    CalendarMiniDataSource();
+			    //CalendarMiniDataSource();
 
 		        try { top.onresize() } catch (e) { }
 
