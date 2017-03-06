@@ -527,8 +527,8 @@ function event_btnOk_onclick()
             pAlldaycheck = "1";
             rtvString = strLang126 + ", ";
 
-            var m_objStartTime_temp = new Date(m_objStartTime.getFullYear(), m_objStartTime.getMonth(), m_objStartTime.getDate(), 0, 0);
-            var m_objEndTime_temp = new Date(m_objEndTime.getFullYear(), m_objEndTime.getMonth(), m_objEndTime.getDate(), 23, 59);
+            var m_objStartTime_temp = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T00:00:00Z");
+            var m_objEndTime_temp = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + "T23:59:59Z");
             m_objStartTime = m_objStartTime_temp;
             m_objEndTime = m_objEndTime_temp;
         }
@@ -1057,7 +1057,7 @@ function Remainder( Root, xmlDoc )
 		else
 		{
 		    createNodeAndInsertText(xmlDoc, Root, "endRecurType", 0);
-		    rtvString += strLang582;
+		    rtvString += strLang581;
 		}
 	}
 	catch(e)
