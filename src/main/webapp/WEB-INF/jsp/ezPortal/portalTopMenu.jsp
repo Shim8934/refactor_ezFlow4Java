@@ -21,11 +21,11 @@
 		<style type="text/css">
 			<%String lang = (String)request.getAttribute("lang"); %>
 			<% if (lang.equals("2")) { %>
-				#input_search { background:#333437 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
+				#input_search { background:#15335f url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
 			<% } else if (lang.equals("3")) { %>
-				#input_search { background:#333437 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
+				#input_search { background:#15335f url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
 			<% } else if (lang.equals("4")) { %>
-			 	#input_search { background:#333437 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
+			 	#input_search { background:#15335f url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
 			<% } %>
 		</style>
 	
