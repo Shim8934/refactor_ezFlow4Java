@@ -19629,8 +19629,8 @@
    			ProcessDate = #v_SYSDATE#
 		WHERE 
 			DocID = #v_DOCID# 
-		AND 
-			AprMemberID = #v_AprMemberID# 
+		AND                
+			AprMemberID = #v_APRMEMBERID# 
 		AND 
 			(AprState = #v_AprState2# OR AprState = #v_AprState3#) 
 		AND 
