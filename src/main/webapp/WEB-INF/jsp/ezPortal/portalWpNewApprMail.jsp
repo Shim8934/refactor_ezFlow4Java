@@ -79,35 +79,10 @@
               				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num" runat="server">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
-            			<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
+            			<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
             		</div>
           			<div id ="ApprList" class="appr_mailcont">            
               			<ul class="listtype_txt">
-            	<%-- 			<%if(pExist) { %>
-            					<asp:Repeater ID="ApprListRepeater" runat="server">  
-                					<ItemTemplate>
-                    					<li id="DocListArray_TR_<%# (Container.ItemIndex) %>"
-                         				onclick="opendocview('<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DOCID")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("HREF")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("APRMEMBERID")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("APRMEMBERNAME")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("APRMEMBERDEPTID")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DOCSTATE")[0].InnerText %>',
-                        				'<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("FUNCTIONTYPE")[0].InnerText %>')">
-
-                        				<span class='txt'><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DOCTITLE")[0].InnerText) %></span> 
-                        				<span class='date'><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("STARTDATE")[0].InnerText).Substring(0, 
-                                           Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("STARTDATE")[0].InnerText).Length-3) %></span> 
-                        				<span class='name'><%# Server.HtmlEncode(((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("WRITERNAME")[0].InnerText) %></span>
-                    					</li>
-                					</ItemTemplate>   
-            					</asp:Repeater>
-            				<%} else {%>
-                				<div class='nodata_portlet '>
-                					<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_white.gif' width='107' height='70'></p>
-                					<p><spring:message code='main.t00026' /></p>
-                				</div>
-            				<%} %> --%>
             			</ul>
           			</div>
         		</section>
@@ -173,6 +148,7 @@
 	    var pUse_IE11Browser = "${useIE11Browser}";
 	    var pNoneActiveX = "${noneActiveX}";
 	    document.onselectstart = function () { return false; };
+	    
 	    function window_onload_NewApprMail() {
 	        if (navigator.userAgent.indexOf('Firefox') != -1) {
 	            document.body.style.MozUserSelect = 'none';
@@ -181,7 +157,10 @@
 	            document.body.style.oUserSelect = 'none';
 	            document.body.style.UserSelect = 'none';
 	        }
-	        getApprGraph();
+	        //getApprGraph();
+	        change_article("mail");
+	        getMailGraph();
+	        
 	        try { top.onresize() } catch (e) { }
 	    }
 
@@ -199,33 +178,9 @@
 	    }
 
 	    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
-	    function getApprGraph() {
-<%-- 	        var xmlpara = createXmlDom();
-
-	        var objNode;
-	        createNodeInsert(xmlpara, objNode, "PARAMETER");
-	        createNodeAndInsertText(xmlpara, objNode, "pListTypeName", pListTypeValue);
-	        createNodeAndInsertText(xmlpara, objNode, "pDocTypeName", "A01000");
-	        createNodeAndInsertText(xmlpara, objNode, "pUserID", pUserID);
-	        createNodeAndInsertText(xmlpara, objNode, "pUserDeptID", arr_userinfo[4]);
-	        createNodeAndInsertText(xmlpara, objNode, "pPageSize", "1000");
-	        createNodeAndInsertText(xmlpara, objNode, "pPageNum", "1");
-	        createNodeAndInsertText(xmlpara, objNode, "companyID", companyID);
-	        createNodeAndInsertText(xmlpara, objNode, "orderCell", "");
-	        createNodeAndInsertText(xmlpara, objNode, "orderOption", "");
-	        createNodeAndInsertText(xmlpara, objNode, "SearchQuery", "");
-	        createNodeAndInsertText(xmlpara, objNode, "SubQuery", "");
-
-	        xmlhttp_getApprGraph_NewApprMail = null;
-	        xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
-	        
-	        if ("<%=userApprovalG%>" == "YES")
-	            xmlhttp_getApprGraph_NewApprMail.open("POST", "/ezApprovalG/getPortletAprDocList.do", true);
-	        else
-	            xmlhttp_getApprGraph_NewApprMail.open("POST", "/myoffice/ezApproval/aspx/getportletaprdoclist.aspx", true);
-	        xmlhttp_getApprGraph_NewApprMail.onreadystatechange = getDocList_after;
-	        xmlhttp_getApprGraph_NewApprMail.send(xmlpara); --%>
-        	if ("<%=userApprovalG%>" == "YES") {
+	    
+/* 	    function getApprGraph() {
+        	if ("${userApprovalG}" == "YES") {
         	      $.ajax({
       	        	type : "POST",
       	        	dataType : "text",
@@ -276,7 +231,7 @@
        	        	}
        	        });	
         	}
-	    }
+	    } */
 
 	    function getDocList_after(xml) {
 
@@ -339,7 +294,7 @@
 	    function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType) {
 	        var openLocation = "";
 
-	        if ("<%=userApprovalG%>" == "YES")
+	        if ("${userApprovalG}" == "YES")
 	        {
 	            if (pListTypeValue != "2") {
 	                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
@@ -788,7 +743,7 @@
 
 	    function Appmore_btnClick()
 	    {
-	        if ("<%=userApprovalG%>" == "YES")
+	        if ("${userApprovalG}" == "YES")
 	        {
 	            if (pListTypeValue != "2")
 	                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");

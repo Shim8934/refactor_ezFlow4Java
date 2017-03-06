@@ -6240,7 +6240,7 @@
 			DELETE FROM
 				TBL_COMM_ITEM_ATTACHMENTS
 			WHERE
-				itemid = #v_PITEMID#
+				itemid = #v_pItemID#
 			AND
 				tenant_id = #tenantID#
 		]]>

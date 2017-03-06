@@ -1279,7 +1279,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				filePath = "/images/default_pic.jpg";
 			}
 			
-			if (userInfo.getLang().equals("1")) {
+			if (userInfo.getPrimary().equals("1")) {
 				displayName = result.getDisplayName();
 				title = result.getTitle();
 				description = result.getDescription();
@@ -1428,7 +1428,7 @@ public class EzPortalController extends EgovFileMngUtil {
 									strAnswer = strAnswer.substring(0, 13) + "...";
 								}
 								pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + i + "." + strAnswer + " (" +
-	                                    						"<strong>0</strong>명/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
+	                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
 	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
 																resultPrintCnt++;
 								if (resultPrintCnt == 4) {

@@ -3298,9 +3298,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<CELL>");
 			
 			if (commonUtil.getPrimaryData(langType, tenantID).equals("1")) {
-				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent())) + "</VALUE>");
 			} else {
-				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent())) + "</VALUE>");
 			}
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
@@ -13670,8 +13670,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</VALUE>");
-			resultXML.append("<DATA1>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "</DATA1>");
+			resultXML.append("<VALUE><![CDATA[" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent())) + "]]></DATA1>");
 			resultXML.append("<DATA2>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent())) + "</DATA2>");
 			if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
 				resultXML.append("<DATA3>" + "0" + "</DATA3>");
@@ -17693,12 +17693,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if(docTitle.trim().equals("")){
 					docTitle = makeListField(signXML.getElementsByTagName("DOCTITLE").item(0).getTextContent());
 				}
+	            
+				map.put("v_OrgDocID", makeRightField(orgDocID));
+				map.put("v_DOCID", docID);
 				
 				String startDate = ezApprovalGDAO.getStartDateTime(map);
 	            String endDate = ezApprovalGDAO.getEndDateTime(map);
 	            
-				map.put("v_OrgDocID", makeRightField(orgDocID));
-				map.put("v_DOCID", docID);
 				map.put("v_DocType", makeRightField(makeListField(signXML.getElementsByTagName("DOCTYPE").item(0).getTextContent())));
 				map.put("v_DocState", staDSSimSa);
 				map.put("v_FunctionType", staASJinHang);
