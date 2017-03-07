@@ -1690,7 +1690,7 @@
 		<![CDATA[
 			SELECT
 				c_clubgubun,
-				c_clubname$v_USERINFO_LANG$,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
 				c_membercnt,
 				c_clubconfirmtype
 			FROM
