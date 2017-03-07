@@ -723,8 +723,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			
 			map.put("v_OWNERID", ownerid);
 			map.put("v_OWNERNAME", ownername);
+			map.put("v_OWNERNAME2", ownername2);
 			map.put("v_CREATORID", creatorid);
 			map.put("v_CREATORNAME", creatorname);
+			map.put("v_CREATORNAME2", creatorname2);
 			map.put("v_SCHEDULETYPE", scheduletype);
 			map.put("v_IMPORTANCE", importance);
 			map.put("v_HASATTENDANT", hasattendant);

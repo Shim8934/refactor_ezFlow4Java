@@ -724,14 +724,13 @@
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
 			insert into tbl_schedule(
-				parentid, 			ownerid, 			ownername, 					creatorid, 			creatorname,		createdate,			modifierid,		modifiername,
-				modifydate,			scheduletype,		importance,					hasattendant,		hasattach,			hascomment,			isreadonly,		ispublic,		datetype,	
-				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,	tenant_id
+				parentid, 			ownerid, 			ownername, 					ownername2,			creatorid, 			creatorname,		creatorname2,		createdate,			modifierid,		modifiername,
+				modifiername2,		modifydate,			scheduletype,				importance,			hasattendant,		hasattach,			hascomment,			isreadonly,			ispublic,		datetype,	
+				startdate, 			enddate,	 		repetition,					repetitiondelete,	title,				location,			contentpath,		tenant_id
 			) values (
-				0,					#v_OWNERID#,		#v_OWNERNAME#,				#v_CREATORID#,		#v_CREATORNAME#,	utc_timestamp(),	#v_CREATORID#,	#v_CREATORNAME#,
-				utc_timestamp(),	#v_SCHEDULETYPE#,	#v_IMPORTANCE#,				#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',			#v_ISPUBLIC#,	#v_DATETYPE#,
-				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				
-				#v_CONTENTPATH#,	#v_TENANTID#	 
+				0,					#v_OWNERID#,		#v_OWNERNAME#,				#v_OWNERNAME2#,		#v_CREATORID#,		#v_CREATORNAME#,	#v_CREATORNAME2#,	utc_timestamp(),	#v_CREATORID#,	#v_CREATORNAME#,
+				#v_CREATORNAME2#,	utc_timestamp(),	#v_SCHEDULETYPE#,			#v_IMPORTANCE#,		#v_HASATTENDANT#,	#v_HASATTACH#,		'N',				'N',				#v_ISPUBLIC#,	#v_DATETYPE#,
+				#v_STARTDATE#,		#v_ENDDATE#,		ifnull(#v_REPETITION#, ''),	'',					#v_TITLE#,			ifnull(#v_LOCATION#, ''),				#v_CONTENTPATH#,	#v_TENANTID#	 
 			)
    		]]>
 	</insert>

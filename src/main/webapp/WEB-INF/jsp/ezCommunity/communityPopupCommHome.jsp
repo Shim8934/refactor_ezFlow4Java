@@ -766,7 +766,7 @@
 	                    		<span class="icon_gray"><span id="mastericon"><spring:message code='ezCommunity.t9' /></span></span>
 	                    	</c:when>
 	                    	<c:otherwise>
-	                    		<span class="icon_gray" style="background:none"><span id="mastericon" style="-webkit-padding-start:0px;font-size:7pt;background-position:top left;"><spring:message code='ezCommunity.t9' /></span></span>		
+	                    		<span class="icon_gray" style="background:none"><span id="mastericon" style="padding-left:1px;font-size:7pt;"><spring:message code='ezCommunity.t9' /></span></span>		
 	                    	</c:otherwise>
 	                    </c:choose>
                     
