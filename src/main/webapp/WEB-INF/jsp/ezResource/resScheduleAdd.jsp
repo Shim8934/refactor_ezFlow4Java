@@ -178,7 +178,11 @@
 		            }
 		        }
 		    }
-
+			
+		    window.onresize = function () {
+		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
+	    	}
+		    
 		    $(function () {
 	    	    $("#Sdatepicker").datepicker({
 	        	    changeMonth: true,
@@ -389,9 +393,6 @@
 	        	}
 	    	}
 
-	    	window.onresize = function () {
-		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
-	    	}
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -531,34 +532,26 @@
       			</td>
   			</tr>
   			<tr>
-	  			<td <c:if test="${noneActiveX eq 'YES'}">style="height:100%"</c:if>>
-        			<table style="height:100%; width:100%">
-        				<tr style="height:100%">
-          					<td id="EdtorSize">
-           						<div id="divCross" style="height: 100%;">
-           							<c:choose>
-           								<c:when test="${editor eq 'TAGFREE'}" >
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-           								</c:when>
-           								<c:when test="${editor eq 'DEXT'}" >
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/dextEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-           								</c:when>
-           								<c:otherwise>
-           									<iframe id="Iframe1" class="viewbox"  name="message" src="/ezResource/ckEditor.do" style="padding:0; height:97%; width:99.7%; overflow:auto;"></iframe>
-           								</c:otherwise>
-           							</c:choose>
-           						</div>
-				          </td>
-        				</tr>
-
-				      	<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-        				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
-        				<input type="hidden" id="gresFlag" value="${gresFlag}" />
-        				<input type="hidden" id="num" value="${num}" />
-        				<input type="hidden" id="pnum" value="${pNum}" />
-        				<input type="hidden" id="ownerID" value="${ownerID}" />
-        				<input type="hidden" id="writerID" value="${writerID}" /> 
-      				</table>
+	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
+					<c:choose>
+						<c:when test="${editor eq 'TAGFREE'}">
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+						</c:when>
+						<c:when test="${editor eq 'DEXT'}">
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/dextEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+						</c:when>
+						<c:otherwise>
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
+						</c:otherwise>
+					</c:choose>
+	      			
+	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
+       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
+       				<input type="hidden" id="gresFlag" value="${gresFlag}" />
+       				<input type="hidden" id="num" value="${num}" />
+       				<input type="hidden" id="pnum" value="${pNum}" />
+       				<input type="hidden" id="ownerID" value="${ownerID}" />
+       				<input type="hidden" id="writerID" value="${writerID}" />
       			</td>
   			</tr>
   			<tr style="display: none">
