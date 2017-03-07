@@ -97,15 +97,17 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-		                    self.resizeTo(765, (768 + addheight));
-		                else
-		                    self.resizeTo(765, (795 + addheight));
+		                    self.resizeTo(760, (768 + addheight));
+		                else {
+		                    self.resizeTo(785, (795 + addheight));
+		                }
 		            }
 		            else {
-		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-		                    self.resizeTo(765, (690 + addheight));
-		                else
-		                    self.resizeTo(775, (715 + addheight));
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (690 + addheight));
+		                } else {
+		                    self.resizeTo(785, (715 + addheight));
+		                }
 		            }
 		
 		            var Div = document.createElement("DIV");

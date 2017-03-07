@@ -487,7 +487,7 @@ function ListView() {
                         strStyle += "cursor:pointer;";
                     }
 
-                    if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                    if (!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
                     else {
@@ -512,7 +512,7 @@ function ListView() {
                             objTd.width = strWidth + "px";
                         }
                         else {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                            if (CrossYN()) {
                                 objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -520,23 +520,15 @@ function ListView() {
                             }
                         }
                     }
-                    //else {
-                    //    if (_WidthFlag) {
-                    //        if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
-                    //           objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
-                    //        }
-                    //        else {
-                    //           objTd.width = "80%";// objTd.width = strWidth + "px";
-                    //        }
-                    //    }
-                    //    else
-                    //        objTd.width = strWidth + "px";
-                    //}
                     _TableWidth = _TableWidth + parseInt(strWidth);
                 }
 
                 if (strColName == "TITLE") {
                     objTd.style.width = "50%";
+                }
+                
+                if (strColName == "WRITEDATE") {
+                	objTd.width = "120px";
                 }
                 
                 if (strColName == "BOARDNAME") {
@@ -668,11 +660,12 @@ function ListView() {
 
                 objTr.setAttribute(strData, strValue);
             }
-            oTbody.appendChild(objTr);
             
             if (!getNodeText(oDatas[5]) == "") {
             	objTr.setAttribute("title", getNodeText(oDatas[5]));
             }
+            
+            oTbody.appendChild(objTr);
 
             var chkbox = false;
             for (var j = 0; j < oCells.length; j++) {
@@ -728,6 +721,11 @@ function ListView() {
                     objTd.style.overflow = "hidden";
                     objTd.style.whiteSpace = "nowrap";
                     objTd.style.textOverflow = "ellipsis";
+                } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITEDATE') > -1) {
+                	objTd.style.textAlign = "left";
+                	objTd.style.overflow = "hidden";
+                	objTd.style.whiteSpace = "nowrap";
+                	objTd.style.width = "120px";
                 } else {
                 	objTd.style.textAlign = "left";
                 	objTd.style.overflow = "hidden";
@@ -789,7 +787,7 @@ function ListView() {
                 }
 
                 if (strStyle != "") {
-                    if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                    if (!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
                     else {
@@ -858,7 +856,7 @@ function ListView() {
             var objTd = document.createElement("TD");
 
             if (strStyle != "") {
-                if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                if (!CrossYN()) {
                     objTd.style.setAttribute("cssText", strStyle);
 
                 }
@@ -1014,7 +1012,7 @@ function ListView() {
             pIdx = 0;
 
         var objTr = null;
-        if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+        if (!CrossYN()) {
             //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
             objTr = oList.insertRow((pIdx + 1));
             objTr.setAttribute("id", _thisID + "_TR_" + pIdx);
@@ -1197,7 +1195,7 @@ function ListView() {
     //사용자 브라우저 확인
     //IE가 아닌경우 OCS Presence 무조건 사용안함
     function SetUserBrower() {
-        if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+        if (CrossYN()) {
             _IE = false;
             _useOcs = false;
         }

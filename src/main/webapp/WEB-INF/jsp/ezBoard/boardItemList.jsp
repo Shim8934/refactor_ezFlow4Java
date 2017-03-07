@@ -56,6 +56,9 @@
 			#layer_Viewpopup .popupwrap3 h1 {
 				font-size:13px;margin:0px 0px 10px 0px;height:24px; line-height:15px; padding:0px;color:#fff; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
 			}
+			.mainlist tr td {
+				word-wrap:normal;
+			}
 	    </style>
 		<script  type="text/javascript">
 			var pBoardID = "<c:out value='${boardID}'/>";
