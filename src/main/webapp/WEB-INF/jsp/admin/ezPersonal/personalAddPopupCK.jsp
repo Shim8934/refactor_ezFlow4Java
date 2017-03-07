@@ -109,7 +109,7 @@
 			}
 			
 			function OK_Click() {
-				if (specialChk(document.getElementById("Title").value) || specialChk(document.getElementById("Title2").value)) {
+				if (specialChk(document.getElementById("Title").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			   	}
