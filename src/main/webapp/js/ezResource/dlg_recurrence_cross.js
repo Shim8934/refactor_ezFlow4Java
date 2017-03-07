@@ -531,9 +531,6 @@ function event_btnOk_onclick()
             m_objEndTime = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
             m_objEndTime.setHours(23);
             m_objEndTime.setMinutes(59);
-            
-            m_objStartTime = m_objStartTime_temp;
-            m_objEndTime = m_objEndTime_temp;
         }
         else {
             pAlldaycheck = "0";
@@ -601,6 +598,7 @@ function event_btnOk_onclick()
 //                return false;
 //            }
 //        }
+        
     }
 	catch(e)
 	{
