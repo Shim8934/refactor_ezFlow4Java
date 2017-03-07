@@ -4,7 +4,10 @@
 
     acrobat.installed = false;
 
-    if (navigator.plugins && navigator.plugins.length) {
+    if (checkAdobePlugin()) {
+        return "OK";
+    }
+    else if (navigator.plugins && navigator.plugins.length) {
         for (x = 0; x < navigator.plugins.length; x++) {
 
             if (
@@ -51,3 +54,26 @@
 
     return acrobat.installed;
 }
+
+function checkAdobePlugin() {
+    var error, found = false, info = '';
+    try {
+        acrobat4 = new ActiveXObject('PDF.PdfCtrl.1');
+        if (acrobat4) { found = true; info = 'v. 4.0'; }
+    } catch (e) { error = 4; }
+    if (!found) {
+        try {
+            acrobat7 = new ActiveXObject('AcroPDF.PDF.1');
+            if (acrobat7) { found = true; info = 'v. 7+'; }
+        } catch (e) { error = 7 }
+        if (!found && navigator.plugins && navigator.plugins.length > 0) {
+            for (var i = 0; i < navigator.plugins.length; i++) {
+                if (navigator.plugins[i].name.indexOf('Adobe Acrobat') > -1) {
+                    found = true; info = navigator.plugins[i].description; //+ ' (' + navigator.plugins[i].filename + ')';
+                    break;
+                }
+            }
+        }
+    }
+    return found;
+};
