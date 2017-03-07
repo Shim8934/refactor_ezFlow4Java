@@ -142,7 +142,7 @@
 		      		<%-- <li><span id="menu03" onClick="menu_change(450, event)"><spring:message code="main.t25" /></span></li> --%>
 		      		<c:if test="${use_approvalG == 'YES'}">
 		      		<%-- 전자결재 공공 --%>
-		      			<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t26" /></span></li>
+		      			<li><span id="menu04" onClick="menu_change(545, event)"><spring:message code="main.t25" /></span></li>
 		      		</c:if>	
 		      		<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
 		      		<%-- 시스템 --%>          
