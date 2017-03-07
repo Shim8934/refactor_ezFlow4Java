@@ -270,7 +270,7 @@
 		                }
 		                break;
 		            case "schedule3":
-		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 305 + "PX";
+		                document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 335 + "PX";
 		                break;
 		        }
 		    }
@@ -548,8 +548,7 @@
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>
-										<!-- 2017-03-07 이효민 : 자원관리 기간 추후수정 -->
-                                        <tr ID="HolderWriteTr2" style="display: none">
+                                        <tr ID="HolderWriteTr2">
                                             <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcerepeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; HEIGHT: 19px; width: 565px">&nbsp;</div>
