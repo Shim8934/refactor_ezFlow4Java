@@ -49,7 +49,7 @@
 	    				<span class="warningimg"><img src="/images/help/warning02.gif" width="136" height="112"></span>
 	    				<dl class="warningdl">
 	    					<dt><img alt="" src="/images/help/warning01.gif" width="183" height="27"></dt>
-	    					<dd>PDF Viewer가 설치되어 있지 않습니다.<br/></dd>
+	    					<dd><spring:message code='ezPortal.jjs11' /><br/></dd>
 	    				</dl>
 	    			</div>
 	    		<!-- 삽입할 내용이 없으신경우 아래 <p></p> 태그를 삭제해주세요 -->
