@@ -850,7 +850,7 @@
 		            var tr = selRow[0];
 		            SwapSubMenuDisplay("1");
 		            InitGlobals("RECORD", "0", "1");
-		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID>" + tr.getAttribute("DATA1") + "</CABINETID></CABINET></CABINETINFO>";
+		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
 		            GetRecordList();
 		        }
 		        else {

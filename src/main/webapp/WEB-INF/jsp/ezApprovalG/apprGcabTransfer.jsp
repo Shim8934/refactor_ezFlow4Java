@@ -299,28 +299,28 @@
 	        SelListView.LoadFromID("DivSelCabinetList");
 	        var row = "<ROW>";
 	        row += "<CELL>";
-	        row += "<VALUE>";
+	        row += "<VALUE><![CDATA[";
 	        row += selRow.cells[0].innerText;
-	        row += "</VALUE>";
-	        row += "<DATA1>";
+	        row += "]]></VALUE>";
+	        row += "<DATA1><![CDATA[";
 	        row += selRow.getAttribute("DATA1");
-	        row += "</DATA1>";
-	        row += "<DATA2>";
+	        row += "]]></DATA1>";
+	        row += "<DATA2><![CDATA[";
 	        row += selRow.getAttribute("DATA2");
-	        row += "</DATA2>";
-	        row += "<DATA3>";
+	        row += "]]></DATA2>";
+	        row += "<DATA3><![CDATA[";
 	        row += selRow.cells[1].innerText;
-	        row += "</DATA3>";
+	        row += "]]></DATA3>";
 	        row += "</CELL>";
 	        row += "<CELL>";
-	        row += "<VALUE>";
+	        row += "<VALUE><![CDATA[";
 	        row += selRow.cells[2].innerText;
-	        row += "</VALUE>";
+	        row += "]]></VALUE>";
 	        row += "</CELL>";
 	        row += "<CELL>";
-	        row += "<VALUE>";
+	        row += "<VALUE><![CDATA[";
 	        row += selRow.cells[3].innerText;
-	        row += "</VALUE>";
+	        row += "]]></VALUE>";
 	        row += "</CELL>";
 	        row += "</ROW>";
 	        var rowXml = loadXMLString(row);
@@ -415,7 +415,7 @@
 	                </div>
 	            </td>
 	            <td style="text-align: center; width: 25px">
-	                <img src="/images/arr_right.gif" name="Image191" width="16" height="16" onclick="return AddCabList_onclick()" style="padding-left: 0px cursor: pointer">
+	                <img src="/images/arr_right.gif" name="Image191" width="16" height="16" onclick="return AddCabList_onclick()" style="padding-left: 0px; cursor: pointer">
 	                <img src="/images/arr_left.gif" name="Image201" width="16" height="16" onclick="return DelCabList_onclick()" style="padding-top: 5px; -webkit-padding-start:2px; cursor: pointer;">
 	                <br>
 	                <br>
