@@ -2869,14 +2869,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-//			item.setUpperItemIDTree(item.getUpperItemIDTree() + GetReverseDateNow() + item.getItemID());
+			item.setUpperItemIDTree(item.getItemID());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
 		
 		if (!pMode.equals("copy")) {
 			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
-//			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
 		} else {
 			item.setParentWriteDate(item.getWriteDate());

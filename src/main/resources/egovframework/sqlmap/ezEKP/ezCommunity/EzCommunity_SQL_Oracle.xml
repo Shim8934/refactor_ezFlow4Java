@@ -5139,7 +5139,7 @@
 				#v_pExtensionAttribute32#,
 				#v_pExtensionAttribute4#,
 				#v_pExtensionAttribute5#,
-				#v_pDocNo#,
+				#v_pDocNo# + 1,
 				#v_pDocPassWord#,
 				#tenantID#)
 		]]>
