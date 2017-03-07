@@ -11,8 +11,6 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script src="/js/ezPersonal/ListView_list.js" type="text/javascript"></script>
 		<script language="javascript" type="text/javascript">
-		    var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var ReturnFunction;
 		    window.onload = function () {
 		        try {

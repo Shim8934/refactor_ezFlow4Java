@@ -27,21 +27,22 @@
 			        g_SelectedObj = pObj;
 			    }
 			}
+			
 			function selectItem(pUID, pObj) {
-			    if (navigator.userAgent.indexOf("MSIE") != -1)
-			        location.href = "/ezPortal/topMenu.do?pageID=" + pUID;
-			    else
-			        location.href = "/ezPortal/topMenu.do?pageID=" + pUID;
+				location.href = "/ezPortal/topMenu.do?pageID=" + pUID;
 			}
+			
 			var themeinfo_dialogArguments = new Array();
 			function newpage() {
 			    themeinfo_dialogArguments[1] = newpage_Complete;
 			    var OpenWin = window.open("/admin/ezPortal/themeInfo.do?mode=new", "ThemeInfo", GetOpenWindowfeature(550, 560));
 			    try { OpenWin.focus(); } catch (e) { }
 			}
+			
 			function newpage_Complete() {
 			    window.location.reload();
 			}
+			
 			function Modify_Theme() {
 			    if (g_UID == "") {
 			        alert("<spring:message code='ezPortal.t990009'/>");

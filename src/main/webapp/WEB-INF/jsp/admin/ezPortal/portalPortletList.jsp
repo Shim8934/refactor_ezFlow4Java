@@ -78,28 +78,12 @@
 		}
 		
 		function selectItem(pUID, pObj) {
-            //2015-10-27 장진혁 activex 관련 주석처리
-		    /*if (navigator.userAgent.indexOf("MSIE") != -1) {
-		        if (pNoneActiveX == "YES")
-		            window.open("/myoffice/ezPortal/admin/edit/Portlet_Edit_Cross.aspx?uid_=" + pUID, "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
-                else
-		            window.open("/myoffice/ezPortal/admin/edit/Portlet_Edit.aspx?uid_=" + pUID, "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
-		    }
-		    else */
-		        window.open("/admin/ezPortal/portletEdit.do?uID=" + pUID, "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
+		    window.open("/admin/ezPortal/portletEdit.do?uID=" + pUID, "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
 		}
 		
 		// 새로만들기
-		function newpage()
-		{
-		    if (navigator.userAgent.indexOf("MSIE") != -1) {
-		        if (pNoneActiveX == "YES")
-		            window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
-                else
-		            window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
-		    }
-		    else
-		        window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
+		function newpage() {
+			window.open("/admin/ezPortal/portletEdit.do?mode=new", "", "height = 380px, width = 540px, status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes" + GetOpenPosition(540, 380));
 		}
 		
 		// 미리보기
