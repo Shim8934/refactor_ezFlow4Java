@@ -8602,11 +8602,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></VALUE>");
-			resultXML.append("<DATA1><![CDATA[[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA1>");
-			resultXML.append("<DATA2><![CDATA[[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
-			resultXML.append("<DATA3><![CDATA[[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA3>");
-			resultXML.append("<DATA4><![CDATA[[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "]]></DATA4>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA1>");
+			resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
+			resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA3>");
+			resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "]]></DATA4>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "</VALUE>");
@@ -8615,7 +8615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent())) + "</VALUE>");
@@ -17149,17 +17149,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		strXML.append("<CABINFO>");
 		strXML.append("<BASICINFO>");
-		strXML.append("<CABINETID><![CDATA[[" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "]]></CABINETID>");  // '기록물철 아이디
-		strXML.append("<CABCLASSNO><![CDATA[[" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "]]></CABCLASSNO>");  // '기록물철 분류번호
-		strXML.append("<TITLE><![CDATA[[" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "]]></TITLE>"); // '제목
-		strXML.append("<CABCLASSID><![CDATA[[" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), // '기록물철 분류기호
+		strXML.append("<CABINETID><![CDATA[" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "]]></CABINETID>");  // '기록물철 아이디
+		strXML.append("<CABCLASSNO><![CDATA[" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "]]></CABCLASSNO>");  // '기록물철 분류번호
+		strXML.append("<TITLE><![CDATA[" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "]]></TITLE>"); // '제목
+		strXML.append("<CABCLASSID><![CDATA[" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), // '기록물철 분류기호
 				makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "]]></CABCLASSID>");
 		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID,langType, tenantID) + "</RECTYPE>");// '기록물형태
 		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "</DEPTNAME>"); // '처리과 이름
-		strXML.append("<TASKNAME><![CDATA[[" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "]]></TASKNAME>"); // '단위업무 이름
+		strXML.append("<TASKNAME><![CDATA[" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "]]></TASKNAME>"); // '단위업무 이름
 		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>"); // '생산년도
 		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>"); 	// '등록연번
 		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>"); // '권호수
@@ -17199,7 +17199,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strXML.append("<TDEPTNAME>" + docXML.getElementsByTagName("TDEPTNAME"+ commonUtil.getMultiData(langType, tenantID)).item(0).getTextContent() + "</TDEPTNAME>"); // 인수 기록물철 처리과명
 		strXML.append("<TDEPTCODE>" + docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() + "</TDEPTCODE>"); // 인수 기록물철 처리과 코드
 		strXML.append("<TTASKNAME>" + docXML.getElementsByTagName("TASKNAME").item(0).getTextContent() + "</TTASKNAME>"); // 인수기록물철 단위업무명
-		strXML.append("<TTASKCODE><![CDATA[[" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "]]></TTASKCODE>");// 인수기록물철 단위업무 코드
+		strXML.append("<TTASKCODE><![CDATA[" + (docXML.getElementsByTagName("TASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()) + "]]></TTASKCODE>");// 인수기록물철 단위업무 코드
 		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");// 인수기록물철 생산연도
 		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()) + "</TREGSN>");// 인수기록물철 등록연번
 		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</TVOLNO>");// 인수기록물철 권호수
