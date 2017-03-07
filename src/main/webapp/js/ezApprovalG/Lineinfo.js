@@ -391,14 +391,33 @@ function DoAprLineDown(pSelectedRow) {
         NIndex = pSelectedIndex + 1;
         if (NIndex + 1 != pTotalRowsLen) {
             RowDownCheck = pTotalRows[NIndex].cells[0].innerText;
+            var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
+            var OrgRowDownCheck = RowDownCheck;
+            var OrglocalCheck = localCheck;
+            
+            RowDownCheck = RowDownCheck.replace("⊙", "").replace("★", "");
+            localCheck = localCheck.replace("⊙", "").replace("★", "");
+
+            if (OrglocalCheck.indexOf("⊙") > -1) {
+                RowDownCheck = "⊙" + RowDownCheck;
+            }
+            if (OrglocalCheck.indexOf("★") > -1) {
+                RowDownCheck = "★" + RowDownCheck;
+            }
+            if (OrgRowDownCheck.indexOf("⊙") > -1) {
+                localCheck = "⊙" + localCheck;
+            }
+            if (OrgRowDownCheck.indexOf("★") > -1) {
+                localCheck = "★" + localCheck;
+            }
 
             if (CrossYN()) {
-                pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].innerText;
-                pTotalRows[CIndex].childNodes[0].textContent = RowDownCheck;
+            	 setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
+                 setNodeText(pTotalRows[CIndex].childNodes[0] , RowDownCheck);
             }
             else {
-                pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText;
-                pTotalRows[CIndex].cells[0].innerText = RowDownCheck;
+            	 setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
+                 setNodeText(pTotalRows[CIndex].cells[0] , RowDownCheck);
             }
             Rtnval = "Y";
         }
@@ -547,13 +566,33 @@ function UpperAprLineSN(pSelectedRow) {
 
         if (NIndex >= 0) {
             RowUpCheck = pTotalRows[NIndex].cells[0].innerText; 
+            var localCheck = getNodeText(pTotalRows[CIndex].cells[0]);
+            var OrgRowUpCheck = RowUpCheck
+            var OrglocalCheck = localCheck
+
+            RowUpCheck = RowUpCheck.replace("⊙", "").replace("★", "");
+            localCheck = localCheck.replace("⊙", "").replace("★", "");
+
+            if (OrglocalCheck.indexOf("⊙") > -1) {
+                RowUpCheck = "⊙" + RowUpCheck;
+            }
+            if (OrglocalCheck.indexOf("★") > -1) {
+                RowUpCheck = "★" + RowUpCheck;
+            }
+            if (OrgRowUpCheck.indexOf("⊙") > -1) {
+                localCheck = "⊙" + localCheck;
+            }
+            if (OrgRowUpCheck.indexOf("★") > -1) {
+                localCheck = "★" + localCheck;
+            }
+            
             if (CrossYN()) {
-                pTotalRows[NIndex].childNodes[0].textContent = pTotalRows[CIndex].cells[0].innerText;
-                pTotalRows[CIndex].childNodes[0].textContent = RowUpCheck;
+            	setNodeText(pTotalRows[NIndex].childNodes[0] , localCheck);
+                setNodeText(pTotalRows[CIndex].childNodes[0] , RowUpCheck);
             }
             else {
-                pTotalRows[NIndex].cells[0].innerText = pTotalRows[CIndex].cells[0].innerText;
-                pTotalRows[CIndex].cells[0].innerText = RowUpCheck;
+            	setNodeText(pTotalRows[NIndex].cells[0] , localCheck);
+                setNodeText(pTotalRows[CIndex].cells[0] , RowUpCheck);
             }
             Rtnval = "Y";
         }

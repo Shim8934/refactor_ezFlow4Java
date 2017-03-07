@@ -51,7 +51,7 @@
     }
     function LoadPrintForm() {
         var URL, param;
-        param = "?ID1=" + g_ID1 + "&ID2=" + g_ID2;
+        param = "?ID1=" + javaURLEncode(g_ID1) + "&ID2=" + javaURLEncode(g_ID2);
         if (g_Flag == "CABINET") {
             URL = "/ezApprovalG/printFormCabInfo.do" + param;
         }

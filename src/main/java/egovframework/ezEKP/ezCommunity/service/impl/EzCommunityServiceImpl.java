@@ -472,7 +472,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
+			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1529", userInfo.getLocale()) + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -2869,14 +2869,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-//			item.setUpperItemIDTree(item.getUpperItemIDTree() + GetReverseDateNow() + item.getItemID());
+			item.setUpperItemIDTree(item.getItemID());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
 		
 		if (!pMode.equals("copy")) {
 			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
-//			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
 		} else {
 			item.setParentWriteDate(item.getWriteDate());
