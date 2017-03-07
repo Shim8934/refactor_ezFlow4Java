@@ -97,15 +97,17 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-		                    self.resizeTo(765, (768 + addheight));
-		                else
-		                    self.resizeTo(765, (795 + addheight));
+		                    self.resizeTo(760, (768 + addheight));
+		                else {
+		                    self.resizeTo(785, (795 + addheight));
+		                }
 		            }
 		            else {
-		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
-		                    self.resizeTo(765, (690 + addheight));
-		                else
-		                    self.resizeTo(775, (715 + addheight));
+		                if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1) {
+		                    self.resizeTo(760, (690 + addheight));
+		                } else {
+		                    self.resizeTo(785, (715 + addheight));
+		                }
 		            }
 		
 		            var Div = document.createElement("DIV");
@@ -1168,7 +1170,7 @@
 		  <tr>
 		  <c:choose>
 			  <c:when test="${guBun != '3'}">
-			    <td class="pad1" style="height : 100px">
+			    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
 			        <iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; height:495px; overflow:auto;"></iframe>
 			    </td>
 			  </c:when>

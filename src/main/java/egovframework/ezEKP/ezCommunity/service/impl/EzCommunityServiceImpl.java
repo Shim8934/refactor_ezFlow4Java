@@ -948,8 +948,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		for (CommunityCPollManagerVO item : list) {
-			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10));
-			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10));
+			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10));
+			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10));
 			
 			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
@@ -985,7 +985,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			sb.append("<tr>");
 			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
-			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10) + "</td>");
+			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
@@ -2047,13 +2047,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet1 started.");
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
@@ -2066,19 +2066,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsListGet2(map);
 		
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
 		logger.debug("bbsListGet2 ended.");
 		
 		return list;

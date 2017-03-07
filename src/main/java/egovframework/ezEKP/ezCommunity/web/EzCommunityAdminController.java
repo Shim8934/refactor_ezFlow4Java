@@ -135,7 +135,7 @@ public class EzCommunityAdminController {
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 		
-		int keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
 		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
@@ -144,7 +144,7 @@ public class EzCommunityAdminController {
 		
 		curPage = Math.min(curPage,  totalPage);
 		
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
 		String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);
@@ -196,10 +196,10 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), iQueryCount, select , query, userInfo.getTenantId());
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getTenantId());
 
 		for(CommunityClubVO club : clubList) {
-			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
+			club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
 		}
 		
 		model.addAttribute("userInfo", userInfo);
@@ -222,7 +222,7 @@ public class EzCommunityAdminController {
 		String code = request.getParameter("code");
 		
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
-		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getTenantId()));
+		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getTenantId()));
 		
 		String idSpanValue = ezCommunityService.getCategory(club.getC_Cate_A(), club.getC_Cate_B(), club.getC_Cate_C(), userInfo);
 		

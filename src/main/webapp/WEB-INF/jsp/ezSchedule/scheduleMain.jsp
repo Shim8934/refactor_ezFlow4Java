@@ -892,7 +892,7 @@
 			
 			        return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
 			    }).call(this, v_dateTime, hourNum, minuteNum)
-			    : (navigator.userAgent.indexOf('MSIE') == -1) ?
+			    : (CrossYN()) ?
 			    (function (v_dateTime, hourNum, minuteNum) {
 			        var dt = new Date(
 			        Date.UTC(

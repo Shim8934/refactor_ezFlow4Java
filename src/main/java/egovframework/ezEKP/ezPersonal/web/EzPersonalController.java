@@ -804,7 +804,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);
 		model.addAttribute("labelDepartment", labelDepartment);

@@ -15,8 +15,6 @@
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var bSearch = false;
-	    	var UserAgentState = navigator.userAgent.toLowerCase();
-	    	var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 	    	var pListType = "IMG";
 	    	var pListXML_Info = null;
 	    	var strLang1 = "<spring:message code='ezPersonal.t249'/>";
@@ -489,7 +487,7 @@
 					}
 				});
 	        	var usedefault;
-	        	if (browserIE) {
+	        	if (CrossYN()) {
 	        		usedefault = document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex].usedefault;
 	        	} else {
 	        		usedefault = GetAttribute(document.getElementById("search_type").options[document.getElementById("search_type").selectedIndex], "usedefault");

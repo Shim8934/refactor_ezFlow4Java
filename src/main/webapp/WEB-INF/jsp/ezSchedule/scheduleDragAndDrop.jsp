@@ -211,14 +211,15 @@
 		</script>
 	</head>
     <body style ="width:100%;height:100%;overflow:hidden">   
-        <div style="width:100%;white-space:nowrap;display:inline-block">
-            <span style="float:left">
+        <div style="width:100%;white-space:nowrap;display:inline-block;height:22px">
+            <div style="float:left">
                 <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezSchedule.t370'/></span></a>
-                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>   
-            </span>
+                <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezSchedule.t371'/></span></a>
+            </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
-             </div>
+            </div>
+            <div style="clear:both"></div>
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>

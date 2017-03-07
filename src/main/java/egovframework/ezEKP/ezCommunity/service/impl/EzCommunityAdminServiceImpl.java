@@ -347,11 +347,11 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public List<CommunityClubVO> aspSearchKeyGet1(String lang, int iQueryCount, String select, String query, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int iQueryCount, String select, String query, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_IQUERYCOUNT", iQueryCount);
 		map.put("v_STRSELECT", select.toUpperCase());
 		map.put("v_STRQUERY", query);
@@ -365,11 +365,12 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public String getUserName(String id, int tenantID) throws Exception {
+	public String getUserName(String id, String primary, int tenantID) throws Exception {
 		logger.debug("getUserName started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_ID", id);
+		map.put("primary", primary);
 		map.put("tenantID", tenantID);
 		
 		String result = ezCommunityAdminDAO.getUserName(map);

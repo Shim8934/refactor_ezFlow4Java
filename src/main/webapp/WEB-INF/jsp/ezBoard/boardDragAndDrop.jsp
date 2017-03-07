@@ -249,11 +249,11 @@
 		</script>
 	</head>  
     <body style ="width:100%;height:100%;overflow:hidden">   
-        <div style="width:100%;white-space:nowrap;display:inline-block">
-            <span style="float:left; font-size:13px;">
+        <div style="width:100%;white-space:nowrap;display:inline-block; height: 22px;">
+            <div style="float:left;">
                 <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
                 <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezBoard.t441' /></span></a>   
-            </span>
+            </div>
             <div id="progdiv" class="progarea" style="display:none">
              	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
              </div>

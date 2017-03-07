@@ -1500,11 +1500,7 @@ function HTMLtoMHT_MakeTag(ContnetHTML) {
     var META = document.createElement("META");
     META.content = "text/html; charset=utf-8";
     META.httpEquiv = "Content-Type";
-    var META2 = document.createElement("META");
-    META2.content = "IE=9";
-    META2.httpEquiv = "X-UA-COMPATIBLE";
     HEAD.appendChild(META);
-    HEAD.appendChild(META2);
 
     var STYLE = document.createElement("STYLE");
     STYLE.type = "text/css";

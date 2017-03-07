@@ -299,7 +299,7 @@
 						FROM
 							$v_BNAME$
 						WHERE
-							username$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'
+							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 					]]>
@@ -4357,11 +4357,11 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							NVL(COUNT(username$v_USERINFO_LANG$), 0) 
+							NVL(COUNT(CASE #primary# WHEN '1' THEN username ELSE username2 END AS username), 0) 
 						FROM
 							$v_BNAME$ 
 						WHERE
-							username$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'
+							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 							tenant_id = #tenantID#
 					]]>

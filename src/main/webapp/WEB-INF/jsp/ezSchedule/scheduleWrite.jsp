@@ -316,8 +316,12 @@
 		            printOwner = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].textContent;
 		            printAttendant = document.getElementById("receiverlist").textContent;
 		        } else {
-		            printOwner = document.getElementById("LabelOwner").textContent;
-		            printAttendant = document.getElementById("LabelAttendant").textContent;
+		        	if (document.getElementById("LabelOwner")) {
+		            	printOwner = document.getElementById("LabelOwner").textContent;
+		        	}
+		        	if (document.getElementById("LabelAttendant")) {
+		            	printAttendant = document.getElementById("LabelAttendant").textContent;
+		        	}
 		        }
 
 		        printIsPublic = document.getElementById("publicSelect").options[document.getElementById("publicSelect").selectedIndex].textContent;

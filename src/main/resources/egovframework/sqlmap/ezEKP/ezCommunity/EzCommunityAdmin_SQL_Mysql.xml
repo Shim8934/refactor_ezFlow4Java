@@ -292,7 +292,7 @@
 			FROM
 				(SELECT
 					c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
+					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
 					c_sysopid,
 					c_clubdesc,
 					c_regdate
@@ -327,7 +327,7 @@
 									FROM
 										TBL_C_CLUB
 									WHERE
-										c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+										CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
 									AND
 										tenant_id = #tenantID#)
 					AND
@@ -686,7 +686,7 @@
 	<select id="EzCommunityAdminDAO.getUserName" 						parameterClass="Map"		resultClass="String">
 		<![CDATA[
 			SELECT 
-				username
+				CASE #primary# WHEN '1' THEN username ELSE username2 END AS username
 			FROM
 				TBL_C_MEMBERINFO
 			WHERE
