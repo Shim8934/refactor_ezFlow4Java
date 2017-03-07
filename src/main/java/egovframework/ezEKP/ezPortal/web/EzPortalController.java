@@ -1641,7 +1641,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		mailAddress = userInfo.getEmail();
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			displayName = userInfo.getDisplayName1();
 			department = userInfo.getDeptName1();
 			title = userInfo.getTitle1();
@@ -1833,7 +1833,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (result.getItemSeq() > 0) {
 				if (result.getItemSeq() != 0) {
 					pPollItemSeq = result.getItemSeq();
-					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
 				}	
 			}
 		}
@@ -2994,10 +2994,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		sb.append("</DATA>");
 
 		model.addAttribute("portletCategoryXML", sb.toString());
-		if (userInfo.getLang() != null && userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary() != null && userInfo.getPrimary().equals("1")) {
 			model.addAttribute("userLang", "");
 		} else {
-			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getLang()));
+			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getPrimary()));
 		}
 
 		return "/ezPortal/portalPortletSearch";
