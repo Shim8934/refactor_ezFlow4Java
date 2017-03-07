@@ -33,7 +33,6 @@
 			var pTotalPage = "<c:out value='${pTotalPage}'/>";
 			var pCurrPage = "<c:out value='${pCurrPage}'/>";
 			var totalCount = "<c:out value='${pTotalCnt}'/>";
-			var xmlHTTP = createXMLHttpRequest();
 			window.onload = function () {
 			    makePageSelPage();
 			    tableXML();
