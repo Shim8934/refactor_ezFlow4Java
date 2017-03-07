@@ -71,7 +71,7 @@ function organtreeview(thisobjid, elobjid) {
             return;
         }
 
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             g_treeXML = new DOMParser().parseFromString(sourceXML, "text/xml");
         }
         else {
@@ -294,7 +294,9 @@ function organtreeview(thisobjid, elobjid) {
     
     this.getvalue = ex_getvalue;
     function ex_getvalue(nodeIdx, valueName) {
-      return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx, valueName) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -314,7 +316,9 @@ function organtreeview(thisobjid, elobjid) {
     this.putvalue = ex_putvalue;
     // 수정(2007.05.30) : DATA 값 변경함수 추가
     function ex_putvalue(nodeIdx, valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx, valueName, value) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -334,7 +338,9 @@ function organtreeview(thisobjid, elobjid) {
     this.putcaption = ex_putcaption;
     // 수정(2007.05.30) : Text 값 변경함수 추가
     function ex_putcaption(nodeIdx, caption) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx, caption) {
             // safari
             document.getElementById(g_nodeid + nodeIdx).innerHTML = caption;
@@ -347,7 +353,9 @@ function organtreeview(thisobjid, elobjid) {
     
     this.select = ex_select;
     function ex_select(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -434,7 +442,9 @@ function organtreeview(thisobjid, elobjid) {
     this.deletenode = ex_deletenode;
     // 수정(2007.05.30) : 노드 삭제가 정상적으로 처리되지 않아 함수 변경
     function ex_deletenode(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -554,7 +564,9 @@ function organtreeview(thisobjid, elobjid) {
     this.addnode = ex_addnode;
     // 수정(2007.05.30) : 노드 추가가 정상적으로 처리되지 않아 함수 변경
     function ex_addnode(nodeIdx, nodeXML) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx, nodeXML) {
             // safari
             if (nodeIdx > g_nodeCount || nodeIdx < 1)
@@ -738,7 +750,9 @@ function organtreeview(thisobjid, elobjid) {
     this.findindex = ex_findindex;
     // 함수를 사용하는 페이지가 없음
     function ex_findindex(valueName, value) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(valueName, value) {
             // safari
             for (var i = 1; i <= g_nodeCount; i++) {
@@ -770,7 +784,9 @@ function organtreeview(thisobjid, elobjid) {
     this.haschild = ex_haschild;
     // 함수를 사용하는 페이지가 없음
     function ex_haschild(nodeIdx) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	//2017-03-07
+        //return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    	return (CrossYN()) ?
         (function(nodeIdx) {
             // safari
             var depth = g_nodeArray["depth"][nodeIdx].length;
@@ -823,7 +839,7 @@ function organtreeview(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
 	    (function(event) { // safari
 	        // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
 	        if (!event) event = window.event;
@@ -850,7 +866,7 @@ function organtreeview(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
 	    (function(event) { // safari
 	        // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
 	        if (!event) event = window.event;
@@ -878,7 +894,7 @@ function organtreeview(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
 	    (function(event) { // safari
 	        // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
 	        if (!event) event = window.event;
@@ -902,7 +918,7 @@ function organtreeview(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
 	    (function(event) { // safari
 	        // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
 	        if (!event) event = window.event;
@@ -936,7 +952,7 @@ function organtreeview(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
 	    (function(event) { // safari
 	        // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
 	        if (!event) event = window.event;
@@ -983,7 +999,7 @@ function organtreeview(thisobjid, elobjid) {
     }
 
 
-    if (navigator.userAgent.indexOf('MSIE') == -1) {
+    if (CrossYN()) {
         element.addEventListener('selectstart', event_onselectstart, false);
         element.addEventListener('mousedown', event_onmousedown, false);
         element.addEventListener('dblclick', event_ondblclick, false);
@@ -1328,7 +1344,7 @@ function organtreeview(thisobjid, elobjid) {
         		
         (function() {
             // IE
-        	if(navigator.userAgent.indexOf('MSIE') == -1){  //IE11
+        	if(CrossYN()){  //IE11
         	 	//var bimageNodes = SelectSingleNodeValue(g_configXML, "baseimage").childNodes;
                 //var bimageNodes = g_configXML.selectSingleNode("tree/config/baseimage").childNodes;
             	var bimageNodes = g_configXML.getElementsByTagName("baseimage")[0].childNodes;
@@ -1445,7 +1461,7 @@ function organtreeview(thisobjid, elobjid) {
     // 수정(2007.05.30) : 노드 추가가 정상적으로 처리되지 않아 함수 변경
     // 함수를 사용하는 페이지가 없음
     function changeRecursiveImg(node, bspace, depth, recuringCount) {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(node, bspace, depth, recuringCount) {
             // safari
             if (node.innerHTML == "")

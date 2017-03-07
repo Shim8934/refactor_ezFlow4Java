@@ -67,7 +67,8 @@ function window_onload()
 
         try
         {
-            if (navigator.userAgent.indexOf('MSIE') == -1)
+            /*if (navigator.userAgent.indexOf('MSIE') == -1)*/
+        	if(CrossYN())
             {
                 xmlinDoc = createXmlDom();
                 xmlinDoc = loadXMLString(m_dlgArgs["recurrence"]); //new DOMParser().parseFromString(m_dlgArgs["recurrence"], "text/xml");

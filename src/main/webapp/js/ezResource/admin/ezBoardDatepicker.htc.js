@@ -161,7 +161,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     };
     function get_vtLocalDate() {
         //return (m_objCurDate[0].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[0] :
         m_objCurDate[0].getVarDate();
     }
@@ -190,7 +190,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     };
     function get_vtLocalEndDate() {
         //return (m_objCurDate[1].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[1] :
         m_objCurDate[1].getVarDate();
     }
@@ -223,7 +223,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     };
     function get_vtLocalTime() {
         //return (m_objCurDate[0].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[0] :
         m_objCurDate[0].getVarDate();
     }
@@ -251,7 +251,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     };
     function get_vtLocalEndTime() {
         //return (m_objCurDate[1].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[1] :
         m_objCurDate[1].getVarDate();
     }
@@ -474,7 +474,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     // [가온아이]UI변경시 수정한 부분
     //**********************************************************************
     function mfUnPopPicker() {
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function() {
             // safari
             if (null != m_eCalPopup) {
@@ -592,7 +592,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
 
     this.ready = onDocumentReady;
     function onDocumentReady() {
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function() { // safari
             var szTemp;
             var x, y, eNode;
@@ -939,7 +939,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     var m_fEndtimepicker24hours = false;
 
     function mfCreateTimepicker() {
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function() { // safari
             //INIITIALIZE THE TIME FORMAT STRING
             mfFormatTime.szFormat = this.pickerTimeFormat;
@@ -1022,7 +1022,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     // [가온아이]UI변경시 수정한 부분
     //**********************************************************************
     function mfCreateCalendar() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function() {
             // safari
             var eTR, eTD, eNode, x, y;
@@ -1102,7 +1102,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     }
 
     function mfWriteEndtimePicker() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function() {
             // safari
             if (null == m_eEndTimePopup) return;
@@ -1216,7 +1216,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -1306,7 +1306,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(event) { // safari
             if (!event) event = window.event;
             var srcElement = event.target;
@@ -1448,7 +1448,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     // [가온아이]UI변경시 수정한 부분
     //**********************************************************************
     function mfBuildMonth() {
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function() {
             // safari
             var x, y;
@@ -1784,7 +1784,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -1984,7 +1984,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(event) { // safari
             if (!event) event = window.event;
             var thisCell = event.target;
@@ -2014,7 +2014,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(event) { // safari
             if (!event) event = window.event;
 
@@ -2037,7 +2037,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(event) { // safari
             if (!event) event = window.event;
             var srcElement = event.target;
@@ -2081,7 +2081,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
     mfPopPicker.hideElements;
 
     function mfPopPicker(ePicker, event) {
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(ePicker, event) { // safari
             if (!event) event = window.event;
             event.cancelBubble = true;
@@ -2385,7 +2385,7 @@ function ezBoardDatepicker(thisobjid, elobjid) {
             arguments.callee.call(window[thisid], event);
             return;
         }
-        (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (CrossYN()) ?
         (function(event) { // safari
             if (!event) event = window.event;
             if (null == event.toElement) {

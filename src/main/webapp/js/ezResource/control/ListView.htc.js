@@ -234,7 +234,7 @@ function ListView(thisobjid, elobjid) {
     this.getheader = ex_getheader;
 
     function ex_getvalue(name) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getvalue_safari(name);
         }
         else {
@@ -261,7 +261,7 @@ function ListView(thisobjid, elobjid) {
 
     //특정위치의 값 가져오기
     function ex_getvalue2(listidx, name) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getvalue2_safari(listidx, name);
         }
         else {
@@ -286,7 +286,7 @@ function ListView(thisobjid, elobjid) {
 
     //특정위치의 값 가져오기
     function ex_getvalue3(row, col, name) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getvalue3_safari(row, col, name);
         }
         else {
@@ -313,7 +313,7 @@ function ListView(thisobjid, elobjid) {
 
     //2011.05.11 결재알림메일 기능 추가
     function ex_getText(row, col) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getText_safari(row, col);
         }
         else {
@@ -341,7 +341,7 @@ function ListView(thisobjid, elobjid) {
     // 20091123 : 전자결재 리스트 변경
     //특정위치의 값 수정오기
     function ex_setvalue3(row, col, name, strData) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_setvalue3_safari(row, col, name, strData);
         }
         else {
@@ -366,7 +366,7 @@ function ListView(thisobjid, elobjid) {
 
     //선택된 열의 index 반환
     function ex_getMultiRowIndex() {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getMultiRowIndex_safari();
         }
         else {
@@ -411,7 +411,7 @@ function ListView(thisobjid, elobjid) {
     }
 
     function ex_getheader(name) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_getheader_safari(name);
         }
         else {
@@ -454,7 +454,7 @@ function ListView(thisobjid, elobjid) {
     }
 
     function ex_firstselect(rowindex) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_firstselect_safari(rowindex);
         }
         else {
@@ -507,7 +507,7 @@ function ListView(thisobjid, elobjid) {
     }
 
     function ex_listlength() {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_listlength_safari();
         }
         else {
@@ -525,7 +525,7 @@ function ListView(thisobjid, elobjid) {
 
 
     function ex_makelist() {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return ex_makelist_safari();
         }
         else {
@@ -687,7 +687,7 @@ function ListView(thisobjid, elobjid) {
         // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
         window[thisid].onmousedown(e);
     }
-    this.onmousedown = (navigator.userAgent.indexOf('MSIE') == -1) ?
+    this.onmousedown = (CrossYN()) ?
     function(event) { // safari
         if (listXML == null) return;
         try {
@@ -829,7 +829,7 @@ function ListView(thisobjid, elobjid) {
     function event_onmouseover(e) {
         window[thisid].onmouseover(e);
     }
-    this.onmouseover = (navigator.userAgent.indexOf('MSIE') == -1) ?
+    this.onmouseover = (CrossYN()) ?
     function(event) { // safari
         // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
         if (!event) event = window.event;
@@ -885,7 +885,7 @@ function ListView(thisobjid, elobjid) {
     function event_onclick(e) {
         window[thisid].onclick(e);
     }
-    this.onclick = (navigator.userAgent.indexOf('MSIE') == -1) ?
+    this.onclick = (CrossYN()) ?
     function(event) { // safari
         // firefox 에서는 window.event 가 없어서 event object를 arguments[0]로 받음
         if (!event) event = window.event;
@@ -925,7 +925,7 @@ function ListView(thisobjid, elobjid) {
 
 
 
-    if (navigator.userAgent.indexOf('MSIE') == -1) {
+    if (CrossYN()) {
         if (!element.addEventListener) {
             element.onclick = event_onclick;
             element.onmousedown = event_onmousedown;
@@ -958,7 +958,7 @@ function ListView(thisobjid, elobjid) {
     
     
     function make_header(g_HeaderXml) {
-        if (navigator.userAgent.indexOf('MSIE') == -1) {
+        if (CrossYN()) {
             return make_header_safari(g_HeaderXml);
         }
         else {

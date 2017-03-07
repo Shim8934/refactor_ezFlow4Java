@@ -6,7 +6,6 @@
 	<head>
 		<title><spring:message code="ezResource.t241" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<meta http-equiv="X-UA-Compatible" content="IE=9,chrome=1" />
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="/css/Tab.css" />
 		<link type="text/css" rel="stylesheet" href="/css/olstyle_nonIE.css" />
@@ -249,7 +248,7 @@
 
 	                return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
 	            }).call(this, v_dateTime, hourNum, minuteNum)
-	            : (navigator.userAgent.indexOf('MSIE') == -1) ?
+	            : (CrossYN()) ?
 	            (function (v_dateTime, hourNum, minuteNum) {
 	                var dt = new Date(
 	                Date.UTC(

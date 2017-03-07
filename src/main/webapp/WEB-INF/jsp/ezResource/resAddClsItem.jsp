@@ -158,7 +158,7 @@
 			                }
 			            }).call(this) :
 			            	
-				(navigator.userAgent.indexOf('MSIE') == -1) ?
+				(CrossYN()) ?
 			            		
 				(function () {
 					if (document.getElementsByName('Brd_Explain').length > 1) {

@@ -359,9 +359,9 @@ function ListView() {
 
             oTable.appendChild(oTHeader);
             oTable.appendChild(oTBody);
-
-            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
-
+            
+            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+            if(CrossYN()) {
                 /*if (_WidthFlag && _TableWidth > 835 && _titleIdx == null)
                     oTable.setAttribute("width", _TableWidth);
                 else*/
@@ -480,7 +480,8 @@ function ListView() {
                         strStyle += "cursor:pointer;";
                     }
 
-                    if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                    if(!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
                     else {
@@ -505,7 +506,8 @@ function ListView() {
                             objTd.width = strWidth + "px";
                         }
                         else {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                        	if(CrossYN()) {
                                 objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -515,7 +517,8 @@ function ListView() {
                     }
                     else {
                         if (_WidthFlag) {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                        	if(CrossYN()) {
                                objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -575,7 +578,9 @@ function ListView() {
         
         var oHeaders;
         var colCount;
-        if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                
+        /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+        if(CrossYN()) {
             oHeaders = _dataSource.getElementsByTagName("HEADER");
             colCount = oHeaders.length;
         }
@@ -586,7 +591,7 @@ function ListView() {
                 oHeaders = _dataSource.getElementsByTagName("HEADER");
                 colCount = oHeaders.length;
             }
-        }
+       }
        if(_rowCount == 0)
         {
             var objTr = document.createElement("TR");
@@ -653,8 +658,9 @@ function ListView() {
                 var oText = document.createTextNode(strValue);
                 var objTd = document.createElement("TD");
 
-                if (strStyle != "") {
-                    if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                if (strStyle != "") {                	
+                    /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                	if(!CrossYN()) {
                         objTd.style.setAttribute("cssText", strStyle);
                     }
                     else {
@@ -682,8 +688,9 @@ function ListView() {
                             objTd.style.textOverflow = "ellipsis";
                             objTd.style.whiteSpace = "nowrap";                           
 
-                        if (_titleIdx == j) {
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                        if (_titleIdx == j) {                        	
+                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                        	if(CrossYN()) {
                                 if (_UrgentFlag && oDatas[13].textContent == "Y") {   //DATA14값
                                     objTd.style.color = m_UrgentColor;
                                 }
@@ -692,8 +699,9 @@ function ListView() {
                                 if (_UrgentFlag && oDatas[13].text == "Y") {   //DATA14값
                                     objTd.style.color = m_UrgentColor;
                                 }
-                            }
-                            if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+                            }                        	
+                            /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+                        	if(CrossYN()) {
                                 objTd.setAttribute("width", "80%");// objTd.setAttribute("width", strWidth + "px");
                             }
                             else {
@@ -723,7 +731,9 @@ function ListView() {
 
                 if (strValue == "CHECK") {
                     var oInput = document.createElement("INPUT");
-                    if (!new RegExp(/MSIE/).test(navigator.userAgent)) 
+                    
+                    /*if (!new RegExp(/MSIE/).test(navigator.userAgent))*/
+                    if(CrossYN())
                         oInput.id = oDatas[0].textContent + ";";
                     else
                         oInput.id = oDatas[0].text + ";";
@@ -787,9 +797,9 @@ function ListView() {
             var objTd = document.createElement("TD");
 
             if (strStyle != "") {
-                if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+                /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+            	if(!CrossYN()) {
                     objTd.style.setAttribute("cssText", strStyle);
-
                 }
                 else {
                     strStyle = strStyle.replace(/center/, "-moz-center");
@@ -942,7 +952,8 @@ function ListView() {
             pIdx = 0;
 
         var objTr = null;
-        if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+        /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+        if(!CrossYN()) {
             //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
             objTr = oList.insertRow((pIdx + 1));
             objTr.setAttribute("id", _thisID + "_TR_" + pIdx);
@@ -987,7 +998,8 @@ function ListView() {
             pIdx = 0;
 
         var objTr = null;
-        if (new RegExp(/MSIE/).test(navigator.userAgent)) {
+        /*if (new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+        if(!CrossYN()) {
             //테이블 객체의 인덱스는 헤더를 포함하기 때문에 1을 더해서 인서트 한다.
             objTr = oList.insertRow((pIdx + 1));
             objTr.setAttribute("id",  id);
@@ -1199,7 +1211,8 @@ function ListView() {
     //사용자 브라우저 확인
     //IE가 아닌경우 OCS Presence 무조건 사용안함
     function SetUserBrower() {
-        if (!new RegExp(/MSIE/).test(navigator.userAgent)) {
+        /*if (!new RegExp(/MSIE/).test(navigator.userAgent)) {*/
+    	if(CrossYN()) {
             _IE = false;
             _useOcs = false;
         }
