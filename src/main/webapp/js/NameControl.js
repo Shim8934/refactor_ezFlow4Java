@@ -2757,18 +2757,13 @@ function createXMLHttpRequest() {
 }
 // DOM 객체를 생성합니다.
 function createXmlDom() {
-    var xmlDoc;
-
-    if (window.ActiveXObject) {
-        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-    }
-    else if (document.implementation && document.implementation.createDocument) {
+	var xmlDoc;    
+    if (CrossYN()) {
         xmlDoc = document.implementation.createDocument("", "", null);
     }
     else {
-        xmlDoc = null;
-    }
-
+        xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+    }    
     return xmlDoc;
 }
 // XMLString을 DOM 객체로 반환합니다.
