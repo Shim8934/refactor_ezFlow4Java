@@ -13,14 +13,10 @@
 				var useragentstr = navigator.userAgent;
 				var _MSIE = 'MSIE';
 				if (useragentstr.indexOf(_MSIE) == -1) {
-					download_attach2();
+					download_attach();
 				}
 			}
-			function download_attach2() {
-				document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
-			}
-		</script>
-		<script type="text/javascript">
+			
 			var type = "<c:out value='${qstAttachVO.attachType}'/>";
 			var href = "<c:out value='${qstAttachVO.attachUrl}'/>";
 			var title = "<c:out value='${title}'/>";
@@ -29,8 +25,24 @@
 			var strQuestionNo = "<c:out value='${qstAttachVO.questionNo}'/>";
 			var strAnswer = "<c:out value='${qstAttachVO.answerNo}'/>";
 			var strAttID = "<c:out value='${qstAttachVO.attachNo}'/>";
+			
+			var useragentstr = navigator.userAgent;
+		    var _MSIE = 'MSIE';
+		
+		    if (useragentstr.indexOf(_MSIE) != -1) {
+		        ezQuestion_ActiveX(_href, type);
+		    } else {
+		        document.getElementById("Content2").style.margin = "10px 10px 10px 10px";
+		        document.getElementById("Content2").innerHTML = "<b>" + '<spring:message code="ezQuestion.t564" />' + "</br>" + '<spring:message code="ezQuestion.t565" />' + " <a href = '#'><span onclick=\"download_attach();\">" + '<spring:message code="ezQuestion.t567" />' + "</span></a>" + '<spring:message code="ezQuestion.t568" />' + "</b>";
+		        document.getElementById("Content").style.display = "none";
+		        document.getElementById("download_att").style.display = "none";
+		    }
+		    
+		    function download_attach() {
+		        document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
+		    }
 		</script>
-		</head>
+	</head>
 		<c:choose >
 			<c:when test="${qstAttachVO.attachType==1}">
 				<script type="text/javascript">
@@ -71,21 +83,4 @@
 			</c:otherwise>
 		</c:choose>
 	</body>
-	<script language="javascript" type="text/javascript">
-	    var useragentstr = navigator.userAgent;
-	    var _MSIE = 'MSIE';
-	
-	    if (useragentstr.indexOf(_MSIE) != -1) {
-	        ezQuestion_ActiveX(_href, type);
-	    }
-	    else {
-	        document.getElementById("Content2").style.margin = "10px 10px 10px 10px";
-	        document.getElementById("Content2").innerHTML = "<b>" + '<spring:message code="ezQuestion.t564" />' + "</br>" + '<spring:message code="ezQuestion.t565" />' + " <a href = '#'><span onclick=\"download_attach();\">" + '<spring:message code="ezQuestion.t567" />' + "</span></a>" + '<spring:message code="ezQuestion.t568" />' + "</b>";
-	        document.getElementById("Content").style.display = "none";
-	        document.getElementById("download_att").style.display = "none";
-	    }
-	    function download_attach() {
-	        document.location.href = "/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID="+v_brd_id+"&itemID="+v_item_no+"&qstNo="+strQuestionNo+"&ansNo="+strAnswer+"&attID="+strAttID+"";
-	    }
-</script>
 </html>
