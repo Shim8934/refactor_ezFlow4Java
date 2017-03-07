@@ -5714,24 +5714,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "</DATA1>");
+					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "]]></DATA1>");
 					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ATTACHFILESN").item(k).getTextContent()) + "</DATA2>");
 					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "</DATA6>");
-					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "</DATA7>");
+					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
 					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ATTACHFILESIZE").item(k).getTextContent() + "bytes") + "</DATA8>");
 					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("PAGENUM").item(k).getTextContent()) + "</DATA9>");
-					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("ATTACHFILENAME").item(k).getTextContent()) + "</DATA10>");
-					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("BODYATTACH").item(k).getTextContent()) + "</DATA11>");
-					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("DISPLAYNAME").item(k).getTextContent()) + "</DATA12>");
-					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "</DATA13>");
-					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "</DATA14>");
-					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "</DATA15>");
-					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "</DATA16>");
-					resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "</DATA17>");
-					resultXML.append("<DATA18>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "</DATA18>");
+					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILENAME").item(k).getTextContent()) + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("BODYATTACH").item(k).getTextContent()) + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("DISPLAYNAME").item(k).getTextContent()) + "]]></DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA13>");
+					resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA14>");
+					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA15>");
+					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA16>");
+					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA17>");
+					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA18>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -11240,7 +11240,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<MANUALFLAG>" + manualFlag + "</MANUALFLAG>");
 		resultXML.append("<DOCID>" + docID + "</DOCID>");
 		resultXML.append("<REGSN>" + regSN + "</REGSN>");
-		resultXML.append("<CABINETID>" + cabinetID + "</CABINETID>");
+		resultXML.append("<CABINETID><![CDATA[" + cabinetID + "]]></CABINETID>");
 		if (title.length() > 50) {
 			resultXML.append("<TITLE>" + title.substring(0, 50) + "</TITLE>");
 		} else {
@@ -12029,7 +12029,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	public String doDeptAssist(String docID, String deptID, String deptName, String deptName2, String dirPath, String aprState, String docState, String pCompanyID, String companyID, int tenantID) throws Exception{
-		StringBuilder strSQL = new StringBuilder();
 		String newID = getNewID(pCompanyID, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -16948,13 +16947,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		strXML.append("<CABINFO>");
 		strXML.append("<BASICINFO>");
-		strXML.append("<CABINETID>" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "</CABINETID>");
-		strXML.append("<CABCLASSNO>" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "</CABCLASSNO>");
-		strXML.append("<TITLE>" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "</TITLE>");
-		strXML.append("<CABCLASSID>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), docXML.getElementsByTagName("TASKCODE").item(0).getTextContent(), docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent(), docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent(), docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent()) + "</CABCLASSID>");
-		strXML.append("<RECTYPE>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID , strType, tenantID) + "</RECTYPE>");
-		strXML.append("<DEPTNAME>" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() + "</DEPTNAME>");
-		strXML.append("<TASKNAME>" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() + "</TASKNAME>");
+		strXML.append("<CABINETID><![CDATA[" + docXML.getElementsByTagName("CABINETID").item(0).getTextContent() + "]]></CABINETID>");
+		strXML.append("<CABCLASSNO><![CDATA[" + docXML.getElementsByTagName("CABINETCLASSNO").item(0).getTextContent() + "]]></CABCLASSNO>");
+		strXML.append("<TITLE><![CDATA[" + docXML.getElementsByTagName("TITLE").item(0).getTextContent() + "]]></TITLE>");
+		strXML.append("<CABCLASSID><![CDATA[" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), docXML.getElementsByTagName("TASKCODE").item(0).getTextContent(), docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent(), docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent(), docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent()) + "]]></CABCLASSID>");
+		strXML.append("<RECTYPE><![CDATA[" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(),companyID , strType, tenantID) + "]]></RECTYPE>");
+		strXML.append("<DEPTNAME><![CDATA[" + docXML.getElementsByTagName("PROCESSDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() + "]]></DEPTNAME>");
+		strXML.append("<TASKNAME><![CDATA[" + docXML.getElementsByTagName("TASKNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() + "]]></TASKNAME>");
 		strXML.append("<PRODUCEY>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEY>");
 		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>");
 		strXML.append("<VOLNO>" + docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent() + "</VOLNO>");
@@ -16987,13 +16986,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		strXML.append("<TRANSINFO>");
 		strXML.append("<CABTRANSFLAG>" + docXML.getElementsByTagName("CABINETTRANSFERFLAG").item(0).getTextContent() + "</CABTRANSFLAG>");
-		strXML.append("<TCABID>" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "</TCABID>");
-		strXML.append("<TCABNAME>" + (docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent())+ "</TCABNAME>");
-		strXML.append("<TDEPTNAME>" + (docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() ==null ? "" : docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent())+ "</TDEPTNAME>");
-		strXML.append("<TDEPTCODE>" + (docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() == null ? "" :  docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent()) + "</TDEPTCODE>");
-		strXML.append("<TTASKNAME>" + (docXML.getElementsByTagName("TTASKNAME").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TTASKNAME").item(0).getTextContent() ) + "</TTASKNAME>");
-		strXML.append("<TTASKCODE>" + (docXML.getElementsByTagName("TTASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TTASKCODE").item(0).getTextContent()) + "</TTASKCODE>");
-		strXML.append("<TPRODUCEY>" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "</TPRODUCEY>");
+		strXML.append("<TCABID><![CDATA[" + docXML.getElementsByTagName("TCABINETID").item(0).getTextContent() + "]]></TCABID>");
+		strXML.append("<TCABNAME><![CDATA[" + (docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TCABINETNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent())+ "]]></TCABNAME>");
+		strXML.append("<TDEPTNAME><![CDATA[" + (docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent() ==null ? "" : docXML.getElementsByTagName("TDEPTNAME" + commonUtil.getMultiData(strType, tenantID)).item(0).getTextContent())+ "]]></TDEPTNAME>");
+		strXML.append("<TDEPTCODE><![CDATA[" + (docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent() == null ? "" :  docXML.getElementsByTagName("TDEPTCODE").item(0).getTextContent()) + "]]></TDEPTCODE>");
+		strXML.append("<TTASKNAME><![CDATA[" + (docXML.getElementsByTagName("TTASKNAME").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TTASKNAME").item(0).getTextContent() ) + "]]></TTASKNAME>");
+		strXML.append("<TTASKCODE><![CDATA[" + (docXML.getElementsByTagName("TTASKCODE").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TTASKCODE").item(0).getTextContent()) + "]]></TTASKCODE>");
+		strXML.append("<TPRODUCEY><![CDATA[" + (docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TPRODUCEYEAR").item(0).getTextContent())+ "]]></TPRODUCEY>");
 		strXML.append("<TREGSN>" + (docXML.getElementsByTagName("TREGSERIALNO").item(0).getTextContent() == null ? "" : docXML.getElementsByTagName("TREGSERIALNO").item(0).getTextContent()) + "</TREGSN>");
 		strXML.append("<TVOLNO>" + docXML.getElementsByTagName("TVOLUMENO").item(0).getTextContent() + "</TVOLNO>");
 		strXML.append("<TRANSDATE>" + formatDateForView(docXML.getElementsByTagName("TRANSFERDATE").item(0).getTextContent(),1) + "</TRANSDATE>");

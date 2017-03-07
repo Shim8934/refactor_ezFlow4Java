@@ -250,7 +250,7 @@
 	</head>  
     <body style ="width:100%;height:100%;overflow:hidden">   
         <div style="width:100%;white-space:nowrap;display:inline-block">
-            <span style="float:left">
+            <span style="float:left; font-size:13px;">
                 <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
                 <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezBoard.t441' /></span></a>   
             </span>

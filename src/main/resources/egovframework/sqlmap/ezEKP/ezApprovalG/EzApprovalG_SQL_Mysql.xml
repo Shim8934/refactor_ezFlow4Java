@@ -15580,7 +15580,7 @@
     					TBL_SEPERATEATTACH.TENANT_ID = #v_TENANTID#
     				AND
     					TBL_SEPERATEATTACH.COMPANYID = #companyID# ) NUMOFREC  ,
-	             (SELECT (
+	             (SELECT CONCAT(
     						(
     						  SELECT 
     						  	CASE WHEN A IS NULL THEN 0 
