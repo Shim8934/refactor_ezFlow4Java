@@ -312,9 +312,9 @@
 	                <td style="padding: 5px;white-space:nowrap"><spring:message code='ezCommunity.t1026' /></td>
 	            </tr>
 	            <tr>
-	                <th>Community<spring:message code='ezCommunity.t18' /></th>
+	                <th><spring:message code='ezCommunity.t1529' /><spring:message code='ezCommunity.t18' /></th>
 	                <td colspan="2">
-	                    <textarea name="intro" style="height: 120px; width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;"></textarea></td>
+	                    <textarea name="intro" style="height: 120px; width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none;"></textarea></td>
 	            </tr>
 	        </form>
 	    </table>
