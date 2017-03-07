@@ -6874,7 +6874,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		strXML.append("<MCATECODE><![CDATA[" + docXML.getElementsByTagName("MCATEGORYCODE").item(0).getTextContent() + "]]></MCATECODE>");
 		strXML.append("<SCATECODE><![CDATA[" + docXML.getElementsByTagName("SUBCATEGORYCODE").item(0).getTextContent() + "]]></SCATECODE>");
 		strXML.append("<REGSN>" + docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent() + "</REGSN>");
-		strXML.append("<DISPCABCLASSNO>" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), docXML.getElementsByTagName("TASKCODE").item(0).getTextContent(), docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent(), docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent(), docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent()) + "</DISPCABCLASSNO>");
+		strXML.append("<DISPCABCLASSNO><![CDATA[" + getCabinetNo(docXML.getElementsByTagName("PROCESSDEPTCODE").item(0).getTextContent(), docXML.getElementsByTagName("TASKCODE").item(0).getTextContent(), docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent(), docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent(), docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent()) + "]]></DISPCABCLASSNO>");
 		strXML.append("<RECTYPE>" + docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent() + "</RECTYPE>");
 		strXML.append("<PRODUCEYEAR>" + docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent() + "</PRODUCEYEAR>");
 		strXML.append("<RECTYPEDES>" + getRecordTypeString(docXML.getElementsByTagName("RECTYPECODE").item(0).getTextContent(), companyID, strType, tenantID) + "</RECTYPEDES>");
@@ -15696,13 +15696,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 }
 		resultXML.append("<RECINFO>");
 		resultXML.append("<CLASSINFO>");
-		resultXML.append("<CABCLASSID>" + getCabinetNo(makeListField(docXML.getElementsByTagName("CABDEPTCODE").item(0).getTextContent()),
+		resultXML.append("<CABCLASSID><![CDATA[" + getCabinetNo(makeListField(docXML.getElementsByTagName("CABDEPTCODE").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("TASKCODE").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(0).getTextContent()),
 				makeListField(docXML.getElementsByTagName("REGSERIALNO").item(0).getTextContent()),
-				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "</CABCLASSID>");
-		resultXML.append("<CABTITLE>" + makeListField(docXML.getElementsByTagName("CABTITLE").item(0).getTextContent()) + "</CABTITLE>");
-		resultXML.append("<SPECIALRECCODE>" + getSpecialRecString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()), companyID, lang, tenantID) + "</SPECIALRECCODE>");
+				makeListField(docXML.getElementsByTagName("VOLUMENO").item(0).getTextContent())) + "]]></CABCLASSID>");
+		resultXML.append("<CABTITLE><![CDATA[" + makeListField(docXML.getElementsByTagName("CABTITLE").item(0).getTextContent()) + "]]></CABTITLE>");
+		resultXML.append("<SPECIALRECCODE><![CDATA[" + getSpecialRecString(makeListField(docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent()), companyID, lang, tenantID) + "]]></SPECIALRECCODE>");
 		resultXML.append("<PUBLICCODE>" + getPublicCodeString((docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent()), companyID, lang, tenantID) + "</PUBLICCODE>");
 		resultXML.append("<LIMITRANGE>" + makeListField(docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent()) + "</LIMITRANGE>");
 		resultXML.append("<CONFIRMFLAG>" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(0).getTextContent()) + "</CONFIRMFLAG>");
