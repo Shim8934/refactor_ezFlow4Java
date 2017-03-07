@@ -31,7 +31,7 @@ public interface EzCommunityAdminService {
 
 	String admitCom(List<CommunityClubVO> clubList, int curPage, int comNoPerPage) throws Exception;
 	
-	String getUserName(String id, int tenantID) throws Exception;
+	String getUserName(String id, String primary, int tenantID) throws Exception;
 
 	int aspSearchKeyGet2(String lang, String select, String query, int tenantID) throws Exception ;
 	

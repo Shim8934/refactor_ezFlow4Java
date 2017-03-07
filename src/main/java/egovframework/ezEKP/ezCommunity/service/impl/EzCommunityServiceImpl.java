@@ -2047,13 +2047,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet1 started.");
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
@@ -2066,19 +2066,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsListGet2(map);
 		
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
 		logger.debug("bbsListGet2 ended.");
 		
 		return list;
