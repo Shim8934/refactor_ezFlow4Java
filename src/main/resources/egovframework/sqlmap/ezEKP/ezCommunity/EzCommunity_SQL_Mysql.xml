@@ -1128,7 +1128,7 @@
 				A.attachments,
 				A.importance,
 				B.boardid,
-				B.boardname$v_strLang$,
+				B.boardname$v_strLang$ AS boardname,
 				A.abstract
 			FROM
 				TBL_COMM_ITEM A

@@ -1269,8 +1269,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pSortBy = request.getParameter("sortBy");
 		}
 		
+		String code = request.getParameter("code");
+		String boardID = request.getParameter("boardID");
+		
 		String boardName = egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale());
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, "");
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
 		boardInfo.setSs_Board_MaxRows(10);
 		
@@ -1295,6 +1298,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("pOrgBoardParameters", pOrgBoardParameters);
+		model.addAttribute("code", code);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);

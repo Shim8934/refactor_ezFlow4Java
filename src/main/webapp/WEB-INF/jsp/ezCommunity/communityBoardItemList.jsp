@@ -609,9 +609,8 @@
     				alert("<spring:message code='ezCommunity.t907' />");
     				return;
     			}
-    				
-    			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
-    			window.location.href = "/ezCommunity/boardReservedItemList.do?orgBoardParameters=" + OrgBoardParameters;
+    			
+    			window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
     		}
 
     		document.onselectstart = function () {

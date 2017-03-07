@@ -3044,7 +3044,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			if (count >= pStartRow) {
 				sb.append("<NODE>");
 				sb.append("<BoardID>" + boardList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + boardList.getBoardName() + "</BoardName>");
+				sb.append("<BoardName>" + commonUtil.cleanValue(boardList.getBoardName()) + "</BoardName>");
 				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
 				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 				
