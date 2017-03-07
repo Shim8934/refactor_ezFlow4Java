@@ -489,7 +489,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
 				result.append("</CELL>");
 				
-				if (userInfo.getLang().equals("1")) {
+				if (userInfo.getPrimary().equals("1")) {
 					result.append("<CELL>");
 					result.append("<VALUE>" + vo.getSliderName() + "</VALUE>");
 					result.append("</CELL>");

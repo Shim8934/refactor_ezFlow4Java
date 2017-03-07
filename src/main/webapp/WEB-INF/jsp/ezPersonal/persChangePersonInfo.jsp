@@ -23,398 +23,394 @@
 		<script type="text/javascript" src="/js/rsa/pidcrypt_util.js"></script>
 		<script type="text/javascript" src="/js/rsa/asn1.js"></script>
 		<script type="text/javascript">
-		var rsa = new RSAKey();
-		<%
-		String userLang = (String)request.getAttribute("userLang"); 
-		%>
-		 var getBirthDay = "${birthDay}";
-		 var useAddressOpenAPI = "${useAddressOpenAPI}";
-		    $(function () {
-		        document.getElementById("TempCalImage").style.display = "none";
-		        $("#txtBirth").datepicker({
-		            changeMonth: true,
-		            changeYear: true,
-		            autoSize: true,
-		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
-		        });
-		        $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
-		        if (getBirthDay == "") {
-		            //var NowDate = new Date();
-		            //$("#txtBirth").datepicker('setDate', NowDate);
-		        }
-		        else
-		            $("#txtBirth").datepicker('setDate', getBirthDay);
-		    });
-
-		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
-		    var monthStr = monthMsg.split(";");		    
-		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
-		    var dayStr = dayMsg.split(";");
-		    
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		        	closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-					currentText: "<spring:message code='main.t0606' />",
-		            monthNames: monthStr,
-		            monthNamesShort: monthStr,
-		            dayNames: dayStr,
-		            dayNamesShort: dayStr,
-		            dayNamesMin: dayStr,
-		            weekHeader: 'Wk',
-		            dateFormat: 'yy-mm-dd',
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: 'show',
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
-		    
-		    window.onload = function () {
-		    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-		    	
-		        if ("<%=userLang%>" != "1" && "<%=userLang%>" != "4") {
-		            document.getElementById("RadBirthType1").style.display = "none";
-		            document.getElementById("RadBirthType2").style.display = "none";
-		        }
-		    }
-		    var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
-		    var personpicture_cross_dialogArguments = new Array();
-		    function btnPhoto_onclick() {
-		        var wWeight = "400";
-		        var wHeight = "280";
-
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-
-		        var left = (width - wWeight) / 2;
-		        var top = (heigth - wHeight) / 2;
-
-		        if (CrossYN()) {
-		            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-		            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(405, 280));
-		            try { OpenWin.focus(); } catch (e) { }
-		        }
-		        else {
-		            var ret;
-		            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
-		            window.location.reload(true);
-		        }
-		    }
-		    function btnPhoto_onclick_Complete() {
-		        window.location.reload(true);
-		    }
-
-		    var address_zip_select_dialogArguments = new Array();
-			function zip_find()
-		    {
-			    /* if (CrossYN()) { */
-			    	var OpenWin;
-			    	if (useAddressOpenAPI == "YES") {
-			    		address_zip_select_dialogArguments[1] = jusoCallBack;
-			    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
-			    	} else {
-			        	address_zip_select_dialogArguments[1] = zip_find_Complete;
-				        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
-			    	}
-			    /* }
-			    else {
-			        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
-			        
-			        if (typeof (Para) != "undefined" || Para == "") {
-			            document.getElementById("txtZipcode").value = Para[0];
-			            document.getElementById("txtAddress").value = Para[1];
+			var rsa = new RSAKey();
+			
+			var getBirthDay = "${birthDay}";
+			var useAddressOpenAPI = "${useAddressOpenAPI}";
+			
+			    $(function () {
+			        document.getElementById("TempCalImage").style.display = "none";
+			        $("#txtBirth").datepicker({
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            showOn: "both",
+			            buttonImage: "/images/ImgIcon/calendar-month.gif",
+			            buttonImageOnly: true
+			        });
+			        $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
+			        if (getBirthDay == "") {
+			            //var NowDate = new Date();
+			            //$("#txtBirth").datepicker('setDate', NowDate);
 			        }
-			    } */
-			}
-			function zip_find_Complete(Para) {
-				if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
-			        document.getElementById("txtZipcode").value = Para[0];
-			        document.getElementById("txtAddress").value = Para[1];
+			        else
+			            $("#txtBirth").datepicker('setDate', getBirthDay);
+			    });
+	
+			    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+			    var monthStr = monthMsg.split(";");		    
+			    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+			    var dayStr = dayMsg.split(";");
+			    
+			    $(function () {
+			        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			        	closeText: "<spring:message code='main.t3' />",
+			            prevText: "<spring:message code='main.t0604' />",
+			            nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+			            monthNames: monthStr,
+			            monthNamesShort: monthStr,
+			            dayNames: dayStr,
+			            dayNamesShort: dayStr,
+			            dayNamesMin: dayStr,
+			            weekHeader: 'Wk',
+			            dateFormat: 'yy-mm-dd',
+			            firstDay: 0,
+			            isRTL: false,
+			            duration: 200,
+			            showAnim: 'show',
+			            showMonthAfterYear: true
+			        };
+			        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			    });
+			    
+			    window.onload = function () {
+			    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
+			    	
+			        if ("${userInfo.lang != '1'}" && "${userInfo.lang != '4'}") {
+			            document.getElementById("RadBirthType1").style.display = "none";
+			            document.getElementById("RadBirthType2").style.display = "none";
+			        }
 			    }
-			}
-			function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
-				document.getElementById("txtZipcode").value = zipNo;
-				document.getElementById("txtAddress").value = roadFullAddr;
-			}
-			function change_press()
-			{
-				if (window.event.keyCode == "13")
-				{
-					event.returnValue = false;
-					document.getElementById("ButtonChangePassword").click();
+			    
+			    var personpicture_cross_dialogArguments = new Array();
+			    
+			    function btnPhoto_onclick() {
+			        var wWeight = "400";
+			        var wHeight = "280";
+	
+			        var heigth = window.screen.availHeight;
+			        var width = window.screen.availWidth;
+	
+			        var left = (width - wWeight) / 2;
+			        var top = (heigth - wHeight) / 2;
+	
+			        if (CrossYN()) {
+			            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
+			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(405, 280));
+			            try { OpenWin.focus(); } catch (e) { }
+			        }
+			        else {
+			            var ret;
+			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+			            window.location.reload(true);
+			        }
+			    }
+			    
+			    function btnPhoto_onclick_Complete() {
+			        window.location.reload(true);
+			    }
+	
+			    var address_zip_select_dialogArguments = new Array();
+			    
+				function zip_find() {
+				    /* if (CrossYN()) { */
+				    	var OpenWin;
+				    	if (useAddressOpenAPI == "YES") {
+				    		address_zip_select_dialogArguments[1] = jusoCallBack;
+				    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+				    	} else {
+				        	address_zip_select_dialogArguments[1] = zip_find_Complete;
+					        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+				    	}
+				    /* }
+				    else {
+				        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
+				        
+				        if (typeof (Para) != "undefined" || Para == "") {
+				            document.getElementById("txtZipcode").value = Para[0];
+				            document.getElementById("txtAddress").value = Para[1];
+				        }
+				    } */
 				}
-			}
-					
-			//MobileSetting
-			function SettingMobile()
-			{
-				 //20120726 모바일 푸시 수정 start
-				 		     window.open("UserSetting.aspx", "User_Setting", "height=130px,width=460px,status=no,toolbar=no,menubar=no,location=no,resizable=0" + GetOpenPosition(460, 130));
-				 
-				 //20120726 모바일 푸시 수정 start
-			}
-		    function checkKey() {
-		        return false;
-		    }
-		    
-		    function ButtonDeleteClick() {
-				$.ajax({
-		    		type : "POST",
-		    		dataType : "html",
-		    		url : "/ezPersonal/deletePicture.do",
-		    		success : function(result) {
-		    			 if (result == "OK") {
-		    				var literalPhoto = document.getElementById("LiteralPhoto"); 
-		    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
-		    			} 
-					},
-		    		error : function() {
-		    			alert("<spring:message code='ezPersonal.t190'/>");
-		    		}
-		    	});
-		     }
-		    
-		    function PassWordChange() {
-		        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
-		            alert("<spring:message code='ezPersonal.t193'/>");
-			        document.all['txtNewPassword'].focus();
-			        return;
+				
+				function zip_find_Complete(Para) {
+					if ((typeof (Para) != "undefined" || Para == "") && Para != "cancel") {
+				        document.getElementById("txtZipcode").value = Para[0];
+				        document.getElementById("txtAddress").value = Para[1];
+				    }
+				}
+				
+				function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+					document.getElementById("txtZipcode").value = zipNo;
+					document.getElementById("txtAddress").value = roadFullAddr;
+				}
+				
+				function change_press() {
+					if (window.event.keyCode == "13")
+					{
+						event.returnValue = false;
+						document.getElementById("ButtonChangePassword").click();
+					}
+				}
+						
+				//MobileSetting
+				function SettingMobile() {
+					 //20120726 모바일 푸시 수정 start
+					 		     window.open("UserSetting.aspx", "User_Setting", "height=130px,width=460px,status=no,toolbar=no,menubar=no,location=no,resizable=0" + GetOpenPosition(460, 130));
+					 
+					 //20120726 모바일 푸시 수정 start
+				}
+				
+			    function checkKey() {
+			        return false;
 			    }
-
-		        if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
-		            alert("<spring:message code='ezPersonal.t194'/>");
-			        document.all['txtNewPassword'].focus();
-			        return;
-			    }
-		        if (document.getElementById('txtNewPassword').value == "") {
-		            alert("<spring:message code='ezPersonal.t195'/>");
-			        document.all['txtNewPassword'].focus();
-			        return;
-			    }
-
-		        if (document.getElementById('txtNewPassword').value.Length > 100) {
-		            alert("<spring:message code='ezPersonal.t196'/>");
-			        document.all['txtNewPassword'].focus();
-			        return;
-			    }
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlPara = createXmlDom();
-		        var xmlDom = createXmlDom();
-		        var objRoot, objNode, subNode;
-		        var objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
-		        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", rsa.encrypt(document.getElementById('txtOldPassword').value));
-		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", rsa.encrypt(document.getElementById('txtNewPassword').value));
-		        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORDCONFIRM", rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value));
-		        xmlHTTP.open("POST", "/ezPersonal/changePassword.do", false);
-		        xmlHTTP.send(xmlDom);
-		        // 수정(2007.02.07) : 사용자 생성/수정 루틴 변경 (BE 서버)
-		        //var retVal = SelectSingleNodeValueNew(xmlHTTP.responseXML, "DATA");
-
-		        if (xmlHTTP.status == 200) {
-		            if (xmlHTTP.responseText == "OK") {
-		                alert("<spring:message code='ezPersonal.t197'/>");
-			            window.top.location.href = '/user/login/actionLogout.do';
-		            } else if (xmlHTTP.responseText == "CHKERROR") {    
-		                alert("<spring:message code='ezPersonal.t946'/>");
-			        } else {
-			            alert("<spring:message code='ezPersonal.t198'/>");
+			    
+			    function ButtonDeleteClick() {
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "html",
+			    		url : "/ezPersonal/deletePicture.do",
+			    		success : function(result) {
+			    			 if (result == "OK") {
+			    				var literalPhoto = document.getElementById("LiteralPhoto"); 
+			    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
+			    			} 
+						},
+			    		error : function() {
+			    			alert("<spring:message code='ezPersonal.t190'/>");
+			    		}
+			    	});
+			     }
+			    
+			    function PassWordChange() {
+			        if (document.getElementById('txtNewPassword').value != document.getElementById('txtNewPasswordConfirm').value) {
+			            alert("<spring:message code='ezPersonal.t193'/>");
+				        document.all['txtNewPassword'].focus();
+				        return;
+				    }
+	
+			        if (document.getElementById('txtOldPassword').value == document.getElementById('txtNewPassword').value) {
+			            alert("<spring:message code='ezPersonal.t194'/>");
+				        document.all['txtNewPassword'].focus();
+				        return;
+				    }
+			        if (document.getElementById('txtNewPassword').value == "") {
+			            alert("<spring:message code='ezPersonal.t195'/>");
+				        document.all['txtNewPassword'].focus();
+				        return;
+				    }
+	
+			        if (document.getElementById('txtNewPassword').value.Length > 100) {
+			            alert("<spring:message code='ezPersonal.t196'/>");
+				        document.all['txtNewPassword'].focus();
+				        return;
+				    }
+			        
+			        var xmlHTTP = createXMLHttpRequest();
+			        var xmlPara = createXmlDom();
+			        var xmlDom = createXmlDom();
+			        var objRoot, objNode, subNode;
+			        var objNode;
+			        createNodeInsert(xmlDom, objNode, "DATA");
+			        createNodeAndInsertText(xmlDom, objNode, "OLDPASSWORD", rsa.encrypt(document.getElementById('txtOldPassword').value));
+			        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORD", rsa.encrypt(document.getElementById('txtNewPassword').value));
+			        createNodeAndInsertText(xmlDom, objNode, "NEWPASSWORDCONFIRM", rsa.encrypt(document.getElementById('txtNewPasswordConfirm').value));
+			        xmlHTTP.open("POST", "/ezPersonal/changePassword.do", false);
+			        xmlHTTP.send(xmlDom);
+			        // 수정(2007.02.07) : 사용자 생성/수정 루틴 변경 (BE 서버)
+			        //var retVal = SelectSingleNodeValueNew(xmlHTTP.responseXML, "DATA");
+	
+			        if (xmlHTTP.status == 200) {
+			            if (xmlHTTP.responseText == "OK") {
+			                alert("<spring:message code='ezPersonal.t197'/>");
+				            window.top.location.href = '/user/login/actionLogout.do';
+			            } else if (xmlHTTP.responseText == "CHKERROR") {    
+			                alert("<spring:message code='ezPersonal.t946'/>");
+				        } else {
+				            alert("<spring:message code='ezPersonal.t198'/>");
+				        }
 			        }
-		        }
-		    }
-		    
-		    function ButtonChangeClick() {
-		    	var birthType = "";
-		    	if ($("input:radio[id='RadBirthType1']").is(":checked") == true) {
-		    		birthType = "Y";
-		    	} else {
-		    		birthType = "N";
-		    	}
-		    	
-		    	var cn = "${userInfo.id}";
-		    	
-		    	
-				$.ajax({
-		    		type : "POST",
-		    		dataType : "html",
-		    		url : "/ezPersonal/saveUserInfo.do",
-		    		async : false,
-		    		data : {
-		    			cn : cn,
-		    			telephoneNumber : document.getElementById("txtTelePhone").value,
-		    			mobile : document.getElementById("txtMobilePhone").value,
-		    			homePhone : document.getElementById("txtHomePhone").value,
-		    			facsimileTelephoneNumber : document.getElementById("txtFax").value,
-		    			postalCode : document.getElementById("txtZipcode").value,
-		    			streetAddress : document.getElementById("txtAddress").value,
-		    			birth : document.getElementById("txtBirth").value,
-		    			birthType : birthType,
-		    			info : document.getElementById("txtInfo").value
-		    		},
-		    		success : function(result) {   			
-		    			 if (result == "OK") {
-		    				 alert("<spring:message code='ezPersonal.t191'/>");
-		    			} 
-					},
-		    		error : function() {
-		    			alert("<spring:message code='ezPersonal.t192'/>");
-		    		}
-		    	});
-		     }
-		    
+			    }
+			    
+			    function ButtonChangeClick() {
+			    	var birthType = "";
+			    	if ($("input:radio[id='RadBirthType1']").is(":checked") == true) {
+			    		birthType = "Y";
+			    	} else {
+			    		birthType = "N";
+			    	}
+			    	
+			    	var cn = "${userInfo.id}";
+			    	
+					$.ajax({
+			    		type : "POST",
+			    		dataType : "html",
+			    		url : "/ezPersonal/saveUserInfo.do",
+			    		async : false,
+			    		data : {
+			    			cn : cn,
+			    			telephoneNumber : document.getElementById("txtTelePhone").value,
+			    			mobile : document.getElementById("txtMobilePhone").value,
+			    			homePhone : document.getElementById("txtHomePhone").value,
+			    			facsimileTelephoneNumber : document.getElementById("txtFax").value,
+			    			postalCode : document.getElementById("txtZipcode").value,
+			    			streetAddress : document.getElementById("txtAddress").value,
+			    			birth : document.getElementById("txtBirth").value,
+			    			birthType : birthType,
+			    			info : document.getElementById("txtInfo").value
+			    		},
+			    		success : function(result) {   			
+			    			 if (result == "OK") {
+			    				 alert("<spring:message code='ezPersonal.t191'/>");
+			    			} 
+						},
+			    		error : function() {
+			    			alert("<spring:message code='ezPersonal.t192'/>");
+			    		}
+			    	});
+			     }
 		  
 		</script>
 	</head>
 	<body class="mainbody"> 
-<form method="post" runat="server" action=""> 
-    <h1><spring:message code='ezPersonal.t172'/></h1>
-    <h2><spring:message code='ezPersonal.t173'/></h2>
-    <span class="txt"><spring:message code='ezPersonal.t174'/></span>
-    <table class="popuplist" width="100%">
-        <tr> 
-            <td width="130" rowspan="6" align="center">
-                <div> 
-                    <!-- <asp:Label EnableViewState="True" ID="LiteralPhoto" Runat="server"></asp:Label>  -->
-                    <span id="LiteralPhoto">
-                    	${literalPhoto}
-                    </span>
-                </div>
-            </td>
-			<th><spring:message code='ezPersonal.t67'/></th> 
-            <td width="100%">
-                <!-- <asp:Label ID="LabelCompany" Runat="server"></asp:Label> -->${labelCompany }
-            </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t7'/></th> 
-            <td>
-                <!-- <asp:Label ID="LabelDepartment" Runat="server"></asp:Label> -->${labelDepartment }
-            </td> 
-        </tr>
-        <tr> 
-            <th><spring:message code='ezPersonal.t9'/></th> 
-            <td>
-            	<!-- <asp:Label ID="LabelDisplayName" Runat="server"></asp:Label> -->${labelDisplayName }
-            </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t69'/></th> 
-            <td>
-            	<!-- <asp:Label ID="LabelTitle" Runat="server"></asp:Label> -->${labelTitle}
-            </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t175'/></th> 
-            <td>
-            	<!-- <asp:Label ID="LabelJikChek" Runat="server"></asp:Label> -->${labelJikChek}
-            </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t176'/></th> 
-            <td>
-            	<!-- <asp:Label ID="LabelMail" Runat="server"></asp:Label> -->${labelMail }
-            </td> 
-        </tr> 
-    </table> 
-    <table class="content" width="100%" style="margin-top:10px;"> 
-        <tr>
-            <th><spring:message code='ezPersonal.t177'/></th>
-            <td width="230"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}"></td>
-            <th><spring:message code='ezPersonal.t178'/></th>
-            <td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}"> </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t70'/></th> 
-            <td> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}"> </td> 
-            <th><spring:message code='ezPersonal.t179'/></th> 
-            <td> <input type="text" id="txtFax" size="22" value="${txtFax}"> </td> 
-        </tr> 
-        <tr> 
-            <th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
-            <td colspan="3">
-                <c:if test="${userLang == '1'}">
-                <input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
-                <a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
-                </c:if>
-                <c:if test="${userLang != '1'}">
-                <input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
-                <span><spring:message code='ezPersonal.t181'/></span>
-                </c:if>
-            </td> 
-        </tr> 
-        <tr> 
-            <td colspan="3"> <input type="text" id="txtAddress" size="72" value="${txtAddress}"> </td> 
-        </tr> 
-        <tr>
-            <th>
-                <spring:message code='ezPersonal.t2003'/>
-            </th>
-            <td colspan="3">
-                <input type="text" id="txtBirth" style="width:80px;text-align:center;" value="${txtBirth}" onkeydown="return checkKey()">
-                <img id="TempCalImage" src="/images/ImgIcon/calendar-month.gif" style="margin-bottom:-5px"/>
-                &nbsp;&nbsp;
-
-                <c:choose>
-                	<c:when test="${birthType eq 'Y'}">
-                		<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
-                		<input type="radio" id="RadBirthType2" name="radioGroup"  ><spring:message code='ezPersonal.t2002'/>
-                	</c:when>
-                	<c:otherwise>
-                		<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
-                		<input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/>
-                	</c:otherwise>
-                </c:choose>
-                
-            </td>
-        </tr>
-        <tr> 
-            <th><spring:message code='ezPersonal.t182'/></th> 
-            <td colspan="3"><textarea id="txtInfo" style="WIDTH:100%;HEIGHT:80px" maxlength="450">${txtInfo}</textarea></td> 
-        </tr> 
-    </table> 
-    <div class="btnposition">
-    	<%--2016-10-25 모바일 설정 주석처리  --%>
-       <%-- <a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a> --%>
-       <a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
-       <%-- <a runat ="server" class="imgbtn" name="ButtonDelPic" ID="ButtonDelPic" onserverclick="ButtonDelPic_ServerClick"><span><spring:message code='ezPersonal.t184'/></span></a> --%>
-       <a class ="imgbtn"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
-       <%-- <a runat ="server" class="imgbtn" name="ButtonChange" ID="ButtonChange" onserverclick="ButtonChange_ServerClick"><span><spring:message code='ezPersonal.t34'/></span></a> --%>
-       <a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
-       <a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
-    </div>
-    <br/>
-    <br/>
-    <span class="subtxt"><spring:message code='ezPersonal.t185'/></span>-<spring:message code='ezPersonal.t186'/>
-    <table class="content">
-        <!-- 표준모듈 (2007.02.21) 수정 -->
-        <tr>
-            <th><spring:message code='ezPersonal.t187'/></th> 
-            <td> <input type="password" id="txtOldPassword" size="25" value="" onkeypress="change_press()"> </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t188'/></th> 
-            <td> <input type="password" id="txtNewPassword" size="25" value="" onkeypress="change_press()"> </td> 
-        </tr> 
-        <tr> 
-            <th><spring:message code='ezPersonal.t189'/></th> 
-            <td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()"> </td> 
-        </tr>
-    </table> 
-    <div class="btnposition">
-        <a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
-        <a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
-    </div>
-</form>
-<br/>
-<br/>
-<input id="publicModulus" value="${publicModulus}" type="hidden"/>
-<input id="publicExponent" value="${publicExponent}" type="hidden"/>
-</body>
+		<form method="post" action=""> 
+    		<h1><spring:message code='ezPersonal.t172'/></h1>
+    		<h2><spring:message code='ezPersonal.t173'/></h2>
+    		<span class="txt"><spring:message code='ezPersonal.t174'/></span>
+    		<table class="popuplist" width="100%">
+        		<tr> 
+            		<td width="130" rowspan="6" align="center">
+                		<div> 
+	  	                	<span id="LiteralPhoto">
+        		          		${literalPhoto}
+                    		</span>
+                		</div>
+            		</td>
+					<th><spring:message code='ezPersonal.t67'/></th> 
+            		<td width="100%">
+                		${labelCompany }
+            		</td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t7'/></th> 
+            		<td>
+                		${labelDepartment }
+            		</td> 
+        		</tr>
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t9'/></th> 
+            		<td>
+            			${labelDisplayName }
+            		</td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t69'/></th> 
+            		<td>
+            			${labelTitle}
+            		</td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t175'/></th> 
+            		<td>
+            			${labelJikChek}
+            		</td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t176'/></th> 
+            		<td>
+            			${labelMail }
+            		</td> 
+        		</tr> 
+    		</table> 
+    		<table class="content" width="100%" style="margin-top:10px;"> 
+        		<tr>
+            		<th><spring:message code='ezPersonal.t177'/></th>
+            		<td width="230"><input type="text" id="txtTelePhone" size="22" value="${txtTelePhone}"></td>
+            		<th><spring:message code='ezPersonal.t178'/></th>
+            		<td><input type="text" id="txtMobilePhone" size="22" value="${txtMobilePhone}"> </td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t70'/></th> 
+            		<td> <input type="text" id="txtHomePhone" size="22" value="${txtHomePhone}"> </td> 
+            		<th><spring:message code='ezPersonal.t179'/></th> 
+            		<td> <input type="text" id="txtFax" size="22" value="${txtFax}"> </td> 
+        		</tr> 
+        		<tr> 
+            		<th rowspan="2"><spring:message code='ezPersonal.t180'/></th> 
+            		<td colspan="3">
+                		<c:if test="${userLang == '1'}">
+                			<input type="text" id="txtZipcode" size="10" value="${txtZipCode}" readonly>
+                			<a class="imgbtn"><span onClick="zip_find();"><spring:message code='ezPersonal.t181'/></span></a>
+                		</c:if>
+                		<c:if test="${userLang != '1'}">
+                			<input type="text" id="txtZipcode" size="10" value="${txtZipCode}">
+                				<span><spring:message code='ezPersonal.t181'/></span>
+                		</c:if>
+            		</td> 
+        		</tr> 
+        		<tr> 
+            		<td colspan="3"> <input type="text" id="txtAddress" size="72" value="${txtAddress}"> </td> 
+        		</tr> 
+        		<tr>
+            		<th><spring:message code='ezPersonal.t2003'/></th>
+            		<td colspan="3">
+                		<input type="text" id="txtBirth" style="width:80px;text-align:center;" value="${txtBirth}" onkeydown="return checkKey()">
+                			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.gif" style="margin-bottom:-5px"/>
+                			&nbsp;&nbsp;
+             			   <c:choose>
+                				<c:when test="${birthType eq 'Y'}">
+                					<input type="radio" id="RadBirthType1" name="radioGroup"  checked><spring:message code='ezPersonal.t2001'/>
+                					<input type="radio" id="RadBirthType2" name="radioGroup"  ><spring:message code='ezPersonal.t2002'/>
+                				</c:when>
+                				<c:otherwise>
+                					<input type="radio" id="RadBirthType1" name="radioGroup" ><spring:message code='ezPersonal.t2001'/>
+                					<input type="radio" id="RadBirthType2" name="radioGroup"  checked><spring:message code='ezPersonal.t2002'/>
+                				</c:otherwise>
+                			</c:choose>
+		            </td>
+		        </tr>
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t182'/></th> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:100%;HEIGHT:80px" maxlength="450">${txtInfo}</textarea></td> 
+        		</tr> 
+    		</table> 
+    		<div class="btnposition">
+    			<%--2016-10-25 모바일 설정 주석처리  --%>
+       			<%-- <a class="imgbtn" onClick="SettingMobile()"><span><spring:message code='ezPersonal.t998'/></span></a> --%>
+       			<a class="imgbtn" name="Submit" onClick="return btnPhoto_onclick()"><span><spring:message code='ezPersonal.t183'/></span></a>
+       			<%-- <a runat ="server" class="imgbtn" name="ButtonDelPic" ID="ButtonDelPic" onserverclick="ButtonDelPic_ServerClick"><span><spring:message code='ezPersonal.t184'/></span></a> --%>
+       			<a class ="imgbtn"  onClick="ButtonDeleteClick()" name="ButtonDelete"  id="ButtonDelete" ><span><spring:message code='ezPersonal.t184'/></span></a>
+       			<%-- <a runat ="server" class="imgbtn" name="ButtonChange" ID="ButtonChange" onserverclick="ButtonChange_ServerClick"><span><spring:message code='ezPersonal.t34'/></span></a> --%>
+       			<a class ="imgbtn"  onClick="ButtonChangeClick()" name="ButtonChange"  id="ButtonChange" ><span><spring:message code='ezPersonal.t34'/></span></a>
+       			<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
+    		</div>
+    	<br/>
+    	<br/>
+    		<span class="subtxt"><spring:message code='ezPersonal.t185'/></span>-<spring:message code='ezPersonal.t186'/>
+    		<table class="content">
+        		<!-- 표준모듈 (2007.02.21) 수정 -->
+        		<tr>
+            		<th><spring:message code='ezPersonal.t187'/></th> 
+            		<td> <input type="password" id="txtOldPassword" size="25" value="" onkeypress="change_press()"> </td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t188'/></th> 
+            		<td> <input type="password" id="txtNewPassword" size="25" value="" onkeypress="change_press()"> </td> 
+        		</tr> 
+        		<tr> 
+            		<th><spring:message code='ezPersonal.t189'/></th> 
+            		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()"> </td> 
+        		</tr>
+    		</table> 
+    		<div class="btnposition">
+        		<a class="imgbtn" onclick="return PassWordChange()"><span><spring:message code='ezPersonal.t34'/></span></a>
+        		<a class="imgbtn" name="Submit2" onClick="window.location.href='/ezPersonal/changePersonInfo.do'"><span><spring:message code='ezPersonal.t13'/></span></a>
+    		</div>
+		</form>
+	<br/>
+	<br/>
+		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
+		<input id="publicExponent" value="${publicExponent}" type="hidden"/>
+	</body>
 </html>
