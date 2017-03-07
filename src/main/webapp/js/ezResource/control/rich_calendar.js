@@ -56,7 +56,7 @@ RichCalendar = function(target_obj, show_time) {
 
 }
 
-RichCalendar.is_ie = /msie/i.test(navigator.userAgent) && !/opera/i.test(navigator.userAgent);
+RichCalendar.is_ie = !CrossYN();
 
 // Static functions
 RichCalendar.get_iframe_styles = function() {

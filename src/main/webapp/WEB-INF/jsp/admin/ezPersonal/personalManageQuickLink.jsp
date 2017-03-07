@@ -137,48 +137,85 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<xml id="listviewheader" style ="display:none">
-			<LISTVIEWDATA>
-		    	<HEADERS>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
-		        		<WIDTH>40</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-		        		<WIDTH>40</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-		        		<WIDTH>40</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s85' />)</NAME>
-		        		<WIDTH>40</WIDTH>
-		      		</HEADER>
-		     		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-		        		<WIDTH>50</WIDTH>
-		      		</HEADER>
-		        	<HEADER>
-		        		<NAME>URL</NAME>
-		        		<WIDTH>70</WIDTH>
-		      		</HEADER>
-		        	<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-		        		<WIDTH>50</WIDTH>
-		      		</HEADER>
-		        	<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-		        		<WIDTH>50</WIDTH>
-		      		</HEADER>
-		        	<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-		        		<WIDTH>50</WIDTH>
-		      		</HEADER>
-		    	</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
+		<c:choose>
+			<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+				<xml id="listviewheader" style ="display:none">
+					<LISTVIEWDATA>
+						<HEADERS>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					     	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME>URL</NAME>
+					        	<WIDTH>70</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					    </HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:when>
+			<c:otherwise>
+				<xml id="listviewheader" style ="display:none">
+					<LISTVIEWDATA>
+						<HEADERS>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t304' /></NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					    	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+							<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					      	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s85' />)</NAME>
+					        	<WIDTH>40</WIDTH>
+					      	</HEADER>
+					     	<HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME>URL</NAME>
+					        	<WIDTH>70</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					        <HEADER>
+					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
+					        	<WIDTH>50</WIDTH>
+					      	</HEADER>
+					    </HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:otherwise>
+		</c:choose>
+
 		
 		<h1>Quick Link</h1>
 		<div id="mainmenu">

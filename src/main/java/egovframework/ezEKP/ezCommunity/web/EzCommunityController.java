@@ -1269,8 +1269,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 			pSortBy = request.getParameter("sortBy");
 		}
 		
+		String code = request.getParameter("code");
+		String boardID = request.getParameter("boardID");
+		
 		String boardName = egovMessageSource.getMessage("ezCommunity.t91", userInfo.getLocale());
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, "");
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
 		
 		boardInfo.setSs_Board_MaxRows(10);
 		
@@ -1295,6 +1298,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		model.addAttribute("pOrgBoardParameters", pOrgBoardParameters);
+		model.addAttribute("code", code);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
@@ -1513,7 +1517,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 
-		keywordCount = ezCommunityService.bbsListGet1(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -1521,7 +1525,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
 		
 		String strHTML = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 
@@ -2165,8 +2169,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityCPollManagerVO managerVO = ezCommunityService.pollEditGet1(managerID, tenantID);
 		
-		String pStartDate = commonUtil.getDateStringInUTC(managerVO.getPollStartDate(), offset, false).substring(0, 10);
-		String pEndDate = commonUtil.getDateStringInUTC(managerVO.getPollEndDate(), offset, false).substring(0, 10);
+		String pStartDate = commonUtil.getDateStringInUTC(managerVO.getPollStartDate().substring(0,19), offset, false).substring(0, 10);
+		String pEndDate = commonUtil.getDateStringInUTC(managerVO.getPollEndDate().substring(0,19), offset, false).substring(0, 10);
 		
 		CommunityCPollQuestionVO questionVO = ezCommunityService.pollEditGet2(managerID, tenantID);
 		

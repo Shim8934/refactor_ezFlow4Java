@@ -64,20 +64,15 @@
 		    else
 		        location.href = "/ezPortal/portalPage.do?mode=edit&pageID=" + pUID;
 		}
+		
 		// 새로만들기
-		function newpage()
-		{
-		    if(navigator.userAgent.indexOf("MSIE") != -1)
-		        location.href = "/ezPortal/portalPage.do?mode=new";
-		    else
-		        location.href = "/ezPortal/portalPage.do?mode=new";
+		function newpage() {
+			location.href = "/ezPortal/portalPage.do?mode=new";
 		}
 		
 		// 미리보기
-		function preview()
-		{
-			if (g_UID == "")
-			{
+		function preview() {
+			if (g_UID == "") {
 				alert("<spring:message code='ezPortal.t60'/>");
 				return;
 			}

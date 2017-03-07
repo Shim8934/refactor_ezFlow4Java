@@ -33,7 +33,7 @@
 	        	document.getElementById("pMessageContent").innerHTML = dialogArguments;
 
 	        	var UserAgentState = navigator.userAgent.toLowerCase();
-	        	var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+	        	var browserIE = (CrossYN()) ? true : false;
 	        	
 	        	if (!browserIE) {
 		            if (UserAgentState.indexOf("firefox") != -1) {

@@ -227,7 +227,7 @@ function datepicker(thisobjid, elobjid) {
     };
     function get_vtLocalTime() {
         //return (m_objCurDate[0].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[0] :
         m_objCurDate[0].getVarDate();
     }
@@ -255,7 +255,7 @@ function datepicker(thisobjid, elobjid) {
     };
     function get_vtLocalEndTime() {
         //return (m_objCurDate[1].getVarDate());
-        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        return (CrossYN()) ?
         m_objCurDate[1] :
         m_objCurDate[1].getVarDate();
     }
@@ -521,7 +521,7 @@ function datepicker(thisobjid, elobjid) {
                 }
             }
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             if (null != m_eCalPopup) {
@@ -796,7 +796,7 @@ function datepicker(thisobjid, elobjid) {
                 mfOutputDate.call(this, false, m_rgeInputTime[x], 1);
             }
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             var szTemp;
@@ -1175,7 +1175,7 @@ function datepicker(thisobjid, elobjid) {
                 mfWriteEndtimePicker.call(this);
             }
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             //INIITIALIZE THE TIME FORMAT STRING
@@ -1371,7 +1371,7 @@ function datepicker(thisobjid, elobjid) {
             m_eCalPopup = m_winDocBody.appendChild(eTable);
             m_eCalTitle = m_eCalPopup.rows[0].cells[2];
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             // 수정(2007.05.29) : 이전년도/월, 다음년도/월 이동 버튼 수정
@@ -1630,7 +1630,7 @@ function datepicker(thisobjid, elobjid) {
                 }
             }
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             if (null == m_eEndTimePopup) return;
@@ -1797,7 +1797,7 @@ function datepicker(thisobjid, elobjid) {
 
             mfUnPopPicker.call(this);
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -1925,7 +1925,7 @@ function datepicker(thisobjid, elobjid) {
                 srcElement.value = mfFormatTime.call(this, m_objCurDate[iWhichDate].getHours() * 60 + m_objCurDate[iWhichDate].getMinutes())
             }
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -2147,7 +2147,7 @@ function datepicker(thisobjid, elobjid) {
                 m_cellSelTime = rgCells[x];
             }
         }).call(this)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function() {
             // safari
             var x, y;
@@ -2519,7 +2519,7 @@ function datepicker(thisobjid, elobjid) {
                 mfUnPopPicker.call(this);
             }
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -2722,7 +2722,7 @@ function datepicker(thisobjid, elobjid) {
                 lastCell = thisCell;
             }
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -2765,7 +2765,7 @@ function datepicker(thisobjid, elobjid) {
             if (null == m_eCalPopup) mfCreateCalendar.call(this);
             mfPopPicker.call(this, m_eCalPopup, event);
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -2811,7 +2811,7 @@ function datepicker(thisobjid, elobjid) {
                 mfPopPicker.call(this, m_eEndTimePopup, event);
             }
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;
@@ -3028,7 +3028,7 @@ function datepicker(thisobjid, elobjid) {
             //        break;
             //}
         }).call(this, ePicker, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(ePicker, event) {
             // safari
             if (!event) event = window.event;
@@ -3396,7 +3396,7 @@ function datepicker(thisobjid, elobjid) {
                 mfUnPopPicker.call(this);
             }
         }).call(this, event)
-        : (navigator.userAgent.indexOf('MSIE') == -1) ?
+        : (CrossYN()) ?
         (function(event) {
             // safari
             if (!event) event = window.event;

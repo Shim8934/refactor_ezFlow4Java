@@ -17,7 +17,7 @@ var g_szXmlError = "" + strLang86 + "";
 
 //* 기능설명      : 달력이 온체인지 될때 실행되는 것
 function idCalendarControl_OnDateChange(event) {
-    return (navigator.userAgent.indexOf('MSIE') == -1) ?
+    return (CrossYN()) ?
     (function(event) {
         // safari
         if (!event) event = window.event;

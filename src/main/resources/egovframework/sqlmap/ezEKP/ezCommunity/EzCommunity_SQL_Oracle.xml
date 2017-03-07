@@ -299,7 +299,7 @@
 						FROM
 							$v_BNAME$
 						WHERE
-							username$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'
+							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 	            			tenant_id = #tenantID#
 					]]>
@@ -1167,7 +1167,7 @@
 					A.attachments,
 					A.importance,
 					B.boardid,
-					B.boardname$v_strLang$,
+					B.boardname$v_strLang$ AS boardname,
 					A.abstract
 				FROM
 					TBL_COMM_ITEM A
@@ -1733,7 +1733,7 @@
 		<![CDATA[
 			SELECT
 				c_clubgubun,
-				c_clubname$v_USERINFO_LANG$,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
 				c_membercnt,
 				c_clubconfirmtype
 			FROM
@@ -4357,11 +4357,11 @@
 				<isEqual property="v_S_RADIO" compareValue="WRITER">
 					<![CDATA[
 						SELECT
-							NVL(COUNT(username$v_USERINFO_LANG$), 0) 
+							NVL(COUNT(CASE #primary# WHEN '1' THEN username ELSE username2 END AS username), 0) 
 						FROM
 							$v_BNAME$ 
 						WHERE
-							username$v_USERINFO_LANG$ LIKE '%'||#v_KEYWORD#||'%'
+							CASE #primary# WHEN '1' THEN username ELSE username2 END LIKE '%'||#v_KEYWORD#||'%'
 						AND
 							tenant_id = #tenantID#
 					]]>
@@ -5139,7 +5139,7 @@
 				#v_pExtensionAttribute32#,
 				#v_pExtensionAttribute4#,
 				#v_pExtensionAttribute5#,
-				#v_pDocNo#,
+				#v_pDocNo# + 1,
 				#v_pDocPassWord#,
 				#tenantID#)
 		]]>

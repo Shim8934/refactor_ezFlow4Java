@@ -277,12 +277,14 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/manageQuickLink.do")
-	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie) {
+	public String manageQuickLink(@CookieValue("loginCookie") String loginCookie, Model model) {
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		
 		if (auth == null) {
 			return "cmm/error/adminDenied";
 		}
+		
+		model.addAttribute("host", auth.getServerName());
 		
 		return "admin/ezPersonal/personalManageQuickLink";
 	}
@@ -313,6 +315,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("mode", mode);
+		model.addAttribute("host", userInfo.getServerName());
 		
 		return "admin/ezPersonal/personalAddQuickLink";
 	}

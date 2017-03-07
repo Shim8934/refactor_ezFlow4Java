@@ -1154,7 +1154,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				filePath = "/images/default_pic.jpg";
 			}
 			
-			if (userInfo.getLang().equals("2")) {
+			if (userInfo.getPrimary().equals("2")) {
 				displayName = result.getDisplayName2();
 				title = result.getTitle2();
 				description = result.getDescription2();
@@ -1167,20 +1167,20 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 			pCompanyBoard = req.getParameter("companyBoardID");
-			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 			pDeptBoardID = req.getParameter("deptBoardID");
-			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 			pNewsBoardID = req.getParameter("newsBoardID");
-			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		model.addAttribute("filePath", filePath);
@@ -1224,20 +1224,20 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		if (req.getParameter("companyBoardID") != null && !req.getParameter("companyBoardID").equals("")) {
 			pCompanyBoard = req.getParameter("companyBoardID");
-			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pCompanyBDNM = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pCompanyType = ezPortalService.getBoardProperty(pCompanyBoard, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("deptBoardID") != null && !req.getParameter("deptBoardID").equals("")) {
 			pDeptBoardID = req.getParameter("deptBoardID");
-			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pDeptBDNM = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pDeptType = ezPortalService.getBoardProperty(pDeptBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		if (req.getParameter("newsBoardID") != null && !req.getParameter("newsBoardID").equals("")) {
 			pNewsBoardID = req.getParameter("newsBoardID");
-			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[0];
-			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getLang(), userInfo.getTenantId()).split("\\:")[1];
+			pNewsBDNM = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[0];
+			pNewsType = ezPortalService.getBoardProperty(pNewsBoardID, userInfo.getPrimary(), userInfo.getTenantId()).split("\\:")[1];
 		}
 		
 		model.addAttribute("pCompanyBoard", pCompanyBoard);
@@ -1381,7 +1381,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				if (result.getItemSeq() != 0) {
 					pPollItemSeq = result.getItemSeq();
 					int maxAns = Integer.parseInt(result.getPollSelectionCount());
-					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
 					
 					List<PersonalLightPollVO> list = ezPersonalService.getPollResultOrderResult(pPollItemSeq, userInfo.getTenantId());
 					
@@ -1641,7 +1641,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		mailAddress = userInfo.getEmail();
 		
-		if (userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary().equals("1")) {
 			displayName = userInfo.getDisplayName1();
 			department = userInfo.getDeptName1();
 			title = userInfo.getTitle1();
@@ -1833,7 +1833,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			if (result.getItemSeq() > 0) {
 				if (result.getItemSeq() != 0) {
 					pPollItemSeq = result.getItemSeq();
-					pPollTitle = userInfo.getLang().equals("1") ? result.getPollTitle() : result.getPollTitle2();
+					pPollTitle = userInfo.getPrimary().equals("1") ? result.getPollTitle() : result.getPollTitle2();
 				}	
 			}
 		}
@@ -2994,10 +2994,10 @@ public class EzPortalController extends EgovFileMngUtil {
 		sb.append("</DATA>");
 
 		model.addAttribute("portletCategoryXML", sb.toString());
-		if (userInfo.getLang() != null && userInfo.getLang().equals("1")) {
+		if (userInfo.getPrimary() != null && userInfo.getPrimary().equals("1")) {
 			model.addAttribute("userLang", "");
 		} else {
-			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getLang()));
+			model.addAttribute("userLang", commonUtil.getLangData(userInfo.getPrimary()));
 		}
 
 		return "/ezPortal/portalPortletSearch";

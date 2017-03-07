@@ -472,7 +472,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		if (clubVO == null) {
 			response.getWriter().write("<script language='javascript'>\n");
-			response.getWriter().write("alert('Community" + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
+			response.getWriter().write("alert('" + egovMessageSource.getMessage("ezCommunity.t1529", userInfo.getLocale()) + egovMessageSource.getMessage("ezCommunity.t1027", userInfo.getLocale()) + "');\n");
 			response.getWriter().write("document.location.href = '/ezCommunity/commMake.do?flag=1';\n");
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
@@ -948,8 +948,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		for (CommunityCPollManagerVO item : list) {
-			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10));
-			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10));
+			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10));
+			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10));
 			
 			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
@@ -985,7 +985,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			sb.append("<tr>");
 			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
-			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10) + "</td>");
+			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");
@@ -2047,13 +2047,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int bbsListGet1(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet1 started.");
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio + ", tenantID : " + tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
@@ -2066,19 +2066,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public List<CommunityCBoardVO> bbsListGet2(String bName, String lang, String pKeyword, String sRadio, int tenantID) throws Exception {
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception {
 		logger.debug("bbsListGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_BNAME", bName);
-		map.put("v_USERINFO_LANG", lang);
+		map.put("primary", primary);
 		map.put("v_KEYWORD", pKeyword);
 		map.put("v_S_RADIO", sRadio.toUpperCase());
 		map.put("tenantID", tenantID);
 		
 		List<CommunityCBoardVO> list = ezCommunityDAO.bbsListGet2(map);
 		
-		logger.debug("bName : " + bName + ", lang : " + lang + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
+		logger.debug("bName : " + bName + ", primary : " + primary + ", pKeyword : " + pKeyword + ", sRadio : " + sRadio);
 		logger.debug("bbsListGet2 ended.");
 		
 		return list;
@@ -2869,14 +2869,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-//			item.setUpperItemIDTree(item.getUpperItemIDTree() + GetReverseDateNow() + item.getItemID());
+			item.setUpperItemIDTree(item.getItemID());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
 		
 		if (!pMode.equals("copy")) {
 			pContent = xmlData.getElementsByTagName("CONTENT").item(0).getTextContent();
-//			item.setParentWriteDate(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent());
 			item.setParentWriteDate(commonUtil.getDateStringInUTC(xmlData.getElementsByTagName("PARENTWRITEDATE").item(0).getTextContent(), offset, true));
 		} else {
 			item.setParentWriteDate(item.getWriteDate());
@@ -3044,7 +3043,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			if (count >= pStartRow) {
 				sb.append("<NODE>");
 				sb.append("<BoardID>" + boardList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + boardList.getBoardName() + "</BoardName>");
+				sb.append("<BoardName>" + commonUtil.cleanValue(boardList.getBoardName()) + "</BoardName>");
 				sb.append("<ItemID>" + boardList.getItemID() + "</ItemID>");
 				sb.append("<Title>" + commonUtil.cleanValue(boardList.getTitle()) + "</Title>");
 				

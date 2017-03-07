@@ -467,7 +467,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 				}
 				list.get(i).setStartDate(commonUtil.getDateStringInUTC(list.get(i).getStartDate(), userInfo.getOffset(), false).substring(0, 10));
 				
-				if (userInfo.getLang().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
+				if (userInfo.getPrimary().equals("2") && list.get(i).getPollTitle2() != null && !list.get(i).getPollTitle2().equals("")) {
 					list.get(i).setPollTitle(list.get(i).getPollTitle2());
 				}
 				
@@ -511,7 +511,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			if (result.getItemSeq() == 0) {
 				labelPollTitle = egovMessageSource.getMessage("ezPersonal.t385", locale);
 			} else {
-				if (userInfo.getLang().equals("2") && result.getPollTitle2() != null && !result.getPollTitle2().equals("")) {
+				if (userInfo.getPrimary().equals("2") && result.getPollTitle2() != null && !result.getPollTitle2().equals("")) {
 					labelPollTitle = result.getPollTitle2();
 				} else {
 					labelPollTitle = result.getPollTitle();
@@ -563,7 +563,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(pollInfo)+"</DATA>");
 		List<PersonalLightPollVO> pollResultList = ezPersonalService.getPollResult(Integer.parseInt(itemSeq), userInfo.getTenantId());
 		
-		if (userInfo.getLang().equals("2") && pollInfo.getPollTitle2() != null && !pollInfo.getPollTitle2().equals("")) {
+		if (userInfo.getPrimary().equals("2") && pollInfo.getPollTitle2() != null && !pollInfo.getPollTitle2().equals("")) {
 			subject = pollInfo.getPollTitle2();
 		} else {
 			subject = pollInfo.getPollTitle();
@@ -762,7 +762,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String propList = "postalCode;streetAddress;homePhone;facsimileTelephoneNumber;extensionAttribute2;company;description;displayName;title;mail;telephoneNumber;mobile;info;extensionAttribute10;birth;birthType;password";
 		
-		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezOrganService.getPropertyList(userInfo.getId(), propList, userInfo.getPrimary(), userInfo.getTenantId());
 		Document xmlDom = commonUtil.convertStringToDocument(result);
 		
 		String labelCompany = xmlDom.getElementsByTagName("COMPANY").item(0).getTextContent();
@@ -804,7 +804,6 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		
 		model.addAttribute("noneActiveX", noneActiveX);
-		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("txtInfo", pInfo);
 		model.addAttribute("labelCompany", labelCompany);
 		model.addAttribute("labelDepartment", labelDepartment);

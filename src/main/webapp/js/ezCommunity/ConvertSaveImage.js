@@ -22,7 +22,7 @@ function EmbedContentIntoXML(ConValue) {
         }
 
     }
-    var BodyHTMLContent = HTMLtoMHT_MakeTag(tempDiv);
+    var BodyHTMLContent = tempDiv.innerHTML;
     return BodyHTMLContent;
 }
 

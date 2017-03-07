@@ -215,10 +215,17 @@
   				<li><span onClick="preview()"><spring:message code='ezPortal.t63'/></span></li>
   				<li><span onClick="usepage()"><spring:message code='ezPortal.t248'/></span></li>
   				<li><span onClick="Outofusepage()"><spring:message code='ezPortal.t249'/></span></li>
-  				<li><span onClick="uselang(1)"><spring:message code='ezPortal.t406'/></span></li>
-  				<li><span onClick="uselang(2)"><spring:message code='ezPortal.t407'/></span></li>
-  				<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>
-  				<li><span onClick="uselang(4)"><spring:message code='ezPortal.t4074'/></span></li>
+  				<c:choose>
+  					<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+  						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>			
+  					</c:when>
+  					<c:otherwise>
+  						<li><span onClick="uselang(1)"><spring:message code='ezPortal.t406'/></span></li>
+  						<li><span onClick="uselang(2)"><spring:message code='ezPortal.t407'/></span></li>
+  						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>
+  						<li><span onClick="uselang(4)"><spring:message code='ezPortal.t4074'/></span></li>
+  					</c:otherwise>
+  				</c:choose>
 			</ul>
 		</div>
 	    <table class="mainlist" style="width:100%">	

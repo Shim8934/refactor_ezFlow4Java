@@ -109,25 +109,7 @@
 		    }
 		    
 		    function Priority_UP() {
-		        if (navigator.userAgent.indexOf("MSIE") != -1) {
-		            if (_RowObject == null) {
-		                alert("<spring:message code = 'ezPersonal.t1022' />");
-		                return;
-		            }
-		            
-		            var ChangeRow = null;
-		            for (var i = 0; i < _RowObject.parentNode.childNodes.length - 1; i++) {
-		                if (_RowObject.parentNode.childNodes.item(i) == _RowObject) {
-		                    if (i == 0) {
-		                        return;
-		                    }
-		                    ChangeRow = i - 1;
-		                    if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5")))
-		                    swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
-		                    break;
-		                }
-		            }
-		        } else if (navigator.userAgent.indexOf("MSIE") == -1) {
+		    	if (CrossYN()) {
 		            if (_RowObject == null) {
 		                alert("<spring:message code = 'ezPersonal.t1022' />");
 		                return;
@@ -145,7 +127,25 @@
 		                    break;
 		                }
 		            }
-		        }
+		    	} else {
+		    	    if (_RowObject == null) {
+		                alert("<spring:message code = 'ezPersonal.t1022' />");
+		                return;
+		            }
+		            
+		            var ChangeRow = null;
+		            for (var i = 0; i < _RowObject.parentNode.childNodes.length - 1; i++) {
+		                if (_RowObject.parentNode.childNodes.item(i) == _RowObject) {
+		                    if (i == 0) {
+		                        return;
+		                    }
+		                    ChangeRow = i - 1;
+		                    if (event_ChangePriority(_RowObject.getAttribute("DATA1"), _RowObject.getAttribute("DATA5"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA1"), _RowObject.parentNode.childNodes.item(ChangeRow).getAttribute("DATA5")))
+		                    swapNodes(_RowObject, _RowObject.parentNode.childNodes.item(ChangeRow));
+		                    break;
+		                }
+		            }
+		    	}
 		    }
 		    
 		    function Priority_DOWN() {

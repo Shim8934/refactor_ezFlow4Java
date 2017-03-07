@@ -171,8 +171,6 @@
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
 		<script type="text/javascript">
-			var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";
@@ -423,10 +421,10 @@
 					{
 						try {
 //							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
-		                    if(browserIE) {
-		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
-		                    } else {		                    	
+		                    if(CrossYN()) {
 		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
+		                    } else {		                    	
+		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;		                        
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e)
