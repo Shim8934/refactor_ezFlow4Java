@@ -19,7 +19,7 @@
 		<script type="text/javascript">
 			var pListType = "TXT";
 		    var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+		    var browserIE = (CrossYN()) ? true : false;
 		    var userlang = "${userLang}";
 		    var CurPage = "1";
 		    var pListXML_Info = null;
