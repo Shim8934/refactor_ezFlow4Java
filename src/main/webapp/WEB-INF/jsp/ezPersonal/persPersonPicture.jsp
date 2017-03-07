@@ -10,11 +10,9 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
-		 	var UserAgentState = navigator.userAgent.toLowerCase();
 	        var ReturnFunction;
-	        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 	        
-	        if (browserIE) {
+	        if (CrossYN()) {
 	            document.write("<link rel='stylesheet' href='<spring:message code='ezPersonal.e3'/>' type='text/css'>");
 	        } else {
 	            document.write("<link href='<spring:message code='ezPersonal.e3'/>' rel='stylesheet' type='text/css'>");

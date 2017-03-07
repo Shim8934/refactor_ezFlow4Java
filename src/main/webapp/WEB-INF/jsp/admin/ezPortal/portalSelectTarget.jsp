@@ -17,8 +17,6 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript">
 		  	var bSearch = false;
-	        var UserAgentState = navigator.userAgent.toLowerCase();
-	        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang1 = "<spring:message code='ezPortal.t1056'/>";

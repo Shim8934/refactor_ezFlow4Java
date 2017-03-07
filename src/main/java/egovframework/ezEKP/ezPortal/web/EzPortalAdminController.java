@@ -465,6 +465,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		    
 		model.addAttribute("result", result);
 		model.addAttribute("returnXML", returnXML);
+		model.addAttribute("host", userInfo.getServerName());
 		logger.debug("topList ended");
 		return "/admin/ezPortal/portalTopList";
 	}

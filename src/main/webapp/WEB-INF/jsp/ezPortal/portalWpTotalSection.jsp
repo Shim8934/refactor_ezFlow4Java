@@ -171,8 +171,6 @@
 		<script type="text/javascript" src="/js/jquery/raphael-min.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>   
 		<script type="text/javascript">
-			var UserAgentState = navigator.userAgent.toLowerCase();
-		    var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";

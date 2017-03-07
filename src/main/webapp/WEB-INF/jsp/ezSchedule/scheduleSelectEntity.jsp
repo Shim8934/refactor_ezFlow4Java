@@ -1206,8 +1206,7 @@
 	                </table>
 	      		</td> 
 	    	</tr> 
-	 	</table> 
-	    <br />
+	 	</table>	    
 		<div class="btnposition">	    	
 	    	<a class="imgbtn" onClick="close_onclick()" ><span><spring:message code='ezSchedule.t4' /></span></a>
 	    	<a class="imgbtn" onClick="window.close();" ><span><spring:message code='ezSchedule.t5' /></span></a>
