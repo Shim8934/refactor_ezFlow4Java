@@ -8602,11 +8602,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "</VALUE>");
-			resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "</DATA1>");
-			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "</DATA2>");
-			resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "</DATA3>");
-			resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "</DATA4>");
+			resultXML.append("<VALUE><![CDATA[[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA1>");
+			resultXML.append("<DATA2><![CDATA[[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
+			resultXML.append("<DATA3><![CDATA[[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA3>");
+			resultXML.append("<DATA4><![CDATA[[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "]]></DATA4>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "</VALUE>");
@@ -8615,7 +8615,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE><![CDATA[[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent())) + "</VALUE>");
