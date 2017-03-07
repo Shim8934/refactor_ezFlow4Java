@@ -7859,12 +7859,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getCallBackYNForceLine(String docID, String tempUserID, String companyID, int tenantID) throws Exception {
-	
 		String docList = getCallBackYNForceLineList(docID, companyID, tempUserID, tenantID);
 		Document docXML = commonUtil.convertStringToDocument(docList);
 
 		 String result = "<RESULT>TRUE</RESULT>";
-		 System.out.println(docXML.getElementsByTagName("ROW").getLength());
 		 
 		    if (docXML.getElementsByTagName("ROW").getLength() > 1)
             {
@@ -9803,6 +9801,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			try{
 				ezApprovalGDAO.updateAprLineInfo1(updateAprLineInfo1);
 			} catch(Exception e) {
+				LOGGER.debug(e.getMessage());
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 				return "FALSE";
 			}
@@ -9878,6 +9877,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try{
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch (Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 					return "FALSE";
@@ -9895,6 +9895,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try{
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch (Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 
 					return "FALSE";
@@ -9912,6 +9913,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try{
 					ezApprovalGDAO.updateAprLineInfo2(map3);
 				} catch (Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FALSE";
 				}				
@@ -9926,6 +9928,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					try{
 						ezApprovalGDAO.updateAprLineInfo(map3);
 					} catch (Exception e) {
+						LOGGER.debug(e.getMessage());
 						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 						return "FALSE";
 					}					
@@ -9940,6 +9943,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					try{
 						ezApprovalGDAO.updateAprLineInfo2(map3);
 					} catch (Exception e) {
+						LOGGER.debug(e.getMessage());
 						TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 						return "FALSE";
 					}					
@@ -9955,6 +9959,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try{
 					ezApprovalGDAO.updateAprLineInfo2(map3);
 				} catch (Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FALSE";
 				}				
@@ -9987,6 +9992,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try{
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch (Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FALSE";
 				}				
@@ -10008,6 +10014,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						try {
 							ezApprovalGDAO.updateAprLineInfo3(map3);
 						} catch(Exception e) {
+							LOGGER.debug(e.getMessage());
 							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 							return "FLASE";
 						}
@@ -10040,6 +10047,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								try {
 									ezApprovalGDAO.updateAprLineInfo3(map3);
 								} catch(Exception e) {
+									LOGGER.debug(e.getMessage());
 									TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 									return "FLASE";
 								}
@@ -10061,6 +10069,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10087,6 +10096,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						try {
 							ezApprovalGDAO.updateAprLineInfo(map3);
 						} catch(Exception e) {
+							LOGGER.debug(e.getMessage());
 							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 							return "FLASE";
 						}
@@ -10118,6 +10128,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10141,6 +10152,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10164,6 +10176,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo2(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10196,6 +10209,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10212,6 +10226,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}
@@ -10234,6 +10249,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						try {
 							ezApprovalGDAO.updateAprLineInfo3(map3);
 						} catch(Exception e) {
+							LOGGER.debug(e.getMessage());
 							TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 							return "FLASE";
 						}
@@ -10250,6 +10266,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				try {
 					ezApprovalGDAO.updateAprLineInfo(map3);
 				} catch(Exception e) {
+					LOGGER.debug(e.getMessage());
 					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 					return "FLASE";
 				}

@@ -859,7 +859,12 @@
                 img.style.width = "156px";
                 img.style.height = "28px";
                 //이효진 2017-03-06 분기타서 언어별 이미지따와야함
-                img.src = "/images/kr/community/title_todayCommunity.png";
+                
+                if ('${userInfo.lang}' == '3') {
+                	img.src = "/images/jp/community/title_todayCommunity_jp.png";
+                } else {
+                	img.src = "/images/kr/community/title_todayCommunity.png";
+                }
                 img.alt = "today Community";
 
                 h1.appendChild(img);
