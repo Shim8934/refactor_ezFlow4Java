@@ -18,7 +18,7 @@
 		<script type="text/javascript">
 			var bSearch = false;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
-	        var browserIE = (UserAgentState.indexOf("msie") != -1) ? true : false;
+	        var browserIE = (CrossYN()) ? true : false;
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var ReturnFunction;
