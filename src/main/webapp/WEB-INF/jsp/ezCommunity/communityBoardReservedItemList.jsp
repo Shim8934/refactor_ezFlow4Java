@@ -30,6 +30,8 @@
 			var CurPage = "${pPage}";
 			var totalPage = "${totalPage}";
 			var strListInfo = "";
+			var code = "${code}"
+			var pBoardID = "${boardInfo.boardID}";
 			var pSortBy = "${pSortBy}";
 			var totalCount = "${totalCount}";
 // 			var pUse_Editor = "${ Use_Editor }";
@@ -254,7 +256,7 @@
 			
 			function movePage(newPage) {
 			    if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-			        window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
+			        window.location.href = "/ezCommunity/boardReservedItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID) + "&page=" + newPage.toString() + "&sortBy=" + encodeURIComponent(pSortBy);
 			    }
 			}
 
@@ -262,7 +264,7 @@
 				newPage = parseInt(CurPage) - 1;
 				
 				if(newPage > 0) {
-					window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
+					window.location.href = "/ezCommunity/boardReservedItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID) + "&page=" + newPage.toString() + "&sortBy=" + encodeURIComponent(pSortBy);
 				}
 			}
 
@@ -270,7 +272,7 @@
 				newPage = parseInt(CurPage) + 1;
 				
 				if(newPage <= parseInt(totalPage)) {
-					window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
+					window.location.href = "/ezCommunity/boardReservedItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID) + "&page=" + newPage.toString() + "&sortBy=" + encodeURIComponent(pSortBy);
 				}
 			}
 
@@ -279,17 +281,17 @@
 					var newPage = txt_PageInputNum.value;
 					
 					if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-						window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + newPage.toString() + "&sortBy=" + pSortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
+						window.location.href = "/ezCommunity/boardReservedItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID) + "&page=" + newPage.toString() + "&sortBy=" + encodeURIComponent(pSortBy);
 					}
 				}
 			}
 			
 			function SortPage(SortBy) {
-				window.location.href = "/ezCommunity/boardReservedItemList.do?page=" + CurPage + "&sortBy=" + SortBy + "&orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
+				window.location.href = "/ezCommunity/boardReservedItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID) + "&page=" + CurPage + "&sortBy=" + encodeURIComponent(SortBy);
 			}
 
 			function BoardItemList() {
-				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
+				window.location.href = "/ezCommunity/boardItemList.do?code=" + encodeURIComponent(code) + "&boardID=" + encodeURIComponent(pBoardID);
 			}
         </script>
 	</head>
