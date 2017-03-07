@@ -412,26 +412,37 @@
 	            <th style="text-align:center"><spring:message code = 'ezPersonal.t304' /><span style="color:red">*</span></th>
 	            <td colspan="2">
 	                <table width="100%">
-	                    <tr class="primary">
-	                        <th><spring:message code = 'ezPersonal.s81' /></th>
-	                        <td>
-	                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
-	                    </tr>
-	                    <tr class="secondary">
-	                        <th><spring:message code = 'ezPersonal.s82' /></th>
-	                        <td>
-	                            <input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
-	                    </tr>
-	                    <tr class="secondary">
-	                        <th><spring:message code = 'ezPersonal.s84' /></th>
-	                        <td>
-	                            <input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
-	                    </tr>
-	                    <tr class="secondary">
-	                        <th><spring:message code = 'ezPersonal.s85' /></th>
-	                        <td>
-	                            <input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"/></td>
-	                    </tr>
+	                	<c:choose>
+	                		<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+	                			 <tr class="primary">
+			                        <th><spring:message code = 'ezPersonal.s81' /></th>
+			                        <td>
+			                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
+			                    </tr>
+	                		</c:when>
+	                		<c:otherwise>
+	                			 <tr class="primary">
+			                        <th><spring:message code = 'ezPersonal.s81' /></th>
+			                        <td>
+			                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
+			                    </tr>
+			                    <tr class="secondary">
+			                        <th><spring:message code = 'ezPersonal.s82' /></th>
+			                        <td>
+			                            <input type="text" id="Title2" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
+			                    </tr>
+			                    <tr class="secondary">
+			                        <th><spring:message code = 'ezPersonal.s84' /></th>
+			                        <td>
+			                            <input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
+			                    </tr>
+			                    <tr class="secondary">
+			                        <th><spring:message code = 'ezPersonal.s85' /></th>
+			                        <td>
+			                            <input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"/></td>
+			                    </tr>
+	                		</c:otherwise>
+	                	</c:choose>
 	                </table>
 	            </td>
 	        </tr>

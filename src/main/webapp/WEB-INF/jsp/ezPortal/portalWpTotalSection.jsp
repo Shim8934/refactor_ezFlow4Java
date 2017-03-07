@@ -423,10 +423,10 @@
 					{
 						try {
 //							document.getElementById("aprnum").innerText = xmlHttp2.responseXML.text;
-		                    if(browserIE) {
-		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;
-		                    } else {		                    	
+		                    if(CrossYN()) {
 		                        document.getElementById("aprnum").textContent = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.textContent;
+		                    } else {		                    	
+		                        document.getElementById("aprnum").innerText = xmlHttp_getnewapprovalcount_total.responseXML.firstChild.text;		                        
 		                    }
 		                    xmlHttp_getnewapprovalcount_total = null;
 						} catch(e)

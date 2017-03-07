@@ -57,7 +57,7 @@
 	    <div class="popup_noti_btnarea"> 
 	   	    <div class="btnposition"> 
 	            <input type="submit" value="<spring:message code='ezApprovalG.t1'/>" id="Submit4" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick('0')" >
-	            <input type="submit" value="<spring:message code='ezApprovalG.t50'/>" id="Submit5" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick('1')" >
+	            <input type="submit" value="<spring:message code='ezApprovalG.t999937'/>" id="Submit5" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick('1')" >
 	            <input type="submit" value="<spring:message code='ezApprovalG.t367'/>" id="Submit6" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick('2')" >
 	            <input type="submit" value="<spring:message code='ezApprovalG.t119'/>" id="Submit7" name="btn_OpinionOK" onClick="return btn_OpinionOK_onclick('3')" >
 		    </div>
