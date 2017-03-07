@@ -948,8 +948,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("userCurrentTime=" + dateStr);
 		
 		for (CommunityCPollManagerVO item : list) {
-			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10));
-			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10));
+			logger.debug("getPollStartDate() : " + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10));
+			logger.debug("getPollEndDate() : " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10));
 			
 			if (dateStr.compareTo(item.getPollStartDate().substring(0, 10)) < 0) {
 				pollState = egovMessageSource.getMessage("ezCommunity.t677", userInfo.getLocale());
@@ -985,7 +985,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			sb.append("<tr>");
 			sb.append("<td align=\"center\">" + item.getPollGroupNo() + "</td>");
-			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate(), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate(), offset, false).substring(0, 10) + "</td>");
+			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
 			sb.append("<td style=\"text-overflow:ellipsis;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()) + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState + "\")>" +commonUtil.cleanValue(item.getPollSubject()) + "</a></td>");
 			sb.append("<td>" + strResponseCnt + egovMessageSource.getMessage("ezCommunity.t478", userInfo.getLocale()) + "</td>");

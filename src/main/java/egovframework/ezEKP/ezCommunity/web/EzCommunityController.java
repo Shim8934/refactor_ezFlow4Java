@@ -2169,8 +2169,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityCPollManagerVO managerVO = ezCommunityService.pollEditGet1(managerID, tenantID);
 		
-		String pStartDate = commonUtil.getDateStringInUTC(managerVO.getPollStartDate(), offset, false).substring(0, 10);
-		String pEndDate = commonUtil.getDateStringInUTC(managerVO.getPollEndDate(), offset, false).substring(0, 10);
+		String pStartDate = commonUtil.getDateStringInUTC(managerVO.getPollStartDate().substring(0,19), offset, false).substring(0, 10);
+		String pEndDate = commonUtil.getDateStringInUTC(managerVO.getPollEndDate().substring(0,19), offset, false).substring(0, 10);
 		
 		CommunityCPollQuestionVO questionVO = ezCommunityService.pollEditGet2(managerID, tenantID);
 		
