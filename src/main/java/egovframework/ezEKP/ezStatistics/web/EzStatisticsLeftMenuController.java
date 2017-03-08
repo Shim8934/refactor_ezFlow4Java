@@ -31,8 +31,10 @@ public class EzStatisticsLeftMenuController {
 	@RequestMapping(value="/ezStatistics/statisticsLeftMenu.do")
 	public String statisticsLeftMenu(Model model) throws Exception {
 	    String IsJMochaStandAlone = config.getProperty("config.IsJMochaStandAlone");
+	    String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 	    
 	    model.addAttribute("IsJMochaStandAlone", IsJMochaStandAlone);
+	    model.addAttribute("use_approvalG", use_approvalG);
 	    
 		return "ezStatistics/statisticsLeftMenu";
 	}
