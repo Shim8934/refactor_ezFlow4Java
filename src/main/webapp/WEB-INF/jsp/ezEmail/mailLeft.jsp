@@ -16,7 +16,7 @@
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
-	    <link rel="stylesheet" href="/css/email_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
 	    <script type="text/javascript">
 	        var pUse_Editor = "${useEditor}";
 	        var subCode = "${subCode}";
