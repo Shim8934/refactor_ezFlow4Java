@@ -223,7 +223,7 @@
 	            if (CrossYN()) {
 	                for (var i = 0; i < bodycount; i++) {
 	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
-	                    filename += document.getElementsByName('imgView')[i].title + ";";
+	                    filename += document.getElementsByName('imgView')[i].title + "|";
 	                }
 	            } else {
 	                for (var i = 0; i < bodycount; i++) {
@@ -236,7 +236,7 @@
 
 	                    var imagenamelength = document.getElementById(checkreuslt.value).getAttribute("name").lastIndexOf("\\");
 	                    //사진실제이름
-	                    filename += document.getElementById(checkreuslt.value).getAttribute("name").substring(imagenamelength + 1, imagenamelength.length) + ";";
+	                    filename += document.getElementById(checkreuslt.value).getAttribute("name").substring(imagenamelength + 1, imagenamelength.length) + "|";
 	                }
 	            }
 	            
@@ -341,12 +341,12 @@
 	                if (filepath.indexOf(pBoardID) != -1) {
 	                    var idx = filepath.lastIndexOf("/");
 	                    if (idx != -1) {
-	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + ";";                        
+	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + "|";                        
 	                    }
 	
 	                } else {
-	                    //strRet += pBoardID + "/UploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
-	                    strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
+	                    //strRet += pBoardID + "/UploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
+	                    strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
 	                }
 	            }
 	            xmldom_attachlist = null;

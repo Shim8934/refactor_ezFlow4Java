@@ -62,13 +62,13 @@
 			            }
 			            var AttachHTML = _tempList2.outerHTML;
 			
-			            AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
-			            AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
+// 			            AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
+// 			            AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
 			            document.getElementById('lstAttachLink').innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
 		        	} else {
 		        		var AttachHTML = window.opener.lstAttachLink.innerHTML;
-		                AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
-		                AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
+// 		                AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
+// 		                AttachHTML = ReplaceText(AttachHTML, "%2b", "+");
 		                lstAttachLink.innerHTML = ReplaceText(AttachHTML, "<A href=", "<A temp=");
 		        	}
 		        }

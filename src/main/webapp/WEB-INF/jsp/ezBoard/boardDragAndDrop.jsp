@@ -135,9 +135,9 @@
 		        for (var i = 0; i < filecnt - 1; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i + 1].getAttribute("DATA2");
 		            if (filepath.indexOf(pBoardID) != -1) {
-		                strRet += filepath.replace(/;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
+		                strRet += filepath + "|";
 		            } else {
-		                strRet += "tempUploadFile/" + filepath.replace(/;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
+		                strRet += "tempUploadFile/" + filepath + "|";
 		            }
 		        }
 		        window.parent.attachxml = strRet;
@@ -199,14 +199,14 @@
 		        for (var i = 1; i < filecnt; i++) {
 		            var filepath = document.getElementById("filelist").childNodes[i].getAttribute("DATA2");
 		            if (filepath.indexOf(pBoardID) != -1) {
-		                strRet += filepath + ";";
+		                strRet += filepath + "|";
 		            }
 		            else if (filepath.indexOf("tempUploadFile") != -1)
 		            {
-		                strRet += filepath + ";";
+		                strRet += filepath + "|";
 		            }
 		            else {
-		                strRet += pBoardID + "/uploadFile/" + filepath + ";";
+		                strRet += pBoardID + "/uploadFile/" + filepath + "|";
 		            }
 		        }
 		        window.parent.attachxml = strRet;

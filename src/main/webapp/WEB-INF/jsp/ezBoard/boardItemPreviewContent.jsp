@@ -144,10 +144,10 @@
 	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
 	            	filename = filepath.substr(120, filepath.length - 119);
 // 	                filename = filepath.substr(filepath.indexOf("}_") + 2);
-	                filename = ReplaceText(filename, "%2b", "+");
-	                filename = ReplaceText(filename, "%3b", ";");
-	                filename = ReplaceText(filename, "%7e", "~");
-	                filename = ReplaceText(filename, "%3d", "=");
+// 	                filename = ReplaceText(filename, "%2b", "+");
+// 	                filename = ReplaceText(filename, "%3b", ";");
+// 	                filename = ReplaceText(filename, "%7e", "~");
+// 	                filename = ReplaceText(filename, "%3d", "=");
 	                filepath = "/upload_board/" + filepath;
 	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
 	

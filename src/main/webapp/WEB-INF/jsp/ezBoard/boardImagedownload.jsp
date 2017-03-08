@@ -85,10 +85,10 @@
 	        <tr>
 	            <td>
 	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height: 410px;">
-	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
+	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
-	                	<c:set var="fileName" value="${fn:split(fileName, ';')}"/>
-	                	<c:set var="encodeFileHref" value="${fn:split(encodeFileHref, ';')}"/>
+	                	<c:set var="fileName" value="${fn:split(fileName, '|')}"/>
+	                	<c:set var="encodeFileHref" value="${fn:split(encodeFileHref, '|')}"/>
 	                	<c:set var="resultCount" value="${fn:length(result)}"/>
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
 		                    <span style="display:inline-block; padding:3px">

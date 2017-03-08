@@ -173,14 +173,14 @@
 	                if (filepath.indexOf(pBoardID) != -1) {
 	                    var idx = filepath.lastIndexOf("/");
 	                    if (idx != -1) {
-	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + ";";
+	                        strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + "|";
 	                    }
 	
 	                } else {
 	                    if (saveItemBoardId != "" && saveItemBoardId == pBoardID)
-	                        strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
+	                        strRet += "tempUploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
 	                    else
-	                        strRet += saveItemBoardId + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
+	                        strRet += saveItemBoardId + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
 	                }
 	            }
 	            xmldom_attachlist = null;
@@ -209,7 +209,7 @@
 	            if (isdad || CrossYN()) {
 	                for (var i = 0; i < bodycount; i++) {
 	                    content += document.getElementsByName('imgContent')[i].value + ";:;";
-	                    filename += document.getElementsByName('imgView')[i].title + ";";
+	                    filename += document.getElementsByName('imgView')[i].title + "|";
 	                }
 	            } else {
 	                for (var i = 0; i < bodycount; i++)
@@ -222,7 +222,7 @@
 
 	                    var imagenamelength = GetAttribute(document.getElementById(checkreuslt.value),'name').lastIndexOf("\\");
 	                    
-	                    filename += GetAttribute(document.getElementById(checkreuslt.value),'name').substring(imagenamelength + 1, imagenamelength.length) + ";";
+	                    filename += GetAttribute(document.getElementById(checkreuslt.value),'name').substring(imagenamelength + 1, imagenamelength.length) + "|";
 	                }
 	            }
 			
@@ -281,7 +281,7 @@
 	            if(pMode != "modify") {		
 	                strXML += "<ITEMID>" + itemid + "</ITEMID>";
 	            } else {		
-	                itemid = strItemID +";";
+	                itemid = strItemID + "|";
 	                strXML += "<ITEMID>" + itemid + "</ITEMID>";
 			    }
 	
