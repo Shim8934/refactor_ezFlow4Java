@@ -224,7 +224,7 @@
     				return;
     			}
     			
-    			if (CheckIfHasReplies()) {
+    			if (!CheckIfHasReplies()) {
     		        alert("<spring:message code='ezCommunity.t425' />");
                     return;
                 }
@@ -272,7 +272,7 @@
 	                return;
 	            }
 
-		        if (CheckIfHasReplies()) {
+		        if (!CheckIfHasReplies()) {
 		            alert("<spring:message code='ezCommunity.t425' />");
 		            return;
 		        }
@@ -287,15 +287,15 @@
     		function CheckIfHasReplies() {
     		    var xmlhttp = createXMLHttpRequest();
     			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
-    			xmlhttp.send();	
+    			xmlhttp.send();
     			
-    			if(xmlhttp.responseText == "FALSE") {
+    			if(xmlhttp.responseText == "TRUE") {
     				xmlhttp = null;	
     				return true;
+    			} else {
+    				xmlhttp = null;
+        			return false;
     			}
-    			
-    			xmlhttp = null;
-    			return false;
     		}
 
     		function DeleteItem() {

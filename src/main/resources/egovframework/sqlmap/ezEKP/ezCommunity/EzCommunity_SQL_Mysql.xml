@@ -608,8 +608,7 @@
 					)
 				ORDER BY
 					A.parentwritedate DESC,
-					A.upperitemidtree,
-					A.startdate DESC
+					A.upperitemidtree
 				LIMIT
 					#v_pEndRow#
 			]]>
@@ -741,8 +740,7 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-					A.itemlevel ASC
+					A.upperitemidtree
 			]]>
 		</isEqual>
 		
@@ -843,8 +841,7 @@
 		<![CDATA[
 			ORDER BY
 				A.parentwritedate DESC,
-				STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-				A.startdate ASC
+				A.upperitemidtree
 			LIMIT
 				#v_pEndRow#
 		]]>
@@ -946,8 +943,7 @@
 		<![CDATA[
 			ORDER BY
 				A.parentwritedate DESC,
-				STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-				A.startdate ASC
+				A.upperitemidtree
 			LIMIT
 				#v_pEndRow#
 		]]>
@@ -1014,8 +1010,7 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-				startdate ASC
+				upperitemidtree
 		]]>
 	</select>
 	
@@ -1041,8 +1036,7 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-				startdate ASC
+				upperitemidtree
 			LIMIT
 				20
 		]]>
@@ -1077,8 +1071,7 @@
 					tenant_id = #tenantID#
 				ORDER BY 
 					parentwritedate DESC,
-					STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-					startdate ASC
+					upperitemidtree
 				LIMIT
 					1
 			]]>
@@ -1107,8 +1100,7 @@
 					tenant_id = #tenantID#
 				ORDER BY 
 					parentwritedate DESC,
-					STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-					startdate ASC
+					upperitemidtree
 				LIMIT
 					1
 			]]>
@@ -2067,9 +2059,8 @@
 		<isEqual property="v_PSORTBY" compareValue="">
 			ORDER BY
 				A.parentwritedate DESC,
-				A.startdate DESC,
 				A.docno DESC,
-				STR_TO_DATE(A.upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC
+				A.upperitemidtree
 		</isEqual>
 		
 		<isNotEqual property="v_PSORTBY" compareValue="">
@@ -2105,9 +2096,8 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				startdate DESC,
 				docno DESC,
-				STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s')
+				upperitemidtree
 			LIMIT
 				20
 		]]>
@@ -2135,9 +2125,8 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				startdate DESC,
 				docno DESC,
-				STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s')
+				upperitemidtree
 			LIMIT
 				20
 		]]>
@@ -2304,9 +2293,7 @@
 			AND
 				enddate > #v_pNow#
 			ORDER BY 
-				parentwritedate DESC,
-				STR_TO_DATE(upperitemidtree, '%Y-%m-%d %H:%i:%s') DESC,
-				startdate ASC
+				startdate DESC
 			LIMIT
         		5
 		]]>
@@ -3910,7 +3897,7 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				upperitemidtree LIKE #v_pItemID#
+				upperitemidtree LIKE CONCAT('%', #v_pItemID#, '%')
 			AND
 				itemid <> #v_pItemID#
 			AND

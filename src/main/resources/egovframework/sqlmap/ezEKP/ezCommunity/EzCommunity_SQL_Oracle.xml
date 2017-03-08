@@ -618,8 +618,7 @@
 						)
 					ORDER BY
 						A.parentwritedate DESC,
-						A.upperitemidtree,
-						A.startdate DESC
+						A.upperitemidtree
 					)
 				WHERE
 					ROWNUM <= #v_pEndRow#
@@ -755,8 +754,7 @@
 			<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree) DESC,
-					A.startdate ASC
+					A.upperitemidtree
 				)
 			]]>
 		</isEmpty>
@@ -862,8 +860,7 @@
 		<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree) DESC,
-					A.startdate ASC
+					A.upperitemidtree
 				)
 			WHERE
 				ROWNUM <= #v_pEndRow#
@@ -969,8 +966,7 @@
 		<![CDATA[
 				ORDER BY
 					A.parentwritedate DESC,
-					TO_CHAR(A.upperitemidtree) DESC,
-					A.startdate ASC
+					A.upperitemidtree
 				)
 			WHERE
 				rownum <= #v_pEndRow#
@@ -2370,9 +2366,7 @@
 				AND
 					enddate > #v_pNow#
 				ORDER BY 
-					parentwritedate DESC,
-					TO_CHAR(upperitemidtree) DESC,
-					startdate ASC
+					startdate DESC
 				)
         	WHERE
         		ROWNUM <= 5
@@ -3994,7 +3988,7 @@
 			FROM
 				TBL_COMM_ITEM
 			WHERE
-				upperitemidtree LIKE #v_pItemID#
+				upperitemidtree LIKE '%'||#v_pItemID#||'%'
 			AND
 				itemid <> #v_pItemID#
 			AND
