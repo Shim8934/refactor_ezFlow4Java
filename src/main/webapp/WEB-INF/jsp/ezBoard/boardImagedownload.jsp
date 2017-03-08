@@ -91,10 +91,10 @@
 	                	<c:set var="encodeFileHref" value="${fn:split(encodeFileHref, ';')}"/>
 	                	<c:set var="resultCount" value="${fn:length(result)}"/>
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
-		                    <span style="display:inline-block; padding:3px">
-		                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" style="position:fixed"/>
-		                        <img src='${result[vs.count-1]}' width='85px' height ='85px' title='${content[vs.count-1]}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer;' onclick="img_onClick(this)">
-		                    </span>
+		                    <div style="display:inline-block">
+		                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" style="vertical-align: top; position: relative; z-index: 1; left:8px"/>
+		                        <img src='${result[vs.count-1]}' width='100px' height ='100px' title='${content[vs.count-1]}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer; position: relative; right: 13px' onclick="img_onClick(this)">
+		                    </div>
 	                	</c:forEach>
 	                </div>
 	            </td>
