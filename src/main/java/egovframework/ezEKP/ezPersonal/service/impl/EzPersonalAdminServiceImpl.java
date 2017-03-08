@@ -169,7 +169,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			
 			result.append("<CELL><VALUE>" + vo.getQuickLinkName2() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE>" + vo.getQuickLinkName3() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
+			//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
 			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
@@ -236,14 +236,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pQuickLinkName = doc.getElementsByTagName("pQuickLinkName").item(0).getTextContent();
 		String pQuickLinkName2 = doc.getElementsByTagName("pQuickLinkName2").item(0).getTextContent();
 		String pQuickLinkName3 = doc.getElementsByTagName("pQuickLinkName3").item(0).getTextContent();
-		String pQuickLinkName4 = doc.getElementsByTagName("pQuickLinkName4").item(0).getTextContent();
 		String pLinkType= doc.getElementsByTagName("pLinkType").item(0).getTextContent();
 		String pLinkTypeURL = doc.getElementsByTagName("pLinkTypeURL").item(0).getTextContent();
 		String pMode = doc.getElementsByTagName("pMode").item(0).getTextContent();
 		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
 		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
 		
-		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pQuickLinkName4, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getTenantId());
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("node").getLength() == 0) {
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL", userInfo.getTenantId()); 
@@ -635,14 +634,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		ezPersonalAdminDAO.delQuickLink(map);
 	}
 
-	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String quickLinkName4, String linkType, String linkTypeURL, String mode, String url, String size, String userID, int tenantID) throws Exception {
+	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PMODE", mode);
 		map.put("v_QUICKLINKID", quickLinkID);
 		map.put("v_QUICKLINKNAME", quickLinkName);
 		map.put("v_QUICKLINKNAME2", quickLinkName2);
 		map.put("v_QUICKLINKNAME3", quickLinkName3);
-		map.put("v_QUICKLINKNAME4", quickLinkName4);
 		map.put("v_LINKTYPE", linkType);
 		map.put("v_LINKTYPEURL", linkTypeURL);
 		map.put("v_URL", url);
