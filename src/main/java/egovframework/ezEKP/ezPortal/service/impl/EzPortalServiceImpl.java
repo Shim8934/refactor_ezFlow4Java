@@ -2493,8 +2493,6 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_USERINFO_LANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("tenantID", userInfo.getTenantId());
 		
-		logger.debug("multiDate="+commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
 		for (int i=0; i<list.size(); i++) {
@@ -2537,7 +2535,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			} else {
 				strData.append("<dl class='listtype_dttxt'>");
                 strData.append("<dt style='cursor:pointer'");
-                if (("3").equals(list.get(i).getGubun())) {
+                if (list.get(i).getGubun().equals("3")) {
                 	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
                 } else {
                 	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
