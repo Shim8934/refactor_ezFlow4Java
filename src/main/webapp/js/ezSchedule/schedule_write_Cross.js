@@ -586,38 +586,6 @@ function attach_Delete()
 	}
 }		
 
-function restore_deleted()
-{
-	if (repetitiondel == "")
-	{
-		alert(strLang29);
-		return;
-	}
-	if (!confirm(strLang30))
-		return;
-
-    var xmlHTTP = createXMLHttpRequest();
-    var xmlDom = createXmlDom();
-
-    var objNode;
-    createNodeInsert(xmlDom, objNode, "DATA");
-    createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", scheduleid);
-	
-	xmlHTTP.open("POST", "remote/schedule_restore_deleted.aspx", false);
-	xmlHTTP.send(xmlDom);
-
-	if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK")
-		alert(strLang31);
-	else
-	{
-		alert(strLang32);
-		
-		try { window.opener.RefreshView() } catch(e) {}
-		repetitiondel = "";
-		show_repetition_info();
-	}	
-}
-
 function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)

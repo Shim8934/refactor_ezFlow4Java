@@ -1102,8 +1102,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String _datetype = "";
 		String _startdate = "";
 		String _enddate = "";
-		String _repetition = "";
-		String _repetitiondel = "";
+		String _repetition = "";		
 		String _content = "";
         String _contentpath = "";
 		String _importance = "";
@@ -1115,14 +1114,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String UploadSDate="";
 		String UploadEDate="";
 		String startDateTime="";
-		String endDateTime="";
-        String strIReFlagVal = "";
-        String _hasattach = "N";
-        String _attendantname = "";
-        String _attendantemail = "";
+		String endDateTime="";        
+        String _hasattach = "N";                
         String pCompanyAdmin = "";
-        String pDeptAdmin = "";
-        int defaultIndex = 0;
+        String pDeptAdmin = "";        
         
         StringBuilder strAttach = new StringBuilder();
         StringBuilder strOwnerID = new StringBuilder();
@@ -1230,8 +1225,7 @@ public class EzScheduleController extends EgovFileMngUtil {
             _datetype = scheduleInfo.getDateType();
             _startdate = scheduleInfo.getStartDate();
             _enddate = scheduleInfo.getEndDate();            
-            _repetition = scheduleInfo.getRepetition();
-            _repetitiondel = scheduleInfo.getRepetitionDel();
+            _repetition = scheduleInfo.getRepetition();            
             _ispublic = scheduleInfo.getIsPublic();
             _importance = scheduleInfo.getImportance();
             
@@ -1265,30 +1259,38 @@ public class EzScheduleController extends EgovFileMngUtil {
         		//개인일정
         		String type = _scheduletype;
         		strOwnerID.append("<option value='" + type + ";;" + _otherid + "'>" + request.getParameter("othername") + "</option>");
-        	} else {				
-				defaultIndex = Integer.parseInt(_defaultid) -1;
+        	} else {
+        		int count = 1;
+				int defaultIndex = Integer.parseInt(_defaultid);
 				
 				if (primary.equals("1")) {
 					//개인일정
-					strOwnerID.append("<option value='1;;" + userId + "'>" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName1() + "</option>");
+					strOwnerID.append("<option value='1;;" + userId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName1() + "</option>");
+					count++;
 					//부서일정
-					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'>" + msg.getMessage("ezSchedule.t373", locale) + " " + loginVO.getDeptName1() + "</option>");
+					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + loginVO.getDeptName1() + "</option>");
+					count++;
 					//회사일정
-					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'>" + msg.getMessage("ezSchedule.t374", locale) + " " + loginVO.getCompanyName1() + "</option>");
+					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + loginVO.getCompanyName1() + "</option>");
+					count++;
 				} else {
 					//개인일정
-					strOwnerID.append("<option value='1;;" + userId + "'>" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName2() + "</option>");
+					strOwnerID.append("<option value='1;;" + userId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName2() + "</option>");
+					count++;
 					//부서일정
-					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'>" + msg.getMessage("ezSchedule.t373", locale) + " " + "</option>");
+					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + "</option>");
+					count++;
 					//회사일정
-					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'>" + msg.getMessage("ezSchedule.t374", locale) + " " + "</option>");
+					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + "</option>");
+					count++;
 				}
             	
             	List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, loginVO.getTenantId());
             	
             	for (ScheduleGroupListVO vo : gList) {
             		//그룹 일정
-            		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'>" + msg.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");
+            		strOwnerID.append("<option value='7;;" + vo.getGroupId() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t375", locale) + " " + vo.getGroupName() + "</option>");
+            		count++;
             	}
         	}
 			String cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);				
@@ -1330,8 +1332,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("contentPath", _contentpath);
         model.addAttribute("isPublic", _ispublic);
         model.addAttribute("importance", _importance);
-        model.addAttribute("repetition", _repetition);
-        model.addAttribute("repetitionDel", _repetitiondel);
+        model.addAttribute("repetition", _repetition);        
         model.addAttribute("scheduleType", _scheduletype);
         model.addAttribute("changeKey", _changekey);
         model.addAttribute("pattern", _pattern);
@@ -1342,19 +1343,15 @@ public class EzScheduleController extends EgovFileMngUtil {
         model.addAttribute("companyID", loginVO.getCompanyID());
         model.addAttribute("deptName", loginVO.getDeptName());
         model.addAttribute("deptID", loginVO.getDeptID());
-        model.addAttribute("hasAttach", _hasattach);
-        model.addAttribute("attendantName", _attendantname);
-        model.addAttribute("attendantemail", _attendantemail);
+        model.addAttribute("hasAttach", _hasattach);                
         model.addAttribute("pCompanyAdmin", pCompanyAdmin);
         model.addAttribute("pDeptAdmin", pDeptAdmin);
         model.addAttribute("strXML", strAttach.toString());
         model.addAttribute("UploadSDate", UploadSDate);
         model.addAttribute("UploadEDate", UploadEDate);
         model.addAttribute("lang", loginVO.getLang());        
-        model.addAttribute("EDITOR", EDITOR);
-        model.addAttribute("strIReFlagVal", strIReFlagVal);
-        model.addAttribute("strOwnerID", strOwnerID);
-        model.addAttribute("defaultIndex", defaultIndex);
+        model.addAttribute("EDITOR", EDITOR);        
+        model.addAttribute("strOwnerID", strOwnerID);        
         model.addAttribute("offSetMin", offSetMin);
         model.addAttribute("scheduleInfo", scheduleInfo);
 
