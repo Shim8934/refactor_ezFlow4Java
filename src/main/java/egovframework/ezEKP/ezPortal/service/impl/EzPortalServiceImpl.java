@@ -2484,7 +2484,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			if (firstFlag) {
 				strData.append("<dl class='listtype_photo'>");
 				strData.append("<dt class='tit' style='cursor:pointer'");
-				if (list.get(i).getC_ClubGubun().equals("3")) {
+				if (list.get(i).getC_ClubGubun() != null && list.get(i).getC_ClubGubun().equals("3")) {
 					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
 				} else {
 					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
@@ -2516,7 +2516,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			} else {
 				strData.append("<dl class='listtype_dttxt'>");
                 strData.append("<dt style='cursor:pointer'");
-                if (list.get(i).getGubun().equals("3")) {
+                if (list.get(i).getGubun() != null && list.get(i).getGubun().equals("3")) {
                 	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
                 } else {
                 	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
