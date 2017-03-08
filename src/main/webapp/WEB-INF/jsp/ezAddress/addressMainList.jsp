@@ -656,6 +656,7 @@
 	                return;
 	            }
 				
+	            setNodeText(document.getElementById("loadtxt"), "<spring:message code='ezAddress.t5000' />");
 	            document.getElementById("Div1").style.display = "";
 	            document.getElementById("loadingLayer").style.display = "";
 	            document.getElementById("loadingLayer").style.top = (document.documentElement.clientHeight / 2) + "px";
