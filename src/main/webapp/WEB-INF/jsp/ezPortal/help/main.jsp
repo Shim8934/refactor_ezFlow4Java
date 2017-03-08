@@ -44,7 +44,7 @@
 	        }
     </script>
 		<body class="mbody">
-      		<div id="div_warning" class="warningbox01">
+      		<div id="div_warning" class="warningbox01" style="display:none">
         		<div class="warningbox02">
   	    			<div class="warnintxt01">
 	    				<span class="warningimg"><img src="/images/help/warning02.gif" width="136" height="112"></span>

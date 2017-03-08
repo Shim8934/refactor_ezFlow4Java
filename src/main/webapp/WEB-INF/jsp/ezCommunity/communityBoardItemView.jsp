@@ -124,6 +124,11 @@
 	                alert("<spring:message code='ezCommunity.t901'/>");
 				    return;
 				}
+	        	
+	        	if (!CheckIfHasReplies()) {
+		            alert("<spring:message code='ezCommunity.t425' />");
+		            return;
+		        }
 
 	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
 	                if (gubun == "2") {
@@ -190,6 +195,20 @@
                 }
 	        }
 	        
+	        function CheckIfHasReplies() {
+			    var xmlhttp = createXMLHttpRequest();
+				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + pItemID + ";", false);
+				xmlhttp.send();
+				
+				if (xmlhttp.responseText == "TRUE") {
+		            xmlhttp = null;
+		            return true;
+		        } else {
+			        xmlhttp = null;
+			        return false;
+		        }
+			}
+	        
 	        function btn_Delete_Onclick_Complete(ret) {
 	            if (typeof (ret) == "undefined") {
 	            	alert("<spring:message code='ezCommunity.t901'/>");
@@ -203,6 +222,11 @@
 	            	alert("<spring:message code='ezCommunity.t60'/>");
 	                return;
 	            }
+	            
+	            if (!CheckIfHasReplies()) {
+		            alert("<spring:message code='ezCommunity.t425' />");
+		            return;
+		        }
 
 	            if (!confirm("<spring:message code='ezCommunity.t426'/>")) { 
 	            	return;

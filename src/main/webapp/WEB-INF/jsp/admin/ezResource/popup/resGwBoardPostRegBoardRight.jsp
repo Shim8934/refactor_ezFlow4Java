@@ -7,7 +7,7 @@
 		<title><spring:message code="ezResource.t12" /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
-		<link type="text/css" rel="stylesheet" href="/css/organ_tree.css" />
+		<link type="text/css" rel="stylesheet" href="<spring:message code="main.lhm01" />" />
 		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>

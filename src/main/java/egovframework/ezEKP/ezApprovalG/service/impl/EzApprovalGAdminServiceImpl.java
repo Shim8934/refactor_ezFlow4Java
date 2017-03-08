@@ -806,19 +806,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				
 				switch (categoryType) {
 					case "1":
-						sb.append("<DATA2>" + vo.getCategoryCode() + "</DATA2>");
-						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
+						sb.append("<DATA2>" + commonUtil.cleanValue(vo.getCategoryCode()) + "</DATA2>");
+						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA3>");
 						sb.append("<DATA4>" + "ROOT" + "</DATA4>");
 						break;
 					case "2":
-						sb.append("<DATA2>" + vo.getMcategoryCode() + "</DATA2>");
-						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
-						sb.append("<DATA4>" + vo.getCategoryCode() + "</DATA4>");
+						sb.append("<DATA2>" + commonUtil.cleanValue(vo.getMcategoryCode()) + "</DATA2>");
+						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA3>");
+						sb.append("<DATA4>" + commonUtil.cleanValue(vo.getCategoryCode()) + "</DATA4>");
 						break;
 					case "3":
-						sb.append("<DATA2>" + vo.getSubCategoryCode() + "</DATA2>");
-						sb.append("<DATA3>" + vo.getDescription() + "</DATA3>");
-						sb.append("<DATA4>" + vo.getMcategoryCode() + "</DATA4>");
+						sb.append("<DATA2>" + commonUtil.cleanValue(vo.getSubCategoryCode()) + "</DATA2>");
+						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getDescription()) + "</DATA3>");
+						sb.append("<DATA4>" + commonUtil.cleanValue(vo.getMcategoryCode()) + "</DATA4>");
 						break;
 				}
 				sb.append("</NODE>");

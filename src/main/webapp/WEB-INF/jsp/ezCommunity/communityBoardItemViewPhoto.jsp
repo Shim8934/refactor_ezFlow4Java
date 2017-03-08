@@ -146,19 +146,18 @@
 		        xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + pItemID + ",;", false);
 		        xmlhttp.send();
 		        
-		        if (xmlhttp.responseText == "FALSE") {
+		        if (xmlhttp.responseText == "TRUE") {
 		            xmlhttp = null;
-		            
 		            return true;
+		        } else {
+			        xmlhttp = null;
+			        return false;
 		        }
 		        
-		        xmlhttp = null;
-		        
-		        return false;
 		    }
 	
 		    function btn_Delete_Onclick() {
-		        if (CheckIfHasReplies()) {
+		        if (!CheckIfHasReplies()) {
 		            alert("<spring:message code = 'ezCommunity.t425' />");
 		            
 		            return;

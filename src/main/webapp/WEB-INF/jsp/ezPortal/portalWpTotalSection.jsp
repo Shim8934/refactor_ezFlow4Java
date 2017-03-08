@@ -7,11 +7,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta http-equiv="refresh" content="${refreshSecond}">
 		
-		<%
-			String userLang = (String)request.getAttribute("userLang");
-		 	String userApprovalG = (String)request.getAttribute("userApprovalG");
-		 	String pExist = (String)request.getAttribute("pExist");
-		 %>
 		<section class="body_bg2">
 			<article  class="personal">
 				<p>
@@ -39,11 +34,14 @@
 									<span id="mailnum">0</span>
 								</div>
 							</li>
-                    		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="main.t00017" /></li>
-                    		<%}else{ %>
-                    			<li class="title1"><spring:message code="main.t00017" /></li>
-                    		<%} %>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00017" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00017" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
 						</ul>
 					</a>
 					
@@ -62,11 +60,14 @@
 										<span id="aprnum" runat="server">0</span>
 									</div>
 								</li>
-                    			<%if(userLang != "3"){ %>
-									<li class="title"><spring:message code="main.t00018" /></li>
-                    			<%}else{ %>
+                    			<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00018" /></li>
+                    			</c:when>
+                    			<c:otherwise>
                     				<li class="title1"><spring:message code="main.t00018" /></li>
-                    			<%} %>
+                    			</c:otherwise>
+                    		</c:choose>
 						</ul>
 					</a>
 					<a id="Schedule" onClick="btnSumming_click(this)" href="#">
@@ -77,11 +78,14 @@
 									<span id="schedulenum">0</span>
 								</div>
 							</li>
-                    		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="main.t00019" /></li>
-                    		<%}else{ %>
-                    			<li class="title1"><spring:message code="main.t00019" /></li>
-                    		<%} %>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00019" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00019" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
 						</ul>
 					</a>
 					<a id="Poll" onClick="btnSumming_click(this)" href="#">
@@ -92,11 +96,14 @@
 									<span>${pollNum }</span>
 								</div>
 							</li>
-                    		<%if(userLang != "3"){ %>
-								<li class="title"><spring:message code="main.t00020" /></li>
-                    		<%}else{ %>
-                    		<li class="title1"><spring:message code="main.t00020" /></li>
-                    		<%} %>
+                    		<c:choose>
+                    			<c:when test="${userInfo.lang != '3'}">
+                    				<li class="title"><spring:message code="main.t00020" /></li>
+                    			</c:when>
+                    			<c:otherwise>
+                    				<li class="title1"><spring:message code="main.t00020" /></li>
+                    			</c:otherwise>
+                    		</c:choose>
 						</ul>
 					</a>			
 				</div>
@@ -151,11 +158,6 @@
    			</article>
 		</section>
 			
-		 <%
-			 String browser = "";
-			 String userAgent = request.getHeader("User-Agent");		 		
-		 %>
-		
 		<link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezSchedule/jindo.all.js"></script>
@@ -400,7 +402,7 @@
 			function getnewapprovalcount() 
 			{
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-				if (("<%=userApprovalG%>") == ("YES"))
+				if (("${userApprovalG}") == ("YES"))
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
 				else
 				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
@@ -480,7 +482,7 @@
 					case "AprSign" : 		
 						var listType;
 						listType = 1;
-						if ("<%=userApprovalG%>" == ("YES"))
+						if ("${userApprovalG}" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
@@ -489,7 +491,7 @@
 						// 문서Type 선택 1=결재할문서 2=기안할문서  3=결재진행문서  4=수신문서처리(접수기)
 						var listType;
 						listType = 1;
-						if ("<%=userApprovalG%>" == ("YES"))
+						if ("${userApprovalG}" == ("YES"))
 							window.open("/ezApprovalG/apprGMain.do?listType=" + listType, "main");
 						else
 							window.open("/ezApproval/apprMain.do?listType=" + listType, "main");
@@ -670,7 +672,7 @@
 		        parameter[0] = "${userInfo.deptID}";
 		        parameter[1] = "A01000";
 
-		        if ("<%=userApprovalG%>" == ("YES")) {
+		        if ("${userApprovalG}" == ("YES")) {
 		            url = "/ezApprovalG/getFormCont.do";
 		        } else {
 		            url = "/ezApproval/getFormCont.do";
@@ -706,7 +708,7 @@
 		    function openDraftUI() {
 		        var pArgument = new Array();
 		        var gb = "";
-		        if ("<%=userApprovalG%>" == ("YES"))
+		        if ("${userApprovalG}" == ("YES"))
 		            gb = "G";
 		        
 	        	pArgument[0] = "${userInfo.id}";
@@ -723,31 +725,11 @@
 	                if (CrossYN() || pNoneActiveX == "YES") {
 	                    alert("<spring:message code='main.t3000' />");
 	                    return;
+	                } else {
+	                   var openLocation = "/ezApprovalG/draftui.do";
 	                }
-	                else {
-	                    //var openLocation = "/myoffice/ezApproval" + gb + "/ezViewHWP/ezDraftUI_HWP.aspx";
-	                    var openLocation = "/ezApprovalG/draftui.do";
-	                }
-	            }
-	            else {
-	                if (CrossYN() || pNoneActiveX == "YES") {
-	                    //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-	                	var openLocation = "/ezApprovalG/draftui.do";
-	                }
-	                else {
-	                    if (pUse_IE11Browser == "CK")
-	                        //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/DraftUI_Cross.aspx";
-	                    	var openLocation = "/ezApprovalG/draftui.do";
-	                    else {
-	                        if (pUse_Editor == "")
-	                            //openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui.aspx";
-	                        	var openLocation = "/ezApprovalG/draftui.do";
-	                        else {
-	                            /* openLocation = "/myoffice/ezApproval" + gb + "/DraftUI/draftui_IE.aspx"; */
-	                        	var openLocation = "/ezApprovalG/draftui.do";
-	                        }
-	                    }
-	                }
+	            } else {
+	                var openLocation = "/ezApprovalG/draftui.do";
 	                openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
 	                openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
 	                openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7])
