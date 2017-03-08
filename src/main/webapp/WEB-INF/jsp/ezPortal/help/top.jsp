@@ -6,7 +6,6 @@
 		<title><spring:message code='main.t00037'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf=8">
 		<style type="text/css">
-			<!--
 			td,a {font-family: Arial, gulim;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
 			.over{
 				padding-left:15px; padding-right:15px; 
@@ -23,7 +22,9 @@
 			a:visited {}
 			a:active {}
 			a:hover {color: #006c9c;}
-			-->
+				td {
+        			font-family:'Meiryo UI';
+    			}
 		</style>
 		<script type="text/javascript">
 			var beforethis;
@@ -107,14 +108,12 @@
 					default:
 						break;
 				}
-			
 			}
 			
 			function TreeView_toggle(TreeView,width){	
 				TreeView.style.display = "block";
 				TreeView.style.marginLeft = width + "px";
 			}
-			//-->
 		</script>
 		</head>
 		<body style="background-color:#606671">
@@ -145,7 +144,7 @@
 			<div>
 	    		<img src="/images/help/help_jp.gif" width="135">
 			</div>
-			<table onstalled="width:100%;" border="0" style="background:url(images/topmenu_bg.gif) repeat-x; height:26px;">
+			<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 	  			<tr>
 	      			<td class="normal" id="menu00" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">ポータル</td>
 				    <td class="normal" id="menu02" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">電子メール</td>

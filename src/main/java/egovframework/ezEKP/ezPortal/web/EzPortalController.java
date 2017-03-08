@@ -1505,9 +1505,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			model.addAttribute("pExist", "false");
 		}
 		
-		model.addAttribute("userLang", userInfo.getLang());
 		model.addAttribute("pPhotoGalleryID", pPhotoGalleryID);
-		
 		return "/ezPortal/portalWpNewPhoto";
 	}
 	

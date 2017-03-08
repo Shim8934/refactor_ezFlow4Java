@@ -1706,7 +1706,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 
             pstrXML += "<ROW><CELL><VALUE><![CDATA[" + filename + "]]></VALUE>";
             pstrXML += "<DATA1><![CDATA[" + filename + "]]></DATA1>";
-            pstrXML += "<DATA2>" + filepath + "</DATA2>";
+            pstrXML += "<DATA2><![CDATA[" + filepath + "]]></DATA2>";
             pstrXML += "<DATA3></DATA3>";
             pstrXML += "<DATA4>APPROVAL</DATA4>";
             pstrXML += "<DATA5>N</DATA5>";

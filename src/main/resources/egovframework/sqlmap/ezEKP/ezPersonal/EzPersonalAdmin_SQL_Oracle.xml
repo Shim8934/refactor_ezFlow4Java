@@ -263,7 +263,6 @@
              	QUICKLINKNAME ,
              	QUICKLINKNAME2 ,
              	QUICKLINKNAME3 ,
-             	QUICKLINKNAME4 ,
              	LINKTYPE ,
              	URL ,
              	REGUSERID ,
@@ -384,7 +383,6 @@
              	QUICKLINKNAME ,
              	QUICKLINKNAME2 ,
 	            QUICKLINKNAME3 ,
-	            QUICKLINKNAME4 ,
 	            LINKTYPE ,
 	            URL ,
 	            REGDATE ,
@@ -483,7 +481,7 @@
 				TBL_PS_QUICKLINK
         		( QUICKLINKID, QUICKLINKNAME, QUICKLINKNAME2, QUICKLINKNAME3, QUICKLINKNAME4, LINKTYPE, LINKTYPEURL, URL, REGDATE, REGUSERID, SIZE_, TENANT_ID )
         	VALUES
-        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, #v_QUICKLINKNAME4#, #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
+        		( #v_QUICKLINKID#, #v_QUICKLINKNAME#, #v_QUICKLINKNAME2#, #v_QUICKLINKNAME3#, '', #v_LINKTYPE#, #v_LINKTYPEURL#, #v_URL#, #v_NOWDATE#, #v_REGUSERID#, #v_SIZE#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -495,7 +493,6 @@
          		QUICKLINKNAME = #v_QUICKLINKNAME#,
              	QUICKLINKNAME2 = #v_QUICKLINKNAME2#,
              	QUICKLINKNAME3 = #v_QUICKLINKNAME3#,
-             	QUICKLINKNAME4 = #v_QUICKLINKNAME4#,
              	LINKTYPE = #v_LINKTYPE#,
              	LINKTYPEURL = #v_LINKTYPEURL#,
              	URL = #v_URL#,
