@@ -1825,12 +1825,6 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	if ( g_data["recurrence"] != null && g_data["recurrence"] != "" ) {
 		var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
-				
-		if(pAllDay) {
-			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "true");
-		} else {
-			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "false");
-		}
 		
 		if(CrossYN()) { 
 	        var xmlRtn = xmlDOMrec.documentElement;
