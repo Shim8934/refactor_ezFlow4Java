@@ -79,24 +79,27 @@
 		        	</td>
 		    	</tr>
 		  	</table>
-		  	<table class="popuplist" style="table-layout:fixed;width:100%">
+		  	<table class="popuplist" style="table-layout:fixed;width:100%;">
+		  		<colgroup>
+		  			<col width="6%" /><col width="9%" /><col width="9%" /><col width="22%" /><col width="18%" /><col width="18%" /><col width="18%" />
+		  		</colgroup>
 		    	<tr>
-		      		<th style="text-align:center; width:6%"><spring:message code='ezSchedule.t269' /></th>
-		      		<th style="width:7%"><spring:message code='ezSchedule.t270' /></th>
-		      		<th style="width:8%"><spring:message code='ezSchedule.t271' /></th>
-		      		<th style="width:23%"><spring:message code='ezSchedule.t272' /></th>
-		      		<th style="width:20%"><spring:message code='ezSchedule.t273' /></th>
-		      		<th style="width:17%"><spring:message code='ezSchedule.t274' /></th>
-		      		<th style="width:18%"><spring:message code='ezSchedule.t275' /></th>
+		      		<th><spring:message code='ezSchedule.t269' /></th>
+		      		<th><spring:message code='ezSchedule.t270' /></th>
+		      		<th><spring:message code='ezSchedule.t271' /></th>
+		      		<th><spring:message code='ezSchedule.t272' /></th>
+		      		<th><spring:message code='ezSchedule.t273' /></th>
+		      		<th><spring:message code='ezSchedule.t274' /></th>
+		      		<th><spring:message code='ezSchedule.t275' /></th>
 		    	</tr>
 		    	<c:forEach var="item" items="${scheduleListData}">
 				<tr>
-			         <td style="text-align:center;white-space:nowrap;word-break:break-all;">			         
+			         <td style="text-align:center;word-break:break-all;">			         
 			         	<c:if test="${item.importance == '1'}"><img src='/images/i_l.gif' width='8' height='10' /></c:if>
 			         	<c:if test="${item.importance == '2'}">&nbsp;</c:if>
 			         	<c:if test="${item.importance == '3'}"><img src='/images/i_h.gif' width='8' height='10' /></c:if>
 			         </td>
-			         <td style="white-space:nowrap;word-break:break-all;">
+			         <td style="word-break:break-all;">
 			         	<c:if test="${item.scheduleType == '1'}"><spring:message code='ezSchedule.t281' /></c:if>
 			         	<c:if test="${item.scheduleType == '2'}"><spring:message code='ezSchedule.t12' /></c:if>
 			         	<c:if test="${item.scheduleType == '3'}"><spring:message code='ezSchedule.t11' /></c:if>
@@ -104,21 +107,21 @@
 			         	<c:if test="${item.scheduleType == '7'}"><spring:message code='ezSchedule.t282' /></c:if>
 			         	<c:if test="${item.scheduleType == '8'}"><spring:message code='ezSchedule.t205' /> / <spring:message code='ezSchedule.t996' /></c:if>
 			         </td>
-			         <td style="white-space:nowrap;word-break:break-all;">			          
+			         <td style="word-break:break-all;">			          
 				        <c:if test="${primary == '1'}">${item.ownerName}</c:if>
 						<c:if test="${primary != '1'}">${item.ownerName2}</c:if>
 			         </td>
-			         <td style="white-space: nowrap;word-break: keep-all;word-wrap: normal;text-overflow:ellipsis; overflow:hidden;">
+			         <td style="word-break: keep-all;">
 					 	${item.title} 
 					 </td>
-			         <td style="white-space: nowrap;word-break: keep-all;word-wrap: normal;text-overflow:ellipsis; overflow:hidden;">
+			         <td style="word-break:break-all;">
 			         	${item.location} 
 			         </td>
-			         <td style="white-space:nowrap;word-break:break-all;text-overflow:ellipsis; overflow:hidden;">
+			         <td style="word-break:break-all;">
 			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.startDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>
 			         </td>
-			         <td style="white-space:nowrap;word-break:break-all;text-overflow:ellipsis; overflow:hidden;">
+			         <td style="word-break:break-all;">
 			         	<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)}(<spring:message code='ezSchedule.t280' /></c:if>
 			         	<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>
 			         </td>

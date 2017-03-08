@@ -223,6 +223,8 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	@Override
 	public String getConnInfo(StatApprVO statApprVO) {
 		
+		statApprVO.setOffSet(statApprVO.getOffSet().substring(6,7));
+		
 		String rtnValue = "";
 		
 		StringBuffer sb = new StringBuffer();
