@@ -1116,7 +1116,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	            int nlength = noticeList.size();
 	            
 	            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
-	            resultXML.append("<PAGECNT>" + ((int)noticeCount  +  (int)boardCount) + "</PAGECNT>");
+	            resultXML.append("<PAGECNT>" + (noticeCount + boardCount) + "</PAGECNT>");
 	            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
 	            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
 	            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
@@ -1210,13 +1210,24 @@ public class EzBoardController extends EgovFileMngUtil{
 	        if (boardVO.getPageNum() != 1) {
 	            startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount)  +  1;
 	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
+	            
+	            if (startRow <= 0) {
+	            	startRow = 1;
+	            }
+	        } else {
+	        	startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
+	            
+	            if (endRow < 0) {
+	            	endRow = 0;
+	            }
 	        }
         } else {
         	startRow = ((personalCount * (boardVO.getPageNum() - 1)))  +  1;
             endRow = (personalCount * boardVO.getPageNum());
 
             resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
-            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+            resultXML.append("<PAGECNT>" + (noticeCount + boardCount) + "</PAGECNT>");
             resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
             resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
             resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
@@ -1238,8 +1249,6 @@ public class EzBoardController extends EgovFileMngUtil{
             resultXML.append("</HEADERS>");
             resultXML.append("<ROWS>");
         }
-        startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
-        endRow = (personalCount * boardVO.getPageNum());
         
         List<HashMap<String, Object>> boardListItem = new ArrayList<HashMap<String,Object>>();
         
@@ -1847,7 +1856,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue = commonUtil.getDateStringInUTC((String)boardSearchList.get(j).get(fieldName), userInfo.getOffset(), false);
-                	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+                	fieldValue = fieldValue.substring(0, fieldValue.length() - 3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
                 }

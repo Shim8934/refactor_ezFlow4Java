@@ -827,6 +827,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
 		map.put("v_END", end);
@@ -854,6 +855,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -881,6 +883,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -907,6 +910,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -932,6 +936,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -963,6 +968,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -1622,6 +1628,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PENDROW", endRow);
 		map.put("v_PUSERID", userID);
+		map.put("lang", lang);
 		map.put("v_PSORTBY", sortBy);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
