@@ -233,7 +233,7 @@
 	
 	            }
 	            else {
-	                SelectReceiverWindow(${defaultWin}Title, ListViewMsg${defaultWin});
+	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	        }
 		    function recevieListview(pID, pListView) {
