@@ -991,7 +991,7 @@
 						<c:otherwise>
 							<iframe id="message" class="viewbox" name="message"
 								src="/ezCommunity/ckEditor.do"
-								style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+								style="padding: 0; height: 100%; width: 99.7%; overflow: auto;"></iframe>
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
