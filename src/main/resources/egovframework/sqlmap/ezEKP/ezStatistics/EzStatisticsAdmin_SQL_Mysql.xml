@@ -572,7 +572,7 @@
         		( SELECT 
         			  'DAY' DAY  ,
         	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
-                	  DATE_FORMAT(CONNECTTIME, '%H') DATE  ,
+                	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') DATE  ,
                       ( SELECT 
                       		COUNT(SEQUENCE)  
                       	FROM 
@@ -599,14 +599,14 @@
            	      SELECT 
            	      	  'TOTAL' TOTAL  , 
            	          COUNT(SEQUENCE)  CONNECTCNT  ,
-           	          DATE_FORMAT(CONNECTTIME, '%H') DATE  ,
+           	          DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') DATE  ,
            	          0 
            	      FROM 
            	      	  TBL_CONNECTION_INFO
            	      WHERE
            	      	  COMPANYID = #company# 
            	      GROUP BY 
-           	      	  DATE_FORMAT(CONNECTTIME, '%H') ) A
+           	      	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') ) A
         	ORDER BY 
         		A.DATE,
            	    A.DAY ;
@@ -680,7 +680,7 @@
         	FROM 
         		TBL_CONNECTION_INFO 
        		WHERE  
-       			CONNECTAGENT LIKE '%WOW64%'
+       			CONNECTAGENT regexp 'WOW64|Win64|Mac'
             AND 
             	CONNECTTIME >= #startDate#
             AND 
@@ -693,12 +693,12 @@
       		SELECT 
       			'BIT' TYPE  ,
             	COUNT(SEQUENCE)  CONNECTCNT  ,
-             	'32BIT' CONNECTOS  ,
+             	'OTHERS' CONNECTOS  ,
              	0 TOTAL  
         	FROM 
         		TBL_CONNECTION_INFO  
        		WHERE  
-       			CONNECTAGENT NOT LIKE '%WOW64%'
+       			CONNECTAGENT NOT regexp 'WOW64|Win64|Mac'
             AND 
             	CONNECTTIME >= #startDate#
             AND 
