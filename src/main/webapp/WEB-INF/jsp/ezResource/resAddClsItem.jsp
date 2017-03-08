@@ -255,7 +255,7 @@
 				</td>
   			</tr>
   			<tr>
-    			<td style="padding-bottom:1px; padding-right:12px; height:100%"><textarea name="Brd_Explain"  id="Brd_Explain" style="width: 100%; height: 100%;resize:none;"></textarea></td>
+    			<td style="padding-bottom:1px; padding-right:12px; height:100%"><textarea name="Brd_Explain"  id="Brd_Explain" style="margin-top:7px;width: 100%; height: 100%;resize:none;"></textarea></td>
   			</tr>
 		</table>
 	</body>
