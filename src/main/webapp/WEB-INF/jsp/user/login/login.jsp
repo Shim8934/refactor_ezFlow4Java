@@ -8,8 +8,8 @@
 <html>
 	<head>
 		<title>로그인</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />		
-		<link href="/css/common.css" rel="stylesheet" type="text/css" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">		
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />		
 		<script type="text/javascript" src="/js/rsa/jsbn.js"></script>
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
