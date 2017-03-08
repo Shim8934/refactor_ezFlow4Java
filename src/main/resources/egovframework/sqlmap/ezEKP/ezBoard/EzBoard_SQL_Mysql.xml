@@ -464,8 +464,7 @@
                          	A.ATTACHMENTS ,
                          	A.IMPORTANCE ,
                          	B.BOARDID ,
-                         	B.BOARDNAME ,
-                         	B.BOARDNAME2 ,
+                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                          	A.ABSTRACT ,
                          	A.DOCNO 
            			   FROM 
@@ -506,8 +505,7 @@
 	      			A.ATTACHMENTS,
 	      			A.IMPORTANCE,
 	      			B.BOARDID,
-	      			B.BOARDNAME,
-	      			B.BOARDNAME2,
+	      			CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	      			A.ABSTRACT,
 	      			A.DocNo
 	      		FROM 
@@ -636,7 +634,7 @@
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
-	                    B.BOARDNAME$lang$ BOARDNAME,
+	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION,
 	                    C.MAIL
@@ -681,7 +679,7 @@
 						A.TITLE TITLE ,
 	                    B.GUBUN ,
 	                    A.BOARDID BOARDID  ,
-	                    B.BOARDNAME$lang$ BOARDNAME,
+	                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.WRITERNAME$lang$ WRITERNAME,
 	                    A.CONTENTLOCATION
 	                FROM 
@@ -1274,7 +1272,7 @@
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE  ,
-                    B.BOARDNAME BOARDNAME  ,
+                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                     A.APPRFLAG APPRFLAG  
             	 FROM 
             	 	TBL_Board_Item A
@@ -1337,7 +1335,7 @@
                     A.UPPERITEMIDTREE ,
                     A.DOCNO ,
                     A.EXTENSIONATTRIBUTE2 NOTICE  ,
-                    B.BOARDNAME BOARDNAME  ,
+                    CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                     A.APPRFLAG APPRFLAG  
                 FROM 
                 	TBL_Board_Item A
@@ -1399,7 +1397,7 @@
    					ITEMID = A.ItemID) ONELINECNT  ,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
-   				B.BOARDNAME  AS BOARDNAME,
+   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
    				B.GUBUN  AS GUBUN,
    			    '' AS NOTICE,
    				A.APPRFLAG AS APPRFLAG
@@ -1432,7 +1430,13 @@
   				  WHERE
   				  	A.TENANT_ID = #v_TENANTID#
   				  AND 
-  				  	WRITERID = #v_PUSERID# 
+  				  	WRITERID = #v_PUSERID#
+  				  AND 
+	   				(
+	   					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+			        		OR 
+	        		  	A.APPRFLAG IS NULL
+	        		 ) 
   				  AND 
   				  	STARTDATE <= #nowDate# 
   				  AND 
@@ -1477,7 +1481,7 @@
    					ITEMID = A.ItemID) ONELINECNT  ,
    				A.UPPERITEMIDTREE,
    				A.DOCNO,
-   				B.BOARDNAME  AS BOARDNAME,
+   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
    				B.GUBUN  AS GUBUN,
    			    '' AS NOTICE
   				  FROM 
@@ -1550,7 +1554,7 @@
     					ITEMID = A.ItemID) ONELINECNT  ,
 	   				A.UPPERITEMIDTREE,
 	   				A.DOCNO,
-	   				B.BOARDNAME  AS BOARDNAME,
+	   				CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME, 
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE
   				   FROM 
@@ -1876,8 +1880,7 @@
   					A.UPPERITEMIDTREE,
   					A.DOCNO,
   			    	'' AS NOTICE,
-  			    	I.BOARDNAME,
-  					I.BOARDNAME2
+  			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
 				  FROM 
 				  	TBL_BOARD_ITEM A 
 				  LEFT OUTER JOIN 
@@ -1961,8 +1964,7 @@
   					A.UPPERITEMIDTREE,
   					A.DOCNO,
   			    	'' AS NOTICE,
-  			    	I.BOARDNAME,
-   					I.BOARDNAME2,
+  			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
   					I.GUBUN AS GUBUN
   		     	FROM 
   		     	  	TBL_BOARD_ITEM A 
@@ -2047,8 +2049,7 @@
   					A.UPPERITEMIDTREE,
   					A.DOCNO,
   			    	'' AS NOTICE,
-  			    	I.BOARDNAME,
-  					I.BOARDNAME2,
+  			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
   					I.GUBUN AS GUBUN
   				FROM 
   					TBL_BOARD_ITEM_TEMP A 
@@ -2080,13 +2081,6 @@
   					A.TENANT_ID = #v_TENANTID#
   				AND 
   					A.WRITERID = #v_PUSERID# 
-  				AND (
-						(A.APPRFLAG <> 'C'  
-							AND 
-						A.APPRFLAG <> 'N')
-							OR 
-						A.APPRFLAG IS NULL
-					  )
   				$v_PSUBQUERY$ 
    				ORDER BY 
    					$iv_PORDERBYSUB$
@@ -2601,6 +2595,12 @@
 			AND
 				WRITERID = #v_PUSERID# 
 			AND 
+   				(
+   					(APPRFLAG <> 'C' AND APPRFLAG <> 'N')
+		        		OR 
+        		  	APPRFLAG IS NULL
+        		 )
+			AND 
 				StartDate < #nowDate# 
 			AND 
 				EndDate > #nowDate#
@@ -2893,6 +2893,12 @@
    				TENANT_ID = #v_TENANTID#
    			AND
    				WRITERID = #v_PUSERID#
+   			AND 
+   				(
+   					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+		        		OR 
+        		  	A.APPRFLAG IS NULL
+        		 )
    			AND 
    				STARTDATE < #nowDate# 
    			AND 

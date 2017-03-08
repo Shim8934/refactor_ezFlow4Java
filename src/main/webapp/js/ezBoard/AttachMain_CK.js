@@ -350,7 +350,7 @@ function AppendFileAttachInfo(ret) {
 
                 var objTd2 = document.createElement("TD");
 
-                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(/%2b/gi,"+").replace(/%3b/gi,";");
+                objTd2.innerHTML = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                 objTr.appendChild(objTd2);
 
                 var objTd3 = document.createElement("TD");
@@ -388,9 +388,9 @@ function AttachFileList() {
         for (var i = 0; i < xmldomNodes.length; i++) {
             filepath = getNodeText(xmldomNodes[i]);
             if (filepath.indexOf(pBoardID) != -1) {
-                strRet += filepath + ";";
+                strRet += filepath + "|";
             } else {
-            strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+            strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + "|";
             }
         }
     }
@@ -559,12 +559,12 @@ function AttachFileList_Photo()
 	{
 	    filepath = getNodeText(xmldomNodes[i]);
 		if(filepath.indexOf(pBoardID) != -1) {
-		    strRet += filepath + ";";
+		    strRet += filepath + "|";
 		} else {
 		    if (saveItemBoardId != "" && saveItemBoardId == pBoardID )
-		        strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+		        strRet += pBoardID + "/uploadFile/" + getNodeText(xmldomNodes[i]) + "|";
 		    else
-		        strRet += saveItemBoardId + "/uploadFile/" + getNodeText(xmldomNodes[i]) + ";";
+		        strRet += saveItemBoardId + "/uploadFile/" + getNodeText(xmldomNodes[i]) + "|";
 		}
 	}
 	

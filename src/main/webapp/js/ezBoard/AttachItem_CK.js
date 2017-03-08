@@ -196,9 +196,9 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         pstrXML += "</HEADERS><ROWS>";
         for (i = 0; i < nodes.length; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
-                pstrXML += "<ROW><CELL><VALUE>" + unescape(getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;")) + "</VALUE>";//파일명
-                pstrXML += "<DATA1>" + unescape(getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;"))+ "</DATA1>"; //파일명
-                pstrXML += "<DATA2>" + unescape(getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;")) + "</DATA2>"; //저장될 파일명
+                pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;") + "</VALUE>";//파일명
+                pstrXML += "<DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;")+ "</DATA1>"; //파일명
+                pstrXML += "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;") + "</DATA2>"; //저장될 파일명
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
                 pstrXML += "<DATA5>Y</DATA5>";

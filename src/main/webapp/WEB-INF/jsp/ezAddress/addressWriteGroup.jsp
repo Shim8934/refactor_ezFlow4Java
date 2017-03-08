@@ -1346,10 +1346,12 @@
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
 	                        p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
-	                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
-	                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
-	                        }
-	
+	                        
+	                        if (p_ListOrderObject != null) {
+		                        for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+		                            p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		                        }
+	                        }	
 	                    }
 	                    listContentArry = new Array();
 	                }

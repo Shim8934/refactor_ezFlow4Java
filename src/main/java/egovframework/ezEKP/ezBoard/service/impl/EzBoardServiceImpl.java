@@ -277,13 +277,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -624,13 +624,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 =" A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE DESC ";
 				} else {
-					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE ";
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 		}
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
@@ -660,13 +660,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE DESC ";
 				} else {
-					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE ";
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -690,13 +690,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -740,13 +740,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = new BoardMyFavoriteVO();
@@ -776,13 +776,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -827,6 +827,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
 		map.put("v_END", end);
@@ -842,18 +843,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE DESC ";
 				} else {
-					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE ";
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -869,18 +871,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE DESC ";
 				} else {
-					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE ";
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -895,18 +898,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (orderOption1.length() > 0) {
 			if (orderOption1.indexOf("WRITEDATE") > -1) {
 				if (orderOption1.indexOf("WRITEDATE DESC") > -1) {
-					orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE DESC ";
 				} else {
-					orderOption1 = " A.PARENTWRITEDATE, A.WRITEDATE ";
+					orderOption1 = " A.WRITEDATE ";
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.WRITEDATE ";
+			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("iv_PORDERBYSUB", orderOption1);
@@ -922,16 +926,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -953,16 +958,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		if (boardListVO.getOrderBySub().length() > 0) {
 			if (boardListVO.getOrderBySub().indexOf("WRITEDATE") > -1) {
 				if (boardListVO.getOrderBySub().indexOf("WRITEDATE DESC") > -1) {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 				} else {
-					boardListVO.setOrderBySub(" A.PARENTWRITEDATE, A.WRITEDATE ");
+					boardListVO.setOrderBySub(" A.WRITEDATE ");
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.WRITEDATE ");
+			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("lang", commonUtil.getMultiData(boardVO.getLang(), boardVO.getTenantID()));
 		map.put("v_PUSERID", boardListVO.getUserID());
 		map.put("v_PSTARTROW", boardListVO.getStartRow());
 		map.put("v_PENDROW", boardListVO.getEndRow());
@@ -1622,6 +1628,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PENDROW", endRow);
 		map.put("v_PUSERID", userID);
+		map.put("lang", lang);
 		map.put("v_PSORTBY", sortBy);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
@@ -1731,9 +1738,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String strFilePath = "";
 		
 		for(int i = 0; i < boardListVO.getImageCount(); i++){
-			strFilePath = boardListVO.getExtensionAttribute5().split(";")[i];
+			strFilePath = boardListVO.getExtensionAttribute5().split("\\|")[i];
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
-			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split(";")[i].replace("tempUploadFile", "");
+			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
 			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
 			
 			if(!mvFile.exists()){
@@ -1756,7 +1763,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			} catch (Exception e) {
 				map.put("v_pFileContent", "");
 			}
-			map.put("v_pImageName", boardListVO.getImageNames().split(";")[i]);
+			map.put("v_pImageName", boardListVO.getImageNames().split("\\|")[i]);
 			
 			ezBoardDAO.deletePhotoImageItem(map);
 			ezBoardDAO.photoSaveDB(map);
@@ -2235,9 +2242,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			int savecount = 0;
 			String[] imageIDs = boardListVO.getImageID().split(";");
-			String[] filePaths = boardListVO.getFilePath().split(";");
+			String[] filePaths = boardListVO.getFilePath().split("\\|");
 			String[] fileContents = boardListVO.getFileContent().split(";:;");
-			String[] imageName = boardListVO.getImageNames().split(";");
+			String[] imageName = boardListVO.getImageNames().split("\\|");
 			
 			savecount = boardListVO.getImageID().split(";").length;
 			boardListVO.setWriteDate(commonUtil.getTodayUTCTime(""));
@@ -2441,44 +2448,39 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
         String fileName = "";
         
         try {
-        	if (!strAttachments.substring(strAttachments.length() - 1).equals(";")) {
-        		strAttachments += ";";
+        	if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
+        		strAttachments += "|";
         	}
         	
-        	for (int i = 0; i < strAttachments.split(";").length; i++) {
+        	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
         		if (strType.equals("BOARD")) {
-        			if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-        				filePath = strAttachments.split(";")[i];
-        				filePath = filePath.replace("%3b", ";").replace("%2b", "+");
+        			if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+        				filePath = strAttachments.split("\\|")[i];
         			} else {
-        				filePath = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
+        				filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
         			}
         			File file = new File(realPath + filePath);
         			fileSize = file.length();
         			
-        			if (strAttachments.split(";")[i].indexOf("tempUploadFile") > -1) {
-        				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split(";")[i].replace("tempUploadFile", "");
-        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        			if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
+        				filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
         				
         				File fileinfo = new File(realPath + filePath2);
         				
         				if (!fileinfo.exists()) {
         					FileUtils.moveFile(file, fileinfo);
         				}
-        			} else if (strAttachments.split(";")[i].indexOf("upload_board") > -1) {
-        				filePath2 = strAttachments.split(";")[i];
-        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        			} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
+        				filePath2 = strAttachments.split("\\|")[i];
         			} else {
-        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split(";")[i];
-        				filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
         			}
         			file = null;
         		} else {
-        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split(";")[i].split("/")[2]);
+        			File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
         			fileSize = file.length();
         			
-        			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split(";")[i].split("/")[2];
-        			filePath2 = filePath2.replace("%3b", ";").replace("%2b", "+");
+        			filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
         			
         			File fileinfo = new File(realPath + filePath2);
         			
@@ -2868,6 +2870,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardListVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
+	        sb.append("<GUBUN>M</GUBUN>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 
@@ -2901,7 +2904,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             if (returnString.equals("")) {
             	returnString += destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
             } else {
-            	returnString = returnString + ";" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
+            	returnString = returnString + "|" + destBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + fileName;
             }
             //move 이면 지우고 옮기기
             if (mode.equals("copy")) {
@@ -3170,6 +3173,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	        sb.append("<EXTENSIONATTRIBUTE5>" + commonUtil.cleanValue(boardLisitVO.getExtensionAttribute5()) + "</EXTENSIONATTRIBUTE5>");
 	        sb.append("<DOCPASSWORD></DOCPASSWORD>");
 	        sb.append("<READCOUNTFLAG>N</READCOUNTFLAG>");
+	        sb.append("<GUBUN>C</GUBUN>");
 	        sb.append("</NODE>");
 	        sb.append("</NODES>");
 

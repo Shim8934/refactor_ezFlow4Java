@@ -83,7 +83,7 @@
 		<h2><spring:message code='ezOrgan.t274'/></h2>		
 		<table class="content">
 			<tr>
-		        <td rowspan="3" align="center" nowrap ID="UserPhotoDiv" style="width:160px"><b><spring:message code='ezOrgan.t272'/></b> </td>
+		        <td rowspan="6" align="center" nowrap ID="UserPhotoDiv" style="width:160px"><b><spring:message code='ezOrgan.t272'/></b> </td>
 		        <th style="width:60px"><spring:message code='ezOrgan.t275'/></th>
 		        <td style="width:100%"><span id="UserID" style="ime-mode:disabled; width:100%"></span></td>
 		    </tr>
@@ -118,7 +118,7 @@
 		        </td>
 		    </tr>
 		    <tr>
-		    	<th rowspan="2"><div>img size</div><div style="margin-top:3px;">(w:119 h:128)</div></th>		    	
+		    	<!-- <th rowspan="2"><div>img size</div><div style="margin-top:3px;">(w:119 h:128)</div></th> -->		    	
 		        <th><spring:message code='ezOrgan.t279'/></th>
 		        <td style="padding:0">
 		            <table width="100%">

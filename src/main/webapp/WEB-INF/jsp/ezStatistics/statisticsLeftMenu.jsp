@@ -22,10 +22,10 @@
     {
         <c:if test="${IsJMochaStandAlone != 'YES'}">
 //        parent.frames[1].location.href = "Personal/ezStatistics_Connect.aspx";
-        parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";        
+        parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";        
         </c:if>
         <c:if test="${IsJMochaStandAlone == 'YES'}">
-        parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
+        parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";
         </c:if>
     };
 	
@@ -39,7 +39,10 @@
 	        this_menu = Item;
 
 	    switch(this_menu)
-	    {
+	    {	
+	    	case "PERSONAL":
+           		parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";
+           	 	break;
 	        case "MAIL":
 	            parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
 	            break;
@@ -103,13 +106,13 @@
 	            url = "/ezStatistics/statisticsApprMain.do";
 	            break;
 	        case 16:
-	            url = "Personal/ezStatistics_Connect.aspx";
+	            url = "/ezStatistics/statisticsPerSonalMain.do";
 	            break;
 	        case 17:
-	            url = "Personal/ezStatistics_Browser.aspx";
+	            url = "/ezStatistics/statisticsConnBrowser.do";
 	            break;
 	        case 18:
-	            url = "Personal/ezStatistics_OS.aspx";
+	            url = "/ezStatistics/statisticsConnOS.do";
 	            break;
 	        case 19:
 	            url = "PageLog/PageLog_Dept.aspx";
@@ -131,17 +134,16 @@
     <body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0"> 
 	    <div id="left">
 		    <div class="left_admin" title="<spring:message code='ezStatistics.t124' />"><spring:message code='ezStatistics.t124' /></div>
-      <!--
+      
             <c:if test="${IsJMochaStandAlone != 'YES'}">
-            <h2><span id="PERSONAL" style="display:inline-block;width:100%;" onClick="goPage(16)" ><spring:message code='ezStatistics.t1049' /></span></h2>
+            <h2><span id="PERSONAL" style="display:inline-block;width:100%;" onClick="menu_change('PERSONAL')" ><spring:message code='ezStatistics.t1049' /></span></h2>
             <ul>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span></li>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span></li>
                 <li><span style="display: inline-block; width: 100%;" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
             </ul>
             </c:if>
-            -->
-		    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t2' /></span></h2>
+      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t2' /></span></h2>
 		    <ul>
 			    <li><span style="display:inline-block;width:100%;" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span></li>
 			    <li><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='ezStatistics.t1012' /></span></li>

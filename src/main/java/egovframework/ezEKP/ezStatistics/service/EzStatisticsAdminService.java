@@ -14,6 +14,12 @@ public interface EzStatisticsAdminService {
 	public String getSearchList(StatApprVO statApprVO);
 
 	public String getMainList(StatApprVO statApprVO);
+	
+	public String getConnInfo(StatApprVO statApprVO);
+	
+	public String getStatConnBrowser(StatApprVO statApprVO);
+	
+	public String getStatConnOS(StatApprVO statApprVO);
 
 	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception;
 

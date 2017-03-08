@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import egovframework.ezEKP.ezStatistics.dao.EzStatisticsAdminDAO;
 import egovframework.ezEKP.ezStatistics.service.EzStatisticsAdminService;
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
+import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -218,5 +219,75 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		logger.debug("dailyFormCountLog ended");
 		
 	}
+
+	@Override
+	public String getConnInfo(StatApprVO statApprVO) {
+		
+		String rtnValue = "";
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		try {
+			List<StatConnVO> statConnVOs = ezStatisticsAdminDAO.getConnInfo(statApprVO);
+			for (int i = 0; i < statConnVOs.size(); i++) {
+				sb.append(commonUtil.getQueryResult(statConnVOs.get(i)));
+			}
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		sb.append("</DATA>");
+		
+		rtnValue=sb.toString();
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String getStatConnBrowser(StatApprVO statApprVO) {
+		String rtnValue = "";
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		try {
+			List<StatConnVO> connVo = ezStatisticsAdminDAO.getConnBrowser(statApprVO);
+			for (int i = 0; i < connVo.size(); i++) {
+				logger.debug("@@"+connVo.get(i).getConnectBrowser()+","+connVo.get(i).getTotal()+","+connVo.get(i).getConnectCnt());
+				sb.append(commonUtil.getQueryResult(connVo.get(i)));
+			}
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		sb.append("</DATA>");
+		
+		rtnValue=sb.toString();
+		
+		return rtnValue;
+	}
 	
+	@Override
+	public String getStatConnOS(StatApprVO statApprVO) {
+		String rtnValue = "";
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		try {
+			List<StatConnVO> connVo = ezStatisticsAdminDAO.getConnOS(statApprVO);
+			for (int i = 0; i < connVo.size(); i++) {
+				sb.append(commonUtil.getQueryResult(connVo.get(i)));
+			}
+		}catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		sb.append("</DATA>");
+		
+		rtnValue=sb.toString();
+		
+		return rtnValue;
+	}
 }

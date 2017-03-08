@@ -495,8 +495,7 @@
                          	A.Attachments ,
                          	A.Importance ,
                          	B.BOARDID ,
-                         	B.BOARDNAME ,
-                         	B.BOARDNAME2 ,
+                         	CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                          	A.Abstract ,
                          	A.DocNo 
            			   FROM 
@@ -539,8 +538,7 @@
                          	A.Attachments ,
                          	A.Importance ,
                          	B.BOARDID ,
-                         	B.BOARDNAME ,
-                         	B.BOARDNAME2 ,
+                         	CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                          	A.Abstract ,
                          	A.DocNo 
            			   FROM 
@@ -1283,7 +1281,7 @@
 	                    A.UpperItemIDTree ,
 	                    A.DocNo ,
 	                    A.extensionAttribute2 NOTICE  ,
-	                    B.BoardName BoardName  ,
+	                    CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	                    A.APPRFLAG APPRFLAG  
 	            	 FROM 
 	            	 	TBL_Board_Item A
@@ -1343,7 +1341,7 @@
                     A.UpperItemIDTree ,
                     A.DocNo ,
                     A.extensionAttribute2 NOTICE  ,
-                    B.BoardName BoardName  ,
+                    CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
                     A.APPRFLAG APPRFLAG  
                 FROM 
                 	TBL_Board_Item A
@@ -1409,7 +1407,7 @@
     					ITEMID = A.ItemID) ONELINECNT  ,
 	   				A.UPPERITEMIDTREE,
 	   				A.DOCNO,
-	   				B.BOARDNAME  AS BOARDNAME,
+	   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE,
 	   				A.APPRFLAG AS APPRFLAG
@@ -1443,6 +1441,12 @@
    				  	A.TENANT_ID = #v_TENANTID#
    				  AND 
    				  	WRITERID = #v_PUSERID# 
+   				  AND 
+	   				(
+	   					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+			        		OR 
+	        		  	A.APPRFLAG IS NULL
+	        		 ) 
    				  AND 
    				  	STARTDATE <= #nowDate# 
    				  AND 
@@ -1489,7 +1493,7 @@
     					ITEMID = A.ItemID) ONELINECNT  ,
 	   				A.UPPERITEMIDTREE,
 	   				A.DOCNO,
-	   				B.BOARDNAME  AS BOARDNAME,
+	   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 	   				B.GUBUN  AS GUBUN,
 	   			    '' AS NOTICE
    				  FROM 
@@ -1563,7 +1567,7 @@
 	    					ITEMID = A.ItemID) ONELINECNT  ,
 		   				A.UPPERITEMIDTREE,
 		   				A.DOCNO,
-		   				B.BOARDNAME  AS BOARDNAME,
+		   				CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
 		   				B.GUBUN  AS GUBUN,
 		   			    '' AS NOTICE
    				   FROM 
@@ -1897,8 +1901,7 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-   					I.BOARDNAME2
+   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
    				  FROM 
    				  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
@@ -1984,8 +1987,7 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-	   				I.BOARDNAME2,
+   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
    					I.GUBUN AS GUBUN
    		     	  FROM 
    		     	  	TBL_BOARD_ITEM A 
@@ -2072,8 +2074,7 @@
    					A.UPPERITEMIDTREE,
    					A.DOCNO,
    			    	'' AS NOTICE,
-   			    	I.BOARDNAME,
-   					I.BOARDNAME2,
+   			    	CASE WHEN I.BOARDNAME$lang$ IS NULL THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
    					I.GUBUN AS GUBUN
    				FROM 
    					TBL_BOARD_ITEM_TEMP A 
@@ -2105,13 +2106,6 @@
    					A.TENANT_ID = #v_TENANTID#
    				AND 
    					A.WRITERID = #v_PUSERID# 
-   				AND (
-						(A.APPRFLAG <> 'C'  
-							AND 
-						A.APPRFLAG <> 'N')
-							OR 
-						A.APPRFLAG IS NULL
-					  )
    				$v_PSUBQUERY$ ) T1 
    			WHERE 
    				ROWNUM_ BETWEEN #v_PSTARTROW# AND #v_PENDROW#
@@ -2924,6 +2918,12 @@
    				TENANT_ID = #v_TENANTID#
    			AND
    				WRITERID = #v_PUSERID#
+   			AND 
+   				(
+   					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
+		        		OR 
+        		  	A.APPRFLAG IS NULL
+        		 )
    			AND 
    				STARTDATE < #nowDate# 
    			AND 

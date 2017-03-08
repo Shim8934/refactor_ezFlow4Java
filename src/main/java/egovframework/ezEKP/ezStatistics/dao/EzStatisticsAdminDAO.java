@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
+import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -64,6 +65,21 @@ public class EzStatisticsAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<StatDailyDocCountLogVO> getMainList(StatApprVO statApprVO) {
 		return (List<StatDailyDocCountLogVO>) list("EzStatisticsAdminDAO.getMainList", statApprVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatConnVO> getConnInfo(StatApprVO statApprVO) {
+		return (List<StatConnVO>) list("EzStatisticsAdminDAO.getConnInfo", statApprVO);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatConnVO> getConnBrowser(StatApprVO statApprVO) {
+		return (List<StatConnVO>) list("EzStatisticsAdminDAO.getConnBrowser", statApprVO);	
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<StatConnVO> getConnOS(StatApprVO statApprVO) {
+		return (List<StatConnVO>) list("EzStatisticsAdminDAO.getConnOS", statApprVO);	
 	}
 
 	public void deleteDailyDocCountLog(StatApprVO statApprVO) throws Exception {

@@ -130,7 +130,7 @@
 	        <tr>
 	            <td>
 	                <div style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;">
-	                	<c:set var="result" value="${fn:split(listImages, ';')}"/>
+	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>
 	                	<c:set var="flag" value="${fn:split(mainFg, ';')}"/>

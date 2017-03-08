@@ -420,8 +420,9 @@ function AppendFileAttachInfo(ret) {
             var is_newfile = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]);
 
             if (is_newfile != "DEL") {
-                var strName = replace(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "%3b", ";");
-                strName = replace(strName, "%2b", "+");
+//                var strName = replace(getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]), "%3b", ";");
+//                strName = replace(strName, "%2b", "+");
+                var strName = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
                 
                 document.all.EzHTTPTrans.InsertFileList(strName, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?fileName=" + encodeURIComponent(strName) + "&filePath=" + encodeURIComponent(realFilePath) + "&regData=" + clientInformation.systemLanguage, "N", "N", getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[6]));
                 document.all.EzHTTPTrans.InsertFileInfo(realFileNM);
