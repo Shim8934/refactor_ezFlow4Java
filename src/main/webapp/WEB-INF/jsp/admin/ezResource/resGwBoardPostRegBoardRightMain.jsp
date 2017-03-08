@@ -103,7 +103,7 @@
 		<br>
 		<table class="box" style="width:100%">
   			<tr>
-    			<td><select id="acllist" name="acllist" style="width: 830px; height: 120px" size="10" language="javascript" onChange="selAclList_Change(this);"> ${strOptions}</select></td>
+    			<td style="padding:2px;"><select id="acllist" name="acllist" style="width: 830px; height: 120px" size="10" language="javascript" onChange="selAclList_Change(this);"> ${strOptions}</select></td>
     			<td style="width:80px; text-align:center; vertical-align:middle">
         			<a class="imgbtn"><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></a><br>
         			<a class="imgbtn"><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></a>
@@ -124,7 +124,7 @@
   			</tr>
 		</table>
 		<br>
-		<div class="txt">(<spring:message code="ezResource.t113" /></div>
+		<div class="txt"><spring:message code="ezResource.t113" /></div>
 		<div class="btnposition">
      		<a class="imgbtn"><span onclick="cmdOk_onclick()" ><spring:message code="ezResource.t114" /></span></a>
 		</div>
