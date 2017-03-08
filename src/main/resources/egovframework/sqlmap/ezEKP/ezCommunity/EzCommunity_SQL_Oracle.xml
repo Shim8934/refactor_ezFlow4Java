@@ -1063,7 +1063,8 @@
 					tenant_id = #tenantID#
 				ORDER BY
 					parentwritedate DESC,
-					upperitemidtree
+					upperitemidtree ASC,
+					startdate DESC
 				)
 			WHERE
 				ROWNUM <= 20
@@ -1102,7 +1103,8 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						upperitemidtree
+						upperitemidtree,
+						startdate DESC
 					)
 				WHERE
 					ROWNUM <= 1
@@ -1135,7 +1137,8 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						upperitemidtree
+						upperitemidtree,
+						startdate DESC
 					)
 				WHERE
 					ROWNUM <= 1

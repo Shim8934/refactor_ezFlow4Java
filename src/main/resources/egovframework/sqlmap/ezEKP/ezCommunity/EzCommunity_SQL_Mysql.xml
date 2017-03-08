@@ -1036,8 +1036,8 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				upperitemidtree,
-				startdate ASC
+				upperitemidtree ASC,
+				startdate DESC
 			LIMIT
 				20
 		]]>

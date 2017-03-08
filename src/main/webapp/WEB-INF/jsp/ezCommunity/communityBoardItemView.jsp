@@ -1106,13 +1106,13 @@
 		            <td style="height:20px">
 		                <table class="content">
 		                    <tr>
-		                        <th style="width:70px"><spring:message code='ezCommunity.t190'/></th>
+		                        <th>&nbsp;<spring:message code='ezCommunity.t190'/>&nbsp;</th>
                         		<td style="width:100%">
 		                        	<div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px" onclick="OpenItem('${previousItemID}')"><c:out value='${previousTitle}' /></div>
 		                        </td>
 		                    </tr>
 		                    <tr>
-		                        <th style="width:70px"><spring:message code='ezCommunity.t192'/></th>
+		                        <th>&nbsp;<spring:message code='ezCommunity.t192'/>&nbsp;</th>
 		                        <td>
 		                            <div style="word-break: break-all; cursor: pointer; MARGIN-TOP: 0px; OVERFLOW: auto; PADDING-TOP: 0px; BACKGROUND-COLOR: white" onclick="OpenItem('${nextItemID}')"><c:out value='${nextTitle}' /></div>
 		                        </td>

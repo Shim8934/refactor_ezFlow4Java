@@ -5744,7 +5744,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		map = new HashMap<String, Object>();
 		map.put("v_pParentWriteDate", parentWriteDate);
-		map.put("v_pUpperItemIDTree", upperItemIDTree);
+		map.put("v_pUpperItemIDTree", upperItemIDTree.substring(0, 38));
 		map.put("v_pBoardID", pBoardID);
 		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 		map.put("tenantID", tenantID);
@@ -5796,7 +5796,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			map.put("v_pBoardID", pBoardID);
 			map.put("v_pParentWriteDate", parentWriteDate);
 			map.put("v_pItemID", pItemID);
-			map.put("v_pUpperItemIDTree", upperItemIDTree.subSequence(0, 38));
+			map.put("v_pUpperItemIDTree", upperItemIDTree.substring(0, 38));
 			map.put("v_previousItemID", previousItemID);
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
