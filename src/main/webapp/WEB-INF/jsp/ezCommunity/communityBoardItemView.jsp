@@ -125,7 +125,7 @@
 				    return;
 				}
 	        	
-	        	if (!CheckIfHasReplies()) {
+	        	if (CheckIfHasReplies()) {
 		            alert("<spring:message code='ezCommunity.t425' />");
 		            return;
 		        }
@@ -223,7 +223,7 @@
 	                return;
 	            }
 	            
-	            if (!CheckIfHasReplies()) {
+	            if (CheckIfHasReplies()) {
 		            alert("<spring:message code='ezCommunity.t425' />");
 		            return;
 		        }
