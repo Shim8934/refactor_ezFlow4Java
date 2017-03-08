@@ -451,7 +451,6 @@ function ListView() {
         objTr.id = _thisID + "_TH";
 
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
-        alert(oHeaders.length);
         for (var i = 0; i < oHeaders.length; i++) {
             var strWidth = SelectSingleNodeValue(oHeaders[i], "WIDTH");
             
