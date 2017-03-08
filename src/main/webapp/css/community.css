@@ -328,6 +328,7 @@ img { border:0px;}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:10;
+	background:none;
 	background-color:#dde1e6;
 	display: block;
 }
