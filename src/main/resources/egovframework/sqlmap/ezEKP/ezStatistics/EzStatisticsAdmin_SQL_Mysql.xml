@@ -4,6 +4,7 @@
 <sqlMap namespace="ezStatisticsAdmin">
 	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
 	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
+	<typeAlias  alias="StatConnVO"				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
 	
 	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
@@ -560,6 +561,153 @@
             	A.EXTENSIONATTRIBUTE2 = #company#
         	GROUP BY 
         		SUBSTR(REGDATE, 0, 7)
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+		    SELECT 
+		    	* 
+        	FROM 
+        		( SELECT 
+        			  'DAY' DAY  ,
+        	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
+                	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') DATE  ,
+                      ( SELECT 
+                      		COUNT(SEQUENCE)  
+                      	FROM 
+                      		TBL_CONNECTION_INFO 
+                        WHERE
+                            CONNECTTIME >= #startDate#
+                        AND 
+                        	CONNECTTIME < #endDate# 
+                       	AND
+                       		COMPANYID = #company# ) TOTAL  
+              	  FROM 
+              	  		TBL_CONNECTION_INFO 
+            	  WHERE  
+            	   		CONNECTTIME >= #startDate#
+                  AND 
+                   		CONNECTTIME < #endDate#
+                  AND
+                    	COMPANYID = #company#
+           	      GROUP BY 
+           	      		DATE_FORMAT(CONNECTTIME, '%H')
+           	      
+           	      UNION ALL 
+           	      
+           	      SELECT 
+           	      	  'TOTAL' TOTAL  , 
+           	          COUNT(SEQUENCE)  CONNECTCNT  ,
+           	          DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') DATE  ,
+           	          0 
+           	      FROM 
+           	      	  TBL_CONNECTION_INFO
+           	      WHERE
+           	      	  COMPANYID = #company# 
+           	      GROUP BY 
+           	      	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') ) A
+        	ORDER BY 
+        		A.DATE,
+           	    A.DAY ;
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnBrowser" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				COUNT(SEQUENCE)  CONNECTCNT  ,
+            	CONNECTBROWSER ,
+             	( SELECT 
+             		 COUNT(SEQUENCE)  CONNECTCNT  
+               	  FROM 
+               	  	 TBL_CONNECTION_INFO 
+               	  WHERE  
+               	     CONNECTTIME >= #startDate#
+                  AND 
+                  	 CONNECTTIME < #endDate# 
+                  AND
+                  	 COMPANYID = #company#) TOTAL  
+			FROM 
+        	    TBL_CONNECTION_INFO 
+      		WHERE  
+      			CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+            AND
+            	COMPANYID = #company#
+      		GROUP BY 
+      			CONNECTBROWSER
+        	ORDER BY 
+        		COUNT(SEQUENCE)  DESC ;
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnOS" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				'OS' TYPE  ,
+              	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	CONNECTOS ,
+             	( SELECT 
+             		  COUNT(SEQUENCE)  
+              	  FROM 
+              	  	  TBL_CONNECTION_INFO 
+                  WHERE  
+                  	  CONNECTTIME >= #startDate#
+                  AND 
+                  	  CONNECTTIME < #endDate# 
+                  AND
+                    	COMPANYID = #company#) TOTAL  
+            FROM 
+            	TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+            AND
+               	COMPANYID = #company#
+        	GROUP BY 
+        		CONNECTOS
+      
+      		UNION ALL
+      		 
+      		SELECT 
+      		    'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+            	'64BIT' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTAGENT regexp 'WOW64|Win64|Mac'
+            AND 
+            	CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+            AND
+                COMPANYID = #company#	
+      
+      		UNION ALL
+      		 
+      		SELECT 
+      			'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	'OTHERS' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO  
+       		WHERE  
+       			CONNECTAGENT NOT regexp 'WOW64|Win64|Mac'
+            AND 
+            	CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+            AND
+                COMPANYID = #company#	
+        	ORDER BY 
+        		TYPE DESC,
+                CONNECTCNT DESC ;
 		]]>
 	</select>
 	

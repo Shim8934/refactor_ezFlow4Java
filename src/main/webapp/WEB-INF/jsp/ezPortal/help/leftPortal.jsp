@@ -4,6 +4,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 	</head>
 	<link href="/css/help.css" rel="stylesheet" type="text/css">
 	<script src="/js/mouseeffect.js" type="text/javascript" ></script>

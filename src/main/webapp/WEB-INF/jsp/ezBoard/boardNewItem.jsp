@@ -27,8 +27,8 @@
 	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
 	    <script type="text/javascript" src="<spring:message code='ezBoard.e1' />"></script>
 	    <c:if test="${!isCrossBrowser}">
-		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js?ver_0.52"></script>
-		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js?ver_0.52"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachMain.js"></script>
+		    <script type="text/javascript" src="/js/ezBoard/AttachItem.js"></script>
 		    <script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 	    </c:if>
 	    <c:if test="${isCrossBrowser}">
@@ -159,9 +159,9 @@
 	
 				            for (var i = 0; i < objAttachNodes.length; i++) {
 				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
 				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]).replace(/\;/gi, "%3b").replace(/\+/gi, "%2b") + ";";
+				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
 				                }
 				            }
 			            }
@@ -1212,7 +1212,7 @@
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
 		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
-		                    strRet += "tempUploadFile/" + filepath + ";";
+		                    strRet += "tempUploadFile/" + filepath + "|";
 		                }
 		                attachxml = strRet;
 		            }
@@ -1279,10 +1279,10 @@
 		            if (filepath.indexOf(pBoardID) != -1) {
 		                var idx = filepath.lastIndexOf("/");
 		                if (idx != -1) {
-		                    strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + ";";
+		                    strRet += filepath.substr(0, idx + 1) + "s_" + filepath.substr(idx + 1) + "|";
 		                }
 		            } else {
-		                strRet += pBoardID + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + ";";
+		                strRet += pBoardID + "/uploadFile/s_" + getNodeText(xmldomNodes.item(i)) + "|";
 		            }
 		        }
 		        xmldom_attachlist = null;
@@ -1299,7 +1299,7 @@
 		        }
 		        var xmldomNodes = GetElementsByTagName(pAttachListXml, "DATA1");
 		        for (var i = 0; i < xmldomNodes.length; i++) {
-		            strRet += getNodeText(xmldomNodes.item(i)) + ";";
+		            strRet += getNodeText(xmldomNodes.item(i)) + "|";
 		        }
 		        return strRet;
 		    }

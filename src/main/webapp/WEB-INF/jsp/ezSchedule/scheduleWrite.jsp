@@ -37,8 +37,7 @@
 	        var contentpath = "${contentPath}";
 	        var ispublic = "<c:out value='${isPublic}'/>";
 	        var importance = "<c:out value='${importance}'/>";
-	        var repetition = "<c:out value='${repetition}'/>";
-	        var repetitiondel = "<c:out value='${repetitionDel}'/>";
+	        var repetition = "<c:out value='${repetition}'/>";	        
 	        var scheduletype = "<c:out value='${scheduleType}'/>";
 	        var changekey = "<c:out value='${changeKey}'/>";
 	        var pattern = "<c:out value='${pattern}'/>";
@@ -50,12 +49,10 @@
 	        var companyID = "<c:out value='${companyID}'/>";
 	        var deptName = "<c:out value='${deptName}'/>";
 	        var deptID = "<c:out value='${deptID}'/>";
-	        var hasattach = "<c:out value='${hasAttach}'/>";
-	        var attendantname = "<c:out value='${attendantName}'/>";
-	        var attendantemail = "<c:out value='${attendantemail}'/>";	        
+	        var hasattach = "<c:out value='${hasAttach}'/>";	        	        
 	        var pCompanyAdmin = "<c:out value='${pCompanyAdmin}'/>";
 	        var pDeptAdmin = "<c:out value='${pDeptAdmin}'/>";
-	        var offSetMin = "<c:out value='${offSetMin}'/>";
+	        var offSetMin = "<c:out value='${offSetMin}'/>";	        
 	        /* var use_exchange_pims = "NO"; */
 	        /* var NoneActiveX = "NO"; */
 		    
@@ -129,11 +126,11 @@
 		        catch (e) { }
 
 		        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-		        
-		        for (var i = 0; i < attendantname.split("&").length - 1; i++) {
+     
+		        /* for (var i = 0; i < attendantname.split("&").length - 1; i++) {
 		            g_attendant["id"][i] = attendantemail.split("&")[i];
 		            g_attendant["name1"][i] = attendantname.split("&")[i];
-		        }
+		        } */
 		    }
 		    
 		    window.onresize = function () {   	
@@ -648,8 +645,7 @@
 	                        <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px"></div>
 	                    </td>
 	                </tr>
-	            </table>
-                <input type="hidden" id="iReFlag" value="${strIReFlagVal}"/>
+	            </table>                
 	        </div>
 	        <div id="tempattachdiv" style="display:none"></div>
 	        <script type="text/javascript">

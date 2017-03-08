@@ -235,6 +235,7 @@
 	        function getBoardList_after(xml) {
 	            try {
 	                var cntNode = SelectSingleNodeNew(xml, "DOCLIST/TOTALCNT");
+	                var pntNode = SelectSingleNodeNew(xml, "DOCLIST/PAGECNT");
 	                var perNode = SelectSingleNodeNew(xml, "DOCLIST/PERSONALCNT");
 	                var listNode = SelectSingleNodeNew(xml, "DOCLIST/LISTVIEWDATA");
 	                pPreviewShow_HOW = getNodeText(SelectSingleNodeNew(xml, "DOCLIST/PREVIEWTYPE"));
@@ -247,12 +248,13 @@
 	                if (listNode == null) return;
 	
 	                var lstCnt = getNodeText(cntNode);
+	                var pstCnt = getNodeText(pntNode);
 	                totalCount = lstCnt;
 	                var perCnt = getNodeText(perNode);
 	
 	                listcount.value = perCnt;
 	
-	                totalPage = Math.ceil(new Number(lstCnt / perCnt));
+	                totalPage = Math.ceil(new Number(pstCnt / perCnt));
 	                pTotalCnt = lstCnt;
 	
 	                makePageSelPage();

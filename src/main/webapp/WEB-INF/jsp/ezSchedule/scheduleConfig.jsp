@@ -90,17 +90,17 @@
 		    		},
 		    		url : "/ezSchedule/scheduleSaveConfig.do",
 		    		success: function(text){
-		    			alert("<spring:message code='ezSchedule.t137' />");	                    		    				    			
+		    			alert("<spring:message code='ezSchedule.t137' />");		    			
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t136' />");
 		    		}
 		        });		
 	
-		        /* try {
-		            if (parent.parent.frames["left"].CalendarMini != undefined)
-		                parent.parent.frames["left"].location.reload();
-		        } catch (e) { } */
+		        try {
+		            if (parent.parent.frames["left"].CalendarMini != undefined)		            	
+		                parent.parent.frames["left"].location = "/ezSchedule/scheduleLeft.do?funCode=11";		            	    	
+		        } catch (e) { }
 		    }
 					
 		    var schedule_select_attendant_dialogArguments = new Array();

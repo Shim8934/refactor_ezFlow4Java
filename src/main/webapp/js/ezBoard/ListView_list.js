@@ -531,10 +531,6 @@ function ListView() {
                 	objTd.width = "120px";
                 }
                 
-                if (strColName == "BOARDNAME") {
-                	objTd.style.width = "100px";
-                }
-
                 if (strColName == "ITEMID") {
                     var _HeaderCheckBox = document.createElement("INPUT");
                     _HeaderCheckBox.type = "checkbox";
@@ -568,6 +564,10 @@ function ListView() {
 
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
+                }
+                
+                if (strColName == "BOARDNAME") {
+                	objTd.style.width = "100px";
                 }
 
                 objTr.appendChild(objTd);

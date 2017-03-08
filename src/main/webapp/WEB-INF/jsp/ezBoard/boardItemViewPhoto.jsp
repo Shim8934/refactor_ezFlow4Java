@@ -74,7 +74,7 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (CrossYN()) {
-		                	self.resizeTo(785, 980);
+		                	self.resizeTo(785, 985);
 		                } else {
 		                    self.resizeTo(785, 990);
 		                }

@@ -1116,7 +1116,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	            int nlength = noticeList.size();
 	            
 	            resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
-	            resultXML.append("<PAGECNT>" + ((int)noticeCount  +  (int)boardCount) + "</PAGECNT>");
+	            resultXML.append("<PAGECNT>" + (noticeCount + boardCount) + "</PAGECNT>");
 	            resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
 	            resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
 	            resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
@@ -1210,13 +1210,24 @@ public class EzBoardController extends EgovFileMngUtil{
 	        if (boardVO.getPageNum() != 1) {
 	            startRow = ((personalCount * (boardVO.getPageNum() - 1)) - noticeCount)  +  1;
 	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
+	            
+	            if (startRow <= 0) {
+	            	startRow = 1;
+	            }
+	        } else {
+	        	startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
+	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;
+	            
+	            if (endRow < 0) {
+	            	endRow = 0;
+	            }
 	        }
         } else {
         	startRow = ((personalCount * (boardVO.getPageNum() - 1)))  +  1;
             endRow = (personalCount * boardVO.getPageNum());
 
             resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
-            resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+            resultXML.append("<PAGECNT>" + (noticeCount + boardCount) + "</PAGECNT>");
             resultXML.append("<PERSONALCNT>" + personalCount + "</PERSONALCNT>");
             resultXML.append("<PREVIEWTYPE>" + previewtype + "</PREVIEWTYPE>");
             resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
@@ -1238,8 +1249,6 @@ public class EzBoardController extends EgovFileMngUtil{
             resultXML.append("</HEADERS>");
             resultXML.append("<ROWS>");
         }
-        startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
-        endRow = (personalCount * boardVO.getPageNum());
         
         List<HashMap<String, Object>> boardListItem = new ArrayList<HashMap<String,Object>>();
         
@@ -1847,7 +1856,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 }
                 if (fieldName.equals("WRITEDATE")) {
                 	fieldValue = commonUtil.getDateStringInUTC((String)boardSearchList.get(j).get(fieldName), userInfo.getOffset(), false);
-                	fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+                	fieldValue = fieldValue.substring(0, fieldValue.length() - 3);
                 } else {
                 	fieldValue = commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get(fieldName)));
                 }
@@ -3108,13 +3117,13 @@ public class EzBoardController extends EgovFileMngUtil{
         
         Document doc = commonUtil.convertStringToDocument(xmlData.toString());
 
-        String attachList = "";
-        String smallName = "";
-        String title = "";
-        String itemID = "";
-        String[] attchArray = null;
-        String[] smallArray = null;
-        String[] itemid = null;
+//        String attachList = "";
+//        String smallName = "";
+//        String title = "";
+//        String itemID = "";
+//        String[] attchArray = null;
+//        String[] smallArray = null;
+//        String[] itemid = null;
     	
     	if (gubun.equals("2")) {
     		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
@@ -3128,40 +3137,40 @@ public class EzBoardController extends EgovFileMngUtil{
         if (boardInfo.getWrite_FG().equals("false")) {
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
-        if (gubun.equals("3")) {
-            attachList = doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
-            smallName = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
-            title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
-            itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
-            attchArray = attachList.split(";");
-            smallArray = smallName.split(";");
-            itemid = itemID.split(";");
-        }                
+//        if (gubun.equals("3")) {
+//            attachList = doc.getElementsByTagName("ATTACHMENTS").item(0).getTextContent();
+//            smallName = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
+//            title = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+//            itemID = doc.getElementsByTagName("ITEMID").item(0).getTextContent();
+//            attchArray = attachList.split(";");
+//            smallArray = smallName.split(";");
+//            itemid = itemID.split(";");
+//        }                
 
         String ret = "";
 
         //gubun 3이면 포토게시판 2는 익명
-        if (gubun.equals("3")) {
-            if (attchArray.length == smallArray.length) {
-                for (int i = 0; i < attchArray.length - 1; i++) {
-                    doc.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attchArray[i] + ";");
-                    doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
-                    doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemid[i]);
-                    doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemid[i]);
-                    
-                    if (attchArray.length > 2) {
-                    	doc.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + (i + 1));
-                    }
-                    if (i > 0) {
-                        pMode = "New";
-                        doc.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime(""));
-                    }
-                    ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
-                }
-            }
-        } else {
-            ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
-        }
+//        if (gubun.equals("3")) {
+//            if (attchArray.length == smallArray.length) {
+//                for (int i = 0; i < attchArray.length - 1; i++) {
+//                    doc.getElementsByTagName("ATTACHMENTS").item(0).setTextContent(attchArray[i] + ";");
+//                    doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).setTextContent(smallArray[i]);
+//                    doc.getElementsByTagName("ITEMID").item(0).setTextContent(itemid[i]);
+//                    doc.getElementsByTagName("UPPERITEMIDTREE").item(0).setTextContent(itemid[i]);
+//                    
+//                    if (attchArray.length > 2) {
+//                    	doc.getElementsByTagName("TITLE").item(0).setTextContent(title + "_" + (i + 1));
+//                    }
+//                    if (i > 0) {
+//                        pMode = "New";
+//                        doc.getElementsByTagName("STARTDATE").item(0).setTextContent(commonUtil.getTodayUTCTime(""));
+//                    }
+//                    ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
+//                }
+//            }
+//        } else {
+        ret = ezBoardService.insertNewItem(doc, pMode, realPath, userInfo);
+//        }
         
         logger.debug("saveItem ended. ret=" + ret);
         
@@ -3211,9 +3220,9 @@ public class EzBoardController extends EgovFileMngUtil{
             }
         }
 
-        for (int i = 0; i < cnt; i++) {
-            pFileName[i] = pFileName[i].replace(";", "%3b").replace("+", "%2b");
-        }
+//        for (int i = 0; i < cnt; i++) {
+//            pFileName[i] = pFileName[i].replace(";", "%3b").replace("+", "%2b");
+//        }
 
         String pDirPath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
         pDirPath = realPath + pDirPath;
@@ -4611,8 +4620,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					}
 					fileName = commonUtil.cleanValue(pFileName);
 				}
-				fileName = fileName.replace("+", "%2b");
-				fileName = fileName.replace(";", "%3b");
+//				fileName = fileName.replace("+", "%2b");
+//				fileName = fileName.replace(";", "%3b");
 				
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
 				String guid = "{" + UUID.randomUUID().toString() + "}";
@@ -4750,9 +4759,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			result.append("<BOARDID>" + vo.getBoardId() + "</BOARDID>");
 			result.append("<APPRUSERID>" + vo.getApprUserId() + "</APPRUSERID>");
 			result.append("<DISPLAYNAME>" + commonUtil.cleanValue(vo.getBoardName()) + "</DISPLAYNAME>");
-			result.append("<DISPLAYNAME2>" + vo.getBoardType() + "</DISPLAYNAME2>");
-			result.append("<DESCRIPTION>" + vo.getOrderCell() + "</DESCRIPTION>");
-			result.append("<DESCRIPTION2>" + vo.getOrderOption() + "</DESCRIPTION2>");
+			result.append("<DISPLAYNAME2>" + commonUtil.cleanValue(vo.getBoardType()) + "</DISPLAYNAME2>");
+			result.append("<DESCRIPTION>" + commonUtil.cleanValue(vo.getOrderCell()) + "</DESCRIPTION>");
+			result.append("<DESCRIPTION2>" + commonUtil.cleanValue(vo.getOrderOption()) + "</DESCRIPTION2>");
 			result.append("</NODE>");
 		}
 		result.append("</NODES>");
@@ -4787,15 +4796,15 @@ public class EzBoardController extends EgovFileMngUtil{
         
         for (int k = 0; k < photoViewList.size(); k++) {
         	int idx = photoViewList.get(k).getFilePath().lastIndexOf(commonUtil.separator);
-        	g_ImageUrl = photoViewList.get(k).getFilePath().substring(0, idx + 1) + photoViewList.get(k).getFilePath().substring(idx + 1).replace("+", "%20");
+        	g_ImageUrl = photoViewList.get(k).getFilePath().substring(0, idx + 1) + photoViewList.get(k).getFilePath().substring(idx + 1);
         	
         	sb.append("<ROW>");
         	sb.append("<IMAGECOUNT>" + imageCount + "</IMAGECOUNT>");
         	sb.append("<IMAGEID>" + photoViewList.get(k).getImageID() + "</IMAGEID>");
-        	sb.append("<FILEPATH>" + g_ImageUrl + "</FILEPATH>");
+        	sb.append("<FILEPATH>" + commonUtil.cleanValue(g_ImageUrl) + "</FILEPATH>");
         	sb.append("<FILECONTENT>" + commonUtil.cleanValue(photoViewList.get(k).getFileContent()) + "</FILECONTENT>");
         	sb.append("<FLAG>" + photoViewList.get(k).getFlag() + "</FLAG>");
-        	sb.append("<IMAGENAME>" + photoViewList.get(k).getImageName() + "</IMAGENAME>");
+        	sb.append("<IMAGENAME>" + commonUtil.cleanValue(photoViewList.get(k).getImageName()) + "</IMAGENAME>");
         	
         	String filePath = photoViewList.get(k).getFilePath();
             String orgpDirPath = realPath + commonUtil.separator + filePath;
@@ -4893,15 +4902,15 @@ public class EzBoardController extends EgovFileMngUtil{
         		String filePath = photoViewList.get(k).getFilePath();
         		int idx = filePath.lastIndexOf(commonUtil.separator);
         		
-        		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7].replace("s_", "") + ";";
+        		g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1);
+        		listImages = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7].replace("s_", "");
         		mainFg = photoViewList.get(k).getFlag();
         	}
         }
         
         model.addAttribute("listCount", photoViewList.size());
         model.addAttribute("listImage", imageID);
-        model.addAttribute("listImages", listImages.substring(0, listImages.length() - 1));
+        model.addAttribute("listImages", listImages);
         model.addAttribute("imageContent", imageContent);
         model.addAttribute("boardID", boardID);
         model.addAttribute("boardInfo", boardInfo);
@@ -4911,7 +4920,7 @@ public class EzBoardController extends EgovFileMngUtil{
         model.addAttribute("guBun", guBun);
         model.addAttribute("g_Width", g_Width);
         model.addAttribute("g_Height", g_Height);
-        model.addAttribute("orgImagePath", listImages.substring(0, listImages.length() - 1));
+        model.addAttribute("orgImagePath", listImages);
 		
 		return "ezBoard/boardModifyImageItem";
 	}
@@ -5044,7 +5053,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			mainFg += photoViewList.get(k).getFlag().trim() + ";";
@@ -5094,18 +5103,18 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + ";";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
 			if (photoViewList.get(k).getImageName().split("/").length > 1) {
-				fileName += photoViewList.get(k).getImageName().split("/")[3] + ";";
+				fileName += photoViewList.get(k).getImageName().split("/")[3] + "|";
 				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
-                        "&attID=" + photoViewList.get(k).getImageName().split("/")[3] + ";";
+                        "&attID=" + photoViewList.get(k).getImageName().split("/")[3] + "|";
 			} else {
-				fileName += photoViewList.get(k).getImageName() + ";";
+				fileName += photoViewList.get(k).getImageName() + "|";
 				encodeFileHref += "/ezBoard/boardAttachDown.do?filePath=" + URLEncoder.encode(filePath, "UTF-8") + "&fileName=" + URLEncoder.encode((g_ImageUrl.split("/")[7]).replace("s_", ""), "UTF-8") +
-                        "&attID=" + photoViewList.get(k).getImageName() + ";";
+                        "&attID=" + photoViewList.get(k).getImageName() + "|";
 			}
 		}
 		

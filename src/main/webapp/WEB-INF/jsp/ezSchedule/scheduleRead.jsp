@@ -18,8 +18,8 @@
 			<c:if test="${scheduleInfo.scheduleType == 3}"><spring:message code='ezSchedule.t323' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t322' /></c:if>
-			<c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
-	        <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>)
+			<c:if test="${primary == '1'}"><c:out value="${scheduleInfo.ownerName}" /></c:if>
+	        <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.ownerName2}" /></c:if>)
 		</title>
 		<style> P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm; line-height:20px }</style>
 		<script>

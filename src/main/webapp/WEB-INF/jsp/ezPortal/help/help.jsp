@@ -4,8 +4,9 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
-			<title><spring:message code='main.t00037' /></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
+		<title><spring:message code='main.t00037' /></title>
 	</head>
 	<script type="text/javascript">
     	window.resizeTo("1200", "800");

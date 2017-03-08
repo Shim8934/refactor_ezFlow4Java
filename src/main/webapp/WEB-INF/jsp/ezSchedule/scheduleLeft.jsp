@@ -99,11 +99,7 @@
 	                }
 	            }
 	            var ua = navigator.userAgent;
-	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                if ("1" == _funCode) {
-	                    document.getElementById('SancList').parentElement.onclick();
-	                    document.getElementById('SancList').onclick();
-	                }
+	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {	    
 	                if ("2" == _funCode) {
 	                    document.getElementById('Schedule_Main').parentElement.onclick();
 	                    document.getElementById('Schedule_Main').onclick();
@@ -126,21 +122,12 @@
 	                    document.getElementById('Task_Search').parentElement.onclick();
 	                    document.getElementById('Task_Search').onclick();
 	                }
-	                else if ("4" == _funCode) {
-	                    document.getElementById('Address_Main').parentElement.onclick();
-	                    document.getElementById('Address_Main').onclick();
-	                }
-	                else if ("8" == _funCode) {
-	                    document.getElementById('Address_Main').parentElement.onclick();
-	                    document.getElementById('Address_Main').onclick();
-	                    document.getElementById('Address_Search').parentElement.onclick();
-	                    document.getElementById('Address_Search').onclick();
+	                else if ("11" == _funCode) {
+	                	document.getElementById('Schedule_Config').parentElement.onclick();
+	                    document.getElementById('Schedule_Config').onclick();
 	                }
 	            }
-	            else {
-	                if ("1" == _funCode) {
-	                    document.getElementById('SancList').click();
-	                }
+	            else {	                
 	                if ("2" == _funCode) {
 	                    document.getElementById('Schedule_Main').click();
 	                }
@@ -156,13 +143,9 @@
 	                else if ("7" == _funCode) {
 	                    document.getElementById('Task').click();
 	                    document.getElementById('Task_Search').click();
-	                }
-	                else if ("4" == _funCode) {
-	                    document.getElementById('Address_Main').click();
-	                }
-	                else if ("8" == _funCode) {
-	                    document.getElementById('Address_Main').click();
-	                    document.getElementById('Address_Search').click();
+	                }	            	               
+	                else if ("11" == _funCode) {
+	                    document.getElementById('Schedule_Config').click();	                    
 	                }
 	            }
 	        }
@@ -275,7 +258,7 @@
 			    <li><span id='Task_Main' onClick="Function_Flag(3)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1011'/></span></li>
 			    <li><span id='Task_Search' onClick="Function_Flag(7)" style="width:100%;display:inline-block;">&nbsp;<spring:message code='ezSchedule.t1019'/></span></li>
 		    </ul> --%>
-	        <h3><span  onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
+	        <h3><span id='Schedule_Config' onClick="Function_Flag('11')" style="width:100%;display:inline-block;"><spring:message code='ezSchedule.t1012'/></span></h3>
 		</div>		
 	    <script type="text/javascript">
 		    initToggleList(document.getElementById("left"), "h2", "ul", "li");

@@ -107,7 +107,7 @@
 		            <p><span id="1tab2" divname="bujaeTab"><spring:message code='ezPersonal.t999900025'/></span></p>
 	            </c:if>
 	            <c:if test="${userInfoApprovalG == 'YES' || userInfoApprovalG == 'BOTH'}">
-		            <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900026'/></span></p>
+		            <p><span id="1tab3" divname="bujaeGTab"><spring:message code='ezPersonal.t999900025'/></span></p>
 	            </c:if>
 	            <c:if test="${userInfoApprovalG == 'YES' || userInfoApprovalG == 'NO' || userInfoApprovalG == 'BOTH'}">
 		            <p><span id="1tab4" divname="noticeTab"><spring:message code='ezPersonal.t999900027'/></span></p>

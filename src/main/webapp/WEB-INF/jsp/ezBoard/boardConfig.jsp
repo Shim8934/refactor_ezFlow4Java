@@ -81,7 +81,7 @@
     </script>
 </head>
 <body class="mainbody">
-    <h1><spring:message code="ezBoard.t0005" /></h1>
+    <h1><spring:message code="ezBoard.t10010" /></h1>
     <div class="portlet_tabpart01">
         <div class="portlet_tabpart01_top" id="tab1">
             <p id="BoardEnv_sub1"><span divname="BoardEnv_div1" id="1tab1"><spring:message code="ezBoard.t0006" /></span></p>

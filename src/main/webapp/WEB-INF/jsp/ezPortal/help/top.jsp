@@ -5,6 +5,7 @@
 	<head>
 		<title><spring:message code='main.t00037'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf=8">
+		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<style type="text/css">
 			td,a {font-family: Arial, gulim;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
 			.over{

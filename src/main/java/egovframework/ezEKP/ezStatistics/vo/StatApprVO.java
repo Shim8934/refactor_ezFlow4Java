@@ -21,7 +21,15 @@ public class StatApprVO {
 	private String lang;
 	/** yyyy-MM-dd*/
 	private String today;
+	/**offSet*/
+	private String offSet;
 	
+	public String getOffSet() {
+		return offSet;
+	}
+	public void setOffSet(String offSet) {
+		this.offSet = offSet;
+	}
 	public String getCompany() {
 		return company;
 	}
