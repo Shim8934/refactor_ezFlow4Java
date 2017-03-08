@@ -131,6 +131,8 @@
 		            g_attendant["id"][i] = attendantemail.split("&")[i];
 		            g_attendant["name1"][i] = attendantname.split("&")[i];
 		        } */
+		        
+		        tmpReFlag = document.getElementById("iReFlag").value;
 		    }
 		    
 		    window.onresize = function () {   	
