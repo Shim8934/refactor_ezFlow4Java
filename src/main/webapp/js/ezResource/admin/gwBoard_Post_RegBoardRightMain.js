@@ -80,6 +80,8 @@ function cmdOk_onclick() {
 		} else {
 			alert("" + strLang33 + "");
 		}
+		
+		location.reload();
 	}
 }
 
@@ -296,7 +298,7 @@ function SetPermission( gubun, value ) {
 	
 	if( objSelected.selectedIndex == -1 ) {
 		alert(L_ACLERRORMESSAGE);
-		return false;cmdOk_onclick
+		return false;
 	}
 
 	var pos = objSelected.selectedIndex;
