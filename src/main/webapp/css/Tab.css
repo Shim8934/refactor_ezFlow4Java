@@ -1,5 +1,5 @@
 ﻿/* 환경설정탭 */
-.portlet_tabpart01{position:relative; width:100%; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:12px;}
+.portlet_tabpart01{position:relative; width:100%; font-size:12px;}
 .portlet_tabpart01_top{height:27px; border-bottom:1px solid #bbbaba; overflow:hidden;}
 .portlet_tabpart01_top p{float:left; display:inline; margin:0; padding:0; color:#666666;}
 .portlet_tabpart01_top p span{display:inline-block; height:26px; line-height:26px; padding:0px 23px 0px 12px; margin:0px 1px 0px 0px; color:#666; border:1px solid #cecdcd;  border-bottom:0 none;background:url(/images/kr/cm/tab2_bg_off.gif) no-repeat right; font-weight:bold; text-decoration:none;} 
@@ -7,7 +7,7 @@
 .portlet_tabpart01_top p .tabon {display:inline-block; height:26px; line-height:26px; padding:0px 23px 0px 12px; margin:0px 1px 0px 0px; color:#fff; border:1px solid #40474e; background:url(/images/kr/cm/tab2_bg_on.gif) no-repeat right; font-weight:bold;}
 
 /* 전자결재상단 */
-.portlet_tabpart02{position:relative; width:100%; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:12px;}
+.portlet_tabpart02{position:relative; width:100%; font-size:12px;}
 .portlet_tabpart02_top{height:29px; background:url('/images/kr/cm/tab1_bar.gif') repeat-x bottom; overflow:hidden; padding-left:6px; }
 .portlet_tabpart02_top p{float:left; display:inline; margin:0px 0px 0px -1px; padding:0; color:#666666;}
 .portlet_tabpart02_top p span{display:inline-block; height:26px; line-height:26px; padding:0px 10px; margin:0px 0px 1px 0px; color:#666; border:1px solid #c0bfbf;  border-bottom:0 none;background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x; font-weight:bold; text-decoration:none;} 
@@ -15,7 +15,7 @@
 .portlet_tabpart02_top p .tabon {display:inline-block; height:27px; line-height:27px; padding:0px 10px; margin:0px 1px 0px 0px; color:#3f454c; border:1px solid #41506e;	border-top:2px solid #41506e; background:url('/images/kr/cm/tab1_bg_on.gif') repeat-x #fff; font-weight:bold; cursor:pointer;}
 
 /* 기안작성탭  */
-.portlet_tabpart03{position:relative; width:100%; font-family:Gulim, Arial, Helvetica, sans-serif; font-size:12px; margin-bottom:5px;}
+.portlet_tabpart03{position:relative; width:100%; font-size:12px; margin-bottom:5px;}
 .portlet_tabpart03_top{height:29px; background:url('/images/kr/cm/tab3_bar.gif') repeat-x top; overflow:hidden; padding:0px 0px 0px 1px; border-right:1px solid #d3d2d2;}
 .portlet_tabpart03_top p{float:left; display:inline; margin:0px 0px 0px -1px; padding:0; color:#666666; }
 .portlet_tabpart03_top p span{display:inline-block; height:27px; line-height:27px; padding:0px 10px; margin:0px 0px 1px 0px; color:#666; border:1px solid #c0bfbf;  background:url('/images/kr/cm/tab1_bg_off.gif') repeat-x; font-weight:bold; text-decoration:none;} 
