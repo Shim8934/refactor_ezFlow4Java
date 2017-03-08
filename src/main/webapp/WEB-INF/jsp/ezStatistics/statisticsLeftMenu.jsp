@@ -152,7 +152,8 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
 		    </ul>
             <c:if test="${IsJMochaStandAlone != 'YES'}">
-             <h2><span id="APPROVAL" style="display:inline-block;width:100%;" onClick="menu_change('APPROVAL')" ><spring:message code='ezStatistics.t1030' /></span></h2>
+            <c:if test="${use_approvalG == 'YES'}">
+            <h2><span id="APPROVAL" style="display:inline-block;width:100%;" onClick="menu_change('APPROVAL')" ><spring:message code='ezStatistics.t1030' /></span></h2>
 		    <ul>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(15)"><spring:message code='ezStatistics.t1030' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(6)"><spring:message code='ezStatistics.t1031' /></span></li>
@@ -165,6 +166,7 @@
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(13)"><spring:message code='ezStatistics.t1040' /></span></li>
                 <li><span style="display:inline-block;width:100%;" onclick="goPage(14)"><spring:message code='ezStatistics.t1041' /></span></li>
 		    </ul>
+            </c:if>
       <!--
             <h2><span id="Span2" style="display:inline-block;width:100%;" onClick="menu_change('WEBLOG')" ><spring:message code='ezStatistics.t2004' /></span></h2>
             <ul>

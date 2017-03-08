@@ -13,7 +13,7 @@
 		<link rel="stylesheet" href="/js/ezEmail/Controls/ezSearchDatePicker.htc" type="text/css">
 		<script type="text/javascript" src="/js/ezAddress/address_tree_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/Controls_cross/treeview_namespace.htc.js"></script>
-	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code="main.lhm01" />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 	    <script type="text/javascript" src="/js/ezPersonal/controls/TreeView.js"></script>
 	    <script type="text/javascript" src="/js/ezEmail/js_cross/ListView_list.js"></script>
@@ -233,7 +233,7 @@
 	
 	            }
 	            else {
-	                SelectReceiverWindow(${defaultWin}Title, ListViewMsg${defaultWin});
+	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
 	            }
 	        }
 		    function recevieListview(pID, pListView) {

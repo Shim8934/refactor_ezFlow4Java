@@ -11,6 +11,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.security.PrivateKey;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -2787,13 +2791,13 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			logger.debug("ret : " + ret);
 
 			if (ret != 0) {
-				return "FALSE";
+				return "TRUE";
 			}
 		}
 		
 		logger.debug("checkIfHasReply ended.");
 		
-		return "TRUE";
+		return "FALSE";
 	}
 
 	@Override
@@ -2869,7 +2873,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		item.setUpperItemIDTree(xmlData.getElementsByTagName("UPPERITEMIDTREE").item(0).getTextContent());
 		
 		if (pMode.equals("reply")) {
-			item.setUpperItemIDTree(item.getItemID());
+			item.setUpperItemIDTree(item.getUpperItemIDTree() + getReverseDateNow() + item.getItemID());
 		}
 		
 		item.setItemLevel(Integer.parseInt(xmlData.getElementsByTagName("ITEMLEVEL").item(0).getTextContent()));
@@ -3338,11 +3342,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String textContent = request.getParameter("textContent");
 		String MHTcontent = request.getParameter("content");
 		String title = request.getParameter("title");
-		/*String sRadio = request.getParameter("sRadio");
-		String keyword = request.getParameter("keyword");
-		String id = request.getParameter("id");
-		String goToPage = request.getParameter("goToPage");
-		String block = request.getParameter("nowBlock");*/
 		String attachList = request.getParameter("attachList");
 		String userNm = request.getParameter("userNM");
 		String userNm2 = request.getParameter("userNM2");
@@ -3358,6 +3357,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             myLevel = Integer.parseInt(request.getParameter("level"));
         }
 		
+logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
@@ -6196,6 +6196,20 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		return result;
 	}
 	
+	public String getReverseDateNow() throws Exception {
+		ZoneId utc = ZoneId.of("UTC");
+		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
+		
+		String result = Integer.toString(9999 - getTime.getYear()) +
+						Integer.toString(22 - getTime.getMonthValue()) +
+						Integer.toString(41 - getTime.getDayOfMonth()) +
+						Integer.toString(33 - getTime.getHour()) +
+						Integer.toString(69 - getTime.getMinute()) +
+						Integer.toString(69 - getTime.getSecond());
+		
+		return result;
+	}
+	
 	public int pollResGetAllCount(int questionID, int tenantID) throws Exception {
 		logger.debug("pollResGetAllCount started.");
 		
@@ -6388,7 +6402,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_bName", bName);
-		map.put("v_myREf", myRef);
+		map.put("v_myRef", myRef);
 		map.put("v_myStep", myStep);
 		map.put("v_code", code);
 		map.put("tenantID", tenantID);

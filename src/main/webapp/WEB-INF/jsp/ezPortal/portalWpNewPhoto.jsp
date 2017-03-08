@@ -14,40 +14,25 @@
             		</span>
         		</div>
         		<div class="photocont">
-        		<%
-		 			String pExist = (String)request.getAttribute("pExist");
-		 		%>
-            		<%if(pExist == "true"){ %>
-            			<ul id="photoul">
-                			<li class="btn_area">
-                    			<img src="/images/kr/main/btn_prev2.gif" width="10" height="17" onclick="Pagenationimage('PREV')">
-                			</li>
-            				<asp:Repeater ID="PhotoListRepeater" runat="server">  
-                				<ItemTemplate>
-                					<%-- <li>
-                    					<span class="photo">
-                        					<img src="<%# Request.Url.Scheme + "://" + GetSystemConfigValue("PORTAL_REMOTEURL") + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA1")[0].InnerText + "&FILENAME=" +  ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA5")[0].InnerText.Split('/')[((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA5")[0].InnerText.Split('/').Length -1] %>" 
-                            					width="80" height="80" onclick="ItemRead_onclick(this)" 
-                            					DATA1="<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA1")[0].InnerText %>" 
-                            					DATA2="<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA2")[0].InnerText %>">
-                    					</span>
-                    					<span class="ptxt" DATA1="<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA1")[0].InnerText %>" 
-                        					DATA2="<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("DATA2")[0].InnerText %>" onclick="ItemRead_onclick(this)">
-                        					<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[2].InnerText %>
-                    					</span>
-                					</li> --%>
-                				</ItemTemplate>
-            				</asp:Repeater>
-                			<li class="btn_next">
-                    			<img src="/images/kr/main/btn_next2.gif" width="10" height="17" onclick="Pagenationimage('NEXT')">
-                			</li>
-            			</ul>
-            		<%}else{ %>
-            			<div class='nodata_portlet '>
+		 			<c:choose>
+		 				<c:when test="${pExist == 'true'}">
+		 					<ul id="photoul">
+                				<li class="btn_area">
+                    				<img src="/images/kr/main/btn_prev2.gif" width="10" height="17" onclick="Pagenationimage('PREV')">
+                				</li>
+            			
+                				<li class="btn_next">
+	                    			<img src="/images/kr/main/btn_next2.gif" width="10" height="17" onclick="Pagenationimage('NEXT')">
+    	            			</li>
+        	    			</ul>
+		 				</c:when>
+		 				<c:otherwise>
+		 					<div class='nodata_portlet '>
             				<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>
             				<p><spring:message code='main.t00026' /></p>
             			</div>
-            		<%} %>
+		 				</c:otherwise>
+		 			</c:choose>
         		</div>
         		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
     		</article>
@@ -55,6 +40,7 @@
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
 		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var pBoardType_NewPhoto = "4";
 	    	var pBoardID_NewPhoto = "${pPhotoGalleryID}";
@@ -105,12 +91,13 @@
 	        	perCnt = getNodeText(perNode);
 	        	totalPage_NewPhoto = Math.ceil(new Number(pageCnt / perCnt));
 
-	        	document.getElementById("photoul").innerHTML = "";
+	        	$('#photoul').html("");
 	        	var start_li = document.createElement("li");
 	        	start_li.className = "btn_area";
 	        	start_li.innerHTML = "<img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\">";
-	        	document.getElementById("photoul").appendChild(start_li);
-
+	        	//document.getElementById("photoul").appendChild(start_li);
+				$('.btn_area').html(start_li);
+	        	
 		        var cnt = GetChildNodes(SelectSingleNodeNew(xmlhttp_getBoardList_NewPhoto.responseXML, "DOCLIST/LISTVIEWDATA/ROWS")).length;
 		        if (cnt > 0) {
 	    	        for (var i = 1; i < cnt + 1; i++) {
@@ -154,7 +141,7 @@
 	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
 	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
 
-	            	document.getElementById("photoul").innerHTML = nodata;
+	            	$('#photoul').html(nodata);
 	        	}
 		    }
 	        
@@ -171,6 +158,7 @@
 	        	}
 	        	getBoardList_NewPhoto();
 	    	}
+		    
 	    	function ItemRead_onclick(obj) {
 		        var ShowAdjacent = "";
 		        var pheight = window.screen.availHeight;
@@ -180,9 +168,11 @@
 
 		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
+	    	
 	    	function Boardmore_btnClick() {
 		        window.open("/ezBoard/boardMainRedirect.do?boardID=" + pBoardID_NewPhoto, "main", "");
 		    }
+	    	
 	    	function refresh_onclick() {
 		        getBoardList_NewPhoto();
 		    }

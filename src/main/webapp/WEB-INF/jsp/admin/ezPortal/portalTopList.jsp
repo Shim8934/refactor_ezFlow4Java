@@ -176,10 +176,7 @@
 			} else if( lang=="3")
 			{
 				mgrStr = "<spring:message code='ezPortal.t4023'/>";
-			} else if( lang=="4")
-			{
-				mgrStr = "<spring:message code='ezPortal.t4024'/>";
-			}
+			} 
 			
 			if (confirm(mgrStr))
 			{
@@ -223,7 +220,6 @@
   						<li><span onClick="uselang(1)"><spring:message code='ezPortal.t406'/></span></li>
   						<li><span onClick="uselang(2)"><spring:message code='ezPortal.t407'/></span></li>
   						<li><span onClick="uselang(3)"><spring:message code='ezPortal.t4073'/></span></li>
-  						<li><span onClick="uselang(4)"><spring:message code='ezPortal.t4074'/></span></li>
   					</c:otherwise>
   				</c:choose>
 			</ul>

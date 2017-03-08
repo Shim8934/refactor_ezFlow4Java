@@ -8,7 +8,7 @@
     <title><spring:message code='ezEmail.t535' /></title>
     <meta name="CODE_LANGUAGE" content="C#">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="/css/email_tree.css" type="text/css">
+    <link rel="stylesheet" href="<spring:message code='main.lhm02' />" type="text/css">
     <link rel="stylesheet" href="<spring:message code='ezEmail.c1' />" type="text/css">
 	<script type="text/javascript" src="/js/ezEmail/<spring:message code='ezEmail.e1' />"></script>
     <script type="text/javascript" src="/js/mouseeffect.js"></script>

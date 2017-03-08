@@ -186,10 +186,10 @@
 					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
 					        	<WIDTH>40</WIDTH>
 					      	</HEADER>
-					      	<HEADER>
+					      	<%-- <HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.t304' />(<spring:message code = 'ezPersonal.s85' />)</NAME>
 					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
+					      	</HEADER> --%>
 					     	<HEADER>
 					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
 					        	<WIDTH>50</WIDTH>
