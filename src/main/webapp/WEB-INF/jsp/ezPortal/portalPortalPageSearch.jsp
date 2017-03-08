@@ -6,6 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPortal.t337'/></title>
+		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<link rel="stylesheet" href="/css/style.css" type="text/css" />
 		<script type="text/javascript">
 		var selectedID = "";

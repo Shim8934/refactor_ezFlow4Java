@@ -10,8 +10,7 @@
 }
 
 .rc_iframe_body .rc_table {
-	font-size: 11px;
-	font-family: verdana,tahoma,sans-serif,arial;
+	font-size: 11px;	
 }
 
 .rc_iframe_body .rc_wd_tr td {
@@ -118,8 +117,7 @@
 }
 
 .rc_iframe_body_alt .rc_table {
-	font-size: 12px;
-	font-family: verdana,tahoma,sans-serif,arial;
+	font-size: 12px;	
 	background: #0f0;
 }
 
