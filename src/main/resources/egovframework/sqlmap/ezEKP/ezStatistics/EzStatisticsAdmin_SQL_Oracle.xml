@@ -4,6 +4,14 @@
 <sqlMap namespace="ezStatisticsAdmin">
 	<typeAlias  alias="StatDailyDocCountLogVO" 	type="egovframework.ezEKP.ezStatistics.vo.StatDailyDocCountLogVO"/>
 	<typeAlias  alias="StatApprVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatApprVO"/>
+	<typeAlias  alias="StatConnVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
+	
+	<resultMap class="StatConnVO" id="StatConnInfoVO">
+		<result property="day"					column="DAY"					columnIndex="1"/>
+		<result property="connectCnt"			column="CONNECTCNT"				columnIndex="2"/>
+		<result property="date"					column="DATE_"					columnIndex="3"/>
+		<result property="total"				column="TOTAL"					columnIndex="4"/>
+	</resultMap>
 	
 	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
@@ -560,6 +568,135 @@
             	A.EXTENSIONATTRIBUTE2 = #company#
         	GROUP BY 
         		SUBSTR(REGDATE, 0, 7)
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+		    SELECT 
+		    	* 
+        	FROM 
+        		( SELECT 
+        			  'DAY' DAY  ,
+        	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
+                	  TO_CHAR(CONNECTTIME, 'hh24') DATE_  ,
+                      ( SELECT 
+                      		COUNT(SEQUENCE)  
+                      	FROM 
+                      		TBL_CONNECTION_INFO 
+                        WHERE
+                            CONNECTTIME >= TO_DATE(#startDate#,'YYYY-MM-DD')
+                        AND 
+                        	CONNECTTIME < TO_DATE(#endDate#,'YYYY-MM-DD') ) TOTAL  
+              	  FROM 
+              	  		TBL_CONNECTION_INFO 
+            	  WHERE  
+            	   		CONNECTTIME >= TO_DATE(#startDate#,'YYYY-MM-DD')
+                  AND 
+                   		CONNECTTIME < TO_DATE(#endDate#,'YYYY-MM-DD')
+           	      GROUP BY 
+           	      		TO_CHAR(CONNECTTIME, 'hh24')
+           	      
+           	      UNION ALL 
+           	      
+           	      SELECT 
+           	      	  'TOTAL' TOTAL  , 
+           	          COUNT(SEQUENCE)  CONNECTCNT  ,
+           	          TO_CHAR(CONNECTTIME, 'hh24') DATE_  ,
+           	          0 
+           	      FROM 
+           	      	  TBL_CONNECTION_INFO 
+           	      GROUP BY 
+           	      	  TO_CHAR(CONNECTTIME, 'hh24') ) A
+        	ORDER BY 
+        		A.DATE_,
+           	    A.DAY ;
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnBrowser" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				COUNT(SEQUENCE)  CONNECTCNT  ,
+            	CONNECTBROWSER ,
+             	( SELECT 
+             		 COUNT(SEQUENCE)  CONNECTCNT  
+               	  FROM 
+               	  	 TBL_CONNECTION_INFO 
+               	  WHERE  
+               	     CONNECTTIME >= #startDate#
+                  AND 
+                  	 CONNECTTIME < #endDate# ) TOTAL  
+			FROM 
+        	    TBL_CONNECTION_INFO 
+      		WHERE  
+      			CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+      		GROUP BY 
+      			CONNECTBROWSER
+        	ORDER BY 
+        		COUNT(SEQUENCE)  DESC ;
+		]]>
+	</select>
+	
+	<select id="EzStatisticsAdminDAO.getConnOS" parameterClass="StatApprVO" resultClass="StatConnVO">
+		<![CDATA[
+			SELECT 
+				'OS' TYPE  ,
+              	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	CONNECTOS ,
+             	( SELECT 
+             		  COUNT(SEQUENCE)  
+              	  FROM 
+              	  	  TBL_CONNECTION_INFO 
+                  WHERE  
+                  	  CONNECTTIME >= #startDate#
+                  AND 
+                  	  CONNECTTIME < #endDate# ) TOTAL  
+            FROM 
+            	TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+        	GROUP BY 
+        		CONNECTOS
+      
+      		UNION ALL
+      		 
+      		SELECT 
+      		    'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+            	'64BIT' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO 
+       		WHERE  
+       			CONNECTAGENT LIKE '%WOW64%'
+            AND 
+            	CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+      
+      		UNION ALL
+      		 
+      		SELECT 
+      			'BIT' TYPE  ,
+            	COUNT(SEQUENCE)  CONNECTCNT  ,
+             	'32BIT' CONNECTOS  ,
+             	0 TOTAL  
+        	FROM 
+        		TBL_CONNECTION_INFO  
+       		WHERE  
+       			CONNECTAGENT NOT LIKE '%WOW64%'
+            AND 
+            	CONNECTTIME >= #startDate#
+            AND 
+            	CONNECTTIME < #endDate#
+        	ORDER BY 
+        		TYPE DESC,
+                CONNECTCNT DESC ;
 		]]>
 	</select>
 	
