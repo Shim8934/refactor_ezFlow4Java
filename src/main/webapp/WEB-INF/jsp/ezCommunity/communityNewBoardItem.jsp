@@ -1017,11 +1017,10 @@
 											<div id="lstAttachLink"
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
 										</td>
-										<td class="pos2"><a class="imgbtn"><span
-												id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message
-														code='ezCommunity.t1177' /></span></a><br> <a class="imgbtn"><span
-												id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message
-														code='ezCommunity.t1178' /></span></a></td>
+										<td class="pos2">
+											<a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezCommunity.t1177' /></span></a><br>
+											<a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>
+										</td>
 									</tr>
 								</form>
 							</table>
@@ -1043,7 +1042,7 @@
 										<td class="pos1">
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>
-										<td class="pos2">
+										<td class="pos2" style ="white-space:normal;">
 											<a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_AttachSelect_onclick()"><spring:message code='ezCommunity.t1177' /></span></a>
 											<br>
 											<a class="imgbtn"><span id="btn_AttachDel" onclick="return btn_AttachDel_onclick()"><spring:message code='ezCommunity.t1178' /></span></a>

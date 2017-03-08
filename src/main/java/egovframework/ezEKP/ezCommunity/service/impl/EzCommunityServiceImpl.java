@@ -14,7 +14,6 @@ import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -5797,12 +5796,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			map.put("v_pBoardID", pBoardID);
 			map.put("v_pParentWriteDate", parentWriteDate);
 			map.put("v_pItemID", pItemID);
-			map.put("v_pUpperItemIDTree", upperItemIDTree);
+			map.put("v_pUpperItemIDTree", upperItemIDTree.subSequence(0, 38));
 			map.put("v_previousItemID", previousItemID);
 			map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 			map.put("tenantID", tenantID);
 			
-			logger.debug("getAdjacentItemsGet3 started.");
+			logger.debug("getAdjacentItemsGet3 started. " + previousItemID);
 			
 			CommunityBoardItemVO item = ezCommunityDAO.getAdjacentItemGet3(map);
 			

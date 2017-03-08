@@ -1025,7 +1025,7 @@
 			AND
 				parentwritedate = #v_pParentWriteDate#
 			AND
-				upperitemidtree LIKE #v_pUpperItemIDTree#
+				upperitemidtree LIKE #v_pUpperItemIDTree# || '%'
 			AND
 				startdate <= #v_pNow#
 			AND
@@ -1034,8 +1034,7 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				TO_CHAR(upperitemidtree) DESC,
-				startdate ASC
+				upperitemidtree
 		]]>
 	</select>
 	
@@ -1064,8 +1063,7 @@
 					tenant_id = #tenantID#
 				ORDER BY
 					parentwritedate DESC,
-					TO_CHAR(upperitemidtree) DESC,
-					startdate ASC
+					upperitemidtree
 				)
 			WHERE
 				ROWNUM <= 20
@@ -1093,7 +1091,7 @@
 					AND
 						itemid <> #v_pItemID#
 					AND
-						upperitemidtree NOT LIKE #v_pUpperItemIDTree#
+						upperitemidtree NOT LIKE #v_pUpperItemIDTree# || '%'
 					AND
 						startdate <= #v_pNow#
 					AND
@@ -1104,8 +1102,7 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						TO_CHAR(upperitemidtree) DESC,
-						startdate ASC
+						upperitemidtree
 					)
 				WHERE
 					ROWNUM <= 1
@@ -1129,7 +1126,7 @@
 					AND
 						itemid <> #v_pItemID#
 					AND
-						upperitemidtree NOT LIKE #v_pUpperItemIDTree#
+						upperitemidtree NOT LIKE #v_pUpperItemIDTree# || '%'
 					AND
 						startdate <= #v_pNow#
 					AND
@@ -1138,8 +1135,7 @@
 						tenant_id = #tenantID#
 					ORDER BY 
 						parentwritedate DESC,
-						TO_CHAR(upperitemidtree) DESC,
-						startdate ASC
+						upperitemidtree
 					)
 				WHERE
 					ROWNUM <= 1
