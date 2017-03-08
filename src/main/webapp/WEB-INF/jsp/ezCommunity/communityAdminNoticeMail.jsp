@@ -64,14 +64,14 @@
 				</tr>
 				<tr> 
 					<th><spring:message code='ezCommunity.t557' /></th>
-					<td><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px"></textarea></td>
+					<td><textarea name=memo id=memo style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;height:250px;resize:none;"></textarea></td>
 				</tr>
 			</form>
 		</table>
 		<br>
 		<div class="btnposition">
-			<a class="imgbtn"  name="Submit" onClick="SendMail()"><span><spring:message code='ezCommunity.t245' /></span></a>
-			<a class="imgbtn"  name="Submit2" onClick="javascript:mail.reset();"><span><spring:message code='ezCommunity.t246' /></span></a>
+			<a class="imgbtn"  name="Submit" onClick="SendMail()"><span><spring:message code='ezCommunity.t108' /></span></a>
+			<a class="imgbtn"  name="Submit2" onClick="javascript:mail.reset();"><span><spring:message code='ezCommunity.t109' /></span></a>
 			<a class="imgbtn"  name="Submit3" onclick="parent.parent.window.close()" ><span><spring:message code='ezCommunity.t21' /></span></a>
 		</div>
 	</body>

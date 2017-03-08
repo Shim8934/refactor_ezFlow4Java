@@ -195,13 +195,13 @@
 					<th colspan="2"><spring:message code ='ezCommunity.t1529' /> <spring:message code ='ezCommunity.t461' /></th>
 				</tr>
 				<tr>
-					<td colspan="2"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<td colspan="2"><textarea name="c_ClubDesc" style="height:120px;width:100%;box-sizing:border-box;-moz-box-sizing:border-box;resize:none"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 		  
 			<div class="btnposition">
-				<a class="imgbtn"	name="Submit"	onclick="javascript:check();"><span><spring:message code ='ezCommunity.t245' /></span></a>
-				<a class="imgbtn"	name="Submit2"	onclick="window.location.reload(false)" ><span><spring:message code ='ezCommunity.t246' /></span></a>
+				<a class="imgbtn"	name="Submit"	onclick="javascript:check();"><span><spring:message code ='ezCommunity.t20' /></span></a>
+				<a class="imgbtn"	name="Submit2"	onclick="window.location.reload(false)" ><span><spring:message code ='ezCommunity.t109' /></span></a>
 				<a class="imgbtn"	name="Submit3"	onclick="parent.parent.window.close()"><span><spring:message code ='ezCommunity.t21' /></span></a>
 			</div>
 		</form>

@@ -40,11 +40,14 @@
 			            }
 			        }
 			    }
+			    
 			    function fun_QuesCancel() {
 			        window.self.close();
 			    }
+			    
 			    function TypeDetermination() {
 			        pType = document.all("sel_Type").options[document.all("sel_Type").selectedIndex].value;
+			        
 			        if (pType == "3" || pType == "4" || pType == "6" || pType == "7") {
 			            tr_TypeValueM.style.display = "";
 			            tr_TypeValueE.style.display = "none";
@@ -55,6 +58,7 @@
 			            tr_AddList.style.display = "";
 			        }
 			    }
+			    
 			    function AttachFile_Onclick() {
 			        if (pType == "3" || pType == "4" || pType == "6" || pType == "7") {
 			            if (document.all("txt_TitleM").value == "") {
@@ -69,6 +73,7 @@
 						    return;
 						}
 			        }
+			        
 			        if (pType == "1") {
 			            document.all("cmuds").accept = "image/*";
 			        } else if (pType == "2") {
@@ -78,26 +83,31 @@
 			        } else {
 			            document.all("cmuds").accept = "";
 			        }
+			        
 			        document.all("cmuds").click();
 			    }
 			    function fun_AddAns() {
 			        var pTitle = "";
 			        var pPath = "";
 			        selType = pType;
+			        
 			        if (pType == "3" || pType == "4" || pType == "6" || pType == "7") {
 			            if (document.all("txt_TitleM").value == "") {
 			                alert("<spring:message code='ezQuestion.t155' />");
 			                document.all.txt_TitleM.focus();
 			                return;
 			            }
+			            
 			            if (document.all("txt_URL").value == "") {
 			                alert("<spring:message code='ezQuestion.t158' />");
 			                return;
 			            }
+			            
 			            if (CheckChar(document.all("txt_TitleM").value)) {
 			                alert("<spring:message code='ezQuestion.t159' />");
 			                return;
 			            }
+			            
 			            pTitle = document.all("txt_TitleM").value;
 			            pPath = document.all("txt_URL").value;
 			        } else {
@@ -125,13 +135,16 @@
 			            pTitle = document.all("txt_TitleE").value;
 			            pPath = document.all("AttachPath").value;
 			        }
+			        
 			        lastindex = document.all("input_Value").length;
 			        var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
+			        
 			        if (lastindex > 0) {
 			            document.all("input_Value").options[lastindex] = newoption;
 			        } else {
 			            document.all("input_Value").options[0] = newoption;
 			        }
+			        
 			        document.all("txt_TitleM").value = "";
 			        document.all("txt_URL").value = "";
 			        document.all("txt_TitleE").value = "";
@@ -141,8 +154,10 @@
 			    }
 			    function fun_AnsDelete() {
 			        var idx = document.all("input_Value").selectedIndex;
+			        
 			        if (idx > -1) {
 			            var arrInfo = document.all("input_Value").options[idx].value.split(";");
+			            
 			            if (arrInfo[0] == "1" || arrInfo[0] == "2") {
 			                if (CrossYN()) {
 			                    document.Delete_Upload.QstType_delFile.value = arrInfo[0];
@@ -153,13 +168,15 @@
 			                    document.all("input_Value").options[idx].removeNode(true);
 			                }
 			            } else {
-			                if (CrossYN())
+			                if (CrossYN()) {
 			                    DeleteAttach_Sel(idx);
+			                }
 			            }
 			        } else {
 			            alert("<spring:message code='ezQuestion.t161' />");
 			         }
 			     }
+			    
 			    function DeleteAttach_Sel(idx) {
 			        document.all("input_Value").options[idx] = null;
 			    }
@@ -169,6 +186,7 @@
 			            var xmlDom = createXmlDom();
 			            xmlDom = loadXMLString(pAttachInfo);
 			            var lastindex = SelectNodes(xmlDom, "ATTACH/ROW").length;
+			            
 			            for (var count = 0; count < lastindex; count++) {
 			                var selType = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "TYPE");
 			                var pTitle = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE");
@@ -183,8 +201,8 @@
 			                var selType = pAttachInfo["type"][count];
 			                var pTitle = pAttachInfo["attachTitle"][count];
 			                var pPath = pAttachInfo["href"][count];
-
 			                var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
+			                
 			                document.all("input_Value").options[count] = newoption;
 			            }
 			        }
@@ -207,8 +225,10 @@
 			                dialogArguments["m_AttachInfo"] = null;
 			            }
 			        }
+			        
 			        window.close();
 			    }
+			    
 			    function GetInfoList_IE() {
 			        var pValue = "";
 			        var pInfoList = "";
@@ -223,35 +243,43 @@
 			            pInfoList = pValue.split(";");
 
 			            m_AttachInfo["type"][count] = pInfoList[0];
-			            m_AttachInfo["attachTitle"][count] = pInfoList[1];
+			            m_AttachInfo["attachTitle"][count] = javaURLEncode(pInfoList[1]);
 			            m_AttachInfo["href"][count] = pInfoList[2];
 			        }
+			        
 			        return m_AttachInfo;
 			    }
+			    
 			    function GetInfoList() {
 			        var pValue = "";
 			        var pInfoList = "";
 			        var m_AttachInfo = null;
 			        var lastindex = document.all("input_Value").length;
+			        
 			        if (lastindex > 0) {
 			            m_AttachInfo = "<ATTACH>";
+			            
 			            for (var count = 0; count < lastindex; count++) {
 			                pValue = document.all("input_Value").options[count].value;
 			                pInfoList = pValue.split(";");
 			                m_AttachInfo += "<ROW>";
 			                m_AttachInfo += "<TYPE>" + pInfoList[0] + "</TYPE>";
-			                m_AttachInfo += "<ATTACHTITLE>" + pInfoList[1] + "</ATTACHTITLE>";
+			                m_AttachInfo += "<ATTACHTITLE>" + javaURLEncode(pInfoList[1]) + "</ATTACHTITLE>";
 			                m_AttachInfo += "<HREF>" + pInfoList[2] + "</HREF>";
 			                m_AttachInfo += "</ROW>";
 			            }
+			            
 			            m_AttachInfo += "</ATTACH>";
 			        }
+			        
 			        return m_AttachInfo;
 			    }
+			    
 			    function CheckChar(pVal) {
 			        if (pVal.indexOf(";") > -1 || pVal.indexOf("|") > -1 || pVal.indexOf("^") > -1) {
 			            return true;
 			        }
+			        
 			        return false;
 			    }
 			    
@@ -259,6 +287,7 @@
 			        Attach_Upload.QstType.value = pType;
 
 			        var imgPath = "";
+			        
 			        if (CrossYN()) {
 			        	var input = document.getElementById("cmuds");
 			            document.all("txt_AttachPath").value = input.value;
@@ -268,8 +297,8 @@
 			            imgPath = selectionRange.text.toString();
 			            var input = document.getElementById("cmuds");
 				        document.all("txt_AttachPath").value = imgPath;
-				        
 			        }
+			        
 			        fileup = false;
 			        
 			        if (CrossYN()) {
@@ -299,7 +328,6 @@
 			        }
 			        fileup = true;
 			    }
-			    
 		</script>
 	</head>
 	<body class="popup">

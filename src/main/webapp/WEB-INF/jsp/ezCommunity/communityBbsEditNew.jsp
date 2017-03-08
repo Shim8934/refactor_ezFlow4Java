@@ -312,7 +312,7 @@
 					<table style="width:100%;height:100%;">
 		                <tr> 
 							<td style="vertical-align:top;height:100%" id="EdtorSize">
-					        	<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/ckEditor.do" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+					        	<iframe id="message" class="viewbox"  name="message" src="/ezCommunity/ckEditor.do" frameborder="0" style="padding:0; height:100%; width:99.7%; overflow:auto;"></iframe>
 							</td>
 		                </tr> 
 		            </table>

@@ -274,12 +274,12 @@
 	                <th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t498' /></th>
 	                <td>
 	                    <c:if test="${isCrossBrowser == true}">
-	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    	<a class="imgbtn" style="margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachSelect_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    	<span id="filename" style="vertical-align:middle"></span>
 	                    	<input type="file" id="logo" name="logo" accept="image/*" onchange="return logo_onpropertychange()" style="display:none">
 	                    </c:if>
 	                    <c:if test="${isCrossBrowser == false}">
-	                    	<a class="imgbtn"><span id="btn_AttachAdd_logo" onclick="return btn_AttachAdd_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
+	                    	<a class="imgbtn" style="margin-bottom:0px;"><span id="btn_AttachAdd_logo" onclick="return btn_AttachAdd_onclick()"><spring:message code = 'ezCommunity.t1177' /></span></a>
 	                    	<span id="filename" style="vertical-align:middle"></span>
 	                    	<input type="file" id="logo" name="logo" accept="image/*" style="display:none">
 	                    </c:if>
@@ -339,8 +339,8 @@
 	    </table>
 	    <div class="btnposition">
 	            <a class="imgbtn" name="Submit" onclick="javascript:pre_onclick();" style="display: none"><span><spring:message code = 'ezCommunity.t502' /></span></a>
-	            <a class="imgbtn" name="Submit2" onclick="javascript:go();"><span><spring:message code = 'ezCommunity.t245' /></span></a>
-	            <a class="imgbtn" name="Submit3" onclick="javascript:cancle_onclick();"><span><spring:message code = 'ezCommunity.t246' /></span></a>
+	            <a class="imgbtn" name="Submit2" onclick="javascript:go();"><span><spring:message code = 'ezCommunity.t20' /></span></a>
+	            <a class="imgbtn" name="Submit3" onclick="javascript:cancle_onclick();"><span><spring:message code = 'ezCommunity.t109' /></span></a>
 	            <a class="imgbtn" name="Submit4" onclick="close_onclick()"><span><spring:message code = 'ezCommunity.t21' /></span></a>
 	        </div>
     	</form>
