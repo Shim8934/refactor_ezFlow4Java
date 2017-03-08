@@ -608,15 +608,18 @@
         		rgParams["m_Return"] = "";
         		rgParams["m_AttachInfo"] = null;
         		rgParams["m_DelAttach"] = g_DelAttachList;
+        		
         		if( pID == "A" ) {
             		if( pCmd == "MOD" && index == -1 ) {
                 		alert("<spring:message code='ezQuestion.t496' />");
                 		return;
             		}
+            		
             		if( pCmd == "MOD" && document.Ques_Answer.input_Ans[0].text == "" ) {
                 		alert("<spring:message code='ezQuestion.t496' />");
                 		return;
             		}
+            		
             		if( pCmd == "MOD" ) {
                 		if (Ques_Answer.input_Ans.options[index].AnsInfo == undefined) {
                 			rgParams["m_AttachInfo"] = Ques_Answer.input_Ans.options[index].getAttribute("ansinfo")
@@ -636,6 +639,7 @@
             		} else{
                 		td_QuestionText = td_Question.innerText;
             		}
+            		
             		if(td_QuestionText != ""){
                 		if(Ques_Answer.txtQuestion.AnsInfo == undefined) {
                 			rgParams["m_AttachInfo"] = Ques_Answer.txtQuestion.getAttribute("ansinfo");
@@ -662,6 +666,7 @@
                         			tmpIdx = Ques_Answer.input_Ans.options.length;
                         		}
                     		}
+                    		
                     		Ques_Answer.input_Ans.options[tmpIdx].AnsInfo = rgParams["m_AttachInfo"];
                 		} else {
                     		td_Question.innerText = "";
@@ -669,16 +674,19 @@
 		                    if (rgParams["m_AttachInfo"] != null) {
         		                Ques_Answer.txtQuestion.AnsInfo = rgParams["m_AttachInfo"];
                 		        var tmpText = "";
+                		        
                         		for (var count = 0; count < rgParams["m_AttachInfo"].attachTitle.length; count++) {
                             		var pTitle = rgParams["m_AttachInfo"].attachTitle[count]
                             		tmpText += pTitle + ";";
                         		}
+                        		
                         		xmlDom = null;
                         		td_Question.innerHTML = tmpText;
                     		} else {
                         		//Ques_Answer.txtQuestion.AnsInfo = null;
                     		}
                 		}
+                		
                 		g_DelAttachList = rgParams["m_DelAttach"];
             		}
         		} else {
@@ -694,6 +702,7 @@
                 		document.AttachAdd.target="AttachAdd";
                 		document.AttachAdd.submit();
             		}
+            		
             		g_windowReference.focus();
         		}
     		}
@@ -709,6 +718,7 @@
                 			tmpIdx = Ques_Answer.input_Ans.options.length;
                 		}
             		}
+            		
             		Ques_Answer.input_Ans.options[tmpIdx].AnsInfo = pAttachXml;
         		} else {
             		td_Question.innerText = "";
@@ -719,10 +729,12 @@
                 		xmlDom = loadXMLString(pAttachInfo);
                 		var tmpText = "";
                 		var lastindex = SelectNodes(xmlDom, "ATTACH/ROW").length;
+                		
                 		for (var count=0; count<lastindex; count++) {
-                    		var pTitle  = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE");
+                    		var pTitle  = decodeURIComponent(SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE"));
                     		tmpText += pTitle + ";";
                 		}
+                		
                 		xmlDom = null;
                 		td_Question.innerHTML = tmpText;
             		} else {
