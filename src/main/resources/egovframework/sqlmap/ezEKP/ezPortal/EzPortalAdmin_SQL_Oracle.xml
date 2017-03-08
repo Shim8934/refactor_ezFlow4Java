@@ -139,12 +139,6 @@
 		]]>
 	</update>
 	
-	<!-- <procedure id="EzPortalAdminDAO.setUseLang" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_SETUSELANG(#v_pUID#, #v_pCOMPANYID#, #v_pLANGSTR#)}
-		]]>
-	</procedure> -->
-  
     <update id="EzPortalAdminDAO.setUseLang" parameterClass="Map">
         <![CDATA[
 	         UPDATE
@@ -168,12 +162,6 @@
                     LANG = '3'
             ]]>
         </isEqual>
-        <isEqual property="v_pLANGSTR" compareValue="4">
-            <![CDATA[
-               SET
-                    LANG = '4'
-            ]]>
-        </isEqual>
         <![CDATA[
 	         WHERE
                 UID_ = #v_pUID#
@@ -183,13 +171,7 @@
                 TENANT_ID = #tenantID#   
 		]]>
     </update>
-	
-	<!-- <procedure id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map" >
-		<![CDATA[
-			{CALL EZSP_PORTAL_SAVESKIN(#v_UID#, #v_SKINNAME#, #v_SKINBGFLAG#, #v_SKINBGCOLOR#, #v_SKINBGIMAGE#, #v_SKINFONTCOLOR#, #v_SKINFONTOVERCOLOR#)}
-		]]>
-	</procedure> -->
-	
+    
 	<insert id="EzPortalAdminDAO.portalSaveSkin" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO

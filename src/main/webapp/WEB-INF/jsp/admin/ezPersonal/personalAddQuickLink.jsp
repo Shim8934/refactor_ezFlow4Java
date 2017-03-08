@@ -58,7 +58,7 @@
 	                    KeEventControl(document.getElementById("Title1"));
 	                    KeEventControl(document.getElementById("Title2"));
 	                    KeEventControl(document.getElementById("Title3"));
-	                    KeEventControl(document.getElementById("Title4"));
+	                    //KeEventControl(document.getElementById("Title4"));
 	                    KeEventControl(document.getElementById("txtURL"));
 	                }
 	            } catch (e){
@@ -113,7 +113,7 @@
 				    var QuickLinkName = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME");
 				    var QuickLinkName2 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME2");
 				    var QuickLinkName3 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME3");
-				    var QuickLinkName4 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME4");
+				    //var QuickLinkName4 = SelectSingleNodeValue(xmldomNode[i], "QUICKLINKNAME4");
 				    var LinkType = SelectSingleNodeValue(xmldomNode[i], "LINKTYPE");
 				    var URL = SelectSingleNodeValue(xmldomNode[i], "URL");
 				    var SIZE = SelectSingleNodeValue(xmldomNode[i], "SIZE_");
@@ -136,7 +136,7 @@
 				    document.getElementById("Title1").value = QuickLinkName;
 				    document.getElementById("Title2").value = QuickLinkName2;
 				    document.getElementById("Title3").value = QuickLinkName3;
-				    document.getElementById("Title4").value = QuickLinkName4;
+				    //document.getElementById("Title4").value = QuickLinkName4;
 				
 				    checkValue = LinkType;
 				    var cnt = document.getElementsByName("linktypeOption").length;
@@ -287,7 +287,7 @@
 	        }
 	        
 	        function btn_ok() {
-	        	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
+	        	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  specialChk(document.getElementById("Title3").value)) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
@@ -311,10 +311,6 @@
 	            if (document.getElementById("Title3").value.trim() == "") {
 	                document.getElementById("Title3").value = document.getElementById("Title1").value + "_ja";
 	            }
-	            
-	            if (document.getElementById("Title4").value.trim() == "") {
-	                document.getElementById("Title4").value = document.getElementById("Title1").value + "_zh";
-	            }
 	
 	            SaveQuickLink();
 	        }
@@ -335,7 +331,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById("Title1").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById("Title2").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById("Title3").value);
-	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("Title4").value);
+	            //createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("Title4").value);
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkType", checkValue);
 	            createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", LinkTypeURL);
 	            createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
@@ -436,11 +432,11 @@
 			                        <td>
 			                            <input type="text" id="Title3" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value=""  maxLength="50"/></td>
 			                    </tr>
-			                    <tr class="secondary">
+			                    <%-- <tr class="secondary">
 			                        <th><spring:message code = 'ezPersonal.s85' /></th>
 			                        <td>
 			                            <input type="text" id="Title4" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"/></td>
-			                    </tr>
+			                    </tr> --%>
 	                		</c:otherwise>
 	                	</c:choose>
 	                </table>
