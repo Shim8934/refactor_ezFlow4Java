@@ -478,7 +478,7 @@ function func_reject() {
 
     denial_cross_dialogArguments[0] = params;
     denial_cross_dialogArguments[1] = func_reject_Complete;
-    DivPopUpShow(335, 314, "/ezEmail/mailDenial.do");
+    DivPopUpShow(337, 316, "/ezEmail/mailDenial.do");
 }
 function func_reject_Complete(retVal) {
     try {

@@ -74,19 +74,19 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (CrossYN()) {
-		                	self.resizeTo(770, 980);
+		                	self.resizeTo(785, 980);
 		                } else {
-		                    self.resizeTo(770, 990);
+		                    self.resizeTo(785, 990);
 		                }
 		            }
-		            
+            
 		            rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 		
 		            // GS 수정(2006.02.10) : 게시알림메일을 다시 게시하는 경우 url link와 게시물 link 기능이 겹치는 문제 수정
 		            AddLinkTarget();
 		
 		            if (g_progresswin) g_progresswin.close();
-		
+
 		            if ("${useOCS}" == "YES") {
 		                var pSIPUriList = getSIPUri(strWriterID + ";", "").split(';');
 		                document.getElementById("WriteUserNM").innerHTML = "<div><img style ='vertical-align:middle' src='/images/Presence/unknown.gif' id ='" + GetGUID() + ",type=smtp' onload='PresenceControl(\"" + pSIPUriList[0] + "\",this);'/>" + "<span style ='vertical-align:middle'>" + "${boardItem.writerName}" + "</span></div>";

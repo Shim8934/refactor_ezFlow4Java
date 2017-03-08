@@ -571,7 +571,7 @@ function saveOpinionInfo() {
         if (selRow.length == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
         {
             if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && document.getElementById("btn_OpinionCancel").textContent != strLang407) {
-                var pAlertContent = pOpinionType + strLang410;
+                var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
                 OpenAlertUI(pAlertContent);
                 return;
             }
@@ -608,7 +608,7 @@ function saveOpinionInfo() {
         }
         else if (pDisplay == "HeSong") {
             if (trim(document.getElementById("txt_OpinionContent").value) == "" && OpinionAddFlag == "0") {
-                var pAlertContent = pOpinionType + strLang410;
+                var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
                 OpenAlertUI(pAlertContent);
                 return;
             }
