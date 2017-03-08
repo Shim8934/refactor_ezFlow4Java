@@ -143,12 +143,6 @@
                     LANG = '3'
             ]]>
         </isEqual>
-        <isEqual property="v_pLANGSTR" compareValue="4">
-            <![CDATA[
-               SET
-                    LANG = '4'
-            ]]>
-        </isEqual>
         <![CDATA[
 	         WHERE
                 UID_ = #v_pUID#
