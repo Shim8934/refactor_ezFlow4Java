@@ -2497,89 +2497,62 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		
 		List<CommunityMyCommunityVO> list = ezCommunityDAO.mainPageGet5(map);
 		
-		boolean readTF = false;
-		
 		for (int i=0; i<list.size(); i++) {
-			if (list != null) {
-				if (val == 3) {
-					return "";
-				}
-				if (firstFlag) {
-					strData.append("<dl class='listtype_photo'>");
-					strData.append("<dt class='tit' style='cursor:pointer'");
-					if (list.get(i).getC_ClubGubun().equals("3")) {
-						strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-					} else {
-						strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-					}
-					logger.debug("userPrimary="+userInfo.getPrimary());
-					logger.debug("clubName="+list.get(i).getC_ClubName());
-					logger.debug("clubName2="+list.get(i).getC_ClubName2());
-					strData.append("<strong>");
-					if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()) == null || commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
-						strData.append(list.get(i).getC_ClubName());
-					} else {
-						strData.append(list.get(i).getC_ClubName2());
-					}
-					strData.append("</strong></dt>");
-					strData.append("<dd class='photo'>");
-					
-					String bannerSrc = "";
-					if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
-						bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
-					} else {
-						//bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + "/files/upload_community/logo/"+list.get(i).getC_Logo_Thumbnail();
-						bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
-					}
-					logger.debug("bannerSrc="+bannerSrc);
-					
-					strData.append("<img src='" + bannerSrc + "' width='86' height='61' alt=''>");
-					strData.append("<span class='iconbest'></span>");
-					strData.append("</dd'>");
-					strData.append("<dd  class='txt'>");
-					strData.append(list.get(i).getC_ClubDesc());
-					strData.append("</dd>");
-					strData.append("</dl>");
-					 
-                    firstFlag = false;
-                    
+			
+			if (val == 3) {
+				return "";
+			}
+			if (firstFlag) {
+				strData.append("<dl class='listtype_photo'>");
+				strData.append("<dt class='tit' style='cursor:pointer'");
+				if (list.get(i).getC_ClubGubun().equals("3")) {
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
 				} else {
-					strData.append("<dl class='listtype_dttxt'>");
-                    strData.append("<dt style='cursor:pointer'");
-                    if (("3").equals(list.get(i).getGubun())) {
-                    	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
-                    } else {
-                    	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
-                    }
-                    
-                    strData.append("<strong>");
-					if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()) == null || commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
-						strData.append(list.get(i).getC_ClubName());
-					} else {
-						strData.append(list.get(i).getC_ClubName2());
-					}
-					strData.append("</strong></dt>");
-					strData.append("<dd>");
-					strData.append(list.get(i).getC_ClubDesc());
-					strData.append("</dd>");
-					strData.append("</dl>");
-                    
+					strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
 				}
-				val++;
+				
+				strData.append("<strong>");
+				strData.append(list.get(i).getC_ClubName());
+				strData.append("</strong></dt>");
+				strData.append("<dd class='photo'>");
+				
+				String bannerSrc = "";
+				if (list.get(i).getC_Logo_Thumbnail().trim().indexOf("default_logo_type") > -1) {
+					bannerSrc = "/images/ezCommunity/logo/" + list.get(i).getC_Logo_Thumbnail().trim();
+				} else {
+					bannerSrc = "/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId())+commonUtil.separator+list.get(i).getC_Logo_Thumbnail();
+				}
+				logger.debug("bannerSrc="+bannerSrc);
+				
+				strData.append("<img src='" + bannerSrc + "' width='86' height='61' alt=''>");
+				strData.append("<span class='iconbest'></span>");
+				strData.append("</dd'>");
+				strData.append("<dd  class='txt'>");
+				strData.append(list.get(i).getC_ClubDesc());
+				strData.append("</dd>");
+				strData.append("</dl>");
+				 
+                firstFlag = false;
+                
 			} else {
-				strData.append("<div class='nodata_portlet '>");
-				strData.append("<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>");
-				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", userInfo.getLocale()) + "</p></div>");
-				break;
+				strData.append("<dl class='listtype_dttxt'>");
+                strData.append("<dt style='cursor:pointer'");
+                if (("3").equals(list.get(i).getGubun())) {
+                	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + memberChk(list.get(i).getC_ClubNo(), userInfo) + "')\">");
+                } else {
+                	strData.append("onclick=\"go_best('" + list.get(i).getC_ClubNo() + "','" + "0" + "')\">");
+                }
+                
+                strData.append("<strong>");
+				strData.append(list.get(i).getC_ClubName());
+				strData.append("</strong></dt>");
+				strData.append("<dd>");
+				strData.append(list.get(i).getC_ClubDesc());
+				strData.append("</dd>");
+				strData.append("</dl>");
+                
 			}
-			readTF = true;
-		}
-		if (!readTF) {
-			if (list == null) {
-				strData.append("<div class='nodata_portlet '>");
-				strData.append("<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>");
-				strData.append("<p>" + egovMessageSource.getMessage("main.t00026", userInfo.getLocale()) + "</p></div>");
-			}
+			val++;
 		}
 		
 		return strData.toString();
