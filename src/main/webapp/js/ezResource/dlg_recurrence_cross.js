@@ -573,21 +573,13 @@ function event_btnOk_onclick()
                     break;
         }
 
-        var startDateTime, endDateTime, tmpEndDateTime;
         if (document.getElementById("alldaycheck").checked == true) {
-            createNodeAndInsertText(xmlDoc, Root, "startDateTime", m_objStartTime.getFullYear() + "-" + setLength(m_objStartTime.getMonth() + 1) + "-" + setLength(m_objStartTime.getDate()) + " " + setLength(m_objStartTime.getHours()) + ":" + setLength(m_objStartTime.getMinutes()));
-            if (document.getElementById("EndTimeSet").checked) {
-                createNodeAndInsertText(xmlDoc, Root, "endDateTime", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
-            }
-            else {
-                createNodeAndInsertText(xmlDoc, Root, "endDateTime", m_objEndTime.getFullYear() + "-" + setLength(m_objEndTime.getMonth() + 1) + "-" + setLength(m_objEndTime.getDate()) + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
-            }
+        	createNodeAndInsertText(xmlDoc, Root, "allday", "true");
         }
-        else {
-            createNodeAndInsertText(xmlDoc, Root, "startDateTime", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val());
-            createNodeAndInsertText(xmlDoc, Root, "endDateTime", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
-        }
-
+        
+        createNodeAndInsertText(xmlDoc, Root, "startDateTime", m_objStartTime.getFullYear() + "-" + setLength(m_objStartTime.getMonth() + 1) + "-" + setLength(m_objStartTime.getDate()) + " " + setLength(m_objStartTime.getHours()) + ":" + setLength(m_objStartTime.getMinutes()));
+        createNodeAndInsertText(xmlDoc, Root, "endDateTime", m_objEndTime.getFullYear() + "-" + setLength(m_objEndTime.getMonth() + 1) + "-" + setLength(m_objEndTime.getDate()) + " " + setLength(m_objEndTime.getHours()) + ":" + setLength(m_objEndTime.getMinutes()));
+        
         putReturnData("xml", getXmlString(xmlDoc));
         putReturnData("str", rtvString);
         
@@ -599,14 +591,12 @@ function event_btnOk_onclick()
 //            }
 //        }
         
-    }
-	catch(e)
-	{
+    } catch(e) {
 	}
 	
-	if (ReturnFunction != null)
-	    ReturnFunction(g_RetVal);
-    else {
+	if (ReturnFunction != null) {
+		ReturnFunction(g_RetVal);
+	} else {
         window.returnValue = g_RetVal;
         window.close();
     }
