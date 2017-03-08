@@ -184,9 +184,9 @@
   			<ul>
     			<c:if test="${adminFg eq 'Y'}">
     				<li><span onClick="btnAdd_Click();"><spring:message code="ezResource.t363" /></span></li>	
+    				<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
+    				<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
     			</c:if>
-    			<li><span onClick="btnView_Resource();"><spring:message code="ezResource.t17" /></span></li>
-    			<li id="tbar2" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
       			<li style="background:none;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
