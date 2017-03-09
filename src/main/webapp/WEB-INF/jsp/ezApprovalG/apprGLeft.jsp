@@ -42,7 +42,7 @@
 		    var approvalYN = "${approvalYN}";     //전자결재 일반/공공 여부 (Y : 공공 , N : 일반)
 		    var ViewLeftCount = "${viewLeftCount}";
 		    $(function () {
-		      	if(approvalYN == "Y") {
+		      	if(approvalYN == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
 	        	} else{
@@ -67,7 +67,7 @@
 		        }
 		        initUserRoleinfo();
 		        
-		        if(approvalYN == "Y") {
+		        if(approvalYN == "G") {
 			        if (g_bRecAdmin || AdminYN == "TRUE") {
 			            document.getElementById("tag07").style.display = "";
 			            document.getElementById("tag08").style.display = "";
@@ -690,7 +690,7 @@
 				</c:if>
 	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="approvalYN" var="Y"> 
+			<c:if test="approvalYN" var="G"> 
 	        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99')"><spring:message code='ezApprovalG.t10010'/><span id=count99></span></span></h2>
 	         <ul id="iconul">
 			    <li><span style="width:100%;display:inline-block;"  id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/></span></li>
@@ -721,7 +721,7 @@
 					<li><span style="width:100%;display:inline-block;" onClick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')" ><spring:message code='ezApprovalG.t1517'/></span></li>
 				</c:if>						
 			</ul>
-			<c:if test="${approvalYN eq 'Y'}"> 		
+			<c:if test="${approvalYN eq 'G'}"> 		
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>

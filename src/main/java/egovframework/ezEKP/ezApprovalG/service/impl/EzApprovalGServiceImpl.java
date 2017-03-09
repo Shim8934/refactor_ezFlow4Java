@@ -1628,14 +1628,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
-		if (approvalYN.equals("N")) {
+		if (approvalYN.equals("S")) {
 			rtnXML.append("<div style='padding-top:5px'>");
 		}
 		
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
 			
-			if (approvalYN.equals("Y")) {
+			if (approvalYN.equals("G")) {
 				if (colOption[2].equals(selected)) {
 					rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
 				} else {
@@ -1647,7 +1647,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		if (approvalYN.equals("N")) {
+		if (approvalYN.equals("S")) {
 			rtnXML.append("</div>");
 		}
 		
