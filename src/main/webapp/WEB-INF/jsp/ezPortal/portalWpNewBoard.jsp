@@ -131,7 +131,7 @@
                         listHTML += "</ul>";
                         document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
 
-                        getContent(pfirstItemID);                  
+                        //getContent(pfirstItemID);                  
 	                } else {
                     	var nodata = "<div class='nodata_portlet '>";
                     	nodata += "<p><img src='/images/" + strLang1_NewBoard + "/main/nodata_gray.gif' width='107' height='70'></p>";
