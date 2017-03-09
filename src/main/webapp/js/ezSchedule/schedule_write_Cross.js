@@ -103,12 +103,43 @@ function save_schedule()
 
 	if (!check_length(document.getElementById("TextTitle").value, 250, strLang10)) return;
 	if (!check_length(document.getElementById("TextLocation").value, 50, strLang11)) return;
+	
+	var resDate = "";
+	if (tmpReFlag == "0" && $.trim(repetition) != "") {
+		var sdate, edate;
+		
+		if (g_sdate == null)
+		{
+		    sdate = new Date(startDateStringOrgin.substring(0, 4), parseInt(startDateStringOrgin.substring(5, 7)) -1, startDateStringOrgin.substring(8, 10), startDateStringOrgin.substring(11, 13), startDateStringOrgin.substring(14, 16), startDateStringOrgin.substring(17, 19));
+		    edate = new Date(endDateStringOrgin.substring(0, 4), parseInt(endDateStringOrgin.substring(5, 7)) - 1, endDateStringOrgin.substring(8, 10), endDateStringOrgin.substring(11, 13), endDateStringOrgin.substring(14, 16), endDateStringOrgin.substring(17, 19));
+		    if (isNaN(sdate)) {
+		        sdate = new Date(startDateStringOrgin);
+		        edate = new Date(endDateStringOrgin);
+		    }
+        }
+		else
+		{
+			sdate = new Date(g_sdate.trim());
+			edate = new Date(g_edate.trim());
 
+			if (isNaN(sdate)) {
+			    sdate = new Date(ReplaceText(g_sdate, "-", "/"));
+			    edate = new Date(ReplaceText(g_edate, "-", "/"));
+			}
+		}
+		
+		//TODO
+		resDate = getFirstDateInfo(sdate, edate);
+		if (resDate == "") {
+			return;
+		}
+	}
+	
 	var ResourceSaveResult = false;
 	if (scheduleid == "") {
 	    if (document.getElementById("resourcelist")) {	    	
 	        if (trim(document.getElementById("resourcelist").innerHTML) != "") {
-	            ResourceSaveResult = resource_Check();
+	            ResourceSaveResult = resource_Check(resDate);
 	            if (!ResourceSaveResult)
 	                return;
 	        }
@@ -313,7 +344,7 @@ function save_schedule()
 	    if (ResourceSaveResult) {	    	
 	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
-	            var rntVal = resource_save();
+	            var rntVal = resource_save(resDate);
 	            if (rntVal != "OK") {
 	                alert(strLang255);
 	                return;
@@ -640,10 +671,6 @@ function config_repeat_Complete(rtn) {
         document.getElementById("periodblock").style.display = "";
         document.getElementById("repeatblock").style.display = "none";
         document.getElementById("repeatinfo").innerHTML = "&nbsp;";
-        
-        if (tmpReFlag != "1") {
-        	g_data["recurrence"] = "";
-        }
     }
     else {
         g_sdate = rtn["SDATE"];
@@ -651,14 +678,7 @@ function config_repeat_Complete(rtn) {
         repetition = rtn["REPETITION"];
         show_repetition_info();
         document.getElementById("repeatinfo").innerHTML = rtn["REPDISPLAY"];
-        
-        if (tmpReFlag != "1") {
-        	makeResRepetition(g_sdate, g_edate);
-        }
     }
-    
-    //TODO: delete
-    alert(g_data["recurrence"]);
 }
 
 function show_repetition_info()
@@ -1052,13 +1072,9 @@ function config_repeat_resource_Complete(rgParams) {
         document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
         tmpReFlag = "1";
     }
-    
-    //TODO: delete
-	alert(g_data["recurrence"]);
 }
 
-
-function resource_Check() {
+function resource_Check(resDate) {
     var check = true;
 
     if (g_resource[0].length == 0) {
@@ -1066,7 +1082,7 @@ function resource_Check() {
         return;
     }
     for (var i = 0; i < g_resource[0].length; i++) {
-        if (DupCheck(g_resource[0][i]) == false) {
+        if (DupCheck(g_resource[0][i], resDate) == false) {
             alert("[" + g_resource[1][i] + "] " + strLang108);
             check = false;
         }
@@ -1074,9 +1090,8 @@ function resource_Check() {
     return check;
 }
 
-function resource_save() {
+function resource_save(resDate) {
     var check = true;
-    var resDate = "";
     
     if (g_resource[0].length == 0) {
         alert(strLang109);
@@ -1084,17 +1099,10 @@ function resource_save() {
     }
     
     for (var i = 0; i < g_resource[0].length; i++) {
-    	var returnValue = DupCheck(g_resource[0][i]);
-    	
-    	if (typeof(returnValue) == "string") {
-    		resDate = returnValue;
-    	} else {
-    		if (returnValue == false) {
-                alert("[" + g_resource[1][i] + "] " + strLang108);
-                check = false;
-            }
-    	}
-        
+		if (DupCheck(g_resource[0][i], resDate) == false) {
+            alert("[" + g_resource[1][i] + "] " + strLang108);
+            check = false;
+        }
     }
     
     var saveResult = "";
@@ -1107,19 +1115,36 @@ function resource_save() {
     return saveResult;
 }
 
-function DupCheck(resItemID) {
+function DupCheck(resItemID, resDate) {
     var STime = "";
     var ETime = "";
-    if (document.getElementById("alldaycheck").checked == true) {
-        STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00";
-        ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59";
-    }
-    else {
-        STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
-        ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+    var allday = false;
+    if (resDate != "") {
+    	var dateArr = resDate.split("|");
+    	
+    	if (dateArr[0] == "allday") {
+    		STime = dateArr[1] + " 00:00";
+    		ETime = dateArr[1] + " 23:59";
+    		allday = true;
+    	} else {
+    		STime = dateArr[0];
+    		ETime = dateArr[1];
+    	}
+    	
+    } else {
+    	
+    	if (document.getElementById("alldaycheck").checked == true) {
+            STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00";
+            ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59";
+            allday = true;
+        } else {
+            STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+            ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+        }
+    	
     }
     
-    return isUsingResource(resItemID, STime, ETime, companyID, "", "add", document.getElementById("alldaycheck").checked);
+    return !isUsingResource(resItemID, STime, ETime, companyID, "", "add", allday);
 }
 
 function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay) {
@@ -1140,7 +1165,8 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     	var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
 		
-		if(CrossYN()) { 
+		//TODO 이거 맞는지 확인해봐야돼!!
+		if(CrossYN()) {
 	        var xmlRtn = xmlDOMrec.documentElement;
 	        var Node = xmlDOM.importNode(xmlRtn, true);
             xmlDOM.documentElement.appendChild(Node);
@@ -1150,28 +1176,13 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	    }
 		
 		xmlDOMrec = null;
-    	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
-    	
-    } else if (g_data["recurrence"] != null && g_data["recurrence"] != "") { //일정 반복예약(일정의 첫날에 자원저장)
-    	var xmlDOMrec = createXmlDom();
-		xmlDOMrec = loadXMLString(g_data["recurrence"]);
-		
-		if(CrossYN()) { 
-	        var xmlRtn = xmlDOMrec.documentElement;
-	        var Node = xmlDOM.importNode(xmlRtn, true);
-            xmlDOM.documentElement.appendChild(Node);
-	    } else {
-	         var xmlRtn = xmlDOMrec.documentElement;
-             xmlDOM.documentElement.appendChild(xmlRtn);
-	    }
-		
-		xmlDOMrec = null;
-    	xmlHTTP.open("POST", "/ezResource/timeDupCheck2.do", false);
-    	
-    } else { //일반예약
-    	xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
+    } else { // 자원 반복예약이 아닐 때에는 allday 따로 넣어줘야함.
+    	if (pAllDay) {
+    		createNodeAndInsertText(xmlDOM, objNode, "allday", ApproveFlag);
+    	}
     }
     
+    xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
     xmlHTTP.send(xmlDOM);
 
     var rtnValue = xmlHTTP.responseText;
@@ -1181,12 +1192,9 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 
     if (rtnValue == "False") {
     	return false;
-    } else if (rtnValue == "True") {
+    } else {
     	return true;
-    } else { // /ezResource/timeDupCheck2.do에서 시작/끝날짜 리턴
-    	return rtnValue;
     }
-        
 }
 
 function SaveSchedule_onClick(cmd, resItem, resDate) {
@@ -1204,8 +1212,8 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
 	        }
 	    }
 	} else {
-		var date = resDate.split("|");
-		if (date[1] != "allday") {
+		var dateArr = resDate.split("|");
+		if (dateArr[0] != "allday") {
 			if (date[0] >= date[1]) {
 				alert("" + strLang139 + "");
 	            return;
@@ -1234,7 +1242,7 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
 
     var objNode4, objNode5, objNode6, objNode7;
     if (tmpReFlag == "0") {
-    	if (resDate == "") {
+    	if (resDate == "") { // 일반예약
     	    if (document.getElementById("alldaycheck").checked == true) {
     	    	objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00";
     	    	objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59";
@@ -1244,21 +1252,33 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     	    	objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
     	    	objNode6 = "0";
     	    }
-        } else {
-        	var date = resDate.split("|");
-        	if (date[1] == "allday") {
-        		objNode4 = date[0] + " 00:00";
-        		objNode5 = date[0] + " 23:59";
+        } else { // 일반예약(일정반복)
+        	var dateArr = resDate.split("|");
+        	if (dateArr[0] == "allday") {
+        		objNode4 = dateArr[1] + " 00:00";
+        		objNode5 = dateArr[1] + " 23:59";
         		objNode6 = "1";
         	} else {
-        		objNode4 = date[0];
-        		objNode5 = date[1];
+        		objNode4 = dateArr[0];
+        		objNode5 = dateArr[1];
+        		objNode6 = "0";
         	}
         }
-    } else { //자원 반복예약 시 allday setting
-    	//TODO
-    	//objNode4, objNode5 setting
-    	//g_data["recurrence"]에서 allday 꺼내서 objNode6 setting
+    } else { // 반복예약
+    	
+    	//TODO : 크롬,IE10 확인필요
+    	var xmlDom = createXmlDom();
+    	xmlDom = loadXMLString(g_data["recurrence"]);
+		
+    	var node = SelectSingleNode(xmlDom, "recurrence");
+    	objNode4 = getNodeText(SelectSingleNode(node, "startDateTime"));
+    	objNode5 = getNodeText(SelectSingleNode(node, "endDateTime"));
+		
+		if (getNodeText(SelectSingleNode(node, "allday")) == "true") {
+			objNode6 = "1";
+		} else {
+			objNode6 = "0";
+		}
     }
     
     createNodeAndInsertText(xmlDoc, objNode, "STARTDATETIME", objNode4);
@@ -1308,14 +1328,7 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
     var result = "OK";
 
     if (typeof (resultXML) != "undefined" && getXmlString(resultXML) != "") {
-        xmlHttp = null;
-        if (cmd == "add" && objNode23 == "0") {
-            xmlHttp = createXMLHttpRequest();
-            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
-            xmlHttp.send(xmlDoc.xml);
-            xmlHttp = null;
-        }
-        if (tmpReFlag != "0") {
+    	if (tmpReFlag != "0") {
             var objNodes = SelectNodes(resultXML, "RTN_DATA")[0];
             p_num = getNodeText(GetChildNodes(objNodes)[0]);
             p_ownerID = getNodeText(GetChildNodes(objNodes)[1]);
@@ -1327,6 +1340,15 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
 
             SaveRepetition(p_num, resItem);
         }
+    	
+        xmlHttp = null;
+        if (cmd == "add" && objNode23 == "0") {
+            xmlHttp = createXMLHttpRequest();
+            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
+            xmlHttp.send(xmlDoc.xml);
+            xmlHttp = null;
+        }
+        
     } else {
         alert("" + strLang110 + "");
         result = "ERROR";
@@ -1656,6 +1678,43 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     return (orgStr.replace(re, replaceStr));
 }
 
+//TODO
+function getFirstDateInfo(startDate, endDate) {
+	var returnValue = "";
+	alert(startDate);
+	alert(endDate);
+	alert(repetition);
+	
+	return "";
+	
+	var xmlHTTP = createXMLHttpRequest();
+	var xmlDom = createXmlDom();    
+	var objNode;
+
+	objNode = createNodeInsert(xmlDom, objNode, "DATA");
+	createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
+	
+	xmlHTTP.open("POST", "/ezSchedule/getFirstScheduleDate.do", false);
+	xmlHTTP.send(xmlDom);
+
+	if (xmlHTTP.status != 200) {
+	    if (xmlHTTP.responseText.indexOf("OK") == -1) {
+	    	alert(strLang17);
+	    }
+	}
+	else {
+		returnValue = xmlHTTP.responseText;
+		
+		if (returnValue == "") {
+			//TODO : strLang으로 옮기기!
+			alert("일정이 한 번 이상 반복되지않습니다. 다시 설정해주십시오.");
+		}
+	}
+	
+	return returnValue;
+}
+
+//안쓰네ㅠㅠ
 function makeResRepetition(startDate, endDate) {
 	var info = repetition.split("|");
 	
