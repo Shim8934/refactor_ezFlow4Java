@@ -228,21 +228,4 @@ public class EzStatisticsPersonalController {
 		return ezStatisticsAdminService.getStatConnOS(statApprVO);
 	}
 	
-	/**
-	 * 액셀저장
-	 */
-	@RequestMapping(value = "/ezStatistics/statisticsexcelExportOut.do")
-	public void statisticsexcelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, HttpServletRequest request) throws IOException {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		response.setContentType("application/vnd.ms-excel");
-		response.setCharacterEncoding("UTF-8");
-		response.addHeader("Content-Disposition", "attachment;filename=" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + ".xls");
-		
-		if (request.getParameter("saveExcelData") != null) {
-			PrintWriter writer = response.getWriter();
-			
-			writer.println(request.getParameter("saveExcelData"));
-		}
-	}	
 }
