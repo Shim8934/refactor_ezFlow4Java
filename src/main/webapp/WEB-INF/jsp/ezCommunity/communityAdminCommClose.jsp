@@ -131,14 +131,14 @@
 		    	<th colspan="2"><spring:message code = 'ezCommunity.t71' /></th>
 		  	</tr>
 		  	<tr>
-		    	<td colspan="2"><textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:80px" id="closereason"></textarea>
+		    	<td colspan="2"><textarea name="textarea" style="width: 100%;box-sizing:border-box;-moz-box-sizing:border-box;height:80px;resize:none" id="closereason"></textarea>
 		    	</td>
 		  	</tr>
 		</table>
 		
 		<div class="btnposition">
-			<a class="imgbtn" name="Submit"  id="closeok" onClick="return closeok_onclick('${code}')"><span><spring:message code = 'ezCommunity.t245' /></span></a>
-			<a class="imgbtn" name="Submit2" id="closecancel" onClick="return closecancel_onclick()" ><span><spring:message code = 'ezCommunity.t246' /></span></a>
+			<a class="imgbtn" name="Submit"  id="closeok" onClick="return closeok_onclick('${code}')"><span><spring:message code = 'ezCommunity.t108' /></span></a>
+			<a class="imgbtn" name="Submit2" id="closecancel" onClick="return closecancel_onclick()" ><span><spring:message code = 'ezCommunity.t109' /></span></a>
 			<a class="imgbtn" name="Submit3" onclick="parent.parent.window.close()"><span><spring:message code = 'ezCommunity.t21' /></span></a>
 		</div>
 	</body>

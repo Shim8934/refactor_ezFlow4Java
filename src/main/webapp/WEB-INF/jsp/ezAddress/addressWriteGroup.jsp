@@ -1568,6 +1568,9 @@
 	            td_Create2(PagingHTML2);
 	        }
 	        function goToPageByNum2(Value) {
+	        	p_ListOrderObject = "";		    	
+		    	listContentArry = new Array();
+		    	
 	            CurPage = Value;
 	            makePageSelPage2();
 	            movePage2(CurPage);

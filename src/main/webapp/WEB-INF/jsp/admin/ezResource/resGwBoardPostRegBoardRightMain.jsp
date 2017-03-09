@@ -32,64 +32,64 @@
 			    return;
 		    }
 
-		function optAclLvl_Click(objthis){
-			if (acllist.selectedIndex < 0) return;
-			
-			var indexV			= acllist.selectedIndex;
-			var strMember_nam;// = CrossYN() ? acllist.options[indexV].getAttribute("Member_nam") : acllist.options[indexV].Member_nam;
-			if (CrossYN()) {
-			    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
-			} else {
-			    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
-			    if (strMember_nam == undefined) {
-			        strMember_nam = acllist.options[indexV].Member_nam;
-			    }
-			}
-
-			var AccLvl = objthis.value ;
-
-			if (AccLvl == "1"){
-				strVal = strMember_nam + " - (<spring:message code="ezResource.t104" />";
+			function optAclLvl_Click(objthis){
+				if (acllist.selectedIndex < 0) return;
 				
-			    try {
-			        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
-			        acllist.options[indexV].Access_lvl = AccLvl;
-			    } catch (e) {}
-			    
-				acllist.options[indexV].text = strVal;
-
-			}else{
-				strVal = strMember_nam + " - (<spring:message code="ezResource.t105" />";
-
-			    try {
-			        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
-			        acllist.options[indexV].Access_lvl = AccLvl;
-			    } catch (e) {}
-			    
-				acllist.options[indexV].text = strVal;
+				var indexV			= acllist.selectedIndex;
+				var strMember_nam;// = CrossYN() ? acllist.options[indexV].getAttribute("Member_nam") : acllist.options[indexV].Member_nam;
+				if (CrossYN()) {
+				    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
+				} else {
+				    strMember_nam = acllist.options[indexV].getAttribute("Member_nam");
+				    if (strMember_nam == undefined) {
+				        strMember_nam = acllist.options[indexV].Member_nam;
+				    }
+				}
+	
+				var AccLvl = objthis.value ;
+	
+				if (AccLvl == "1"){
+					strVal = strMember_nam + " - (<spring:message code="ezResource.t104" />";
+					
+				    try {
+				        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
+				        acllist.options[indexV].Access_lvl = AccLvl;
+				    } catch (e) {}
+				    
+					acllist.options[indexV].text = strVal;
+	
+				}else{
+					strVal = strMember_nam + " - (<spring:message code="ezResource.t105" />";
+	
+				    try {
+				        acllist.options[indexV].setAttribute("Access_lvl", AccLvl);
+				        acllist.options[indexV].Access_lvl = AccLvl;
+				    } catch (e) {}
+				    
+					acllist.options[indexV].text = strVal;
+				}
 			}
-		}
-
-
-		function selAclList_Change(objthis) {
-			var indexV			= objthis.selectedIndex;
-			var strAclLvl;// = CrossYN() ? objthis.options[indexV].getAttribute("Access_lvl") : objthis.options[indexV].Access_lvl;
-
-			if (CrossYN()) {
-			    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-			} else {
-			    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-			    if (strAclLvl == undefined) {
-			        strAclLvl = objthis.options[indexV].Access_lvl;
-			    }
+	
+	
+			function selAclList_Change(objthis) {
+				var indexV			= objthis.selectedIndex;
+				var strAclLvl;// = CrossYN() ? objthis.options[indexV].getAttribute("Access_lvl") : objthis.options[indexV].Access_lvl;
+	
+				if (CrossYN()) {
+				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				} else {
+				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				    if (strAclLvl == undefined) {
+				        strAclLvl = objthis.options[indexV].Access_lvl;
+				    }
+				}
+	
+				if ( strAclLvl == "1" ) {	
+					brd_mng1.checked = true;
+				} else {
+					brd_mng2.checked = true;
+				}
 			}
-
-			if ( strAclLvl == "1" ) {	
-				brd_mng1.checked = true;
-			} else {
-				brd_mng2.checked = true;
-			}
-		}
 		</script>
 	</head>
 	<body class="mainbody">	
@@ -103,7 +103,7 @@
 		<br>
 		<table class="box" style="width:100%">
   			<tr>
-    			<td><select id="acllist" name="acllist" style="width: 830px; height: 120px" size="10" language="javascript" onChange="selAclList_Change(this);"> ${strOptions}</select></td>
+    			<td style="padding:2px;"><select id="acllist" name="acllist" style="width: 830px; height: 120px" size="10" language="javascript" onChange="selAclList_Change(this);"> ${strOptions}</select></td>
     			<td style="width:80px; text-align:center; vertical-align:middle">
         			<a class="imgbtn"><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></a><br>
         			<a class="imgbtn"><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></a>
@@ -124,7 +124,7 @@
   			</tr>
 		</table>
 		<br>
-		<div class="txt">(<spring:message code="ezResource.t113" /></div>
+		<div class="txt"><spring:message code="ezResource.t113" /></div>
 		<div class="btnposition">
      		<a class="imgbtn"><span onclick="cmdOk_onclick()" ><spring:message code="ezResource.t114" /></span></a>
 		</div>

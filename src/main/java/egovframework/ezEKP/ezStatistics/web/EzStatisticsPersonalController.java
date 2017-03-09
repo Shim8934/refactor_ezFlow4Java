@@ -87,9 +87,9 @@ public class EzStatisticsPersonalController {
 	@ResponseBody
 	public String getPersnalMain(@CookieValue("loginCookie") String loginCookie, @RequestBody String bodyData, Locale locale, Model model,StatApprVO statApprVO) throws Exception {
         //관리자 권한체크
-		LoginVO user = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		if (user == null) {
+		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
@@ -99,9 +99,10 @@ public class EzStatisticsPersonalController {
 		String eDate = doc.getElementsByTagName("EDATE").item(0).getTextContent();
 		String company = doc.getElementsByTagName("COMPANY").item(0).getTextContent();
 				
-		statApprVO.setStartDate(commonUtil.getDateStringInUTC(sDate + " 00:00:00", user.getOffset(), true));
-		statApprVO.setEndDate(commonUtil.getDateStringInUTC(eDate + " 23:59:59", user.getOffset(), true));
+		statApprVO.setStartDate(commonUtil.getDateStringInUTC(sDate + " 00:00:00", userInfo.getOffset(), true));
+		statApprVO.setEndDate(commonUtil.getDateStringInUTC(eDate + " 23:59:59", userInfo.getOffset(), true));
 		statApprVO.setCompany(company);
+		statApprVO.setOffSet(userInfo.getOffset());
 		
 		return ezStatisticsAdminService.getConnInfo(statApprVO);
 	}

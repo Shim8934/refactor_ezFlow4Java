@@ -371,14 +371,6 @@ function show_repetition_info() {
 	if (document.getElementById("AllDay").checked == true) {
 	    repeatinfo += "" + strLang126 + "";
 	} else {
-	    var sdate, edate, tempstr;
-	    sdate = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-	    edate = new Date($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
-
-	    tempSstr = sdate.toLocaleTimeString().split(" ")[1];
-	    tempEstr = edate.toLocaleTimeString().split(" ")[1];
-
-	    
 	    reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
 	    reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);  
 
@@ -1833,12 +1825,6 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	if ( g_data["recurrence"] != null && g_data["recurrence"] != "" ) {
 		var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
-				
-		if(pAllDay) {
-			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "true");
-		} else {
-			createNodeAndInsertText(xmlDOMrec, objNode, "allday", "false");
-		}
 		
 		if(CrossYN()) { 
 	        var xmlRtn = xmlDOMrec.documentElement;

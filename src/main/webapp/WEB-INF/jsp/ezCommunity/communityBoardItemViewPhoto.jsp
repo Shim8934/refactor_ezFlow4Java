@@ -157,7 +157,7 @@
 		    }
 	
 		    function btn_Delete_Onclick() {
-		        if (!CheckIfHasReplies()) {
+		        if (CheckIfHasReplies()) {
 		            alert("<spring:message code = 'ezCommunity.t425' />");
 		            
 		            return;

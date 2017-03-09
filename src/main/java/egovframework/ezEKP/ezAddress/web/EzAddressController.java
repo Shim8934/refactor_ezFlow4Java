@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 
@@ -828,11 +829,13 @@ public class EzAddressController{
         rootAddressXML.append("</nodes>");
         rootAddressXML.append("</tree>");
 		
+        String browser = ClientUtil.getClientInfo(request, "browser");
 		
 		model.addAttribute("checkAdmin", checkAdmin);
 		model.addAttribute("deptAdmin", deptAdmin);
 		model.addAttribute("companyAdmin", companyAdmin);
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
+		model.addAttribute("browser", browser);
 		
 		logger.debug("addressMoveCopy ended.");
 		logger.debug("checkAdmin=" + checkAdmin + ",deptAdmin=" + deptAdmin + ",companyAdmin=" + companyAdmin);

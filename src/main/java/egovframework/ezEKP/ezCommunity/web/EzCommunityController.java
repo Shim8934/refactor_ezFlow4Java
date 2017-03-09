@@ -1089,9 +1089,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
 		ezCommunityService.boardItemView(userInfo, boardInfo, item, pItemID, pBoardID, showAdjacent, adjacentItemsEnableFlag, model);
-
-//		item.setWriteDate(commonUtil.getDateStringInUTC(item.getWriteDate(), userInfo.getOffset(), false));
 		
+		model.addAttribute("item", item);
 		model.addAttribute("itemID", pItemID);
 		model.addAttribute("boardID", pBoardID);
 		model.addAttribute("code", code);
@@ -1103,7 +1102,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("boardInfo", boardInfo);
-//		model.addAttribute("ch_CommunityAdmin", userInfo.getRollInfo().indexOf("t=1"));
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
 		

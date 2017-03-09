@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezQuestion.t178' /></title>
+		<title><c:out value='${title}'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
@@ -65,7 +65,7 @@
 			</c:when>
 			<c:otherwise>
 				<body class="popup">
-					<h1>title</h1>
+					<h1><c:out value='${title}'/></h1>
 					<div id="close">
 					  <ul>
 					    <li><span onclick="window.close()"><spring:message code="ezQuestion.t88" /></span></li>

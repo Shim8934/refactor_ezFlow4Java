@@ -434,11 +434,11 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			String accessLvl = xmlRet.getElementsByTagName("NODE").item(i).getChildNodes().item(4).getTextContent();
 			
 			if (accessLvl.equals("1")) {
-				strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t115", locale);
+				strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t115", locale);
 				optAdmLvl = "checked";
 				optUserLvl = "";
 			} else if (accessLvl.equals("2")) {
-				strVal = memberNam + " - ( " + egovMessageSource.getMessage("ezResource.t116", locale);
+				strVal = memberNam + " - (" + egovMessageSource.getMessage("ezResource.t116", locale);
 				optAdmLvl = "";
 				optUserLvl = "checked";
 			}

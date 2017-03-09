@@ -1001,7 +1001,7 @@
 			AND
 				parentwritedate = #v_pParentWriteDate#
 			AND
-				upperitemidtree LIKE #v_pUpperItemIDTree#
+				upperitemidtree LIKE CONCAT(#v_pUpperItemIDTree#, '%')
 			AND
 				startdate <= #v_pNow#
 			AND
@@ -1009,8 +1009,8 @@
 			AND
 				tenant_id = #tenantID#
 			ORDER BY
-				parentwritedate DESC,
-				upperitemidtree
+				upperitemidtree,
+				startDate DESC
 		]]>
 	</select>
 	
@@ -1036,7 +1036,8 @@
 				tenant_id = #tenantID#
 			ORDER BY
 				parentwritedate DESC,
-				upperitemidtree
+				upperitemidtree ASC,
+				startdate DESC
 			LIMIT
 				20
 		]]>
@@ -1058,9 +1059,9 @@
 				AND
 					parentwritedate <= #v_pParentWriteDate#
 				AND
-					itemid <> #v_pItemID#
+					upperitemidtree NOT LIKE CONCAT(#v_pUpperItemIDTree#, '%')
 				AND
-					upperitemidtree NOT LIKE #v_pUpperItemIDTree#
+					itemid <> #v_pItemID#
 				AND
 					startdate <= #v_pNow#
 				AND
@@ -1071,9 +1072,9 @@
 					tenant_id = #tenantID#
 				ORDER BY 
 					parentwritedate DESC,
-					upperitemidtree
-				LIMIT
-					1
+					upperitemidtree,
+					startdate DESC
+				LIMIT 1
 			]]>
 		</isNotEqual>
 		
@@ -1089,9 +1090,9 @@
 				AND
 					parentwritedate <= #v_pParentWriteDate#
 				AND
-					itemid <> #v_pItemID#
+					upperitemidtree NOT LIKE CONCAT(#v_pUpperItemIDTree#, '%')
 				AND
-					upperitemidtree NOT LIKE #v_pUpperItemIDTree#
+					itemid <> #v_pItemID#
 				AND
 					startdate <= #v_pNow#
 				AND
@@ -1100,9 +1101,9 @@
 					tenant_id = #tenantID#
 				ORDER BY 
 					parentwritedate DESC,
-					upperitemidtree
-				LIMIT
-					1
+					upperitemidtree,
+					startdate DESC
+				LIMIT 1
 			]]>
 		</isEqual>
 	</select>

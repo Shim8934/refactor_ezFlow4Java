@@ -1,5 +1,5 @@
 /* �±� redefine */
-*{letter-spacing:-1; font-size:12px;font-family: 'Gulim', 'arial', 'verdana'; color:#313131}
+*{letter-spacing:-1; font-size:12px; color:#313131}
 textarea {padding : 5px}
 a:hover, a:link, a:visited{text-decoration:none}
 body{

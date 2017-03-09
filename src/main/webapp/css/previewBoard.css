@@ -24,8 +24,7 @@ th {
 	background: #FFF;
 	border:1px solid #b6b6b6;
 	height:29px;
-	word-break:break-all;
-	font-family:"Gulim", "arial", "verdana";
+	word-break:break-all;	
 	font-size:12px;
 }
 .content td, .file td, .file2 td {

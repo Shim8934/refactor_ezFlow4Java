@@ -4,6 +4,7 @@
 <html style="height:97%">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="<spring:message code='ezPortal.i2'/>" type="text/css" />
 		<link href="/css/help.css" rel="stylesheet" type="text/css">
 		<style type="text/css">
 			.warningbox01 { width:490px; margin-top:200px; margin-left:220px; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}

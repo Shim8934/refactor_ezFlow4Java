@@ -232,13 +232,15 @@
 		    }
 
 		    var pSeach = false;
-		    function DisplayUserImageList() {
+		    function DisplayUserImageList() {		    	
 		        var xmlRtn = pListXML_Info;
 		        document.getElementById("DeptUserImgList").innerHTML = "";
 		        document.getElementById("txtlist_Layer").scrollTop = "0";
 		        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes;
-		        totalPage = Math.ceil(new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]) / 50));
 		        
+		        var totalCount = new Number(getNodeText(SelectNodes(xmlRtn, "LISTVIEWDATA/TOTALCOUNT")[0]));
+		        totalPage = Math.ceil(totalCount / 50);		        
+
 		        while (document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.length > 1) {
 		            document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).removeChild(document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).childNodes.item(1));
 		        }
@@ -249,7 +251,7 @@
 		        
 		        var UserListHTML = "";
 		        if (SelectDeptNM.getAttribute("countinfo") != "1") {
-		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		            SelectDeptNM.innerHTML += "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
 		            SelectDeptNM.setAttribute("countinfo", "1")
 		        }
 		        
@@ -260,7 +262,7 @@
 		            document.getElementById("Search_txtlist_table").style.display = "none";
 		            
 		            if (pSeach) {
-		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+		                document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
 		                SelectDeptNM.setAttribute("countinfo", "1");
 		            }
 		        } else {
@@ -273,7 +275,7 @@
 	                } else {
 	                    document.getElementById("Search_txtlist_table").style.display = "";
 	                    document.getElementById("txtlist_table").style.display = "none";
-	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length + strLang256 + "</span>]";
+	                    document.getElementById("SelectDeptNM").innerHTML = "<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;\" >" + strLang257 + "" + "-[<span style='color:#017BEC;'>" + totalCount + strLang256 + "</span>]";
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
@@ -474,12 +476,14 @@
 		    function event_listclick(obj) {
 		        if (!listEventCheckbox) {
 		            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
-		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
+		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {		                	
 		                    p_ListOrderObject = document.getElementById(listContentArry[Cnt]);
-		                    for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
-		                        p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+		                    
+		                    if (p_ListOrderObject != null) {
+			                    for (var RowCnt = 0; RowCnt < p_ListOrderObject.childNodes.length; RowCnt++) {
+			                        p_ListOrderObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
+			                    }
 		                    }
-
 		                }
 		                listContentArry = new Array();
 		            }
@@ -837,10 +841,6 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + id + "&dept=" + dept, "", "height=450px,width=420px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
 
-		    function event_listDBclick(obj) {
-		        InsertReceiver("MsgToList");
-		    }
-
 		    function InsertReceiver(pListView) {
 		        var pparsingXML = "";
 		        var pparsingXML2 = "";
@@ -1173,6 +1173,9 @@
 		        td_Create1(PagingHTML);
 		    }
 		    function goToPageByNum(Value) {
+		    	p_ListOrderObject = "";		    	
+		    	listContentArry = new Array();
+		    	
 		        CurPage = Value;
 		        makePageSelPage();
 		        movePage(CurPage);
@@ -1229,145 +1232,7 @@
 		            else
 		                displayUserList();
 		        }
-		    }
-		    var BlockSize = 10;
-		    function td_Create1(strtext) {
-		        document.getElementById("tblPageRayer").innerHTML = strtext;
-		    }
-		    function makePageSelPage() {
-		        var strtext;
-		        var PagingHTML = "";
-		        document.getElementById("tblPageRayer").innerHTML = "";
-		        strtext = "<div class='pagenavi'>";
-		        PagingHTML += strtext;
-		        var pageNum = CurPage;
-		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' width='16' height='16'></span>"
-		            PagingHTML += strtext;
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' width='16' height='16'></span>"
-		            PagingHTML += strtext;
-		        }
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang268 + "</span>";
-		            PagingHTML += strtext;
-		        }
-		        var MaxNum;
-		        var i;
-		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
-		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        }
-		        else {
-		            MaxNum = totalPage;
-		        }
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		            else {
-		                strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        else {
-		            strtext = "<span class='ptxt' onclick='return selafterBlock_one()'>" + strLang269 + "</span>";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' width='16' height='16'></span>";
-		            PagingHTML += strtext;
-		        }
-		        PagingHTML += "</div>";
-		        td_Create1(PagingHTML);
-		    }
-		    function goToPageByNum(Value) {
-		        CurPage = Value;
-		        makePageSelPage();
-		        movePage(CurPage);
-		    }
-		    function selbeforeBlock() {
-		        var pageNum = parseInt(CurPage);
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    function selbeforeBlock_one() {
-		        var pageNum = parseInt(CurPage);
-		        if (parseInt(pageNum - 1) > 0)
-		            goToPageByNum(parseInt(pageNum - 1));
-		        else
-		            return;
-		    }
-		    function selafterBlock() {
-		        var pageNum = parseInt(CurPage);
-		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    function selafterBlock_one() {
-		        var pageNum = parseInt(CurPage);
-		        if (parseInt(pageNum + 1) <= totalPage)
-		            goToPageByNum(parseInt(pageNum + 1));
-		        else
-		            return;
-		    }
-		    function movePage(newPage) {
-		        if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
-		            CurPage = newPage;
-		            if (issearch)
-		                search_click();
-		            else
-		                displayUserList();
-		        }
-		    }
-		    function prevPage_onclick() {
-		        newPage = parseInt(CurPage) - 1;
-		        if (newPage > 0) {
-		            CurPage = newPage;
-		            if (issearch)
-		                search_click();
-		            else
-		                displayUserList();
-		        }
-		    }
-		    function nextPage_onclick() {
-		        newPage = parseInt(CurPage) + 1;
-		        if (newPage <= parseInt(totalPage)) {
-		            CurPage = newPage;
-		            if (issearch)
-		                search_click();
-		            else
-		                displayUserList();
-		        }
-		    }
+		    }		    
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">		
