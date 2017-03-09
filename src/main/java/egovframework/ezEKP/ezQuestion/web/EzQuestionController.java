@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezQuestion.web;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -1746,6 +1747,8 @@ public class EzQuestionController extends EgovFileMngUtil {
                 pFilePath = qstAttachVO.getAttachUrl();
                 pFileName = qstAttachVO.getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
             }
+            
+            pFileName = URLDecoder.decode(pFileName, "utf-8");
             
             if (pFilePath != null && !pFilePath.equals("")){
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
@@ -3998,24 +4001,21 @@ public class EzQuestionController extends EgovFileMngUtil {
 	            	break;
 	            	
 	            case "2":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(2," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
-	            	break;
-	            	
-	            case "3":
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(2," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" + URLDecoder.decode(strAttachName, "utf-8") + "</td>");
 	            	break;
 	            	
 	            case "4":
 	            	//url
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\">" + strAttachName + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>");
 	            	break;
 	            	
 	            case "5":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + strAttachName + "</td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" width=\"21\" height=\"17\" align=\"absmiddle\">" + URLDecoder.decode(strAttachName, "utf-8") + "</td>");
 	            	break;
 	            
 	            default :
 	            	//img URL 등등
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + strAttachUrl + "\" target=\"_blink\">" + strAttachName + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>");
 	            	break;
 	            }
 	        }
