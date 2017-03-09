@@ -67,7 +67,7 @@
 	</head>
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left" style="overflow-x:hidden">
-			<div class="left_admin" title="<spring:message code='main.t26'/>"><spring:message code='main.t26'/></div>
+			<div class="left_admin" title="<spring:message code='ezApprovalG.t102'/>"><spring:message code='ezApprovalG.t102'/></div>
         	<h2><span id="1" style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t33'/></span><ul></ul></h2>	
 <%-- 			<h2><span id="2" style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t34'/></span><ul></ul></h2> --%>
 			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t36'/></span><ul></ul></h2>	

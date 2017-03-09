@@ -1607,7 +1607,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSecurityType(String selected, String companyID, String lang, int tenantID) throws Exception {
+	public String getSecurityType(String selected, String companyID, String lang, int tenantID, String approvalYN) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", lang);
@@ -1628,15 +1628,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
+		if (approvalYN.equals("N")) {
+			rtnXML.append("<div style='padding-top:5px'>");
+		}
+		
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
 			
-			if (colOption[2].equals(selected)) {
-				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			if (approvalYN.equals("Y")) {
+				if (colOption[2].equals(selected)) {
+					rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+				} else {
+					rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+				}
 			} else {
-				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+				rtnXML.append("<input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><span>" + colOption[1] + "</span>&nbsp;&nbsp;");
+				
 			}
 		}
+		
+		if (approvalYN.equals("N")) {
+			rtnXML.append("</div>");
+		}
+		
 		return rtnXML.toString();
 	}
 
@@ -17926,17 +17940,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 			 if (deptName.trim().equals("")) {
 						deptName = docID;
 		 			 }
+		 			 	map.put("companyID", companyID);
 		 			 	map.put("v_DOCID", docID.trim());
 		 			 	map.put("v_DEPTNAME", makeRightField(deptName.trim()));
 		 			 	map.put("v_DEPTNAME2", makeRightField(deptName2.trim()));
 		 			 	map.put("v_PROCESSYN", processYN);
-		 			 	map.put("v_DEPTID", makeRightField(docID.trim()));
+		 			 	map.put("v_DEPTID", makeRightField(deptID.trim()));
 		 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		 			 	map.put("v_TENANTID", tenantID);
 		 			 	ezApprovalGDAO.insertProHistoryReceiptInfo2(map);
 			}
 		}
 		} catch(Exception e) {
+			System.out.println(e.getMessage());
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
@@ -18440,6 +18456,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	@Override
 	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID,  String langType, String companyID, String pw,	HttpServletRequest request, LoginVO userInfo) throws Exception {
 		return null;
+	}
+
+	@Override
+	public String getKeepType(String lang, int tenantId, String companyID) throws Exception {
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("companyID", companyID);
+		
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGetKeepTypeList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGetKeepTypeList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+			rtnXML.append("<div style='padding-top:5px'>");
+		
+		for (int k = 0; k < dlength; k++) {
+			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+			rtnXML.append("<input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
+		}
+			rtnXML.append("</div>");
+		return rtnXML.toString();
 	}
 
 

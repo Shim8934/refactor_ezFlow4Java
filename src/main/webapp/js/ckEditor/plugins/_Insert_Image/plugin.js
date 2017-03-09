@@ -19,10 +19,12 @@ function Insert_ImageCmd_Complete(rtn) {
 		{
 		    var selection = editor.getSelection();
 		    if (!CrossYN()) {
+		    	var rtn;
+		    	
 		    	if (parent.document.location.href.toLowerCase().indexOf("/ezemail/mailsignatureck.do") > -1) {
-		    		var rtn = showModalDialog("/ezEmail/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		    		rtn = showModalDialog("/ezEmail/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
 		    	} else {
-		    		var rtn = showModalDialog("/ezCommon/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
+		    		rtn = showModalDialog("/ezCommon/ckImageUpload.do", this, "dialogHeight:400px; dialogWidth:470px; status:no;scroll:no; help:no; edge:sunken");
 		    	}
 		    	
 		        if (rtn == undefined)
@@ -38,10 +40,15 @@ function Insert_ImageCmd_Complete(rtn) {
 			        else
 			            parent.parent.DivPopUpShow(470, 400, "/ezEmail/ckImageUpload.do");
 			    } else {
-			    	if (parent.document.getElementById("mailPanel") != null)
-			            parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
-			        else
-			            parent.parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
+			    	if (parent.document.getElementById("mailPanel") != null) {
+			    		parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
+			    	} else {
+			    		if (parent.document.location.href.indexOf("boardFormSave.do") > -1) {
+			    			parent.parent.DivPopUpShow(370, 300, "/ezCommon/ckImageUpload.do");
+			    		} else {
+			    			parent.parent.DivPopUpShow(470, 400, "/ezCommon/ckImageUpload.do");
+			    		}
+			    	}
 			    }
 		    }
 		}

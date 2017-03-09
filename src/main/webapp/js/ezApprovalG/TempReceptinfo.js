@@ -146,7 +146,11 @@ function btn_GroupReceptAdd_onclick(){
 function AprLineAddDeptGroup() {
     var Resultxml = "";
     Resultxml.async = false;
-    Resultxml = loadXMLFile(strLangEtcFile1);
+    if(approvalYN == "Y") {
+    	Resultxml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+    }	
 
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");

@@ -56,7 +56,7 @@ public interface EzApprovalGService {
 	
 	public String getApprovalPWD(String userID, int tenantID, String companyID) throws Exception;
 	
-	public String getSecurityType(String selected, String companyID, String lang, int tenantID) throws Exception;
+	public String getSecurityType(String selected, String companyID, String lang, int tenantID, String approvalYN) throws Exception;
 	
 	public String getAprType(String companyID, String lang, int tenantID) throws Exception;
 	
@@ -382,5 +382,7 @@ public interface EzApprovalGService {
 	public String updateHistoryForDoc(String docID, String url, String userID, String userName, String userName2, String userJobTitle, String userJobTitle2, String userDeptID, String userDeptName, String userDeptName2, LoginVO userInfo)  throws Exception;
 
 	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, String pw, HttpServletRequest request, LoginVO userInfo) throws Exception;
+
+	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
 }

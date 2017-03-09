@@ -98,23 +98,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		String serverName = request.getServerName();
-		StringBuilder sb = new StringBuilder();
 		String redirectBoardID = "";
+		String redirectBoardGroupID = "";
 
-		if (request.getParameter("BoardID") != null) {
-			redirectBoardID = request.getParameter("BoardID");
+		if (request.getParameter("boardID") != null) {
+			redirectBoardID = request.getParameter("boardID");
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 
-			sb.append("<DATA>");
-			for (int i = 0; i < leftBoardList.size(); i++) {
-				sb.append("<ROW><BOARDGROUPID>");
-				sb.append(leftBoardList.get(i).getBoardGroupId());
-				sb.append("</BOARDGROUPID></ROW>");
-			}
-			sb.append("</DATA>");
+			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
 		model.addAttribute("redirectBoardID", redirectBoardID);
-		model.addAttribute("redirectBoardGroupID", sb.toString());
+		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
 
@@ -786,19 +780,19 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<COMPANY><!CDATA[" + obj.getLoginVO().getCompanyName1() + "]]></COMPANY>");
-				sb.append("<DESCRIPTION><!CDATA[" + obj.getLoginVO().getDeptName1() + "]]></DESCRIPTION>");
-				sb.append("<DISPLAYNAME><!CDATA[" + obj.getLoginVO().getDisplayName1() + "]]></DISPLAYNAME>");
-				sb.append("<TITLE><!CDATA[" + obj.getLoginVO().getTitle1() + "]]></TITLE>");
-				sb.append("<COMPANY2><!CDATA[" + obj.getLoginVO().getCompanyName2() + "]]></COMPANY2>");
-				sb.append("<DESCRIPTION2><!CDATA[" + obj.getLoginVO().getDeptName2() + "]]></DESCRIPTION2>");
-				sb.append("<DISPLAYNAME2><!CDATA[" + obj.getLoginVO().getDisplayName2()	+ "]]></DISPLAYNAME2>");
-				sb.append("<TITLE2><!CDATA[" + obj.getLoginVO().getTitle2()	+ "]]></TITLE2>");
+				sb.append("<COMPANY><![CDATA[" + obj.getLoginVO().getCompanyName1() + "]]></COMPANY>");
+				sb.append("<DESCRIPTION><![CDATA[" + obj.getLoginVO().getDeptName1() + "]]></DESCRIPTION>");
+				sb.append("<DISPLAYNAME><![CDATA[" + obj.getLoginVO().getDisplayName1() + "]]></DISPLAYNAME>");
+				sb.append("<TITLE><![CDATA[" + obj.getLoginVO().getTitle1() + "]]></TITLE>");
+				sb.append("<COMPANY2><![CDATA[" + obj.getLoginVO().getCompanyName2() + "]]></COMPANY2>");
+				sb.append("<DESCRIPTION2><![CDATA[" + obj.getLoginVO().getDeptName2() + "]]></DESCRIPTION2>");
+				sb.append("<DISPLAYNAME2><![CDATA[" + obj.getLoginVO().getDisplayName2()	+ "]]></DISPLAYNAME2>");
+				sb.append("<TITLE2><![CDATA[" + obj.getLoginVO().getTitle2()	+ "]]></TITLE2>");
 				sb.append("<ACCESSID>" + obj.getAccessID() + "</ACCESSID>");
-				sb.append("<ACCESSNAME><!CDATA[" + obj.getAccessName() + "]]></ACCESSNAME>");
-				sb.append("<ACCESSNAME2><!CDATA[" + obj.getAccessName2() + "]]></ACCESSNAME2>");
+				sb.append("<ACCESSNAME><![CDATA[" + obj.getAccessName() + "]]></ACCESSNAME>");
+				sb.append("<ACCESSNAME2><![CDATA[" + obj.getAccessName2() + "]]></ACCESSNAME2>");
 				sb.append("<BOARDGROUPACL>" + obj.getBoardGroupACL() + "</BOARDGROUPACL>");
-				sb.append("<DISPLAYNAME><!CDATA[" + obj.getDisplayName() + "]]></DISPLAYNAME>");
+				sb.append("<DISPLAYNAME><![CDATA[" + obj.getDisplayName() + "]]></DISPLAYNAME>");
 				sb.append("<BOARDADMIN_FG>" + obj.getBoardAdmin_FG() + "</BOARDADMIN_FG>");
 				sb.append("<ACCESS_>" + obj.getAccess_() + "</ACCESS_>");
 				sb.append("<LISTVIEW_FG>" + obj.getListView_FG() + "</LISTVIEW_FG>");
