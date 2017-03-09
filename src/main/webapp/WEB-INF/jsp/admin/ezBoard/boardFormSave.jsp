@@ -6,10 +6,10 @@
 	<head>		
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href='<spring:message code="ezBoard.i1" />' type="text/css" />
-	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
-	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>	    
+	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+	    <script type="text/javascript" src="/js/mouseeffect.js"></script>
+	    <script type="text/javascript" src="/js/ezBoard/ConvertSaveImage.js"></script>
 		<script type="text/javascript" language="javascript">			
 			var pBoardId = "<c:out value='${boardID}'/>";
 	        var pcheckForm = "<c:out value='${checkForm}'/>";
@@ -69,6 +69,10 @@
 	    <div style="width:780px;text-align:center;margin-top:5px;">
 	        <a class="imgbtn"><span onclick="saveForm()"><spring:message code="ezBoard.t98" /></span></a>
 	        <a class="imgbtn"><span onclick="cancel()"><spring:message code="ezBoard.t15" /></span></a>
+	    </div>
+	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0); display: none;" id="mailPanel">&nbsp;</div>	
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="/blank.htm" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
 	</body>	
 </html>

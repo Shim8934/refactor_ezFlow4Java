@@ -152,7 +152,12 @@
 	    <table class="content" style="width: 100%;">
 	        <tr>
 	            <td class="pos1" style="padding-right: 0">
+                    <c:if test="${browser == 'Chrome'}">
+                    <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 265px; overflow: auto" id="AddressTreeView"></div>
+                    </c:if>
+                    <c:if test="${browser != 'Chrome'}">
 	                <div class="tree" style="border: 0; margin-left: 5px; width: 98%; height: 270px; overflow: auto" id="AddressTreeView"></div>
+                    </c:if>
 	            </td>
 	        </tr>
 	    </table>
