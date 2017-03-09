@@ -1074,7 +1074,7 @@
 	          	ATTACHSIZELIMIT = #v_PATTACHMAX#,
 	          	URL = #v_PURL#,
 	          	REPLYNOTIFY = #v_PREPLYNOTIFY#,
-	          	GUBUN = #v_PGUBUN#,
+	          	GUBUN = (CASE WHEN (#v_PGUBUN# IS NULL OR #v_PGUBUN# = '') THEN 0 ELSE #v_PGUBUN# END) ,
 	          	BOARDNAME = #v_PBOARDNAME#,
 	          	DELETEAFTER = #v_PDELETEAFTER#,
 	          	BOARDCOLOR = #v_PBOARDCOLOR#,
