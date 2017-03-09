@@ -30,7 +30,6 @@
 			var pAnswerType = "<c:out value='${pAnswerType}'/>";
 			
 			window.onload = function () {
-				alert(pAnswerType);
 				if(pAnswerType==2 || pAnswerType==5){
 					alert("<spring:message code='ezQuestion.lhj1' />");
 				 	window.location.href = "/ezQuestion/qstList.do?brdID="+pBrdID+"&currPage="+pCurrPage;

@@ -219,7 +219,7 @@
 		    }
 		
 		    $(function () {
-		      	if(approvalYN == "Y") {
+		      	if(approvalYN == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
 	        	} else{

@@ -121,19 +121,6 @@
             xmlHttp.open("POST", "/ezStatistics/getStatConnBrowser.do", true);
             xmlHttp.onreadystatechange = event_getpersonalstatistics;
             xmlHttp.send(xmlDoc);
-            $.ajax({
-				type : "POST",
-				dataType : "text",
-				async : true,
-				url : "/ezStatistics/getStatisticsAprMain.do",
-				data : {
-						company : document.getElementById("SCompID").value,
-						date : document.getElementById("selyear").value
-						},
-				success: function(text) {
-					event_getapprovalstatistics(text);
-				}        			
-			});
         }
 
         var rowcnt;
@@ -295,7 +282,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/statisticsexcelExportOut.do">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXls.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

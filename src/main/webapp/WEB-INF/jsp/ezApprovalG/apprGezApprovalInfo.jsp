@@ -236,7 +236,7 @@
 // 	        });
 	        
 	        window.onload = function () {
-	        	if(approvalYN == "Y") {
+	        	if(approvalYN == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
 	        	} else{
@@ -983,7 +983,7 @@
 	        document.getElementById("taSummery").value = "";
 	
 	        onload_window();
-	        if (approvalYN == "Y") {
+	        if (approvalYN == "G") {
 		        if (vSecurity.trim() == "")
 		            document.getElementById("selSecLevel").options[0].selected = true;
 		        else
@@ -1153,14 +1153,14 @@
 	    <div class="portlet_tabpart02">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1"><spring:message code='ezApprovalG.t1769'/></span></p>
-	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalYN eq 'Y'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalYN  eq 'N'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
-	            <c:if test="${approvalYN eq 'Y'}" >
+	            <p id="showReceptinfo"><span divname="Receptinfo" id="1tab2"><c:if test="${approvalYN eq 'G'}" ><spring:message code='ezApprovalG.t448'/></c:if><c:if test="${approvalYN  eq 'S'}"><spring:message code='ezApprovalG.t999932'/></c:if></span></p>
+	            <c:if test="${approvalYN eq 'G'}" >
 	            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApprovalG.t51'/></span></p>
 	           	</c:if>
-	           	<c:if test="${approvalYN eq 'N'}" >
+	           	<c:if test="${approvalYN eq 'S'}" >
 	            <p id="showCabinetinfo"><span divname="Cabinetinfo" id="1tab3"><spring:message code='ezApproval.t335'/></span></p>
 	           	</c:if>
-	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4"><c:if test="${approvalYN eq 'Y' }"><spring:message code='ezApprovalG.t1204'/></c:if><c:if test="${approvalYN eq 'N' }"><spring:message code='ezApproval.t62'/></c:if></span></p>
+	            <p id="showDocinfo"><span divname="Docinfo" id="1tab4"><c:if test="${approvalYN eq 'G' }"><spring:message code='ezApprovalG.t1204'/></c:if><c:if test="${approvalYN eq 'S' }"><spring:message code='ezApproval.t62'/></c:if></span></p>
 	        </div>
 	    </div>
 	    <div id="Approvallist">
@@ -1297,10 +1297,10 @@
 	    <div id="Receptinfo" style="border: 2px solid #dbdbda; width: 970px; height: 597px; display: none;">
 	        <table>
 	            <tr>
-	            	<c:if test= "${approvalYN eq 'Y'}">
+	            	<c:if test= "${approvalYN eq 'G'}">
 	                <td style="vertical-align: top">
 	                </c:if>
-	                <c:if test= "${approvalYN eq 'N'}">
+	                <c:if test= "${approvalYN eq 'S'}">
 	                <td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top;">
 	                </c:if>
 	                    <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
@@ -1315,17 +1315,17 @@
 	                        <table style="margin-left: 0px;">
 	                            <tr>
 	                                <td style="vertical-align: top;">
-	                                	<c:if test="${approvalYN eq 'Y' }">
+	                                	<c:if test="${approvalYN eq 'G' }">
 		                                    <div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 524px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
 		                                    </div>
 	                                    </c:if>
-	                                    <c:if test="${approvalYN eq 'N' }">
+	                                    <c:if test="${approvalYN eq 'S' }">
                                         	<div id="TreeView2" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
 		                                    </div>
 	                                    </c:if>
 	                                </td>
 	                            </tr>
-	                            <c:if test="${approvalYN eq 'N' }">
+	                            <c:if test="${approvalYN eq 'S' }">
 	                            <tr>
                                     <td style="border: 1px solid #b6b6b6;">
                                         <div class="border_gray" style="border: 0px;">
@@ -1568,7 +1568,7 @@
 	
 	                </td>
 	            </tr>
-	            <c:if test="${approvalYN eq 'N' }">
+	            <c:if test="${approvalYN eq 'S' }">
 	                 <tr>
                     <th><spring:message code="ezApproval.t706"/></th>
                     <td>
