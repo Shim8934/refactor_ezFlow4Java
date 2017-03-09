@@ -84,7 +84,7 @@
 			}
 			
 			function menuQst_ResultView() {
-			    history.go("${pageCount}");
+			    window.location.href = "/ezQuestion/qstResult.do?brdID=" + szBrdID + "&itemNo=" + szItemNo;
 			}
 			
  			function search_Set(pPage) {

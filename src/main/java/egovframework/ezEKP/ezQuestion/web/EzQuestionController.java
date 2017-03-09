@@ -149,7 +149,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(request.getParameter("currPage") != null){
 			currPage = request.getParameter("currPage");
 		}
-			
+		
 		qstListVO.setBrdID(Integer.parseInt(brdID));
 		qstListVO.setTitle(title);
 		qstListVO.setResponseRange(responseRange);
@@ -467,20 +467,20 @@ public class EzQuestionController extends EgovFileMngUtil {
 		qstVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
 		qstVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
 		
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		String userID = loginVO.getId();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
 		boolean multiResponseOK = false;
 		int responseCnt = 0;
 	
 		/**UserPermission*/
 		qstUserPermissionVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
 		qstUserPermissionVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, loginVO.getTenantId());
+		qstUserPermissionVO=ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
 		
 		if(qstUserPermissionVO.getMultiResponseFlg().equals('1')){
 			multiResponseOK = true;
 		}else{
-			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO,userID, loginVO.getTenantId())!=0){
+			if(ezQuestionService.getResponseDateCnt(qstUserPermissionVO,userID, userInfo.getTenantId())!=0){
 				multiResponseOK = false;
 			}else{
 				multiResponseOK = true;
@@ -495,19 +495,19 @@ public class EzQuestionController extends EgovFileMngUtil {
 				adminYN = true;
 		}
 		
-		responseCnt = ezQuestionService.resCount(request.getParameter("brdID"),request.getParameter("itemNo"), loginVO.getTenantId());
+		responseCnt = ezQuestionService.resCount(request.getParameter("brdID"),request.getParameter("itemNo"), userInfo.getTenantId());
 		
 		QstUserPollItemVO qstUserPollItemVO = new QstUserPollItemVO();
 		qstUserPollItemVO.setBrdID(Integer.parseInt(request.getParameter("brdID")));
 		qstUserPollItemVO.setItemNo(Integer.parseInt(request.getParameter("itemNo")));
-		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, loginVO.getTenantId());
+		qstUserPollItemVO=ezQuestionService.getUserPollItem(qstUserPollItemVO, userInfo.getTenantId());
 		
 		if(qstUserPollItemVO.getUserID() != userID){
 			qstUserPollItemVO.setReadCnt(qstUserPollItemVO.getReadCnt() + 1);
-			ezQuestionService.updateReadCnt(qstUserPollItemVO, loginVO.getTenantId());
+			ezQuestionService.updateReadCnt(qstUserPollItemVO, userInfo.getTenantId());
 		}
 		
-		int readDateCnt = ezQuestionService.getReadDateItem(qstUserPollItemVO,userID,loginVO.getTenantId());
+		int readDateCnt = ezQuestionService.getReadDateItem(qstUserPollItemVO,userID,userInfo.getTenantId());
 		
 		//Date sysDate=new Date();
 		//java.text.DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -515,12 +515,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String nowDate = commonUtil.getTodayUTCTime("");
 		
 		if(readDateCnt > 0){
-			ezQuestionService.updateReadDate(qstUserPollItemVO, nowDate, userID, loginVO.getTenantId());
+			ezQuestionService.updateReadDate(qstUserPollItemVO, nowDate, userID, userInfo.getTenantId());
 		}else{
-			ezQuestionService.insertItemRead(loginVO, qstUserPollItemVO, nowDate);
+			ezQuestionService.insertItemRead(userInfo, qstUserPollItemVO, nowDate);
 		}
 		
-		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO, loginVO.getTenantId());
+		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO, userInfo.getTenantId());
 
 		String strResult = "<SUBDATA>";
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -542,7 +542,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				Node answerViewType = doc.createElement("ANSWERVIEWTYPE");
 				Node multiSelect = doc.createElement("MULTISELECT");
 				Node quesSn = doc.createElement("QUES_SN");
-				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333", loginVO.getLocale()) + (iQueCount) + ":" + commonUtil.cleanValue(question.getQuesContent()) + getAttachList(loginCookie,Integer.toString(question.getQuestionNo()), "0", question.getBrdID(), question.getItemNo())));
+				qst.appendChild(doc.createTextNode(egovMessageSource.getMessage("ezQuestion.t333", userInfo.getLocale()) + (iQueCount) + ":" + commonUtil.cleanValue(question.getQuesContent()) + getAttachList(userInfo, Integer.toString(question.getQuestionNo()), "0", question.getBrdID(), question.getItemNo())));
 				brdID.appendChild(doc.createTextNode(Integer.toString(question.getBrdID())));
 				itemNo.appendChild(doc.createTextNode(Integer.toString(question.getItemNo())));
 				questionNo.appendChild(doc.createTextNode(Integer.toString(question.getQuestionNo())));
@@ -590,7 +590,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	                    row.appendChild(subRow);
 					}
 					
-					dataSubProcess(loginCookie,question.getBrdID(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);
+					dataSubProcess(userInfo, question.getBrdID(), question.getItemNo(), question.getQuestionNo(), question.getAnswerType(), question.getMultiSelect(), row, doc);
 				}
 				strResult += "</SUBDATA>";
 			}
@@ -599,12 +599,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 		//publicDate, 공개기간을 구하기위해 endDate에 시간을 1초 더해주는부분 추가
 		SimpleDateFormat publicDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(publicDate.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false)));
+		cal.setTime(publicDate.parse(commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), userInfo.getOffset(), false)));
 		cal.add(Calendar.SECOND, 1);
 		
 		model.addAttribute("qstUserPollItemVO", qstUserPollItemVO);
-		model.addAttribute("pollStartDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), loginVO.getOffset(), false));
-		model.addAttribute("pollEndDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), loginVO.getOffset(), false));
+		model.addAttribute("pollStartDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollStartDate(), userInfo.getOffset(), false));
+		model.addAttribute("pollEndDate", commonUtil.getDateStringInUTC(qstUserPollItemVO.getPollEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("nowDate", nowDate);
 		model.addAttribute("qstUserPermissionVO", qstUserPermissionVO);
 		model.addAttribute("xmlResult", commonUtil.convertDocumentToString(doc));
@@ -837,8 +837,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String qstResult(@CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap model, HttpServletRequest request, QstUserPollItemVO qstUserPollItemVO, QstUserPermissionVO qstUserPermissionVO) throws Exception{
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
-		String brdID="5", brdNm="", itemNo="", title="", responseRange="", pollStartDate="", pollEndDate="", currPage="";
+		String brdID="5", brdNm="", itemNo="", title="", responseRange="", pollStartDate="", pollEndDate="";
 		String publicResultFlg = "", publicFlg = "", multiResponseFlg = "", endFlg = "";
+		int currPage = 1;
 		int readCnt=0, resCnt=0;
 		int percent = 0;
 		
@@ -857,15 +858,15 @@ public class EzQuestionController extends EgovFileMngUtil {
 		if(request.getParameter("pollEndDate")!=null)
 			pollEndDate = request.getParameter("pollEndDate");
 		if(request.getParameter("currPage")!=null)
-			currPage = request.getParameter("currPage");
-		logger.debug("currPage="+request.getParameter("currPage"));
-		String receve = "brdID=" + request.getParameter("brdID") +
-						"&itemNo=" + request.getParameter("itemNo") +
-		                "&title=" + commonUtil.cleanValue(request.getParameter("title")) +
-		                "&responseRange=" + request.getParameter("responseRange") +
-		                "&pollStartDate=" + request.getParameter("pollStartDate") +
-		                "&pollEndDate=" + request.getParameter("pollEndDate") +
-		                "&currPage=" + request.getParameter("currPage");		
+			currPage = Integer.parseInt(request.getParameter("currPage"));
+		
+		String receve = "brdID=" + brdID +
+						"&itemNo=" + itemNo +
+		                "&title=" + commonUtil.cleanValue(title) +
+		                "&responseRange=" + responseRange +
+		                "&pollStartDate=" + pollStartDate +
+		                "&pollEndDate=" + pollEndDate +
+		                "&currPage=" + currPage;
 		logger.debug("receve="+receve);
 		/** EZSP_GETUSERIDADMIN*/
 		boolean adminYN = false;
@@ -1844,7 +1845,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             		pAnsType = Integer.toString(qstVO.getAnswerType());
             		
             		if(pAnsType.equals("4")){
-            			List<QstAnswerVO> rtnList = dataProcessAns(loginCookie ,Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
+            			List<QstAnswerVO> rtnList = dataProcessAns(userInfo ,Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
             			StringBuilder rtnXML = new StringBuilder();
             			rtnXML.append("<DATA>");
             			
@@ -3830,13 +3831,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문내용 HTML Code 생성 실행 함수
 	 */
-	public void dataSubProcess(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public void dataSubProcess(LoginVO userInfo, int brdID, int itemNo, int qstNo, int answerType, String multiSelect, Node row, Document doc) throws Exception{
 		Node snewRow = doc.createElement("ITEM");
         int iCount = 0;
         String strTagData = "";
         
-        List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
+        List<QstAnswerVO> qstAnswerList = ezQuestionService.getAnswerCnt(brdID, itemNo, qstNo, userInfo.getTenantId());
         
         if (answerType == 5) {
         	Node itemNode = null;
@@ -3846,7 +3846,7 @@ public class EzQuestionController extends EgovFileMngUtil {
     		strTagData = "<tr><td style=\"overflow: auto;\">";
     		strTagData += "<table id=\"table_answer\" style=\"width:100%;\"; class=\"ex\">";
     		
-        	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, loginVO.getTenantId());
+        	List<QstAnswerVO> qstAnswerAnswerList = ezQuestionService.getAnswerAnswerCnt(brdID, itemNo, qstNo, userInfo.getTenantId());
         	
         	for (QstAnswerVO qstAnswer : qstAnswerList) {
         		iCount++;
@@ -3903,11 +3903,11 @@ public class EzQuestionController extends EgovFileMngUtil {
             		case 1:
             			if (multiSelect.equals("1")){
                             strTagData = "<input type=\"checkbox\" name=\"chk" + qstNo + "_" + Integer.toString(iCount) + "\" value=\"0\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                            strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                            strTagData += getAttachList(userInfo, Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
                             iValueNode = doc.createTextNode(strTagData);
                         }else{
                         	 strTagData = "<input type=\"Radio\" name=\"rdo" + qstNo + "\" value=\"" + Integer.toString(iCount) + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                        	 strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                        	 strTagData += getAttachList(userInfo, Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
                              iValueNode = doc.createTextNode(strTagData);
                         }
             			
@@ -3939,7 +3939,7 @@ public class EzQuestionController extends EgovFileMngUtil {
     					
             		case 4:
             			strTagData = "<input type=\"checkbox\" onchange=\"seqResponse(" + Integer.toString(iCount - 1) + ",frmResponse.chk" + qstNo + ", frmResponse.txt" + qstNo + ")\" name=\"chk" + qstNo + "\" value=\"" + qstAnswer.getAnswerNo() + "\">" + commonUtil.cleanValue(qstAnswer.getAnswerContent());
-                        strTagData += getAttachList(loginCookie,Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
+                        strTagData += getAttachList(userInfo, Integer.toString(qstNo), Integer.toString(qstAnswer.getAnswerNo()), qstAnswer.getBrdID(), qstAnswer.getItemNo());
                         iValueNode = doc.createTextNode(strTagData);
                         strTagData = "";
                         itemNode.appendChild(iValueNode);
@@ -3961,10 +3961,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 첨부파일 목록 HTML Code 생성 실행 함수
 	 */
-	@SuppressWarnings("unused")
-	public String getAttachList(@CookieValue("loginCookie") String loginCookie, String strQuestionNo, String strAnswer,int brdID, int itemNo) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		
+	public String getAttachList(LoginVO userInfo, String strQuestionNo, String strAnswer,int brdID, int itemNo) throws Exception{
 		StringBuilder strResult = new StringBuilder();
         String strAttachName = "";
         String strAttachUrl = "";
@@ -3976,7 +3973,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         qstAttachVO.setItemNo(itemNo);
         qstAttachVO.setQuestionNo(Integer.parseInt(strQuestionNo));
         qstAttachVO.setAnswerNo(Integer.parseInt(strAnswer));
-        List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+        List<QstAttachVO> qstAttachVOList = ezQuestionService.getAttachInfo(qstAttachVO, userInfo.getTenantId());
 
         if(qstAttachVOList!=null){
 	        for(QstAttachVO attachVO : qstAttachVOList){
@@ -4047,7 +4044,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 타입별 HTML코드 생성 실행 함수
 	 */
 	public List<QstVO> dataProcess(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, boolean bPublic,List<QstVO> qstVOList, int percent, Locale locale) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int iCount=0;
 		String strData = "";
@@ -4061,18 +4058,18 @@ public class EzQuestionController extends EgovFileMngUtil {
 			strData = "";
 			
 			if(answerType == 2){
-				strData = dataProcessType2(loginCookie,brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, locale);
+				strData = dataProcessType2(userInfo, brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, locale);
 			}else{
-				List<QstAnswerVO> qstAnswerVOList = dataProcessAns(loginCookie,brdID, itemNo, questionNo);
+				List<QstAnswerVO> qstAnswerVOList = dataProcessAns(userInfo ,brdID, itemNo, questionNo);
 				
 				if(answerType == 1){
-					strData = dataProcessType1(loginCookie,brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstAnswerVOList, locale);
+					strData = dataProcessType1(userInfo, brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, multiSelect, qstAnswerVOList, locale);
 				}else if(answerType == 3){
-					strData = dataProcessType3(loginCookie,brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstAnswerVOList, locale);
+					strData = dataProcessType3(userInfo, brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, bPublic, qstAnswerVOList, locale);
 				}else if(answerType == 4){
-					strData = dataProcessType4(loginCookie,brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
+					strData = dataProcessType4(userInfo, brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
 				}else if(answerType == 5){
-					strData = dataProcessType5(loginCookie,brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
+					strData = dataProcessType5(userInfo, brdID, itemNo, questionNo, quesContent, multiSelect, answerType, iCount, percent, qstAnswerVOList, locale);
 				}
 			}
 			
@@ -4084,10 +4081,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문 답변 정보 호출 실행 함수
 	 */
-	public List<QstAnswerVO> dataProcessAns(@CookieValue("loginCookie")String loginCookie, int brdID, int itemNo, int questionNo) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public List<QstAnswerVO> dataProcessAns(LoginVO userInfo, int brdID, int itemNo, int questionNo) throws Exception{
 		/** EZSP_GETANSWERCNT*/
-		List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(brdID, itemNo, questionNo, loginVO.getTenantId());
+		List<QstAnswerVO> qstAnswerVOList = ezQuestionService.getAnswerCnt(brdID, itemNo, questionNo, userInfo.getTenantId());
 		return qstAnswerVOList;
 	}
 	
@@ -4133,14 +4129,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 타입1 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType1(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
-		
+	public String dataProcessType1(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, String multiSelect, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
         float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
         String strData = "";
-        responseCnt = defaultResponseCount(brdID, itemNo, questionNo, loginVO);
+        responseCnt = defaultResponseCount(brdID, itemNo, questionNo, userInfo);
 
         strData += "<table class=\"question\">";
         strData += "<tr>";
@@ -4150,7 +4144,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
         
-        strData += getAttachList(loginCookie,Integer.toString(questionNo), "0", brdID, itemNo);
+        strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo);
         strData += "</th>";
         strData += "</tr>";
         strData += "</table>";
@@ -4158,7 +4152,7 @@ public class EzQuestionController extends EgovFileMngUtil {
        
         for(QstAnswerVO qstAnswerVO : qstAnswerVOList){
         	iAnsCount ++;
-        	rCnt = responseCount(questionNo, answerType, iAnsCount, brdID, itemNo, loginVO);
+        	rCnt = responseCount(questionNo, answerType, iAnsCount, brdID, itemNo, userInfo);
         	fRCnt = rCnt;
         	fResponseCnt = responseCnt;
 
@@ -4171,7 +4165,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 			
         	strData += "<tr>";
         	strData += "<td>" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
-            strData += getAttachList(loginCookie,Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
+            strData += getAttachList(userInfo, Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
             strData += "<td width=\"80\" valign=\"top\" align=\"right\" nowrap>";
             strData += "" + rCnt + " ";
             strData += " " + egovMessageSource.getMessage("ezQuestion.t399", locale) + " ";
@@ -4196,14 +4190,14 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문 타입2 HTML코드 생성 실행 함수
 	 */
-	public String dataProcessType2(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, Locale locale) throws Exception{
+	public String dataProcessType2(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, Locale locale) throws Exception{
 		String strData = "";
 		strData += "<table class=\"question\"><tr>";
 		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "</th>";
 		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
 		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
 		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
-		strData += getAttachList(loginCookie,Integer.toString(questionNo), "0", brdID, itemNo) + "</td>";
+		strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo) + "</td>";
 		strData += "</tr>";
 		strData += "</table>";
 		strData += "<br>";
@@ -4215,12 +4209,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 타입3 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType3(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public String dataProcessType3(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, boolean bPublic, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 		int rCnt = 0, jCnt =0, responseCnt =0;;
 		float fRCnt =0, fResponseCnt = 0, fPercent =0;
-		responseCnt = defaultResponseCount(brdID, itemNo, questionNo, loginVO);
+		responseCnt = defaultResponseCount(brdID, itemNo, questionNo, userInfo);
 
 		strData += "<table class=\"question\">";
         strData += "<tr>";
@@ -4230,7 +4223,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
 
-        strData += getAttachList(loginCookie,Integer.toString(questionNo), "0", brdID, itemNo);
+        strData += getAttachList(userInfo ,Integer.toString(questionNo), "0", brdID, itemNo);
         strData += "</th>";
         strData += "</tr>";
         
@@ -4239,7 +4232,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
         for (int i = Integer.parseInt(ArrayContent[0]); i < Integer.parseInt(ArrayContent[1]); i++){
         	jCnt++;
-            rCnt = responseCount(questionNo, answerType, i, brdID, itemNo, loginVO);
+            rCnt = responseCount(questionNo, answerType, i, brdID, itemNo, userInfo);
             fRCnt = rCnt;
             fResponseCnt = responseCnt;
             
@@ -4288,13 +4281,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문리스트 설문 타입4 HTML코드 생성 실행 함수
 	 */
 	@SuppressWarnings("unused")
-	public String dataProcessType4(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public String dataProcessType4(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 		int iAnsCount = 0, responseCnt = 0;
         int rCnt = 0;
         float fRCnt = 0, fResponseCnt = 0, fPercent = 0;
-        responseCnt = defaultResponseCount(brdID, itemNo, questionNo, loginVO);
+        responseCnt = defaultResponseCount(brdID, itemNo, questionNo, userInfo);
         
         strData += "<table class=\"question\">";
         strData += "<tr>\n";
@@ -4305,12 +4297,12 @@ public class EzQuestionController extends EgovFileMngUtil {
         strData += "<A class=\"imgbtn\" onclick=\"fun_ResponseView('" + questionNo + "');\" style=\"cursor:pointer\"><span>" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
         strData += "</th></tr></table>\n";
 
-        strData += getAttachList(loginCookie,Integer.toString(questionNo), "0", brdID, itemNo);
+        strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo);
         strData += "<table class=\"ex\">";
         
         for(QstAnswerVO qstAnswerVO : qstAnswerVOList){
         	iAnsCount++;
-            rCnt = responseCount(questionNo, answerType, iAnsCount, brdID, itemNo, loginVO);
+            rCnt = responseCount(questionNo, answerType, iAnsCount, brdID, itemNo, userInfo);
             fRCnt = rCnt;
             fResponseCnt = responseCnt;
             
@@ -4324,7 +4316,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             strData += "<tr>";
             strData += "<td>";
             strData += "" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent()) + "";
-            strData += getAttachList(loginCookie,Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
+            strData += getAttachList(userInfo, Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
             strData += "</tr>";
         }
         
@@ -4338,14 +4330,13 @@ public class EzQuestionController extends EgovFileMngUtil {
 	/**
 	 * 전자설문 설문리스트 설문 타입5 HTML코드 생성 실행 함수
 	 */
-	public String dataProcessType5(@CookieValue("loginCookie") String loginCookie,int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);
+	public String dataProcessType5(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, int percent, List<QstAnswerVO> qstAnswerVOList, Locale locale) throws Exception{
 		String strData = "";
 
 		/** EZSP_GETTABLEANSWER*/
-		String strXmlDom = ezQuestionService.getTableAnswer(brdID, itemNo, questionNo, loginVO.getTenantId());	
+		String strXmlDom = ezQuestionService.getTableAnswer(brdID, itemNo, questionNo, userInfo.getTenantId());	
 		Document xmlDom = commonUtil.convertStringToDocument(strXmlDom);
-		String strXmlDoc = ezQuestionService.getResponseAnswer(brdID, itemNo, questionNo, loginVO.getTenantId());		
+		String strXmlDoc = ezQuestionService.getResponseAnswer(brdID, itemNo, questionNo, userInfo.getTenantId());		
 		Document xmlDoc = commonUtil.convertStringToDocument(strXmlDoc);
 		
 		int iAnsCount = 0, responseCnt = 0;
@@ -4361,7 +4352,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t55", locale) + "</span>";
         }
         
-        strData += getAttachList(loginCookie,Integer.toString(questionNo), "0", brdID, itemNo);
+        strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo);
         strData += "</th>";
         strData += "</tr>";
         strData += "</table>";
@@ -4386,7 +4377,7 @@ public class EzQuestionController extends EgovFileMngUtil {
         	
         	strData += "<tr style=\"text-align:center;\">";
             strData += "<td style=\"border:1px solid #b6b6b6;\">" + commonUtil.cleanValue(qstAnswerVO.getAnswerContent());
-            strData += getAttachList(loginCookie,Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
+            strData += getAttachList(userInfo, Integer.toString(questionNo), Integer.toString(qstAnswerVO.getAnswerNo()), brdID, itemNo) + "</td>";
             
             for (int i = 0; i < xmlDom.getElementsByTagName("ANSWER_ANSWERCONTENT").getLength(); i++){
                 rCnt = getAnswerPerson(xmlDoc, iAnsCount - 1, i);
