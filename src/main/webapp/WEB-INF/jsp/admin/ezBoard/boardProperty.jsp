@@ -189,10 +189,14 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("${adminType}" == "y") {
-	            			parent.parent.board_menu.window.location.reload();
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
+	            			
+	            			return;
 	            		} else {
-	            			parent.board_menu.window.location.reload();
+	            			parent.frames.location = parent.frames.location;
 	            		}
+	            		
+	            		location.href = location.href;
 	            	}	            		
 	            });
 	        }			
