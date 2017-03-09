@@ -3683,7 +3683,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					for (String colName : rowObject.keySet()) {
 						String colValue = rowObject.get(colName);
 						sb.append("<" + colName + ">");
-						sb.append(colValue);
+						sb.append(commonUtil.cleanValue(colValue));
 						sb.append("</" + colName + ">");
 					}
 					
@@ -3718,12 +3718,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
             	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
-            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : addressInfo.getsName()) + "</SNAME>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
             	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
-            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : addressInfo.getsEmail()) + "</SEMAIL>");
-            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : addressInfo.getsCompany()) + "</SCOMPANY>");
-            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : addressInfo.getsDept()) + "</SDEPT>");
-            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : addressInfo.getsTitle()) + "</STITLE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
             	sb.append("</ROW>");
             }
             
