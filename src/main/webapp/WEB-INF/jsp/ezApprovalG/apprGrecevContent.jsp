@@ -24,6 +24,7 @@
 	                var tempXML = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
+
 	                tempStr = ConvertMHTtoHTML(url);
 	                if (tempStr.indexOf("MIME-Version: 1.0") > 0) {
 	                    Set_EditorContentURL(url);

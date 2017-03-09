@@ -565,8 +565,7 @@ function ListView() {
                     _HeaderSpanimg.setAttribute("align", "absmiddle");
                     objTd.appendChild(_HeaderSpanimg);
                 }
-                
-                if (strColName == "BOARDNAME") {
+                if (strColName.toUpperCase() == "BOARDNAME") {
                 	objTd.style.width = "100px";
                 }
 
