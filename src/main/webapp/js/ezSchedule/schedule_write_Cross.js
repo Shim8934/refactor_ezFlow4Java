@@ -130,6 +130,7 @@ function save_schedule()
 		
 		//TODO
 		resDate = getFirstDateInfo(sdate, edate);
+		
 		if (resDate == "") {
 			return;
 		}
@@ -1151,8 +1152,8 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     var xmlHTTP = createXMLHttpRequest();
     var xmlDOM = createXmlDom();
     var objNode;
-    createNodeInsert(xmlDOM, objNode, "DATA");
     
+    createNodeInsert(xmlDOM, objNode, "DATA");
     createNodeAndInsertText(xmlDOM, objNode, "RESID", pResID);
     createNodeAndInsertText(xmlDOM, objNode, "STIME", pSTime);
     createNodeAndInsertText(xmlDOM, objNode, "ETIME", pETime);
@@ -1214,7 +1215,7 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
 	} else {
 		var dateArr = resDate.split("|");
 		if (dateArr[0] != "allday") {
-			if (date[0] >= date[1]) {
+			if (dateArr[0] >= dateArr[1]) {
 				alert("" + strLang139 + "");
 	            return;
 			}
@@ -1681,17 +1682,15 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 //TODO
 function getFirstDateInfo(startDate, endDate) {
 	var returnValue = "";
-	alert(startDate);
-	alert(endDate);
-	alert(repetition);
-	
-	return "";
 	
 	var xmlHTTP = createXMLHttpRequest();
 	var xmlDom = createXmlDom();    
 	var objNode;
 
 	objNode = createNodeInsert(xmlDom, objNode, "DATA");
+	
+	createNodeAndInsertText(xmlDom, objNode, "STARTDATE", startDate.getFullYear() + "-" + setLength((parseInt(startDate.getMonth()) + 1)) + "-" + setLength(startDate.getDate()) + " " + setLength(startDate.getHours()) + ":" + setLength(startDate.getMinutes()));
+	createNodeAndInsertText(xmlDom, objNode, "ENDDATE", endDate.getFullYear() + "-" + setLength((parseInt(endDate.getMonth()) + 1)) + "-" + setLength(endDate.getDate()) + " " + setLength(endDate.getHours()) + ":" + setLength(endDate.getMinutes()));
 	createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
 	
 	xmlHTTP.open("POST", "/ezSchedule/getFirstScheduleDate.do", false);
@@ -1712,6 +1711,13 @@ function getFirstDateInfo(startDate, endDate) {
 	}
 	
 	return returnValue;
+}
+
+function setLength(num) {
+    if (num < 10) {
+        num = "0" + num;
+    }
+    return num;
 }
 
 //안쓰네ㅠㅠ

@@ -55,20 +55,8 @@
 		            var pTop = (pheight - conHeight) / 2;
 		            var pLeft = (pwidth - 890) / 2;
 		              
-		            if (CrossYN() || pNoneActiveX == "YES")
-		                window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURI(email), "",
+		            window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(email), "",
 		                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            else {
-		                if (pUse_Editor == "")
-		                    window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW&msgTo=" + escape(email), "",
-		                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		                else
-		                    window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + escape(email), "",
-		                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            }
-		
-		
-		
 				}
 				else
 				    alert(document.getElementById("TextName").innerText + " <spring:message code='ezAddress.t277' />");

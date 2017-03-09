@@ -53,6 +53,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -154,7 +155,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
 			Model model, 
-			HttpServletRequest request) throws Exception{
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		
 		logger.debug("mailWrite started.");
 		
@@ -884,6 +886,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
+		response.setHeader("X-XSS-Protection", "0");
 		
 		logger.debug("mailWrite ended.");
 		
@@ -3679,7 +3683,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					for (String colName : rowObject.keySet()) {
 						String colValue = rowObject.get(colName);
 						sb.append("<" + colName + ">");
-						sb.append(colValue);
+						sb.append(commonUtil.cleanValue(colValue));
 						sb.append("</" + colName + ">");
 					}
 					
@@ -3714,12 +3718,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
             	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
-            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : addressInfo.getsName()) + "</SNAME>");
+            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
             	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
-            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : addressInfo.getsEmail()) + "</SEMAIL>");
-            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : addressInfo.getsCompany()) + "</SCOMPANY>");
-            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : addressInfo.getsDept()) + "</SDEPT>");
-            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : addressInfo.getsTitle()) + "</STITLE>");
+            	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
+            	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
+            	sb.append("<SDEPT>" + (addressInfo.getsDept() == null ? "" : commonUtil.cleanValue(addressInfo.getsDept())) + "</SDEPT>");
+            	sb.append("<STITLE>" + (addressInfo.getsTitle() == null ? "" : commonUtil.cleanValue(addressInfo.getsTitle())) + "</STITLE>");
             	sb.append("</ROW>");
             }
             

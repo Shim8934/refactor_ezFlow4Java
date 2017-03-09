@@ -353,7 +353,7 @@
             </td>
             <td>
                 <div id="mainmenu" style="height: 28px; width: 100px"> 
-                    <ul style="display:none;">
+                    <ul">
                         <li><span onclick="return btnexportexcel_onclick()"><spring:message code='ezStatistics.t1003' /></span></li>
                     </ul>
                 </div>
@@ -397,7 +397,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/myoffice/ezStatistics/excelExportOut.aspx">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXlsM.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

@@ -1997,6 +1997,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String num = xmlDom.getElementsByTagName("NUM").item(0).getTextContent();
 		String cmd = xmlDom.getElementsByTagName("CMD").item(0).getTextContent();
 		String approve = xmlDom.getElementsByTagName("APPROVE").item(0).getTextContent();
+		String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
 		
 		//반복예약시
 		String frequency = xmlDom.getElementsByTagName("frequency").getLength() == 0 ? "" : xmlDom.getElementsByTagName("frequency").item(0).getTextContent();
@@ -2010,7 +2011,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String byPosition = xmlDom.getElementsByTagName("byPosition").getLength() == 0 ? "" : xmlDom.getElementsByTagName("byPosition").item(0).getTextContent();
 		String daysOfMonth = xmlDom.getElementsByTagName("daysOfMonth").getLength() == 0 ? "" : xmlDom.getElementsByTagName("daysOfMonth").item(0).getTextContent();
 		String monthsOfYear = xmlDom.getElementsByTagName("monthsOfYear").getLength() == 0 ? "" : xmlDom.getElementsByTagName("monthsOfYear").item(0).getTextContent();
-		String allDay = xmlDom.getElementsByTagName("allday").getLength() == 0 ? "" : xmlDom.getElementsByTagName("allday").item(0).getTextContent();
 		
 		String allDayStime = sTime.split(" ")[0] + " 00:00:00";
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";

@@ -126,7 +126,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String firstContainerID = "";
 		String subTitleString = "";
 		boolean isSubTitle = false;
-		String approvalYN = config.getProperty("config.ApprovalYN");
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		StringBuffer containers = new StringBuffer();
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -287,7 +287,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useMobile = ezCommonService.getTenantConfig("Use_Mobile", userInfo.getTenantId()); 
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String selMenu = "all";
-		String approvalYN = config.getProperty("config.ApprovalYN");
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		nowDate = nowDate.substring(0, 16);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -650,7 +650,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String listType = request.getParameter("listType");
 		String aprState = request.getParameter("aprState");
 		String isTmpDoc = request.getParameter("isTmpDoc");
-		String approvalYN = config.getProperty("config.ApprovalYN");
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		String docSN = "";
 		
@@ -809,7 +809,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/ezApprovalInfo.do")
 	public String ezApprovalInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
-		String approvalYN = config.getProperty("config.ApprovalYN");
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String securityNode3 = ezApprovalGService.getSecurityType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalYN);
 		String periodnode = ezApprovalGService.getKeepType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
 		String startDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
@@ -4317,7 +4317,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String securityCode = "";
 		String securityDate = "";
 		
-		String approvalYN = config.getProperty("config.ApprovalYN");
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String docID = request.getParameter("docID");
 		String ingFlag = request.getParameter("ingFlag");
 		String strXML = ezApprovalGService.getDocInfo(docID, ingFlag, "UrgentApproval;SpecialRecordCode;PublicityCode;LimitRange;PageNum;Summary;SecurityCode;SecurityApproval", userInfo.getCompanyID(), userInfo.getTenantId());

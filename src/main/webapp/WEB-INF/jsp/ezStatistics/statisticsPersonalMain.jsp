@@ -120,20 +120,7 @@
             xmlHttp.open("POST", "/ezStatistics/getPersonalMain.do", true);
             xmlHttp.onreadystatechange = event_getpersonalstatistics;
             xmlHttp.send(xmlDoc);
-            $.ajax({
-				type : "POST",
-				dataType : "text",
-				async : true,
-				url : "/ezStatistics/getPersonalMain.do",
-				data : {
-						company : document.getElementById("SCompID").value,
-						date : document.getElementById("selyear").value
-						},
-				success: function(text) {
-					event_getapprovalstatistics(text);
-				}        			
-			});
-        }
+       }
 
         function event_getpersonalstatistics() {
             if (xmlHttp != null && xmlHttp.readyState == 4) {
@@ -358,7 +345,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/statisticsexcelExportOut.do">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXls.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>
