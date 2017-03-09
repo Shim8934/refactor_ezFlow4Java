@@ -28,6 +28,7 @@
 			var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
 			var SearchCond = new Array();
 			var pUse_Editor = "<c:out value = '${useEditor}' />";
+			var approvalFlag = "<c:out value = '${approvalFlag}' />";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
