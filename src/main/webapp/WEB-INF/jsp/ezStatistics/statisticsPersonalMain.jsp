@@ -247,7 +247,7 @@
             }
            
             plot2 = $.jqplot('statisticschart', [data, data2], {
-                animate: true,
+                animate: false,
                 series: [{
                     renderer: $.jqplot.BarRenderer
                 },
