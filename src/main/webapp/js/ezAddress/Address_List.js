@@ -372,12 +372,18 @@ function Complete_Get_AddressList() {
         return;
     if (xmlHTTPAddressList.status >= 200 && xmlHTTPAddressList.status < 300) {
         ListXML = xmlHTTPAddressList.responseXML;
+        
+        if (ListXML == null) {
+            HiddenMailProgress();
+            return;
+        }
+        
         var XmlRows = SelectNodes(ListXML, "DATA/ROW");
         if (XmlRows.length == 0) {
             if (searchFlag) {
                 pCurrentPage--;
                 if (pCurrentPage < 0) {
-                    document.getElementById("mailBoxInfo").style.display = "none";
+                    document.getElementById("mailBoxInfo").style.visibility = "hidden";
                     while (document.getElementById("MailList").childNodes.length > 0) {
                         document.getElementById("MailList").removeChild(document.getElementById("MailList").childNodes.item(0));
                     }
@@ -394,7 +400,7 @@ function Complete_Get_AddressList() {
                 return;
             }
         }
-        document.getElementById("mailBoxInfo").style.display = "";
+        document.getElementById("mailBoxInfo").style.visibility = "visible";
         MakeAddressList();
     }
 }

@@ -612,12 +612,15 @@
                             		oTr.appendChild(oTd);
                         		}
                     		}
+                    		
                     		ooTable.appendChild(oTr);
                 		}
             		}
         		}
+		        
 		        document.getElementById("Preview_Content").appendChild(oTable);
     		}
+    		
     		function Back_List() {
         		document.getElementById("Main_List").style.display = "block";
         		document.getElementById("Privew_List").style.display = "none";
