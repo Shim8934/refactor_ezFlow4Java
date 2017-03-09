@@ -1499,8 +1499,8 @@ function event_HeaderCheckBoxClick(obj) {
     if (obj.checked) {
         strListInfo = "";
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            if (i == 0)
-                SelList.GetDataRows()[0].onclick();
+            //if (i == 0)
+                //SelList.GetDataRows()[0].onclick();
             SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
             strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
