@@ -121,6 +121,19 @@
             xmlHttp.open("POST", "/ezStatistics/getStatConnBrowser.do", true);
             xmlHttp.onreadystatechange = event_getpersonalstatistics;
             xmlHttp.send(xmlDoc);
+            $.ajax({
+				type : "POST",
+				dataType : "text",
+				async : true,
+				url : "/ezStatistics/getStatisticsAprMain.do",
+				data : {
+						company : document.getElementById("SCompID").value,
+						date : document.getElementById("selyear").value
+						},
+				success: function(text) {
+					event_getapprovalstatistics(text);
+				}        			
+			});
         }
 
         var rowcnt;
@@ -225,6 +238,12 @@
             });
         }
 
+        function btnexportexcel_onclick() {
+            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+            document.getElementById("formAgent").target = "saveExcel";
+            document.getElementById("formAgent").submit();
+        }
+        
         function getnodetext(obj) {
             if (CrossYN())
                 return obj.textContent;
@@ -233,12 +252,6 @@
                     return obj.innerText;
                 else
                     return obj.text;
-        }
-
-        function btnexportexcel_onclick() {
-            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
-            document.getElementById("formAgent").target = "saveExcel";
-            document.getElementById("formAgent").submit();
         }
 
     </script>
@@ -282,7 +295,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/myoffice/ezStatistics/excelExportOut.aspx">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/statisticsexcelExportOut.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

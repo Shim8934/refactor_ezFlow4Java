@@ -1118,8 +1118,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         String _hasattach = "N";                
         String pCompanyAdmin = "";
         String pDeptAdmin = "";        
-        
-        StringBuilder strAttach = new StringBuilder();
+                
+        StringBuilder strAttach = new StringBuilder();        
         StringBuilder strOwnerID = new StringBuilder();
         ScheduleInfoVO scheduleInfo = new ScheduleInfoVO();
                
@@ -1169,41 +1169,18 @@ public class EzScheduleController extends EgovFileMngUtil {
             _contentpath = pDirPath + scheduleInfo.getContentPath();
             startDateStringOrgin = scheduleInfo.getStartDate();
             endDateStringOrgin = scheduleInfo.getEndDate();
-            String hasAttendant = scheduleInfo.getHasAttendant();
-                              
-            if (hasAttendant.equals("Y")) {            	
-            	StringBuilder strAttendant = new StringBuilder();
-                String parentId = (scheduleInfo.getParentId().equals("0") ? _scheduleid : scheduleInfo.getParentId());
-                
-                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginVO.getTenantId());
-
-                for (int i = 0; i < attendantList.size(); i++) {                    	
-                	AttendantListVO attendant = attendantList.get(i);
-                	String status = "";
-
-                	if (attendant.getStatus().equals("1")) {
-                        status = "(" + msg.getMessage("ezSchedule.t251", locale) + ")";
-                	} else if (attendant.getStatus().equals("2")) {
-                        status = "(" + msg.getMessage("ezSchedule.t168", locale) + ")";
-                	} else if (attendant.getStatus().equals("3")) {
-                        status = "(" + msg.getMessage("ezSchedule.t169", locale) + ")";
-                	} else {
-                        status = "(" + msg.getMessage("ezSchedule.t166", locale) + ")";
-                	}
-                	
-                	if (i != 0) {
-                		strAttendant.append(", ");
-                	}
-                	
-                    if (loginVO.getLang().equals("1")) {
-                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName() + status + "</span>");
-                    } else {
-                    	strAttendant.append("<span title='" + msg.getMessage("ezSchedule.t162", locale) + "' style='cursor:pointer' onclick=show_personinfo('" + attendant.getAttendantId() + "')>" + attendant.getAttendantDeptName2() + status + "</span>");
-                    }
-                }                    
-            }                
-            _hasattach = scheduleInfo.getHasAttach();            
             
+            //참석자 리스트
+            String hasAttendant = scheduleInfo.getHasAttendant();
+            if (hasAttendant.equals("Y")) {            	
+                String parentId = (scheduleInfo.getParentId().equals("0") ? _scheduleid : scheduleInfo.getParentId());                
+                List<AttendantListVO> attendantList = ezScheduleService.getAttendantList(parentId, offSetMin, loginVO.getTenantId());   
+                
+                model.addAttribute("attendantList", attendantList);
+            }
+            
+            //첨부파일 리스트
+            _hasattach = scheduleInfo.getHasAttach();            
             if (_hasattach.equals("Y")) {            	
             	_hasattach = "Y";            	
             	
@@ -1252,8 +1229,9 @@ public class EzScheduleController extends EgovFileMngUtil {
             	strLabelOwner = msg.getMessage("ezSchedule.t373", locale);
                 strLabelOwner += (primary.equals("1") ? scheduleInfo.getOwnerName() : scheduleInfo.getOwnerName2());
             }
-        	model.addAttribute("strLabelOwner", strLabelOwner);
-        	model.addAttribute("strAttach", strAttach.toString());
+      	
+        	model.addAttribute("strLabelOwner", strLabelOwner);        	
+        	model.addAttribute("strAttach", strAttach.toString());        	
         } else {
         	if (!_otherid.equals("")) {        		
         		//개인일정

@@ -3,7 +3,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
-
 	<title><spring:message code='ezStatistics.t1047'/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
@@ -121,6 +120,19 @@
             xmlHttp.open("POST", "/ezStatistics/getPersonalMain.do", true);
             xmlHttp.onreadystatechange = event_getpersonalstatistics;
             xmlHttp.send(xmlDoc);
+            $.ajax({
+				type : "POST",
+				dataType : "text",
+				async : true,
+				url : "/ezStatistics/getPersonalMain.do",
+				data : {
+						company : document.getElementById("SCompID").value,
+						date : document.getElementById("selyear").value
+						},
+				success: function(text) {
+					event_getapprovalstatistics(text);
+				}        			
+			});
         }
 
         function event_getpersonalstatistics() {
@@ -278,6 +290,12 @@
             });
         }
 
+        function btnexportexcel_onclick() {
+            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+            document.getElementById("formAgent").target = "saveExcel";
+            document.getElementById("formAgent").submit();
+        }
+
         function getnodetext(obj) {
             if (CrossYN())
                 return obj.textContent;
@@ -287,13 +305,6 @@
                 else
                     return obj.text;
         }
-
-        function btnexportexcel_onclick() {
-            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
-            document.getElementById("formAgent").target = "saveExcel";
-            document.getElementById("formAgent").submit();
-        }
-
     </script>
 </head>
 <h1><spring:message code='ezStatistics.t1047'/></h1>
@@ -347,7 +358,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/myoffice/ezStatistics/excelExportOut.aspx">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/statisticsexcelExportOut.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>
