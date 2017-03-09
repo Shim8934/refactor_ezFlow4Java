@@ -98,23 +98,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		String serverName = request.getServerName();
-		StringBuilder sb = new StringBuilder();
 		String redirectBoardID = "";
+		String redirectBoardGroupID = "";
 
-		if (request.getParameter("BoardID") != null) {
-			redirectBoardID = request.getParameter("BoardID");
+		if (request.getParameter("boardID") != null) {
+			redirectBoardID = request.getParameter("boardID");
 			List<BoardVO> leftBoardList = ezBoardService.getLeft_BoardSTD(redirectBoardID, user.getTenantId());
 
-			sb.append("<DATA>");
-			for (int i = 0; i < leftBoardList.size(); i++) {
-				sb.append("<ROW><BOARDGROUPID>");
-				sb.append(leftBoardList.get(i).getBoardGroupId());
-				sb.append("</BOARDGROUPID></ROW>");
-			}
-			sb.append("</DATA>");
+			redirectBoardGroupID = leftBoardList.get(0).getBoardGroupId();
 		}
 		model.addAttribute("redirectBoardID", redirectBoardID);
-		model.addAttribute("redirectBoardGroupID", sb.toString());
+		model.addAttribute("redirectBoardGroupID", redirectBoardGroupID);
 		model.addAttribute("user", user);
 		model.addAttribute("serverName", serverName);
 

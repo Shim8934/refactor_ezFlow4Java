@@ -62,6 +62,7 @@
 		    var pAttributeYN = "${boardInfo.attributeYN}";
 		    var AtttributeCount = "${boardAttrCount}"; 
 		    var rsa = new RSAKey();
+		    var addheight = 0;
 		    window.onload = function () {
 		        try {
 					var html = "";
@@ -89,9 +90,9 @@
 		            SetAttachmentInfo();
 			        
 		            //추가항목 창 사이즈 조절
-		            var addheight = 0;
+		            addheight = 0;
 		            if("${boardAttrCount}" > 0){
-						addheight = AtttributeCount * 40;
+						addheight = AtttributeCount * 30;
 		            }
 		
 		            if (OneLineReplyFlag == "1") {
