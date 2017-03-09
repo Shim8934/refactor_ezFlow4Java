@@ -2089,6 +2089,230 @@ public class EzScheduleController extends EgovFileMngUtil {
 		downFile(request, response, fullFilePath, fileName);	
 	}
     
+	
+	/**
+	 * 일정작성 > 자원예약을 위한 반복일정 첫날 구하기
+	 */
+	@RequestMapping(value = "/ezSchedule/getFirstScheduleDate.do", produces = "text/plain; charset=utf-8")
+	@ResponseBody
+	public String getFirstScheduleDate(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, @RequestBody String requestXML) throws Exception{
+		
+		logger.debug("============ getFirstScheduleDate started ============");
+		
+		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(requestXML);
+        String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+        String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+        String repetition = doc.getElementsByTagName("REPETITION").item(0).getTextContent();
+        
+        String returnValue = "";
+		Date firstDate = null;
+		String[] info = repetition.split("\\|");
+		int maxCount = Integer.parseInt(info[0]);
+		int count = 0;
+		boolean isFirst = true;
+
+		if (maxCount == 0) {
+			maxCount = -1;
+		}
+
+		Calendar date_cal = Calendar.getInstance();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		date_cal.setTime(sdf.parse(startDate));
+
+		switch (info[2]) {
+		case "0" :
+			while (true) {
+				if (maxCount == count) break;
+
+				boolean generated = false;
+				int dayOFWeek = date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+				if (info[3].equals("0")) {
+					if (dayOFWeek != 0 && dayOFWeek != 6) {
+						generated = true;
+					}
+				} else {
+					generated = true;
+				}
+
+				if (generated) {
+					count++;
+					
+					firstDate = date_cal.getTime();
+					break;
+				}
+
+				if (info[3].equals("0")) {
+					date_cal.add(Calendar.DATE, 1);
+				} else {
+					date_cal.add(Calendar.DATE, Integer.parseInt(info[3]));
+				}
+			}
+			break;
+
+		case "1" :
+			int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;
+
+			while (true) {
+				if (maxCount == count) break;
+
+				boolean generated = false;
+
+				if (info[4].indexOf((date_cal.get(Calendar.DAY_OF_WEEK) - 1) + "") > -1) {
+					generated = true;
+				}
+
+				if (generated) {
+					count++;
+
+					firstDate = date_cal.getTime();
+					break;
+				}
+
+				if (weekcount == 0) {
+					date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
+					weekcount = 6;
+				} else {
+					date_cal.add(Calendar.DATE, 1);
+					weekcount--;
+				}
+			}						
+			break;	
+
+		case "2" :
+			while (true) {						
+				int year = date_cal.get(Calendar.YEAR);
+				int month = date_cal.get(Calendar.MONTH) + 1;
+
+				if (maxCount == count) break;
+
+				boolean generated = false;
+
+				Calendar newCal = Calendar.getInstance();
+				newCal.set(year, month-1, 1);
+
+				if (info[3].equals("1")) {
+					newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+				} else {
+					int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1);
+
+					if (diff < 0) {
+						diff += 7;									
+					}								
+					newCal.add(Calendar.DATE, diff);
+
+					if (Integer.parseInt(info[5]) < 5) {
+						newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+					} else {
+						while (true) {
+							newCal.add(Calendar.DATE, 7);
+
+							if (newCal.get(Calendar.MONTH) + 1 != month) {
+								newCal.add(Calendar.DATE, -7);
+								break;
+							}
+						}
+					}
+				}
+
+				if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+					generated = true;
+				}
+
+				isFirst = false;
+
+				if (generated) {
+					count++;
+
+					firstDate = newCal.getTime();
+					break;
+				}
+
+				date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+				date_cal.add(Calendar.MONTH, Integer.parseInt(info[4]));							
+			}
+			break;
+
+		case "3" :
+			while (true) {
+				int year = date_cal.get(Calendar.YEAR);
+				int month = Integer.parseInt(info[4]);
+
+				if (maxCount == count) break;
+
+				boolean generated = false;
+
+				Calendar newCal = Calendar.getInstance();
+				newCal.set(year, month-1, 1);
+
+				if (info[3].equals("1")) {
+					newCal.add(Calendar.DATE, Integer.parseInt(info[5]) - 1);
+
+					if (info[5].equals("2")) {
+						//음력으로 newCal 다시 만듬									
+						if (!isFirst || newCal.compareTo(date_cal) >= 0) {
+							generated = true;
+						}
+					}
+				} else {
+					int diff = Integer.parseInt(info[6]) - (newCal.get(Calendar.DAY_OF_WEEK) - 1); 
+
+					if (diff < 0) {
+						diff += 7;									
+					}								
+					newCal.add(Calendar.DATE, diff);
+
+					if (Integer.parseInt(info[5]) < 5) {
+						newCal.add(Calendar.DATE, (Integer.parseInt(info[5]) - 1) * 7);
+					} else {
+						while (true) {
+							newCal.add(Calendar.DATE, 7);
+
+							if (newCal.get(Calendar.MONTH) + 1 != month) {
+								newCal.add(Calendar.DATE, -7);
+								break;
+							}
+						}
+					}
+				}
+
+				if (newCal.get(Calendar.MONTH) + 1 == month && (!isFirst || newCal.get(Calendar.DATE) >= date_cal.get(Calendar.DATE))) {
+					generated = true;
+				}
+
+				isFirst = false;
+
+				if (generated) {
+					count++;
+
+					firstDate = newCal.getTime();
+					break;
+				}
+
+				date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
+				date_cal.add(Calendar.YEAR, 1);
+			}						
+			break;	
+		}				
+		
+		if (firstDate != null) {
+			if (info[1].equals("1")) {
+				String rStartDate = sdf.format(firstDate).substring(0, 10);
+				returnValue = "allday|" + rStartDate;
+			} else {
+				String rStartDate = sdf.format(firstDate).substring(0, 10) + startDate.substring(10);
+				String rEndDate = sdf.format(firstDate).substring(0, 10) + endDate.substring(10);
+				returnValue = rStartDate + "|" + rEndDate;
+			}
+		}
+		
+        return returnValue;
+    }
+	
 	/**
 	 * 업로드 날짜를 30분 단위로 구하는 함수
 	 */
