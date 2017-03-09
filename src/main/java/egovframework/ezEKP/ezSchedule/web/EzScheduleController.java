@@ -832,7 +832,36 @@ public class EzScheduleController extends EgovFileMngUtil {
 				if(i != gList.size()-1){
 					pidList += ",";
 				}	
-			}									
+			}
+			
+			List<ScheduleDeptVO> dList = ezScheduleService.getPublicScheduleDept(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId());
+			
+			for(int i = 0; i < dList.size(); i++){
+				if(i == 0){
+					pidList += ",";
+				}			
+				ScheduleDeptVO data = dList.get(i);			
+				pidList += "'" + data.getDeptId() + "'";
+				
+				if(i != dList.size()-1){
+					pidList += ",";
+				}	
+			}
+			
+			List<ScheduleCumulerVO> cList = ezScheduleService.getPublicScheduleCumuler(loginVO.getId(), loginVO.getPrimary(), loginVO.getTenantId());
+			
+			for(int i = 0; i < cList.size(); i++){
+				if(i == 0){
+					pidList += ",";
+				}			
+				ScheduleCumulerVO data = cList.get(i);			
+				pidList += "'" + data.getDeptId() + "'";
+				
+				if(i != cList.size()-1){
+					pidList += ",";
+				}	
+			}			
+			
 			sList = ezScheduleService.getScheduleList(pidList, filter.trim(), utcStartTime, utcEndTime, keyword.trim(), offSetMin, loginVO.getTenantId());;			
 		}		
 		model.addAttribute("offSetMin", offSetMin);
