@@ -1,10 +1,14 @@
 package egovframework.ezEKP.ezStatistics.web;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +31,7 @@ import egovframework.ezEKP.ezStatistics.vo.StatApprVO;
 import egovframework.ezEKP.ezStatistics.vo.StatConnVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Controller
 public class EzStatisticsPersonalController {
@@ -223,4 +228,21 @@ public class EzStatisticsPersonalController {
 		return ezStatisticsAdminService.getStatConnOS(statApprVO);
 	}
 	
+	/**
+	 * 액셀저장
+	 */
+	@RequestMapping(value = "/ezStatistics/statisticsexcelExportOut.do")
+	public void statisticsexcelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, HttpServletRequest request) throws IOException {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		response.setContentType("application/vnd.ms-excel");
+		response.setCharacterEncoding("UTF-8");
+		response.addHeader("Content-Disposition", "attachment;filename=" + EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + ".xls");
+		
+		if (request.getParameter("saveExcelData") != null) {
+			PrintWriter writer = response.getWriter();
+			
+			writer.println(request.getParameter("saveExcelData"));
+		}
+	}	
 }
