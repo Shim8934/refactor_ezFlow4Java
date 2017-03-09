@@ -116,7 +116,14 @@ public class EzStatisticsController {
 	
 	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		boolean cellFlag = true;
+		
+		String headerFLAG = "";
+		
+		if (request.getParameter("headerFlag") != null) {
+			headerFLAG = request.getParameter("headerFlag");
+        }
+		
+		
 		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
@@ -181,7 +188,22 @@ public class EzStatisticsController {
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 				}
-				cell.setCellStyle(bodyStyle);
+				logger.debug("@@@@@@@@headerFLAG@@@@@@@@"+headerFLAG);
+				if(headerFLAG.equals("TRUE")){
+					logger.debug("@@@@@@@@TRUE@@@@@@@@");
+					if(i!=1){
+						cell.setCellStyle(bodyStyle);
+					}else{
+						cell.setCellStyle(headerStyle);
+					}
+				}else{
+					logger.debug("@@@@@@@@FALSE@@@@@@@@");
+					if(i!=2){
+						cell.setCellStyle(bodyStyle);
+					}else{
+						cell.setCellStyle(headerStyle);
+					}
+				}
 			}
 		}
 		
