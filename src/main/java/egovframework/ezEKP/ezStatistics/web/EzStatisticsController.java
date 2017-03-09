@@ -207,6 +207,87 @@ public class EzStatisticsController {
 			}
 		}
 		
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+	}
+	
+	@RequestMapping(value = "/ezStatistics/UserOSsaticGetXlsM.do")
+	public void getUserOSsaticGetXlsM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		
+		@SuppressWarnings("resource")
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		
+		Row row;
+		Cell cell;
+		
+		String pFileName = "";
+		String strDate = EgovDateUtil.getToday("-");
+		pFileName = strDate+"_Report.xls";
+		sheet = workbook.createSheet("report");
+		
+		String StrAnalysisDate[] = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "").split("_");
+
+		for (int i=0; i<StrAnalysisDate.length; i++) {
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate[i]);
+
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+			
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+			
+			if (i == 0) {
+				row = sheet.createRow(0);				
+			} else {
+				row = sheet.createRow(6);
+			}
+			
+			for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
+				cell = row.createCell(j);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(j).getTextContent());
+				cell.setCellStyle(headerStyle);
+			}
+			
+			if (i == 0) {
+				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+					row = sheet.createRow(j+1);
+					Node tr = tableBodyNode.getChildNodes().item(j+1);
+					
+					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+						cell = row.createCell(k);
+						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+						cell.setCellStyle(bodyStyle);
+					}
+				}				
+			} else {
+				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+					row = sheet.createRow(j+7);
+					Node tr = tableBodyNode.getChildNodes().item(j+1);
+					
+					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+						cell = row.createCell(k);
+						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+						cell.setCellStyle(bodyStyle);
+					}
+				}
+			}
+		}		
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());

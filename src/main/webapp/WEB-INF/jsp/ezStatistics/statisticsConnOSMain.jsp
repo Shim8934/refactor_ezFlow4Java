@@ -313,19 +313,12 @@
             });
         }
 
-
         function btnexportexcel_onclick() {
-            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML + "_" +document.getElementById("statisticstable2").innerHTML;
             document.getElementById("formAgent").target = "saveExcel";
             document.getElementById("formAgent").submit();
         }
         
-        function btnexportexcel_onclick2() {
-            document.getElementById("saveExcelData").value = document.getElementById("statisticstable2").innerHTML;
-            document.getElementById("formAgent").target = "saveExcel";
-            document.getElementById("formAgent").submit();
-        }
-
         function getnodetext(obj) {
             if (CrossYN())
                 return obj.textContent;
@@ -357,15 +350,6 @@
                     </ul>
                 </div>
             </td>
-            <td>
-                <div id="mainmenu" style="height: 28px; width: 110px">
-                    <ul>
-                        <li><span onclick="return btnexportexcel_onclick2()"><spring:message code='ezStatistics.t1003'/></span>
-                        </li>
-                    </ul>
-                </div>
-            </td>
-            
         </tr>
     </table>
     <br />
@@ -396,7 +380,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/saticGetXls.do">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/UserOSsaticGetXlsM.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>
