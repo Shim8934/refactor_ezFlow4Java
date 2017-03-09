@@ -19873,4 +19873,33 @@
         ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDATE#, ' ', #v_TENANTID#, #companyID#)
    	</insert>
    	
+   	<select id="EzApprovalG.getKeepType" parameterClass="Map" resultClass="ApprGLeftVO">
+   		<isEqual property="v_LANGTYPE" compareValue="1">
+   			SELECT 
+   				CODE2, 
+   				NAME
+      		FROM 
+      			TBL_CODELIST 
+      		WHERE 
+      			CODE1 = 'A52' 
+      		AND  
+      			ISUSE = 1
+      		ORDER BY 
+      			CODE2
+   		</isEqual>
+   		<isNotEqual property="v_LANGTYPE" compareValue="1">
+   			SELECT 
+   				CODE2, 
+   				NAME$v_LANGTYPE$ AS NAME
+      		FROM 
+      			TBL_CODELIST 
+      		WHERE 
+      			CODE1 = 'A52' 
+      		AND  
+      			ISUSE = 1
+      		ORDER BY 
+      			CODE2
+   		</isNotEqual>
+   	</select>
+   	
 </sqlMap>

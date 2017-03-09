@@ -103,12 +103,43 @@ function save_schedule()
 
 	if (!check_length(document.getElementById("TextTitle").value, 250, strLang10)) return;
 	if (!check_length(document.getElementById("TextLocation").value, 50, strLang11)) return;
+	
+	var resDate = "";
+	if (tmpReFlag == "0" && $.trim(repetition) != "") {
+		var sdate, edate;
+		
+		if (g_sdate == null)
+		{
+		    sdate = new Date(startDateStringOrgin.substring(0, 4), parseInt(startDateStringOrgin.substring(5, 7)) -1, startDateStringOrgin.substring(8, 10), startDateStringOrgin.substring(11, 13), startDateStringOrgin.substring(14, 16), startDateStringOrgin.substring(17, 19));
+		    edate = new Date(endDateStringOrgin.substring(0, 4), parseInt(endDateStringOrgin.substring(5, 7)) - 1, endDateStringOrgin.substring(8, 10), endDateStringOrgin.substring(11, 13), endDateStringOrgin.substring(14, 16), endDateStringOrgin.substring(17, 19));
+		    if (isNaN(sdate)) {
+		        sdate = new Date(startDateStringOrgin);
+		        edate = new Date(endDateStringOrgin);
+		    }
+        }
+		else
+		{
+			sdate = new Date(g_sdate.trim());
+			edate = new Date(g_edate.trim());
 
+			if (isNaN(sdate)) {
+			    sdate = new Date(ReplaceText(g_sdate, "-", "/"));
+			    edate = new Date(ReplaceText(g_edate, "-", "/"));
+			}
+		}
+		
+		//TODO
+		resDate = getFirstDateInfo(sdate, edate);
+		if (resDate == "") {
+			return;
+		}
+	}
+	
 	var ResourceSaveResult = false;
 	if (scheduleid == "") {
 	    if (document.getElementById("resourcelist")) {	    	
 	        if (trim(document.getElementById("resourcelist").innerHTML) != "") {
-	            ResourceSaveResult = resource_Check();
+	            ResourceSaveResult = resource_Check(resDate);
 	            if (!ResourceSaveResult)
 	                return;
 	        }
@@ -297,6 +328,7 @@ function save_schedule()
 			createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME2", g_attendant["deptname2"][i]);
 		}
 	}
+	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
 
@@ -312,7 +344,7 @@ function save_schedule()
 	    if (ResourceSaveResult) {	    	
 	        SaveScheduleId = trim(xmlHTTP.responseText);	        
 	        if (SaveScheduleId != "") {
-	            var rntVal = resource_save();
+	            var rntVal = resource_save(resDate);
 	            if (rntVal != "OK") {
 	                alert(strLang255);
 	                return;
@@ -1029,7 +1061,7 @@ function config_repeat_resource_Complete(rgParams) {
             g_data["recur_del"] = resourcexmlDoc.xml;
         }
         document.getElementById("resourcerepeatinfo").innerHTML = "";
-        document.getElementById("iReFlag").value = "0";
+        tmpReFlag = "0";
     }
     else {
         g_data["recurrence"] = rgParams["xml"];
@@ -1037,104 +1069,20 @@ function config_repeat_resource_Complete(rgParams) {
         g_data["startTime"] = rgParams["startTime"];
         g_data["endTime"] = rgParams["endTime"];
         
-        document.getElementById("iReFlag").value = "1";
-
-        if (rgParams["alldaycheck"] == "1")
-            document.getElementById("alldaycheck").checked = true;
-        else
-            document.getElementById("alldaycheck").checked = false;
-        
         document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
-//        show_resource_repetition_info();
-
+        tmpReFlag = "1";
     }
 }
 
-//function show_resource_repetition_info() {
-//    var repeatinfo = "" + strLang101 + "";
-//    xmlinDoc = createXmlDom();
-//    xmlinDoc.async = false;
-//    xmlinDoc = loadXMLString(g_data["recurrence"]);
-//    szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
-//    switch (szType) {
-//        case "4":
-//            repeatinfo += "" + strLang102 + "";
-//            break;
-//        case "5":
-//            repeatinfo += "" + strLang103 + "";
-//            break;
-//        case "6":
-//            repeatinfo += "" + strLang106 + "";
-//            break;
-//        case "7":
-//            repeatinfo += "" + strLang107 + "";
-//            break;
-//    }
-//
-//    repeatinfo += ", " + strLang104 + "";
-//
-//    if (document.getElementById("alldaycheck").checked == true)
-//        repeatinfo += "" + strLang105 + "";
-//    else {
-//        var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
-//        var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
-//
-//        var reStartHour = reStartDate.split(" ")[1].split(":")[0];
-//        var reEndHour = reEndDate.split(" ")[1].split(":")[0];
-//
-//        var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
-//        var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
-//
-//        if (Number(reStartHour) < 12) {
-//            repeatinfo += "" + strLang1 + " ";
-//
-//            if (Number(reStartHour) == 0)
-//                reStartHour = 12;
-//        }
-//        else {
-//            repeatinfo += "" + strLang2 + " ";
-//
-//            if (Number(reStartHour) > 12)
-//                reStartHour = Number(reStartHour) - 12;
-//        }
-//
-//        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
-//
-//        if (Number(reEndHour) < 12) {
-//            repeatinfo += "" + strLang1 + " ";
-//
-//            if (Number(reEndHour) == 0)
-//                reEndHour = 12;
-//        }
-//        else {
-//            repeatinfo += "" + strLang2 + " ";
-//
-//            if (Number(reEndHour) > 12)
-//                reEndHour = Number(reEndHour) - 12;
-//        }
-//
-//        repeatinfo += reEndHour + ":" + reEndMinute;
-//    }
-//    
-//    document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
-//}
-
-function resource_Check() {
+function resource_Check(resDate) {
     var check = true;
-
-    if (document.getElementById("resourcerepeatinfo").innerHTML != "" && document.getElementById("resourcerepeatinfo").innerHTML != "&nbsp;") {
-        tmpReFlag = "1";
-    }
-    else {
-        tmpReFlag = "0";
-    }
 
     if (g_resource[0].length == 0) {
         alert(strLang109);
         return;
     }
     for (var i = 0; i < g_resource[0].length; i++) {
-        if (DupCheck(g_resource[0][i]) == false) {
+        if (DupCheck(g_resource[0][i], resDate) == false) {
             alert("[" + g_resource[1][i] + "] " + strLang108);
             check = false;
         }
@@ -1142,63 +1090,69 @@ function resource_Check() {
     return check;
 }
 
-function resource_save() {
+function resource_save(resDate) {
     var check = true;
-
-    if (document.getElementById("resourcerepeatinfo").innerHTML != "" && document.getElementById("resourcerepeatinfo").innerHTML != "&nbsp;") {
-        tmpReFlag = "1";
-    }
-    else {
-        tmpReFlag = "0";
-    }
-
+    
     if (g_resource[0].length == 0) {
         alert(strLang109);
         return;
     }
+    
     for (var i = 0; i < g_resource[0].length; i++) {
-        if (DupCheck(g_resource[0][i]) == false) {
+		if (DupCheck(g_resource[0][i], resDate) == false) {
             alert("[" + g_resource[1][i] + "] " + strLang108);
             check = false;
         }
     }
+    
     var saveResult = "";
 
     if (check == true) {
-        for (var i = 0; i < g_resource[0].length; i++) {
-            saveResult = SaveSchedule_onClick('add', g_resource[0][i])
-        }
+		for (var i = 0; i < g_resource[0].length; i++) {
+		    saveResult = SaveSchedule_onClick('add', g_resource[0][i], resDate);
+		}
     }
     return saveResult;
 }
 
-function DupCheck(resItemID) {
+function DupCheck(resItemID, resDate) {
     var STime = "";
     var ETime = "";
-    if (document.getElementById("alldaycheck").checked == true) {
-        STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-        ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+    var allday = false;
+    if (resDate != "") {
+    	var dateArr = resDate.split("|");
+    	
+    	if (dateArr[0] == "allday") {
+    		STime = dateArr[1] + " 00:00";
+    		ETime = dateArr[1] + " 23:59";
+    		allday = true;
+    	} else {
+    		STime = dateArr[0];
+    		ETime = dateArr[1];
+    	}
+    	
+    } else {
+    	
+    	if (document.getElementById("alldaycheck").checked == true) {
+            STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00";
+            ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59";
+            allday = true;
+        } else {
+            STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+            ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+        }
+    	
     }
-    else {
-        STime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
-        ETime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-    }
-    var bUsingResource = isUsingResource(resItemID, STime, ETime, companyID, "", "add", document.getElementById("alldaycheck").checked);
-
-    if (bUsingResource) {
-        return false;
-    }
-    else {
-        return true;
-    }
+    
+    return !isUsingResource(resItemID, STime, ETime, companyID, "", "add", allday);
 }
 
 function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay) {
     var xmlHTTP = createXMLHttpRequest();
     var xmlDOM = createXmlDom();
     var objNode;
-
     createNodeInsert(xmlDOM, objNode, "DATA");
+    
     createNodeAndInsertText(xmlDOM, objNode, "RESID", pResID);
     createNodeAndInsertText(xmlDOM, objNode, "STIME", pSTime);
     createNodeAndInsertText(xmlDOM, objNode, "ETIME", pETime);
@@ -1206,33 +1160,26 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     createNodeAndInsertText(xmlDOM, objNode, "NUM", pNum);
     createNodeAndInsertText(xmlDOM, objNode, "CMD", pCmd);
     createNodeAndInsertText(xmlDOM, objNode, "APPROVE", ApproveFlag);
-
-    if (g_data["recurrence"] != null && g_data["recurrence"] != "") {
-        if (CrossYN()) {
-            var xmlDOMrec = createXmlDom();
-            xmlDOMrec = loadXMLString(g_data["recurrence"]);
-
-            if (pAllDay)
-                createNodeAndInsertText(xmlDOMrec, objNode, "allday", "true");
-            else
-                createNodeAndInsertText(xmlDOMrec, objNode, "allday", "false");
-
-            var xmlRtn = xmlDOMrec.documentElement;
-            var Node = xmlDOM.importNode(xmlRtn, true);
+    
+    if (tmpReFlag == "1") { //자원 반복예약
+    	var xmlDOMrec = createXmlDom();
+		xmlDOMrec = loadXMLString(g_data["recurrence"]);
+		
+		//TODO 이거 맞는지 확인해봐야돼!!
+		if(CrossYN()) {
+	        var xmlRtn = xmlDOMrec.documentElement;
+	        var Node = xmlDOM.importNode(xmlRtn, true);
             xmlDOM.documentElement.appendChild(Node);
-        }
-        else {
-            var xmlDOMrec = new ActiveXObject("Microsoft.XMLDOM");
-            if(g_resource["recurrence"] == undefined)
-                xmlDOMrec.loadXML(g_data["recurrence"]);
-            else
-                xmlDOMrec.loadXML(g_resource["recurrence"]);
-            var alldaynode = xmlDOMrec.createNode(1, "allday", '');
-            alldaynode.text = pAllDay ? 'true' : 'false';
-            xmlDOMrec.documentElement.appendChild(alldaynode);
-            xmlDOM.documentElement.appendChild(xmlDOMrec.documentElement);
-            xmlDOMrec = null;
-        }
+	    } else {
+	         var xmlRtn = xmlDOMrec.documentElement;
+             xmlDOM.documentElement.appendChild(xmlRtn);
+	    }
+		
+		xmlDOMrec = null;
+    } else { // 자원 반복예약이 아닐 때에는 allday 따로 넣어줘야함.
+    	if (pAllDay) {
+    		createNodeAndInsertText(xmlDOM, objNode, "allday", ApproveFlag);
+    	}
     }
     
     xmlHTTP.open("POST", "/ezResource/timeDupCheck.do", false);
@@ -1243,27 +1190,38 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     xmlDOM = null;
     xmlHTTP = null;
 
-    if (rtnValue == "False")
-        return false;
-    else
-        return true;
+    if (rtnValue == "False") {
+    	return false;
+    } else {
+    	return true;
+    }
 }
 
-function SaveSchedule_onClick(cmd, resItem) {
-    if (!document.getElementById("alldaycheck").checked) {
-        if (!CheckStartEndDateTime()) {
-            alert("" + strLang139 + "");
-            return;
-        }
-    }
-    else {
-        if (!AllDayCheckStartEndDateTime()) {
-            alert("" + strLang139 + "");
-            return;
-        }
-    }
-
-    if (cmd == "mod") {
+function SaveSchedule_onClick(cmd, resItem, resDate) {
+	if (resDate == "") {
+		if (!document.getElementById("alldaycheck").checked) {
+	        if (!CheckStartEndDateTime()) {
+	            alert("" + strLang139 + "");
+	            return;
+	        }
+	    }
+	    else {
+	        if (!AllDayCheckStartEndDateTime()) {
+	            alert("" + strLang139 + "");
+	            return;
+	        }
+	    }
+	} else {
+		var dateArr = resDate.split("|");
+		if (dateArr[0] != "allday") {
+			if (date[0] >= date[1]) {
+				alert("" + strLang139 + "");
+	            return;
+			}
+		}
+	}
+    
+	if (cmd == "mod") {
         if (CheckAdmin() == false && OwnerCheck() == false) {
             alert("" + strLang140 + "");
             return;
@@ -1282,21 +1240,45 @@ function SaveSchedule_onClick(cmd, resItem) {
     createNodeAndInsertText(xmlDoc, objNode, "LOC", "");
     createNodeAndInsertText(xmlDoc, objNode, "T_DISPLAY", "1");
 
-    var objNode4, objNode5, objNode6;
-    if (document.getElementById("alldaycheck").checked == true) {
-        objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:00";
-        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-        objNode6 = "1";
-    }
-    else {
-        objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val()
-        objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val()
-        objNode6 = "0";
-    }
-    
-    var resReflag = document.getElementById("iReFlag").value;
-    if (resReflag == "") {
-    	resReflag = "0";
+    var objNode4, objNode5, objNode6, objNode7;
+    if (tmpReFlag == "0") {
+    	if (resDate == "") { // 일반예약
+    	    if (document.getElementById("alldaycheck").checked == true) {
+    	    	objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00";
+    	    	objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59";
+    	    	objNode6 = "1";
+    	    } else {
+    	    	objNode4 = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+    	    	objNode5 = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+    	    	objNode6 = "0";
+    	    }
+        } else { // 일반예약(일정반복)
+        	var dateArr = resDate.split("|");
+        	if (dateArr[0] == "allday") {
+        		objNode4 = dateArr[1] + " 00:00";
+        		objNode5 = dateArr[1] + " 23:59";
+        		objNode6 = "1";
+        	} else {
+        		objNode4 = dateArr[0];
+        		objNode5 = dateArr[1];
+        		objNode6 = "0";
+        	}
+        }
+    } else { // 반복예약
+    	
+    	//TODO : 크롬,IE10 확인필요
+    	var xmlDom = createXmlDom();
+    	xmlDom = loadXMLString(g_data["recurrence"]);
+		
+    	var node = SelectSingleNode(xmlDom, "recurrence");
+    	objNode4 = getNodeText(SelectSingleNode(node, "startDateTime"));
+    	objNode5 = getNodeText(SelectSingleNode(node, "endDateTime"));
+		
+		if (getNodeText(SelectSingleNode(node, "allday")) == "true") {
+			objNode6 = "1";
+		} else {
+			objNode6 = "0";
+		}
     }
     
     createNodeAndInsertText(xmlDoc, objNode, "STARTDATETIME", objNode4);
@@ -1307,7 +1289,7 @@ function SaveSchedule_onClick(cmd, resItem) {
     createNodeAndInsertText(xmlDoc, objNode, "WRITERID", userid);
     createNodeAndInsertText(xmlDoc, objNode, "IMPORTANCE1", document.getElementById("importantSelect").value);
     createNodeAndInsertText(xmlDoc, objNode, "ENTRY", "");
-    createNodeAndInsertText(xmlDoc, objNode, "REFLAG", resReflag);
+    createNodeAndInsertText(xmlDoc, objNode, "REFLAG", tmpReFlag);
     createNodeAndInsertText(xmlDoc, objNode, "GRESFLAG", "");
     createNodeAndInsertText(xmlDoc, objNode, "NUM", "");
     createNodeAndInsertText(xmlDoc, objNode, "PNUM", "");
@@ -1324,7 +1306,7 @@ function SaveSchedule_onClick(cmd, resItem) {
         if (cmd == "add")
             objNode23 = "0";
         else {
-            if (reFlagVal == "1" && document.getElementById("iReFlag").value == "0")
+            if (reFlagVal == "1" && tmpReFlag == "0")
                 objNode23 = "0";
             else
                 objNode23 = SavedApproveFlag;
@@ -1346,14 +1328,7 @@ function SaveSchedule_onClick(cmd, resItem) {
     var result = "OK";
 
     if (typeof (resultXML) != "undefined" && getXmlString(resultXML) != "") {
-        xmlHttp = null;
-        if (cmd == "add" && objNode23 == "0") {
-            xmlHttp = createXMLHttpRequest();
-            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
-            xmlHttp.send(xmlDoc.xml);
-            xmlHttp = null;
-        }
-        if (tmpReFlag != "0") {
+    	if (tmpReFlag != "0") {
             var objNodes = SelectNodes(resultXML, "RTN_DATA")[0];
             p_num = getNodeText(GetChildNodes(objNodes)[0]);
             p_ownerID = getNodeText(GetChildNodes(objNodes)[1]);
@@ -1365,6 +1340,15 @@ function SaveSchedule_onClick(cmd, resItem) {
 
             SaveRepetition(p_num, resItem);
         }
+    	
+        xmlHttp = null;
+        if (cmd == "add" && objNode23 == "0") {
+            xmlHttp = createXMLHttpRequest();
+            xmlHttp.open("POST", "/ezResource/sendMail.do", false);
+            xmlHttp.send(xmlDoc.xml);
+            xmlHttp = null;
+        }
+        
     } else {
         alert("" + strLang110 + "");
         result = "ERROR";
@@ -1692,4 +1676,144 @@ function ConvertSaveImageFile(filename) {
 function ReplaceText(orgStr, findStr, replaceStr) {
     var re = new RegExp(findStr, "gi");
     return (orgStr.replace(re, replaceStr));
+}
+
+//TODO
+function getFirstDateInfo(startDate, endDate) {
+	var returnValue = "";
+	alert(startDate);
+	alert(endDate);
+	alert(repetition);
+	
+	return "";
+	
+	var xmlHTTP = createXMLHttpRequest();
+	var xmlDom = createXmlDom();    
+	var objNode;
+
+	objNode = createNodeInsert(xmlDom, objNode, "DATA");
+	createNodeAndInsertText(xmlDom, objNode, "REPETITION", repetition);
+	
+	xmlHTTP.open("POST", "/ezSchedule/getFirstScheduleDate.do", false);
+	xmlHTTP.send(xmlDom);
+
+	if (xmlHTTP.status != 200) {
+	    if (xmlHTTP.responseText.indexOf("OK") == -1) {
+	    	alert(strLang17);
+	    }
+	}
+	else {
+		returnValue = xmlHTTP.responseText;
+		
+		if (returnValue == "") {
+			//TODO : strLang으로 옮기기!
+			alert("일정이 한 번 이상 반복되지않습니다. 다시 설정해주십시오.");
+		}
+	}
+	
+	return returnValue;
+}
+
+//안쓰네ㅠㅠ
+function makeResRepetition(startDate, endDate) {
+	var info = repetition.split("|");
+	
+	var recurrenceDom = createXmlDom();
+    var objNode;
+    createNodeInsert(recurrenceDom, objNode, "recurrence");
+	
+    switch (Number(info[0])) {
+    case -1: 
+		createNodeAndInsertText(recurrenceDom, objNode, "endRecurType", 0);
+		break;
+    case 0: 
+		createNodeAndInsertText(recurrenceDom, objNode, "endRecurType", 1);
+		break;
+    default: 
+		createNodeAndInsertText(recurrenceDom, objNode, "endRecurType", 2);
+    	createNodeAndInsertText(recurrenceDom, objNode, "instances", info[0]);
+    
+		break;
+    }
+    
+    if (Number(info[1]) == 1) {
+    	createNodeAndInsertText(recurrenceDom, objNode, "allday", "true");
+    }
+    
+	switch (Number(info[2])) {
+	case 0: //매일
+		createNodeAndInsertText(recurrenceDom, objNode, "frequency", 4);
+		
+		if (Number(info[3]) == 0) { //매일(평일)
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 1);
+			createNodeAndInsertText(recurrenceDom, objNode, "interval", 1);
+			createNodeAndInsertText(recurrenceDom, objNode, "daysOfWeek", "1,2,3,4,5,");
+		} else {
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 0);
+			createNodeAndInsertText(recurrenceDom, objNode, "interval", info[3]);
+		}
+		
+		break;
+	case 1: //매주
+		createNodeAndInsertText(recurrenceDom, objNode, "frequency", 5);
+		createNodeAndInsertText(recurrenceDom, objNode, "selType", 1);
+		createNodeAndInsertText(recurrenceDom, objNode, "interval", info[3]);
+		
+		var daysOfWeek = "";
+		for (var i=0; i<info[4].length; i++) {
+			daysOfWeek += info[4].charAt(i) + ",";
+		}
+		createNodeAndInsertText(recurrenceDom, objNode, "daysOfWeek", daysOfWeek);
+		
+		break;
+	case 2: //매월
+		createNodeAndInsertText(recurrenceDom, objNode, "frequency", 6);
+		
+		if (Number(info[3]) == 1) { //날짜
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 0);
+			createNodeAndInsertText(recurrenceDom, objNode, "interval", info[4]);
+			createNodeAndInsertText(recurrenceDom, objNode, "daysOfMonth", info[5]);
+			
+		} else { //요일(info[3] == "2")
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 1);
+			createNodeAndInsertText(recurrenceDom, objNode, "interval", info[4]);
+			
+			var byPosition = info[5];
+			if (Number(byPosition) == 5) {
+				byPosition = "-1";
+			}
+			createNodeAndInsertText(recurrenceDom, objNode, "byPosition", byPosition);
+			createNodeAndInsertText(recurrenceDom, objNode, "daysOfWeek", info[6]);
+		}
+		
+		
+		break;
+	case 3: //매년
+		createNodeAndInsertText(recurrenceDom, objNode, "frequency", 7);
+		
+		if (Number(info[3]) == 1) { //날짜
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 0);
+			createNodeAndInsertText(recurrenceDom, objNode, "monthsOfYear", info[4]);
+			createNodeAndInsertText(recurrenceDom, objNode, "daysOfMonth", info[5]);
+			
+		} else { //요일(info[3] == "2")
+			createNodeAndInsertText(recurrenceDom, objNode, "selType", 1);
+			createNodeAndInsertText(recurrenceDom, objNode, "monthsOfYear", info[4]);
+			
+			var byPosition = info[5];
+			if (Number(byPosition) == 5) {
+				byPosition = "-1";
+			}
+			createNodeAndInsertText(recurrenceDom, objNode, "byPosition", byPosition);
+			createNodeAndInsertText(recurrenceDom, objNode, "daysOfWeek", info[6]);
+		}
+		
+		break;
+		
+	}
+	
+	createNodeAndInsertText(recurrenceDom, objNode, "startDateTime", startDate);
+	createNodeAndInsertText(recurrenceDom, objNode, "endDateTime", endDate);
+	
+	g_data["recurrence"] = getXmlString(recurrenceDom);
 }

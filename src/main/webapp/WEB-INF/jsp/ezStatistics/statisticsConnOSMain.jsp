@@ -3,10 +3,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
+<head>s
     <title><spring:message code='ezStatistics.t1001'/></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
+	<link rel="stylesheet" href="<spring:message code='ezStatistics.e2' />" type="text/css" />
     <link rel="stylesheet" href="/css/Tab.css" type="text/css">
     <link rel="stylesheet" href="/js/ezStatistics/js/jquery.jqplot.min.css" type="text/css">
   	<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
@@ -122,6 +122,19 @@
             xmlHttp.open("POST", "/ezStatistics/getStatConnOS.do", true);
             xmlHttp.onreadystatechange = event_getpersonalstatistics;
             xmlHttp.send(xmlDoc);
+            $.ajax({
+				type : "POST",
+				dataType : "text",
+				async : true,
+				url : "/ezStatistics/getStatConnOS.do",
+				data : {
+						company : document.getElementById("SCompID").value,
+						date : document.getElementById("selyear").value
+						},
+				success: function(text) {
+					event_getapprovalstatistics(text);
+				}        			
+			});
         }
 
         var rowcnt;
@@ -313,6 +326,13 @@
             });
         }
 
+
+        function btnexportexcel_onclick() {
+            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML + "<BR />" + document.getElementById("statisticstable2").innerHTML;
+            document.getElementById("formAgent").target = "saveExcel";
+            document.getElementById("formAgent").submit();
+        }
+
         function getnodetext(obj) {
             if (CrossYN())
                 return obj.textContent;
@@ -322,13 +342,6 @@
                 else
                     return obj.text;
         }
-
-        function btnexportexcel_onclick() {
-            document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML + "<BR />" + document.getElementById("statisticstable2").innerHTML;
-            document.getElementById("formAgent").target = "saveExcel";
-            document.getElementById("formAgent").submit();
-        }
-
     </script>
 </head>
 <body class="mainbody" style="text-align:left">
@@ -381,7 +394,7 @@
             </dl>
         </div>
     </div>
-    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/myoffice/ezStatistics/excelExportOut.aspx">
+    <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/statisticsexcelExportOut.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
     </form>

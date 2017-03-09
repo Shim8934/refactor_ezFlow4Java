@@ -131,6 +131,8 @@
 		            g_attendant["id"][i] = attendantemail.split("&")[i];
 		            g_attendant["name1"][i] = attendantname.split("&")[i];
 		        } */
+		        
+		        tmpReFlag = document.getElementById("iReFlag").value;
 		    }
 		    
 		    window.onresize = function () {   	
@@ -521,7 +523,19 @@
                                         <tr id="HolderEdit2">
                                             <th><spring:message code='ezSchedule.t163'/></th>
                                             <td colspan="2">
-                                                <span ID="LabelAttendant" Style="OVERFLOW-Y: auto; PADDING-TOP: 2px height=19px"></span>
+                                            	<div style="overflow-y: auto; height: 14px; padding-top: 2px" id="LabelAttendant">                                                
+													<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
+			                                	 		<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
+			                                	 			<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>
+			                                	 			<c:if test="${lang != '1'}"><c:out value="${item.attendantName2}" /></c:if>
+		                                    				<c:if test="${item.status == '1'}">(<spring:message code='ezSchedule.t251' />)</c:if>
+			                                				<c:if test="${item.status == '2'}">(<spring:message code='ezSchedule.t168' />)</c:if>
+			                                				<c:if test="${item.status == '3'}">(<spring:message code='ezSchedule.t169' />)</c:if>
+			                                				<c:if test="${item.status != '1' && item.status != '2' && item.status != '3'}">(<spring:message code='ezSchedule.t166' />)</c:if>
+			                                				<c:if test="${fn:length(attendantList) != status.count}">,</c:if>	                                				                                		
+		                                    			</span>
+			                                		</c:forEach>
+			                                	</div>	
 											</td>
                                         </tr>
                                         </c:if>

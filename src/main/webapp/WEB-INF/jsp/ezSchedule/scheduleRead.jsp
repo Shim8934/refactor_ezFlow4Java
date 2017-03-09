@@ -408,7 +408,7 @@
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
 	                            <td colspan="3" width="100%">
-	                                <div style="overflow-y: auto; height: 17px; padding-top: 2px" id="LabelAttendant">	                                
+	                                <div style="overflow-y: auto; height: 16px; padding-top: 2px" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 	                                	 		<c:if test="${lang == '1'}"><c:out value="${item.attendantName}" /></c:if>

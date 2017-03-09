@@ -4,6 +4,9 @@ function Receptinfo_ini() {
         Recinfoini = true;
         Tree_setconfig();
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
+        if(approvalYN == "N") {
+        	RdisplayUserList(arr_userinfo[4]);
+        }
         ChangeReceptTab(document.getElementById("3tab1"));
         initReceptListView();
         document.getElementById("3tab1").onclick();
@@ -224,87 +227,61 @@ function RequestData2(pNodeID, pTreeID) {
 //#############################################################################################################################################수신처 조직도 사용자 가져오기 
 var ReceptUserXmlHttp;
 function RdisplayUserList(DeptID) {
-    var xmlpara = createXmlDom();
-
-
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA"); // Root Node 생성	
-    createNodeAndInsertText(xmlpara, objNode, "DEPTID", DeptID);
-    createNodeAndInsertText(xmlpara, objNode, "CELL", "displayname;Description;Title;telephonenumber");
-    createNodeAndInsertText(xmlpara, objNode, "PROP", "Department;DisplayName;Description;Title;PhysicalDeliveryOfficeName");
-    createNodeAndInsertText(xmlpara, objNode, "TYPE", "user");
-
-    ReceptUserXmlHttp = createXMLHttpRequest();
-    ReceptUserXmlHttp.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptMemberList.aspx", false);
-    ReceptUserXmlHttp.send(xmlpara);
-    if (ReceptUserXmlHttp.statusText == "OK") {
-        var xmldom = createXmlDom();
-        xmldom = loadXMLString(userlist_h.innerHTML.toUpperCase());
-        if (ReceptUserXmlHttp.responseText != "") {
-            if (CrossYN()) {
-                var xmlRtn = ReceptUserXmlHttp.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                var Node = xmldom.importNode(xmlRtn, true);
-                xmldom.documentElement.appendChild(Node);
-            }
-            else {
-                var xmlRtn = ReceptUserXmlHttp.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                xmldom.documentElement.appendChild(xmlRtn);
-            }
-        }
-        document.getElementById('UserList2').innerHTML = "";
-        var listview = new ListView();
-        listview.SetID("lvUserList2");
-        listview.SetSelectFlag(false);
-        listview.SetHeightFree(true);
-        listview.SetRowOnDblClick("Rlist2_onSel_DBclick");
-        listview.DataSource(xmldom);
-        listview.DataBind("UserList2");
-        if (listview.GetRowCount() <= 0)
-            OpenAlertUI(linealt11);
-        else if (USE_OCS.toUpperCase() == "YES")
-            check_presence();
-    }
-    else
-        OpenAlertUI(linealt12 + g_xmlHTTP.statusText);
-
-    ReceptUserXmlHttp = null;
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezOrgan/getDeptMemberList.do",
+		data : {
+				deptID   : DeptID, 
+				cell 	 : "displayName;description;title;telephoneNumber",
+				prop     : "department;displayName;description;title;physicalDeliveryOfficeName",
+				type 	 : "user"
+				},
+		success: function(xml){
+			event_RdisplayUserList(loadXMLString(xml));
+		}        			
+	});
 
 }
 //#############################################################################################################################################수신처 조직도 사용자 가져오기 
-function event_RdisplayUserList() {
-    if (ReceptUserXmlHttp != null && ReceptUserXmlHttp.readyState == 4) {
-        if (ReceptUserXmlHttp.statusText == "OK") {
-            var xmldom = createXmlDom();
-            xmldom = loadXMLString(userlist_h.innerHTML.toUpperCase());
-            if (ReceptUserXmlHttp.responseText != "") {
-                if (CrossYN()) {
-                    var xmlRtn = ReceptUserXmlHttp.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                    var Node = xmldom.importNode(xmlRtn, true);
-                    xmldom.documentElement.appendChild(Node);
-                }
-                else {
-                    var xmlRtn = ReceptUserXmlHttp.responseXML.documentElement.getElementsByTagName("ROWS")[0];
-                    xmldom.documentElement.appendChild(xmlRtn);
-                }
-            }
-            document.getElementById('UserList2').innerHTML = "";
+function event_RdisplayUserList(xml) {
+	 var retXml = createXmlDom();
+	 
+	 if (document.getElementById("UserList2").innerHTML != "") {
+	     document.getElementById("UserList2").innerHTML = "";
+	 }   
+	 
+	var headerData = createXmlDom();
+    headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
+
+    if (xml != "") {
+        if (CrossYN()) {
+            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+            var Node = headerData.importNode(xmlRtn, true);
+            headerData.documentElement.appendChild(Node);
+        }
+        else {
+            var xmlRtn = xml.documentElement.getElementsByTagName("ROWS")[0];
+            headerData.documentElement.appendChild(xmlRtn);
+        }
+    }
             var listview = new ListView();
             listview.SetID("lvUserList2");
             listview.SetSelectFlag(false);
             listview.SetHeightFree(true);
             listview.SetRowOnDblClick("Rlist2_onSel_DBclick");
-            listview.DataSource(xmldom);
+            listview.DataSource(headerData);
             listview.DataBind("UserList2");
-            if (listview.GetRowCount() <= 0)
-                OpenAlertUI(linealt11);
-            else if (USE_OCS.toUpperCase() == "YES")
-                check_presence();
-        }
-        else
-            OpenAlertUI(linealt12 + g_xmlHTTP.statusText);
+            
+            var userRows = listview.GetDataRows();
 
-        ReceptUserXmlHttp = null;
-    }
+            if (userRows.length <= 0) {
+                OpenAlertUI(linealt11);
+            }
+            else if (USE_OCS.toUpperCase() == "YES") {
+                check_presence();
+            }
 }
 //#############################################################################################################################################수신처 리스트 삭제 이벤트
 function AprDeptDel_onclick() {
@@ -478,8 +455,11 @@ function AprLineAddDept(nodeIdx, tr) {
     var isCurretnCompany = "N";
     var Resultxml = "";
     Resultxml.async = false;
-    Resultxml = loadXMLFile(strLangEtcFile1);
-
+    if(approvalYN == "Y") {
+    	Resultxml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+    }	
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
     var deptid = treeNode.GetNodeData("CN");
@@ -576,8 +556,13 @@ function AprLineAddDept(nodeIdx, tr) {
 function AprLineAddDept_User(pSelectedRow) {
 
     var isCurretnCompany = "N";
+    var Resultxml ="";
     Resultxml.async = false;
-    Resultxml = loadXMLFile(strLangEtcFile1);
+    if(approvalYN == "Y") {
+    	Resultxml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+    }	
 
     var listview = new ListView();
     listview.LoadFromID("lvRECEPTLIST");
@@ -785,7 +770,7 @@ function event_displayUserList2(xml) {
         OpenAlertUI(linealt1);
     }
     else if (USE_OCS.toUpperCase() == "YES") {
-        check_presence();
+    	check_presence_Rec();
     }
 }
 
@@ -892,7 +877,11 @@ function btnSearchDept_onClick() {
                 var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
                 if (DuplicateFlag) {
                     Resultxml.async = false;
-                    Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
+                    if(approvalYN == "Y") {
+                    	Resultxml = loadXMLFile(strLangEtcFile1);
+                    } else {
+                    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+                    }
 
                     var listview = new ListView();
                     listview.LoadFromID("lvRECEPTLIST");
@@ -1053,7 +1042,11 @@ function btnSearchDept_onClick() {
                     var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
                     if (DuplicateFlag) {
                         Resultxml.async = false;
-                        Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
+                        if(approvalYN == "Y") {
+                        	Resultxml = loadXMLFile(strLangEtcFile1);
+                        } else {
+                        	Resultxml = loadXMLFile(strLangEtcFileliban1);
+                        }
 
                         var listview = new ListView();
                         listview.LoadFromID("lvRECEPTLIST");
@@ -1226,7 +1219,11 @@ function btnSearchDept_onClick_Complete(reParam) {
         var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
         if (DuplicateFlag) {
             Resultxml.async = false;
-            Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
+            if(approvalYN == "Y") {
+            	Resultxml = loadXMLFile(strLangEtcFile1);
+            } else {
+            	Resultxml = loadXMLFile(strLangEtcFileliban1);
+            }
 
             var listview = new ListView();
             listview.LoadFromID("lvRECEPTLIST");
@@ -1384,7 +1381,11 @@ function btnSearchDept_onClick_Complete(reParam) {
             var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
             if (DuplicateFlag) {
                 Resultxml.async = false;
-                Resultxml = loadXMLFile("/xml/ezApprovalG/TreeViewAddDept.xml");
+                if(approvalYN == "Y") {
+                	Resultxml = loadXMLFile(strLangEtcFile1);
+                } else {
+                	Resultxml = loadXMLFile(strLangEtcFileliban1);
+                }
 
                 var listview = new ListView();
                 listview.LoadFromID("lvRECEPTLIST");
@@ -1675,7 +1676,11 @@ function AprLineAddDeptG(nodeIdx, tr) {
     var isCurretnCompany = "Y";
     Resultxml.async = false;
 
-    Resultxml = loadXMLFile(strLangEtcFile1);
+    if(approvalYN == "Y") {
+    	Resultxml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+    }	
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
@@ -2113,7 +2118,11 @@ function CheckLen(pStr, pSize) {
 }
 function AprLineAddDeptAddress(AddressName) {
     Resultxml.async = false;
-    Resultxml = loadXMLFile(strLangEtcFile1);
+    if(approvalYN == "Y") {
+    	Resultxml = loadXMLFile(strLangEtcFile1);
+    } else {
+    	Resultxml = loadXMLFile(strLangEtcFileliban1);
+    }	
 
     var listview = new ListView();
     listview.SetID("lvRECEPTLIST");
@@ -2331,7 +2340,11 @@ function AddOrgan(_OrganId, _OrganName) {
         var isCurretnCompany = "N";
         var Resultxml = "";
         Resultxml.async = false;
-        Resultxml = loadXMLFile(strLangEtcFile1);
+        if(approvalYN == "Y") {
+        	Resultxml = loadXMLFile(strLangEtcFile1);
+        } else {
+        	Resultxml = loadXMLFile(strLangEtcFileliban1);
+        }	
 
         var treeNode = new TreeNode();
         treeNode.LoadFromID(nodeIdx);
@@ -2470,8 +2483,11 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
         var isCurretnCompany = "Y";
         Resultxml.async = false;
 
-        Resultxml = loadXMLFile(strLangEtcFile1);
-
+        if(approvalYN == "Y") {
+        	Resultxml = loadXMLFile(strLangEtcFile1);
+        } else {
+        	Resultxml = loadXMLFile(strLangEtcFileliban1);
+        }	
         var listview = new ListView();
         listview.LoadFromID("lvRECEPTLIST");
 
