@@ -2356,4 +2356,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
 		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getKeepType(Map<String, Object> map) throws Exception{
+		return (List<ApprGLeftVO>) list("EzApprovalG.getKeepType", map);
+	}
 }

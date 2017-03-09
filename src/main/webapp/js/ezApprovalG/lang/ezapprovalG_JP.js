@@ -1261,6 +1261,7 @@ var strLangEtcAprType4 = "前決"; // 문서 싸인칸에 표시하는 전결문
 var strLangEtcAprState4 = "返送"; // 문서 싸인칸에 표시하는 반송문자
 var strLangEtcFile1 = "/xml/ezApprovalG/TreeViewAddDept3.xml"; // xml 파일 처리
 var strLangEtcFile2 = "/xml/ezApprovalG/TreeViewTmpAddDept3.xml"; // xml 파일 처리
+var strLangEtcFileliban1 = "/xml/ezApproval/TreeViewAddDept.xml";
 
 var strLang1101 = "해당 부서에 수발신 담당자가 존재하지 않아 "
 var strLang1102 = "수신처에 등록할 수 없는 부서 입니다."
