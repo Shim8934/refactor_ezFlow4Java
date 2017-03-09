@@ -9846,7 +9846,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			LOGGER.debug("doApproveLineCnt ended");
 
-			if (subCount > 1) {
+			if (subCount >= 1) {
 				return strSQL.toString();
 			}
 		}
@@ -9882,7 +9882,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map3.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		
 		while (k < dlength && whileFlag) {
-		map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
+			map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 			switch (docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().trim()) {
 			case "001":
 				lastState = staATYilBan;
@@ -10042,7 +10042,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (!curAprType.equals(staATByungRyulHyubJo)) {
 					while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATByungRyulHyubJo)) {
-						
+						map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 						map3.put("v_APRSTATE", staASJinHang);
 						ezApprovalGDAO.updateAprLineInfo(map3);
 						
@@ -10106,6 +10106,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (!curAprType.equals(staATBuSeuByungRyulHyubJo)) {
 					while (k < dlength && docXML2.getElementsByTagName("APRTYPE").item(k).getTextContent().equals(staATBuSeuByungRyulHyubJo) && whileFlag) {
 						
+						map3.put("v_APRMEMBERSN", docXML2.getElementsByTagName("APRMEMBERSN").item(k).getTextContent());
 						map3.put("v_APRSTATE", staASJinHang);
 						try {
 							ezApprovalGDAO.updateAprLineInfo(map3);
@@ -11201,7 +11202,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
 			
 			docSN = docSN.substring(docSN.length() - 6);
-			
+			//뭐하는짓
 			int pDocSN = Integer.parseInt(docSN);
 			
 			docSN = String.valueOf(pDocSN);
@@ -11510,7 +11511,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	public String getSerialNum(String snType1, String snType2, String snType3, String companyID, String langType, int tenantID) throws Exception{
 		String accountYear = getAccountingYear(commonUtil.getTodayUTCTime(""), companyID, langType ,tenantID);
-		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("iv_Type1", snType1);
