@@ -62,7 +62,7 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 
-		    function menuQstList(){
+		    function menuQstList() {
 	            var szUrl = "/ezQuestion/qstList.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;
 			    window.location.href = szUrl;
 			}

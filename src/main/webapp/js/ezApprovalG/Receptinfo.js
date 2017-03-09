@@ -4,7 +4,7 @@ function Receptinfo_ini() {
         Recinfoini = true;
         Tree_setconfig();
         TreeViewinitialize_tree2(arr_userinfo[4], companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "<%=_pServerName%>");
-        if(approvalYN == "N") {
+        if(approvalYN == "S") {
         	RdisplayUserList(arr_userinfo[4]);
         }
         ChangeReceptTab(document.getElementById("3tab1"));
@@ -206,6 +206,9 @@ function TreeViewNodeClick2(pNodeID, pNodeNM) {
 
     var treeNode = new TreeNode();
     treeNode.LoadFromID(nodeIdx);
+    if (approvalYN == 'S') {
+    	RdisplayUserList(treeNode.GetNodeData("CN"));
+    }
 }
 function RequestData2(pNodeID, pTreeID) {
     nodeIdx = pNodeID;
@@ -455,7 +458,7 @@ function AprLineAddDept(nodeIdx, tr) {
     var isCurretnCompany = "N";
     var Resultxml = "";
     Resultxml.async = false;
-    if(approvalYN == "Y") {
+    if(approvalYN == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -558,7 +561,7 @@ function AprLineAddDept_User(pSelectedRow) {
     var isCurretnCompany = "N";
     var Resultxml ="";
     Resultxml.async = false;
-    if(approvalYN == "Y") {
+    if(approvalYN == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -877,7 +880,7 @@ function btnSearchDept_onClick() {
                 var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
                 if (DuplicateFlag) {
                     Resultxml.async = false;
-                    if(approvalYN == "Y") {
+                    if(approvalYN == "G") {
                     	Resultxml = loadXMLFile(strLangEtcFile1);
                     } else {
                     	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -1042,7 +1045,7 @@ function btnSearchDept_onClick() {
                     var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
                     if (DuplicateFlag) {
                         Resultxml.async = false;
-                        if(approvalYN == "Y") {
+                        if(approvalYN == "G") {
                         	Resultxml = loadXMLFile(strLangEtcFile1);
                         } else {
                         	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -1219,7 +1222,7 @@ function btnSearchDept_onClick_Complete(reParam) {
         var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"]);
         if (DuplicateFlag) {
             Resultxml.async = false;
-            if(approvalYN == "Y") {
+            if(approvalYN == "G") {
             	Resultxml = loadXMLFile(strLangEtcFile1);
             } else {
             	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -1381,7 +1384,7 @@ function btnSearchDept_onClick_Complete(reParam) {
             var DuplicateFlag = DuplicateAprDeptCheckG(RECEPTLIST, reParam["ouCode"][i]);
             if (DuplicateFlag) {
                 Resultxml.async = false;
-                if(approvalYN == "Y") {
+                if(approvalYN == "G") {
                 	Resultxml = loadXMLFile(strLangEtcFile1);
                 } else {
                 	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -1676,7 +1679,7 @@ function AprLineAddDeptG(nodeIdx, tr) {
     var isCurretnCompany = "Y";
     Resultxml.async = false;
 
-    if(approvalYN == "Y") {
+    if(approvalYN == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -2118,7 +2121,7 @@ function CheckLen(pStr, pSize) {
 }
 function AprLineAddDeptAddress(AddressName) {
     Resultxml.async = false;
-    if(approvalYN == "Y") {
+    if(approvalYN == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -2340,7 +2343,7 @@ function AddOrgan(_OrganId, _OrganName) {
         var isCurretnCompany = "N";
         var Resultxml = "";
         Resultxml.async = false;
-        if(approvalYN == "Y") {
+        if(approvalYN == "G") {
         	Resultxml = loadXMLFile(strLangEtcFile1);
         } else {
         	Resultxml = loadXMLFile(strLangEtcFileliban1);
@@ -2483,7 +2486,7 @@ function AddOuter(strOuterDeptId, strOuterDeptName) {
         var isCurretnCompany = "Y";
         Resultxml.async = false;
 
-        if(approvalYN == "Y") {
+        if(approvalYN == "G") {
         	Resultxml = loadXMLFile(strLangEtcFile1);
         } else {
         	Resultxml = loadXMLFile(strLangEtcFileliban1);

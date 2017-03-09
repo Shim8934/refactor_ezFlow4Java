@@ -265,7 +265,7 @@
 			                m_AttachInfo += "<ROW>";
 			                m_AttachInfo += "<TYPE>" + pInfoList[0] + "</TYPE>";
 			                m_AttachInfo += "<ATTACHTITLE>" + javaURLEncode(pInfoList[1]) + "</ATTACHTITLE>";
-			                m_AttachInfo += "<HREF>" + pInfoList[2] + "</HREF>";
+			                m_AttachInfo += "<HREF>" + javaURLEncode(pInfoList[2]) + "</HREF>";
 			                m_AttachInfo += "</ROW>";
 			            }
 			            

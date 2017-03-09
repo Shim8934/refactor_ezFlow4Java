@@ -53,6 +53,7 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -154,7 +155,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
 			Model model, 
-			HttpServletRequest request) throws Exception{
+			HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
 		
 		logger.debug("mailWrite started.");
 		
@@ -884,6 +886,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("uploadCommonPath", commonUtil.getUploadPath("upload_common.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("uploadCommunityPath", commonUtil.getUploadPath("upload_community.ROOT", loginInfo.getTenantId()));
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
+		
+		response.setHeader("X-XSS-Protection", "0");
 		
 		logger.debug("mailWrite ended.");
 		

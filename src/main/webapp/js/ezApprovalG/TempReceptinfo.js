@@ -146,7 +146,7 @@ function btn_GroupReceptAdd_onclick(){
 function AprLineAddDeptGroup() {
     var Resultxml = "";
     Resultxml.async = false;
-    if(approvalYN == "Y") {
+    if(approvalYN == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
     	Resultxml = loadXMLFile(strLangEtcFileliban1);

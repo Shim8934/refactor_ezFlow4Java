@@ -405,6 +405,7 @@
         		}
         		return strRet;
     		}
+    		
     		function fun_QuesSave() {
         		if(Ques_Answer.selType[0].checked){
             		if (Form_Check()==false)
@@ -549,19 +550,22 @@
         		}
         		var pAttachYN = "";
         		attach = attach.replace(/\^/g, "");
+        		
         		if ( trim(attach) != "" &&  trim(attachQ) != "" ) {
             		pAttachYN =  "Y";
         		} else {
             		pAttachYN = "";
         		}
-		
+        		
         		if(pEditIndex != "") {
              		window.opener.EditQues(Ques_Answer.txtQuestion.value,pEditIndex, pAttachYN, getXmlString(xmlDoc)); 
         		} else {
             		window.opener.AddQuesList_DATA(Ques_Answer.txtQuestion.value, pAttachYN, getXmlString(xmlDoc));
         		}
+        		
         		window.close();
     		}
+    		
     		function GetAttachList_ie(objInfo) {
         		var strRet = "";
         		var xmlpara = createXmlDom();
@@ -570,6 +574,7 @@
 		            objRoot = createNodeInsert(xmlpara, objRoot, "ATTACH");
             		if (objInfo.type.length > 0) {
                 		var attachcnt = objInfo.type.length;
+                		
                 		for (var jj = 0 ; jj < attachcnt ; jj++) {
                     		objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
                     		objNode = createNodeAndAppandNodeText(xmlpara, objRow, objNode, "TYPE", objInfo.type[jj]);
@@ -581,15 +586,18 @@
 
         		return xmlpara;
     		}
+    		
     		function fun_QuesCancel() {
         		window.self.close();
     		}
+    		
     		function fun_SelClick() {
         		if(Ques_Answer.input_Ans.selectedIndex >= 0) {
             		index = Ques_Answer.input_Ans.selectedIndex;
             		Ques_Answer.txtAnswer.value = Ques_Answer.input_Ans.options[index].value;
         		}
     		}
+    		
     		function IsNumeric(vdata) {
         		var num="0123456789"; 	
         		var returnValue = true;
@@ -603,6 +611,7 @@
         		}
         		return returnValue;
     		}
+    		
     		function fun_SetAns(pID, pCmd) {
         		var rgParams = new Array();
         		rgParams["m_Return"] = "";
@@ -629,6 +638,7 @@
             		}
         		} else {
             		var td_QuestionText = "";
+            		
             		if (navigator.userAgent.indexOf("Firefox")>-1) {
                 		var ret = td_Question.innerHTML;
                 		ret = ret.replace(/&nbsp;/ig," ");
@@ -648,6 +658,7 @@
                 		}
             		}
         		}
+        		
         		var _MSIE = 'MSIE';
         		var useragentstr = navigator.userAgent;
         		if (useragentstr.indexOf(_MSIE) != -1) {
