@@ -1394,12 +1394,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			sb.append("<ROW>");
 			sb.append("<POP3SERVER>" + pop3Vo.getPop3Server() + "</POP3SERVER>");
 			sb.append("<POP3PORTNO>" + pop3Vo.getPop3PortNo() + "</POP3PORTNO>");
-			sb.append("<POP3USERID>" + pop3UserId + "</POP3USERID>");
-			sb.append("<POP3PW>" + pop3Pw + "</POP3PW>");
+			sb.append("<POP3USERID>" + commonUtil.cleanValue(pop3UserId) + "</POP3USERID>");
+			sb.append("<POP3PW>" + commonUtil.cleanValue(pop3Pw) + "</POP3PW>");
 			sb.append("<SAVETO>" + pop3Vo.getSaveTo() + "</SAVETO>");
 			sb.append("<DELETEYN>" + pop3Vo.getDeleteYN() + "</DELETEYN>");
 			sb.append("<POP3SSLYN>" + pop3SslYN + "</POP3SSLYN>");
-			sb.append("<SAVETOFOLDER>" + pop3Vo.getSaveTofolder() + "</SAVETOFOLDER>");
+			sb.append("<SAVETOFOLDER>" + commonUtil.cleanValue(pop3Vo.getSaveTofolder()) + "</SAVETOFOLDER>");
 			sb.append("</ROW>");
 		}
 
