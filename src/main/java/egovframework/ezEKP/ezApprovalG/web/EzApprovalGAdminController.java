@@ -1108,12 +1108,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	//장진혁과장 작성 이후 이효진사원 추가
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 메뉴 호출 함수 
+	 * 전자결재 분류,단위업무관리 메뉴 호출함수
+	 * 전자결재 분류코드관리 메뉴 호출함수 
 	 */
 	//일반 docNumUI.do
 	@RequestMapping(value = "/admin/ezApprovalG/apprGTaskCodeManage.do")
 	public String apprGTaskCodeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGTaskCodeManage started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -1131,29 +1135,39 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("list", resultList);
+		
+		logger.debug("apprGTaskCodeManage ended.");
 		
 		return "admin/ezApprovalG/apprGTaskCodeManage";
 	}
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 분류목록 호출 함수
+	 * 전자결재 관리 분류,단위업무관리 분류목록 호출함수
+	 * 전자결재 관리 분류코드관리 체계목록 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryTree.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getTaskCategoryTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskCategoryTree started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String categoryType = request.getParameter("categoryType");
 		String parentID = request.getParameter("parentID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId());
-
+		String result = ezApprovalGAdminService.getTaskCategoryTree(categoryType, parentID, companyID, userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("getTaskCategoryTree ended.");
+		
 		return result;
 	}
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 분류목록에따른 단위업무 목록 호출 함수
+	 * 전자결재 관리 분류,단위업무관리 분류목록에따른 단위업무 목록 호출함수
+	 * 전자결재 관리 분ㅂ류코드관리 체계목록에 따른 분류코드 목록 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -1167,11 +1181,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 분류추가,분류수정 메뉴 호출 함수
+	 * 전자결재 분류,단위업무관리 분류추가,분류수정 메뉴 호출함수
+	 * 전자결재 분류코드관리 체계추가, 체계수정 메뉴 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCategoryInsert.do")
-	public String taskCategoryInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String taskCategoryInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskCategoryInsert started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String title = "";
 		
@@ -1179,12 +1197,24 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		if (tCheck.equals("ins")) {
-			title = egovMessageSource.getMessage("ezApprovalG.t734", userInfo.getLocale());
+		if (approvalFlag.equals("S")) {
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApproval.t765", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApproval.t766", userInfo.getLocale());
+			}
 		} else {
-			title = egovMessageSource.getMessage("ezApprovalG.t735", userInfo.getLocale());
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t734", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t735", userInfo.getLocale());
+			}
 		}
+		
 		model.addAttribute("title", title);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("taskCategoryInsert ended.");
 		
 		return "admin/ezApprovalG/apprGTaskCategoryInsert";
 	}
@@ -1195,12 +1225,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryDuplicate.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getTaskCategoryDuplicate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskCategoryDuplicate started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.getTaskCategoryDuplicate(categoryType, categoryCode, companyID, userInfo.getTenantId());
+		
+		logger.debug("getTaskCategoryDuplicate ended.");
 		
 		return result;
 	}
@@ -1219,7 +1253,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String setTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setTaskCategory started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String categoryType = request.getParameter("categoryType");
 		String categoryCode = request.getParameter("categoryCode");
 		String categoryName = request.getParameter("categoryName");
@@ -1228,7 +1265,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pCode = request.getParameter("pCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.setTaskCategory(categoryType, categoryCode, categoryName, categoryName2, categoryDesc, pCode, companyID, userInfo.getTenantId());
+		if (approvalFlag.equals("S") && categoryCode.equals("")) {
+			String tempCategoryCode1 = Character.toString((char)((int)(Math.random()*26) + 65)) + Character.toString((char)((Math.random()*26) + 65));
+			String tempCategoryCode2 = Integer.toString((int)(Math.random()*1000000));
+			logger.debug("tempCategoryCode1 = " + tempCategoryCode1);
+			logger.debug("tempCategoryCode2 = " + tempCategoryCode2);
+			categoryCode = tempCategoryCode1 + tempCategoryCode2;
+		}
+		
+		String result = ezApprovalGAdminService.setTaskCategory(categoryType, categoryCode, categoryName, categoryName2, categoryDesc, pCode, companyID, userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("setTaskCategory ended.");
 		
 		return result;
 	}
@@ -1255,12 +1302,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String removeTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("removeTaskCategory started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("cateCode");
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID, userInfo.getTenantId());
+		
+		logger.debug("removeTaskCategory ended.");
 		
 		return result;
 	}
@@ -2347,4 +2398,36 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G관리 문서이동 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMoveContainer.do")
+	public String moveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("moveContainer started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("companySel", companySel);
+		
+		logger.debug("moveContainer ended");
+		
+		return "admin/ezApprovalG/apprGMoveContainer";
+	}
+
 }
