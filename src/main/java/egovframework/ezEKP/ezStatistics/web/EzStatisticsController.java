@@ -119,7 +119,6 @@ public class EzStatisticsController {
 			headerFLAG = request.getParameter("headerFlag");
         }
 		
-		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -203,6 +202,8 @@ public class EzStatisticsController {
 		workbook.write(response.getOutputStream());
 		
 		logger.debug("qstResultAnalysisSaveM ended");
+
+		workbook.close();
 	}
 	
 	/**
@@ -212,7 +213,6 @@ public class EzStatisticsController {
 	public void getUserOSsaticXls(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("getUserOSsaticXls started");
 		
-		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -291,5 +291,7 @@ public class EzStatisticsController {
 		workbook.write(response.getOutputStream());
 		
 		logger.debug("getUserOSsaticXls ended");
+
+		workbook.close();
 	}
 }

@@ -26,39 +26,36 @@
 					case 1:
 						url = "/admin/ezApprovalG/formAdmin.do";
 						break;					
-					case 2:
-					    url = "/myoffice/ezApprovalG/manage/FormMaker/Form_Admin.aspx?type=HWP";
-						break;						
-				    case 3:
+				    case 2:
 	                    url = "/admin/ezApprovalG/apprGMCont.do";
 	                    break;						
-				    case 4:
+				    case 3:
 				        url = "/admin/ezApprovalG/apprGReceiveGroup.do";
 						break;					
-				    case 5:
+				    case 4:
 				        url = "/admin/ezApprovalG/apprGTaskCodeManage.do";
 						break;					
-					case 6:
+					case 5:
 					    url = "/admin/ezApprovalG/taskAdminDept.do";
 						break;						
-					case 7:
+					case 6:
 					    url = "/admin/ezApprovalG/manageSeal.do";
 						break;						
-					case 8:
+					case 7:
 					    url = "/admin/ezApprovalG/manageDeptSeal.do";
 						break;					
-					case 9:
+					case 8:
 						url = "/admin/ezApprovalG/manageSendInfo.do";
 						break;						
-					case 10:
+					case 9:
 					    url = "/admin/ezApprovalG/statistics.do";
 						break;						
-					case 11:
+					case 10:
 					    url = "/admin/ezApprovalG/forAprDoc.do";
 						break;						
-					case 12:
+					case 11:
 					    url = "/admin/ezApprovalG/forDoc.do";
-						break;								
+						break;
 				}
 				
 				window.open(url,"right");
@@ -68,18 +65,18 @@
 	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left" style="overflow-x:hidden">
 			<div class="left_admin" title="<spring:message code='ezApprovalG.t102'/>"><spring:message code='ezApprovalG.t102'/></div>
-        	<h2><span id="1" style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t33'/></span><ul></ul></h2>	
-<%-- 			<h2><span id="2" style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t34'/></span><ul></ul></h2> --%>
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t36'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t39'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t46'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t47'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t41'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t48'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t49'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t42'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t50'/></span><ul></ul></h2>	
-			<h2><span style="display:inline-block;width:100%;" onClick="goPage(12)"><spring:message code='main.t51'/></span><ul></ul></h2>	
+<!-- 			approvalFlag 로 분기 -->
+        	<h2><span id="1" style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t33'/></span><ul></ul></h2>
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t39'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t46'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t47'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='main.t41'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='main.t48'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='main.t49'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='main.t42'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(10)"><spring:message code='main.t50'/></span><ul></ul></h2>	
+			<h2><span style="display:inline-block;width:100%;" onClick="goPage(11)"><spring:message code='main.t51'/></span><ul></ul></h2>	
 		</div>
 		<script type="text/javascript">
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");

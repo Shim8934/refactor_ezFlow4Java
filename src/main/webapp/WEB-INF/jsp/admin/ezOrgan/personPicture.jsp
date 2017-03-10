@@ -113,7 +113,7 @@
 			
 			function uploadComplete() {		        
 		        if(xhr.responseText == "UPLOAD_ERROR"){
-		        	alert("<spring:message code='fail.common.msg' />");
+		        	alert("<spring:message code='ezBoard.hyj02' />");
 		        	
 		        	document.getElementById("file1").value = "";
 		        	document.getElementById("tempFilePath").value = "";

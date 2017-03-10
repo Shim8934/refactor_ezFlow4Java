@@ -286,18 +286,20 @@
 	                var tempno = 0;
 	                for (var i = 0; i < GetElementsByTagName(xmlDoc, "ROW").length; i++) {
 	                    if (CrossYN()) {
-	                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim()) > tempno)
-	                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim());
+	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim().length > 10) {
+	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
+	                        }
 	                    }
 	                    else {
-	                        if (parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim()) > tempno)
-	                            tempno = parseInt(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim());
+	                        if (GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].text.trim().length > 10) {
+	                            tempno = GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[1].textContent.trim();
+	                        }
 	                    }
 	                }
 	                tempno = tempno + "";
-	
-	                if (tempno.length > 4) {
-	                    document.getElementById("BoardList_TH_1").style.width = tempno.length * 3 + 20 + "px";
+	                
+	                if (tempno.length > 10) {
+	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
 	                }
 	
 	                if ("${useOcs}" == "YES" && lstCnt > 0) {

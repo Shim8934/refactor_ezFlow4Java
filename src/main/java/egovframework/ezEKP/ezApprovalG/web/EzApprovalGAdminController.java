@@ -84,7 +84,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMain.do")
-	public String apprGMain() throws Exception {		
+	public String apprGMain() throws Exception {
 		return "/admin/ezApprovalG/apprGMain";
 	}
 	
@@ -92,7 +92,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 왼쪽화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGLeft.do")
-	public String apprGLeft() throws Exception {		
+	public String apprGLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("apprGLeft started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
+		
 		return "/admin/ezApprovalG/apprGLeft";
 	}
 	
@@ -1101,6 +1110,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 분류,단위업무관리 메뉴 호출 함수 
 	 */
+	//일반 docNumUI.do
 	@RequestMapping(value = "/admin/ezApprovalG/apprGTaskCodeManage.do")
 	public String apprGTaskCodeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -2205,6 +2215,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("forDoc started.");
 		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -2224,6 +2235,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("list", resultList);
 		
@@ -2287,13 +2299,19 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/search.do")
 	public String search(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("search started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String ingFlag = request.getParameter("ingFlag");
 		String initDate = EgovDateUtil.getToday("-");
 		
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("aprFlag", ingFlag);
 		model.addAttribute("initDate", initDate);
+		
+		logger.debug("search ended.");
 		
 		return "admin/ezApprovalG/apprGSearch";
 	}
