@@ -1625,7 +1625,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				returnValue = "NO";
 			}
 		} else if (cmd.equals("del")) {
-			boolean ret = ezResourceService.deleteRepetition(xmlStr, userInfo.getTenantId());
+			boolean ret = ezResourceService.deleteRepetition(xmlStr, userInfo.getCompanyID(), userInfo.getTenantId());
 				
 			if (ret == true) {
 				returnValue = "OK";

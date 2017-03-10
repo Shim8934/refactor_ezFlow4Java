@@ -13,6 +13,7 @@
 	<typeAlias  alias="ScheduleGroupListVO" type="egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO"/>
 	<typeAlias  alias="ReceiveListVO" 		type="egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO"/>
 	<typeAlias  alias="OrganUserVO" 		type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias  alias="ResGetScheduleVO" 	type="egovframework.ezEKP.ezResource.vo.ResGetScheduleVO"/>
 	
 	<resultMap class="ScheGetHolidayVO" id="scheGetHolidayVO">
 		<result property="holidayID"		column="HOLIDAYID"			columnIndex="1"/>
@@ -721,7 +722,23 @@
 	        ORDER BY GROUPNAME
 		]]>
 	</select>
-		
+	
+	<select id="EzScheduleDAO.getResourceSchedule" parameterClass="Map" resultClass="ResGetScheduleVO">
+		<![CDATA[
+			select
+				ownerid,
+				num,
+				companyid,
+				reflag
+			from
+				tbl_rs_schedule
+			where
+				scheduleid = #v_SCHEDULEID#
+			and
+				tenant_id = #v_TENANTID#
+		]]>
+	</select>
+	
 	<insert id="EzScheduleDAO.insertSchedule" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULE(

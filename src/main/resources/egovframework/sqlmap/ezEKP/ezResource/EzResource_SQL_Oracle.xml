@@ -1365,6 +1365,8 @@
    			AND
    				NUM = #v_pNum#
    			AND
+   				COMPANYID = #companyID#
+   			AND
    				TENANT_ID = #tenantID#	
 		]]>
 	</delete>
