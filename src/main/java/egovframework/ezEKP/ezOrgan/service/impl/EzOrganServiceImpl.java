@@ -1188,10 +1188,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 			
 			stb.append("<ROW>");
 	        stb.append("<TITLE>");
-	        stb.append(userVO.getTitle());
+	        stb.append(commonUtil.cleanValue(userVO.getTitle()));
 	        stb.append("</TITLE>");
 	        stb.append("<DISPLAYNAME>");
-	        stb.append(userVO.getDisplayName());
+	        stb.append(commonUtil.cleanValue(userVO.getDisplayName()));
 	        stb.append("</DISPLAYNAME>");		           
 			stb.append("</ROW>");
 			strXML = stb.toString();

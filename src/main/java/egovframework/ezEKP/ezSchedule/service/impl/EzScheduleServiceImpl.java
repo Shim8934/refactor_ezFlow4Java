@@ -24,6 +24,8 @@ import org.w3c.dom.NodeList;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
@@ -43,7 +45,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
-		
+	
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -882,6 +887,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_TENANTID", tenantId);
+		
+		List<ResGetScheduleVO> list = ezScheduleDAO.getResourceSchedule(map);
+		
+		//자원 반복예약일 경우 자원 반복정보 삭제
+		for (ResGetScheduleVO vo : list) {
+			if (vo.getReFlag().equals("1")) {
+				ezResourceService.deleteRepetition(vo.getOwnerID(), vo.getNum(), vo.getCompanyID(), tenantId);
+			}
+		}
 		
 		ezScheduleDAO.deleteResource(map);
 	}

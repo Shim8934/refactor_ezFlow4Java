@@ -370,10 +370,10 @@ public class EzEmailAdminController {
 					if (dept != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
-						sb.append("<CN>" + pCn + "</CN>");
-						sb.append("<DISPLAYNAME>" + dept.getDisplayName() + "</DISPLAYNAME>");
-						sb.append("<MAIL>" + dept.getMail() + "</MAIL>");
-						sb.append("<COMPANY>" + dept.getExtensionAttribute3() + "</COMPANY>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(dept.getDisplayName()) + "</DISPLAYNAME>");
+						sb.append("<MAIL>" + commonUtil.cleanValue(dept.getMail()) + "</MAIL>");
+						sb.append("<COMPANY>" + commonUtil.cleanValue(dept.getExtensionAttribute3()) + "</COMPANY>");
 						sb.append("<DEPT>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</DEPT>");
 						sb.append("<TITLE>" + egovMessageSource.getMessage("ezOrgan.t68", locale) + "</TITLE>");
 						sb.append("</ROW>");
@@ -384,12 +384,12 @@ public class EzEmailAdminController {
 					if (user != null) {
 						sb.append("<ROW>");
 						sb.append("<CLASS>" + pClass + "</CLASS>");
-						sb.append("<CN>" + pCn + "</CN>");
-						sb.append("<DISPLAYNAME>" + user.getDisplayName() + "</DISPLAYNAME>");
-						sb.append("<MAIL>" + user.getMail() + "</MAIL>");
-						sb.append("<COMPANY>" + user.getCompany() + "</COMPANY>");
-						sb.append("<DEPT>" + user.getDescription() + "</DEPT>");
-						sb.append("<TITLE>" + user.getTitle() + "</TITLE>");
+						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
+						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(user.getDisplayName()) + "</DISPLAYNAME>");
+						sb.append("<MAIL>" + commonUtil.cleanValue(user.getMail()) + "</MAIL>");
+						sb.append("<COMPANY>" + commonUtil.cleanValue(user.getCompany()) + "</COMPANY>");
+						sb.append("<DEPT>" + commonUtil.cleanValue(user.getDescription()) + "</DEPT>");
+						sb.append("<TITLE>" + commonUtil.cleanValue(user.getTitle()) + "</TITLE>");
 						sb.append("</ROW>");
 					}
 				}

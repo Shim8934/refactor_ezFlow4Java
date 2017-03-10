@@ -579,7 +579,7 @@
         		( SELECT 
         			  'DAY' DAY  ,
         	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
-                	  TO_CHAR(CONNECTTIME+(9/24), 'hh24') DATE_  ,
+                	  TO_CHAR(CONNECTTIME + ($offSet$/24), 'hh24') DATE_  ,
                       ( SELECT 
                       		COUNT(SEQUENCE)  
                       	FROM 
@@ -587,27 +587,34 @@
                         WHERE
                             CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                         AND 
-                        	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) TOTAL
+                        	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+    			        AND 
+	            		    TRIM(COMPANYID) = #company# ) TOTAL
               	  FROM 
               	  		TBL_CONNECTION_INFO 
             	  WHERE  
             	   		CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
                    		CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                		TRIM(COMPANYID) = #company#	
+                   		
            	      GROUP BY 
-           	      		TO_CHAR(CONNECTTIME+9/24, 'hh24')
+           	      		TO_CHAR(CONNECTTIME + $offSet$/24, 'hh24')
            	      
            	      UNION ALL 
            	      
            	      SELECT 
            	      	  'TOTAL' TOTAL  , 
            	          COUNT(SEQUENCE)  CONNECTCNT  ,
-           	          TO_CHAR(CONNECTTIME+9/24, 'hh24') DATE_  ,
+           	          TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') DATE_  ,
            	          0 
            	      FROM 
-           	      	  TBL_CONNECTION_INFO 
+           	      	  TBL_CONNECTION_INFO
+           	      WHERE
+ 		              TRIM(COMPANYID) = #company#	
            	      GROUP BY 
-           	      	  TO_CHAR(CONNECTTIME+9/24, 'hh24') ) A
+           	      	  TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') ) A
         	ORDER BY 
         		A.DATE_,
            	    A.DAY
@@ -628,13 +635,17 @@
                	  WHERE  
                	     CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                  	 CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') ) TOTAL  
+                  	 CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                  AND 
+                  	 TRIM(COMPANYID) = #company# ) TOTAL  
 			FROM 
         	    TBL_CONNECTION_INFO 
       		WHERE  
       			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
       		GROUP BY 
       			CONNECTBROWSER
         	ORDER BY 
@@ -655,13 +666,17 @@
                   WHERE  
                   	  CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                  	  CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') ) TOTAL  
+                  	  CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                   AND 
+                	  TRIM(COMPANYID) = #company#) TOTAL  
             FROM 
             	TBL_CONNECTION_INFO 
        		WHERE  
        			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
         	GROUP BY 
         		CONNECTOS
       
@@ -680,6 +695,8 @@
             	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
       
       		UNION ALL
       		 
@@ -696,6 +713,8 @@
             	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
             	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
         	ORDER BY 
         		TYPE DESC,
                 CONNECTCNT DESC

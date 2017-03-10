@@ -39,13 +39,13 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteReceiveGroupInfo(String groupID, String companyID, int tenantID) throws Exception;
 	
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID) throws Exception;
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception;
 
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
-	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID) throws Exception;
+	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 

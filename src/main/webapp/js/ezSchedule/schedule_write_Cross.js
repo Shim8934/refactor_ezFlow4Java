@@ -128,7 +128,6 @@ function save_schedule()
 			}
 		}
 		
-		//TODO
 		resDate = getFirstDateInfo(sdate, edate);
 		
 		if (resDate == "") {
@@ -992,47 +991,27 @@ function config_repeat_resource() {
     createNodeInsert(resourcexmlDoc, objNode, "PARAMETER");
     createNodeAndInsertText(resourcexmlDoc, objNode, "NUM", "");
     createNodeAndInsertText(resourcexmlDoc, objNode, "OWNERID", "");
-    if (endDateStringOrgin != "") {
-        var startYearNum = Number(startDateStringOrgin.substring(0, 4));
-        var startMonthNum = Number(startDateStringOrgin.substring(5, 7)) - 1;
-        var startDayNum = Number(startDateStringOrgin.substring(8, 10));
-        var startHourNum = Number(startDateStringOrgin.substring(11, 13));
-        var startMiniteNum = Number(startDateStringOrgin.substring(14, 16));
-
-        var endYearNum = Number(endDateStringOrgin.substring(0, 4));
-        var endMonthNum = Number(endDateStringOrgin.substring(5, 7)) - 1;
-        var endDayNum = Number(endDateStringOrgin.substring(8, 10));
-        var endHourNum = Number(endDateStringOrgin.substring(11, 13));
-        var endMiniteNum = Number(endDateStringOrgin.substring(14, 16));
-
-        var startDateRepeat = new Date(startYearNum, startMonthNum, startDayNum, startHourNum, startMiniteNum);
-        var endDateRepeat = new Date(endYearNum, endMonthNum, endDayNum, endHourNum, endMiniteNum);
-
-        if (isNaN(startDateRepeat)) {
-            var startDateRepeat = new Date(startDateStringOrgin);
-            var endDateRepeat = new Date(endDateStringOrgin);
-        }
-
-        g_data["startTime"] = startDateRepeat;
-        g_data["endTime"] = endDateRepeat;
-    }
-    else {
-        var startDate = new Date();
-        var endDate = new Date();
-        if (startDate.getMinutes() <= 30) {
-            startDate.setMinutes(30);
-        }
-        else if (startDate.getMinutes() > 30) {
-            startDate.setHours(startDate.getHours() + 1);
-            startDate.setMinutes(0);
-        }
-
-        endDate.setHours(startDate.getHours() + 1);
-        endDate.setMinutes(startDate.getMinutes());
-
-        g_data["startTime"] = startDate;
-        g_data["endTime"] = endDate;
-    }
+    
+    if(pattern == "1")
+	{
+    	g_data["startTime"] = startDateStringOrgin;
+    	g_data["endTime"] = endDateStringOrgin; 
+	}
+	else
+	{
+	    if (g_sdate == null)
+	    {
+	    	g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
+	    	g_data["endTime"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
+		    
+	    }
+	    else
+	    {    	    
+	    	g_data["startTime"] = g_sdate;
+	    	g_data["endTime"] = g_edate; 	        		   
+		} 	   
+	}
+    
     g_data["ftDay"] = "";
 
     var pAlldaycheck = "";
@@ -1043,7 +1022,7 @@ function config_repeat_resource() {
         pAlldaycheck = "0";
 
     g_data["alldaycheck"] = pAlldaycheck;
-
+    
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
 
@@ -1166,7 +1145,6 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
     	var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
 		
-		//TODO 이거 맞는지 확인해봐야돼!!
 		if(CrossYN()) {
 	        var xmlRtn = xmlDOMrec.documentElement;
 	        var Node = xmlDOM.importNode(xmlRtn, true);
@@ -1267,7 +1245,6 @@ function SaveSchedule_onClick(cmd, resItem, resDate) {
         }
     } else { // 반복예약
     	
-    	//TODO : 크롬,IE10 확인필요
     	var xmlDom = createXmlDom();
     	xmlDom = loadXMLString(g_data["recurrence"]);
 		
@@ -1679,7 +1656,6 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     return (orgStr.replace(re, replaceStr));
 }
 
-//TODO
 function getFirstDateInfo(startDate, endDate) {
 	var returnValue = "";
 	
@@ -1703,11 +1679,6 @@ function getFirstDateInfo(startDate, endDate) {
 	}
 	else {
 		returnValue = xmlHTTP.responseText;
-		
-		if (returnValue == "") {
-			//TODO : strLang으로 옮기기!
-			alert("일정이 한 번 이상 반복되지않습니다. 다시 설정해주십시오.");
-		}
 	}
 	
 	return returnValue;
@@ -1720,7 +1691,7 @@ function setLength(num) {
     return num;
 }
 
-//안쓰네ㅠㅠ
+//언젠간 쓰일지도 모를 repetition->g_data["recurrence"] 변환 함수
 function makeResRepetition(startDate, endDate) {
 	var info = repetition.split("|");
 	
@@ -1792,7 +1763,6 @@ function makeResRepetition(startDate, endDate) {
 			createNodeAndInsertText(recurrenceDom, objNode, "daysOfWeek", info[6]);
 		}
 		
-		
 		break;
 	case 3: //매년
 		createNodeAndInsertText(recurrenceDom, objNode, "frequency", 7);
@@ -1815,7 +1785,6 @@ function makeResRepetition(startDate, endDate) {
 		}
 		
 		break;
-		
 	}
 	
 	createNodeAndInsertText(recurrenceDom, objNode, "startDateTime", startDate);

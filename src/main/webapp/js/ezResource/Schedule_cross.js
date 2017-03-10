@@ -1235,16 +1235,8 @@ function print_onClick( printTrueFalse )
         var strContent = "<html><head>"; // If you use this script inside <head> on the page, there might be error. So I am keeping inside body (becaue of <head>)        
         strContent = strContent + "<title>" + strLangLHM02 + "</title>";      
         strContent = strContent + "<link rel='stylesheet' href='/css/" + strLangLHM01 + ".css' type='text/css' />";       
-        strContent = strContent + "</head><body class='popup'>";        
-        strContent = strContent + "<table><tr><td height='20'>";    
-        strContent = strContent + "<div id='menu'><ul>";        
-        strContent = strContent + "<li><span onclick='window.print()'>" + strLangLHM03 + "</span></li>";       
-        strContent = strContent + "</ul></div>"; 
-        strContent = strContent + "<div id='close'><ul>";        
-        strContent = strContent + "<li><span onclick='window.close()'>" + strLangLHM04 + "</span></li>";        
-        strContent = strContent + "</ul></div>";    
-        strContent = strContent + "</td></tr></table>";
-        strContent = strContent + "<div style='width:100%'><table id='printScreen' style='width:100%' border='0' cellspacing='0' cellpadding='10'>";          
+        strContent = strContent + "</head><body style='padding:10px;' onload='window.print();'>";        
+        strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";       
         strContent = strContent + document.getElementById("printScreen").innerHTML ;        
         strContent = strContent + "</table></div>";        
         strContent = strContent + "</body>"; 

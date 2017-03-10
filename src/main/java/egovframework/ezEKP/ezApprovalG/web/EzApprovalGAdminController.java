@@ -1313,6 +1313,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("removeTaskCategory ended.");
 		
+		logger.debug("removeTaskCategory ended.");
+		
 		return result;
 	}
 	

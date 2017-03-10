@@ -767,7 +767,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getTaskCategoryTree started.");
 		StringBuilder sb = new StringBuilder();
 		String isLeaf = "FALSE";
@@ -890,9 +890,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID) throws Exception {
-		String result = "FALSE";
-		
+	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
@@ -903,29 +901,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		try {
-			String duplicate = getTaskCategoryDuplicate(categoryType, categoryCode, companyID, tenantID);
-			
-			if (duplicate.equals("TRUE")) {
-				logger.debug("setTaskCategory started. mode=U");
-				ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
-			} else {
-				logger.debug("setTaskCategory started. mode=I");
-				ezApprovalGAdminDAO.setTaskCategoryInsert(map);
-			}
-			
-			result = "TRUE";
-		} catch (Exception e) {
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			logger.debug("setTaskCategory catch.");
-			logger.debug(e.getMessage());
-			
-			result = "FALSE";			
+		String duplicate = getTaskCategoryDuplicate(categoryType, categoryCode, companyID, tenantID);
+		
+		if (duplicate.equals("TRUE")) {
+			logger.debug("setTaskCategory started. mode=U");
+			ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
+		} else {
+			logger.debug("setTaskCategory started. mode=I");
+			ezApprovalGAdminDAO.setTaskCategoryInsert(map);
 		}
 		
-		logger.debug("setTaskCategory ended. result=" + result);
+		logger.debug("setTaskCategory ended.");
 		
-		return result;
+		return "TRUE";
 	}
 
 	@Override

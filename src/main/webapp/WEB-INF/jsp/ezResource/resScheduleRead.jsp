@@ -213,12 +213,10 @@
 	            var feature = GetOpenPosition(700, 700);
 	            printWindow = window.open("", "mywindow", "width=700, height=700,location=0,status=0,scrollbars=1,resizable=1" + feature);
 	            var strContent = "<html><head>";
-	            strContent = strContent + "<title>Print Preview</title>";
+	            strContent = strContent + "<title>" + strLangLHM02 + "</title>";
 	            strContent = strContent + "<link rel=\"stylesheet\" href=\"/css/" + strLangLHM01 + ".css\" type=\"text/css\" />";
-	            strContent = strContent + "</head><body  style='overflow:hidden;height:100px;'onload='window.print();window.close();' >";
-	            strContent = strContent + "<div style='width:100%;text-align:right; margin-bottom:5px;'>";
-	            strContent = strContent + "</div>";
-	            strContent = strContent + "<div style='width:100%;margin-left:5px;'><table style='height:100px;' id='printScreen' class=\"layout\" width='100%' border='0' cellspacing='0' cellpadding='10'>";
+	            strContent = strContent + "</head><body style='padding:10px;'onload='window.print();' >";
+	            strContent = strContent + "<div style='width:100%'><table id='printScreen' class='layout'>";
 	            strContent = strContent + document.getElementById("printScreen").innerHTML;
 	            strContent = strContent + "</table></div>";
 	            strContent = strContent + "</body>";
@@ -435,25 +433,25 @@
 		<input type="hidden" id="ownerID" value="${ownerID}" />
 		<input type="hidden" id="writerID" value="${writerID}" />
 
-		<table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
+		<table id="printScreen" style="display: none;">
 			<tr style="text-align:center">
 				<td style="vertical-align:top">
-					<table style="width:690px;border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
+					<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
 						<tr style="height:25px"> 
  							<th style="padding-left:10px" width="80"><spring:message code='ezResource.t193' /></th> 
- 							<td style="padding-left:10px"> <div id="printOwner" style="text-align:left;"></div></td> 
+ 							<td style="padding-left:10px"> <div id="printOwner"></div></td> 
 						</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t213' /></th> 
- 							<td style="padding-left:10px"> <div id="printImportance" style="text-align:left;"></div></td> 
+ 							<td style="padding-left:10px"> <div id="printImportance"></div></td> 
 						</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t197' /></th> 
- 							<td style="padding-left:10px"> <div id="printDate" style="text-align:left;"></div></td> 
+ 							<td style="padding-left:10px"> <div id="printDate"></div></td> 
 						</tr> 
 						<tr style="height:25px"> 
  							<th style="padding-left:10px"><spring:message code='ezResource.t224' /></th> 
- 							<td style="padding-left:10px"> <div id="printTitle" style="text-align:left;"></div></td> 
+ 							<td style="padding-left:10px"> <div id="printTitle"></div></td> 
 						</tr> 
 						<tr> 
  							<td colspan="2"> <div align="left" id="printDocument" style="PADDING-RIGHT: 5px; PADDING-LEFT: 5px; PADDING-BOTTOM: 5px; WIDTH: 100%; PADDING-TOP: 5px;"></div></td> 
