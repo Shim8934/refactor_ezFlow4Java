@@ -61,7 +61,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Autowired
 	private CommonUtil commonUtil;
 
-	@Override
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
@@ -71,7 +70,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getAdmSubClsTree(map);
 	}
 
-	@Override
 	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_ParentID", parentID);
@@ -85,7 +83,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getSubClsTree(map);
 	}
 	
-	@Override
 	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID,String memberID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -105,7 +102,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getBrdMainList(map);
 	}
 	
-	@Override
 	public List<ResDateVO> getScheduleDateList(String ownerID, String num, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
@@ -120,7 +116,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleDateList(map);
 	}
 	
-	@Override
 	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
@@ -136,7 +131,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleList(map);
 	}
 
-	@Override
 	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
@@ -151,7 +145,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleListMain(map);
 	}
 
-	@Override
 	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		endDate = commonUtil.getDateStringInUTC(endDate, offset, true);
@@ -169,7 +162,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleListRepetiti(map);
 	}
 
-	@Override
 	public List<ResGetScheduleVO> getScheduleListRepetitim( String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception {
 		startDate = commonUtil.getDateStringInUTC(startDate, offset, true);
 		
@@ -182,7 +174,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleListRepetitim(map);
 	}
 
-	@Override
 	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_pNum", pNum);
@@ -234,7 +225,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getBrd(map);
 	}
 	
-	@Override
 	public void delResData(String brdID, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
@@ -247,7 +237,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.delResData3(map);
 	}
 	
-	@Override
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
 	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -271,7 +260,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.modifyResData(map);
 	}
 	
-	@Override
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
 	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception {
 		logger.debug("addResData Start");
@@ -319,7 +307,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("addResData End");
 	}
 	
-	@Override
 	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", num);
@@ -341,7 +328,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getSchedule(map);
 	}
 	
-	@Override
 	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
 		logger.debug("insertScheduleRepetition started");
@@ -370,7 +356,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("insertScheduleRepetition ended");
 	}
 	
-	@Override
 	public List<ResGetScheduleVO> getScheduleInfo(int pNum, String entryID, String ownerID, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", pNum);
@@ -381,7 +366,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.getScheduleInfo(map);
 	}
 	
-	@Override
 	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
 			String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -402,16 +386,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.updateScheduleRepetition(map);
 	}
 	
-	@Override
-	public void deleteRepetition(String ownerID, int pNum, int tenantID) throws Exception {
+	public void deleteRepetition(String ownerID, int pNum, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pOwnerID", ownerID);
 		map.put("v_pNum", pNum);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		ezResourceDAO.deleteRepetition(map);
 	}
 	
-	@Override
 	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pNum", pNum);
@@ -429,7 +412,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.selectFormID(map);
 	}
 	
-	@Override
 	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID) throws Exception {
 		logger.debug("getAclTblBrd Start");
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -543,9 +525,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantID", tenantID);
 		ezResourceDAO.updateSchedule(map);
 	}
-
 	
-	@Override
 	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, String endDate,
 			String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, String typeVal,
 			String approve, int tenantID, String offset) throws Exception {
@@ -608,7 +588,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("modifyResSch End");
 	}
 
-	@Override
 	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception {
 		logger.debug("delResSch Start");
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -658,7 +637,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("delResSch End");
 	}
 	
-	@Override
 	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay,
 			String startDate, String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag,
 			String entryList, String characterID, String attachFlag, String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception {
@@ -713,7 +691,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.addRessch_S2(map);
 	}
 	
-	@Override
 	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, String num, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_p_ownerID", ownerID);
@@ -2067,7 +2044,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public boolean deleteRepetition(String xmlStr, int tenantID) throws Exception {
+	public boolean deleteRepetition(String xmlStr, String companyID, int tenantID) throws Exception {
 		String num = "";
 		String ownerID = "";
 		
@@ -2075,7 +2052,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		num = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(0).getTextContent().trim();
 		ownerID = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes().item(1).getTextContent().trim();
 		
-		deleteRepetition(ownerID, Integer.parseInt(num), tenantID);
+		deleteRepetition(ownerID, Integer.parseInt(num), companyID, tenantID);
 	
 		return true;
 	}

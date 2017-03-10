@@ -17,34 +17,11 @@ import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 
 public interface EzResourceService {
-	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID, String companyID, String treeType, int tenantID) throws Exception;
-	
-	public List<ResGetAdmSubClsTreeVO> getSubClsTree(String parentID, String companyID, String treeType, String pUserID, String comID, String deptID, String userID, int tenantID) throws Exception;
 	
 	public List<ResGetItemListVO> getBrdMainList(String brdID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public List<ResGetScheduleVO> getScheduleList(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
-	
-	public List<ResGetScheduleVO> getScheduleListMain(String ownerID, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
-	
-	public List<ResGetScheduleVO> getScheduleListRepetiti(String ownerID, String companyID, String startDate, String endDate, String writerName, String writerDept, String offset, int tenantID) throws Exception;
-	
-	public List<ResGetScheduleVO> getScheduleListRepetitim(String ownerID, String companyID, String startDate, int tenantID, String offset) throws Exception;
-	
 	public List<ResBrdListVO> getBrdList(int topCnt, int brdID, String CompanyID, String ownDeptNm, String ownerNm, String ownerPosition, String brdNm, int tenantID) throws Exception;
 
-	public List<ResGetScheduleVO> getScheduleInfo(int pNum, String entryID, String ownerID, String companyID, int tenantID) throws Exception;
-	
-	public List<ResGetScheduleRepetitionVO> getScheduleRepetition(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
-	
-	public List<ResGetScheduleRepetitionVO> getRepResourceRepeat(String ownerID, String num, String companyID, int tenantID) throws Exception;
-	
-	public List<String> getDeletedRepScheduleDate(int pNum, String companyID, String ownerID, int tenantID) throws Exception;
-	
-	public List<ResDateVO> getScheduleDateList(String ownerID, String num, String companyID, String startDate, String endDate, String offset, int tenantID) throws Exception;
-	
-	public ResGetAdminFlagVO getAdmFlag(String companyID, String resID, String memberID, int tenantID) throws Exception; 
-	
 	public ResGetScheduleRepetitionVO getRepDateTimes(String ownerID, String companyID, int num, int tenantID) throws Exception;
 	
 	public ResBrdVO getBrd(int brdID, String companyID, int tenantID) throws Exception;
@@ -71,8 +48,6 @@ public interface EzResourceService {
 	
 	public String getRepetition(String xmlStr, int tenantID, String offset) throws Exception;
 	
-	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID) throws Exception;
-	
 	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID) throws Exception;
 	
 	public String getBrdApproveFlag(int brdID, String companyID, int tenantID) throws Exception;
@@ -81,7 +56,7 @@ public interface EzResourceService {
 	
 	public String modifyResSch(String xmlStr, int tenantID, String offset) throws Exception;
 	
-	public boolean deleteRepetition(String xmlStr, int tenantID) throws Exception;
+	public boolean deleteRepetition(String xmlStr, String companyID, int tenantID) throws Exception;
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception;
 	
@@ -98,38 +73,10 @@ public interface EzResourceService {
 
 	public boolean getRepResource(String strStartDateTime, String strEndDateTime, String strPownerID, String strPnum, String companyID, List<ResMakeDupResultVO> dtResult, int tenantID, String offset) throws Exception;
 	
-	public void insertScheduleRepetition(int num, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
-	
 	public void insertForm(String resID, String brdNm, String formText, int tenantID) throws Exception;
-	
-	public int addResSch(String ownerID, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
-			String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
-			String deptNm, String ownerNm, String approve, String scheduleID, int tenantID, String offset) throws Exception;
-	
-	public void delResData(String brdID, String companyID, int tenantID) throws Exception;
-	
-	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation, 
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception;
-	
-	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation, 
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception;
-	
-	public void updateScheduleDateTime(int num, String ownerID, String companyID, String startDate, String endDate, int tenantID) throws Exception;
-	
-	public void updateScheduleRepetition(int pNum, String ownerID, String startDateTime, String endDateTime, String reWay, String reDay, String reNum, String reYoil, String reMonth,
-	String reOrd, String endFlag, String reCount, String companyID, int tenantID, String offset) throws Exception;
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;
 	
-	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, 
-	String endDate, String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, 
-	String typeVal, String approve, int tenantID, String offset) throws Exception;
-	
-	public void deleteRepetition(String ownerID, int pNum, int tenantID) throws Exception;
-	
 	public void delFormID(String delCode, int tenantID) throws Exception;
-	
-	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception;
 	
 }
