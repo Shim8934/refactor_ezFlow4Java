@@ -6,9 +6,6 @@ import java.util.Locale;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdVO;
-import egovframework.ezEKP.ezResource.vo.ResDateVO;
-import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
-import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -27,6 +24,8 @@ public interface EzResourceService {
 	public ResBrdVO getBrd(int brdID, String companyID, int tenantID) throws Exception;
 	
 	public ResGetScheduleVO getSchedule(int pNum, String ownerID, String companyID, int tenantID) throws Exception;
+	
+	public void deleteRepetition(String ownerID, int num, String companyID, int tenantID) throws Exception;
 	
 	public ResSelectFormIDVO selectFormID(String resID, int tenantID) throws Exception;
 	
