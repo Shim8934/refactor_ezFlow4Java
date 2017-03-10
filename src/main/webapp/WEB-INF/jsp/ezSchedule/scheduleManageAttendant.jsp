@@ -166,32 +166,32 @@
 			<div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:auto; WIDTH:505px; HEIGHT:277px"> 
 		  		<table style="width:100%" class="popuplist">
 		    		<tr> 
-		            	<th style="width:40px; text-align:center"><spring:message code='ezSchedule.t190' /></th> 
-		            	<th style="width:60px; white-space:nowrap"><spring:message code='ezSchedule.t163' /></th> 
-		            	<th style="width:100px; white-space:nowrap"><spring:message code='ezSchedule.t250' /></th> 
-		            	<th style="width:60px; white-space:nowrap"><spring:message code='ezSchedule.t164' /></th> 
-		            	<th style="white-space:nowrap"><spring:message code='ezSchedule.t165' /></th> 
+		            	<th style="width:40px;text-align:center"><spring:message code='ezSchedule.t190' /></th> 
+		            	<th style="width:60px;text-align:center;white-space:nowrap;"><spring:message code='ezSchedule.t163' /></th> 
+		            	<th style="width:100px;text-align:center;white-space:nowrap"><spring:message code='ezSchedule.t250' /></th> 
+		            	<th style="width:60px;text-align:center;white-space:nowrap"><spring:message code='ezSchedule.t164' /></th> 
+		            	<th style="text-align:center;white-space:nowrap"><spring:message code='ezSchedule.t165' /></th> 
 		            </tr> 
 		            <c:forEach var="item" items="${attendantList}">
 		            <tr> 
 		            	<td style="text-align:center">
 		            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantstatus='${item.status}' />
 		            	</td> 
-		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap">
+		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap; text-align:center">
 		                	<c:if test="${primary == '1'}">${item.attendantName}</c:if>
 		                	<c:if test="${primary != '1'}">${item.attendantName2}</c:if>
 						</td>
-		                <td noWrap>
+		                <td style="white-space:nowrap;text-align:center">
 		                	<c:if test="${primary == '1'}">${item.attendantDeptName}</c:if>
 		                	<c:if test="${primary != '1'}">${item.attendantDeptName2}</c:if>
 		                </td>
-		                <td style="white-space:nowrap">
+		                <td style="white-space:nowrap;text-align:center">
 		                	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>
 		                	<c:if test="${item.status == '1'}"><spring:message code='ezSchedule.t251' /></c:if>
 		                	<c:if test="${item.status == '2'}"><spring:message code='ezSchedule.t168' /></c:if>
 		                	<c:if test="${item.status == '3'}"><spring:message code='ezSchedule.t169' /></c:if>		                	
 		                </td> 
-		                <td style="white-space:nowrap">
+		                <td style="white-space:nowrap;text-align:center">
 		                	<c:if test="${item.status == '0'}">&nbsp;</c:if>
 		                	<c:if test="${item.status != '0'}">${fn:substring(item.responseDate,0,16)}</c:if>		                	
 		                </td> 
