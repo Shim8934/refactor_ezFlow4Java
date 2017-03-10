@@ -266,7 +266,10 @@
 		                	<c:if test="${item.status == '2'}"><spring:message code='ezSchedule.t168' /></c:if>
 		                	<c:if test="${item.status == '3'}"><spring:message code='ezSchedule.t169' /></c:if>		                	
 		                </td> 
-		                <td style="text-align:center">${fn:substring(item.responseDate,0,10)}</td>
+		                <td style="text-align:center">
+		                	<c:if test="${item.status == '0'}">&nbsp;</c:if>
+		                	<c:if test="${item.status != '0'}">${fn:substring(item.responseDate,0,10)}</c:if>
+		                </td>
 				  	</tr>
 				  	</c:forEach>		            
 				</table> 

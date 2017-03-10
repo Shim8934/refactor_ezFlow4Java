@@ -7,10 +7,10 @@
 	<typeAlias  alias="StatConnVO" 				type="egovframework.ezEKP.ezStatistics.vo.StatConnVO"/>
 	
 	<resultMap class="StatConnVO" id="StatConnInfoVO">
-		<result property="day"					column="DAY"					columnIndex="1"/>
+		<result property="day"			column="DAY"				/>
 		<result property="connectCnt"			column="CONNECTCNT"				columnIndex="2"/>
 		<result property="date"					column="DATE_"					columnIndex="3"/>
-		<result property="total"				column="TOTAL"					columnIndex="4"/>
+		<result property="total"				column="TOTAL"					/>
 	</resultMap>
 	
 	<select id="EzStatisticsAdminDAO.getTimeList_F" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
@@ -571,7 +571,7 @@
 		]]>
 	</select>
 	
-	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultClass="StatConnVO">
+	<select id="EzStatisticsAdminDAO.getConnInfo" parameterClass="StatApprVO" resultMap="StatConnInfoVO">
 		<![CDATA[
 		    SELECT 
 		    	* 
@@ -579,38 +579,47 @@
         		( SELECT 
         			  'DAY' DAY  ,
         	   	      COUNT(SEQUENCE)  CONNECTCNT  ,
-                	  TO_CHAR(CONNECTTIME, 'hh24') DATE_  ,
+                	  TO_CHAR(CONNECTTIME + ($offSet$/24), 'hh24') DATE_  ,
                       ( SELECT 
                       		COUNT(SEQUENCE)  
                       	FROM 
                       		TBL_CONNECTION_INFO 
                         WHERE
-                            CONNECTTIME >= TO_DATE(#startDate#,'YYYY-MM-DD')
+                            CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                         AND 
-                        	CONNECTTIME < TO_DATE(#endDate#,'YYYY-MM-DD') ) TOTAL  
+                        	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+    			        AND 
+	            		    TRIM(COMPANYID) = #company# ) TOTAL
               	  FROM 
               	  		TBL_CONNECTION_INFO 
             	  WHERE  
-            	   		CONNECTTIME >= TO_DATE(#startDate#,'YYYY-MM-DD')
+            	   		CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                   		CONNECTTIME < TO_DATE(#endDate#,'YYYY-MM-DD')
+                   		CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+                  AND 
+                		TRIM(COMPANYID) = #company#	
+                   		
            	      GROUP BY 
-           	      		TO_CHAR(CONNECTTIME, 'hh24')
+           	      		TO_CHAR(CONNECTTIME + $offSet$/24, 'hh24')
            	      
            	      UNION ALL 
            	      
            	      SELECT 
            	      	  'TOTAL' TOTAL  , 
            	          COUNT(SEQUENCE)  CONNECTCNT  ,
-           	          TO_CHAR(CONNECTTIME, 'hh24') DATE_  ,
+           	          TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') DATE_  ,
            	          0 
            	      FROM 
-           	      	  TBL_CONNECTION_INFO 
+           	      	  TBL_CONNECTION_INFO
+           	      WHERE
+ 		              TRIM(COMPANYID) = #company#	
            	      GROUP BY 
-           	      	  TO_CHAR(CONNECTTIME, 'hh24') ) A
+           	      	  TO_CHAR(CONNECTTIME+$offSet$/24, 'hh24') ) A
         	ORDER BY 
         		A.DATE_,
-           	    A.DAY ;
+           	    A.DAY
+           	    
+           	
 		]]>
 	</select>
 	
@@ -624,19 +633,23 @@
                	  FROM 
                	  	 TBL_CONNECTION_INFO 
                	  WHERE  
-               	     CONNECTTIME >= #startDate#
+               	     CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                  	 CONNECTTIME < #endDate# ) TOTAL  
+                  	 CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                  AND 
+                  	 TRIM(COMPANYID) = #company# ) TOTAL  
 			FROM 
         	    TBL_CONNECTION_INFO 
       		WHERE  
-      			CONNECTTIME >= #startDate#
+      			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	CONNECTTIME < #endDate#
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
       		GROUP BY 
       			CONNECTBROWSER
         	ORDER BY 
-        		COUNT(SEQUENCE)  DESC ;
+        		COUNT(SEQUENCE)  DESC
 		]]>
 	</select>
 	
@@ -651,15 +664,19 @@
               	  FROM 
               	  	  TBL_CONNECTION_INFO 
                   WHERE  
-                  	  CONNECTTIME >= #startDate#
+                  	  CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
                   AND 
-                  	  CONNECTTIME < #endDate# ) TOTAL  
+                  	  CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS') 
+                   AND 
+                	  TRIM(COMPANYID) = #company#) TOTAL  
             FROM 
             	TBL_CONNECTION_INFO 
        		WHERE  
-       			CONNECTTIME >= #startDate#
+       			CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	CONNECTTIME < #endDate#
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
         	GROUP BY 
         		CONNECTOS
       
@@ -675,9 +692,11 @@
        		WHERE  
        			CONNECTAGENT LIKE '%WOW64%'
             AND 
-            	CONNECTTIME >= #startDate#
+            	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	CONNECTTIME < #endDate#
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#
       
       		UNION ALL
       		 
@@ -691,12 +710,14 @@
        		WHERE  
        			CONNECTAGENT NOT LIKE '%WOW64%'
             AND 
-            	CONNECTTIME >= #startDate#
+            	CONNECTTIME >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
             AND 
-            	CONNECTTIME < #endDate#
+            	CONNECTTIME < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+            AND 
+                TRIM(COMPANYID) = #company#	
         	ORDER BY 
         		TYPE DESC,
-                CONNECTCNT DESC ;
+                CONNECTCNT DESC
 		]]>
 	</select>
 	

@@ -3001,6 +3001,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		workbook.close();
 	}
 	
 	/**

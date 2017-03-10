@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import egovframework.ezEKP.ezQuestion.web.EzQuestionController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
@@ -37,7 +36,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 @Controller
 public class EzStatisticsController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzQuestionController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsController.class);
 	
 	@Autowired
 	CommonUtil commonUtil;
@@ -50,10 +49,19 @@ public class EzStatisticsController {
 		return "ezStatistics/statisticsMain";
 	}
 	
-	@RequestMapping(value = "/ezStatistics/saticGetXls.do")
+	/**
+	 * 사용자 통계 Excel 내려받기 호출 함수
+	 */
+	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"})
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("qstResultAnalysisSave started");
 		
-		@SuppressWarnings("resource")
+		String headerFLAG = "";
+		
+		if (request.getParameter("headerFlag") != null) {
+			headerFLAG = request.getParameter("headerFlag");
+        }
+		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -77,45 +85,103 @@ public class EzStatisticsController {
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
 		pFileName = strDate+"_Report.xls";
-		
-		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
-		
-		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
-		
-		Node tableNode = analysisData.getElementsByTagName("table").item(0);
-		Node tableHeadNode;
-		Node tableBodyNode;
-		
 		sheet = workbook.createSheet("report");
-		tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
-		tableBodyNode = tableNode.getChildNodes().item(0);
 		
-		row = sheet.createRow(0);
+		if (headerFLAG.equals("")) {
+			String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 
-		for(int i=0; i<tableHeadNode.getChildNodes().getLength(); i++){
-			cell = row.createCell(i);
-			cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
-			cell.setCellStyle(headerStyle);
-		}
-		
-		for(int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++){
-			row = sheet.createRow(i+1);
-			Node tr = tableBodyNode.getChildNodes().item(i+1);
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
 			
-			for(int j=0; j<tr.getChildNodes().getLength(); j++){
-				cell = row.createCell(j);
-				cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-				cell.setCellStyle(bodyStyle);
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+			
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+			
+			row = sheet.createRow(0);
+			
+			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
 			}
+			
+			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i+1);
+				
+				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
+				}
+			}
+		} else {
+			String StrAnalysisDate[] = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "").split("_");
+			
+			for (int i=0; i<StrAnalysisDate.length; i++) {
+				Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate[i]);
+
+				Node tableNode = analysisData.getElementsByTagName("table").item(0);
+				Node tableHeadNode;
+				Node tableBodyNode;
+				
+				tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+				tableBodyNode = tableNode.getChildNodes().item(0);
+				
+				if (i == 0) {
+					row = sheet.createRow(0);				
+				} else {
+					row = sheet.createRow(6);
+				}
+				
+				for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tableHeadNode.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(headerStyle);
+				}
+				
+				if (i == 0) {
+					for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+						row = sheet.createRow(j+1);
+						Node tr = tableBodyNode.getChildNodes().item(j+1);
+						
+						for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+							cell = row.createCell(k);
+							cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+							cell.setCellStyle(bodyStyle);
+						}
+					}				
+				} else {
+					for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+						row = sheet.createRow(j+7);
+						Node tr = tableBodyNode.getChildNodes().item(j+1);
+						
+						for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+							cell = row.createCell(k);
+							cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+							cell.setCellStyle(bodyStyle);
+						}
+					}
+				}
+			}		
 		}
-		
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		logger.debug("qstResultAnalysisSave ended");
 	}
 	
+	/**
+	 * 메일 통계 Excel 내려받기 호출 함수
+	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("qstResultAnalysisSaveM started");
 		
 		String headerFLAG = "";
 		
@@ -123,8 +189,6 @@ public class EzStatisticsController {
 			headerFLAG = request.getParameter("headerFlag");
         }
 		
-		
-		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -168,39 +232,36 @@ public class EzStatisticsController {
 		cell.setCellValue(tableBodyNode.getChildNodes().item(1).getChildNodes().item(0).getTextContent());
 		
 		row = sheet.createRow(1);
-		for(int i=0; i<tableHeadNode.getChildNodes().getLength()-1; i++){
+		for (int i=0; i<tableHeadNode.getChildNodes().getLength()-1; i++) {
 			cell = row.createCell(i);
 			cell.setCellValue(tableHeadNode.getChildNodes().item(i+1).getTextContent());
 			cell.setCellStyle(headerStyle);
 		}
 		
-		for(int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++){
+		for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
 			row = sheet.createRow(i+2);
 			Node tr = tableBodyNode.getChildNodes().item(i+1);
 			
-			for(int j=0; j<tr.getChildNodes().getLength(); j++){
-				if(i==0){
-					if(j+1<tr.getChildNodes().getLength()){
+			for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+				if (i==0) {
+					if (j+1<tr.getChildNodes().getLength()) {
 						cell = row.createCell(j);
 						cell.setCellValue(tr.getChildNodes().item(j+1).getTextContent());
 					}
-				}else{
+				} else {
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 				}
-				logger.debug("@@@@@@@@headerFLAG@@@@@@@@"+headerFLAG);
-				if(headerFLAG.equals("TRUE")){
-					logger.debug("@@@@@@@@TRUE@@@@@@@@");
-					if(i!=1){
+				if (headerFLAG.equals("TRUE")) {
+					if (i != 1) {
 						cell.setCellStyle(bodyStyle);
-					}else{
+					} else {
 						cell.setCellStyle(headerStyle);
 					}
-				}else{
-					logger.debug("@@@@@@@@FALSE@@@@@@@@");
-					if(i!=2){
+				} else {
+					if (i != 2) {
 						cell.setCellStyle(bodyStyle);
-					}else{
+					} else {
 						cell.setCellStyle(headerStyle);
 					}
 				}
@@ -209,87 +270,9 @@ public class EzStatisticsController {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
-	}
-	
-	@RequestMapping(value = "/ezStatistics/UserOSsaticGetXlsM.do")
-	public void getUserOSsaticGetXlsM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
-		@SuppressWarnings("resource")
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet;
+		workbook.close();
 		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		Row row;
-		Cell cell;
-		
-		String pFileName = "";
-		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
-		sheet = workbook.createSheet("report");
-		
-		String StrAnalysisDate[] = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "").split("_");
-
-		for (int i=0; i<StrAnalysisDate.length; i++) {
-			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate[i]);
-
-			Node tableNode = analysisData.getElementsByTagName("table").item(0);
-			Node tableHeadNode;
-			Node tableBodyNode;
-			
-			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
-			tableBodyNode = tableNode.getChildNodes().item(0);
-			
-			if (i == 0) {
-				row = sheet.createRow(0);				
-			} else {
-				row = sheet.createRow(6);
-			}
-			
-			for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
-				cell = row.createCell(j);
-				cell.setCellValue(tableHeadNode.getChildNodes().item(j).getTextContent());
-				cell.setCellStyle(headerStyle);
-			}
-			
-			if (i == 0) {
-				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
-					row = sheet.createRow(j+1);
-					Node tr = tableBodyNode.getChildNodes().item(j+1);
-					
-					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
-						cell = row.createCell(k);
-						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
-						cell.setCellStyle(bodyStyle);
-					}
-				}				
-			} else {
-				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
-					row = sheet.createRow(j+7);
-					Node tr = tableBodyNode.getChildNodes().item(j+1);
-					
-					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
-						cell = row.createCell(k);
-						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
-						cell.setCellStyle(bodyStyle);
-					}
-				}
-			}
-		}		
-		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
-		workbook.write(response.getOutputStream());
+		logger.debug("qstResultAnalysisSaveM ended");
 	}
 }
