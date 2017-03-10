@@ -5244,12 +5244,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			if (count >= pStartRow) {
 				sb.append("<NODE>");
 				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
+				sb.append("<BoardName>" + commonUtil.cleanValue(itemList.getBoardName()) + "</BoardName>");
 				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(itemList.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(itemList.getWriterName()) + "</WriterName>");
-				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemList.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemList.getWriterCompanyName()) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(itemList.getTitle()) + "</Title>");
