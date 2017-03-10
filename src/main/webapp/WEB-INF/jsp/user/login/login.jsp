@@ -19,10 +19,10 @@
 		
 			function actionLogin() {				
 			    if (document.loginForm.id.value =="") {
-			        alert("아이디를 입력하세요");
+			        alert("<spring:message code='main.jjs02'/>");
 			        return;
 			    } else if (document.loginForm.password.value =="") {
-			        alert("비밀번호를 입력하세요");
+			        alert("<spring:message code='main.jjs01'/>");
 			        return;
 			    } else {		    	
 			    	var frm = document.loginForm;
