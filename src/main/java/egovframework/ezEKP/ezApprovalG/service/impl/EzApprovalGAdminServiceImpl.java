@@ -767,7 +767,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID) throws Exception {
+	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getTaskCategoryTree started.");
 		StringBuilder sb = new StringBuilder();
 		String isLeaf = "FALSE";
