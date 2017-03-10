@@ -140,7 +140,7 @@
 
                 var _Table = document.createElement("TABLE");
                 _Table.style.textAlign = "center";
-                _Table.style.width = "650px";
+                _Table.style.width = "800px";
                 _Table.className = "tstyle2";
                 _Table.style.border = "1px solid #dadada"
 
