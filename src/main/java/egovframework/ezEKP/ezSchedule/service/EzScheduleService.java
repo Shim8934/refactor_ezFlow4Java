@@ -30,7 +30,7 @@ public interface EzScheduleService {
 	
 	public List<ScheduleCumulerVO> getPublicScheduleCumuler(String userId, String lang, int tenantId) throws Exception;
 	
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String startDate, String endDate, String keyword, String offSetMin, int tenantId) throws Exception;
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception;
 	
 	public List<ScheduleGroupListVO> getScheduleGroupList(String userId, int tenantId) throws Exception;
 

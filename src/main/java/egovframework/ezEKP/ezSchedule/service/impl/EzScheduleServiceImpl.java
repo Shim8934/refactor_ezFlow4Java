@@ -24,6 +24,8 @@ import org.w3c.dom.NodeList;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezSchedule.dao.EzScheduleDAO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
@@ -43,7 +45,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;
-		
+	
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -144,19 +149,19 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String pStartDate, String pEndDate, String keyword, String offSetMin, int tenantId) throws Exception {						
+	public List<ScheduleInfoVO> getScheduleList(String pidList, String filter, String utcStartDate, String utcEndDate, String orgStartDate, String orgEndDate, String keyword, String offSetMin, int tenantId) throws Exception {						
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PIDLIST", pidList);		
 		map.put("v_PFILTER", filter);
-		map.put("v_PSTARTDATE", pStartDate);
-		map.put("v_PENDDATE", pEndDate);
+		map.put("v_PSTARTDATE", utcStartDate);
+		map.put("v_PENDDATE", utcEndDate);
 		map.put("v_PKEYWORD", keyword);
 		map.put("v_OFFSETMIN", offSetMin);
 		map.put("v_TENANTID", tenantId);
 		
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 		List<ScheduleInfoVO> resultList = new ArrayList<ScheduleInfoVO>();
-
+		
 		for (int i=0; i < sList.size(); i++) {
 			ScheduleInfoVO vo = sList.get(i);
 						
@@ -170,10 +175,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				String[] info = vo.getRepetition().split("\\|");
 
 				if (!info[0].equals("0")) {
-					endDate = pEndDate;
+					endDate = orgEndDate;
 				}
-				if (endDate.compareTo(pEndDate) > 0) {
-					endDate = pEndDate;
+				if (endDate.compareTo(orgEndDate) > 0) {
+					endDate = orgEndDate;
 				}
 				
 				int maxCount = Integer.parseInt(info[0]);
@@ -191,7 +196,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 				
-				sDate_cal.setTime(sdf.parse(pStartDate));
+				sDate_cal.setTime(sdf.parse(orgStartDate));
 				eDate_cal.setTime(sdf.parse(endDate));
 				date_cal.setTime(sdf.parse(vo.getStartDate()));
 				
@@ -216,8 +221,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								count++;
 								
 								String calcuDate = nsdf.format(date_cal.getTime());
-								
-								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {	
+
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);
@@ -252,7 +257,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(date_cal.getTime());
 								
-								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {	
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
@@ -319,7 +324,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -388,7 +393,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(pStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(pEndDate.substring(0,10)) <= 0) {
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -882,6 +887,15 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_TENANTID", tenantId);
+		
+		List<ResGetScheduleVO> list = ezScheduleDAO.getResourceSchedule(map);
+		
+		//자원 반복예약일 경우 자원 반복정보 삭제
+		for (ResGetScheduleVO vo : list) {
+			if (vo.getReFlag().equals("1")) {
+				ezResourceService.deleteRepetition(vo.getOwnerID(), vo.getNum(), vo.getCompanyID(), tenantId);
+			}
+		}
 		
 		ezScheduleDAO.deleteResource(map);
 	}

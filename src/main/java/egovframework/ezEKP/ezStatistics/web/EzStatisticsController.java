@@ -21,6 +21,18 @@ import org.w3c.dom.Node;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
+/** 
+ * @Description [Controller] 통계
+ * @author 오픈솔루션팀 이동호
+ * @Modification Information
+ *
+ *    수정일        수정자         수정내용
+ *    ----------    ------    -------------------
+ *    2016.06.27    이동호             신규작성
+ *
+ * @see
+ */
+
 @Controller
 public class EzStatisticsController {
 	
@@ -38,13 +50,18 @@ public class EzStatisticsController {
 	}
 	
 	/**
-	 * 사용자 접속 통계, 사용자 브라우져 통계 Excel 내려받기 호출
+	 * 사용자 통계 Excel 내려받기 호출 함수
 	 */
-	@RequestMapping(value = "/ezStatistics/saticGetXls.do")
+	@RequestMapping(value = {"/ezStatistics/saticGetXls.do", "/ezStatistics/UserOSsaticXls.do"})
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSave started");
 		
-		@SuppressWarnings("resource")
+		String headerFLAG = "";
+		
+		if (request.getParameter("headerFlag") != null) {
+			headerFLAG = request.getParameter("headerFlag");
+        }
+		
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -68,46 +85,99 @@ public class EzStatisticsController {
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
 		pFileName = strDate+"_Report.xls";
-		
-		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
-		
-		Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
-		
-		Node tableNode = analysisData.getElementsByTagName("table").item(0);
-		Node tableHeadNode;
-		Node tableBodyNode;
-		
 		sheet = workbook.createSheet("report");
-		tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
-		tableBodyNode = tableNode.getChildNodes().item(0);
 		
-		row = sheet.createRow(0);
+		if (headerFLAG.equals("")) {
+			String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 
-		for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
-			cell = row.createCell(i);
-			cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
-			cell.setCellStyle(headerStyle);
-		}
-		
-		for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
-			row = sheet.createRow(i+1);
-			Node tr = tableBodyNode.getChildNodes().item(i+1);
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
 			
-			for (int j=0; j<tr.getChildNodes().getLength(); j++) {
-				cell = row.createCell(j);
-				cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
-				cell.setCellStyle(bodyStyle);
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+			
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+			
+			row = sheet.createRow(0);
+			
+			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
 			}
+			
+			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i+1);
+				
+				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
+				}
+			}
+		} else {
+			String StrAnalysisDate[] = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "").split("_");
+			
+			for (int i=0; i<StrAnalysisDate.length; i++) {
+				Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate[i]);
+
+				Node tableNode = analysisData.getElementsByTagName("table").item(0);
+				Node tableHeadNode;
+				Node tableBodyNode;
+				
+				tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+				tableBodyNode = tableNode.getChildNodes().item(0);
+				
+				if (i == 0) {
+					row = sheet.createRow(0);				
+				} else {
+					row = sheet.createRow(6);
+				}
+				
+				for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tableHeadNode.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(headerStyle);
+				}
+				
+				if (i == 0) {
+					for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+						row = sheet.createRow(j+1);
+						Node tr = tableBodyNode.getChildNodes().item(j+1);
+						
+						for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+							cell = row.createCell(k);
+							cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+							cell.setCellStyle(bodyStyle);
+						}
+					}				
+				} else {
+					for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
+						row = sheet.createRow(j+7);
+						Node tr = tableBodyNode.getChildNodes().item(j+1);
+						
+						for (int k=0; k<tr.getChildNodes().getLength(); k++) {
+							cell = row.createCell(k);
+							cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
+							cell.setCellStyle(bodyStyle);
+						}
+					}
+				}
+			}		
 		}
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
+		workbook.close();
+		
 		logger.debug("qstResultAnalysisSave ended");
 	}
 	
 	/**
-	 * 메일 통계 Excel 내려받기 호출
+	 * 메일 통계 Excel 내려받기 호출 함수
 	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -201,97 +271,8 @@ public class EzStatisticsController {
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
 		
+		workbook.close();
+		
 		logger.debug("qstResultAnalysisSaveM ended");
-
-		workbook.close();
-	}
-	
-	/**
-	 * 사용자 OS 통계 Excel 내려받기 호출
-	 */
-	@RequestMapping(value = "/ezStatistics/UserOSsaticXls.do")
-	public void getUserOSsaticXls(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
-		logger.debug("getUserOSsaticXls started");
-		
-		HSSFWorkbook workbook = new HSSFWorkbook();
-		HSSFSheet sheet;
-		
-		HSSFCellStyle headerStyle= workbook.createCellStyle();
-		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
-		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		HSSFCellStyle bodyStyle= workbook.createCellStyle();
-		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		
-		Row row;
-		Cell cell;
-		
-		String pFileName = "";
-		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
-		sheet = workbook.createSheet("report");
-		
-		String StrAnalysisDate[] = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "").split("_");
-
-		for (int i=0; i<StrAnalysisDate.length; i++) {
-			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate[i]);
-
-			Node tableNode = analysisData.getElementsByTagName("table").item(0);
-			Node tableHeadNode;
-			Node tableBodyNode;
-			
-			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
-			tableBodyNode = tableNode.getChildNodes().item(0);
-			
-			if (i == 0) {
-				row = sheet.createRow(0);				
-			} else {
-				row = sheet.createRow(6);
-			}
-			
-			for (int j=0; j<tableHeadNode.getChildNodes().getLength(); j++) {
-				cell = row.createCell(j);
-				cell.setCellValue(tableHeadNode.getChildNodes().item(j).getTextContent());
-				cell.setCellStyle(headerStyle);
-			}
-			
-			if (i == 0) {
-				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
-					row = sheet.createRow(j+1);
-					Node tr = tableBodyNode.getChildNodes().item(j+1);
-					
-					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
-						cell = row.createCell(k);
-						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
-						cell.setCellStyle(bodyStyle);
-					}
-				}				
-			} else {
-				for (int j=0; j<tableBodyNode.getChildNodes().getLength()-1; j++) {
-					row = sheet.createRow(j+7);
-					Node tr = tableBodyNode.getChildNodes().item(j+1);
-					
-					for (int k=0; k<tr.getChildNodes().getLength(); k++) {
-						cell = row.createCell(k);
-						cell.setCellValue(tr.getChildNodes().item(k).getTextContent());
-						cell.setCellStyle(bodyStyle);
-					}
-				}
-			}
-		}		
-		
-		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
-		workbook.write(response.getOutputStream());
-		
-		logger.debug("getUserOSsaticXls ended");
-
-		workbook.close();
 	}
 }

@@ -383,6 +383,7 @@
     <form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezStatistics/UserOSsaticXls.do">
         <input type="hidden" id="saveExcelData" name="saveExcelData" value="">
         <input type="hidden" id="userAgent" name="userAgent" value="">
+        <input type="hidden" id="headerFlag" name="headerFlag" value="OS">
     </form>
     <iframe id="saveExcel" name="saveExcel" style="display: none"></iframe>
 </body>
