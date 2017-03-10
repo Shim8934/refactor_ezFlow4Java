@@ -606,7 +606,7 @@
   			</table>
 		</div>
 
-	    <table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
+	    <table id="printScreen" style="display: none;">
   			<tr style="text-align:center">
     			<td style="vertical-align:top">
     				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">
