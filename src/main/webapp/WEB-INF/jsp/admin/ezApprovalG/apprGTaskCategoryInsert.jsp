@@ -20,6 +20,7 @@
 		    var RetValue;
 		    var ReturnFunction;
 		    var reParam = new Array();
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    reParam[0] = "FALSE";
 		    reParam[1] = "";
 		    reParam[2] = "";
@@ -44,7 +45,9 @@
 		        
 		        var ua = navigator.userAgent;
 		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		            KeEventControl(document.getElementById("tbCateCode"));
+	        		KeEventControl(document.getElementById("tbCateName"));
+		            KeEventControl(document.getElementById("tbCateName2"));
+	        		KeEventControl(document.getElementById("tbCateCode"));
 		            KeEventControl(document.getElementById("tbCateName"));
 		            KeEventControl(document.getElementById("tbCateName2"));
 		            KeEventControl(document.getElementById("tbCateDesc"));
@@ -223,14 +226,16 @@
 		    function btnOk_onclick() {
 		        var tempCode = trim(tbCateCode.value);
 		        
-		        if (tempCode == "") {
-		            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
-		            return;
-		        } else if (tempCode.length != 8) {
-		            OpenAlertUI("<spring:message code = 'ezApprovalG.t724' />");
-		            return;
+		        if (approvalFlag == 'G') {
+		        	if (tempCode == "") {
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
+			            return;
+			        } else if (tempCode.length != 8) {
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t724' />");
+			            return;
+			        }
 		        }
-
+		        
 		        if (trim(tbCateName.value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t725' />");
 		            return;
@@ -246,10 +251,12 @@
 		            return;
 		        }
 
-		        if (gState == "I") {
-		            if (!btnDuplicateHidden_onclick()) {
-		                return;
-		            }
+		        if (approvalFlag == 'G') {
+		        	if (gState == "I") {
+			            if (!btnDuplicateHidden_onclick()) {
+			                return;
+			            }
+			        }
 		        }
 		        
 		        var gRtnVal = UpdateCategory();
@@ -306,40 +313,67 @@
 		<h1><c:out value = '${title}' /></h1>
 		<span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
 		<table class="content">
-		  <tr>
-		    <th><spring:message code = 'ezApprovalG.t728' /></th>
-		    <td><select id="tbCateType" name="select" style="width:85px;" disabled="disabled">
-		        <OPTION value="1"><spring:message code = 'ezApprovalG.t691' /></OPTION>
-		        <OPTION value="2"><spring:message code = 'ezApprovalG.t692' /></OPTION>
-		        <OPTION value="3"><spring:message code = 'ezApprovalG.t693' /></OPTION>
-		      </select>
-		    </td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code = 'ezApprovalG.t729' /> <span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateCode" name="tbCateCode" style="WIDTH:206px" maxlength="8">
-		    	<a class="imgbtn"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
-		    </td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateName" name="tbCateName" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code = 'ezApprovalG.t1762' /> <span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateName2" name="tbCateName2" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"/></td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code = 'ezApprovalG.t732' /> <span style="color:red">*</span></th>
-		    <td><input type="text" id="tbCateDesc" name="tbCateDesc" style="WIDTH:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code = 'ezApprovalG.t733' /></th>
-		    <td>
-		    	<input type="text" id="tbPCateCode"  name="tbPCateCode" style="WIDTH:206px" readonly="true">
-		        <a class="imgbtn"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
-		    </td>
-		  </tr>
+			<tbody>
+				<c:choose>
+					<c:when test="${approvalFlag == 'S' }">
+						<tr style = "display:none">
+					</c:when>
+					<c:otherwise>
+						<tr>
+					</c:otherwise>
+				</c:choose>
+		    		<th><spring:message code = 'ezApprovalG.t728' /></th>
+		    		<td>
+		    			<select id="tbCateType" name="select" style="width:85px;" disabled="disabled">
+			        		<OPTION value="1"><spring:message code = 'ezApprovalG.t691' /></OPTION>
+			        		<OPTION value="2"><spring:message code = 'ezApprovalG.t692' /></OPTION>
+			        		<OPTION value="3"><spring:message code = 'ezApprovalG.t693' /></OPTION>
+		      			</select>
+		    		</td>
+		  		</tr>
+		  		
+				<c:choose>
+					<c:when test="${approvalFlag == 'S' }">
+						<tr style = "display:none">
+					</c:when>
+					<c:otherwise>
+						<tr>
+					</c:otherwise>
+				</c:choose>
+				
+					<th><spring:message code = 'ezApprovalG.t729' /><span style="color:red">*</span></th>
+					<td>
+						<input type="text" id="tbCateCode" name="tbCateCode" style="wigth:206px" maxlength="8">
+						<a class="imgbtn"><span onClick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+					</td>
+				</tr>
+				<tr>
+					<th><spring:message code = 'ezApprovalG.t731' />(<spring:message code = 'ezApprovalG.t1764' />)<span style="color:red">*</span></th>
+					<td><input type="text" id="tbCateName" name="tbCateName" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="10"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code = 'ezApprovalG.t1762' /> <span style="color:red">*</span></th>
+					<td><input type="text" id="tbCateName2" name="tbCateName2" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="100"/></td>
+				</tr>
+				<tr>
+					<th><spring:message code = 'ezApprovalG.t732' /> <span style="color:red">*</span></th>
+					<td><input type="text" id="tbCateDesc" name="tbCateDesc" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" maxlength="50"></td>
+				</tr>
+				<c:choose>
+					<c:when test="${approvalFlag == 'S' }">
+						<tr style = "display:none">
+					</c:when>
+					<c:otherwise>
+						<tr>
+					</c:otherwise>
+				</c:choose>
+					<th><spring:message code = 'ezApprovalG.t733' /></th>
+					<td>
+						<input type="text" id="tbPCateCode"  name="tbPCateCode" style="width:206px" readonly="true">
+						<a class="imgbtn"><span id="btnSelPCode"  onClick="return btnSelPCode_onclick()"><spring:message code = 'ezApprovalG.t690' /></span></a>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn"><span onClick="return btnOk_onclick()"><spring:message code = 'ezApprovalG.t413' /></span></a>
