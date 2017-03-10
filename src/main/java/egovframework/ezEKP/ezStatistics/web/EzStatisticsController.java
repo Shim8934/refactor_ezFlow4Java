@@ -209,6 +209,7 @@ public class EzStatisticsController {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		workbook.close();
 	}
 	
 	@RequestMapping(value = "/ezStatistics/UserOSsaticGetXlsM.do")
@@ -291,5 +292,6 @@ public class EzStatisticsController {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		workbook.close();
 	}
 }
