@@ -302,6 +302,9 @@
 		        		},
 		        	success : function(result) {
 		        		retVal = result;
+		        	},
+		        	error : function(jqXHR, textStatus, errorThrown) {
+		        		retVal = "FALSE";
 		        	}
 				});
 		    	

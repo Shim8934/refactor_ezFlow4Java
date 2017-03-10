@@ -1225,12 +1225,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryDuplicate.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getTaskCategoryDuplicate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskCategoryDuplicate started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.getTaskCategoryDuplicate(categoryType, categoryCode, companyID, userInfo.getTenantId());
+		
+		logger.debug("getTaskCategoryDuplicate ended.");
 		
 		return result;
 	}
@@ -1249,7 +1253,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String setTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("setTaskCategory started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String categoryType = request.getParameter("categoryType");
 		String categoryCode = request.getParameter("categoryCode");
 		String categoryName = request.getParameter("categoryName");
@@ -1258,7 +1265,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pCode = request.getParameter("pCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.setTaskCategory(categoryType, categoryCode, categoryName, categoryName2, categoryDesc, pCode, companyID, userInfo.getTenantId());
+		if (approvalFlag.equals("S") && categoryCode.equals("")) {
+			String tempCategoryCode1 = Character.toString((char)((int)(Math.random()*26) + 65)) + Character.toString((char)((Math.random()*26) + 65));
+			String tempCategoryCode2 = Integer.toString((int)(Math.random()*1000000));
+			logger.debug("tempCategoryCode1 = " + tempCategoryCode1);
+			logger.debug("tempCategoryCode2 = " + tempCategoryCode2);
+			categoryCode = tempCategoryCode1 + tempCategoryCode2;
+		}
+		
+		String result = ezApprovalGAdminService.setTaskCategory(categoryType, categoryCode, categoryName, categoryName2, categoryDesc, pCode, companyID, userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("setTaskCategory ended.");
 		
 		return result;
 	}
@@ -1285,12 +1302,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String removeTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("removeTaskCategory started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String categoryType = request.getParameter("cateType");
 		String categoryCode = request.getParameter("cateCode");
 		String companyID = request.getParameter("companyID");
 		
 		String result = ezApprovalGAdminService.removeTaskCategory(categoryType, categoryCode, companyID, userInfo.getTenantId());
+		
+		logger.debug("removeTaskCategory ended.");
 		
 		return result;
 	}
