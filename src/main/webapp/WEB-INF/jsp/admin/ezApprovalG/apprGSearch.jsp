@@ -18,6 +18,7 @@
 	        var xmldoc = createXmlDom();
 	        var initdate = "<c:out value = '${initDate}' />";
 	        var aprFlag = "<c:out value = '${aprFlag}' />";
+	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        
 	        var ReturnFucntion;
 	        
@@ -609,12 +610,14 @@
 	                <a class="imgbtn"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApprovalG.t442' /></span></a>
 	            </td>
 	        </tr>
-	        <tr id="DOCNUM">
-	            <th><spring:message code ='ezApprovalG.t440' /></th>
-	            <td>
-	                <input type="text" id="DocNumber" name="DocNumber" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
-	            </td>
-	        </tr>
+	        <c:if test="${approvalFlag == 'G'}">
+		        <tr id="DOCNUM">
+		            <th><spring:message code ='ezApprovalG.t440' /></th>
+		            <td>
+		                <input type="text" id="DocNumber" name="DocNumber" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
+		            </td>
+		        </tr>
+	        </c:if>
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t1330' /></th>
 	            <td>
@@ -627,12 +630,14 @@
 	                <input type="text" id="drafter" name="drafter" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
 	            </td>
 	        </tr>
-	        <tr>
-	            <th><spring:message code ='ezApprovalG.t15000' /></th>
-	            <td>
-	                <input type="text" id="approvUser" name="approvUser" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
-	            </td>
-	        </tr>
+	        <c:if test="${approvalFlag == 'G'}">
+		        <tr>
+		            <th><spring:message code ='ezApprovalG.t15000' /></th>
+		            <td>
+		                <input type="text" id="approvUser" name="approvUser" style="width: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
+		            </td>
+		        </tr>
+			</c:if>
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t1331' /></th>
 	            <td>
@@ -648,15 +653,17 @@
 	                <img src="/images/i_scheduler.gif" id="img_EndCalDisp0" width="19" height="15" alt="" border="0" popuplocation='topleft' style="cursor: pointer; POSITION: relative">
 	            </td>
 	        </tr>
-	        <tr id="ENDDATETR">
-	            <th><spring:message code ='ezApprovalG.t1334' /></th>
-	            <td>
-	                <input readonly="readonly" class='datepicker' id='idDatepicker1' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
-	                <img src="/images/i_scheduler.gif" id="img_StartCalDisp1" width="19" height="15" alt="" border="0" popuplocation='topleft' style="cursor: pointer; POSITION: relative">&nbsp;~&nbsp;
-	                <input readonly="readonly" id='_D12' type="text" style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
-	                <img src="/images/i_scheduler.gif" id="img_EndCalDisp1" width="19" height="15" alt="" border="0" popuplocation='topleft' style="cursor: pointer; POSITION: relative">
-	            </td>
-	        </tr>
+	        <c:if test="${approvalFlag == 'G'}">
+		        <tr id="ENDDATETR">
+		            <th><spring:message code ='ezApprovalG.t1334' /></th>
+		            <td>
+		                <input readonly="readonly" class='datepicker' id='idDatepicker1' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
+		                <img src="/images/i_scheduler.gif" id="img_StartCalDisp1" width="19" height="15" alt="" border="0" popuplocation='topleft' style="cursor: pointer; POSITION: relative">&nbsp;~&nbsp;
+		                <input readonly="readonly" id='_D12' type="text" style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
+		                <img src="/images/i_scheduler.gif" id="img_EndCalDisp1" width="19" height="15" alt="" border="0" popuplocation='topleft' style="cursor: pointer; POSITION: relative">
+		            </td>
+		        </tr>
+			</c:if>
 	        <tr id="KEYWORDTR" style="display: none">
 	            <th><spring:message code ='ezApprovalG.t1200' /></th>
 	            <td>
