@@ -306,8 +306,7 @@ function CheckBeforeSave()
 				
 				return false;
 			}
-		}
-		if( document.getElementById("EndTimeSet").checked )	{		
+			
 			if( !CheckStartDateTime() )
 			{
 				alert("" + strLang101 + "");

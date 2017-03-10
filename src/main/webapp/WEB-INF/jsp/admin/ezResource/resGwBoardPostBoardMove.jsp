@@ -146,8 +146,6 @@
 	</head>
 	<body class="mainbody">	
 		<h1><spring:message code='ezResource.t26' /></h1>
-		<br>
-		<br>
 		<table class="content">
   			<tr>
     			<th><spring:message code='ezResource.t44' /></th>
