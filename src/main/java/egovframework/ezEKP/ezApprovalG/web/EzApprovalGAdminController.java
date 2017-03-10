@@ -1313,6 +1313,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("removeTaskCategory ended.");
 		
+		logger.debug("removeTaskCategory ended.");
+		
 		return result;
 	}
 	
@@ -2398,4 +2400,36 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재G관리 문서이동 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGMoveContainer.do")
+	public String moveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("moveContainer started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("companySel", companySel);
+		
+		logger.debug("moveContainer ended");
+		
+		return "admin/ezApprovalG/apprGMoveContainer";
+	}
+
 }
