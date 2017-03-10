@@ -1214,6 +1214,10 @@ public class EzBoardController extends EgovFileMngUtil{
 	            if (startRow <= 0) {
 	            	startRow = 1;
 	            }
+	            
+	            if (endRow < 0) {
+	            	endRow = 0;
+	            }
 	        } else {
 	        	startRow = ((personalCount * (boardVO.getPageNum() - 1))) + 1;
 	            endRow = (personalCount * boardVO.getPageNum()) - noticeCount;

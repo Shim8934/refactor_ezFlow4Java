@@ -444,8 +444,14 @@
             }
         });
     }
-    function btnexportexcel_onclick() {
+    function btnexportexcel_onclick() {    	
         document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML;
+        
+        if (document.getElementById("saveExcelData").value == "") {
+        	alert("<spring:message code='ezStatistics.t1019' />");
+        	return ;
+        }
+        
         document.getElementById("formAgent").target = "saveExcel";
         document.getElementById("formAgent").submit();
     }

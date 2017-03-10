@@ -18,26 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import egovframework.ezEKP.ezQuestion.web.EzQuestionController;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
-
-/** 
- * @Description [Controller] 통계
- * @author 오픈솔루션팀 이동호
- * @Modification Information
- *
- *    수정일        수정자         수정내용
- *    ----------    ------    -------------------
- *    2016.06.27    이동호             신규작성
- *
- * @see
- */
 
 @Controller
 public class EzStatisticsController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(EzQuestionController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EzStatisticsController.class);
 	
 	@Autowired
 	CommonUtil commonUtil;
@@ -50,8 +37,12 @@ public class EzStatisticsController {
 		return "ezStatistics/statisticsMain";
 	}
 	
+	/**
+	 * 사용자 접속 통계, 사용자 브라우져 통계 Excel 내려받기 호출
+	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXls.do")
 	public void qstResultAnalysisSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("qstResultAnalysisSave started");
 		
 		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -92,30 +83,35 @@ public class EzStatisticsController {
 		
 		row = sheet.createRow(0);
 
-		for(int i=0; i<tableHeadNode.getChildNodes().getLength(); i++){
+		for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
 			cell = row.createCell(i);
 			cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
 			cell.setCellStyle(headerStyle);
 		}
 		
-		for(int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++){
+		for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
 			row = sheet.createRow(i+1);
 			Node tr = tableBodyNode.getChildNodes().item(i+1);
 			
-			for(int j=0; j<tr.getChildNodes().getLength(); j++){
+			for (int j=0; j<tr.getChildNodes().getLength(); j++) {
 				cell = row.createCell(j);
 				cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 				cell.setCellStyle(bodyStyle);
 			}
 		}
 		
-		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		
+		logger.debug("qstResultAnalysisSave ended");
 	}
 	
+	/**
+	 * 메일 통계 Excel 내려받기 호출
+	 */
 	@RequestMapping(value = "/ezStatistics/saticGetXlsM.do")
 	public void qstResultAnalysisSaveM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("qstResultAnalysisSaveM started");
 		
 		String headerFLAG = "";
 		
@@ -123,8 +119,6 @@ public class EzStatisticsController {
 			headerFLAG = request.getParameter("headerFlag");
         }
 		
-		
-		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -168,39 +162,36 @@ public class EzStatisticsController {
 		cell.setCellValue(tableBodyNode.getChildNodes().item(1).getChildNodes().item(0).getTextContent());
 		
 		row = sheet.createRow(1);
-		for(int i=0; i<tableHeadNode.getChildNodes().getLength()-1; i++){
+		for (int i=0; i<tableHeadNode.getChildNodes().getLength()-1; i++) {
 			cell = row.createCell(i);
 			cell.setCellValue(tableHeadNode.getChildNodes().item(i+1).getTextContent());
 			cell.setCellStyle(headerStyle);
 		}
 		
-		for(int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++){
+		for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
 			row = sheet.createRow(i+2);
 			Node tr = tableBodyNode.getChildNodes().item(i+1);
 			
-			for(int j=0; j<tr.getChildNodes().getLength(); j++){
-				if(i==0){
-					if(j+1<tr.getChildNodes().getLength()){
+			for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+				if (i==0) {
+					if (j+1<tr.getChildNodes().getLength()) {
 						cell = row.createCell(j);
 						cell.setCellValue(tr.getChildNodes().item(j+1).getTextContent());
 					}
-				}else{
+				} else {
 					cell = row.createCell(j);
 					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
 				}
-				logger.debug("@@@@@@@@headerFLAG@@@@@@@@"+headerFLAG);
-				if(headerFLAG.equals("TRUE")){
-					logger.debug("@@@@@@@@TRUE@@@@@@@@");
-					if(i!=1){
+				if (headerFLAG.equals("TRUE")) {
+					if (i != 1) {
 						cell.setCellStyle(bodyStyle);
-					}else{
+					} else {
 						cell.setCellStyle(headerStyle);
 					}
-				}else{
-					logger.debug("@@@@@@@@FALSE@@@@@@@@");
-					if(i!=2){
+				} else {
+					if (i != 2) {
 						cell.setCellStyle(bodyStyle);
-					}else{
+					} else {
 						cell.setCellStyle(headerStyle);
 					}
 				}
@@ -209,12 +200,19 @@ public class EzStatisticsController {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		
+		logger.debug("qstResultAnalysisSaveM ended");
+
+		workbook.close();
 	}
 	
-	@RequestMapping(value = "/ezStatistics/UserOSsaticGetXlsM.do")
-	public void getUserOSsaticGetXlsM(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	/**
+	 * 사용자 OS 통계 Excel 내려받기 호출
+	 */
+	@RequestMapping(value = "/ezStatistics/UserOSsaticXls.do")
+	public void getUserOSsaticXls(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("getUserOSsaticXls started");
 		
-		@SuppressWarnings("resource")
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet sheet;
 		
@@ -291,5 +289,9 @@ public class EzStatisticsController {
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
+		
+		logger.debug("getUserOSsaticXls ended");
+
+		workbook.close();
 	}
 }

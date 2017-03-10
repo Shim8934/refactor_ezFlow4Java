@@ -211,12 +211,20 @@ public class EzCommonController extends EgovFileMngUtil{
         if (strHTML.indexOf("error") > -1) {
         	strHTML = commonUtil.cleanValue(strHTML);
         } else {
-        	if (strHTML.indexOf("<BODY") > -1) {
+        	if (strHTML.indexOf("<BODY>") > -1) {
         		strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<BODY>") + 6, strHTML.indexOf("</BODY>")));
+        		strHTML = commonUtil.cleanValue(strHTML);
+        		result = "<BODYDATA>" + strHTML + "</BODYDATA>";
+        	} else if (strHTML.indexOf("<BODY") > -1) {
+        		strHTML = strHTML.substring(strHTML.indexOf(">", strHTML.indexOf("<BODY")) + 1, strHTML.indexOf("</BODY>"));
+        		strHTML = commonUtil.cleanValue(strHTML);
         		result = "<BODYDATA>" + strHTML + "</BODYDATA>";
         	} else {
-        		if (strHTML.indexOf("<body") > -1) {
-        			strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body"), strHTML.indexOf("</body>") + 7));
+        		if (strHTML.indexOf("<body>") > -1) {
+        			strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body") + 6, strHTML.indexOf("</body>")));
+        		} else {
+        			strHTML = strHTML.substring(strHTML.indexOf(">", strHTML.indexOf("<body")) + 1, strHTML.indexOf("</body>"));
+        			strHTML = commonUtil.cleanValue(strHTML);
         		}
         		String attribute = "orgdocnum";
 		
@@ -237,6 +245,7 @@ public class EzCommonController extends EgovFileMngUtil{
 		}
 
 		logger.debug("mhtToHTML ended");
+		
 		return result;
 	}
 	
