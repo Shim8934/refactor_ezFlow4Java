@@ -386,10 +386,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.updateScheduleRepetition(map);
 	}
 	
-	public void deleteRepetition(String ownerID, int pNum, String companyID, int tenantID) throws Exception {
+	public void deleteRepetition(String ownerID, int num, String companyID, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_pOwnerID", ownerID);
-		map.put("v_pNum", pNum);
+		map.put("v_pNum", num);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		ezResourceDAO.deleteRepetition(map);
