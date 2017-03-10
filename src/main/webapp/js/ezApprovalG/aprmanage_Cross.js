@@ -984,7 +984,14 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             var pDocID = GetAttribute(pCurSelRow, "DATA1").trim();
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "mht" || g_RelayG_Type.toUpperCase() == "MHT") {
                 openLocation = "";
-                openLocation = "/ezApprovalG/recevGSusin.do";
+                
+                if (GetAttribute(pCurSelRow,"DATA15") == "001") {
+                	//언제타는지 궁금하구나
+                	openLocation = "/ezApprovalG/recevG.do";
+                } else {
+                	openLocation = "/ezApprovalG/recevGSusin.do";
+                }
+                
                 openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
                 openLocation = openLocation + "&uOrgID=" + encodeURI(GetAttribute(pCurSelRow, "DATA7"));
             }
