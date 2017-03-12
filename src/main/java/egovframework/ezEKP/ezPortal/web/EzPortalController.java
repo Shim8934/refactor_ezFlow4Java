@@ -263,7 +263,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId());
+		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
 		logger.debug("themeInfoXml="+themeInfoXml);
@@ -920,7 +920,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
 			pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 		} else {
-			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
+			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId(), userInfo.getCompanyID());
 			logger.debug("mainUrl="+mainUrl);
 			
 			//2017-02-02 mainUrl이 null이 아닐때만,
@@ -961,8 +961,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
-		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
+		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID()));
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
@@ -3347,7 +3347,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId());
+		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		if (result.getImagePath() != null && !result.getImagePath().equals("")) {
 			model.addAttribute("result", result);
@@ -3382,8 +3382,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
-		logger.debug("xmlDom="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
+		logger.debug("xmlDom="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID()));
 		
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();

@@ -345,11 +345,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalTBLThemeGeneralVO getThemeInfo(String pUID, String pGubun, int tenantID) throws Exception {
+	public PortalTBLThemeGeneralVO getThemeInfo(String pUID, String pGubun, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", pUID);
 		map.put("v_PGUBUN", pGubun);
-		map.put("tenantID", tenantID); 
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		return ezPortalDAO.getThemeInfo(map);
 	}
 	
@@ -494,11 +495,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getPortletConfigItem(String pItemName, String pPortletID, int tenantID) throws Exception {
+	public String getPortletConfigItem(String pItemName, String pPortletID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPITEMNAME", pItemName);
 		map.put("v_pPORTLETID", pPortletID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		return ezPortalDAO.getPortletConfigItem(map);
 	}
 	
@@ -615,18 +617,20 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public String getMainUrl(String pUID, int tenantID) throws Exception {
+	public String getMainUrl(String pUID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		return ezPortalDAO.getMainUrl(map);
 	}
 
 	@Override
-	public String getTopUrl(String pUID, int tenantID) throws Exception {
+	public String getTopUrl(String pUID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("pUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		return ezPortalDAO.getTopUrl(map);
 	}
 	
@@ -640,10 +644,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalPortletGeneralVO getPorletProperties(String pUID, int tenantID) throws Exception {
+	public PortalPortletGeneralVO getPorletProperties(String pUID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		String temp = ezPortalDAO.getPorletProperties_S(map);
 		
@@ -784,10 +789,11 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	@Override
-	public PortalImagePortletVO imagePortlet(String pUID, int tenantID) throws Exception {
+	public PortalImagePortletVO imagePortlet(String pUID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_UID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		return ezPortalDAO.imagePortlet(map);
 	}
 	
@@ -1355,8 +1361,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return resultXML;	
 	}
 	
-	public String getThemeInfoStr (String pThemeUID, String pGubun, int tenantID) throws Exception {
-		PortalTBLThemeGeneralVO result = getThemeInfo(pThemeUID, pGubun, tenantID); 
+	public String getThemeInfoStr (String pThemeUID, String pGubun, int tenantID, String companyID) throws Exception {
+		PortalTBLThemeGeneralVO result = getThemeInfo(pThemeUID, pGubun, tenantID, companyID); 
 		
 		return "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 	}
@@ -2182,7 +2188,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					}
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 						}
 					} else {
@@ -2198,7 +2204,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						sb.append("<div class='section1_bg'><section class='section1'>\n");
 						if (portletType == 0) {
 							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 								sb.append("<iframe width='" + portletWidth + "' height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
 							}
 						} else {
@@ -2220,7 +2226,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 						
 						if (portletType == 0) {
 							if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+								portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 								sb.append("<TD id=\"subtd" + String.valueOf(pColumnIndex * 100 + i + 1) + "\" style=\"WIDTH: 100%; HEIGHT:" + portletHeight + "px" +" align=middle valign=top\" uid=\"" + portletUID + "\" canremove=\"" + portletCanRemove + "\" canresize=\"" + portletCanResize + "\" canreplace=\"" + portletCanReplace + "\" style=\"padding-left:" + portletPaddingLeft + ";padding-right:" + portletPaddingRight + ";padding-top:" + portletPaddingTop + ";padding-bottom:" + portletPaddingBottom + "\"><iframe width=100% height=100% border=0 src=\"" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "\" frameborder=0 scrolling=no></iframe></TD>\n");
 							}
 						} else {
@@ -2312,7 +2318,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (userInfo.getTableViewOption().equals("D")) {
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							if (portletWidth == 9999) {
 								String portletWidthStr = "100%"; 
 								sb.append("<iframe width=\"" + portletWidthStr + "\" height=" + portletHeight + " border=0 src='" + portletMoveURL + loadGetParameters(portletMoveURL, portletUID, userInfo) + "' frameborder=0 scrolling=no></iframe>\n");
@@ -2327,7 +2333,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				} else {
 					if (portletType == 0) {
 						if (checkViewRightBln(portletUID, getAccessList(userInfo), userInfo.getTenantId()) == true) {
-							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId());
+							portletMoveURL = getPortletConfigItem("URL",portletUID, userInfo.getTenantId(), userInfo.getCompanyID());
 							
 							if (portletWidth == 9999) {
 								String portletWidthStr = "100%"; 
@@ -2420,8 +2426,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		}
 	}
 	
-	public String getPorletPropertiesStr(String pUID, int tenantID) throws Exception {
-		PortalPortletGeneralVO result = getPorletProperties(pUID, tenantID);
+	public String getPorletPropertiesStr(String pUID, int tenantID, String companyID) throws Exception {
+		PortalPortletGeneralVO result = getPorletProperties(pUID, tenantID, companyID);
 		String resultXML = "<DATA>"+commonUtil.getQueryResult(result)+"</DATA>";
 		return resultXML;
 		
