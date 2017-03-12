@@ -69,15 +69,15 @@ public interface EzPortalService {
 	
 	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID) throws Exception;
+	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID, String companyID) throws Exception;
 	
 	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath, int tenantID) throws Exception;
 	
 	public List<PortalTBLPortalACLVO> getAclItems (String pUID, int tenantID) throws Exception;
 	
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID, int tenantID) throws Exception;
+	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID, int tenantID, String companyID) throws Exception;
 	
-	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID, int tenantID) throws Exception;
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID, int tenantID, String companyID) throws Exception;
 	
 	public PortalTBLUserInfoVO topGetUserInfo (String pUserID, int tenantID) throws Exception;
 	
@@ -115,13 +115,13 @@ public interface EzPortalService {
 	
 	public String checkCacheValue (String portalPageID, String accessIDList, int tenantID) throws Exception;
 	
-	public String topGetTopParentPageID (String uID, int tenantID) throws Exception;
+	public String topGetTopParentPageID (String uID, int tenantID, String companyID) throws Exception;
 	
-	public String getTopParentPageID (String pTemp, int tenantID) throws Exception;
+	public String getTopParentPageID (String pTemp, int tenantID, String companyID) throws Exception;
 	
-	public String getParentUID (String parentTopMenuID, int tenantID) throws Exception;
+	public String getParentUID (String parentTopMenuID, int tenantID, String companyID) throws Exception;
 	
-	public String getPortalParentUID (String temp, int tenantID) throws Exception;
+	public String getPortalParentUID (String temp, int tenantID, String companyID) throws Exception;
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception;
 	

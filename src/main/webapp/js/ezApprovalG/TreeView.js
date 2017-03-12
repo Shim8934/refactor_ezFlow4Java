@@ -1,5 +1,4 @@
-﻿﻿
-//트리의 설정값을 가지고 있는 변수
+﻿﻿/*트리의 설정값을 가지고 있는 변수*/
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
 var TreeClasses     = new Array();

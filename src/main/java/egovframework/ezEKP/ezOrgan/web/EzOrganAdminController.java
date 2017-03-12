@@ -1264,23 +1264,23 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         	
         	result.append("<ROW>");
             result.append("<CELL>");
-            result.append("<VALUE>" + vo.getCn() + "</VALUE>");
-            result.append("<DATA1>" + vo.getCn() + "</DATA1>");
-            result.append("<DATA2>" + vo.getExtensionAttribute4() + "</DATA2>");
-            result.append("<DATA3>" + vo.getDisplayName() + "</DATA3>");
-            result.append("<DATA4>" + vo.getMail() + "</DATA4>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCn()) + "</VALUE>");
+            result.append("<DATA1>" + commonUtil.cleanValue(vo.getCn()) + "</DATA1>");
+            result.append("<DATA2>" + commonUtil.cleanValue(vo.getExtensionAttribute4()) + "</DATA2>");
+            result.append("<DATA3>" + commonUtil.cleanValue(vo.getDisplayName()) + "</DATA3>");
+            result.append("<DATA4>" + commonUtil.cleanValue(vo.getMail()) + "</DATA4>");
             result.append("</CELL>");
             result.append("<CELL>");
-            result.append("<VALUE>" + vo.getDisplayName() + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
-            result.append("<VALUE>" + vo.getTitle() + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE>");
             result.append("</CELL>");
             result.append("<CELL>");
-            result.append("<VALUE>" + vo.getDescription() + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getDescription()) + "</VALUE>");
             result.append("</CELL>");                    
             result.append("<CELL>");
-            result.append("<VALUE>" + vo.getCompany() + "</VALUE>");
+            result.append("<VALUE>" + commonUtil.cleanValue(vo.getCompany()) + "</VALUE>");
             result.append("</CELL>");
             result.append("</ROW>");
         }                
@@ -1347,17 +1347,26 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String deleteTitleInfo = "";
 				
 		for (int i = 0; i < doc.getElementsByTagName("CN").getLength(); i++) {
-		    if (!doc.getElementsByTagName("TITLE").item(i).getTextContent().equals("")) {
+			String titleValue = doc.getElementsByTagName("TITLE").item(i).getTextContent();
+			
+		    if (!titleValue.equals("")) {
+		    	String[] titleArray = titleValue.split(":");
+		    	
+		    	// Primary 언어 이름만 있는 경우엔 Secondary 언어 이름을 동일하게 설정한다.
+		    	if (titleArray.length == 1) {
+		    		titleValue = titleArray[0] + ":" + titleArray[0];
+		    	}
+		    	
     			if (titleInfo.equals("")) {
-    				titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
+    				titleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
     			} else {
-    				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
+    				titleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
     			}
 		    } else {
                 if (deleteTitleInfo.equals("")) {
-                    deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent();
+                    deleteTitleInfo = doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue;
                 } else {
-                    deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + doc.getElementsByTagName("TITLE").item(i).getTextContent(); 
+                    deleteTitleInfo += ";" + doc.getElementsByTagName("DEPTID").item(i).getTextContent() + ":" + titleValue; 
                 }		        
 		    }
 		}
