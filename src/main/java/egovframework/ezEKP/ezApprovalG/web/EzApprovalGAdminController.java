@@ -1322,19 +1322,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
-	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskCodeInsert started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String title = "";
 		
-		if (tCheck.equals("ins")) {
-			title = egovMessageSource.getMessage("ezApprovalG.t763", userInfo.getLocale());
+		if (approvalFlag.equals("S")) {
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t1642", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t1643", userInfo.getLocale());
+			}
 		} else {
-			title = egovMessageSource.getMessage("ezApprovalG.t764", userInfo.getLocale());
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t763", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t764", userInfo.getLocale());
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", title);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("taskCodeInsert ended.");
 		
 		return "admin/ezApprovalG/apprGTaskCodeInsert";
 	}
