@@ -88,85 +88,93 @@
 	                    Bodytd[i].style.height = Bodytd[i].height + "px";
 	                }
 	            }
+	            
+	            document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	            document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
 	        }
-
-	    function show_repetition_info2() {
-	        var repeatinfo = "" + strLang122 + "";
-	        xmlinDoc = createXmlDom();
-	        xmlinDoc.async = false;
-	        xmlinDoc = loadXMLString(g_data["recurrence"]);
-	        szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
-
-	        switch (szType) {
-	            case "4":
-	                repeatinfo += "" + strLang123 + "";
-	                break;
-	            case "5":
-	                repeatinfo += "" + strLang124 + "";
-	                break;
-	            case "6":
-	                repeatinfo += "" + strLang97 + "";
-	                break;
-	            case "7":
-	                repeatinfo += "" + strLang98 + "";
-	                break;
-	        }
-	        repeatinfo += ", " + strLang125 + "";
-
-	        if (allDayFlag != "1") {
-	            var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
-	            var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
-	            var reStartHour = reStartDate.split(" ")[1].split(":")[0];
-	            var reEndHour = reEndDate.split(" ")[1].split(":")[0];
-
-	            var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
-	            var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
-
-	            if (Number(reStartHour) < 12) {
-	                repeatinfo += "" + strLang246 + " ";
-
-	                if (Number(reStartHour) == 0)
-	                    reStartHour = 12;
-	            }
-	            else {
-	                repeatinfo += "" + strLang247 + " ";
-
-	                if (Number(reStartHour) > 12)
-	                    reStartHour = Number(reStartHour) - 12;
-	            }
-
-	            repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
-
-	            if (Number(reEndHour) < 12) {
-	                repeatinfo += "" + strLang246 + " ";
-
-	                if (Number(reEndHour) == 0)
-	                    reEndHour = 12;
-	            }
-	            else {
-	                repeatinfo += "" + strLang247 + " ";
-
-	                if (Number(reEndHour) > 12)
-	                    reEndHour = Number(reEndHour) - 12;
-	            }
-
-	            repeatinfo += reEndHour + ":" + reEndMinute;
-	        }
-	        else
-	            repeatinfo += strLang126;
 			
-	        repeatinfo += ", " + strLang580 + getNodeText(xmlinDoc.getElementsByTagName("startDateTime")[0]).split(' ')[0] + " ~ ";
-
-	        if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
-	            repeatinfo += strLang581;
-	        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
-	            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
-	        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
-	            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
+	        window.onresize = function () {
+	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("divCross").style.height = window.innerHeight - 220 + "px";
 	        }
 	        
-	        document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
-	    }
+		    function show_repetition_info2() {
+		        var repeatinfo = "" + strLang122 + "";
+		        xmlinDoc = createXmlDom();
+		        xmlinDoc.async = false;
+		        xmlinDoc = loadXMLString(g_data["recurrence"]);
+		        szType = getNodeText(SelectNodes(xmlinDoc, "recurrence/frequency")[0]);
+	
+		        switch (szType) {
+		            case "4":
+		                repeatinfo += "" + strLang123 + "";
+		                break;
+		            case "5":
+		                repeatinfo += "" + strLang124 + "";
+		                break;
+		            case "6":
+		                repeatinfo += "" + strLang97 + "";
+		                break;
+		            case "7":
+		                repeatinfo += "" + strLang98 + "";
+		                break;
+		        }
+		        repeatinfo += ", " + strLang125 + "";
+	
+		        if (allDayFlag != "1") {
+		            var reStartDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
+		            var reEndDate = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
+		            var reStartHour = reStartDate.split(" ")[1].split(":")[0];
+		            var reEndHour = reEndDate.split(" ")[1].split(":")[0];
+	
+		            var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
+		            var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
+	
+		            if (Number(reStartHour) < 12) {
+		                repeatinfo += "" + strLang246 + " ";
+	
+		                if (Number(reStartHour) == 0)
+		                    reStartHour = 12;
+		            }
+		            else {
+		                repeatinfo += "" + strLang247 + " ";
+	
+		                if (Number(reStartHour) > 12)
+		                    reStartHour = Number(reStartHour) - 12;
+		            }
+	
+		            repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
+	
+		            if (Number(reEndHour) < 12) {
+		                repeatinfo += "" + strLang246 + " ";
+	
+		                if (Number(reEndHour) == 0)
+		                    reEndHour = 12;
+		            }
+		            else {
+		                repeatinfo += "" + strLang247 + " ";
+	
+		                if (Number(reEndHour) > 12)
+		                    reEndHour = Number(reEndHour) - 12;
+		            }
+	
+		            repeatinfo += reEndHour + ":" + reEndMinute;
+		        }
+		        else
+		            repeatinfo += strLang126;
+				
+		        repeatinfo += ", " + strLang580 + getNodeText(xmlinDoc.getElementsByTagName("startDateTime")[0]).split(' ')[0] + " ~ ";
+	
+		        if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "0") {
+		            repeatinfo += strLang581;
+		        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
+		            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
+		        } else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
+		            repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
+		        }
+		        
+		        document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
+		    }
 
 	        function btn_modify() {
 	            if (CrossYN() || pNoneActiveX == "YES") {
@@ -321,28 +329,15 @@
 	        }  
 		</script>
 	</head>
-	<%-- <% 
-    string strDspMod_1 = "";
-    string strDspMod_2 = "";
-
-    if (pnum == "" && gresFlag != "0")
-    {
-        strDspMod_1 = "";
-        strDspMod_2 = "style='display:none'";
-    }
-    else
-    {
-        strDspMod_1 = "";
-        strDspMod_2 = "style='display:none'";
-    }
-	%>
- --%>
+	
  	<xmp id="sigBody" style="display: none;">${content}</xmp>
-	<body id="mainbodytag" class="popup" style="height: 98%; overflow:hidden;">
+ 	
+	<body id="mainbodytag" class="popup" style="height: 100%; overflow:hidden;">
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		
 	    <table id="normalScreen" class="layout">
     	    <tr>
         	    <td style="height: 20px">
@@ -376,7 +371,8 @@
     	                    <li><span onclick="window.close();"><spring:message code='ezResource.t150' /></span></li>
         	            </ul>
             	    </div>
-					<table class="content" style="width: 100%">
+            	    
+					<table class="content">
 	                    <tr>
     	                    <th style="width: 70px;"><spring:message code='ezResource.t193' /></th>
         	                <td colspan="3" style="width: 100%">
@@ -417,7 +413,7 @@
 		        		</tr>
 	        			<tr style="height:100%">
 	            			<td colspan="4" style="height:100%;">
-	                 			<div id="divCross" style="height:480px;overflow:auto;margin:5px 0px 0px 5px;"></div>
+	                 			<div id="divCross" style="overflow:auto;"></div>
 	            			</td>
 	        			</tr>
 	        		</table>
