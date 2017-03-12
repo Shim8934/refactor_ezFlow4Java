@@ -10,7 +10,7 @@
 		<script type="text/javascript" src="<spring:message code='ezResource.e1' />"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
-		<script type="text/javascript" src="${pageContext.request.contextPath}/js/ezResource/Calendar_Action_cross.js?ver=2.4"></script>
+		<script type="text/javascript" src="/js/ezResource/Calendar_Action_cross.js"></script>
 		<style type="text/css">
 			.warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
 			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
@@ -48,8 +48,16 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
+		    var pStartday = "${startDay}";
+		    
 	    	document.onselectstart = function () { return false; };
 	    	window.onload = function () {
+	    		if (pStartday == 1) {
+		            DefaultView = 1;
+	    		} else {
+		            DefaultView = 0;
+	    		}
+	    		
 	        	try {
 	            	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                	document.body.style.MozUserSelect = 'none';
