@@ -1017,8 +1017,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strBrdAccess = resBrd.getBrdAccess();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
-		StringBuilder iYear = new StringBuilder();
-		StringBuilder iMonth = new StringBuilder();
 		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
@@ -1035,30 +1033,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		String pOffset = userInfo.getOffset().split("\\|")[1];
 		int timeZoneStr = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
-		
-		Date date = new Date();
-		@SuppressWarnings("deprecation")
-		int curYear = date.getYear()-100;
-
-		for (int i=curYear; i>=curYear-6; i--) {
-			if((curYear-3) == i) {
-				iYear.append("<Option Value=\"" + String.valueOf(i) + "\" selected>" + String.valueOf(i) + "</Option>" );
-			} else {
-				iYear.append("<Option Value=\"" + String.valueOf(i) + "\">" + String.valueOf(i) + "</Option>" );
-			}
-		}
-		
-		
-		@SuppressWarnings("deprecation")
-		int curMonth = date.getMonth()+1;
-
-		for (int j=1; j<= 12; j++) {
-			if (curMonth == j) {
-				iMonth.append("<Option Value=\"" + String.valueOf(j) + "\" selected>" + String.valueOf(j) + "</Option>" );
-			} else {
-				iMonth.append("<Option Value=\"" + String.valueOf(j) + "\">" + String.valueOf(j) + "</Option>" );
-			}
-		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("companyID", userInfo.getCompanyID());
