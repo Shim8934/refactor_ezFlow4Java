@@ -11,7 +11,7 @@ var sz_DayOfWeek = "";
 var weekStartDate = "";
 var weekEndDate = "";
 
-var dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
+var DefaultView = 1;
 
 var resource_text = "";
 var tdcount = 0;
@@ -88,17 +88,30 @@ function weekonload(s_Year, s_Month, s_Date)
         sz_Date = weekSetDate.getDate();
         sz_DayOfWeek = weekSetDate.getDay();
     }
-    //오늘의 날짜를 기준으로 요번주의 시작날짜 0~6 / 일~토 를 구한다. 지금현재는 월요일시작기준으로 date에 + 1을 해주었다.
-    if (sz_DayOfWeek == 0)
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
-    else
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
-    //오늘의 날짜를 기준으로 요번주의 마지막날짜를 가져온다.
+    
+    if (DefaultView == 0) { //일요일시작
+        if (sz_DayOfWeek == 0)
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
+        else
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
 
-    if (sz_DayOfWeek == 0)
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
-    else
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
+        if (sz_DayOfWeek == 0)
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
+        else
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
+    } else { //월요일시작
+        //오늘의 날짜를 기준으로 요번주의 시작날짜 0~6 / 일~토 를 구한다. 지금현재는 월요일시작기준으로 date에 + 1을 해주었다.
+        if (sz_DayOfWeek == 0)
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 6);
+        else
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 1);
+        //오늘의 날짜를 기준으로 요번주의 마지막날짜를 가져온다.
+        if (sz_DayOfWeek == 0)
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek));
+        else
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 1);
+    }
+    
     
     mfGetSearchDate(weekStartDate);
     
@@ -162,19 +175,28 @@ function nextToday_onclick(result)
 }
 
 function nextWeek_onclick(result) {
-
-    if(result == "PREV")
-    {
-        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 7); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 7); 
-    }
-    else if(result == "NEXT")
-    {
-        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 7); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 7); 
-    }
+	
+	if (DefaultView == 0) { //일요일시작
+		if (result == "PREV") {
+	        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 7); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 7); 
+	    } else if (result == "NEXT") {
+	        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 7); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 7); 
+	    }
+	} else { //월요일시작
+		if (result == "PREV") {
+	        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 6); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 6); 
+	    } else if (result == "NEXT") {
+	        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 8); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 8); 
+	    }
+	}
     
     //weekStartDate에 대한 값이 설정되었으면 mfGetSearchDate함수를 통해 변수에 값을 저장해놓는다.
     mfGetSearchDate(weekStartDate);
@@ -244,6 +266,11 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
+	if (DefaultView == 0) { //일요일시작
+		dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
+	}
+	
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
         var xmldom = createXmlDom();
         var XMLstring = c_xmlhttp.responseText;
@@ -294,12 +321,19 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-
-                if (countdayname == "0")
-                    _mth.style.color = "#0032cf";//blue
-                else if (countdayname == "1")
-                    _mth.style.color = "#ee1c25";//red
-//                "#0032cf";
+                
+                if (DefaultView == 0) { //일요일시작
+                	if (countdayname == "0")
+                        _mth.style.color = "#0032cf"; //blue
+                    else if (countdayname == "1")
+                        _mth.style.color = "#ee1c25"; //red
+                } else { //월요일시작
+                	if (countdayname == "6")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "0")
+                        _mth.style.color = "#ee1c25";
+                }
+                
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
@@ -327,11 +361,18 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-
-                if (countdayname == "0")
-                    _mth.style.color = "#0032cf";
-                else if (countdayname == "1")
-                    _mth.style.color = "#ee1c25";
+                
+                if (DefaultView == 0) { //일요일시작
+                	if (countdayname == "0")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "1")
+                        _mth.style.color = "#ee1c25";
+                } else { //월요일시작
+                	if (countdayname == "6")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "0")
+                        _mth.style.color = "#ee1c25";
+                }
 
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
@@ -376,18 +417,33 @@ function tableListControl_Week()
             else
                 _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
+            
+            if (DefaultView == 0) { //일요일시작
+            	for (var i = 0; i < 7; i++) {
+                    var y = i;
+                    if (i == 7) y = 0;
 
-            for (var i = 0; i < 7; i++) {
-                var y = i;
-                if (i == 7) y = 0;
+                    var _mtd2 = document.createElement("TD");
+                    _mtd2.style.width = "14.2%";
+                    _mtd2.setAttribute("class", "weektd_02");
+                    _mtd2.verticalAlign = "top";
+                    _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    _mtr2.appendChild(_mtd2);
+                    b++;
+                }
+            } else { //월요일시작
+            	for (var i = 1; i < 8; i++) {
+                    var y = i;
+                    if (i == 7) y = 0;
 
-                var _mtd2 = document.createElement("TD");
-                _mtd2.style.width = "14.2%";
-                _mtd2.setAttribute("class", "weektd_02");
-                _mtd2.verticalAlign = "top";
-                _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
-                _mtr2.appendChild(_mtd2);
-                b++;
+                    var _mtd2 = document.createElement("TD");
+                    _mtd2.style.width = "14.2%";
+                    _mtd2.setAttribute("class", "weektd_02");
+                    _mtd2.verticalAlign = "top";
+                    _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    _mtr2.appendChild(_mtd2);
+                    b++;
+                }
             }
 
             _mtable.appendChild(_mtr2);

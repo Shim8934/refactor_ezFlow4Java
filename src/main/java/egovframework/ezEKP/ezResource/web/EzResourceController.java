@@ -46,6 +46,8 @@ import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSendMailToUserVO;
 import egovframework.ezEKP.ezResource.vo.ResMakeDupResultVO;
 import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -95,6 +97,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzEmailService")
 	private EzEmailService ezEmailService;
+	
+	@Resource(name="EzScheduleService")
+	private EzScheduleService ezScheduleService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
@@ -528,6 +533,15 @@ public class EzResourceController extends EgovFileMngUtil {
 			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + ",";
 		}
 		
+		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
+		int startDay = 0;
+		
+		if (scheduleConfigVO != null) {
+			startDay = scheduleConfigVO.getStartDay();
+		} else {
+			startDay = 7;
+		}
+		
 		model.addAttribute("childBrd", childBrd);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
@@ -538,6 +552,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("startDay", startDay);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -1034,6 +1049,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		String pOffset = userInfo.getOffset().split("\\|")[1];
 		int timeZoneStr = (Integer.parseInt(pOffset.split(":")[0]) * 60) + Integer.parseInt(pOffset.split(":")[1]);
 		
+		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
+		int startDay = 0;
+		
+		if (scheduleConfigVO != null) {
+			startDay = scheduleConfigVO.getStartDay();
+		} else {
+			startDay = 7;
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("resID", resID);
@@ -1052,6 +1076,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("resLocation", strResLocation);
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
+		model.addAttribute("startDay", startDay);
 		
 		return "/ezResource/resScheduleMain";
 	}

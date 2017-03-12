@@ -48,8 +48,16 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
+		    var pStartday = "${startDay}";
+		    
 	    	document.onselectstart = function () { return false; };
 	    	window.onload = function () {
+	    		if (pStartday == 1) {
+		            DefaultView = 1;
+	    		} else {
+		            DefaultView = 0;
+	    		}
+	    		
 	        	try {
 	            	if (navigator.userAgent.indexOf('Firefox') != -1) {
 	                	document.body.style.MozUserSelect = 'none';
