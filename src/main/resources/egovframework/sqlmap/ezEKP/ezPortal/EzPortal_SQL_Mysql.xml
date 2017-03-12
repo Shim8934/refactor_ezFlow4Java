@@ -736,7 +736,7 @@
             AND
             	(B.AccessID = '$v_pACCESSIDLIST$' AND $v_pSTRRIGHT$  )
             AND
-            	A.TENANT_ID = #tenantID#	
+            	A.TENANT_ID = #tenantID#
 		]]>
 	</select> 
 	
@@ -1532,7 +1532,9 @@
                                                AND TENANT_ID = #tenantID# )
                		) )
             AND
-            	A.TENANT_ID = #tenantID#   		
+            	A.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = #v_pIDCOMPANY#     		
         	ORDER BY A.UID_ ASC
 		]]>
 	</select>
@@ -1551,7 +1553,9 @@
 			AND
 				GUBUNFLAG = #v_pGUBUNFLAG#
 			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
         	ORDER BY
                 UID_ ASC
 		]]>
@@ -1632,6 +1636,8 @@
 				A.TENANT_ID = #tenantID#
 			AND
 				B.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = B.COMPANYID 
             ORDER BY
                 DISPLAYNAME ASC
             LIMIT

@@ -69,7 +69,7 @@ public interface EzPortalService {
 	
 	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID) throws Exception;
+	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID, String companyID) throws Exception;
 	
 	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath, int tenantID) throws Exception;
 	
