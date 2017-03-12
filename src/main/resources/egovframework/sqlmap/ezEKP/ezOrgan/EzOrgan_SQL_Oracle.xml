@@ -264,6 +264,58 @@
 	</procedure> --> 
 	
 	 <select id="EzOrganDAO.getDeptMemberList" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
+		<isEqual property="v_CLASS" compareValue="userWithMasterAdmin">
+			<![CDATA[
+				SELECT
+					* 
+                FROM ( 	SELECT
+                				CN ,
+                       			CASE
+                       				#v_LANGDATA#
+                       			WHEN
+                       				'1'
+                       			THEN
+                       				DISPLAYNAME
+                       			ELSE
+                       				DISPLAYNAME2
+                       			END
+                       				DISPLAYNAME  ,
+                       			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+                       			'user' TYPE  
+                       		FROM
+                       			TBL_USERMASTER 
+                       		WHERE
+                       			DEPARTMENT = #v_CN#
+                       		AND
+                       			TENANT_ID = #v_TENANT_ID#	
+                       	UNION ALL 
+                       		SELECT
+                       			A.CN ,
+                       			CASE
+                       				#v_LANGDATA#
+                       			WHEN
+                       				'1'
+                       			THEN
+                       				DISPLAYNAME
+                       			ELSE
+                       				DISPLAYNAME2
+                       			END
+                       				DISPLAYNAME  , 
+                                SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+                       			'user' TYPE  
+                  			FROM
+                  				TBL_ADDJOBMASTER B
+                  			JOIN
+                  				TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                  			WHERE
+                  				B.DEPTID = #v_CN#
+                  			AND
+                  				B.TENANT_ID = #v_TENANT_ID#	 ) AA
+                  			ORDER BY
+                  				EXTENSIONATTRIBUTE15 ASC,
+                  			DISPLAYNAME ASC
+			]]>
+		</isEqual>
 		<isEqual property="v_CLASS" compareValue="user">
 			<![CDATA[
 				SELECT
@@ -318,110 +370,108 @@
                   			DISPLAYNAME ASC
 			]]>
 		</isEqual>
-		<isNotEqual property="v_CLASS" compareValue="user">
-			<isEqual property="v_CLASS" compareValue="group">
-				<![CDATA[
-					SELECT
-						CN ,
-                      	CASE
-                      		#v_LANGDATA#
-                      	WHEN
-                      		'1'
-                      	THEN
-                      		DISPLAYNAME
-                      	ELSE
-                      		DISPLAYNAME2
-                      	END
-                      		DISPLAYNAME  ,
-                      	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                      	'dept' TYPE  
-                    FROM
-                    	TBL_DEPTMASTER 
-                   	WHERE
-                   		EXTENSIONATTRIBUTE1 = #v_CN#
-                   	AND
-                   		TENANT_ID = #v_TENANT_ID#	
-                    ORDER BY
-                    	EXTENSIONATTRIBUTE15, DISPLAYNAME
-				]]>
-			</isEqual>
-			<isNotEqual property="v_CLASS" compareValue="group">
-				<![CDATA[
-					SELECT
-						* 
-                    FROM ( 	SELECT
-                    				CN ,
-                          			CASE
-                          				#v_LANGDATA#
-                          			WHEN
-                          				'1'
-                          			THEN
-                          				DISPLAYNAME
-                          			ELSE
-                          				DISPLAYNAME2
-                          			END
-                          				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                           			'user' TYPE  
-                          		FROM
-                          			TBL_USERMASTER 
-                          		WHERE
-                          			DEPARTMENT = #v_CN#
-                                AND
-                                    CN <> 'masteradmin'                             
-                          		AND
-                          			TENANT_ID = #v_TENANT_ID#	
-                          	UNION ALL 
-                          		SELECT
-                          			A.CN ,
-                          			CASE
-                          				#v_LANGDATA#
-                          			WHEN
-                          				'1'
-                          			THEN
-                          				DISPLAYNAME
-                          			ELSE
-                          				DISPLAYNAME2
-                          			END
-                          				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+		<isEqual property="v_CLASS" compareValue="group">
+			<![CDATA[
+				SELECT
+					CN ,
+                     	CASE
+                     		#v_LANGDATA#
+                     	WHEN
+                     		'1'
+                     	THEN
+                     		DISPLAYNAME
+                     	ELSE
+                     		DISPLAYNAME2
+                     	END
+                     		DISPLAYNAME  ,
+                     	SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+                     	'dept' TYPE  
+                   FROM
+                   	TBL_DEPTMASTER 
+                  	WHERE
+                  		EXTENSIONATTRIBUTE1 = #v_CN#
+                  	AND
+                  		TENANT_ID = #v_TENANT_ID#	
+                   ORDER BY
+                   	EXTENSIONATTRIBUTE15, DISPLAYNAME
+			]]>
+		</isEqual>
+		<isEqual property="v_CLASS" compareValue="all">
+			<![CDATA[
+				SELECT
+					* 
+                   FROM ( 	SELECT
+                   				CN ,
+                         			CASE
+                         				#v_LANGDATA#
+                         			WHEN
+                         				'1'
+                         			THEN
+                         				DISPLAYNAME
+                         			ELSE
+                         				DISPLAYNAME2
+                         			END
+                         				DISPLAYNAME  ,
+                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                           			'user' TYPE  
-                          		FROM
-                          			TBL_ADDJOBMASTER B
-                          		JOIN
-                          			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
-                          		WHERE
-                          			B.DEPTID = #v_CN#
-                          		AND
-                          			B.TENANT_ID = #v_TENANT_ID#	
-                          	UNION ALL 
-                          		SELECT
-                          			CN ,
-                          			CASE
-                          				#v_LANGDATA#
-                          			WHEN
-                          				'1'
-                          			THEN
-                          				DISPLAYNAME
-                          			ELSE
-                          				DISPLAYNAME2
-                          			END
-                          				DISPLAYNAME  ,
-                          			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
-                           			'dept' TYPE  
-                          		FROM
-                          			TBL_DEPTMASTER 
-                          		WHERE
-                          			EXTENSIONATTRIBUTE1 = #v_CN#
-                          		AND
-                          			TENANT_ID = #v_TENANT_ID#	 ) AA
-                          		ORDER BY
-                          			TYPE DESC,
-                          			EXTENSIONATTRIBUTE15,
-                          			DISPLAYNAME ASC
-				]]>
-			</isNotEqual>
-		</isNotEqual>
+                         		FROM
+                         			TBL_USERMASTER 
+                         		WHERE
+                         			DEPARTMENT = #v_CN#
+                               AND
+                                   CN <> 'masteradmin'                             
+                         		AND
+                         			TENANT_ID = #v_TENANT_ID#	
+                         	UNION ALL 
+                         		SELECT
+                         			A.CN ,
+                         			CASE
+                         				#v_LANGDATA#
+                         			WHEN
+                         				'1'
+                         			THEN
+                         				DISPLAYNAME
+                         			ELSE
+                         				DISPLAYNAME2
+                         			END
+                         				DISPLAYNAME  ,
+                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+                         			'user' TYPE  
+                         		FROM
+                         			TBL_ADDJOBMASTER B
+                         		JOIN
+                         			TBL_USERMASTER A   ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+                         		WHERE
+                         			B.DEPTID = #v_CN#
+                         		AND
+                         			B.TENANT_ID = #v_TENANT_ID#	
+                         	UNION ALL 
+                         		SELECT
+                         			CN ,
+                         			CASE
+                         				#v_LANGDATA#
+                         			WHEN
+                         				'1'
+                         			THEN
+                         				DISPLAYNAME
+                         			ELSE
+                         				DISPLAYNAME2
+                         			END
+                         				DISPLAYNAME  ,
+                         			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
+                          			'dept' TYPE  
+                         		FROM
+                         			TBL_DEPTMASTER 
+                         		WHERE
+                         			EXTENSIONATTRIBUTE1 = #v_CN#
+                         		AND
+                         			TENANT_ID = #v_TENANT_ID#	 ) AA
+                         		ORDER BY
+                         			TYPE DESC,
+                         			EXTENSIONATTRIBUTE15,
+                         			DISPLAYNAME ASC
+			]]>
+		</isEqual>
 	</select> 
 	
 	<!-- <procedure id="EzOrganDAO.getDeptMemberListPage" parameterClass="Map" resultMap="deptTreeInfo" remapResults="true">
