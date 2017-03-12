@@ -7,11 +7,12 @@
 		<title><spring:message code='ezResource.t9900013'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>"></script>
 		<script type="text/javascript" src="/js/ezResource/datepicker.htc_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/composeappt_cross.js"></script>
 		<script type="text/javascript" src="/js/ezResource/Schedule_cross.js"></script>
-		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" >
 		 	var g_data = new Array();
 		 	//writerID trim
@@ -371,6 +372,11 @@
     	                    <li><span onclick="window.close();"><spring:message code='ezResource.t150' /></span></li>
         	            </ul>
             	    </div>
+            	    
+            	    <script type="text/javascript" >
+		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		  			</script>
             	    
 					<table class="content">
 	                    <tr>
