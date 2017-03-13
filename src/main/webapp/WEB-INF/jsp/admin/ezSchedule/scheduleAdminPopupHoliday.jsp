@@ -89,6 +89,8 @@
 		    });
 		
 		    function save_holiday(type) {
+		    	var holidayName2;
+		    	
 		    	if (specialChk(document.getElementById("holidayname").value) || specialChk(document.getElementById("holidayname2").value)) {
 		    		alert("<spring:message code='ezResource.special' />");
 		    		return;
@@ -97,10 +99,12 @@
 		        if (document.getElementById("holidayname").value.trim() == "") {
 		            alert("<spring:message code='ezSchedule.t9990004' />");
 		            return;
-		        }
+		        }        
+		        		
 		        if (document.getElementById("holidayname2").value.trim() == "") {
-		            alert("<spring:message code='ezSchedule.t9990004' />");
-		            return;
+		        	holidayName2 = MakeXMLString(document.getElementById("holidayname").value);		            
+		        } else {
+		        	holidayName2 = MakeXMLString(document.getElementById("holidayname2").value);
 		        }
 		        
 		        $.ajax({
@@ -110,7 +114,7 @@
 		    		url : "/admin/ezSchedule/scheduleSaveHoliday.do",
 		    		data : {
 		    			holidayName  : MakeXMLString(document.getElementById("holidayname").value),	
-		    			holidayName2 : MakeXMLString(document.getElementById("holidayname2").value),
+		    			holidayName2 : holidayName2,
 		    			isSolar : (document.getElementsByName("date")[0].checked ? "1" : "0"),
 		    			holidayDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
 		    			isRepeat : (document.getElementById("repeat").checked ? "1" : "0"),
