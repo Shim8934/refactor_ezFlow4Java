@@ -20,7 +20,17 @@
 	    	var pbrdName = "<c:out value='${brdName}' />";
 	    	var result;
 	    	var rtnVal;
-	    
+	    	
+	    	window.onload = function () {
+	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("divCross").style.height = window.innerHeight - 75 + "px";
+	        }
+	    	
+	    	window.onresize = function () {
+	        	document.getElementById("divCross").style.width = document.getElementById("mainbodytag").offsetWidth - 24 + "px";
+	        	document.getElementById("divCross").style.height = window.innerHeight - 75 + "px";
+	        }
+	    	
 	    	function DocumentComplete() {
 	        	var isComplete = false;
 	        	if (!isComplete) {
@@ -60,8 +70,9 @@
 	        
 		    }
 	    	function idDocSaveBtn_onclick_Complete(retVal) {
-		        if (!retVal) {
-		            DivPopUpHidden();
+	    		DivPopUpHidden();
+	    		
+	    		if (!retVal) {
 	    	        return;
 	        	}
 
@@ -80,15 +91,13 @@
 	
 		        rtnVal = xmlHttp.responseText;
 				
-		        if(rtnVal=="OK"){
-					alert("<spring:message code='ezResource.t56'/>");
-				}else if(rtnVal=="FALSE"){
-					alert("<spring:message code='ezResource.t42'/>");	
+		        if (rtnVal == "OK") {
+					alert(strLang256);
+		        	window.close();
+				} else if (rtnVal == "FALSE") {
+					alert("<spring:message code='ezResource.t42'/>");
 				}
 		        
-	    	    OpenAlertUI(strLang256);
-	        	DivPopUpHidden();
-	        	window.close();
 	    	}
 
 	    	function idDelBtn_onclick() {
@@ -106,8 +115,7 @@
 
 	        	valFlag = DomHttp.responseText;
 	        	if (valFlag == "FALSE") {
-	        		alert("<spring:message code='ezResource.t63'/>");
-	        		OpenAlertUI(strLang257);
+	        		alert(strLang257);
 	            	return;
 	        	}
 
@@ -119,8 +127,9 @@
 	        
 	    	}
 	    	function idDelBtn_onclick_Complete(retVal) {
+		        DivPopUpHidden();
+		        
 		        if (!retVal) {
-		        	DivPopUpHidden();
 		            return;
 		        }
 
@@ -138,29 +147,31 @@
 	        	reVal = xmlHttp.responseText;
 
 	        	if (reVal == "OK") {
-		            OpenAlertUI(strLang259);
-		            window.close();
-		            alert("<spring:message code='ezResource.t64'/>");
+	        		alert(strLang259);
 	        	}
-	        	else
-		            OpenAlertUI(strLang260);
+	        	else {
+	        		alert(strLang260);
+	        	}
+	        	
+	        	window.location.reload();
 		    }
-
-	    	var apralert_cross_dialogArguments = new Array();
-	    	function OpenAlertUI(pAlertContent) {
-		        var parameter = pAlertContent;
-		        apralert_cross_dialogArguments[0] = parameter;
-	    	    apralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-
-	        	//DivPopUpShow_sub(330, 205, "../APRALERT_Cross.aspx");
-	    	}
-	    	function OpenAlertUI_Complete() {
-	        
-		    }
+	    	
+	    	//2017-03-13 이효민 : 구현이 되다만 함수인듯해서 사용하지 않도록 수정함
+//	    	var apralert_cross_dialogArguments = new Array();
+//	    	function OpenAlertUI(pAlertContent) {
+//		        var parameter = pAlertContent;
+//		        apralert_cross_dialogArguments[0] = parameter;
+//	    	    apralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+//
+//	        	//DivPopUpShow_sub(330, 205, "../APRALERT_Cross.aspx");
+//	    	}
+//	    	function OpenAlertUI_Complete() {
+//	        
+//		    }
 
 		</script>
 	</head>
-	<body class="popup">
+	<body class="popup" id="mainbodytag">
 		<h1 id="subtitle"><spring:message code="ezResource.t377" /></h1>
     	<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
@@ -170,6 +181,7 @@
     	<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel_sub">
 			<iframe src="/blank.htm" style="border:none;" id="iFrame1"></iframe>
 		</div>
+		
  		<div id="close">
         	<ul>
           		<li id="idDocSaveBtn"><span onclick="return idDocSaveBtn_onclick()"><spring:message code="ezResource.t378" /></span></li>
@@ -177,15 +189,12 @@
           		<li><span onclick="window.close();"> <spring:message code="ezResource.t150" /></span></li>
         	</ul>
  		</div>
- 			<c:choose>
- 				<c:when test="${pNoneActiveX eq 'YES'}">
- 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:630px;">
- 				</c:when>
- 				<c:otherwise>
- 					<div id="divCross" style="margin-top:10px;vertical-align:top;width:675px;height:630px;">
- 				</c:otherwise>
- 			</c:choose>
- 			
+ 		
+ 		<script type="text/javascript">
+    		selToggleList(document.getElementById("close"), "ul", "li", "0");
+		</script>
+		
+ 		<div id="divCross" style="margin-top:10px;vertical-align:top;">
 			<c:choose>
 				<c:when test="${editor eq 'TAGFREE'}">
 					<iframe id="message" class="viewbox"  name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding:0; height:100%; width:100%; overflow:auto;" frameborder="0"></iframe>
