@@ -1,4 +1,5 @@
 target/
+output/
 
 #Eclipse Setting
 .settings/
