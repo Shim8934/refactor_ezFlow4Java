@@ -16,7 +16,7 @@
     				<ul>
     					<%-- <li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="change_article('appr')" width="50" height="115"></li> --%>
     					<c:choose>
-    						<c:when test="${host == 'seokz.com:8080'}">
+    						<c:when test="${host == 'jgw.cloud.kaoni.com'}">
     							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_appro.gif" onclick="javascript:alert('<spring:message code='ezPortal.jjs10' />');" width="50" height="115"></li>
      							<li><img src="/images/<spring:message code='main.t00025' />/main/tab_mail.gif" onclick="change_article('mail')" width="50" height="115"></li>
     						</c:when>
@@ -170,6 +170,7 @@
 	    var pUse_Editor = "${useEditor}";
 	    var pUse_IE11Browser = "${useIE11Browser}";
 	    var pNoneActiveX = "${noneActiveX}";
+	    var host = "${host}";
 	    document.onselectstart = function () { return false; };
 	    
 	    function window_onload_NewApprMail() {
@@ -180,9 +181,14 @@
 	            document.body.style.oUserSelect = 'none';
 	            document.body.style.UserSelect = 'none';
 	        }
-	        //getApprGraph();
-	        change_article("mail");
-	        getMailGraph();
+	        
+	        if (host == 'jgw.cloud.kaoni.com') {
+	        	//getApprGraph();
+		        change_article("mail");
+		        getMailGraph();	
+	        } else {
+	        	getApprGraph();
+	        }
 	        
 	        try { top.onresize() } catch (e) { }
 	    }
@@ -202,7 +208,7 @@
 
 	    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 	    
-/* 	    function getApprGraph() {
+ 	    function getApprGraph() {
         	if ("${userApprovalG}" == "YES") {
         	      $.ajax({
       	        	type : "POST",
@@ -254,7 +260,7 @@
        	        	}
        	        });	
         	}
-	    } */
+	    } 
 
 	    function getDocList_after(xml) {
 
