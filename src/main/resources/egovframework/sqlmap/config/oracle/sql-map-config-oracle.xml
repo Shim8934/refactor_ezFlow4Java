@@ -56,4 +56,6 @@
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezStatistics/EzStatisticsAdmin_SQL_Oracle.xml"/>
 	<!-- 스케쥴 -->
 	<sqlMap resource="egovframework/sqlmap/ezEKP/ezSchedule/EzScheduleAdmin_SQL_Oracle.xml"/>
+	<!-- 시스템 -->
+    <sqlMap resource="egovframework/sqlmap/ezEKP/ezSystem/EzSystemAdmin_SQL_Oracle.xml"/>
 </sqlMapConfig>
