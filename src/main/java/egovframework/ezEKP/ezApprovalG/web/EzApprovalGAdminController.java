@@ -2419,8 +2419,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서이동 메인화면 호출
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMoveContainer.do")
-	public String moveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		logger.debug("moveContainer started");
+	public String apprGMoveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("apprGMoveContainer started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		StringBuilder companySel = new StringBuilder();
@@ -2441,9 +2441,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("companySel", companySel);
 		
-		logger.debug("moveContainer ended");
+		logger.debug("apprGMoveContainer ended");
 		
 		return "admin/ezApprovalG/apprGMoveContainer";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서이동 부서선택 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGOrgan.do")
+	public String apprGOrgan(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("apprGOrgan started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("serverName", userInfo.getServerName());
+		
+		logger.debug("apprGOrgan ended");
+		
+		return "admin/ezApprovalG/apprGOrgan";
 	}
 
 }

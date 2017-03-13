@@ -87,10 +87,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void deleteTheme(String uID, int tenantID) throws Exception {
+	public void deleteTheme(String uID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", uID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		ezPortalAdminDAO.deleteTheme(map);
 	}
 
