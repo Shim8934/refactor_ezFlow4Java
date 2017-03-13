@@ -24,14 +24,14 @@
 			}
 
 			function btnSave_Click() {
-				var re = /[\\/:*?\"<>|@&#`~]/gi;
-				if( re.test(document.getElementById("Brd_NM").value)){
-					alert("<spring:message code="ezResource.kms1" />");
+				var re = /[\\/:*?\"<>&|]/gi;
+				if (re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
+					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
 				
 				if (document.getElementById("Brd_NM").value == "") {
-					alert("<spring:message code="ezResource.t145"/>");
+					alert("<spring:message code='ezResource.t145'/>");
 					document.getElementById("Brd_NM").focus();
 					return;
 				}
