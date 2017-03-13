@@ -1783,9 +1783,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERSTARTPAGE_ITEM
-       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, TENANT_ID )
+       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, LANG, TENANT_ID )
        		VALUES
-       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', $tenantID$ )
+       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', #lang# , $tenantID$ )
 		]]>
 	</insert>
 	

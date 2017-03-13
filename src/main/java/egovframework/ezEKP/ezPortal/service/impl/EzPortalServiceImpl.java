@@ -2738,7 +2738,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	}
 	
 	
-	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, int tenantID) throws Exception {
+	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, String lang, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pPARENTUID", pParentUID);
 		map.put("v_pUSERID", pUserID);
@@ -2746,6 +2746,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		map.put("v_pHOMEUID", pHomeUID);
 		map.put("v_pIMAGEUID", pImageUID);
 		map.put("v_pLINKURL", pLinkURL);
+		map.put("lang", lang);
 		map.put("tenantID", tenantID);
 		
 		String temp1 = ezPortalDAO.searchStartPage_S(map);
