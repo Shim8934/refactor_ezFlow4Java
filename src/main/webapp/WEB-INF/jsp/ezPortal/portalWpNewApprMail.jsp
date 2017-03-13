@@ -89,7 +89,14 @@
               				<dt id="draftTab" onclick="apprChangeTab(this)"><span><spring:message code='main.t00005' /><span id="draftCNT" class="tab_num" runat="server">(0)</span></span></dt>
             			</dl>
             			<!-- /tab -->
-            			<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
+            			<c:choose>
+            				<c:when test="${host == 'jgw.cloud.kaoni.com'}">
+            					<%-- <span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span> --%>
+            				</c:when>
+            				<c:otherwise>
+            				<span class="btn_more"><img onclick="Appmore_btnClick()" src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span>
+            				</c:otherwise>
+            			</c:choose>
             		</div>
           			<div id ="ApprList" class="appr_mailcont">            
               			<ul class="listtype_txt">
