@@ -2676,7 +2676,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("imageUID="+imageUID);
 		logger.debug("linkURL="+linkURL);
 		
-		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getTenantId());
+		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getLang(), userInfo.getTenantId());
 		logger.debug("useStartPage="+useStartPage);
 		
 		String deptPath = userInfo.getDeptPathCode();
@@ -2706,6 +2706,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/useMyStartPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String useMyStartPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("useMyStartPage started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -2719,8 +2720,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			oldUID = req.getParameter("oldUID");
 		}
 		
-		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		logger.debug("uID="+uID+", oldUID="+oldUID);
 		
+		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		logger.debug("result="+result);
+
+		logger.debug("useMyStartPage ended");
 		return result;
 	}
 	

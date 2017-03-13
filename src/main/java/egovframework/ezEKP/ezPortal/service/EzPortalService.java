@@ -193,7 +193,7 @@ public interface EzPortalService {
 	
 	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID, int tenantID) throws Exception;
 	
-	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, int tenantID) throws Exception;
+	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, String lang, int tenantID) throws Exception;
 	
 	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr, int tenantID) throws Exception;
 	
