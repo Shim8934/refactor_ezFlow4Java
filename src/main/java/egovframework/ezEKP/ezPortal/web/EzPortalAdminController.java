@@ -199,7 +199,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 				pKeyCode = req.getParameter("uID");
 			}
-			result = ezPortalService.getThemeInfo(pKeyCode, "3", userInfo.getTenantId());
+			result = ezPortalService.getThemeInfo(pKeyCode, "3", userInfo.getTenantId(), userInfo.getCompanyID());
 			
 			themeNm1 = result.getDisplayName();
 			themeNm2 = result.getDisplayName2();
@@ -1044,7 +1044,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId());
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		List<PortalGetPortletParametersVO> param = ezPortalService.getPortletParametres(uID, userInfo.getTenantId());
 		
 		if (prop.getFrameType() !=null && prop.getFrameType().equals("")) {
@@ -1409,7 +1409,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId());
+		PortalPortletGeneralVO prop = ezPortalAdminService.getPortletProperties(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		String displayName = prop.getDisplayName();
 		String url = prop.getUrl();

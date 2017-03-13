@@ -417,12 +417,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID) throws Exception {
+	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPortletProperties started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		String temp = ezPortalAdminDAO.getPortletProperties_S1(map);
 		
@@ -842,7 +843,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
    					+" FROM TBL_PORTALPAGE_CATEGORY "
    					+"WHERE TENANT_ID="+tenantID+" AND CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
    					+"FROM TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
+   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID AND A.COMPANYID = B.COMPANAYID "
    					+"WHERE (NOT EXISTS(SELECT UID_ FROM TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
@@ -1038,7 +1039,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 					portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 					
-					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
 					NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
@@ -1142,7 +1143,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 						
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
@@ -1363,7 +1364,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 						logger.debug("portletDisplayName["+j+"]="+portletDisplayName);
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);

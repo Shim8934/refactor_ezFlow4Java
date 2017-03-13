@@ -42,7 +42,7 @@
 	    title_name[0] = pBrdid + "/" + "<c:out value='${brdNm}' />";
 	    var pUse_Editor = "${useEditor}";
 	    var pNoneActiveX = "${nonActiveX}";
-	    var pStartday = "7";
+	    var pStartday = "${startDay}";
 	    var LunarUse = false;
 	    
 	    document.onselectstart = function () { return false; };

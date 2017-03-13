@@ -875,6 +875,11 @@
 	                            <spring:message code='ezEmail.t63' /></span></li>
 	                    </ul>
 	                </div>
+	                
+	                <script type="text/javascript" >
+		      			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+		      			selToggleList(document.getElementById("close"), "ul", "li", "0");
+		  			</script>
 	            </td>
 	        </tr>
 	        <tr>

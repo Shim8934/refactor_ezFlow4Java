@@ -75,8 +75,7 @@
 	            else {
 	                if (CrossYN()) {
 	                    openLocation = "/admin/ezApproval/contDocView.do";
-	                }
-	                else {
+	                } else {
 	                    if (pUse_Editor == "")
 	                        openLocation = "/myoffice/ezApproval/formContainer/contDocView.aspx";
 	                    else
@@ -106,7 +105,7 @@
 	        function bt_SDeptSelect_onclick() {
 	            organ_dialogArguments[0] = P_CompanyID;
 	            organ_dialogArguments[1] = bt_SDeptSelect_onclick_Complete;
-	            var result = GetOpenWindow("organ.do", "Organ_Cross", 290, 525, "NO");
+	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 525, "NO");
 	        }
 	
 	        function bt_SDeptSelect_onclick_Complete(retVal) {
@@ -116,7 +115,8 @@
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
 	                pChackYN == "FALSE"
 	            }
-	
+alert(retVal[0])
+alert(retVal[1])
 	            Flag = "SDeptName";
 	            getDocType(Flag);
 	            ScontID = document.getElementsByName("selSContName")[0].value;
@@ -129,6 +129,7 @@
 	            organ_dialogArguments[1] = bt_TDeptSelect_onclick_Complete;
 	            var result = GetOpenWindow("organ.do", "Organ_Cross", 290, 525, "NO");
 	        }
+	        
 	        function bt_TDeptSelect_onclick_Complete(retVal) {
 	            var Flag;
 	            if (typeof (retVal) != "undefined") {
@@ -137,8 +138,7 @@
 	            }
 	            Flag = "TDeptName";
 	            getDocType(Flag);
-	        }
-	
+	        }	
 	
 	        function bt_selSContName_onclick() {
 	            if (document.getElementsByName("selSContName")[0].value != ScontID) {
@@ -157,8 +157,7 @@
 	        function btnIns_onclick() {
 	            if (MoveALL.checked == false)
 	                DocMove();
-	        }
-	
+	        }	
 	
 	        function btndel_onclick() {
 	            listview.LoadFromID("lvSDocForm");
@@ -250,8 +249,7 @@
 			
 			function bt_Cancle_onclick() {
 			    window.close();
-			}
-			
+			}			
 			
 			function changeCompID() {
 			    if (P_CompanyID != document.getElementById("ListCompany").value) {
