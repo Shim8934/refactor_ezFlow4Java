@@ -547,7 +547,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    
 		userInfo = commonUtil.checkAdmin(loginCookie);
 		
-		String lang = userInfo.getPrimary();		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String lang = userInfo.getLang();		
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
@@ -561,6 +562,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
 		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("userInfo ended");
 		
