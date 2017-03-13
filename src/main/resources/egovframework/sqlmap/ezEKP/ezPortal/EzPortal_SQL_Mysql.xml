@@ -1840,7 +1840,7 @@
 			DELETE FROM
 				TBL_USERSTARTPAGE_ITEM
 		    WHERE
-		    	UID_ = #v_pOLDUID#
+		    	LANG = #v_pLANGSTR#
 			AND
 				ACCESSID = #v_pUSERID#
 			AND
