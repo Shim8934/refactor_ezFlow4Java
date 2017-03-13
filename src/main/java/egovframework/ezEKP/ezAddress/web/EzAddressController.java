@@ -399,6 +399,8 @@ public class EzAddressController{
 					+ "<option id='C' value='0' ownerid='" + userInfo.getCompanyID() + "'>" + egovMessageSource.getMessage("ezAddress.t147", userInfo.getLocale()) + "</option>";
 		}
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -410,12 +412,13 @@ public class EzAddressController{
 		model.addAttribute("userNM2", userNM2);
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
-		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
 				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
-				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI);
+				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI
+				 + ",primaryLang=" + primaryLang);
 		
 		return "ezAddress/addressWrite";
 	}
