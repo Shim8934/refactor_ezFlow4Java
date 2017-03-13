@@ -774,9 +774,6 @@ function DataSetRemove(fs_Date, fe_Date) {
 
 function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
-
-        //c_xmlhttp.onreadystatechange = onAbort;
-
         var xmldom = createXmlDom();
 
         var XMLstring = c_xmlhttp.responseText;
@@ -990,7 +987,6 @@ function tableListControl_today() {
         }
         _table.appendChild(_tr);
 
-
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
@@ -1047,7 +1043,7 @@ function tableListControl_today() {
                                 		continue;
                                 	}
                                 	
-                                    var _TD = document.createElement("TD");
+                                    _TD = document.createElement("TD");
                                     
                                     //tooltip 추가
                                     _TD.setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
@@ -1089,7 +1085,7 @@ function tableListControl_today() {
                                     _Tr2.appendChild(_TD);
                                     
                                 } else {
-                                    var _TD = document.createElement("TD");
+                                    _TD = document.createElement("TD");
                                     _TD.align = "center";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.style.width = "2%";
@@ -1099,7 +1095,7 @@ function tableListControl_today() {
                                 }
                             }
                         } else {
-                            var _TD = document.createElement("TD");
+                            _TD = document.createElement("TD");
                             
                             //tooltip 추가
                             _TD.setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
