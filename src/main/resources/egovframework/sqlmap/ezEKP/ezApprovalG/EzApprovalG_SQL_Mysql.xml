@@ -6861,7 +6861,7 @@
    			AND
    					B.TENANT_ID = C.TENANT_ID
    			AND
-   					B.COMPANYID = C.CN		
+   					B.COMPANYID = C.EXTENSIONATTRIBUTE2		
    			WHERE 
    					ContainerTypeID = '500' 
    			AND 
@@ -6885,7 +6885,7 @@
    		AND
    				A.TENANT_ID = D.TENANT_ID
    		AND
-   				A.COMPANYID = D.CN
+   				A.COMPANYID = D.EXTENSIONATTRIBUTE2
    		AND 
    				(A.StartDate >=  STR_TO_DATE(#v_pStartDate#,'%Y-%m-%d %H:%i:%s') AND A.StartDate <= STR_TO_DATE(#v_pEndDate#,'%Y-%m-%d %H:%i:%s')) 
    		WHERE 

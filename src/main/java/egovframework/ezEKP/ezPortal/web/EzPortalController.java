@@ -1462,6 +1462,7 @@ public class EzPortalController extends EgovFileMngUtil {
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		int dMaxCount = 0;
+		int sMaxCount = 0;
 		
 		Calendar cal = Calendar.getInstance();
 		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
@@ -1478,6 +1479,26 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			
+			for (int i=0; i<list.size(); i++) {
+				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+				}
+			}
+			dMaxCount = dMaxCount + sMaxCount;
+			
+			logger.debug("listSize="+list.size());
+			for (int i=0; i<list.size(); i++) {
+				logger.debug("draftCount="+list.get(i).getDraftCount());
+				logger.debug("susinCount="+list.get(i).getSusinCount());
+				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+				
+				list.get(i).setDraftCount((int)(draftPercent));
+				list.get(i).setSusinCount((int)(susinPercent));
+			}
+			
 			
 		} else {
 			dMax = "0";
