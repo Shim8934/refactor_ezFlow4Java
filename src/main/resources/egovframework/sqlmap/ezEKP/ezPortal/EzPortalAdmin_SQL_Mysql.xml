@@ -55,7 +55,8 @@
        		WHERE
        			EXISTS ( SELECT UID_ 
                       		FROM TBL_THEME_GENERAL 
-                       		WHERE  UID_ = #v_PUID# )
+                       		WHERE  UID_ = #v_PUID#
+                            AND COMPANAYID = #v_PCOMPANYID# )
 		]]>
 	</select>
 	
@@ -76,7 +77,9 @@
        		WHERE
        			UID_ = #v_PUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANAYID = #v_PCOMPANYID#	
 		]]>		
 	</update>
 	
@@ -1508,7 +1511,9 @@
 	        WHERE
 	        	UID_ = #v_PUID#
 	        AND
-	        	TENANT_ID = #tenantID#	
+	        	TENANT_ID = #tenantID#
+            AND
+                COMPANAYID = #companyID#	
 		]]>
 	</delete>
 	

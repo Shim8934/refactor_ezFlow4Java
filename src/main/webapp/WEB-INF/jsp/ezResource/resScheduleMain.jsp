@@ -219,183 +219,93 @@
 	        window.location.href = "/ezResource/scheduleApprovList.do?resID=" + pBrdid + "&startDate=" + sStartDate + "&endDate=" + sEndDate;
 	    }
 
-	</script>
-	    <script type="text/javascript">
-	        function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
-	            var tmpdt = new Date(v_dateStr);
-	            switch (v_kind) {
-	                case 'd':
-	                    tmpdt.setDate(tmpdt.getDate() + v_movNum);
-	                    break;
-	                case 'm':
-	                    tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
-	                    break;
-	                case 'y':
-	                    tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
-	                    break;
-	            }
-	            return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
-	        }
+        function v_MoveToSelectedDate(v_kind, v_movNum, v_dateStr) {
+            var tmpdt = new Date(v_dateStr);
+            switch (v_kind) {
+                case 'd':
+                    tmpdt.setDate(tmpdt.getDate() + v_movNum);
+                    break;
+                case 'm':
+                    tmpdt.setMonth(tmpdt.getMonth() + v_movNum);
+                    break;
+                case 'y':
+                    tmpdt.setFullYear(tmpdt.getFullYear() + v_movNum);
+                    break;
+            }
+            return tmpdt.getFullYear().toString(10) + '-' + (tmpdt.getMonth() + 1).toString() + '-' + tmpdt.getDate().toString(10) + ' ' + tmpdt.toTimeString().substring(0, 8);
+        }
 
-	        function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
-	            return (navigator.userAgent.indexOf('Firefox') != -1) ?
-	            (function (v_dateTime, hourNum, minuteNum) {
-	                var dt = new Date(v_dateTime);
+        function v_GetChangedDateTime2_nonIE(v_dateTime, hourNum, minuteNum) {
+            return (navigator.userAgent.indexOf('Firefox') != -1) ?
+            (function (v_dateTime, hourNum, minuteNum) {
+                var dt = new Date(v_dateTime);
 
-	                var offset = dt.getTimezoneOffset(); // 분
+                var offset = dt.getTimezoneOffset(); // 분
 
-	                var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+                var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 
-	                return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-	            }).call(this, v_dateTime, hourNum, minuteNum)
-	            : (CrossYN()) ?
-	            (function (v_dateTime, hourNum, minuteNum) {
-	                var dt = new Date(
-	                Date.UTC(
-	                parseInt(v_dateTime.substring(0, 4), 10),
-	                parseInt(v_dateTime.substring(5, 7), 10) - 1,
-	                parseInt(v_dateTime.substring(8, 10), 10),
-	                parseInt(v_dateTime.substring(11, 13), 10),
-	                parseInt(v_dateTime.substring(14, 16), 10),
-	                parseInt(v_dateTime.substring(17, 19), 10),
-	                parseInt(v_dateTime.substring(20, 23), 10)
-	                ))
+                return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+            }).call(this, v_dateTime, hourNum, minuteNum)
+            : (CrossYN()) ?
+            (function (v_dateTime, hourNum, minuteNum) {
+                var dt = new Date(
+                Date.UTC(
+                parseInt(v_dateTime.substring(0, 4), 10),
+                parseInt(v_dateTime.substring(5, 7), 10) - 1,
+                parseInt(v_dateTime.substring(8, 10), 10),
+                parseInt(v_dateTime.substring(11, 13), 10),
+                parseInt(v_dateTime.substring(14, 16), 10),
+                parseInt(v_dateTime.substring(17, 19), 10),
+                parseInt(v_dateTime.substring(20, 23), 10)
+                ))
 
-	                var offset = dt.getTimezoneOffset();
+                var offset = dt.getTimezoneOffset();
 
-	                var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
+                var dt2 = new Date(dt.getTime() + (offset + (hourNum * 60) + minuteNum) * 60 * 1000);
 
-	                return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
-	            }).call(this, v_dateTime, hourNum, minuteNum)
-	            :
-	            (function (v_dateTime, hourNum, minuteNum) {
+                return dt2.getFullYear().toString(10) + '-' + v_AppendZero(dt2.getMonth() + 1) + '-' + v_AppendZero(dt2.getDate()) + ' ' + dt2.toTimeString().substring(0, 8);
+            }).call(this, v_dateTime, hourNum, minuteNum)
+            :
+            (function (v_dateTime, hourNum, minuteNum) {
 
-	            }).call(this, v_dateTime, hourNum, minuteNum)
-	            ;
-	        }
+            }).call(this, v_dateTime, hourNum, minuteNum)
+            ;
+        }
 
-	        function v_AppendZero(v_str) {
-	            if (isNaN(v_str)) {
-	                switch (v_str.toString().length) {
-	                    case 0:
-	                        return "00";
-	                    case 1:
-	                        return "0" + v_str.toString();
-	                    default:
-	                        return v_str.toString();
-	                }
-	            }
+        function v_AppendZero(v_str) {
+            if (isNaN(v_str)) {
+                switch (v_str.toString().length) {
+                    case 0:
+                        return "00";
+                    case 1:
+                        return "0" + v_str.toString();
+                    default:
+                        return v_str.toString();
+                }
+            }
 
-	            if (v_str < 10) {
-	                return "0" + v_str.toString();
-	            }
+            if (v_str < 10) {
+                return "0" + v_str.toString();
+            }
 
-	            return v_str.toString();
-	        }
-	        
-	        function btnform_onclick() {
-	            var feature = GetOpenPosition(700, 700);
-	            if (CrossYN() || pNoneActiveX == "YES") {
-	                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	            } else {
-	                if (pUse_Editor == "" || pUse_Editor == "CK") {
-	                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	                } else {
-	                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
-	                }
-	            }
-	        }
+            return v_str.toString();
+        }
+        
+        function btnform_onclick() {
+            var feature = GetOpenPosition(700, 700);
+            if (CrossYN() || pNoneActiveX == "YES") {
+                window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700px, height=700px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+            } else {
+                if (pUse_Editor == "" || pUse_Editor == "CK") {
+                    window.open("/ezResource/scheduleManageForm.do?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                } else {
+                    window.open("/ezResource/scheduleManageForm.dor?resID=${resID}&brdName=" + encodeURIComponent("<c:out value='${brdNm}' />"), "", "width=700, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+                }
+            }
+        }
 
-	    </script>
-	<script type="text/vbscript">
-	Public Function v_MoveToSelectedDate( v_kind, v_movNum, v_dateStr )
-		dim returnStr
-		Select Case v_kind
-			Case "d" :
-				returnStr = DateAdd("d", v_movNum, v_dateStr)
-			Case "m" :
-				returnStr = DateAdd("m", v_movNum, v_dateStr)
-			Case "y" :
-				returnStr = DateAdd("yyyy", v_movNum, v_dateStr)
-		End Select
-		returnStr = DatePart("yyyy", returnStr) & "-" & DatePart("m", returnStr) & "-" & DatePart("d", returnStr) & " " & DatePart("h", returnStr) & ":00:00"
-		v_MoveToSelectedDate = returnStr
-	End Function
-		
-	Public Function v_GetChangedDateTime( v_dateTime )
-		dim returnStr, y, m, d, h, n, s
-		
-		returnStr = CDate(v_dateTime)
-		returnStr = DateAdd( "h", 9, returnStr )
-		
-		y = DatePart("yyyy", returnStr)
-		m = DatePart("m", returnStr)
-		d = DatePart("d", returnStr)
-		h = DatePart("h", returnStr)
-		n = DatePart("n", returnStr)
-		s = DatePart("s", returnStr)
-		
-		v_dateTime = y & "-" & v_AppendZero(m) & "-" & v_AppendZero(d) & " "
-		v_dateTime = v_dateTime & v_AppendZero(h) & ":" & v_AppendZero(n) & ":" & v_AppendZero(s)
-		
-		v_GetChangedDateTime = v_dateTime
-	End Function
-
-
-	Public Function v_GetChangedDateTime2( v_dateTime, hourNum, minuteNum )
-		dim returnStr, y, m, d, h, n, s
-		
-		returnStr = CDate(v_dateTime)
-		returnStr = DateAdd( "h", hourNum, returnStr )
-		returnStr = DateAdd( "n", minuteNum, returnStr )
-		
-		y = DatePart("yyyy", returnStr)
-		m = DatePart("m", returnStr)
-		d = DatePart("d", returnStr)
-		h = DatePart("h", returnStr)
-		n = DatePart("n", returnStr)
-		s = DatePart("s", returnStr)
-		
-		v_dateTime = y & "-" & v_AppendZero(m) & "-" & v_AppendZero(d) & " "
-		v_dateTime = v_dateTime & v_AppendZero(h) & ":" & v_AppendZero(n) & ":" & v_AppendZero(s)
-		
-		v_GetChangedDateTime2 = v_dateTime
-	End Function
-
-
-
-	Public Function v_GetChangedDateTime( v_dateTime )
-		dim returnStr, y, m, d, h, n, s
-		
-		returnStr = CDate(v_dateTime)
-		returnStr = DateAdd( "h", 9, returnStr )
-		
-		y = DatePart("yyyy", returnStr)
-		m = DatePart("m", returnStr)
-		d = DatePart("d", returnStr)
-		h = DatePart("h", returnStr)
-		n = DatePart("n", returnStr)
-		s = DatePart("s", returnStr)
-		
-		v_dateTime = y & "-" & v_AppendZero(m) & "-" & v_AppendZero(d) & " "
-		v_dateTime = v_dateTime & v_AppendZero(h) & ":" & v_AppendZero(n) & ":" & v_AppendZero(s)
-		
-		v_GetChangedDateTime = v_dateTime
-	End Function
-
-
-
-	Public Function v_AppendZero( v_str )
-		if Len(v_str) = 0 then
-			v_str = "00"
-		elseif Len(v_str) = 1 then
-			v_str = "0" & v_str
-		end if
-		
-		v_AppendZero = v_str
-		
-	End Function
-		</script>
+    </script>
+	
 	</head>
 	<body class="mainbody" style="overflow: auto;" id="BodyTop">
 		<h1><span id="titleimg"></span> <c:out value='${brdNm}' /></h1>
