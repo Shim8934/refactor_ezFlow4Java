@@ -139,7 +139,7 @@
 
 		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
-	    	        ItemArray[1] = Array("<c:out value='${brdName}' />");
+	    	        ItemArray[1] = Array("${brdName}");
 
 	        	    document.getElementById('itemList').innerHTML = "";
 	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' escapeXml='false'/>";
