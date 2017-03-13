@@ -92,7 +92,7 @@ public interface EzPortalAdminService {
 	
 	public int searchPortletCount (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pCompanyID, int tenantID) throws Exception;
 	
-	public void deleteTheme (String uID, int tenantID) throws Exception;
+	public void deleteTheme (String uID, int tenantID, String companyID) throws Exception;
 	
 	public void setThemeInfo (String uID, String disNm1, String disNm2, String disNm3, String disNm4, String imageURL, String topURL, String mainURL, String companyID, String creatorID, String creatorNm, int topHeight, int tenantID) throws Exception;
 	

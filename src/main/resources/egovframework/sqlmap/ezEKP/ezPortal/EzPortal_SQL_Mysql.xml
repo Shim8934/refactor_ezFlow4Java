@@ -1625,7 +1625,7 @@
    				AND
    					TENANT_ID = #tenantID#
                 AND
-                    COMPANYID = #v_pCOMPANYID#	) AS IMAGEURL
+                    COMPANAYID = #v_pCOMPANYID#	) AS IMAGEURL
 			FROM
 				TBL_PORTALPAGE_GENERAL A ,
    				(SELECT

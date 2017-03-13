@@ -252,7 +252,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		pResult = ezPortalAdminService.useThemeInfo(pThemeID, userInfo.getTenantId());
 		logger.debug("pResult="+pResult);
 		if (pResult != null && pResult.equals("NO")) {
-			ezPortalAdminService.deleteTheme(pThemeID, userInfo.getTenantId()); 
+			ezPortalAdminService.deleteTheme(pThemeID, userInfo.getTenantId(), userInfo.getCompanyID()); 
 		}
 
 		logger.debug("deleteThemeInfo ended");
