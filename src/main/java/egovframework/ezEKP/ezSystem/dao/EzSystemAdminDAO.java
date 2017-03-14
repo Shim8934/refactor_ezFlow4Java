@@ -13,7 +13,7 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public List<SysParamVO> getSysParam(int tenantID){
 		return (List<SysParamVO>)list("EzSystemAdminDAO.getSysParam",tenantID);
 	}
-	public int updateSysParam(List<SysParamVO> list){
-		return update("");
+	public int updateSysParam(SysParamVO sysParamVO){
+		return update("EzSystemAdminDAO.updateSysParam",sysParamVO);
 	}
 }
