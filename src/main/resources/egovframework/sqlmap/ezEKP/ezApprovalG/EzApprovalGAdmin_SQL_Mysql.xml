@@ -178,6 +178,8 @@
 				TBL_TASKCODE.kpreason,
 				TBL_TASKCODE.keepingmethod,
 				TBL_TASKCODE.keepingplace,
+				TBL_TASKCODE.itemSecurity,
+				TBL_TASKCODE.ispublic,
 				TBL_TASKCODE.displayrecflag,
 				TBL_TASKCODE.displayrectrastime,
 				TBL_TASKCODE.exdisplayfrequency,
@@ -2721,6 +2723,8 @@
 				displayusage,
 				description,
 				subcategorycode,
+				itemsecurity,
+				ispublic,
 				companyid,
 				tenant_id)
 			VALUES
@@ -2742,6 +2746,8 @@
 				#v_DISPLAYUSAGE#,
 				#v_DESCRIPTION#,
 				#v_SUBCATEGORYCODE#,
+				#itemSecurity#,
+				#isPublic#,
 				#companyID#,
 				#tenantID#)
 	    ]]>
@@ -2869,7 +2875,9 @@
 				sc3 = #v_SC3#,
 				displayusage = #v_DISPLAYUSAGE#,
 				description = #v_DESCRIPTION#,
-				subcategorycode = #v_SUBCATEGORYCODE#
+				subcategorycode = #v_SUBCATEGORYCODE#,
+				itemsecurity = #itemSecurity#,
+				ispublic = #isPublic#
 			WHERE
 				tenant_id = #tenantID#
 			AND

@@ -61,43 +61,39 @@
             $("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
             $("#Sdatepicker2").datepicker('setDate', NowDate);
         });
-    	if("${userInfo.lang}"=="1"){
         $(function () {
-            $.datepicker.regional['ko'] = {
-                closeText: '닫기',
-                prevText: '이전달',
-                nextText: '다음달',
-                currentText: '오늘',
-                monthNames: ['1월', '2월', '3월', '4월', '5월', '6월',
-                '7월', '8월', '9월', '10월', '11월', '12월'],
-                monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월',
-                '7월', '8월', '9월', '10월', '11월', '12월'],
-                dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-                dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-                dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-                weekHeader: 'Wk',
-                dateFormat: 'yy-mm-dd',
-                firstDay: 0,
-                isRTL: false,
-                duration: 200,
-                showAnim: 'show',
-                showMonthAfterYear: true
+        	$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+        		closeText: "<spring:message code='main.t3' />",
+ 		        prevText: "<spring:message code='main.t0604' />",
+ 		        nextText: "<spring:message code='main.t0605' />",
+ 		        currentText: "<spring:message code='main.t0606' />",
+ 		        monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+ 		                     "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+ 		                     "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+ 		                     "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+ 		        monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+ 		                          "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+ 		                          "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+ 		                          "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+ 		        dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 		                   "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+ 		                   "<spring:message code='main.t0627' />"],
+ 		        dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 				                   "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+ 				                   "<spring:message code='main.t0627' />"],
+ 		        dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+ 			                   "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+ 			                   "<spring:message code='main.t0627' />"],
+ 		        weekHeader: "Wk",
+ 		        dateFormat: "yy-mm-dd",
+ 		        firstDay: 0,
+ 		        isRTL: false,
+ 		        duration: 200,
+ 		        showAnim: "show",
+ 		        showMonthAfterYear: true
             };
-            $.datepicker.setDefaults($.datepicker.regional['ko']);
+        	$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
         });
-    	}else {
-        $(function () {
-            $.datepicker.regional['en'] = {
-                dateFormat: 'yy-mm-dd',
-                firstDay: 0,
-                isRTL: false,
-                duration: 200,
-                showAnim: 'show',
-                showMonthAfterYear: true
-            };
-            $.datepicker.setDefaults($.datepicker.regional['en']);
-        });
-        }
 
         window.onload = function () {
             if (CrossYN())

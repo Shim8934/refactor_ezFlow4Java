@@ -1658,7 +1658,7 @@ console.log("selectedSubCell="+selectedSubCell);
 				<td height="30" bgcolor="#F5f5f5">&nbsp;<spring:message code="ezPortal.t334" /><input type="text" name="txtWidth" id="txtWidth" style="WIDTH:50px">
 					px * <spring:message code="ezPortal.t335" /><input type="text" name="txtHeight" id="txtHeight" style="WIDTH:50px"> px <a class="imgbtn"><span onClick="resizeTable()"><spring:message code="ezPortal.t336" /></span></a>
 				</td>
-				<td bgcolor="#F5f5f5" >테마설정</td>
+				<td bgcolor="#F5f5f5" ><spring:message code="ezPortal.t990022" /></td>
                 <td bgcolor="#F5f5f5">
 					<select id="Themeinfo">
 						${pThemeSelectObject}

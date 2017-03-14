@@ -99,6 +99,13 @@ public class ApprGTaskVO {
 	private String processDate;
 	/** */
 	private String applyDate;
+	/** 전자결재일반*/
+	/** 대중소 구분*/
+	private String level;
+	/** 보안등급*/
+	private String itemSecurity;
+	/** 공개여부*/
+	private String isPublic;
 	
 	/** 기록물철등록 */
 	private String numOfRec;
@@ -602,6 +609,23 @@ public class ApprGTaskVO {
 	public void setTaskName1(String taskName1) {
 		this.taskName1 = taskName1;
 	}
-	
+	public String getLevel() {
+		return level;
+	}
+	public void setLevel(String level) {
+		this.level = level;
+	}
+	public String getItemSecurity() {
+		return itemSecurity;
+	}
+	public void setItemSecurity(String itemSecurity) {
+		this.itemSecurity = itemSecurity;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
+	}
 	
 }
