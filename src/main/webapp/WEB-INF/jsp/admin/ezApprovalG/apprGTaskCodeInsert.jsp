@@ -74,7 +74,7 @@
 	                pLevel = RetValue[4];
 	                document.getElementById("tbTaskCode").disabled = true;
 	                
-	                if (approvalFlag == 'S') {
+	                if (approvalFlag == 'G') {
 		                document.getElementById("btnDuplicate").disabled = true;
 		                document.getElementsByName("isAllDept")[0].disabled = true;
 		                document.getElementsByName("isAllDept")[1].disabled = true;
@@ -116,15 +116,15 @@
 			            var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
 			            InitCodeSelectBox(nodesKeepPlace, selKeepPlace);
 			            
-			            var nodesKeepPlace = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
-			            InitCodeSelectBox(nodesKeepPlace, selSecurityLevel);
+			            var nodeSecurityLevel = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
+			            InitCodeSelectBox(nodeSecurityLevel, securityLevel);
 		        	}
 	        	});
 	        }
 	        
 	        function InitTaskInfo() {
 	            var TaskXml = GetTaskInfo();
-
+	            
 	            if (SelectSingleNodeValue(TaskXml, "RESULT") == "FALSE") {
 	                OpenAlertUI("<spring:message code = 'ezApprovalG.t653' />");
 	        	} else if (SelectSingleNodeValue(TaskXml, "RESULT") == "NOITEM") {
@@ -140,6 +140,8 @@
 
 	            	SelectOption(selKeepMethod, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGMETHOD"));
 	            	SelectOption(selKeepPlace, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPLACE"));
+	            	SelectOption(securityLevel, SelectSingleNodeValue(TaskXml.documentElement, "ITEMSECURITY"));
+	            	SelectOption(isPublic, SelectSingleNodeValue(TaskXml.documentElement, "ISPUBLIC"));
 
 	            	var DispFlag = SelectSingleNodeValue(TaskXml.documentElement, "EXDISPLAYFREQUENCY");
 	            	
@@ -434,7 +436,8 @@
 		    				displayUsage : document.getElementById("selDisplayUsage").value,
 		    				description : document.getElementById("tbTaskDesc").value,
 		    				subCategoryCode : document.getElementById("tbSubCode").value,
-		    				securityLevel : document.getElementById("selSecurityLevel").value,
+		    				itemSecurity : document.getElementById("securityLevel").value,
+		    				isPublic : document.getElementById("isPublic").value,
 		    				companyID : companyID,
 		    				level : pLevel
 		    				},
@@ -544,7 +547,7 @@
 	        </tr>
 	        <tr class = 'approvalFlagS'>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
-	        	<td><select id="selSecurityLevel" style="WIDTH: 100%"></select></td> 
+	        	<td><select id="securityLevel" style="WIDTH: 100%"></select></td> 
 	        </tr>
 	        <tr>
 	        	<c:choose>
@@ -557,6 +560,15 @@
 			            <td><select id="selKeepPeriod" style="WIDTH: 100%"></select></td>
 	        		</c:otherwise>
 	        	</c:choose>
+	        </tr>
+	        <tr class = 'approvalFlagS'>
+	        	<th><spring:message code = 'ezApprovalG.t109' /> *</th>
+	        	<td>
+		        	<select id="isPublic" style="width: 100%">
+	                    <option value="Y" id="Y"><spring:message code='ezApprovalG.t47'/></option>
+	                    <option value="N" id="N"><spring:message code='ezApprovalG.t46'/></option>
+	                </select>
+				</td>
 	        </tr>
 	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t117' /> <spring:message code = 'ezApprovalG.t756' /> <span style="color:red">*</span></th>

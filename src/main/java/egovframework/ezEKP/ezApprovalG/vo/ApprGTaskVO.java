@@ -99,10 +99,13 @@ public class ApprGTaskVO {
 	private String processDate;
 	/** */
 	private String applyDate;
+	/** 전자결재일반*/
 	/** 대중소 구분*/
 	private String level;
-	/** */
-	private String securityLevel;
+	/** 보안등급*/
+	private String itemSecurity;
+	/** 공개여부*/
+	private String isPublic;
 	
 	/** 기록물철등록 */
 	private String numOfRec;
@@ -612,60 +615,17 @@ public class ApprGTaskVO {
 	public void setLevel(String level) {
 		this.level = level;
 	}
-	public String getSecurityLevel() {
-		return securityLevel;
+	public String getItemSecurity() {
+		return itemSecurity;
 	}
-	public void setSecurityLevel(String securityLevel) {
-		this.securityLevel = securityLevel;
+	public void setItemSecurity(String itemSecurity) {
+		this.itemSecurity = itemSecurity;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
 	}
 	
-	@Override
-	public String toString() {
-		return "ApprGTaskVO [categoryCode=" + categoryCode + ", cName=" + cName
-				+ ", cName2=" + cName2 + ", mcategoryCode=" + mcategoryCode
-				+ ", mcName=" + mcName + ", mcName2=" + mcName2
-				+ ", subCategoryCode=" + subCategoryCode + ", scName=" + scName
-				+ ", taskCode=" + taskCode + ", taskName=" + taskName
-				+ ", taskName1=" + taskName1 + ", taskName2=" + taskName2
-				+ ", keepingPeriod=" + keepingPeriod + ", displayRecFlag="
-				+ displayRecFlag + ", displayRecTrasTime=" + displayRecTrasTime
-				+ ", specialCatalogFlag=" + specialCatalogFlag + ", sc1=" + sc1
-				+ ", sc2=" + sc2 + ", sc3=" + sc3 + ", tempFlag=" + tempFlag
-				+ ", keepingMethod=" + keepingMethod + ", keepingPlace="
-				+ keepingPlace + ", processDeptCode=" + processDeptCode
-				+ ", processDeptName=" + processDeptName
-				+ ", processDeptName2=" + processDeptName2 + ", scName2="
-				+ scName2 + ", cabinetID=" + cabinetID + ", cabinetClassNo="
-				+ cabinetClassNo + ", ownerID=" + ownerID + ", title=" + title
-				+ ", title2=" + title2 + ", recTypeCode=" + recTypeCode
-				+ ", regSerialNo=" + regSerialNo + ", volumeNo=" + volumeNo
-				+ ", productionYear=" + productionYear
-				+ ", cabinetTransferFlag=" + cabinetTransferFlag
-				+ ", tcabinetID=" + tcabinetID + ", tDeptCode=" + tDeptCode
-				+ ", displayEndDate=" + displayEndDate + ", categoryType="
-				+ categoryType + ", description=" + description + ", name="
-				+ name + ", name2=" + name2 + ", createDate=" + createDate
-				+ ", kpReason=" + kpReason + ", exDisplayFrequency="
-				+ exDisplayFrequency + ", displayUsage=" + displayUsage
-				+ ", processDate=" + processDate + ", applyDate=" + applyDate
-				+ ", level=" + level + ", securityLevel=" + securityLevel
-				+ ", numOfRec=" + numOfRec + ", numOfPage=" + numOfPage
-				+ ", numOfFile=" + numOfFile + ", modifyFlag=" + modifyFlag
-				+ ", oldCabinetFlag=" + oldCabinetFlag + ", createOrganName="
-				+ createOrganName + ", classificationNo=" + classificationNo
-				+ ", expirationYear=" + expirationYear + ", displayReason="
-				+ displayReason + ", cabCharger=" + cabCharger
-				+ ", confirmFlag=" + confirmFlag + ", catalogTransferFlag="
-				+ catalogTransferFlag + ", catalogTransferYear="
-				+ catalogTransferYear + ", docTransferFlag=" + docTransferFlag
-				+ ", docTransferYear=" + docTransferYear + ", tCabinetName="
-				+ tCabinetName + ", tCabinetName1=" + tCabinetName1
-				+ ", tCabinetName2=" + tCabinetName2 + ", tDeptName="
-				+ tDeptName + ", tDeptName1=" + tDeptName1 + ", tDeptName2="
-				+ tDeptName2 + ", tProduceYear=" + tProduceYear + ", tVolumNo="
-				+ tVolumNo + ", transferDate=" + transferDate + ", serialNo="
-				+ serialNo + ", tTaskName=" + tTaskName + ", tTaskCode="
-				+ tTaskCode + ", tRegSerialNo=" + tRegSerialNo + ", tVolumeNo="
-				+ tVolumeNo + "]";
-	}
 }

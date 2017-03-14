@@ -1119,7 +1119,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 map1.put("v_DISPLAYUSAGE", vo.getDisplayUsage());
                 map1.put("v_DESCRIPTION", vo.getDescription());
                 map1.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
-                map1.put("securityLevel", vo.getSecurityLevel());
+                map1.put("itemSecurity", vo.getItemSecurity());
+                map1.put("isPublic", vo.getIsPublic());
                 map1.put("companyID", companyID);
                 map1.put("tenantID", tenantID);
                 
@@ -1152,7 +1153,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 map2.put("v_DESCRIPTION", vo.getDescription());
                 map2.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
                 map2.put("v_CREATIONDATE", commonUtil.getTodayUTCTime(""));
-                map2.put("securityLevel", vo.getSecurityLevel());
+                map2.put("itemSecurity", vo.getItemSecurity());
+                map2.put("isPublic", vo.getIsPublic());
                 map2.put("companyID", companyID);
                 map2.put("tenantID", tenantID);
                
