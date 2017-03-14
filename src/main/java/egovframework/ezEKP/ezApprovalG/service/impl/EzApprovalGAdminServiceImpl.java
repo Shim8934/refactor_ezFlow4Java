@@ -787,13 +787,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			for (ApprGTaskVO vo : list) {
 				switch (vo.getCategoryType()) {
 					case "1":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getCategoryCode(), companyID, tenantID, approvalFlag);
 						break;
 					case "2":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
 						break;
 					case "3":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID);
+						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
 						break;
 				}
 				isLeaf = isLeaf.equals("TRUE") ? "FALSE" : "TRUE";
@@ -917,12 +917,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception {
+	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception {
 		String result = "FALSE";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_CATECODE", categoryCode);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -948,11 +949,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception {
+	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception {
 		try{
 			logger.debug("removeTaskCategory started.");
 			
-			String duplicate = getTaskCategoryNodeExist(categoryType, categoryCode, companyID, tenantID);
+			String duplicate = getTaskCategoryNodeExist(categoryType, categoryCode, companyID, tenantID, approvalFlag);
 			
 			if (duplicate.equals("TRUE")) {
 				logger.debug("duplicate TRUE");
@@ -2718,5 +2719,56 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		}
 		
 		return result;
+	}
+	
+	@Override
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception {
+		logger.debug("moveDocList started");
+		
+		String rtnValue = "";
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String sourceContID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String targetContID = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String moveAll = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("sourceContID", sourceContID);
+		map.put("targetContID", targetContID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			if (moveAll.toLowerCase().equals("true")) {
+				ezApprovalGAdminDAO.moveAllDocListF(map);
+				ezApprovalGAdminDAO.moveAllDocListS(map);
+			} else {
+				String subQuery = "";
+				
+				for (int k = 3; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k == 3) {
+						subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					} else {
+						subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					}
+				}
+				
+				map.put("subQuery", subQuery);
+				
+				ezApprovalGAdminDAO.moveDocListF(map);
+				ezApprovalGAdminDAO.moveDocListS(map);
+			}
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("moveDocList ended");
+		
+		return rtnValue;
 	}
 }
