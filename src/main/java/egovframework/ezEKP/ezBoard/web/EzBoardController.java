@@ -3846,17 +3846,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String orgItemIDList = "";
-		String orgBoardID = "";
+		String orgBoardIDList = "";
 		String destBoardID = "";
 		String uploadFilePath = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String result = "";
 		
 		orgItemIDList = request.getParameter("orgItemIDList");
-		orgBoardID = request.getParameter("orgBoardID");
+		orgBoardIDList = request.getParameter("orgBoardID");
 		destBoardID = request.getParameter("destBoardID");
 		
-		result = ezBoardService.moveItem(orgItemIDList, orgBoardID, destBoardID, userInfo, uploadFilePath, realPath);
+		result = ezBoardService.moveItem(orgItemIDList, orgBoardIDList, destBoardID, userInfo, uploadFilePath, realPath);
 		
 		return "<RESULT>" + result + "</RESULT>";
 	}

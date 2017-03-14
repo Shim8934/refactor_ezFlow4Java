@@ -364,8 +364,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			for (int i = 0; i < list.size(); i++) {
 				xmlStr.append("<ROW>");
 				xmlStr.append("<BACKGROUNDID>" + list.get(i).getBackgroundID() + "</BACKGROUNDID>");
-				xmlStr.append("<ORGFILENAME>" + list.get(i).getOrgFileName() + "</ORGFILENAME>");
-				xmlStr.append("<SAVEFILENAME>" + list.get(i).getSaveFileName() + "</SAVEFILENAME>");
+				xmlStr.append("<ORGFILENAME>" + commonUtil.cleanValue(list.get(i).getOrgFileName()) + "</ORGFILENAME>");
+				xmlStr.append("<SAVEFILENAME>" + commonUtil.cleanValue(list.get(i).getSaveFileName()) + "</SAVEFILENAME>");
 				xmlStr.append("<REGUSERID>" + list.get(i).getRegUserID() + "</REGUSERID>");
 				xmlStr.append("<REGDATE>" + commonUtil.getDateStringInUTC(list.get(i).getRegDate(), userInfo.getOffset(), false) + "</REGDATE>");
 				xmlStr.append("<ISUSE>" + list.get(i).getIsUse() + "</ISUSE>");
@@ -678,8 +678,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			for (int i = 0; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getMust() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getColType() + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + commonUtil.makeListField(obj.getValue()) + "</VALUE></CELL>");
@@ -707,8 +707,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			for (int i = 1; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}
