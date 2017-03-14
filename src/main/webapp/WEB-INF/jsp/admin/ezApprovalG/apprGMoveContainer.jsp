@@ -115,8 +115,6 @@
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
 	                pChackYN == "FALSE"
 	            }
-alert(retVal[0])
-alert(retVal[1])
 	            Flag = "SDeptName";
 	            getDocType(Flag);
 	            ScontID = document.getElementsByName("selSContName")[0].value;
