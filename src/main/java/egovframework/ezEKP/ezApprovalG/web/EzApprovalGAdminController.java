@@ -1297,7 +1297,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 전자결재G관리 분류,단위업무관리 분류삭제 실행 함수
+	 * 전자결재G관리 분류,단위업무관리 분류삭제 실행함수
+	 * 전자결재관리 분류코드관리 체계삭제 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -1320,6 +1321,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 화면 호출 함수
+	 * 전자결재관리 분류코드관리 분류추가,수정 화면호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
 	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -1369,7 +1371,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 분류,단위업무관리 코드수정 단위업무정보 호출 함수
+	 * 전자결재G관리 분류,단위업무관리 코드수정 단위업무정보 호출함수
+	 * 전자결재관리 분류코드관리 분류수정 분류코드정보 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInfo.do", produces = "text/html; charset=utf-8")
 	@ResponseBody
@@ -1386,6 +1389,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 실행함수
+	 * 전자결재관리 분류코드관리 분류추가,삭제 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCode.do")
 	@ResponseBody
@@ -1422,6 +1426,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재G관리분류,단위업무관리  코드삭제 실행 함수
+	 * 전자결재관리 분류코드관리 분류삭제 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCode.do", produces = "text/html;charset=utf-8")
 	@ResponseBody

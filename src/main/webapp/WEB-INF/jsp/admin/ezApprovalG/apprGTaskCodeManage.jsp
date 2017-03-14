@@ -392,7 +392,14 @@
 		                }
 	
 		                if (retVal == "TRUE") {
-		                    var pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                	var pAlertContent = "";
+		                	
+		                	if (approvalFlag == 'S') {
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+		                	} else {
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                	}
+		                    
  		                    OpenAlertUI(pAlertContent);
 	
 		                    TreeView_onNodeSelect();
@@ -406,7 +413,14 @@
 	
 		    function btnAddItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		        	var pAlertContent = "";
+                	
+                	if (approvalFlag == 'S') {
+                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+                	} else {
+                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+                	}
+		            
  		            OpenAlertUI(pAlertContent);
 	
 		            TreeView_onNodeSelect();
@@ -492,8 +506,8 @@
 	
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
-	
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
+alert(1);
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
@@ -510,7 +524,9 @@
 		            	type : "POST",
 		            	url : "/admin/ezApprovalG/removeTaskCode.do",
 		            	async : false,
-		            	data : {taskCode : selRow[0].getAttribute("DATA1"), companyID : companyID},
+		            	data : {taskCode : selRow[0].getAttribute("DATA1"),
+		            			companyID : companyID
+		            			},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
 								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
