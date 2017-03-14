@@ -99,12 +99,11 @@
 			contentType : "application/json; charset=UTF-8", 
 			data :jsonStr,
 			success : function(data){
-				alert(data.msg)
 				if(data.msg=='success'){
-					alert("1");
+					alert("<spring:message code='main.sp10'/>");
 				}
 				if(data.msg=='fail'){
-					alert("2");
+					alert("<spring:message code='main.sp12'/>");
 				}
 			},
 			complete : function(){

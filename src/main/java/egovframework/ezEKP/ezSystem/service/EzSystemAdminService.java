@@ -7,5 +7,5 @@ import egovframework.ezEKP.ezSystem.vo.SysParamVO;
 
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID);
-	public int updateSysParam(List<Map<String, Object>> list);
+	public int updateSysParam(int tenantId, List<Map<String, Object>> list);
 }
