@@ -289,19 +289,28 @@
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
-	
+		            
+		            //일반일때 getTaskCategoryNodeExist  수정해야함니다~ 
 		            var tempVal = GetTaskCategoryNodeExist(pLevel, pGroupID);
 		            
 		            if (tempVal != "FALSE") {
-		                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
-		                OpenAlertUI(pAlertContent);
-		                return;
+		            	if (approvalFlag == 'S') {
+			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
+			                OpenAlertUI(pAlertContent);
+			                
+			                return;		            		
+		            	} else {
+			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
+			                OpenAlertUI(pAlertContent);
+			                
+			                return;
+		            	}
 		            }
 	
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t774' />\n<spring:message code = 'ezApprovalG.t775' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelTree_onclick_Complete;
 	
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t777' />";
@@ -495,18 +504,20 @@
 		        var selRow = listview.GetSelectedRows();
 		        
 		        if (selRow != "") {
-		            var tempVal = GetTaskCodeNodeExist(selRow[0].getAttribute("DATA1"), "");
-		            
-		            if (tempVal != "FALSE") {
-		            	var pAlertContent = "<spring:message code = 'ezApprovalG.t785' />";
- 		                OpenAlertUI(pAlertContent);
- 		                
-		                return;
-		            }
+		        	if (approvalFlag == 'G') {
+			            var tempVal = GetTaskCodeNodeExist(selRow[0].getAttribute("DATA1"), "");
+			            
+			            if (tempVal != "FALSE") {
+			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t785' />";
+	 		                OpenAlertUI(pAlertContent);
+	 		                
+			                return;
+			            }
+		        	}
 	
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
-alert(1);
+		            
 		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {

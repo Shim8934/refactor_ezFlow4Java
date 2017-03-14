@@ -1575,53 +1575,109 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCategoryNodeExist"
 		remapResults="true" parameterClass="Map" resultClass="Integer">
-		<isEqual property="v_CATETYPE" compareValue="1">
-			<![CDATA[
-				SELECT
-					IFNULL(COUNT(mcategorycode), 0)
-				FROM
-					TBL_TASKMIDDLECATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					categorycode = #v_CATECODE#
-				AND
-					oldflag IS NULL
-			]]>
+		<isEqual property="approvalFlag" compareValue="G">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
 		</isEqual>
-		<isEqual property="v_CATETYPE" compareValue="2">
-			<![CDATA[
-				SELECT
-					IFNULL(COUNT(subcategorycode), 0)
-				FROM
-					TBL_TASKSUBCATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					mcategorycode = #v_CATECODE#
-				AND
-					oldflag IS NULL
-			]]>
-		</isEqual>
-		<isEqual property="v_CATETYPE" compareValue="3">
-			<![CDATA[
-				SELECT
-					IFNULL(COUNT(taskcode), 0)
-				FROM
-					TBL_TASKCODE
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					subcategorycode = #v_CATECODE#
-				AND
-					delflag = '0'
-			]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(mcategorycode), 0)
+					FROM	
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						mcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						subcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						IFNULL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
 		</isEqual>
 	</select>
 
