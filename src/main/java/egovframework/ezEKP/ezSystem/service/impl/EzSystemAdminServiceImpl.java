@@ -41,14 +41,17 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public int updateSysParam(List<Map<String, Object>> list) {
+	public int updateSysParam(int tenantID, List<Map<String, Object>> list) {
 		for(int i=0;i<list.size();i++){
 			SysParamVO sysParamVO = new SysParamVO();
 			sysParamVO.setName(list.get(i).get("name")+"");
 			sysParamVO.setValue(list.get(i).get("value")+"");
-			ezSystemAdminDAO.updateSysParam(sysParamVO);
+			sysParamVO.setTenantID(tenantID);
+			int flag = ezSystemAdminDAO.updateSysParam(sysParamVO);
+			if(flag==0){
+				return 0;
+			}
 		}
-		return 0;
+		return 1;
 	}
-
 }

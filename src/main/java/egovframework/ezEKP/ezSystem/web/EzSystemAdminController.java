@@ -66,8 +66,14 @@ public class EzSystemAdminController {
 	
 	@RequestMapping(value="/admin/Ezsystem/updateSysParam.do", produces="application/json;charset=utf-8")
 	@ResponseBody
-	public String updateSysParam(Model model,@RequestBody List<Map<String, Object>> list) throws Exception {
-		ezSystemAdminService.updateSysParam(list);
-		return "[]";
+	public String updateSysParam(@CookieValue("loginCookie") String loginCookie,Model model,@RequestBody List<Map<String, Object>> list) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		int success = ezSystemAdminService.updateSysParam(userInfo.getTenantId(),list);
+		if(success==1){
+			return "{\"msg\":\"success\"}";
+		}else{
+			return "{\"msg\":\"fail\"}";
+		}
 	}
 }

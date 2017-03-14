@@ -24,6 +24,8 @@
 			PROPERTY_VALUE=#value# 
 		WHERE 
 			PROPERTY_NAME=#name#
+		AND
+			TENANT_ID=#tenantID#
 	]]>
 	</update>
 </sqlMap>
