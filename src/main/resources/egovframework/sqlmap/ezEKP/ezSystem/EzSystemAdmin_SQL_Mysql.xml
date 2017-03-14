@@ -6,14 +6,24 @@
 	
 	<select id="EzSystemAdminDAO.getSysParam" parameterClass="Integer" resultClass="SysParamVO">
 		<![CDATA[
-			SELECT PROPERTY_NAME name,PROPERTY_VALUE value
-			FROM TBL_TENANT_CONFIG
-			WHERE TENANT_ID=#TENANTID#
+			SELECT 
+				PROPERTY_NAME name,
+				PROPERTY_VALUE value
+			FROM 
+				TBL_TENANT_CONFIG
+			WHERE 
+				TENANT_ID=#TENANTID#
 		]]>
 	</select>
 	
-	<update id="EzSystemAdminDAO.updateSysParam">
+	<update id="EzSystemAdminDAO.updateSysParam" parameterClass="SysParamVO">
 	<![CDATA[
+		UPDATE 
+			TBL_TENANT_CONFIG 
+		SET 
+			PROPERTY_VALUE=#value# 
+		WHERE 
+			PROPERTY_NAME=#name#
 	]]>
 	</update>
 </sqlMap>
