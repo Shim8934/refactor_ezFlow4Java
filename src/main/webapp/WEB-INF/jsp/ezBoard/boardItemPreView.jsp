@@ -5,7 +5,8 @@
 <html>
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="/css/default_kr.css" type="text/css"> 
 		<link rel="stylesheet" href="/css/previewBoard.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
@@ -193,15 +194,15 @@
 		        </c:if>
 		        <tr>
 		          <th><spring:message code='ezBoard.t291'/></th>
-		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 16px; vertical-align: middle"></div></td>
+		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 15px; vertical-align: middle"></div></td>
 		        </tr>
 		      </table>
 		      </td>
 		  </tr>
 		  <tr>
 		    <td class="pad1">
-		        <div id="ItemOverflow" class="viewbox" style="overflow-y: auto; height:510px; width:730px;">
-		            <div id="txtContent" class="white" style="height:100%; "></div>
+		        <div id="ItemOverflow" class="viewbox" style="overflow-y: auto; height:510px; width:716px;">
+		            <div id="txtContent" class="white" style="height:90%; "></div>
 		        </div>
 		    </td>
 		    <c:if test="${guBun != '3'}">

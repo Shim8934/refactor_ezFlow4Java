@@ -11,20 +11,20 @@ function paging(p_page, p_nowblock) {
 
     var h, j, x_NAME, x_WIDTH, x_HEADER, x_CELL2, x_VALUE2, count;
     count = NodeList[0].childNodes.length;
-
+    
     var s_page = sPage * p_page - (sPage - 1);
     var e_page = sPage * p_page;
-
+    
     if (totalPage == p_page) {
         if (NodeListLen % sPage != 0) {
             e_page = s_page + (NodeListLen % sPage) - 1;
         }
     }
 
-    if (nowblock > 0) {
+    /* if (nowblock > 0) {
         s_page = s_page - (nowblock * PageSize);
         e_page = e_page - (nowblock * PageSize);
-    }
+    }*/
 
     var xmlpara = createXmlDom();
 
@@ -32,16 +32,14 @@ function paging(p_page, p_nowblock) {
     objNode = createNodeInsert(xmlpara, objRoot, "LISTVIEWDATA");
     var headersNode = createNodeAndAppandNode(xmlpara, objNode, subNode, "HEADERS");
 
-
-
     for (h = 0; h <= Haders.length - 1; h++) {
         headerNode = createNodeAndAppandNode(xmlpara, headersNode, subNode, "HEADER");
-
         createNodeAndAppandNodeText(xmlpara, headerNode, subNode, "NAME", SelectSingleNodeValue(Haders[h], "NAME"));
         createNodeAndAppandNodeText(xmlpara, headerNode, subNode, "WIDTH", SelectSingleNodeValue(Haders[h], "WIDTH"));
     }
 
     RowsHeader = createNodeAndAppandNode(xmlpara, objNode, subNode, "ROWS");
+
     for (i = s_page; i <= e_page; i++) {
         RowHeader = createNodeAndAppandNode(xmlpara, RowsHeader, subNode, "ROW");
         CellNode = createNodeAndAppandNode(xmlpara, RowHeader, subNode, "CELL");
@@ -49,7 +47,7 @@ function paging(p_page, p_nowblock) {
         createNodeAndAppandNodeText(xmlpara, CellNode, subNode, "DATA1", SelectSingleNodeValue(SelectSingleNode(NodeList[i - 1], "CELL"), "DATA1"));
         createNodeAndAppandNodeText(xmlpara, CellNode, subNode, "DATA2", SelectSingleNodeValue(SelectSingleNode(NodeList[i - 1], "CELL"), "DATA2"));
 
-        if (CrossYN()) {
+        if (!CrossYN()) {
             var count = 3;
             for (k = 7; k < NodeList[i - 1].childNodes[1].childNodes.length; k++) {
                 if (NodeList[i - 1].childNodes[1].childNodes[k].childNodes.length > 0)
@@ -74,7 +72,7 @@ function paging(p_page, p_nowblock) {
 
         var CellNodeSub = new Array();
 
-        if (CrossYN()) {
+        if (!CrossYN()) {
             for (k = 3; k < NodeList[i - 1].childNodes.length; k++) {
                 if (NodeList[i - 1].childNodes[k].childNodes[1].childNodes.length > 0) {
 
