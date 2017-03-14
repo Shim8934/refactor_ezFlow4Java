@@ -853,6 +853,16 @@ function event_listclick(obj) {
                         _RowObject.childNodes.item(RowCnt).style.backgroundColor = m_strColorDefault;
                     }
                     _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
+                    
+                    var TemplistArray = new Array();
+                    
+                    for (var i = 0; i < listContentArry.length; i++) {
+                        if (obj.getAttribute("id") != listContentArry[i]) {
+                            TemplistArray[TemplistArray.length] = listContentArry[i];
+                        }
+                    }
+                    
+                    listContentArry = TemplistArray;                    
                 }
                 else {
                     for (var RowCnt = 0; RowCnt < _RowObject.childNodes.length; RowCnt++) {
