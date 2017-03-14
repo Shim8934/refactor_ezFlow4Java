@@ -366,16 +366,30 @@
 		            para[1] = "";
 		            para[2] = nodeIdx.GetNodeData("DATA2");
 		            para[3] = companyID;
-	
+		            para[4] = nodeIdx.GetNodeData("DATA1"); //level
+		            
 		            if (CrossYN()) {
 		                taskcodeinsert_cross_dialogArguments[0] = para;
 		                taskcodeinsert_cross_dialogArguments[1] = btnAddItem_onclick_Complete;
-	
-		                var TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 780));
-		                try { TaskCodeInsert_Cross.focus(); } catch (e) { }
+		                
+		                var TaskCodeInsert_Cross = null;
+		                
+		                if (approvalFlag == 'S') {
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 300)); //이효진 추후수정  사이즈
+		                } else {
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 780));
+		                }
+		                
+						try { TaskCodeInsert_Cross.focus(); } catch (e) { }
 		            } else {
 		                var url = "/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins";
-		                var retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");
+		                var retVal = null;
+		                
+		                if (approvalFlag == 'S') {
+			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken"); //이효진 추후수정  사이즈
+		                } else {
+			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");		                	
+		                }
 	
 		                if (retVal == "TRUE") {
 		                    var pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
@@ -414,15 +428,29 @@
 		                para[1] = selRow[0].getAttribute("DATA1");
 		                para[2] = nodeIdx.GetNodeData("DATA2");
 		                para[3] = companyID;
+						para[4] = nodeIdx.GetNodeData("DATA1");
 	
 		                if (CrossYN()) {
 		                    taskcodeinsert_cross_dialogArguments[0] = para;
 		                    taskcodeinsert_cross_dialogArguments[1] = btnEditItem_onclick_Complete;
-		                    var TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 780));
+		                    var TaskCodeInsert_Cross = null;
+		                    
+		                    if (approvalFlag == 'S') {
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 300));
+		                    } else {
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 780));
+		                    }
+		                    
 		                    try { TaskCodeInsert_Cross.focus(); } catch (e) { }
 		                } else {
 		                    var url = "/admin/ezApprovalG/taskCodeInsert.do?tCheck=update";
-		                    var retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");
+		                    var retVal = null;
+		                    
+		                    if (approvalFlag == 'S') {
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken");
+		                    } else {
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780;status:no;help:no;scroll:no;edge:sunken");
+		                    }
 		                    
 		                    if (retVal == "TRUE") {
 		                        var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
