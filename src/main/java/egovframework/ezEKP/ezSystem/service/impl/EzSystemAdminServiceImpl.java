@@ -46,9 +46,11 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 			SysParamVO sysParamVO = new SysParamVO();
 			sysParamVO.setName(list.get(i).get("name")+"");
 			sysParamVO.setValue(list.get(i).get("value")+"");
-			ezSystemAdminDAO.updateSysParam(sysParamVO);
+			int flag = ezSystemAdminDAO.updateSysParam(sysParamVO);
+			if(flag==0){
+				return 0;
+			}
 		}
-		return 0;
+		return 1;
 	}
-
 }

@@ -52,6 +52,25 @@
 
 	}
 	
+	function check_change_Param() {
+
+		var flag=false;
+	
+		for (var i = 0; i < list.length; i++) {
+			if($("#tr_"+i+" input").val()==undefined){
+			var value = $("#tr_"+i+" select").val();
+			}else{
+			value = $("#tr_"+i+" input").val();
+			}
+			if(value!=list[i].value){
+			 flag=true;
+			}
+		}
+		if(flag){
+			update_Sys_Param();
+		}	
+	}
+	
 	function update_Sys_Param() {
 		var paramArray = new Array();
 		
@@ -79,15 +98,21 @@
 			processData : true /*querySTring make false*/, 
 			contentType : "application/json; charset=UTF-8", 
 			data :jsonStr,
-			success : function(result){
-				alert(result);
+			success : function(data){
+				alert(data.msg)
+				if(data.msg=='success'){
+					alert("1");
+				}
+				if(data.msg=='fail'){
+					alert("2");
+				}
 			},
 			complete : function(){
 				$("table").children().remove();
 				get_Sys_Param();
 			},
-			error : function(xhr, status, error) {
-				alert(error);
+			error : function(e) {
+				alert(e);
 			}
 		});	
 	}
@@ -100,7 +125,7 @@
 	<table>
 	</table>
 	<span style="text-align: center;">
-	<input type="button" value="<spring:message code='main.sp09'/>" onclick="update_Sys_Param()">
+	<input type="button" value="<spring:message code='main.sp09'/>" onclick="check_change_Param()">
 	<input type="reset" value="<spring:message code='main.sp11'/>">
 	</span>
 	</form>

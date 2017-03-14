@@ -67,7 +67,11 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/Ezsystem/updateSysParam.do", produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String updateSysParam(Model model,@RequestBody List<Map<String, Object>> list) throws Exception {
-		ezSystemAdminService.updateSysParam(list);
-		return "[]";
+		int success = ezSystemAdminService.updateSysParam(list);
+		if(success==1){
+			return "{\"msg\":\"success\"}";
+		}else{
+			return "{\"msg\":\"fail\"}";
+		}
 	}
 }
