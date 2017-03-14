@@ -12,7 +12,7 @@
         } else {
         	deptID = document.getElementsByName('TDeptName')[0].id;
         }
-        
+
         var result = "";
     	
     	$.ajax({
@@ -29,23 +29,42 @@
     		}
     	});
 
-        xmlRtn = loadXMLString(result);        
-        index = document.getElementsByName('selSContName')[0].length;
-
-        if (index > 0) {
-            for (i = index ; i > 0 ; i--)
-                document.getElementsByName('selSContName')[0].remove(i - 1);
-        }
-
-        for (Cnt = 0 ; Cnt < xmlRtn.getElementsByTagName("DATA1").length; Cnt++) {
-            var nodevalue = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
-            if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
-                contID[Cnt] = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
-                name[Cnt] = xmlRtn.getElementsByTagName("DATA3")[Cnt].childNodes[0].nodeValue;
-                Add_ContType1(name[Cnt], contID[Cnt]);
-            }        
-        }
+        xmlRtn = loadXMLString(result);
         
+        if (Flag == "SDeptName") {
+            index = document.getElementsByName('selSContName')[0].length;
+
+            if (index > 0) {
+                for (i = index ; i > 0 ; i--)
+                    document.getElementsByName('selSContName')[0].remove(i - 1);
+            }
+            
+            for (Cnt = 0 ; Cnt < xmlRtn.getElementsByTagName("DATA1").length; Cnt++) {
+                var nodevalue = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+                if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
+                    contID[Cnt] = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+                    name[Cnt] = xmlRtn.getElementsByTagName("DATA3")[Cnt].childNodes[0].nodeValue;
+                    Add_ContType1(name[Cnt], contID[Cnt]);
+                }        
+            }            
+        }
+        else {
+            index = document.getElementsByName('selTContName')[0].length;
+
+            if (index > 0) {
+                for (i = index ; i > 0 ; i--)
+                    document.getElementsByName('selTContName')[0].remove(i - 1);
+            }
+            
+            for (Cnt = 0 ; Cnt < xmlRtn.getElementsByTagName("DATA1").length; Cnt++) {
+            	var nodevalue = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+                if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
+                    contID[Cnt] = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+                    name[Cnt] = xmlRtn.getElementsByTagName("DATA3")[Cnt].childNodes[0].nodeValue;
+                    Add_ContType2(name[Cnt], contID[Cnt]);
+                }
+            }            
+        }
     } catch (e) { alert("MoveContainer.js :: getDocType()"); }
 }
 
@@ -79,7 +98,6 @@ function Add_ContType2(Name, ID) {
 }
 
 function getDocList() {
-alert(11);	
     if (CrossYN())
         document.getElementById("PageNum").innerHTML = "";
     else
@@ -287,7 +305,7 @@ function ContMove() {
     var strXML = DocMoveParser();
 
     xmlpara = strXML;
-    xmlhttp.open("POST", "/admin/ezApproval/moveContainer.do", false);
+    xmlhttp.open("POST", "/admin/ezApprovalG/moveContainer.do", false);
     xmlhttp.send(xmlpara);
 
     xmlRtn = createXMLDomFromXmlString(xmlhttp.responseText);
