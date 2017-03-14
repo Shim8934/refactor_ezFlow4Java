@@ -6463,14 +6463,14 @@
 						<![CDATA[
 							ORDER BY 
 								$v_ORDEROPTION2$  
-							LIMIT  #v_PAGESIZE2# )  C
+							LIMIT  #v_PAGESIZE2# ) C
 						]]>
 						</isEqual>
 						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 						<![CDATA[
 							ORDER BY 
 								$v_ORDEROPTION2$, ENDDATE  
-							LIMIT #v_PAGESIZE2# )
+							LIMIT #v_PAGESIZE2# ) C
 						]]>
 						</isNotEqual>
 						</isGreaterEqual>
@@ -6478,7 +6478,7 @@
 						<![CDATA[	
 							ORDER BY 
 								$v_ORDEROPTION2$, ENDDATE 
-							LIMIT #v_PAGESIZE2# )	
+							LIMIT #v_PAGESIZE2# ) C	
 						]]>
 						</isLessThan>
 						</isNotEmpty>
@@ -6486,7 +6486,7 @@
 						<![CDATA[	
 							ORDER BY 
 								ENDDATE 
-							LIMIT #v_PAGESIZE2#) 
+							LIMIT #v_PAGESIZE2#) C
 						]]>
 						</isEmpty>
 		   			

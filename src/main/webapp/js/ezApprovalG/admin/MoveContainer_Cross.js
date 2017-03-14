@@ -19,57 +19,33 @@
     		type : "POST",
     		dataType : "text",
     		async : false,
-    		url : "/admin/ezApproval/MgetDeptUseDocType.do",
+    		url : "/admin/ezApprovalG/apprGMgetContInfo.do",
     		data : {
     			deptID     : deptID,
-    			companyID  : P_CompanyID
+    			comID  : P_CompanyID
     		},
     		success: function(text){
     			result = text;
     		}
     	});
 
-        xmlRtn = loadXMLString(result);
-        objNode = xmlRtn.documentElement.childNodes;
-        var len = objNode.length / 2 ;
+        xmlRtn = loadXMLString(result);        
+        index = document.getElementsByName('selSContName')[0].length;
 
-        if (Flag == "SDeptName") {
-            index = document.getElementsByName('selSContName')[0].length;
-
-            if (index > 0) {
-                for (i = index ; i > 0 ; i--)
-                    document.getElementsByName('selSContName')[0].remove(i - 1);
-            }
-            if (objNode.length > 0) {
-                for (Cnt = 0 ; Cnt < len; Cnt++) {
-                    var nodevalue = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
-                    if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
-                        contID[Cnt] = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
-                        name[Cnt] = xmlRtn.getElementsByTagName("NAME" + Cnt)[0].childNodes[0].nodeValue;
-                        Add_ContType1(name[Cnt], contID[Cnt]);
-                    }
-                }
-            }
-        }
-        else {
-            index = document.getElementsByName('selTContName')[0].length;
-
-            if (index > 0) {
-                for (i = index ; i > 0 ; i--)
-                    document.getElementsByName('selTContName')[0].remove(i - 1);
-            }
-            if (objNode.length > 0) {
-                for (Cnt = 0 ; Cnt < len; Cnt++) {
-                    var nodevalue = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
-                    if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
-                        contID[Cnt] = xmlRtn.getElementsByTagName("CONTID" + Cnt)[0].childNodes[0].nodeValue;
-                        name[Cnt] = xmlRtn.getElementsByTagName("NAME" + Cnt)[0].childNodes[0].nodeValue;
-                        Add_ContType2(name[Cnt], contID[Cnt]);
-                    }
-                }
-            }
+        if (index > 0) {
+            for (i = index ; i > 0 ; i--)
+                document.getElementsByName('selSContName')[0].remove(i - 1);
         }
 
+        for (Cnt = 0 ; Cnt < xmlRtn.getElementsByTagName("DATA1").length; Cnt++) {
+            var nodevalue = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+            if (nodevalue != null && nodevalue != "" && nodevalue && "undefine") {
+                contID[Cnt] = xmlRtn.getElementsByTagName("DATA1")[Cnt].childNodes[0].nodeValue;
+                name[Cnt] = xmlRtn.getElementsByTagName("DATA3")[Cnt].childNodes[0].nodeValue;
+                Add_ContType1(name[Cnt], contID[Cnt]);
+            }        
+        }
+        
     } catch (e) { alert("MoveContainer.js :: getDocType()"); }
 }
 
@@ -103,6 +79,7 @@ function Add_ContType2(Name, ID) {
 }
 
 function getDocList() {
+alert(11);	
     if (CrossYN())
         document.getElementById("PageNum").innerHTML = "";
     else
@@ -130,9 +107,9 @@ function getDocList() {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/admin/ezApproval/MgetDocList.do",
+		url : "/admin/ezApprovalG/getDocList.do",
 		data : {
-			node       : ScontID,
+			contID     : ScontID,
 			pageNum    : nowblock + 1,
 			pageSize   : PageSize,
 			companyID  : P_CompanyID,
@@ -170,7 +147,7 @@ function getDocList() {
 
         }
         xmlpara = reBuildXml();
-        if (NodeListLen > 10) {
+        if (NodeListLen > 10) {        	
             paging(curpage, nowblock);
             listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
             listview2.DataBind("lvTDoc");
@@ -401,7 +378,7 @@ function reBuildXml() {
         createNodeAndAppandNodeText(xmlpara, CellNode, subNode, "DATA1", SelectSingleNodeValue(SelectSingleNode(NodeList[i - 1], "CELL"), "DATA1"));
         createNodeAndAppandNodeText(xmlpara, CellNode, subNode, "DATA2", SelectSingleNodeValue(SelectSingleNode(NodeList[i - 1], "CELL"), "DATA2"));
 
-        if (CrossYN() || pNoneActiveX == "YES") {
+        if (!CrossYN()) {
             var count = 3;
             for (k = 7; k < NodeList[i - 1].childNodes[1].childNodes.length; k++) {
                 if (NodeList[i - 1].childNodes[1].childNodes[k].childNodes.length > 0)
@@ -424,8 +401,8 @@ function reBuildXml() {
 
         var CellNodeSub = new Array();
 
-        if (CrossYN() || pNoneActiveX == "YES") {
-            for (k = 3; k < NodeList[i - 1].childNodes.length; k++) {
+        if (!CrossYN()) {  	
+            for (k = 3; k < NodeList[i - 1].childNodes.length; k++) {	
                 if (NodeList[i - 1].childNodes[k].childNodes[1].childNodes.length > 0) {
 
                     CellNodeSub[k] = createNodeAndAppandNode(xmlpara, RowHeader, subNode, "CELL");
