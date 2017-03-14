@@ -77,10 +77,10 @@
 	        var Udomain = "${userEmail}";
 	        var pOpenYaer = "${openYear}";
 	        var NonActiveX = "YES";
-	
+			var approvalYN = "${approvalYN}"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
-	
+	   
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
@@ -159,7 +159,23 @@
 	                condition[14] = nowday;
 	                condition[24] = "";
 	                DocListType == "GetDocSearch";
+	                
+	                if(approvalYN == 'G') {
+	                	 var settingDate = new Date();
+	                     settingDate.setYear(settingDate.getYear() - 1);
 
+	                     var settingmonth = settingDate.getMonth() + 1;
+	                     var settingday = settingDate.getDate();
+	                     if (settingmonth < 10)
+	                         settingmonth = "0" + settingmonth;
+	                     if (settingday < 10)
+	                         settingday = "0" + settingday;
+
+	                     condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+
+	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+	                }
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
@@ -182,14 +198,42 @@
 	                    GetDocList();
 	                }
 	                else if (LoadSquery != "") {
-	                    for (i = 0; i < 25; i++) {
-	                        condition[i] = "";
-	                    }
-	                    ContainerID = LoadContID;
-	                    subCondition = "TBEXPENDAPRDOCINFO.itemcode = '" + LoadSquery + "'";
-	                    pChackYN = "FALSE";
-	                    Init_Flag = "False";
-	                    GetDocSearch();
+	                	if (approvalYN == 'G') {
+		                    for (i = 0; i < 25; i++) {
+		                        condition[i] = "";
+		                    }
+		                    ContainerID = LoadContID;
+		                    subCondition = "TBL_EXPENDAPRDOCINFO.itemcode = '" + LoadSquery + "'";
+		                    pChackYN = "FALSE";
+		                    Init_Flag = "False";
+		                    GetDocSearch();
+	                	} else {
+	                		 for (i = 0; i <= 13; i++) {
+	                             condition[i] = "";
+	                         }
+	                         condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                         condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+// 	                         if (pItemCD != "") {
+// 	                             condition[12] += "CAPR;";
+// 	                             condition[13] += "<ITEMCODE>" + pItemCD + "</ITEMCODE>";
+// 	                         }
+
+// 	                         if (pEndAprType != "" && pEndAprState != "") {
+// 	                             condition[14] = "EAPRTYPE;";
+// 	                             condition[15] = "<ENDAPRTYPE>" + pEndAprType + "</ENDAPRTYPE>";
+// 	                             condition[16] = "EAPRSTATE;";
+// 	                             condition[17] = "<ENDAPRSTATE>" + pEndAprState + "</ENDAPRSTATE>";
+// 	                             document.getElementById("menuapr").style.display = "";
+// 	                             document.getElementById("menuend").style.display = "none";
+// 	                         }
+
+	                         ContainerID = LoadContID;
+	                         subCondition = LoadSquery;
+	                         pChackYN = "FALSE";
+	                         Init_Flag = "False";
+	                         MakeSubCondition();
+	                         GetDocSearch();
+	                	}
 	                }
 	                else {
 	                    ContainerID = LoadContID;
@@ -208,37 +252,87 @@
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
-	            if (GetSelectVal("sel_year") != "ALL") {
-	                condition[9] = GetSelectVal("sel_year");
-	                condition[10] = "01";
-	                condition[11] = "01";
-	                condition[12] = GetSelectVal("sel_year");
-	                condition[13] = "12";
-	                condition[14] = "31";
-	                condition[24] = "";
-	                DocListType == "GetDocSearch";
-	                GetDocSearch();
-	            }
-	            else {
-	                var nowyear = new Date().getFullYear();
-	                var nowmonth = new Date().getMonth() + 1;
-	                var nowday = new Date().getDate();
-	
-	                if (nowmonth < 10)
-	                    nowmonth = "0" + nowmonth;
-	
-	                if (nowday < 10)
-	                    nowday = "0" + nowday;
-	
-	                condition[9] = nowyear - 1;
-	                condition[10] = nowmonth;
-	                condition[11] = nowday;
-	                condition[12] = nowyear;
-	                condition[13] = nowmonth;
-	                condition[14] = nowday;
-	                condition[24] = "";
-	                DocListType == "GetDocSearch";
-	                GetDocSearch();
+	            if(approvalYN == 'G') {
+		            if (GetSelectVal("sel_year") != "ALL") {
+		                condition[9] = GetSelectVal("sel_year");
+		                condition[10] = "01";
+		                condition[11] = "01";
+		                condition[12] = GetSelectVal("sel_year");
+		                condition[13] = "12";
+		                condition[14] = "31";
+		                condition[24] = "";
+		                DocListType == "GetDocSearch";
+		                GetDocSearch();
+		            }
+		            else {
+		                var nowyear = new Date().getFullYear();
+		                var nowmonth = new Date().getMonth() + 1;
+		                var nowday = new Date().getDate();
+		
+		                if (nowmonth < 10)
+		                    nowmonth = "0" + nowmonth;
+		
+		                if (nowday < 10)
+		                    nowday = "0" + nowday;
+		
+		                condition[9] = nowyear - 1;
+		                condition[10] = nowmonth;
+		                condition[11] = nowday;
+		                condition[12] = nowyear;
+		                condition[13] = nowmonth;
+		                condition[14] = nowday;
+		                condition[24] = "";
+		                DocListType == "GetDocSearch";
+		                GetDocSearch();
+		            }
+	            } else {
+	            	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
+	                    if (GetSelectVal("sel_year") != "ALL") {
+	                        condition[5] = GetSelectVal("sel_year") + "-01-01 00:00:01";
+	                        condition[6] = GetSelectVal("sel_year") + "-12-31 23:59:59";
+	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("sel_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("sel_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+	                    }
+	                    else {
+	                        condition[5] = GetSelectVal("who_year") + "-01-01 00:00:01";
+	                        condition[6] = GetSelectVal("who_year") + "-12-31 23:59:59";
+	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("who_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("who_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+	                    }
+	                }
+	                else {
+	                    var nowyear = new Date().getFullYear();
+	                    var nowmonth = new Date().getMonth() + 1;
+	                    var nowday = new Date().getDate();
+
+	                    if (nowmonth < 10)
+	                        nowmonth = "0" + nowmonth;
+
+	                    if (nowday < 10)
+	                        nowday = "0" + nowday;
+
+	                    var settingDate = new Date();
+	                    var settingmonth = settingDate.getMonth() + 1;
+	                    var settingday = settingDate.getDate();
+	                    if (settingmonth < 10)
+	                        settingmonth = "0" + settingmonth;
+	                    if (settingday < 10)
+	                        settingday = "0" + settingday;
+
+
+	                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+	                    SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+	                }
+
+	                if (LoadSquery == "usercontlist") {
+	                    ContainerID = LoadContID;
+	                    GetUserContList();
+	                }
+	                else if (LoadSquery == "deptcontlist") {
+	                    ContainerID = LoadContID;
+	                    GetDeptContList();
+	                }
+	                else
+	                    GetDocSearch();
 	            }
 	        }
 	

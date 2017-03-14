@@ -41,14 +41,10 @@
 		    });
 	
 		    function Tree_setconfig() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
-		        xmlHTTP.send();
-		        
-		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            var treeView = new TreeView();
-		            treeView.SetConfig(xmlHTTP.responseXML);
-				}
+		    	var xmlDom = createXmlDom();
+	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
+		    	var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
 			}
 	
 		    function InitListView() {
@@ -180,7 +176,6 @@
 		        if (nodeIdx) {
 		            var pLevel = nodeIdx.GetNodeData("DATA1");
 		            var pGroupID = nodeIdx.GetNodeData("DATA2");
-		            
 		            
 		            if (pLevel == "3") {
 		                var pAlertContent = "<spring:message code = 'ezApprovalG.t766' />";
@@ -350,7 +345,14 @@
 		        if (nodeIdx) {
 		            var pLevel = nodeIdx.GetNodeData("DATA1");
 		            
-		            if (approvalFlag == 'G') {
+		            if (approvalFlag == 'S') {
+		            	if (pLevel == '0') {
+		            		var pAlertContent = "<spring:message code = 'ezApprovalG.lhj12' />";
+							OpenAlertUI(pAlertContent);
+			                
+			                return
+		            	}
+		            } else {
 			            if (pLevel != "3") {
 			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t778' />\n<spring:message code = 'ezApprovalG.t779' />";
 	 		                OpenAlertUI(pAlertContent);
@@ -549,12 +551,31 @@
 		</script>
 	</head>
 	<body class="mainbody">
+		<c:choose>
+			<c:when test="${approvalFlag == 'S' }">
+				<xml id="GROUP" style="display:none">
+					<TREEVIEWDATA>
+						<NODE>
+							<EXPANDED>TRUE</EXPANDED>
+							<ISLEAF>FALSE</ISLEAF>
+							<VALUE><spring:message code = 'ezApprovalG.t114' /></VALUE>
+							<VALUE2><spring:message code = 'ezApprovalG.t114' /></VALUE2>
+							<DATA1>0</DATA1>
+							<DATA2>ROOT</DATA2>
+							<DATA3></DATA3>
+							<DATA4>NULL</DATA4>
+						</NODE>
+					</TREEVIEWDATA>
+				</xml>
+			</c:when>
+		</c:choose>
 		<xml id="GROUP" style="display:none">
 			<TREEVIEWDATA>
 				<NODE>
 					<EXPANDED>TRUE</EXPANDED>
 					<ISLEAF>FALSE</ISLEAF>
 					<VALUE>/</VALUE>
+					<VALUE2>/</VALUE2>
 					<DATA1>0</DATA1>
 					<DATA2>ROOT</DATA2>
 					<DATA3></DATA3>
@@ -636,12 +657,15 @@
 		</div>
 		<table>
 			<tr>
-				<td><h2><spring:message code = 'ezApprovalG.t699' /></h2>
-					<div style="BORDER:#b6b6b6 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:auto; 
-						WIDTH:220px;HEIGHT:400px; BACKGROUND-COLOR:#ffffff" 
-						id="TreeView"></div></td>
-				<td style="padding-left:5px" ><h2 id="descript">&nbsp;</h2><div class="listview">
-					<DIV id="lvtForm" style="BORDER:0; WIDTH: 530px; HEIGHT: 400px; OVERFLOW-Y:auto; OVERFLOW-X:auto;" ></DIV></div>
+				<td>
+					<h2></h2>
+					<div style="border:#b6b6b6 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
+				</td>
+				<td style="padding-left:5px">
+					<h2 id="descript"></h2>
+					<div class="listview">
+						<div id="lvtForm" style="border:0; width: 530px; height: 400px; overflow-y:auto; overflow-x:auto;" ></div>
+					</div>
 				</td>
 			</tr>
 		</table>

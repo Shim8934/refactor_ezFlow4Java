@@ -21,6 +21,7 @@
 	        var gState, TaskCode, PCode, companyID;
 	        var RetValue;
 	        var ReturnFunction;
+	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        
 	        $(document).ready(function(){
 	            var ua = navigator.userAgent;
@@ -50,38 +51,42 @@
 	                }
 	            }
 
-	            if (RetValue[0] == "I") {
-	                gState = "I";
-	                TaskCode = RetValue[1];
-	                PCode = RetValue[2];
-	                companyID = RetValue[3];
-
-	                InitCode();
+	            if (approvalFlag == 'S') {
+	            	document.getElementsByName("isAllDept")[1].checked = true;
 	            } else {
-	                gState = "U";
-	                TaskCode = RetValue[1];
-	                PCode = RetValue[2];
-	                companyID = RetValue[3];
-	                document.getElementById("tbTaskCode").disabled = true;
-	                document.getElementById("btnDuplicate").disabled = true;
-	                document.getElementsByName("isAllDept")[0].disabled = true;
-	                document.getElementsByName("isAllDept")[1].disabled = true;
-	                if (TaskCode.length == 8) {
-	                    if (TaskCode.substring(0, 2) == "ZZ" || TaskCode == "99999999") {
-	                        document.getElementsByName("isAllDept")[1].checked = true;
-	                    }
-	                }
-
-	                InitCode();
-	                InitTaskInfo();
+		            if (RetValue[0] == "I") {
+		                gState = "I";
+		                TaskCode = RetValue[1];
+		                PCode = RetValue[2];
+		                companyID = RetValue[3];
+	
+		                InitCode();
+		            } else {
+		                gState = "U";
+		                TaskCode = RetValue[1];
+		                PCode = RetValue[2];
+		                companyID = RetValue[3];
+		                document.getElementById("tbTaskCode").disabled = true;
+		                document.getElementById("btnDuplicate").disabled = true;
+		                document.getElementsByName("isAllDept")[0].disabled = true;
+		                document.getElementsByName("isAllDept")[1].disabled = true;
+		                if (TaskCode.length == 8) {
+		                    if (TaskCode.substring(0, 2) == "ZZ" || TaskCode == "99999999") {
+		                        document.getElementsByName("isAllDept")[1].checked = true;
+		                    }
+		                }
+	
+		                InitCode();
+		                InitTaskInfo();
+		            }
+	
+		            rdoDisplayFlag_onclick("");
+		            rdoSpecialFlag_onclick("");
+	
+		            document.getElementById("tbSubCode").value = PCode;
+		            document.getElementById("tbTaskCode").value = TaskCode;
+		            document.getElementById("tbSubCode").disabled = true;
 	            }
-
-	            rdoDisplayFlag_onclick("");
-	            rdoSpecialFlag_onclick("");
-
-	            document.getElementById("tbSubCode").value = PCode;
-	            document.getElementById("tbTaskCode").value = TaskCode;
-	            document.getElementById("tbSubCode").disabled = true;
 	        });
 	        
 	        function InitCode() {

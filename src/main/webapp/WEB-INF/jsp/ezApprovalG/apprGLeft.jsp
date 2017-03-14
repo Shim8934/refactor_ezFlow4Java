@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pListTypeValue = "${listType}";
 		    var PresentOpen = "APPROVAL";
@@ -39,8 +40,10 @@
 		    var g_bRecAdmin=false;
 		    var g_bDeptCharger=false;
 		    var AdminYN;
-		    var approvalYN = "${approvalYN}";     //전자결재 일반/공공 여부 (Y : 공공 , N : 일반)
+		    var approvalYN = "${approvalYN}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    var ViewLeftCount = "${viewLeftCount}";
+		    var primaryStr = "${userInfo.primary}";
+		    var tmpValue = "";
 		    $(function () {
 		      	if(approvalYN == "G") {
 	        		$(".approvalG").css("display","");
@@ -134,8 +137,59 @@
 		                DocManageMain("m02");
 		            }
 		        }
+		        if(approvalYN == "S") {
+		        	Tree_setconfig();
+		            var xmlDom2 = createXmlDom();
+		            xmlDom2 = loadXMLString('${userCont}');
+		            var treeView = new TreeView();
+		            treeView.SetID("UserContTree");
+		            treeView.SetUseAgency(true);
+		            treeView.SetRequestData("UserContRequestData");
+		            treeView.SetNodeClick("UserContNodeClick");
+		            treeView.DataSource(xmlDom2);
+		            treeView.DataBind("divUserContTree");
+		        }
 		    };
 		
+		    function Tree_setconfig() {
+		        var xmlHTTP = createXMLHttpRequest();
+		        xmlHTTP.open("GET", "/xml/ezApproval/conttree_config.xml", false);
+		        xmlHTTP.send();
+
+		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+		            var treeView = new TreeView();
+		            treeView.SetConfig(loadXMLString(xmlHTTP.responseText));
+		        }
+		    }
+		    
+		       function UserContNodeClick(pNodeID, pNodeNM) {
+		            var treeNode = new TreeNode();
+		            treeNode.LoadFromID(pNodeID);
+		            nodeIdx = pNodeID;
+		            setPresentValue(treeNode.GetNodeData("VALUE"));
+		            if (PresentOpen != "CONTAINER") {
+		                PresentOpen = "CONTAINER";
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do??contID=" + escape(treeNode.GetNodeData("DATA1")) + "&SQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		            }
+		            else {
+		                try {
+
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do??contID=" + escape(treeNode.GetNodeData("DATA1")) + "&SQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                    window.parent.frames("right").document.Script.SelCont_onclick4(treeNode.GetNodeData("DATA1"));
+		                } catch (e) { }
+		            }
+		        }
+		       
+	        var mngusercont_dialogArgument = new Array();
+	        function MngUserOnclick() {
+	            var url = "/ezApprovalG/mngUserCont.do";
+	            mngusercont_dialogArgument[0] = "";
+	            mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
+	            var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+	        }
+	        function MngUserOnclick_Complete(RtnVal) {
+	            TreeViewRefresh();
+	        }
 		    function Open_Func(pthis) {
 		        try {
 		            switch (pthis.id) {
@@ -201,18 +255,33 @@
 		
 		    var localValue = "";
 		    function setPresentValue(tempValue) {
-		        if (tempValue == "")
-		            tempValue = localValue;
-		        else
-		            localValue = tempValue;
-		        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
-		        try {
-		            if (CrossYN())
-		                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
-		            else
-		                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
-		        }
-		        catch (e) { }
+		    	if(approvalYN == 'G') {
+			        if (tempValue == "")
+			            tempValue = localValue;
+			        else
+			            localValue = tempValue;
+			        document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+			        try {
+			            if (CrossYN())
+			                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+			            else
+			                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+			        }
+			        catch (e) { }
+		    	} else {
+		    	    if (tempValue == "")
+		    	        tempValue = localValue;
+		    	    else
+		    	        localValue = tempValue;
+		    	    document.getElementById("presentcell").innerHTML = "<b>[" + tempValue + "]</b>";
+		    	    try {
+		    	    	if (CrossYN())
+			                parent.frames["right"].document.getElementById("presentcell").textContent = " - " + tempValue;
+			            else
+			                parent.frames["right"].document.getElementById("presentcell").innerText = " - " + tempValue;
+		    	        tmpValue = tempValue;
+		    	    } catch (e) { }
+		    	}
 		    }
 		
 		    function convMain(listtype) {
@@ -300,17 +369,35 @@
 		        }
 		    }
 		
-		    function cmdOK_onclick2(ContainerID, ContName) {
-		        if (PresentOpen != "CONTAINER") {
-		            PresentOpen = "CONTAINER";
-		            window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(Containers) + "&sQuery=" + encodeURI(ContainerID);
-		        }
-		        else {
-		            try {
-		                parent.frames["right"].SelCont_onclick3(ContainerID, Containers, ContName);
-		            } catch (e) { }
-		        }
-		    }
+		    function cmdOK_onclick2(ContainerID, ContainerName, ContName) {
+		        if (primaryStr == "1") {
+	                if (PresentOpen != "CONTAINER") {
+	                    PresentOpen = "CONTAINER";
+	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
+	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                }
+	                else {
+	                    try {
+	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
+	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);
+	                    } catch (e) { }
+	                }
+	            } else {
+	                if (PresentOpen != "CONTAINER") {
+	                    PresentOpen = "CONTAINER";
+	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
+	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                }
+	                else {
+	                    try {
+	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
+	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);                     
+	                    } catch (e) { }
+	                }
+	            }
+	        }
 		
 		    function getAprCount() {
 		        try {
@@ -690,7 +777,7 @@
 				</c:if>
 	            <li><span id="APPROVAL21" onClick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21')" ><img src="/images/ImgIcon/icon_extraappr.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t3000'/></span><span id=count21></span></li>
 			</ul>
-			<c:if test="approvalYN" var="G"> 
+			<c:if test="${approvalYN == 'G'}"> 
 	        <h2><span style="width:100%; display:inline-block" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99')"><spring:message code='ezApprovalG.t10010'/><span id=count99></span></span></h2>
 	         <ul id="iconul">
 			    <li><span style="width:100%;display:inline-block;"  id="APPROVAL99" onClick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99')"><img src="/images/ImgIcon/icon_displaypaper.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t10011'/></span></li>
@@ -721,6 +808,20 @@
 					<li><span style="width:100%;display:inline-block;" onClick="setPresentValue('<spring:message code='ezApprovalG.t1517'/>');cmdOK_onclick('GAMSAHAM', '<spring:message code='ezApprovalG.t1517'/>')" ><spring:message code='ezApprovalG.t1517'/></span></li>
 				</c:if>						
 			</ul>
+			<c:if test="${approvalYN == 'S'}"> 
+			<h2><span id="ITEMCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t844'/></span></h2>
+			<ul>
+          	<c:forEach var="itemList" items="${itemList}" varStatus="status">
+          	    <li><span style="width: 100%; display: inline-block;" onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})')">${itemList.taskName}(${itemList.keepingPeriod})</span></li>
+          	</c:forEach>
+        	</ul>
+
+        <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
+        <ul>
+            <div class="tree" id="divUserContTree" style="margin-left: 4px; height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #e6e6e6;"></div>
+            <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
+        </ul>
+        </c:if>
 			<c:if test="${approvalYN eq 'G'}"> 		
 			<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
 			<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>

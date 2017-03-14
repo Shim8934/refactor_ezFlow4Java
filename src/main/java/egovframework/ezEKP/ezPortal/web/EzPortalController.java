@@ -263,7 +263,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId());
+		String themeInfoXml = ezPortalService.getThemeInfoStr(pUserThemeUID, "3",userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		Document xmlDomACL = commonUtil.convertStringToDocument(themeInfoXml);
 		logger.debug("themeInfoXml="+themeInfoXml);
@@ -920,7 +920,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		if ((resetMyParentPageID == null || (resetMyParentPageID.trim()).equals("")) && mode != null && (mode.trim()).equals("edit")) {
 			pMoveURL = "/ezPortal/portalPage.do?mode=" + mode + "&parentPageID=" + resetMyParentPageID;
 		} else {
-			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId());
+			String mainUrl = ezPortalService.getMainUrl(pUserThemeUID, userInfo.getTenantId(), userInfo.getCompanyID());
 			logger.debug("mainUrl="+mainUrl);
 			
 			//2017-02-02 mainUrl이 null이 아닐때만,
@@ -961,8 +961,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
-		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
+		logger.debug("getPortletProperties="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID()));
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();
 
@@ -1458,15 +1458,19 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewGraph.do")
 	public String wpNewGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewGraph started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
-		
 		int dMaxCount = 0;
+		int sMaxCount = 0;
 		
 		Calendar cal = Calendar.getInstance();
-		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
-		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH)-1, cal.get(Calendar.YEAR)) + " 23:59:59";
-	
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
+		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		
+		logger.debug("startDate="+startDate+", endDate="+endDate);
+		
+		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String dMax = "1";
 		if (list.size() > 0) {
@@ -1475,15 +1479,37 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			
+			for (int i=0; i<list.size(); i++) {
+				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+				}
+			}
+			dMaxCount = dMaxCount + sMaxCount;
+			
+			logger.debug("listSize="+list.size());
+			for (int i=0; i<list.size(); i++) {
+				logger.debug("draftCount="+list.get(i).getDraftCount());
+				logger.debug("susinCount="+list.get(i).getSusinCount());
+				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+				
+				list.get(i).setDraftCount((int)(draftPercent));
+				list.get(i).setSusinCount((int)(susinPercent));
+			}
+			
 			
 		} else {
 			dMax = "0";
 			dMaxCount = 0;
 		}
+		logger.debug("dMaxCount="+dMaxCount);
 		
 		model.addAttribute("dMaxCount", dMaxCount);
 		model.addAttribute("list", list);
-		
+
+		logger.debug("wpNewGraph ended");
 		return "/ezPortal/portalWpNewGraph";
 	}
 	
@@ -2514,7 +2540,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			sb.append("<DATA>");
 			
 			for (int i=0; i<myPortalList.size(); i++) {
-				List<PortalNewMyPortalPageListVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag, userInfo.getTenantId());
+				List<PortalNewMyPortalPageListVO> tempNewMyPortalPageList = ezPortalService.newMyPortalList(userInfo.getId(), gubunFlag, userInfo.getTenantId(), userInfo.getCompanyID());
 				for (int t=0; t<tempNewMyPortalPageList.size(); t++) {
 					String uID = myPortalList.get(i).getuID_();
 					String newPortalParentUID = tempNewMyPortalPageList.get(t).getParentUID().trim();
@@ -2676,7 +2702,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("imageUID="+imageUID);
 		logger.debug("linkURL="+linkURL);
 		
-		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getTenantId());
+		useStartPage = ezPortalService.searchStartPage(homeUID, parentUID, imageUID, userInfo.getId(), userInfo.getCompanyID(), linkURL, userInfo.getLang(), userInfo.getTenantId());
 		logger.debug("useStartPage="+useStartPage);
 		
 		String deptPath = userInfo.getDeptPathCode();
@@ -2706,6 +2732,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	@RequestMapping(value = "/ezPortal/useMyStartPage.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String useMyStartPage(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("useMyStartPage started");
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String uID = "";
@@ -2719,8 +2746,12 @@ public class EzPortalController extends EgovFileMngUtil {
 			oldUID = req.getParameter("oldUID");
 		}
 		
-		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		logger.debug("uID="+uID+", oldUID="+oldUID);
 		
+		String result = ezPortalService.setUseMyStartPage(uID, oldUID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		logger.debug("result="+result);
+
+		logger.debug("useMyStartPage ended");
 		return result;
 	}
 	
@@ -3347,7 +3378,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			uID = req.getParameter("uID");
 		}
 		
-		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId());
+		PortalImagePortletVO result = ezPortalService.imagePortlet(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		if (result.getImagePath() != null && !result.getImagePath().equals("")) {
 			model.addAttribute("result", result);
@@ -3382,8 +3413,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			pUserID = req.getParameter("userID");
 		}
 		
-		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId())); 
-		logger.debug("xmlDom="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId()));
+		Document xmlDomProp = commonUtil.convertStringToDocument(ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID())); 
+		logger.debug("xmlDom="+ezPortalService.getPorletPropertiesStr(uID, userInfo.getTenantId(), userInfo.getCompanyID()));
 		
 		if (xmlDomProp.getElementsByTagName("USERTYPE").getLength() > 0) {
 			gubunFlag = xmlDomProp.getElementsByTagName("GUBUNFLAG").item(0).getTextContent();

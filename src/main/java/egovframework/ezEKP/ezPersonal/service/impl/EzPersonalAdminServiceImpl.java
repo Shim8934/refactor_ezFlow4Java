@@ -218,9 +218,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		        field.setAccessible(true);
 									
 				if (field.getName().toUpperCase().equals("VIEW_FLAG")) {
-					result.append("<PERMISSIONS>" + String.valueOf(field.get(vo)) + "</PERMISSIONS>");
+					result.append("<PERMISSIONS>" + commonUtil.cleanValue(String.valueOf(field.get(vo))) + "</PERMISSIONS>");
 				} else {
-					result.append("<" + field.getName().toUpperCase() + ">" + String.valueOf(field.get(vo)) + "</" + field.getName().toUpperCase() + ">");
+					result.append("<" + field.getName().toUpperCase() + ">" + commonUtil.cleanValue(String.valueOf(field.get(vo))) + "</" + field.getName().toUpperCase() + ">");
 				}
 		    }
 			result.append("</NODE>");

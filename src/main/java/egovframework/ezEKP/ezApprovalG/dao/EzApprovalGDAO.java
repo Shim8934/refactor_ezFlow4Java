@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -37,6 +38,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSignInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
@@ -1076,6 +1078,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.historyDocInfoCount", map);
 	}
 	
+	public int getUserContMaxID(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.getUserContMaxID", map);
+	}
+	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.transactionSQL", map);
 	}
@@ -1788,6 +1794,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertHistoryDocInfo", map);
 	}
 	
+	public void insertUserCont(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.insertUserCont", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2360,5 +2370,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGLeftVO> getKeepType(Map<String, Object> map) throws Exception{
 		return (List<ApprGLeftVO>) list("EzApprovalG.getKeepType", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCodeContainer(Map<String, Object> map) throws Exception{
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCodeContainer", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprUserContInfoVO> getUserContTree(Map<String, Object> map) throws Exception{
+		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
+		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
 	}
 }

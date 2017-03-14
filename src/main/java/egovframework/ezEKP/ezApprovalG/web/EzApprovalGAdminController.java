@@ -1322,19 +1322,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 분류,단위업무관리 코드추가,수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/taskCodeInsert.do")
-	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String taskCodeInsert(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("taskCodeInsert started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
 		String title = "";
 		
-		if (tCheck.equals("ins")) {
-			title = egovMessageSource.getMessage("ezApprovalG.t763", userInfo.getLocale());
+		if (approvalFlag.equals("S")) {
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t1642", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t1643", userInfo.getLocale());
+			}
 		} else {
-			title = egovMessageSource.getMessage("ezApprovalG.t764", userInfo.getLocale());
+			if (tCheck.equals("ins")) {
+				title = egovMessageSource.getMessage("ezApprovalG.t763", userInfo.getLocale());
+			} else {
+				title = egovMessageSource.getMessage("ezApprovalG.t764", userInfo.getLocale());
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", title);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("taskCodeInsert ended.");
 		
 		return "admin/ezApprovalG/apprGTaskCodeInsert";
 	}
@@ -2405,8 +2419,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 문서이동 메인화면 호출
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMoveContainer.do")
-	public String moveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
-		logger.debug("moveContainer started");
+	public String apprGMoveContainer(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("apprGMoveContainer started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		StringBuilder companySel = new StringBuilder();
@@ -2427,9 +2441,25 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("companySel", companySel);
 		
-		logger.debug("moveContainer ended");
+		logger.debug("apprGMoveContainer ended");
 		
 		return "admin/ezApprovalG/apprGMoveContainer";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서이동 부서선택 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGOrgan.do")
+	public String apprGOrgan(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("apprGOrgan started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("serverName", userInfo.getServerName());
+		
+		logger.debug("apprGOrgan ended");
+		
+		return "admin/ezApprovalG/apprGOrgan";
 	}
 
 }

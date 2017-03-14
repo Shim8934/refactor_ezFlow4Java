@@ -736,7 +736,7 @@
             AND
             	(B.AccessID = '$v_pACCESSIDLIST$' AND $v_pSTRRIGHT$  )
             AND
-            	A.TENANT_ID = #tenantID#	
+            	A.TENANT_ID = #tenantID#
 		]]>
 	</select> 
 	
@@ -810,6 +810,8 @@
 				A.THEMEUID = B.UID_ 
 			AND
 				A.TENANT_ID = B.TENANT_ID	
+            AND
+                A.COMPANYID = B.COMPANAYID
    			WHERE
    				(NOT EXISTS(
    					SELECT
@@ -822,7 +824,8 @@
    						TENANT_ID = #tenantID#	 )
    				) 
    			AND
-   				A.TENANT_ID = #tenantID#	
+   				A.TENANT_ID = #tenantID#
+            
 		]]>
 		
 		<isNotEmpty property="v_pDISPLAYNAME">
@@ -864,7 +867,9 @@
           		WHERE 
           			UID_ = #v_PUID#
 				AND
-					TENANT_ID = #tenantID#			
+					TENANT_ID = #tenantID#
+                AND
+                    COMPANAYID = #companyID#			
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PGUBUN" compareValue="1">
@@ -877,7 +882,9 @@
              		WHERE 
              			UID_ = #v_PUID#
              		AND
-             			TENANT_ID = #tenantID#	
+             			TENANT_ID = #tenantID#
+                    AND
+                        COMPANAYID = #companyID#	
 				]]>	
 			</isEqual>
 			<isNotEqual property="v_PGUBUN" compareValue="2">
@@ -889,7 +896,9 @@
              		WHERE  
              			UID_ = #v_PUID#
              		AND
-             			TENANT_ID = #tenantID#	
+             			TENANT_ID = #tenantID#
+                    AND
+                        COMPANAYID = #companyID#	
 				]]>	
 			</isNotEqual>
 		</isNotEqual>
@@ -1134,6 +1143,8 @@
 				UID_ = #v_pPORTLETID#
 			AND
 				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#
 			LIMIT
                 1
 		]]>
@@ -1473,7 +1484,9 @@
                        		WHERE
                        			UID_ = #v_pUID#
                        		AND
-                       			TENANT_ID = #tenantID#	 )
+                       			TENANT_ID = #tenantID#
+                            AND
+                                COMPANYID = #companyID#	 )
 		]]>
 	</select>
 	
@@ -1486,7 +1499,9 @@
        		WHERE
        			UID_ = #v_pUID#
        		AND
-       			TENANT_ID = #tenantID#	
+       			TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -1532,7 +1547,9 @@
                                                AND TENANT_ID = #tenantID# )
                		) )
             AND
-            	A.TENANT_ID = #tenantID#   		
+            	A.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = #v_pIDCOMPANY#     		
         	ORDER BY A.UID_ ASC
 		]]>
 	</select>
@@ -1551,7 +1568,9 @@
 			AND
 				GUBUNFLAG = #v_pGUBUNFLAG#
 			AND
-				TENANT_ID = #tenantID#	
+				TENANT_ID = #tenantID#
+            AND
+                COMPANYID = #companyID#	
         	ORDER BY
                 UID_ ASC
 		]]>
@@ -1604,7 +1623,9 @@
    				WHERE
    					UID_=B.THEMEUID
    				AND
-   					TENANT_ID = #tenantID#	) AS IMAGEURL
+   					TENANT_ID = #tenantID#
+                AND
+                    COMPANAYID = #v_pCOMPANYID#	) AS IMAGEURL
 			FROM
 				TBL_PORTALPAGE_GENERAL A ,
    				(SELECT
@@ -1632,6 +1653,8 @@
 				A.TENANT_ID = #tenantID#
 			AND
 				B.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = B.COMPANYID 
             ORDER BY
                 DISPLAYNAME ASC
             LIMIT
@@ -1760,9 +1783,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_USERSTARTPAGE_ITEM
-       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, TENANT_ID )
+       			( UID_, PARENTUID, IMAGEUID, ACCESSID, COMPANYID, LINKURL, LANG, TENANT_ID )
        		VALUES
-       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', $tenantID$ )
+       			( '$v_pHOMEUID$', '$v_pPARENTUID$', '$v_pIMAGEUID$', '$v_pUSERID$', '$v_pCOMPANYID$', '$v_pLINKURL$', #lang# , $tenantID$ )
 		]]>
 	</insert>
 	
@@ -1817,7 +1840,7 @@
 			DELETE FROM
 				TBL_USERSTARTPAGE_ITEM
 		    WHERE
-		    	UID_ = #v_pOLDUID#
+		    	LANG = #v_pLANGSTR#
 			AND
 				ACCESSID = #v_pUSERID#
 			AND
@@ -2215,7 +2238,9 @@
 			AND
 				A.UID_ = #v_UID#
 			AND
-				A.TENANT_ID = #tenantID#	
+				A.TENANT_ID = #tenantID#
+            AND
+                A.COMPANYID = #companyID#	
 		]]>
 	</select>
 	
@@ -2312,7 +2337,9 @@
       		WHERE
       			UID_	=	#pUID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
+            AND
+                COMPANAYID = #companyID#	
 		]]>
 	</select>
 	
@@ -2325,7 +2352,9 @@
       		WHERE
       			UID_	=	#pUID#
       		AND
-      			TENANT_ID = #tenantID#	
+      			TENANT_ID = #tenantID#
+            AND
+                COMPANAYID = #companyID#	
 		]]>
 	</select>
 	

@@ -44,9 +44,11 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -84,6 +86,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 	@Resource(name = "EzApprovalGService")
 	private EzApprovalGService ezApprovalGService;
+	
+	@Resource(name = "EzApprovalGAdminService")
+	private EzApprovalGAdminService ezApprovalGAdminService;
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
@@ -126,20 +131,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String subTitleString = "";
 		boolean isSubTitle = false;
 		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String userCont = "";
 		StringBuffer containers = new StringBuffer();
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		List<ApprGLeftVO> apprGLeftVOList = ezApprovalGService.getUseContInfo(userInfo, "2");
-		
-		String sendOutDept = ezApprovalGService.getOptionInfo("A55", "001", userInfo, "CODE");
-		String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
-		
-        logger.debug("apprGLeft Value : sendOutDept=" + sendOutDept + "optGamsabu=" +optGamsabu);       
-
-		if (sendOutDept.toUpperCase().indexOf(userInfo.getDeptID().toUpperCase()) > -1) {
-			userSendOut = "YES";
-		}
 		
 		if (apprGLeftVOList.size() > 0) {
 			firstContainerID = apprGLeftVOList.get(0).getContainerID();
@@ -152,28 +149,45 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				containers.append(", '" + apprGLeftVOList.get(k).getContainerID() + "'");
 			}
 		}
-		String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4", userInfo.getTenantId());
 		
-		List<Object> referenceTemp = new ArrayList<Object>();
-		referenceTemp.add(subTitleString);
-		referenceTemp.add(isSubTitle);
-		
-		getUserSubTitle(userInfo, referenceTemp);
-		
-		model.addAttribute("approvalYN", approvalYN);
-		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
-		model.addAttribute("listType", listType);
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("containers", containers.toString());
-		model.addAttribute("viewLeftCount", viewLeftCount);
-		model.addAttribute("subTitleString", referenceTemp.get(0));
-		model.addAttribute("isSubTitle", referenceTemp.get(1));
-		model.addAttribute("infoXML", infoXML);
-		model.addAttribute("userSendOut", userSendOut);
-		model.addAttribute("optGamsabu", optGamsabu);
-		model.addAttribute("firstContainerID", firstContainerID);
-		model.addAttribute("szRoleInfo", userInfo.getRollInfo());
-		model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+			String sendOutDept = ezApprovalGService.getOptionInfo("A55", "001", userInfo, "CODE");
+			String optGamsabu = ezApprovalGService.getOptionInfo("A40", "001", userInfo, "CODE");
+			
+	        logger.debug("apprGLeft Value : sendOutDept=" + sendOutDept + "optGamsabu=" +optGamsabu);       
+
+			if (sendOutDept.toUpperCase().indexOf(userInfo.getDeptID().toUpperCase()) > -1) {
+				userSendOut = "YES";
+			}
+			
+			String infoXML = ezOrganService.getPropertyValue(userInfo.getDeptID(), "extensionAttribute4", userInfo.getTenantId());
+			
+			List<Object> referenceTemp = new ArrayList<Object>();
+			referenceTemp.add(subTitleString);
+			referenceTemp.add(isSubTitle);
+			
+			getUserSubTitle(userInfo, referenceTemp);
+			
+			if(approvalYN.equals("S")) {
+				 List<ApprGTaskVO> itemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getPrimary());
+				 userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+				 model.addAttribute("itemList", itemList);
+				 model.addAttribute("userCont", userCont);
+			}
+			
+			model.addAttribute("approvalYN", approvalYN);
+			model.addAttribute("apprGLeftVOList", apprGLeftVOList);
+			model.addAttribute("listType", listType);
+			model.addAttribute("userInfo", userInfo);
+			model.addAttribute("containers", containers.toString());
+			model.addAttribute("viewLeftCount", viewLeftCount);
+			model.addAttribute("subTitleString", referenceTemp.get(0));
+			model.addAttribute("isSubTitle", referenceTemp.get(1));
+			model.addAttribute("infoXML", infoXML);
+			model.addAttribute("userSendOut", userSendOut);
+			model.addAttribute("optGamsabu", optGamsabu);
+			model.addAttribute("firstContainerID", firstContainerID);
+			model.addAttribute("szRoleInfo", userInfo.getRollInfo());
+			model.addAttribute("strLang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		
         logger.debug("apprGLeft Value : listType=" + listType + "containers=" + containers.toString() + "viewLeftCount=" + viewLeftCount);       
         logger.debug("apprGLeft Ended");       
@@ -2795,7 +2809,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String result = ezApprovalGService.getLastOpinionContent(docID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
-		return "<PARA><Row>" + result + "</Row></PARA>";
+		return "<PARA><Row><![CDATA[" + result + "]]></Row></PARA>";
 	}
 
 	/**
@@ -4211,6 +4225,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userInfoEnforce = ezCommonService.getTenantConfig("UserInfo_Enforce", userInfo.getTenantId()); 
 		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 		String susinAdmin = "";
+		String approvalYN = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -4232,6 +4247,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		
+		model.addAttribute("approvalYN", approvalYN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("contType", contType);
 		model.addAttribute("dirPath", dirPath);

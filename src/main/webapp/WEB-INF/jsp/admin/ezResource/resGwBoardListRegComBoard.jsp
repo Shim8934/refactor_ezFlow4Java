@@ -26,14 +26,15 @@
 			}
 
 			function cmdOK_onclick(){
-				var re = /[\\/:*?\"<>|]/gi;
-				if( re.test(Brd_NM.value)){
-					alert("<spring:message code="ezResource.kms1" />");
+				var re = /[\\/:*?\"<>&|]/gi;
+				if (re.test(Brd_NM.value) || re.test(Brd_NM2.value)) {
+					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
 				
-				if( Brd_NM.value == "" ) {
-					alert("<spring:message code="ezResource.t31" />");
+				if (Brd_NM.value == "") {
+					alert("<spring:message code='ezResource.t31' />");
+					Brd_NM.focus();
 					return;
 				}
 
@@ -133,17 +134,17 @@
 				xmlHttp.send(xmlPara)
 
 				if (xmlHttp.status != 200){
-					alert("1. <spring:message code="ezResource.t42" />");
+					alert("1. <spring:message code='ezResource.t42' />");
 					return;
 				}
 
 				var rtnText = xmlHttp.responseText
 
 				if (rtnText == "" || rtnText == "False"){
-					alert("2. <spring:message code="ezResource.t42" />");
+					alert("2. <spring:message code='ezResource.t42' />");
 					return;
 				}else{
-			    	alert("<spring:message code="ezResource.t43" />");
+			    	alert("<spring:message code='ezResource.t43' />");
 
 			    /* 
 		         일반설정에서 저장 후 gwboard_list_managelist_left를 호출할 때 flag값이 SELECT_NO일 경우 Call_BrdMod.aspx에서 좌측 트리뷰 선택 값을 삭제하는데

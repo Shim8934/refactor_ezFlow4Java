@@ -716,4 +716,72 @@ function check_presence2() {
 
         }
     } catch (e) { }
-}
+}   
+    function MakeSubCondition() {
+        var TYPE = "";
+        var DATA = "";
+
+        if (condition[0] != "") {
+            TYPE += "DOCNO;"
+            DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
+        }
+
+        if (condition[1] != "") {
+            TYPE += "DOCTITLE;"
+            DATA += "<DOCTITLE>" + condition[1] + "</DOCTITLE>";
+        }
+
+        if (condition[2] != "") {
+            TYPE += "WRITERNAME;"
+            DATA += "<WRITERNAME>" + condition[2] + "</WRITERNAME>";
+        }
+
+        if (condition[3] != "null" && condition[3].trim() != "") {
+            TYPE += "STARTDATEAF;"
+            DATA += "<STARTDATEAF>" + condition[3] + "</STARTDATEAF>";
+        }
+
+        if (condition[4] != "null" && condition[4].trim() != "") {
+            TYPE += "STARTDATEBF;"
+            DATA += "<STARTDATEBF>" + condition[4] + "</STARTDATEBF>";
+        }
+
+        if (condition[5] != "null" && condition[5].trim() != "") {
+            TYPE += "ENDDATEAF;"
+            DATA += "<ENDDATEAF>" + condition[5] + "</ENDDATEAF>";
+        }
+
+        if (condition[6] != "null" && condition[6].trim() != "") {
+            TYPE += "ENDDATEBF;"
+            DATA += "<ENDDATEBF>" + condition[6] + "</ENDDATEBF>";
+        }
+
+        if (condition[9] != "") {
+            TYPE += "FORMID;"
+            DATA += "<FORMID>" + condition[9] + "</FORMID>";
+        }
+
+        if (condition[11] != "") {
+            TYPE += "WRITERDEPTNAME;"
+            DATA += "<WRITERDEPTNAME>" + condition[11] + "</WRITERDEPTNAME>";
+        }
+
+        if (condition[12] != "") {
+            TYPE += condition[12];
+            DATA += condition[13];
+        }
+//        else if (pItemCD != "") {
+//            TYPE += "CAPR;";
+//            DATA += "<ITEMCODE>" + pItemCD + "</ITEMCODE>";
+//        }
+        if (typeof (condition[14]) != "undefined" && condition[14] != "") {
+            TYPE += condition[14];
+            DATA += condition[15];
+        }
+        if (typeof (condition[16]) != "undefined" && condition[16] != "") {
+            TYPE += condition[16];
+            DATA += condition[17];
+        }
+
+        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+    }

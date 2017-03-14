@@ -31,20 +31,17 @@
 			}
 
 			function cmdOK_onclick(){
-				var re = /[\\/:*?\"<>|]/gi;
-				if( re.test(Brd_NM.value)){
-					alert("<spring:message code="ezResource.kms1" />");
+				var re = /[\\/:*?\"<>&|]/gi;
+				if(re.test(document.getElementById("Brd_NM").value) || re.test(document.getElementById("Brd_NM2").value)){
+					alert("<spring:message code='ezResource.kms1' />");
 					return;
 				}
 				
 		    	if (document.getElementById("Brd_NM").value == "") {
-					alert("<spring:message code="ezResource.t31" />");
+					alert("<spring:message code='ezResource.t31' />");
+					document.getElementById("Brd_NM").focus();
 					return;
 				}
-		    	if(document.getElementById("Brd_NM").value == "") {
-		    		
-		    		return;
-		    	}
 			
 				var pParentClsID = g_BrdID;
 				var pMakerDeptID = "${userInfo.deptID}"; 
@@ -141,16 +138,16 @@
 				xmlHttp.open("Post", "/admin/ezResource/callBrdNew.do", false);
 				xmlHttp.send(xmlPara)
 				if (xmlHttp.status != 200){
-					alert("1. <spring:message code="ezResource.t42" />");
+					alert("1. <spring:message code='ezResource.t42' />");
 					return;
 				}
 
 				var rtnText = xmlHttp.responseText
 				if (rtnText == "" || rtnText == "False"){
-					alert("2. <spring:message code="ezResource.t42" />");
+					alert("2. <spring:message code='ezResource.t42' />");
 					return;
 				}else{
-					alert("<spring:message code="ezResource.t56" />");
+					alert("<spring:message code='ezResource.t56' />");
 					parent.window.location.reload();
 				}
 			}
