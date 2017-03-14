@@ -101,7 +101,8 @@ function AprrovMappingSign(ret) {
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
-
+alert(100);
+alert(pAprLineType);
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -2163,6 +2164,7 @@ function SignCheck() {
 }
 function putSignXML(SignXML) {
     var retVal = false;
+    
     try {
         var NodeList;
         var fields = message.GetFieldsList();
@@ -2191,12 +2193,10 @@ function putSignXML(SignXML) {
                         var strimg;
                         if (img.length >= 1) {
                             var filename = img[0].split("/")[img[0].split("/").length - 1];
-                            strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
+                            strimg = "<img src='" + escape(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
-                            strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-                            //message.BodySetAttribute(SignName, img[0]);
+                            strimg = strimg + " height=" + signHeight + " spath='" + escape(img[0]) + "'>";
                         }
-
 
                         if (img.length >= 2 && img[1] != "") {
                             field.innerHTML = img[1] + "<br/>" + strimg;
@@ -2212,6 +2212,7 @@ function putSignXML(SignXML) {
         alert("putSignXML : " + e.description);
         return false;
     }
+    
     return retVal;
 }
 function openDocExinfo() {

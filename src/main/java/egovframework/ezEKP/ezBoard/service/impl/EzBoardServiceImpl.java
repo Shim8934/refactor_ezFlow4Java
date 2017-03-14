@@ -1890,8 +1890,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					} else {
 						sb.append("<DATA4>N</DATA4>");
 					}
-					sb.append("<DATA5>" + boardList.get(j).get("FILEPATH") + "</DATA5>");
-					sb.append("<DATA6>" + boardList.get(j).get("MAINCONTENT") + "</DATA6>");
+					sb.append("<DATA5>" + commonUtil.cleanValue((String)boardList.get(j).get("FILEPATH")) + "</DATA5>");
+					sb.append("<DATA6>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA6>");
 				}
 				sb.append("</CELL>");
 			}
@@ -2783,17 +2783,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String moveItem(String orgItemIDList, String orgBoardID, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception {
+	public String moveItem(String orgItemIDList, String orgBoardIDList, String destBoardID, LoginVO userInfo, String uploadFilePath, String realPath) throws Exception {
 		logger.debug("moveItem started");
 
 		String result = "";
 		String destItemID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
+			String orgBoardID = boardIDArray[i];
 			
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
