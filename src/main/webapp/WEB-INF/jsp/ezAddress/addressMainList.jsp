@@ -808,7 +808,7 @@
 				<table class="mainlist" style="" id="MailList"></table>
 				<div style="height:100%;display:none;" id="MailListCard" ></div>
 			</div>
-			<div id="tblPageRayer"  style="width:450px; margin:6px auto;"></div>
+			<div id="tblPageRayer"  style="width:600px; margin:6px auto;"></div>
 		</div>
 		<div style="width:100%;height:100%;position:absolute;top:0px;left:0px;display:none;z-index:5000;" id="mailPanel" onclick="ShowQuickAddres();" >&nbsp;</div>
 		<div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
