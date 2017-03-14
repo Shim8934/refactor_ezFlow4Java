@@ -1390,10 +1390,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCode.do")
 	@ResponseBody
 	public String setTaskCode (@CookieValue("loginCookie") String loginCookie, ApprGTaskVO vo, HttpServletRequest request) throws Exception {
+		logger.debug("setTaskCode started.");
+		logger.debug("vo.level = " + vo.getLevel());
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.setTaskCode(vo, companyID, userInfo);
+		String result = ezApprovalGAdminService.setTaskCode(vo, companyID, userInfo, approvalFlag);
+		
+		logger.debug("setTaskCode started.");
 		
 		return result;
 	}
@@ -2460,6 +2466,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGOrgan ended");
 		
 		return "admin/ezApprovalG/apprGOrgan";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서이동 문서함 문서 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/getDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getDocList started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String contID = request.getParameter("contID");
+		String pageNum = request.getParameter("pageNum");
+		String pageSize = request.getParameter("pageSize");
+		String companyID = request.getParameter("companyID");
+		String orderCell = request.getParameter("OC");
+		String orderOption = request.getParameter("OO");
+		
+		if (orderCell == null) orderCell = "";		
+		if (orderOption == null) orderOption = "";
+						
+		String result = ezApprovalGService.getContDocList(contID, userInfo.getId(), "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+	
+		logger.debug("getDocList ended");
+		
+		return result;
 	}
 
 }
