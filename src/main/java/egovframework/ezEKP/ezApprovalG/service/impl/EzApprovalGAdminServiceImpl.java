@@ -1044,60 +1044,63 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	//TODO 이효진 2017-02-28 다국어지원하려면 밑에스트링배열 message로 집어넣어야함
 	@Override
-	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception {
-		logger.debug("setTaskCode started.");
+	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
+		logger.debug("setTaskCodeImpl started.");
 		
 		int tenantID = userInfo.getTenantId();
 		
 		try {
 			if (getTaskCodeDuplicate(vo.getTaskCode(), companyID, userInfo.getTenantId()).equals("TRUE")) {
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("v_TASKCODE", vo.getTaskCode());
-				map.put("companyID", companyID);
-				map.put("tenantID", tenantID);
-				
-				logger.debug("getTaskCode started.");
-				ApprGTaskVO item = ezApprovalGAdminDAO.getTaskCode(map);
-				logger.debug("getTaskCode ended.");
-				
-				Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
-				Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
-				
-//				Map<String, Object> map3 = new HashMap<String, Object>();
-//				map3.put("v_LISTTYPE", "094");
-//				map3.put("v_LANGTYPE", userInfo.getLang());
-//				map3.put("tenantID", userInfo.getCompanyID());
-//				map3.put("companyID", userInfo.getCompanyID());
-//				
-//				List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGAdminDAO.getAdminListHeader(map3);
-				
-				//094 tableName
-				String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
-									"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", "DISPLAYRECTRASTIME",
-									"EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", "SC1", "SC2", 
-									"SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
-				
-				//094 Name1
-				String[] NAMEDESC = {"단위업무명(한글)","단위업무명(영문)", "보존연한", "보존연한책정사유", 
-									"보존방법", "보존장소", "비치기록물", "비치기록물이관시기", 
-									"이관후예상열람빈도", "특수목록위치", "제1특수목록", "제2특수목록", 
-									"제3특수목록", "주요열람용도", "단위업무설명", "소기능"};
-				//094 Name2
-                String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KPREASON", 
-									"KeepingMethod", "KeepingPlace", "DisplayREC", "DisplayRECTrastime", 
-									"EXDisplayFrequency", "SCPlace", "SC1", "SC2", 
-									"SC3", "DisplayUsage", "Description", "SubCategory"};
-                
-                for (int i=0; i<NAMETYPE.length; i++) {
-					if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
-                        String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID, tenantID);
-                        
-                        if (subSQL == "FALSE") {
-							return "FALSE";
-                        }
+				if (approvalFlag.equals("G")) {
+					Map<String, Object> map = new HashMap<String, Object>();
+					map.put("v_TASKCODE", vo.getTaskCode());
+					map.put("companyID", companyID);
+					map.put("tenantID", tenantID);
+					
+					logger.debug("getTaskCode started.");
+					ApprGTaskVO item = ezApprovalGAdminDAO.getTaskCode(map);
+					logger.debug("getTaskCode ended.");
+					
+					Document docXML = commonUtil.convertStringToDocument(commonUtil.getQueryResult(item));
+					Document objParam = commonUtil.convertStringToDocument(commonUtil.getQueryResult(vo));
+					
+					//이효진 2017-03-14 스트링 DB에 초기데이터로 입력하고 db에서 꺼내오게 수정해야함
+//					Map<String, Object> map3 = new HashMap<String, Object>();
+//					map3.put("v_LISTTYPE", "094");
+//					map3.put("v_LANGTYPE", userInfo.getLang());
+//					map3.put("tenantID", userInfo.getCompanyID());
+//					map3.put("companyID", userInfo.getCompanyID());
+//					
+//					List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGAdminDAO.getAdminListHeader(map3);
+					
+					//094 tableName
+					String[] NAMETYPE = {"TASKNAME","TASKNAME2", "KEEPINGPERIOD", "KPREASON", 
+										"KEEPINGMETHOD", "KEEPINGPLACE", "DISPLAYRECFLAG", "DISPLAYRECTRASTIME",
+										"EXDISPLAYFREQUENCY", "SPECIALCATALOGFLAG", "SC1", "SC2", 
+										"SC3", "DISPLAYUSAGE", "DESCRIPTION", "SUBCATEGORYCODE"};
+					
+					//094 Name1
+					String[] NAMEDESC = {"단위업무명(한글)","단위업무명(영문)", "보존연한", "보존연한책정사유", 
+										"보존방법", "보존장소", "비치기록물", "비치기록물이관시기", 
+										"이관후예상열람빈도", "특수목록위치", "제1특수목록", "제2특수목록", 
+										"제3특수목록", "주요열람용도", "단위업무설명", "소기능"};
+					//094 Name2
+	                String[] NAMEDESC2 = {"Taskname(Han)","Taskname(Eng)", "KeepingPeriod", "KPREASON", 
+										"KeepingMethod", "KeepingPlace", "DisplayREC", "DisplayRECTrastime", 
+										"EXDisplayFrequency", "SCPlace", "SC1", "SC2", 
+										"SC3", "DisplayUsage", "Description", "SubCategory"};
+	                
+	                for (int i=0; i<NAMETYPE.length; i++) {
+						if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
+	                        String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID, tenantID);
+	                        
+	                        if (subSQL == "FALSE") {
+								return "FALSE";
+	                        }
+						}
 					}
 				}
-                
+				
                 Map<String, Object> map1 = new HashMap<String, Object>();
                 map1.put("v_TASKCODE", vo.getTaskCode());
                 map1.put("v_TASKNAME", vo.getTaskName());
@@ -1116,16 +1119,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 map1.put("v_DISPLAYUSAGE", vo.getDisplayUsage());
                 map1.put("v_DESCRIPTION", vo.getDescription());
                 map1.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
+                map1.put("securityLevel", vo.getSecurityLevel());
                 map1.put("companyID", companyID);
                 map1.put("tenantID", tenantID);
                 
                 ezApprovalGAdminDAO.updateTaskCode(map1);
 			} else {
-				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID, userInfo.getTenantId());
-				
-                if (subSQL == "FALSE") {
-					return "FALSE";
-                }
+				if (approvalFlag.equals("G")) {
+					String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID, userInfo.getTenantId());
+					
+					if (subSQL == "FALSE") {
+						return "FALSE";
+	                }
+				}
                 
                 Map<String, Object> map2 = new HashMap<String, Object>();
                 map2.put("v_TASKCODE", vo.getTaskCode());
@@ -1146,6 +1152,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
                 map2.put("v_DESCRIPTION", vo.getDescription());
                 map2.put("v_SUBCATEGORYCODE", vo.getSubCategoryCode());
                 map2.put("v_CREATIONDATE", commonUtil.getTodayUTCTime(""));
+                map2.put("securityLevel", vo.getSecurityLevel());
                 map2.put("companyID", companyID);
                 map2.put("tenantID", tenantID);
                

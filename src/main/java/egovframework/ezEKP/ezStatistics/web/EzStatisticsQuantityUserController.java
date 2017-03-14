@@ -127,7 +127,7 @@ public class EzStatisticsQuantityUserController {
 				for (String colName : rowObject.keySet()) {
 					String colValue = rowObject.get(colName);
 					sb.append("<" + colName + ">");	
-					sb.append(colValue);
+					sb.append(commonUtil.cleanValue(colValue));
 					sb.append("</" + colName + ">");
 				}
 				

@@ -742,8 +742,10 @@ function GetBODY(iframePage) {
 
 //CKEDITOR
 function GetListItem(pList, str) {
+alert(str);
     for (i = 0; i < pList.length; i++) {
-        if (pList[i].id == str)
+alert(pList[i].id);
+        if (pList[i].id == str) {}
             return pList[i];
     }
 }

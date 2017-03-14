@@ -2721,6 +2721,7 @@
 				displayusage,
 				description,
 				subcategorycode,
+				securitylevel,
 				companyid,
 				tenant_id)
 			VALUES
@@ -2742,6 +2743,7 @@
 				#v_DISPLAYUSAGE#,
 				#v_DESCRIPTION#,
 				#v_SUBCATEGORYCODE#,
+				#securityLevel#,
 				#companyID#,
 				#tenantID#)
 	    ]]>

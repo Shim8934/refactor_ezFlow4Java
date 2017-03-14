@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -384,5 +385,9 @@ public interface EzApprovalGService {
 	public String mobileSrvConn_HWP(String userID, String string, String formID, String string2, String textContent, String orgUID, String langType, String companyID, String pw, HttpServletRequest request, LoginVO userInfo) throws Exception;
 
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
+
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception;
+
+	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId) throws Exception;
 
 }

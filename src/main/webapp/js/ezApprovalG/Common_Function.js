@@ -3,9 +3,9 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "";
     if(CompleteFunction == "OPEN")
-        url = "/myoffice/ezApproval/ezAPRALERT_Cross.aspx?type=OPEN";
+        url = "/ezApprovalG/ezAprAlert.do?type=OPEN";
     else
-        url = "/myoffice/ezApproval/ezAPRALERT_Cross.aspx";
+        url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || pNoneActiveX == "YES") {
         ezapralert_cross_dialogArgument[0] = parameter;

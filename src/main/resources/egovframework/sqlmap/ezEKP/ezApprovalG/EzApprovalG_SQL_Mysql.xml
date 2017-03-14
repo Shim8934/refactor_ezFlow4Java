@@ -34,7 +34,9 @@
 	<typeAlias  alias="ApprGDocInfoWebSrvVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO"/>
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
+	<typeAlias  alias="ApprUserContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO"/>
 	
+
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6861,7 +6863,7 @@
    			AND
    					B.TENANT_ID = C.TENANT_ID
    			AND
-   					B.COMPANYID = C.CN		
+   					B.COMPANYID = C.EXTENSIONATTRIBUTE2		
    			WHERE 
    					ContainerTypeID = '500' 
    			AND 
@@ -6885,7 +6887,7 @@
    		AND
    				A.TENANT_ID = D.TENANT_ID
    		AND
-   				A.COMPANYID = D.CN
+   				A.COMPANYID = D.EXTENSIONATTRIBUTE2
    		AND 
    				(A.StartDate >=  STR_TO_DATE(#v_pStartDate#,'%Y-%m-%d %H:%i:%s') AND A.StartDate <= STR_TO_DATE(#v_pEndDate#,'%Y-%m-%d %H:%i:%s')) 
    		WHERE 
@@ -19902,4 +19904,170 @@
    		</isNotEqual>
    	</select>
    	
+   	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
+   		<isEqual property="v_LANGTYPE" compareValue="1">
+   		<![CDATA[
+   			SELECT 
+   				TASKNAME, KEEPINGPERIOD , tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID 
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     LEFT JOIN 
+                                                     	tbL_ContainerUseDep    
+                                                     ON 
+                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = tbL_ContainerUseDep.TENANT_ID
+                                                     AND
+                                                     	tbL_Container.COMPANYID = tbL_ContainerUseDep.COMPANYID
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
+                                                     OR 
+                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = 0
+                                                     AND
+                                                     	tbL_Container.COMPANYID = 'S907000'))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+          ]]>
+   		</isEqual>
+   	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
+   	 	<![CDATA[
+   	 		SELECT 
+   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID  
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     LEFT JOIN 
+                                                     	tbL_ContainerUseDep    
+                                                     ON 
+                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
+                                                     OR 
+                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = 0
+                                                     AND
+                                                     	tbL_Container.COMPANYID = 'S907000'))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+           ]]> 
+   	 	</isNotEqual>
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContTree" parameterClass="Map" resultClass="ApprUserContInfoVO">
+   		SELECT 
+   			 USERCONTID ,
+             USERCONTNAME ,
+             DESCRIPTION 
+        FROM 
+        	TBL_USERCONT 
+        WHERE 
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND 
+        	PARENTCONTID = #v_PPARENTCONTID#
+        AND 
+        	OWNUSERID = #v_USERID#
+        ORDER BY 
+        	USERCONTNAME
+   	</select>
+   	
+    <select id="EzApprovalG.getUserContTreeLeaf" parameterClass="Map" resultClass="ApprUserContInfoVO">
+   		SELECT 
+   			USERCONTID ,
+            USERCONTNAME 
+        FROM 
+        	TBl_USERCONT 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	PARENTCONTID = #v_USERCONTID#
+        ORDER BY 
+        	USERCONTID
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="int">
+   		 SELECT 
+   		 	SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(USERCONTID) IS NULL THEN '0000000000'  ELSE MAX(USERCONTID)  END) + 1 )), -10, 10)
+         FROM 
+         	TBL_USERCONT 
+         WHERE 
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.insertUserCont" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_USERCONT
+     	( USERCONTID, USERCONTNAME, PARENTCONTID, DESCRIPTION, OWNUSERID, TENANT_ID, COMPANYID )
+     	VALUES 
+     	( #v_PMAXCONTAINERID#, #v_USERCONTNAME#, #v_PARENTCONTID#, #v_DESCRIPTION#, #v_USERID#, #v_TENANTID#, #companyID# )
+   	</insert>
 </sqlMap>

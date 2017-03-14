@@ -1458,15 +1458,19 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/wpNewGraph.do")
 	public String wpNewGraph(Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest req) throws Exception {
+		logger.debug("wpNewGraph started");
+
 		userInfo = commonUtil.userInfo(loginCookie);
-		
 		int dMaxCount = 0;
+		int sMaxCount = 0;
 		
 		Calendar cal = Calendar.getInstance();
-		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-01 00:00:00";
-		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)-1) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH)-1, cal.get(Calendar.YEAR)) + " 23:59:59";
-	
-		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(commonUtil.getDateStringInUTC(startDate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(endDate, userInfo.getOffset(), false), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String startDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-01 00:00:00";
+		String endDate = String.valueOf(cal.get(Calendar.YEAR)) + "-" + String.valueOf(cal.get(Calendar.MONTH)) + "-" +  ezPortalService.daysInMonth(cal.get(Calendar.MONTH), cal.get(Calendar.YEAR)) + " 23:59:59";
+		
+		logger.debug("startDate="+startDate+", endDate="+endDate);
+		
+		List<ApprGgetDeptStacticsVO> list = ezApprovalGService.getDeptStactics(startDate, endDate, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String dMax = "1";
 		if (list.size() > 0) {
@@ -1475,15 +1479,37 @@ public class EzPortalController extends EgovFileMngUtil {
 			}
 			
 			dMaxCount = list.get(0).getDraftCount() + Integer.parseInt(dMax);
+			sMaxCount = list.get(0).getSusinCount() + Integer.parseInt(dMax);
+			
+			for (int i=0; i<list.size(); i++) {
+				if (sMaxCount < list.get(i).getSusinCount() + Integer.parseInt(dMax)) {
+					sMaxCount = list.get(i).getSusinCount() + Integer.parseInt(dMax);
+				}
+			}
+			dMaxCount = dMaxCount + sMaxCount;
+			
+			logger.debug("listSize="+list.size());
+			for (int i=0; i<list.size(); i++) {
+				logger.debug("draftCount="+list.get(i).getDraftCount());
+				logger.debug("susinCount="+list.get(i).getSusinCount());
+				float draftPercent = (float)list.get(i).getDraftCount() / dMaxCount * 100;
+				float susinPercent = (float)list.get(i).getSusinCount() / dMaxCount * 100;
+				
+				list.get(i).setDraftCount((int)(draftPercent));
+				list.get(i).setSusinCount((int)(susinPercent));
+			}
+			
 			
 		} else {
 			dMax = "0";
 			dMaxCount = 0;
 		}
+		logger.debug("dMaxCount="+dMaxCount);
 		
 		model.addAttribute("dMaxCount", dMaxCount);
 		model.addAttribute("list", list);
-		
+
+		logger.debug("wpNewGraph ended");
 		return "/ezPortal/portalWpNewGraph";
 	}
 	

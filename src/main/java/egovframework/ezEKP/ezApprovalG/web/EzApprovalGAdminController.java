@@ -1390,10 +1390,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/setTaskCode.do")
 	@ResponseBody
 	public String setTaskCode (@CookieValue("loginCookie") String loginCookie, ApprGTaskVO vo, HttpServletRequest request) throws Exception {
+		logger.debug("setTaskCode started.");
+		logger.debug("vo.level = " + vo.getLevel());
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.setTaskCode(vo, companyID, userInfo);
+		String result = ezApprovalGAdminService.setTaskCode(vo, companyID, userInfo, approvalFlag);
+		
+		logger.debug("setTaskCode started.");
 		
 		return result;
 	}

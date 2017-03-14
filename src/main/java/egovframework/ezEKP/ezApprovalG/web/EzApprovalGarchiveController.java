@@ -1224,6 +1224,32 @@ public class EzApprovalGarchiveController {
 		return "OK";
 	}
 	
+	/** 전자결재 G 개인함 관리*/
+	@RequestMapping(value = "ezApprovalG/mngUserCont.do", produces = "text/xml;charset=utf-8")
+	public String mngUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		 model.addAttribute("userCont", userCont.replace("\"", "\\\""));
+		 model.addAttribute("userInfo", userInfo);
+		return  "ezApprovalG/apprMngUserCont";
+	}
+	
+	/** 전자결재 G 개인함 관리 생성*/
+	@RequestMapping(value = "ezApprovalG/getContName.do", produces = "text/xml;charset=utf-8")
+	public String getContName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		String title = request.getParameter("Title");
+		String titleText = request.getParameter("TitleText");
+		
+		if (title.equals("")) {
+			title = messageSource.getMessage("ezApproval.t297", userInfo.getLocale());
+		}
+		 model.addAttribute("titleText", titleText);
+		 model.addAttribute("title", title);
+		return  "ezApprovalG/apprGetContName";
+	}
+	
+	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
