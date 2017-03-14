@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="/js/Common.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/ListView_list.js"></script>
 		<script type="text/javascript" src="/js/ezBoard/PreviewItem.js"></script>
+		
 		<script type="text/javascript">
 			var pBoardID = "${boardID}";
 		    var SSUserID = "${userInfo.id}";    
@@ -591,7 +592,7 @@
 		<c:if test="${boardInfo.listView_FG != true}'">
 			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
 		</c:if>
-		<c:if test="${boardInfo.buttonHidden == N}">
+		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<script type="text/javascript">
 			    parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
 			</script>
@@ -613,7 +614,6 @@
 		    <script type="text/javascript">
 		        parent.document.getElementsByTagName("h1")[0].innerHTML = "<h1>" + "${boardName}" + "<span id='mailBoxInfo'></span>";
 		    </script>
-		    <br />
 		</c:if>
 		    <div id="layer_Viewpopup" style="width: 250px; position: absolute; left: 0px; top: 0px; background-color: #ffffff; display: none;">
 		        <div class="popupwrap1">
