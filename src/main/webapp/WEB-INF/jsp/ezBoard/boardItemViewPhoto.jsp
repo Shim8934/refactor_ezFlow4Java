@@ -338,12 +338,14 @@
 					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				}
 		        window.onunload = function () {
-		            refresh_onclick();
+		        	//리프레쉬 할 이유가 없는거 같음
+// 		            refresh_onclick();
 		        };
 				function btnClose_onclick()
 				{
 					window.close();
-				    refresh_onclick();
+					//리프레쉬 할 이유가 없는거 같음
+// 				    refresh_onclick();
 				}
 		
 				function attach_SelectAll()
