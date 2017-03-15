@@ -109,32 +109,33 @@
 	                buttonImageOnly: true
 	            });
 	        });
+	        
 	        var monthMsg = "<spring:message code='ezSchedule.t110' />";
-	        var monthStr = monthMsg.split(";");     
-	        var dayMsg = "<spring:message code='ezSchedule.t108' />";
-	        var dayStr = dayMsg.split(";");
-	       
-	        $(function () {
-	            $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-	             closeText: "<spring:message code='main.t3' />",
-	                prevText: "<spring:message code='main.t0604' />",
-	                nextText: "<spring:message code='main.t0605' />",
-	                currentText: "<spring:message code='main.t0606' />",
-	                monthNames: monthStr,
-	                monthNamesShort: monthStr,
-	                dayNames: dayStr,
-	                dayNamesShort: dayStr,
-	                dayNamesMin: dayStr,
-	                weekHeader: 'Wk',
-	                dateFormat: 'yy-mm-dd',
-	                firstDay: 0,
-	                isRTL: false,
-	                duration: 200,
-	                showAnim: 'show',
-	                showMonthAfterYear: true
-	            };
-	            $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-	        });
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
+		    
+		    $(function () {
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+		        	closeText: "<spring:message code='main.t3' />",
+		            prevText: "<spring:message code='main.t0604' />",
+		            nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+		            monthNames: monthStr,
+		            monthNamesShort: monthStr,
+		            dayNames: dayStr,
+		            dayNamesShort: dayStr,
+		            dayNamesMin: dayStr,
+		            weekHeader: 'Wk',
+		            dateFormat: 'yy-mm-dd',
+		            firstDay: 0,
+		            isRTL: false,
+		            duration: 200,
+		            showAnim: 'show',
+		            showMonthAfterYear: true
+		        };
+		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+		    });
 	    		
 	        function reset_onclick() {
 	            document.getElementById("DocNumber").value = "";
@@ -253,13 +254,14 @@
 	        window.close();
 	    }
 	
-	    var getFormCont_dialogArguments = new Array();
-	    function btn_FormSelect_onclick() {
+	    var getformcont_cross_dialogArguments = new Array();
+	    /* function btn_FormSelect_onclick() {
 	        var parameter = new Array();
+alert(arr_userinfo[0])	        
 	        parameter[0] = arr_userinfo[0];
-	        parameter[1] = "999";
+	        parameter[1] = "000";
 	
-	        var url = "/admin/ezApproval/getFormCont.do";
+	        var url = "/ezApprovalG/getFormCont.do";
 	
 	        if (CrossYN() || pNoneActiveX == "YES") {            
 	            getFormCont_dialogArguments[0] = parameter;
@@ -274,6 +276,24 @@
 	                document.getElementById("FormName").setAttribute("pId", retVal[2]);
 	            }
 	        }
+	    } */
+	    
+	    function btn_FormSelect_onclick() {
+	        var parameter = new Array();
+	    
+	        parameter[0] = arr_userinfo[0];
+	        parameter[1] = "000";
+
+	        var url = "/ezApprovalG/getFormCont.do";
+	        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+	        feature = feature + GetShowModalPosition(713, 570);
+
+	        getformcont_cross_dialogArguments[0] = parameter;
+	        getformcont_cross_dialogArguments[1] = FormSelect_Complete;
+
+	        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+	        
+	        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
 	    }
 	
 	    function getPositionOpenWin(popUpW, popUpH) {
