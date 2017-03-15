@@ -10,7 +10,10 @@
 <link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript">
+	
 	var list = [];
+	var confirmChange = "";
+	
 	window.onload = function() {
 		get_Sys_Param();
 	};
@@ -25,8 +28,8 @@
 			async: false,
 			success : function(result) {
 				$("table").children().remove();
-				$("table").append('<tr><th><spring:message code="main.kms3"/>'+
-						'</th><th><spring:message code="main.kms4"/></th></tr>');
+				$("table").append('<tr><th><spring:message code="main.kms1"/>'+
+						'</th><th><spring:message code="main.kms3"/></th></tr>');
 				list = result;
 				for (var i = 0; i < list.length; i++) {
 					if(list[i].name=="USE_AdditionalROle"){
@@ -61,7 +64,7 @@
 	function check_change_Param() {
 
 		var flag=false;
-	
+		
 		for (var i = 0; i < list.length; i++) {
 			if($("#tr_"+i+" input").val()==undefined){
 			var value = $("#tr_"+i+" select").val();
@@ -70,11 +73,15 @@
 			}
 			if(value!=list[i].value){
 			 flag=true;
+			 confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
 			}
 		}
 		if(flag){
+			if(confirm(confirmChange)){
 			update_Sys_Param();
-		}	
+			}
+		}
+		confirmChange = "";
 	}
 	
 	function update_Sys_Param() {
