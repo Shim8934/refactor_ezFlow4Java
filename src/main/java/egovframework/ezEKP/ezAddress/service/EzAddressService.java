@@ -1,12 +1,11 @@
 package egovframework.ezEKP.ezAddress.service;
 
 import java.util.List;
+import java.util.Map;
 
-import egovframework.ezEKP.ezAddress.vo.AddressVO;
-import egovframework.ezEKP.ezAddress.vo.AddressOldZipCodeVO;
-import egovframework.ezEKP.ezAddress.vo.AddressZipCodeVO;
-import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
+import egovframework.ezEKP.ezAddress.vo.AddressVO;
+import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
 
 public interface EzAddressService {
 	
@@ -41,9 +40,5 @@ public interface EzAddressService {
 	public List<SimpleAddressVO> getSimpleAddress(int tenantId, String userId) throws Exception;
 	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception;
 	
-	public List<AddressOldZipCodeVO> getZipCodeInfo(String dong) throws Exception;
-	public List<String> getZipCodeSido() throws Exception;
-	public List<AddressZipCodeVO> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception;
-	public int getAddressZipCodeCount(String pSido, String pKeyword) throws Exception;
-	
+	public Map<String, Object> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception;
 }

@@ -118,14 +118,14 @@
 				    	var OpenWin;
 				    	if (useAddressOpenAPI == "YES") {
 				    		address_zip_select_dialogArguments[1] = jusoCallBack;
-				    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+				    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUpOpen.do","address_zip_select", 570, 420, "YES");
 				    	} else {
 				        	address_zip_select_dialogArguments[1] = zip_find_Complete;
-					        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+					        OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do", "address_zip_select", 655, 620, "YES");
 				    	}
 				    /* }
 				    else {
-				        var Para = window.showModalDialog("/ezAddress/address_zip_select.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
+				        var Para = window.showModalDialog("/ezAddress/addressZipCodePopUp.do", "", "dialogWidth:655px;dialogHeight:620px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(655, 620));
 				        
 				        if (typeof (Para) != "undefined" || Para == "") {
 				            document.getElementById("txtZipcode").value = Para[0];
