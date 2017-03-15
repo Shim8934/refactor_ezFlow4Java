@@ -868,7 +868,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
-//            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
             if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0) {
             	cAdmin = "admin";
             }
