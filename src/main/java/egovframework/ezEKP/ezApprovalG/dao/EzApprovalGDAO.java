@@ -1078,8 +1078,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.historyDocInfoCount", map);
 	}
 	
-	public int getUserContMaxID(Map<String, Object> map) throws Exception{
-		return (int) select("EzApprovalG.getUserContMaxID", map);
+	public int delUserConutCnt(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.delUserConutCnt", map);
+	}
+	
+	public String getUserContMaxID(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getUserContMaxID", map);
 	}
 	
 	public void transactionSQL(Map<String, Object> map) throws Exception{
@@ -2082,6 +2086,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		update("EzApprovalG.updateSignCheck", map);
 	}
 	
+	public void updateUserCont(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.updateUserCont", map);
+	}
+	
 	public void deleteReceiptInfo(Map<String, Object> map) throws Exception{
 		delete("EzApprovalG.deleteReceiptInfo", map);
 	}
@@ -2342,6 +2350,14 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteSignCheck", map);
 	}
 	
+	public void delUserConttList(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.delUserConttList", map);
+	}
+	
+	public void delUserCont(Map<String, Object> map) throws Exception{
+		delete("EzApprovalG.delUserCont", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
@@ -2384,6 +2400,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
 	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
-		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
+		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
 	}
 }
