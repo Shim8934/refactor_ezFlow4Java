@@ -7746,6 +7746,10 @@
 		  								TENANT_ID = #v_TENANTID#
 		  							AND
 		  								COMPANYID = #companyID#)A )
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
      ]]>
 	</update>
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">

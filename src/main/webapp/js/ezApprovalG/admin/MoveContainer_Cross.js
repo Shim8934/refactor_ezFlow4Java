@@ -139,7 +139,7 @@ function getDocList() {
 			aprFrom    : SearchCond[5],
 			aprTo      : SearchCond[6],
 			formID     : SearchCond[7],
-			deptName   : SearchCond[1]
+			deptName   : SearchCond[9]
 		},
 		success: function(text){
 			result = text;

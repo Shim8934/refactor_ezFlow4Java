@@ -150,11 +150,15 @@
 		        var pLevel = nodedata.GetNodeData("DATA1");
 		        var pGroupID = nodedata.GetNodeData("DATA2");
 		        document.getElementById("descript").innerText = pGroupID;
-	
-		        if (pLevel == "3") {
+		        
+		        if (approvalFlag == 'S') {
 		            getGroupItem(pGroupID);
 		        } else {
-		            getGroupItem("");
+		        	if (pLevel == "3") {
+			            getGroupItem(pGroupID);
+			        } else {
+			            getGroupItem("");
+			        }
 		        }
 		    }
 	

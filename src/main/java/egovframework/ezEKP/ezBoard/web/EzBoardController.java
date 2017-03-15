@@ -1320,6 +1320,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	String orderOption1 = "";
         String orderOption2 = "";
         String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+        String primaryData = commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
 
@@ -1445,7 +1446,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
-    					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
+    					if (primaryData.equals("1")) {
     						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
     					} else {
@@ -2306,6 +2307,7 @@ public class EzBoardController extends EgovFileMngUtil{
         String orderOption1 = "";
         String orderOption2 = "";
         String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+        String primaryData = commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId());
 
         List<BoardListHeaderVO> headerList = ezBoardService.getListHeaderBoardID(boardVO);
 
@@ -2440,7 +2442,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					resultXML.append("<DATA12>" + commonUtil.cleanValue((String)noticeList.get(k).get("MAINCONTENT")) + "</DATA12>");
     					resultXML.append("<TITLE>" +  commonUtil.cleanValue((String)noticeList.get(k).get("TITLE"))  + "</TITLE>");
     					
-    					if (commonUtil.getPrimaryData(boardVO.getLang(), userInfo.getTenantId()).equals("1")) {
+    					if (primaryData.equals("1")) {
     						resultXML.append("<WRITERNAME>" + noticeList.get(k).get("WRITERNAME") + "</WRITERNAME>");
     						resultXML.append("<WRITERDEPTNAME>" + noticeList.get(k).get("WRITERDEPTNAME") + "</WRITERDEPTNAME>");
     					} else {

@@ -898,6 +898,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_NAME2", categoryName2);
 		map.put("v_DESC", categoryDesc);
 		map.put("v_CODE", pCode);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -908,7 +909,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				logger.debug("setTaskCategory started. mode=U");
 				
 				if (getTaskCategoryNodeExist("3", categoryCode, companyID, tenantID, approvalFlag).equals("TRUE")) {
-					for (int i = Integer.parseInt(categoryType); i < 4; i++) {
+					for (int i = 3; i > Integer.parseInt(categoryType); i--) {
 						map.put("v_CATETYPE", i);
 						
 						ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
