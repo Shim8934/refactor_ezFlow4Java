@@ -597,7 +597,7 @@
 					pheigth = pheigth - 284;
 					pwidth = pwidth - 359;
 							
-					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");	
+					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
 				}
 				function GoTop()
 				{
