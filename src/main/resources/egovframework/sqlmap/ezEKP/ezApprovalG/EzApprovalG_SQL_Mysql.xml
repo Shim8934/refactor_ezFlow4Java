@@ -20044,7 +20044,7 @@
         	USERCONTID
    	</select>
    	
-   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="int">
+   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="String">
    		 SELECT 
    		 	SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(USERCONTID) IS NULL THEN '0000000000'  ELSE MAX(USERCONTID)  END) + 1 )), -10, 10)
          FROM 
@@ -20062,4 +20062,61 @@
      	VALUES 
      	( #v_PMAXCONTAINERID#, #v_USERCONTNAME#, #v_PARENTCONTID#, #v_DESCRIPTION#, #v_USERID#, #v_TENANTID#, #companyID# )
    	</insert>
+   	
+   	<update id="EzApprovalG.updateUserCont" parameterClass="Map">
+   		UPDATE 
+   			TBL_USERCONT 
+   		SET 
+   			DESCRIPTION   = #v_PDESCRIPTION#
+   		<isNotEmpty property="v_POWNUSERID">
+   		, OWNUSERID   = #v_POWNUSERID#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PUSERCONTNAME">
+   		, USERCONTNAME   = #v_PUSERCONTNAME#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PPARENTCONTID">
+   		, PARENTCONTID   = #v_PPARENTCONTID#
+   		</isNotEmpty>
+   		WHERE 
+   			USERCONTID = #v_PCONTID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   	</update>
+   	
+   	<select id="EzApprovalG.delUserConutCnt" parameterClass="Map" resultClass="int">
+   		 SELECT 
+   		 	COUNT(DOCID)  
+         FROM 
+         	TBL_USERCONTLIST 
+         WHERE  
+         	USERCONTID = #v_PCONTID#
+         AND
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   	</select>
+   	
+   	<delete id="EzApprovalG.delUserConttList" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONTLIST
+    	WHERE 
+    	 	USERCONTID = #v_PCONTID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.delUserCont" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONT
+        WHERE  
+        	USERCONTID = #v_PCONTID#
+        AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
 </sqlMap>

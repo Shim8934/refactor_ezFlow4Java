@@ -1,15 +1,15 @@
-var ezapralert_cross_dialogArgument = new Array();
+var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "";
-    if(CompleteFunction == "OPEN")
+    if(CompleteFunction == "OPEN") 
         url = "/ezApprovalG/ezAprAlert.do?type=OPEN";
     else
         url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN() || pNoneActiveX == "YES") {
-        ezapralert_cross_dialogArgument[0] = parameter;
-        ezapralert_cross_dialogArgument[1] = CompleteFunction;
+        ezapralert_cross_dialogArguments[0] = parameter;
+        ezapralert_cross_dialogArguments[1] = CompleteFunction;
 
         if (CompleteFunction != undefined) {
             if (CompleteFunction == "OPEN")
@@ -20,7 +20,7 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
                 DivPopUpShow(330, 205, url);
         }
         else {            
-            ezapralert_cross_dialogArgument[1] = OpenAlertUI_Complete;
+            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
             DivPopUpShow(330, 205, url);
         }
     }
@@ -94,14 +94,16 @@ function openFileAttachUI_Complete(RtnVal)
     DivPopUpHidden();
 }
 
-var ezapropinion_cross_dialogArgument = new Array();
+var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, FunctionName, Type) {
     var parameter = pInformationContent;
-    var url = "/myoffice/ezApproval/ezAPROPINION_Cross.aspx";
+    var url = "/ezApprovalG/ezAprOpinion.do";
     if (CrossYN() || pNoneActiveX == "YES") {
-        ezapropinion_cross_dialogArgument[0] = parameter;
-        ezapropinion_cross_dialogArgument[1] = OpenInformationUI_Complete;
-        ezapropinion_cross_dialogArgument[2] = FunctionName;
+        ezapropinion_cross_dialogArguments[0] = parameter;
+        if (FunctionName != undefined)
+            ezapropinion_cross_dialogArguments[1] = FunctionName;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationUI_Complete;
         if (Type == undefined) {
             DivPopUpShow(330, 205, url);
         }
@@ -119,6 +121,7 @@ function OpenInformationUI(pInformationContent, FunctionName, Type) {
 function OpenInformationUI_Complete(RtnVal, Complete_Function)
 {
     DivPopUpHidden();
-    if (RtnVal)
-        Complete_Function(RtnVal);    
+    if (RtnVal) {
+        Complete_Function(RtnVal);   
+    }
 }

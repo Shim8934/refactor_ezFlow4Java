@@ -100,10 +100,48 @@
             }
             return str_temp;
         }
+        
+        var ezapralert_cross_dialogArguments = new Array();
+        function OpenAlertUI(pAlertContent, CompleteFunction) {
+            var parameter = pAlertContent;
+            var url = "";
+            if(CompleteFunction == "OPEN") 
+                url = "/ezApprovalG/ezAprAlert.do?type=OPEN";
+            else
+                url = "/ezApprovalG/ezAprAlert.do";
+
+            if (CrossYN() || pNoneActiveX == "YES") {
+                ezapralert_cross_dialogArguments[0] = parameter;
+                ezapralert_cross_dialogArguments[1] = CompleteFunction;
+
+                if (CompleteFunction != undefined) {
+                    if (CompleteFunction == "OPEN")
+                    {
+                        var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
+                    }
+                    else
+                        DivPopUpShow(330, 205, url);
+                }
+                else {            
+                    ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+                    DivPopUpShow(325, 185, url);
+                }
+            }
+            else {
+                var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+                feature = feature + GetShowModalPosition(330, 205);
+                var RtnVal = window.showModalDialog(url, parameter, feature);
+            }
+        }
+        
+        function OpenAlertUI_Complete(RtnVal) {
+            DivPopUpHidden();
+        }
+
     </script>
 </head>
 <body class="popup">
-    <h1>${Title}</h1>
+    <h1>${title}</h1>
 
     <div class="txt"><spring:message code='ezApproval.t296'/></div>
 
@@ -115,7 +153,10 @@
         <input type="submit" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" value="<spring:message code='ezApproval.t84'/>" onclick="return btn_SaveAprDeptTempletName_onclick()">
         <input type="submit" name="btn_CancelAprLineTempletName" id="btn_CancelAprLineTempletName" value="<spring:message code='ezApproval.t85'/>" onclick="return btn_CancelAprDeptTempletName_onclick()">
     </div>
-
+    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
+    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
+    </div>
 </body>
 </html>
 
