@@ -903,12 +903,29 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		String duplicate = getTaskCategoryDuplicate(categoryType, categoryCode, companyID, tenantID);
 		
-		if (duplicate.equals("TRUE")) {
-			logger.debug("setTaskCategory started. mode=U");
-			ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
+		if (approvalFlag.equals("S")) {
+			if (duplicate.equals("TRUE")) {
+				logger.debug("setTaskCategory started. mode=U");
+				
+				if (getTaskCategoryNodeExist("3", categoryCode, companyID, tenantID, approvalFlag).equals("TRUE")) {
+					for (int i = Integer.parseInt(categoryType); i < 4; i++) {
+						map.put("v_CATETYPE", i);
+						
+						ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
+					}
+				}
+			} else {
+				logger.debug("setTaskCategory started. mode=I");
+				ezApprovalGAdminDAO.setTaskCategoryInsert(map);
+			}
 		} else {
-			logger.debug("setTaskCategory started. mode=I");
-			ezApprovalGAdminDAO.setTaskCategoryInsert(map);
+			if (duplicate.equals("TRUE")) {
+				logger.debug("setTaskCategory started. mode=U");
+				ezApprovalGAdminDAO.setTaskCategoryUpdate(map);
+			} else {
+				logger.debug("setTaskCategory started. mode=I");
+				ezApprovalGAdminDAO.setTaskCategoryInsert(map);
+			}
 		}
 		
 		logger.debug("setTaskCategory ended.");
@@ -1045,7 +1062,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 	//TODO 이효진 2017-02-28 다국어지원하려면 밑에스트링배열 message로 집어넣어야함
 	@Override
-	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
+	public String setTaskCode(ApprGTaskVO vo, String categoryName, String categoryName2, String categoryDesc, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
 		logger.debug("setTaskCodeImpl started.");
 		
 		int tenantID = userInfo.getTenantId();
@@ -1132,6 +1149,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				if (subSQL == "FALSE") {
 					return "FALSE";
                 }
+			} else {
+				if (vo.getLevel().equals("1")) {
+					//중소
+					//level, 현재코드, 현재이름, 현재이름2, 현재설명, 상위코드 
+					
+					setTaskCategory("2", vo.getSubCategoryCode(), categoryName, categoryName2, categoryDesc, vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
+					setTaskCategory("3", vo.getSubCategoryCode(), categoryName, categoryName2, categoryDesc, vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
+				} else if (vo.getLevel().equals("2")) {
+					//소
+					setTaskCategory("3", vo.getSubCategoryCode(), categoryName, categoryName2, categoryDesc, vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
+				}
 			}
             
             Map<String, Object> map2 = new HashMap<String, Object>();

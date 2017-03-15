@@ -1405,9 +1405,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String categoryName = request.getParameter("categoryName");
+		String categoryName2 = request.getParameter("categoryName2");
+		String categoryDesc = request.getParameter("categoryDesc");
+		
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.setTaskCode(vo, companyID, userInfo, approvalFlag);
+		String result = ezApprovalGAdminService.setTaskCode(vo, categoryName, categoryName2, categoryDesc, companyID, userInfo, approvalFlag);
 		
 		logger.debug("setTaskCode started.");
 		

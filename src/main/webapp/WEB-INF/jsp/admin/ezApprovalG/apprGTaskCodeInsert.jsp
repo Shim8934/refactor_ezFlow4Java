@@ -19,6 +19,8 @@
 	        var xmldoc = createXmlDom();
 	        var gRtnVal = "FALSE";
 	        var gState, TaskCode, PCode, companyID, pLevel;
+	        var cateName, cateName2, cateDesc; 
+            
 	        var RetValue;
 	        var ReturnFunction;
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
@@ -64,6 +66,9 @@
 	                PCode = RetValue[2];
 	                companyID = RetValue[3];
 	                pLevel = RetValue[4];
+	                cateName = RetValue[5]; //CateName
+		            cateName2 = RetValue[6]; //CateName2
+		            cateDesc = RetValue[7]; //CateDesc
 
 	                InitCode();
 	            } else {
@@ -72,6 +77,10 @@
 	                PCode = RetValue[2];
 	                companyID = RetValue[3];
 	                pLevel = RetValue[4];
+	                cateName = RetValue[5]; //CateName
+		            cateName2 = RetValue[6]; //CateName2
+		            cateDesc = RetValue[7]; //CateDesc
+		            
 	                document.getElementById("tbTaskCode").disabled = true;
 	                
 	                if (approvalFlag == 'G') {
@@ -181,7 +190,6 @@
 					data : {taskCode : TaskCode,
 							deptCode : "",
 							companyID : companyID,
-							level : pLevel
 							},
 					success : function (result) {
 						tempRet = loadXMLString(result);
@@ -439,7 +447,10 @@
 		    				itemSecurity : document.getElementById("securityLevel").value,
 		    				isPublic : document.getElementById("isPublic").value,
 		    				companyID : companyID,
-		    				level : pLevel
+		    				level : pLevel,
+		    				categoryName : cateName,
+				            categoryName2 : cateName2,
+				            categoryDesc : cateDesc
 		    				},
 		    		success : function (result) {
 		    			tempRet = result;
