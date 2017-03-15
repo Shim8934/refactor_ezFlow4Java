@@ -1170,15 +1170,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재 관리 분류,단위업무관리 분류목록에따른 단위업무 목록 호출함수
-	 * 전자결재 관리 분ㅂ류코드관리 체계목록에 따른 분류코드 목록 호출함수
+	 * 전자결재 관리 분류코드관리 체계목록에 따른 분류코드 목록 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskInSubCategoryForManage(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(data);
+	public String getTaskInSubCategoryForManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskInSubCategoryForManage started.");
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(doc, userInfo.getTenantId());
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String sCateCode = request.getParameter("sCateCode");
+		String langType = request.getParameter("langType");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, langType, companyID, userInfo.getTenantId());
+		
+		logger.debug("getTaskInSubCategoryForManage ended.");
 		
 		return result;
 	}
@@ -2551,6 +2558,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				subQuery.append(" AND ");
 			}			
 			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+		}
+		
+		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
 		}
 							
 		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
