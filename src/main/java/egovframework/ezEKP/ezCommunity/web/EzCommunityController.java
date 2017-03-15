@@ -1687,7 +1687,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 		}
 		
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId())
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		//TODO 2016-04-27 이효진 사용하는곳 없음
 		/*if (!code.equals("")){
 			String titleName = ezCommunityService.getBoardTitleName(bName, code);
