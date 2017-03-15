@@ -1313,6 +1313,21 @@ public class EzApprovalGarchiveController {
 		return  result;
 	}
 	
+	/** 전자결재 G 문서함 선택*/
+	@RequestMapping(value = "ezApprovalG/selectContainer.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String selectContainer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String pContID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pMode = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        
+		String result = ezApprovalGService.delUserCont(pContID, pMode, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return  result;
+	}
+	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
