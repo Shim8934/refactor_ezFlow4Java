@@ -126,20 +126,8 @@ public interface EzApprovalGAdminService {
 	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
 
 	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception;
-
-
 	
-
-	
-	
-	
-
-
-
-
-	
-
-
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
 	
 
 	

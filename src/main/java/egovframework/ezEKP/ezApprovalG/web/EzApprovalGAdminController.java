@@ -2505,5 +2505,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		return result;
 	}
+	
+	/**
+	 * 전자결재g 관리자 문서이동 로직
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/moveContainer.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String moveContainer(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("moveContainer started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.moveDocList(xmlPara, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("moveContainer ended");
+		
+		return result;
+	}
 
 }

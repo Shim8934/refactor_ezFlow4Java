@@ -99,6 +99,7 @@
 	            }
 	            catch (e) {
 	            }
+	            window.resizeTo(780, 750);
 	            document.getElementById("txtTitle").value = strTitle;
 	            imageViewInit();
 	            saveItemBoardId = pBoardID;

@@ -2720,4 +2720,55 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	}
+	
+	@Override
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception {
+		logger.debug("moveDocList started");
+		
+		String rtnValue = "";
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String sourceContID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String targetContID = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String moveAll = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("sourceContID", sourceContID);
+		map.put("targetContID", targetContID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		try {
+			if (moveAll.toLowerCase().equals("true")) {
+				ezApprovalGAdminDAO.moveAllDocListF(map);
+				ezApprovalGAdminDAO.moveAllDocListS(map);
+			} else {
+				String subQuery = "";
+				
+				for (int k = 3; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k == 3) {
+						subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					} else {
+						subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					}
+				}
+				
+				map.put("subQuery", subQuery);
+				
+				ezApprovalGAdminDAO.moveDocListF(map);
+				ezApprovalGAdminDAO.moveDocListS(map);
+			}
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("moveDocList ended");
+		
+		return rtnValue;
+	}
 }
