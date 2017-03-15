@@ -190,8 +190,6 @@
 		
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter();
-		            //else
-		            //    SignCheck();
 		        }
 		    }
 		

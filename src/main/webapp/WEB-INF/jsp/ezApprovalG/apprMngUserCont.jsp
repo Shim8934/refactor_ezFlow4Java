@@ -61,7 +61,7 @@
         function TreeViewRefresh() {
             var xmlHTTP = createXMLHttpRequest();
             var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
-            xmlHTTP.open("POST", "/myoffice/ezApproval/ezContInfo/aspx/getUserContSubTree.aspx", false);
+            xmlHTTP.open("POST", "/ezApprovalG/getUserContSubTree.do", false);
             xmlHTTP.send(strQuery);
 
             var xmlDomRet = createXmlDom();
@@ -88,16 +88,16 @@
             treeNode.LoadFromID(pNodeID);
 
             var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>" + treeNode.GetNodeData("DATA1") + "</ParentContID><NAME></NAME></DATA>";
-            xmlHTTP.open("POST", "/myoffice/ezApproval/ezContInfo/aspx/getUserContSubTree.aspx", false);
+            xmlHTTP.open("POST", "/ezApprovalG/getUserContSubTree.do", false);
             xmlHTTP.send(strQuery);
 
             var treeView = new TreeView();
             treeView.LoadFromID(pTreeID);
             treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
         }
+        
         function btnCancel_onclick() {
             ReturnFunction("cancel");
-
             window.close();
         }
         
@@ -162,8 +162,9 @@
             var ContName = treeNode.GetNodeData("VALUE");
             var OpinionContent = "[" + ContName + "] <spring:message code='ezApproval.t307'/>";
 
-            if (CrossYN())
+            if (CrossYN()){
                 OpenInformationUI(OpinionContent, Del_Complete);
+            }
             else {
                 var Rtnval = OpenInformationUI(OpinionContent, Del_Complete);
                 if (Rtnval) {
@@ -251,7 +252,7 @@
                     createNodeAndInsertText(xmlpara, objNode, "pContID", ContID);
                     createNodeAndInsertText(xmlpara, objNode, "pContName", ContName);
                     createNodeAndInsertText(xmlpara, objNode, "Description", "");
-                    xmlhttp.open("POST", "/myoffice/ezApproval/ezContInfo/aspx/insertUserCont.aspx", false);
+                    xmlhttp.open("POST", "/ezApprovalG/insertUserCont.do", false);
                     xmlhttp.send(xmlpara);
 
                     var ResultXML = "";
@@ -277,7 +278,7 @@
                     createNodeAndInsertText(xmlpara, objNode, "pContID", "");
                     createNodeAndInsertText(xmlpara, objNode, "pContName", ContName);
                     createNodeAndInsertText(xmlpara, objNode, "Description", "");
-                    xmlhttp.open("POST", "/myoffice/ezApproval/ezContInfo/aspx/updateUserCont.aspx", false);
+                    xmlhttp.open("POST", "/ezApprovalG/updateUserCont.do", false);
                     xmlhttp.send(xmlpara);
 
                     var ResultXML = "";
@@ -306,7 +307,7 @@
             createNodeAndInsertText(xmlpara, objNode, "ContID", ContID);
             createNodeAndInsertText(xmlpara, objNode, "Mode", Mode);
 
-            xmlhttp.open("POST", "/myoffice/ezApproval/ezContInfo/aspx/deleteUserCont.aspx", false);
+            xmlhttp.open("POST", "/ezApprovalG/deleteUserCont.do", false);
             xmlhttp.send(xmlpara);
 
             var ResultXML = "";

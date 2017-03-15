@@ -86,7 +86,7 @@
 			    var strUpperItemIDTree = "<c:out value = '${item.upperItemIDTree}' />";
 			    var strItemLevel = "<c:out value = '${item.itemLevel}' />";
 			    var strWriterTitle = "<c:out value = '${item.extensionAttribute3}' />";
-			    var strWriterFakeName = "<c:out value = '${writerFakeName}' />";
+			    var strWriterFakeName = "<c:out value = '${strWriterFakeName}' />";
 			    var pAttachListXml = "";
 			    var AttachLimit = "<c:out value = '${boardInfo.attachSizeLimit}' />";
 			    var pReservedItem = "<c:out value = '${pReservedItem}' />";
@@ -777,12 +777,13 @@
 		                            var htmlData = message.SetEditorContentURL2(fullPath);
 		                            htmlData = ReplaceText(htmlData, "class=&quot;FIELD&quot;", "");
 		                            htmlData = ReplaceText(htmlData, "class=FIELD", "");
+		        		            
 		                            htmlData = "<body free>" + htmlData + "</body>";
 		                            
 		                            if (gubun != "2") {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + "${strOrgTitle}" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ${item.title} + "<br><br>" + htmlData;
 		                            } else {
-		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterFakeName + "<br><B><spring:message code='ezCommunity.t885'/>" + "${strOrgTitle}" + "<br><br>" + htmlData;
+		                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + ${item.title} + "<br><br>" + htmlData;
 		                            }
 		                            
 		                            message.SetEditorContent(htmlData);
@@ -800,9 +801,6 @@
 		                MHTLoadComplete = "true";
 	                }
 				}
-		
-	            function FieldsAvailable() {
-	            }
 	
 	            function btn_AttachSelect_onclick() {
 	                document.getElementById('mode').value = "ATT";

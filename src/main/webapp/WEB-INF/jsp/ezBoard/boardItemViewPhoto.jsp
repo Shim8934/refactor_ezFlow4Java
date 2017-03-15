@@ -338,12 +338,14 @@
 					window.open("/ezBoard/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID, "", "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth,"");		
 				}
 		        window.onunload = function () {
-		            refresh_onclick();
+		        	//리프레쉬 할 이유가 없는거 같음
+// 		            refresh_onclick();
 		        };
 				function btnClose_onclick()
 				{
 					window.close();
-				    refresh_onclick();
+					//리프레쉬 할 이유가 없는거 같음
+// 				    refresh_onclick();
 				}
 		
 				function attach_SelectAll()
@@ -597,7 +599,7 @@
 					pheigth = pheigth - 284;
 					pwidth = pwidth - 359;
 							
-					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");	
+					window.open("/ezBoard/boardItemViewPhoto.do?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=700,width=1000, status = no, toolbar=no, menubar=no, location=no,scrollbars=1, resizable=1, top=0, left=0", "");	
 				}
 				function GoTop()
 				{

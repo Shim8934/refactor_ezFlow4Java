@@ -513,7 +513,6 @@
 		    }
 		    function btnApprove_onclick()
 		    {
-		
 		        try {
 		            if (OrgAprUserID != arr_userinfo[1]) {
 		                if (!confirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>")) {
@@ -523,7 +522,6 @@
 		                }
 		            }
 		        } catch (e) {
-		
 		        }
 		        setMenuDisable("btnApprove", true);
 		        var signInfo;
@@ -536,7 +534,7 @@
 		            if(field)
 		            {
 		                var CurrentDate = getGyulJeDate();
-		                field.textContent = CurrentDate;
+		                setNodeText(field, CurrentDate);
 		            }
 		        }
 		        if (!isjunkyul) {
@@ -646,7 +644,10 @@
 		            }
 		        }
 
-		        if (rtnVal) rtnVal = SaveApproveInfo("1");
+		        if (rtnVal) {
+		        	rtnVal = SaveApproveInfo("1");
+		        }
+		        
 		        if (rtnVal != "TRUE") {
 		            if (pDraftFlag != "SUSIN") {
 		                if (docAccess) {

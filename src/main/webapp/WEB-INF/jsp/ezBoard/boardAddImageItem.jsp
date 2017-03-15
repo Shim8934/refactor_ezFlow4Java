@@ -175,7 +175,7 @@
 	                var resultHTML = "<table width='100%' class='content' id='" + "M_" + imageid + "' name='" + imgpath + "'  uniqueId='" + imgUniqueID + "' ><tr>" +
 	                                 "<td style='width:25px;padding:0px; margin:0px;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
 	                                 "<td style='width:100px; height: 100px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                 "<td><textarea id='getcontent' style='width:97%; height:80px' maxlength='50' name='imgContent' ></textarea></input></td></tr></table>";
+	                                 "<td><textarea id='getcontent' style='width:97%; height:80px' name='imgContent' ></textarea></input></td></tr></table>";
 	
 	                var imagecontent = document.getElementById("addimagecontent");
 	

@@ -48,7 +48,7 @@
 			        InitValue(Para);
 			    }
 			    
-			    if (gMultiDataNum == "") {
+			    if (gMultiDataNum == "1") {
 			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName + " </font> ";
 			    } else {
 			        document.getElementById("ParantName").innerHTML = " <font color='gray'> " + gParantName2 + " </font> ";

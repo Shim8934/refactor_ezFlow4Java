@@ -876,19 +876,19 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow -1) {
 				sb.append("<ROW>");
-                sb.append("<UID>" + list.get(i).getuID_() + "</UID>");
-                sb.append("<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
+                sb.append("<UID>" + commonUtil.cleanValue(list.get(i).getuID_()) + "</UID>");
+                sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
                 sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
-                sb.append("<CREATEDATE>" + list.get(i).getCreateDate() + "</CREATEDATE>");
-                sb.append("<GUBUNFLAG>" + list.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
-                sb.append("<GUBUNNAME>" + list.get(i).getGubunName() + "</GUBUNNAME>");
-                sb.append("<DEFAULTPAGE>" + list.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                sb.append("<THEMENM>" + list.get(i).getThemeNm() + "</THEMENM>");
-                sb.append("<THEMENM2>" + list.get(i).getThemeNm2() + "</THEMENM2>");
-                sb.append("<THEMENM3>" + list.get(i).getThemeNm3() + "</THEMENM3>");
-                sb.append("<THEMENM4>" + list.get(i).getThemeNm4() + "</THEMENM4>");
+                sb.append("<CREATEDATE>" + commonUtil.cleanValue(list.get(i).getCreateDate()) + "</CREATEDATE>");
+                sb.append("<GUBUNFLAG>" + commonUtil.cleanValue(list.get(i).getGubunFlag()) + "</GUBUNFLAG>");
+                sb.append("<USEFLAG>" + commonUtil.cleanValue(list.get(i).getUseFlag()) + "</USEFLAG>");
+                sb.append("<GUBUNNAME>" + commonUtil.cleanValue(list.get(i).getGubunName()) + "</GUBUNNAME>");
+                sb.append("<DEFAULTPAGE>" + commonUtil.cleanValue(list.get(i).getDefaultPage()) + "</DEFAULTPAGE>");
+                sb.append("<THEMENM>" + commonUtil.cleanValue(list.get(i).getThemeNm()) + "</THEMENM>");
+                sb.append("<THEMENM2>" + commonUtil.cleanValue(list.get(i).getThemeNm2()) + "</THEMENM2>");
+                sb.append("<THEMENM3>" + commonUtil.cleanValue(list.get(i).getThemeNm3()) + "</THEMENM3>");
+                sb.append("<THEMENM4>" + commonUtil.cleanValue(list.get(i).getThemeNm4()) + "</THEMENM4>");
                 sb.append("</ROW>");
 			}
 		}
@@ -1583,9 +1583,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String result = "<DATA>";
 		for (int i=0; i<list.size(); i++) {
 			result += "<ROW>";
-			result += "<UID_>" + list.get(i).getuID_() + "</UID_>";
-			result += "<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>";
-			result += "<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>";
+			result += "<UID_>" + commonUtil.cleanValue(list.get(i).getuID_()) + "</UID_>";
+			result += "<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>";
+			result += "<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2()) + "</DISPLAYNAME2>";
 			if (list.get(i).getPortlet_Type() == 1)
 				result += "<TYPE>t4075</TYPE>";
 			if (list.get(i).getPortlet_Type() == 2)
@@ -1595,7 +1595,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			if (list.get(i).getPortlet_Type() == 4)
 				result += "<TYPE>t4078</TYPE>";
 			
-			result += "<URL>" + list.get(i).getUrl() + "</URL>";
+			result += "<URL>" + commonUtil.cleanValue(list.get(i).getUrl()) + "</URL>";
 			result += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
 			result += "</ROW>";
 		}

@@ -150,11 +150,15 @@
 		        var pLevel = nodedata.GetNodeData("DATA1");
 		        var pGroupID = nodedata.GetNodeData("DATA2");
 		        document.getElementById("descript").innerText = pGroupID;
-	
-		        if (pLevel == "3") {
+		        
+		        if (approvalFlag == 'S') {
 		            getGroupItem(pGroupID);
 		        } else {
-		            getGroupItem("");
+		        	if (pLevel == "3") {
+			            getGroupItem(pGroupID);
+			        } else {
+			            getGroupItem("");
+			        }
 		        }
 		    }
 	
@@ -371,11 +375,18 @@
 		            }
 	
 		            var para = new Array();
+		            //code Info
 		            para[0] = "I";
-		            para[1] = "";
-		            para[2] = nodeIdx.GetNodeData("DATA2");
+		            para[1] = ""; //분류코드
+		            para[2] = nodeIdx.GetNodeData("DATA2"); //현재카테고리
 		            para[3] = companyID;
 		            para[4] = nodeIdx.GetNodeData("DATA1"); //level
+		            
+		            //cate Info
+		            para[5] = nodeIdx.GetNodeData("VALUE"); //CateName
+					para[6] = nodeIdx.GetNodeData("VALUE2"); //CateName2
+					para[7] = nodeIdx.GetNodeData("DATA3"); //CateDesc
+
 		            
 		            if (CrossYN()) {
 		                taskcodeinsert_cross_dialogArguments[0] = para;
@@ -452,6 +463,10 @@
 		                para[2] = nodeIdx.GetNodeData("DATA2");
 		                para[3] = companyID;
 						para[4] = nodeIdx.GetNodeData("DATA1");
+						
+						para[5] = nodeIdx.GetNodeData("VALUE"); //CateName
+			            para[6] = nodeIdx.GetNodeData("VALUE2"); //CateName2
+			            para[7] = nodeIdx.GetNodeData("DATA3"); //CateDesc
 	
 		                if (CrossYN()) {
 		                    taskcodeinsert_cross_dialogArguments[0] = para;
@@ -545,6 +560,9 @@
 
 		 	                    TreeView_onNodeSelect();
 		            		}
+		            	},
+		            	error : function(jqXHR,textStatus,errorThrown) {
+		            		
 		            	}
 		            });
 		        }

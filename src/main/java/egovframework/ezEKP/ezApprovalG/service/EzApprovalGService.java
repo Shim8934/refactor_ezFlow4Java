@@ -390,4 +390,9 @@ public interface EzApprovalGService {
 
 	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId) throws Exception;
 
+	public String insUserCont(String ownUserID, String parentContID, String ownUserName, String description, String companyID, String lang, int tenantID) throws Exception;
+
+	public String updateUserCont(String contID, String ownUserID, String parentContID, String userContName, String description, String companyID, String lang, int tenantID)  throws Exception;
+
+	public String delUserCont(String pContID, String pMode, String companyID, String lang, int tenantId)  throws Exception;	
 }

@@ -1262,27 +1262,27 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			if (pMode.equals("view")) {
 				if (checkViewRightBln(result.get(i).getuID().trim(), pAccessIDList,userInfo.getTenantId()) == true) {
 					sb.append("<ROW>");
-					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-					sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+					sb.append("<UID_>" + commonUtil.cleanValue(result.get(i).getuID()) + "</UID_>");
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(result.get(i).getDisplayName()) + "</DISPLAYNAME>");
 					sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-					sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-					sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-					sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-					sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-					sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+					sb.append("<CREATEDATE>" + commonUtil.cleanValue(result.get(i).getCreateDate()) + "</CREATEDATE>");
+					sb.append("<GUBUNFLAG>" + commonUtil.cleanValue(result.get(i).getGubunFlag()) + "</GUBUNFLAG>");
+					sb.append("<USEFLAG>" + commonUtil.cleanValue(result.get(i).getUseFlag()) + "</USEFLAG>");
+					sb.append("<DEFAULTPAGE>" + commonUtil.cleanValue(result.get(i).getDefaultPage()) + "</DEFAULTPAGE>");
+					sb.append("<THEMEUID>" + commonUtil.cleanValue(result.get(i).getThemeUID()) + "</THEMEUID>");
 					sb.append("</ROW>");
 				}
 			} else {
 				if (checkEditRightBln(result.get(i).getuID().trim(), pAccessIDList, userInfo.getTenantId()) == true) {
 					sb.append("<ROW>");
-					sb.append("<UID_>" + result.get(i).getuID() + "</UID_>");
-					sb.append("<DISPLAYNAME>" + result.get(i).getDisplayName() + "</DISPLAYNAME>");
+					sb.append("<UID_>" + commonUtil.cleanValue(result.get(i).getuID()) + "</UID_>");
+					sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(result.get(i).getDisplayName()) + "</DISPLAYNAME>");
 					sb.append("<DEPTH>" + result.get(i).getDepth() + "</DEPTH>");
-					sb.append("<CREATEDATE>" + result.get(i).getCreateDate() + "</CREATEDATE>");
-					sb.append("<GUBUNFLAG>" + result.get(i).getGubunFlag() + "</GUBUNFLAG>");
-					sb.append("<USEFLAG>" + result.get(i).getUseFlag() + "</USEFLAG>");
-					sb.append("<DEFAULTPAGE>" + result.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-					sb.append("<THEMEUID>" + result.get(i).getThemeUID() + "</THEMEUID>");
+					sb.append("<CREATEDATE>" + commonUtil.cleanValue(result.get(i).getCreateDate()) + "</CREATEDATE>");
+					sb.append("<GUBUNFLAG>" + commonUtil.cleanValue(result.get(i).getGubunFlag()) + "</GUBUNFLAG>");
+					sb.append("<USEFLAG>" + commonUtil.cleanValue(result.get(i).getUseFlag()) + "</USEFLAG>");
+					sb.append("<DEFAULTPAGE>" + commonUtil.cleanValue(result.get(i).getDefaultPage()) + "</DEFAULTPAGE>");
+					sb.append("<THEMEUID>" + commonUtil.cleanValue(result.get(i).getThemeUID()) + "</THEMEUID>");
 					sb.append("</ROW>");
 				}
 			}
@@ -1302,12 +1302,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<resultList.size(); i++) {
 			if (i >= pStartRow - 1) {
 				sb.append("<ROW>");
-				sb.append("<UID_>" + resultList.get(i).getuID() + "</UID_>");
-				sb.append("<DISPLAYNAME>" + resultList.get(i).getDisplayName() + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + resultList.get(i).getDisplayName2() + "</DISPLAYNAME2>");
-				sb.append("<USEFLAG>" + resultList.get(i).getUseFlag() + "</USEFLAG>");
-				sb.append("<LANG>" + resultList.get(i).getLang() + "</LANG>");
-                sb.append("<THEMEUID>" + resultList.get(i).getThemeUID() + "</THEMEUID>");
+				sb.append("<UID_>" + commonUtil.cleanValue(resultList.get(i).getuID()) + "</UID_>");
+				sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(resultList.get(i).getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(resultList.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
+				sb.append("<USEFLAG>" + commonUtil.cleanValue(resultList.get(i).getUseFlag()) + "</USEFLAG>");
+				sb.append("<LANG>" + commonUtil.cleanValue(resultList.get(i).getLang()) + "</LANG>");
+                sb.append("<THEMEUID>" + commonUtil.cleanValue(resultList.get(i).getThemeUID()) + "</THEMEUID>");
 				sb.append("</ROW>");
 			}
 		}
@@ -1325,15 +1325,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<resultList.size(); i++) {
 			if (i >= pStartRow - 1) {
 				sb.append("<ROW>");
-				sb.append("<UID_>" + resultList.get(i).getuID() + "</UID_>");
-				sb.append("<DISPLAYNAME>" + resultList.get(i).getDisplayName() + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + resultList.get(i).getDisplayName2() + "</DISPLAYNAME2>");
-				sb.append("<USEFLAG>" + resultList.get(i).getUseFlag() + "</USEFLAG>");
-				sb.append("<LANG>" + resultList.get(i).getLang() + "</LANG>");
-				sb.append("<THEMENM>" + resultList.get(i).getThemeNm() + "</THEMENM>");
-				sb.append("<THEMENM2>" + resultList.get(i).getThemeNm2() + "</THEMENM2>");
-				sb.append("<THEMENM3>" + resultList.get(i).getThemeNm3() + "</THEMENM3>");
-				sb.append("<THEMENM4>" + resultList.get(i).getThemeNm4() + "</THEMENM4>");
+				sb.append("<UID_>" + commonUtil.cleanValue(resultList.get(i).getuID()) + "</UID_>");
+				sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(resultList.get(i).getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(resultList.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
+				sb.append("<USEFLAG>" + commonUtil.cleanValue(resultList.get(i).getUseFlag()) + "</USEFLAG>");
+				sb.append("<LANG>" + commonUtil.cleanValue(resultList.get(i).getLang()) + "</LANG>");
+				sb.append("<THEMENM>" + commonUtil.cleanValue(resultList.get(i).getThemeNm()) + "</THEMENM>");
+				sb.append("<THEMENM2>" + commonUtil.cleanValue(resultList.get(i).getThemeNm2()) + "</THEMENM2>");
+				sb.append("<THEMENM3>" + commonUtil.cleanValue(resultList.get(i).getThemeNm3()) + "</THEMENM3>");
+				sb.append("<THEMENM4>" + commonUtil.cleanValue(resultList.get(i).getThemeNm4()) + "</THEMENM4>");
 				sb.append("</ROW>");
 			}
 		}
@@ -2677,16 +2677,16 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow - 1) {
 				sb.append("<ROW>");
-                sb.append("<UID_>" + list.get(i).getuID_() + "</UID_>");
-                sb.append("<DISPLAYNAME>" +  list.get(i).getDisplayName() + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
+                sb.append("<UID_>" + commonUtil.cleanValue(list.get(i).getuID_()) + "</UID_>");
+                sb.append("<DISPLAYNAME>" +  commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
                 sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
                 if (list.get(i).getUseFlag() != null && !list.get(i).getUseFlag().trim().equals("")) {
-                	sb.append("<USEFLAG>" + list.get(i).getUseFlag().trim() + "</USEFLAG>");
+                	sb.append("<USEFLAG>" + commonUtil.cleanValue(list.get(i).getUseFlag().trim()) + "</USEFLAG>");
                 } else {
-                	sb.append("<USEFLAG>" + list.get(i).getUseFlag()+ "</USEFLAG>");
+                	sb.append("<USEFLAG>" + commonUtil.cleanValue(list.get(i).getUseFlag())+ "</USEFLAG>");
                 }
-                sb.append("<IMAGEURL>" + list.get(i).getImageUrl() + "</IMAGEURL>");      
+                sb.append("<IMAGEURL>" + commonUtil.cleanValue(list.get(i).getImageUrl()) + "</IMAGEURL>");      
                 sb.append("</ROW>");
 			}
 		}
@@ -2812,12 +2812,12 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow - 1) {
 				sb.append("<ROW>");
-                sb.append("<UID>" + list.get(i).getuID() + "</UID>");
-                sb.append("<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>");
+                sb.append("<UID>" + commonUtil.cleanValue(list.get(i).getuID()) + "</UID>");
+                sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>");
                 sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
-                sb.append("<CREATEDATE>" + list.get(i).getCreateDate() + "</CREATEDATE>");
-                sb.append("<GUBUNFLAG>" + list.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
+                sb.append("<CREATEDATE>" + commonUtil.cleanValue(list.get(i).getCreateDate()) + "</CREATEDATE>");
+                sb.append("<GUBUNFLAG>" + commonUtil.cleanValue(list.get(i).getGubunFlag()) + "</GUBUNFLAG>");
+                sb.append("<USEFLAG>" + commonUtil.cleanValue(list.get(i).getUseFlag()) + "</USEFLAG>");
                 sb.append("</ROW>");
 			}
 		}
@@ -2827,7 +2827,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		return sb.toString();
 	}
 	
-	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID, int tenantID) throws Exception {
+	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID, int tenantID, Locale locale) throws Exception {
 		String retXML = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2850,46 +2850,46 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				if (pMode.equals("view")) {
 					if (checkViewRightBln(list.get(i).getuID_(), getAccessList(userInfo), userInfo.getTenantId()) == true) {
 						retXML += "<ROW>";
-                        retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
-                        retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
-                        retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
+                        retXML += "<UID_>" + commonUtil.cleanValue(list.get(i).getuID_().trim()) + "</UID_>";
+                        retXML += "<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName().trim()) + "</DISPLAYNAME>";
+                        retXML += "<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2().trim()) + "</DISPLAYNAME2>";
                         if (list.get(i).getPortlet_Type() == 1) {
-                        	retXML += "<TYPE>URL 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4075",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 2) {
-                        	retXML += "<TYPE>HTML 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4076",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 3) {
-                        	retXML += "<TYPE>이미지 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4077",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 4) {
-                        	retXML += "<TYPE>게시판 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4078",locale)+"</TYPE>";
                         }
 
-                        retXML += "<URL>" + list.get(i).getUrl() + "</URL>";
+                        retXML += "<URL>" + commonUtil.cleanValue(list.get(i).getUrl()) + "</URL>";
                         retXML += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
                         retXML += "</ROW>";
 					}
 				} else if (pMode.equals("edit")) {
 					if (checkEditRightBln(list.get(i).getuID_(), getAccessList(userInfo), userInfo.getTenantId()) == true) {
 						retXML += "<ROW>";
-                        retXML += "<UID_>" + list.get(i).getuID_().trim() + "</UID_>";
-                        retXML += "<DISPLAYNAME>" + list.get(i).getDisplayName().trim() + "</DISPLAYNAME>";
-                        retXML += "<DISPLAYNAME2>" + list.get(i).getDisplayName2().trim() + "</DISPLAYNAME2>";
+                        retXML += "<UID_>" + commonUtil.cleanValue(list.get(i).getuID_().trim()) + "</UID_>";
+                        retXML += "<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName().trim()) + "</DISPLAYNAME>";
+                        retXML += "<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2().trim()) + "</DISPLAYNAME2>";
                         if (list.get(i).getPortlet_Type() == 1) {
-                        	retXML += "<TYPE>URL 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4075",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 2) {
-                        	retXML += "<TYPE>HTML 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4076",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 3) {
-                        	retXML += "<TYPE>이미지 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4077",locale)+"</TYPE>";
                         }
                         if (list.get(i).getPortlet_Type() == 4) {
-                        	retXML += "<TYPE>게시판 포틀릿</TYPE>";
+                        	retXML += "<TYPE>"+egovMessageSource.getMessage("ezPortal.t4078",locale)+"</TYPE>";
                         }
 
-                        retXML += "<URL>" + list.get(i).getUrl() + "</URL>";
+                        retXML += "<URL>" + commonUtil.cleanValue(list.get(i).getUrl()) + "</URL>";
                         retXML += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
                         retXML += "</ROW>";
 					}
@@ -2926,8 +2926,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (i >= pStartRow - 1) {
 				retXML += "<ROW>";
-				retXML += "<UID_>" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim() + "</UID_>";
-				retXML += "<DISPLAYNAME>" + xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent().trim() + "</DISPLAYNAME>";
+				retXML += "<UID_>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim()) + "</UID_>";
+				retXML += "<DISPLAYNAME>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent().trim()) + "</DISPLAYNAME>";
 				retXML += "</ROW>";
 			}
 		}

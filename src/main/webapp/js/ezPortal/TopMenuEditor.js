@@ -34,7 +34,7 @@ function inherit()
 function savesub(pObject, pPageID, pParentPageID, pDisplayName)
 {
 	var strXML = "<DATA>";
-	strXML += "<DISPLAYNAME>" + pDisplayName + "</DISPLAYNAME>";
+	strXML += "<DISPLAYNAME><![CDATA[" + pDisplayName + "]]></DISPLAYNAME>"
 	strXML += "<WIDTH>" + pObject.width.toString().replace("px", "").replace("100%", "-1") + "</WIDTH>";
 	strXML += "<HEIGHT>" + pObject.height.toString().replace("px", "").replace("100%", "-1") + "</HEIGHT>";
 	strXML += "<PARENTPAGEID>" + pParentPageID + "</PARENTPAGEID>";
@@ -68,7 +68,7 @@ function savesub(pObject, pPageID, pParentPageID, pDisplayName)
 					strXML += "<UID>" + tdsub_item.uid + "</UID>";
 					strXML += "<PAGEUID>" + tdsub_item.pageuid + "</PAGEUID>";
 					strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
-					strXML += "<DISPLAYNAME>" + tdsub_item.innerText + "</DISPLAYNAME>";
+					strXML += "<DISPLAYNAME><![CDATA[" + tdsub_item.innerText + "]]></DISPLAYNAME>"
 					strXML += "<CANREMOVE>" + tdsub_item.canremove + "</CANREMOVE>";
 					strXML += "<CANRESIZE>" + tdsub_item.canresize + "</CANRESIZE>";
 					strXML += "<CANREPLACE>" + tdsub_item.canreplace + "</CANREPLACE>";				
@@ -81,7 +81,7 @@ function savesub(pObject, pPageID, pParentPageID, pDisplayName)
 					strXML += "<UID>" + tdsub_item.uid + "</UID>";
 					strXML += "<PAGEUID>" + tdsub_item.pageuid + "</PAGEUID>";
 					strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
-					strXML += "<DISPLAYNAME>" + tdsub_item.pageuid + "</DISPLAYNAME>";
+					strXML += "<DISPLAYNAME><![CDATA[" + tdsub_item.pageuid + "]]></DISPLAYNAME>"
 					strXML += "<CANREMOVE>" + tdsub_item.canremove + "</CANREMOVE>";
 					strXML += "<CANRESIZE>" + tdsub_item.canresize + "</CANRESIZE>";
 					strXML += "<CANREPLACE>" + tdsub_item.canreplace + "</CANREPLACE>";				

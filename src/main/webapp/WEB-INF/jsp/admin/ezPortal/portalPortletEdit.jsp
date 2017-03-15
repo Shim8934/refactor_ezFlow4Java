@@ -58,7 +58,7 @@
 					} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
 						portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + "<spring:message code='ezPortal.jjs04'/>" + "&nbsp;";
 					}
-					portletHTML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
+					//portletHTML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
 				    //portletHTML += "<input type=radio name=selectType value=\"" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "\" onclick=\"selectTypeChange('" + getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)) + "')\"> " + getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)).replace("<spring:message code='ezPortal.t147'/>", ""); + " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 			}
