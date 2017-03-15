@@ -120,7 +120,7 @@ function getDocList() {
     }
 
 	var result = "";
-	
+
 	$.ajax({
 		type : "POST",
 		dataType : "text",

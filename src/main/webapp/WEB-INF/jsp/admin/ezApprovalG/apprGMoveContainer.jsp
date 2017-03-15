@@ -74,12 +74,12 @@
 	            }
 	            else {
 	                if (CrossYN()) {
-	                    openLocation = "/admin/ezApproval/contDocView.do";
+	                    openLocation = "/ezApprovalG/contDocView.do";
 	                } else {
 	                    if (pUse_Editor == "")
-	                        openLocation = "/myoffice/ezApproval/formContainer/contDocView.aspx";
+	                        openLocation = "/ezApprovalG/contDocView.do";
 	                    else
-	                        openLocation = "/myoffice/ezApproval/formContainer/contDocView_IE.aspx";
+	                        openLocation = "/ezApprovalG/contDocView.do";
 	                }
 	            }
 	            openLocation = openLocation + "?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(formID) + "&orgDocID=" + escape(orgDocid);
