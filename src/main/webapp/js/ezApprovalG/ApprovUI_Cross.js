@@ -78,7 +78,6 @@ function putBansongSign() {
     return signInfo;
 }
 function AprrovMappingSign(ret) {
-
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
@@ -101,8 +100,7 @@ function AprrovMappingSign(ret) {
     if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
         OpinionText = getSignDate() + "<br/>";
     }
-alert(100);
-alert(pAprLineType);
+    
     if (pAprLineType == strAprType8 || pAprLineType == strAprType9 || pAprLineType == strAprType11 || pAprLineType == strAprType12) {
         var phabyuisign;
         var phabyuidate;
@@ -312,8 +310,6 @@ alert(pAprLineType);
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret + "::" + strLang7 + OpinionText + contents;
 
-
-                    
                     signCnt = signCnt + 1;
                     SingFlag = true;
                 }
@@ -448,6 +444,7 @@ alert(pAprLineType);
     return signInfo;
 }
 function putJunkyulSign(signID) {
+alert(666);
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, signID);
     if (field) {
@@ -2168,7 +2165,6 @@ function putSignXML(SignXML) {
     try {
         var NodeList;
         var fields = message.GetFieldsList();
-        var field;
 
         NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
         if (NodeList.length > 0) {
@@ -2178,6 +2174,7 @@ function putSignXML(SignXML) {
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
 
                 var field = message.GetListItem(fields, SignName);
+                
                 if (field) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {

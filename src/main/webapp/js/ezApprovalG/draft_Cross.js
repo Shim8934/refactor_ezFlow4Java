@@ -1232,7 +1232,7 @@ function SetAutoPropertyValue() {
                         break;
 
                     case "department":
-                        field.textContente = arr_userinfo[5];
+                        field.textContent = arr_userinfo[5];
                         break;
 
                     case "parantdept":

@@ -2926,8 +2926,8 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (i >= pStartRow - 1) {
 				retXML += "<ROW>";
-				retXML += "<UID_>" + xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim() + "</UID_>";
-				retXML += "<DISPLAYNAME>" + xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent().trim() + "</DISPLAYNAME>";
+				retXML += "<UID_>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("UID_").item(i).getTextContent().trim()) + "</UID_>";
+				retXML += "<DISPLAYNAME>" + commonUtil.cleanValue(xmlDom.getElementsByTagName("DISPLAYNAME").item(i).getTextContent().trim()) + "</DISPLAYNAME>";
 				retXML += "</ROW>";
 			}
 		}

@@ -3829,10 +3829,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String itemIDList = request.getParameter("itemIDList");
 		
 		String boardID = request.getParameter("boardID");
+		String guBun = request.getParameter("guBun");
+		
+		guBun = guBun.replace(";", "");
 		
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("guBun", guBun);
 		
 		return "ezBoard/boardMoveItem";
 	}

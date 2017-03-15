@@ -3,6 +3,7 @@ table, th, td {
 	empty-cells: show;
 	padding:0;margin:0;
 	font-size:12px;
+	font-family: Gulim, arial, verdana;
 }
 th {
 	white-space: nowrap;

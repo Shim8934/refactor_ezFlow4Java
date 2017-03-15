@@ -164,11 +164,11 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		for(PersonalQuickLinkVO vo : list) {
 			result.append("<ROW>");
-			result.append("<CELL><VALUE>" + vo.getQuickLinkName() + "</VALUE>");
-			result.append("<DATA1>" + vo.getQuickLinkID() + "</DATA1></CELL>");
+			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
+			result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
 			
-			result.append("<CELL><VALUE>" + vo.getQuickLinkName2() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE>" + vo.getQuickLinkName3() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
 			//result.append("<CELL><VALUE>" + vo.getQuickLinkName4() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
 			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
@@ -180,7 +180,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
 			}
 			
-			result.append("<CELL><VALUE>" + vo.getDisplayName() + "</VALUE></CELL>");
+			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE></CELL>");
 			result.append("</ROW>");
 		}
 		
@@ -481,20 +481,20 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<ROW>");
 				result.append("<CELL>");
 				result.append("<VALUE>" + vo.getIsUse() + "</VALUE>");
-				result.append("<DATA1>" + vo.getSliderID() + "</DATA1>");
-				result.append("<DATA2>" + vo.getImagePath().trim() + "</DATA2>");
-				result.append("<DATA3>" + vo.getRegUserID() + "</DATA3>");
+				result.append("<DATA1>" + commonUtil.cleanValue(vo.getSliderID()) + "</DATA1>");
+				result.append("<DATA2>" + commonUtil.cleanValue(vo.getImagePath().trim()) + "</DATA2>");
+				result.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3>");
 				result.append("<DATA4>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</DATA4>");
 				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
 				result.append("</CELL>");
 				
 				if (userInfo.getPrimary().equals("1")) {
 					result.append("<CELL>");
-					result.append("<VALUE>" + vo.getSliderName() + "</VALUE>");
+					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName()) + "</VALUE>");
 					result.append("</CELL>");
 				} else {
 					result.append("<CELL>");
-					result.append("<VALUE>" + vo.getSliderName2() + "</VALUE>");
+					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName2()) + "</VALUE>");
 					result.append("</CELL>");
 				}
 				
