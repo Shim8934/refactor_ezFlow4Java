@@ -99,7 +99,7 @@
 	</head>
 	<body class="popup">
 	    <h1><spring:message code='ezApproval.t344'/></h1>
-	    <div id="TreeView" style="border: 1px solid #B6B6B6; height: 370px; width: 250px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF;" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
+	    <div id="TreeView" style="border: 1px solid #B6B6B6; height: 370px; width: 270px; overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF;" onnodedblclick="TreeView.toggle(TreeView.selectedIndex)"></div>
 	    <div class="btnposition">
 	        <a class="imgbtn" onclick="bt_Ok_onclick()"><span><spring:message code='ezApproval.t84'/></span></a>
 	        <a class="imgbtn" onclick="bt_Close_onclick()"><span><spring:message code='ezApproval.t70'/></span></a>

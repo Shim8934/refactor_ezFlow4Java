@@ -7,7 +7,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="stylesheet" href="/css/default_kr.css&#9;" type="text/css">
+<link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript">
 	var list = [];
@@ -24,6 +24,7 @@
 			},
 			async: false,
 			success : function(result) {
+				$("table").children().remove();
 				$("table").append('<tr><th><spring:message code="main.kms3"/>'+
 						'</th><th><spring:message code="main.kms4"/></th></tr>');
 				list = result;
@@ -44,6 +45,11 @@
 						+'</select></td></tr>');
 					}
 				}
+				$("table").append('<tr><td colspan="2" style="text-align: center; padding-top:5px;">'
+						+'<div class="imgbtn" style="padding-right: 3px;"><span onclick="check_change_Param()">'
+						+'<spring:message code='main.sp09'/></span></div>'
+						+'<div class="imgbtn"><span onclick=$("form")[0].reset()><spring:message code='main.sp11'/>'
+						+'</span></div></td></tr>');
 			},
 			error : function(error) {
 				alert("<spring:message code='main.kms2'/>" + error);
@@ -107,7 +113,6 @@
 				}
 			},
 			complete : function(){
-				$("table").children().remove();
 				get_Sys_Param();
 			},
 			error : function(e) {
@@ -123,10 +128,6 @@
 	<form>
 	<table>
 	</table>
-	<span style="text-align: center;">
-	<input type="button" value="<spring:message code='main.sp09'/>" onclick="check_change_Param()">
-	<input type="reset" value="<spring:message code='main.sp11'/>">
-	</span>
 	</form>
 </body>
 </html>

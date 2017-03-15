@@ -438,7 +438,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getPollTitle() + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");
 			result.append("</CELL>");
 			result.append("<CELL>");
 			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
@@ -563,7 +563,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		        field.setAccessible(true);
 									
 				if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
-					fieldValue = String.valueOf(field.get(infoVO));
+					fieldValue = commonUtil.cleanValue(String.valueOf(field.get(infoVO)));
 				}
 		    }
 			
@@ -648,7 +648,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + vo.getTitle() + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.cleanValue(vo.getTitle()) + "</VALUE>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");

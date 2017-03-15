@@ -114,7 +114,12 @@
 		            return;
 		        }
 		        SignXML = result;
+		        
 		        var rtnVal = putSignXML(SignXML);
+		        
+		        if (rtnVal) {
+		            SaveFile();
+		        }
 		    }
 		    
 		    function putSignXML(SignXML) {
@@ -122,14 +127,17 @@
 		        try {
 		            var NodeList;
 		            var fields = message.GetFieldsList();
-		            var field;
 		            NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
 		            if (NodeList.length > 0) {
+		            	//nodelist 잘못가져오는듯
 		                for (i = 0; i < NodeList.length; i++) {
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
 		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
-		                    var field = GetListItem(fields, SignName);
+		                    var field;
+	                    
+		                    field = message.GetListItem(fields, SignName);
+
 		                    if (field) {
 		                        retVal = true;
 		                        if (SignType == "TEXT" ) {
