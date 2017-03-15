@@ -76,11 +76,6 @@
 			    
 			    window.onload = function () {
 			    	rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
-			    	
-			        if ("${userInfo.lang != '1'}" && "${userInfo.lang != '4'}") {
-			            document.getElementById("RadBirthType1").style.display = "none";
-			            document.getElementById("RadBirthType2").style.display = "none";
-			        }
 			    }
 			    
 			    var personpicture_cross_dialogArguments = new Array();

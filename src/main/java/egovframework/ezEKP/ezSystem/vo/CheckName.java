@@ -20,5 +20,8 @@ public enum CheckName {
 	totBigSizeMailAttachLimit,
 	USE_FileExtension,
 	USE_BOARD_LEFTMENU_COUNT,
-	ONELINE_REPLY_ENABLE
+	ONELINE_REPLY_ENABLE,
+	EDITOR,
+	FormProcSpelling,
+	IE11EDITOR
 }

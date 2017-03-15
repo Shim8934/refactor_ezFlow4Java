@@ -903,46 +903,96 @@
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
-			<![CDATA[
-				SELECT
-					mcategorycode,
-					name,
-					NVL(name2, NAME) NAME2,
-					description,
-					'2' CATEGORYTYPE,
-					categorycode 
-				FROM
-					TBL_TASKMIDDLECATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					categorycode = #v_PARENTID#
-				AND
-					oldflag IS NULL
-			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					SELECT
+						mcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'2' CATEGORYTYPE,
+						categorycode 
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_PARENTID#
+					AND
+						mcategorycode != #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT
+						mcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'2' CATEGORYTYPE,
+						categorycode 
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						categorycode = #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
-			<![CDATA[
-				SELECT
-					subcategorycode,
-					name,
-					NVL(name2, NAME) NAME2,
-					description,
-					'3' CATEGORYTYPE,
-					mcategorycode
-				FROM
-					TBL_TASKSUBCATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					mcategorycode = #v_PARENTID#
-				AND
-					oldflag IS NULL
-			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					SELECT
+						subcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'3' CATEGORYTYPE,
+						mcategorycode
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_PARENTID#
+					AND
+						subcategorycode = #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					SELECT
+						subcategorycode,
+						name,
+						NVL(name2, NAME) NAME2,
+						description,
+						'3' CATEGORYTYPE,
+						mcategorycode
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_PARENTID#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
 		</isEqual>
 	</select>
 
