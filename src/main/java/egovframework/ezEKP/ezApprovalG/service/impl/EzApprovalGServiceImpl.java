@@ -3463,6 +3463,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String fieldName = "";
 		String fieldValue = "";
+		String langData = commonUtil.getMultiData(lang, tenantID);
 		
 		resultXML.append("<ROWS>");
 		
@@ -3471,11 +3472,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
-				
-				/* getMultiData 때문에 쿼리가 엄청나게 돌아서 주석처리 해놈 *
-				/*if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME") || fieldName.equals("WRITERJOBTITLE")) {
-					fieldName = fieldName + commonUtil.getMultiData(lang, tenantID);
-				}*/
+								
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME") || fieldName.equals("WRITERJOBTITLE")) {
+					fieldName = fieldName + langData;
+				}
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
