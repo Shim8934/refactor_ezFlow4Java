@@ -1033,7 +1033,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		portletCategoryXML += "</DATA>";
 		portletCategoryXML.replace("\"", "\\\"");
 		
-		portletCategoryXML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
+		//portletCategoryXML.replace("포틀릿", "portlet").replace("이미지", "Image").replace("게시판", "Board");
 		
 		if (mode.equals("new")) {
 			uID = ezPortalAdminService.createNewPortlet(userInfo.getCompanyID(), userInfo.getTenantId());
