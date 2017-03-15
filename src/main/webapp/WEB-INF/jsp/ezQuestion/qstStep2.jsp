@@ -455,7 +455,7 @@
         		    var oTr = document.createElement("tr");
             		var oTh = document.createElement("th");
             		var oTd, oInput, oImg, oFileTable, pFileName;
-            		oTh.innerHTML = "질문" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("QUESTIONCONTENT")[0]);
+            		oTh.innerHTML = "<spring:message code = 'ezQuestion.t333' />" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("QUESTIONCONTENT")[0]);
             		oTr.appendChild(oTh);
             		oTable.appendChild(oTr);
 		            if (QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW").length > 0) {

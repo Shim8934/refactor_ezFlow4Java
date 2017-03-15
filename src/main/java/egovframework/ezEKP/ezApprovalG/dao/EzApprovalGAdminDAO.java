@@ -367,7 +367,24 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdmin.formMove", map);
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<ApprGListHeaderVO> getAdminListHeader(Map<String, Object> map) throws Exception {
 		return (List<ApprGListHeaderVO>) list("EzApprovalGAdmin.getAdminListHeader", map);
+	}
+	
+	public void moveAllDocListF(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveAllDocListF", map);
+	}
+
+	public void moveAllDocListS(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveAllDocListS", map);
+	}
+
+	public void moveDocListF(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveDocListF", map);
+	}
+
+	public void moveDocListS(Map<String, Object> map) throws Exception {
+		update("EzApprovalAdminDAO.moveDocListS", map);
 	}
 }

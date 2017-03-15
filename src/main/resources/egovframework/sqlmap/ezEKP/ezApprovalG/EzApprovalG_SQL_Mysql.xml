@@ -6393,24 +6393,20 @@
 				   						AND
 				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
 				   						AND
-				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID	 
-									<isEmpty property="v_CONTID" >
-										WHERE 
-											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
-									</isEmpty>
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID									
 									<isEmpty property="v_CONTID" >
 										WHERE 
 											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
 									</isEmpty>
 									<isNotEmpty property="v_CONTID">
-									<isEqual property="v_CONTID" compareValue="ADMIN">
-										WHERE 
-											  CONTAINERID IS NOT NULL
-									</isEqual>
-									<isNotEqual property="v_CONTID" compareValue="ADMIN">
-									 	WHERE 	
-									 		  CONTAINERID IN (#v_CONTID#)
-									</isNotEqual>
+										<isEqual property="v_CONTID" compareValue="ADMIN">
+											WHERE 
+												  CONTAINERID IS NOT NULL
+										</isEqual>
+										<isNotEqual property="v_CONTID" compareValue="ADMIN">
+										 	WHERE 	
+										 		  CONTAINERID IN (#v_CONTID#)
+										</isNotEqual>
 									</isNotEmpty>
 									    AND 
 									  		  TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 		
@@ -6421,11 +6417,11 @@
 										]]>
 									</isNotEqual>
 									<isEqual property="v_PUBFLAG" compareValue="Y">
-									<isNotEmpty property="v_CONTID">
-										<![CDATA[
-										AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-								      	]]>
-									</isNotEmpty>
+										<isNotEmpty property="v_CONTID">
+											<![CDATA[
+											AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+									      	]]>
+										</isNotEmpty>
 									</isEqual>
 									<isNotEmpty property="v_SUBQUERY">
 										AND 
@@ -6436,20 +6432,20 @@
 										AND
 											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 									<isNotEmpty property="v_ORDEROPTION">
-									<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
-									<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
-										ORDER BY 
-											$v_ORDEROPTION$
-									</isEqual>
-									<isNotEqual  property="v_ORDEROPTIONVALUE" compareValue="enddate">
-										ORDER BY 
-											$v_ORDEROPTION$, ENDDATE DESC
-									</isNotEqual>
-									</isGreaterEqual>
-									<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
-										ORDER BY 
-											$v_ORDEROPTION$, ENDDATE DESC
-									</isLessThan>
+										<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+											<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+												ORDER BY 
+													$v_ORDEROPTION$
+											</isEqual>
+											<isNotEqual  property="v_ORDEROPTIONVALUE" compareValue="enddate">
+												ORDER BY 
+													$v_ORDEROPTION$, ENDDATE DESC
+											</isNotEqual>
+										</isGreaterEqual>
+										<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+											ORDER BY 
+												$v_ORDEROPTION$, ENDDATE DESC
+										</isLessThan>
 									</isNotEmpty>
 									<isEmpty property="v_ORDEROPTION">
 										ORDER BY 
@@ -6460,36 +6456,36 @@
 									  ) B ) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
-						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
-						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
-						<![CDATA[
-							ORDER BY 
-								$v_ORDEROPTION2$  
-							LIMIT  #v_PAGESIZE2# )  C
-						]]>
-						</isEqual>
-						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
-						<![CDATA[
-							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE  
-							LIMIT #v_PAGESIZE2# )
-						]]>
-						</isNotEqual>
-						</isGreaterEqual>
-						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
-						<![CDATA[	
-							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE 
-							LIMIT #v_PAGESIZE2# )	
-						]]>
-						</isLessThan>
+							<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
+								<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
+								<![CDATA[
+									ORDER BY 
+										$v_ORDEROPTION2$  
+									LIMIT  #v_PAGESIZE2# ) C
+								]]>
+								</isEqual>
+								<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
+								<![CDATA[
+									ORDER BY 
+										$v_ORDEROPTION2$, ENDDATE  
+									LIMIT #v_PAGESIZE2# ) C
+								]]>
+								</isNotEqual>
+							</isGreaterEqual>
+							<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
+								<![CDATA[	
+									ORDER BY 
+										$v_ORDEROPTION2$, ENDDATE 
+									LIMIT #v_PAGESIZE2# ) C	
+								]]>
+							</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
-						<![CDATA[	
-							ORDER BY 
-								ENDDATE 
-							LIMIT #v_PAGESIZE2#) 
-						]]>
+							<![CDATA[	
+								ORDER BY 
+									ENDDATE 
+								LIMIT #v_PAGESIZE2#) C
+							]]>
 						</isEmpty>
 		   			
 	</select>
@@ -10183,40 +10179,36 @@
    		   	TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
 		<isEmpty property="v_CONTID" >
 			WHERE 
-				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
-		</isEmpty>
-		<isEmpty property="v_CONTID" >
-			WHERE 
 				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
 		</isEmpty>
 		<isNotEmpty property="v_CONTID">
-		<isEqual property="v_CONTID" compareValue="ADMIN">
-			WHERE 
-				  CONTAINERID IS NOT NULL
-		</isEqual>
-		<isNotEqual property="v_CONTID" compareValue="ADMIN">
-		 	WHERE 	
-		 		  CONTAINERID IN (#v_CONTID#)
-		</isNotEqual>
+			<isEqual property="v_CONTID" compareValue="ADMIN">
+				WHERE 
+					  CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="v_CONTID" compareValue="ADMIN">
+			 	WHERE 	
+			 		  CONTAINERID IN (#v_CONTID#)
+			</isNotEqual>
 		</isNotEmpty>
 		AND 
 			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 		<isNotEqual property="v_USERSECCODE" compareValue="0">
-		<![CDATA[
-		AND 
-			#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
-		]]>
+			<![CDATA[
+			AND 
+				#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+			]]>
 		</isNotEqual>
 		<isEqual property="v_PUBFLAG" compareValue="Y">
-		<isNotEmpty property="v_CONTID">
-		<![CDATA[
-		AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-      	]]>
-		</isNotEmpty>
+			<isNotEmpty property="v_CONTID">
+				<![CDATA[
+				AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+		      	]]>
+			</isNotEmpty>
 		</isEqual>
 		<isNotEmpty property="v_SUBQUERY">
-		AND 
-			$v_SUBQUERY$
+			AND 
+				$v_SUBQUERY$
 		</isNotEmpty>
 		AND
 			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
@@ -20020,7 +20012,7 @@
         	USERCONTID
    	</select>
    	
-   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="int">
+   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="String">
    		 SELECT 
    		 	SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(USERCONTID) IS NULL THEN '0000000000'  ELSE MAX(USERCONTID)  END) + 1 )), -10, 10)
          FROM 
@@ -20038,4 +20030,61 @@
      	VALUES 
      	( #v_PMAXCONTAINERID#, #v_USERCONTNAME#, #v_PARENTCONTID#, #v_DESCRIPTION#, #v_USERID#, #v_TENANTID#, #companyID# )
    	</insert>
+   	
+   	<update id="EzApprovalG.updateUserCont" parameterClass="Map">
+   		UPDATE 
+   			TBL_USERCONT 
+   		SET 
+   			DESCRIPTION   = #v_PDESCRIPTION#
+   		<isNotEmpty property="v_POWNUSERID">
+   		, OWNUSERID   = #v_POWNUSERID#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PUSERCONTNAME">
+   		, USERCONTNAME   = #v_PUSERCONTNAME#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PPARENTCONTID">
+   		, PARENTCONTID   = #v_PPARENTCONTID#
+   		</isNotEmpty>
+   		WHERE 
+   			USERCONTID = #v_PCONTID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   	</update>
+   	
+   	<select id="EzApprovalG.delUserConutCnt" parameterClass="Map" resultClass="int">
+   		 SELECT 
+   		 	COUNT(DOCID)  
+         FROM 
+         	TBL_USERCONTLIST 
+         WHERE  
+         	USERCONTID = #v_PCONTID#
+         AND
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   	</select>
+   	
+   	<delete id="EzApprovalG.delUserConttList" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONTLIST
+    	WHERE 
+    	 	USERCONTID = #v_PCONTID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.delUserCont" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONT
+        WHERE  
+        	USERCONTID = #v_PCONTID#
+        AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
 </sqlMap>

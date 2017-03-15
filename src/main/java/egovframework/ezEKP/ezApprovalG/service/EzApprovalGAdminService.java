@@ -47,19 +47,19 @@ public interface EzApprovalGAdminService {
 
 	public String setTaskCategory(String categoryType, String categoryCode, String categoryName, String categoryName2, String categoryDesc, String pCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
-	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
+	public String getTaskCategoryNodeExist(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
-	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
+	public String removeTaskCategory(String categoryType, String categoryCode, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String getTaskCodeDuplicate(String taskCode, String companyID, int tenantID) throws Exception;
 
 	public String getTaskInfo(String pTaskCode, String pDeptCode, String companyID, int tenantID) throws Exception;
 
-	public String setTaskCode(ApprGTaskVO vo, String companyID, LoginVO userInfo) throws Exception;
+	public String setTaskCode(ApprGTaskVO vo, String categoryName, String categoryName2, String categoryDesc, String companyID, LoginVO userInfo, String approvalFlag) throws Exception;
 
 	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception;
+	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo, String approvalFlag) throws Exception;
 	
 	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang, int tenantID) throws Exception;
 
@@ -126,20 +126,8 @@ public interface EzApprovalGAdminService {
 	public String getFormProperty(Locale locale, String companyID, int tenantID) throws Exception;
 
 	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception;
-
-
 	
-
-	
-	
-	
-
-
-
-
-	
-
-
+	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
 	
 
 	

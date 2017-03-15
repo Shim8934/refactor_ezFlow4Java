@@ -13,7 +13,7 @@
 		var selectedID = "";
 	    var selectedDisplayName = "";
 	    var selectedHeight = "";
-	    var g_PortletCategoryXML = "${porteltCategoryXML}";
+	    var g_PortletCategoryXML = "${portletCategoryXML}";
 			var gubunFlag = "";   // 포탈페이지구분
 			var ReturnFunction;
 			var RetValue;
@@ -36,12 +36,20 @@
 			    var xmldom = createXmlDom();
 
 			    if (g_PortletCategoryXML != "") {
-			        xmldom = loadXMLString(g_PortletCategoryXML);
-
+			        xmldom = loadXMLString(g_PortletCategoryXML);;
 			        for (var i = 0; i < xmldom.getElementsByTagName("CATEGORY").length; i++) {
 			            var lastindex = document.getElementById("PortalGubun").length;
-			            var newoption = new Option(getNodeText(getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i))), getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+			        	if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4075') {
+							var newoption = new Option("<spring:message code='ezPortal.t4075'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));	
+						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4076') {
+							var newoption = new Option("<spring:message code='ezPortal.t4076'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4077') {
+							var newoption = new Option("<spring:message code='ezPortal.t4077'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+						} else if (getNodeText(xmldom.getElementsByTagName("DISPLAYNAME").item(i)) == 't4078') {
+							var newoption = new Option("<spring:message code='ezPortal.t4078'/>", getNodeText(xmldom.getElementsByTagName("CATEGORY").item(i)));
+						}
 			            document.getElementById("PortalGubun").options[lastindex] = newoption;
+			            
 			        }
 			    }
 			    xmldom = null;

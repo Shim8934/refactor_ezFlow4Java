@@ -30,7 +30,7 @@
 	
 	            if (startdate == "" && enddate == "") {
 	                var nowDate = new Date();
-	                var weekstr = "일;월;화;수;목;금;토";
+	                var weekstr = "<spring:message code='ezPersonal.t25'/>";
 	                var arry = weekstr.split(";");
 	                document.getElementById("idDatepickers").value = DateFormat(nowDate) + " (" + arry[nowDate.getDay()] + ")";
 	                document.getElementById("_D2").value = DateFormat(nowDate) + " (" + arry[nowDate.getDay()] + ")";

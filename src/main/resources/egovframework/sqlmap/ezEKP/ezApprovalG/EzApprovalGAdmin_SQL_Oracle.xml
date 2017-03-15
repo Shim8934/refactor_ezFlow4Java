@@ -178,6 +178,8 @@
 				TBL_TASKCODE.kpreason,
 				TBL_TASKCODE.keepingmethod,
 				TBL_TASKCODE.keepingplace,
+				TBL_TASKCODE.itemSecurity,
+				TBL_TASKCODE.ispublic,
 				TBL_TASKCODE.displayrecflag,
 				TBL_TASKCODE.displayrectrastime,
 				TBL_TASKCODE.exdisplayfrequency,
@@ -1588,53 +1590,109 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskCategoryNodeExist"
 		remapResults="true" parameterClass="Map" resultClass="Integer">
-		<isEqual property="v_CATETYPE" compareValue="1">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(mcategorycode), 0)
-				FROM
-					TBL_TASKMIDDLECATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#   
-				AND
-					categorycode = #v_CATECODE#
-				AND
-					oldflag IS NULL
-			]]>
+		<isEqual property="approvalFlag" compareValue="G">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#   
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode != #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
 		</isEqual>
-		<isEqual property="v_CATETYPE" compareValue="2">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(subcategorycode), 0)
-				FROM
-					TBL_TASKSUBCATEGORY
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					mcategorycode = #v_CATECODE#
-				AND
-					oldflag IS NULL
-			]]>
-		</isEqual>
-		<isEqual property="v_CATETYPE" compareValue="3">
-			<![CDATA[
-				SELECT
-					NVL(COUNT(taskcode), 0)
-				FROM
-					TBL_TASKCODE
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					subcategorycode = #v_CATECODE#
-				AND
-					delflag = '0'
-			]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<isEqual property="v_CATETYPE" compareValue="1">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(mcategorycode), 0)
+					FROM
+						TBL_TASKMIDDLECATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#   
+					AND
+						categorycode = #v_CATECODE#
+					AND
+						mcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="2">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(subcategorycode), 0)
+					FROM
+						TBL_TASKSUBCATEGORY
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+					AND
+						subcategorycode != #v_CATECODE#
+					AND
+						oldflag IS NULL
+				]]>
+			</isEqual>
+			<isEqual property="v_CATETYPE" compareValue="3">
+				<![CDATA[
+					SELECT
+						NVL(COUNT(taskcode), 0)
+					FROM
+						TBL_TASKCODE
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+					AND
+						delflag = '0'
+				]]>
+			</isEqual>
 		</isEqual>
 	</select>
 
@@ -2741,6 +2799,8 @@
 				displayusage,
 				description,
 				subcategorycode,
+				itemsecurity,
+				ispublic,
 				companyid,
 				tenant_id)
 			VALUES
@@ -2762,6 +2822,8 @@
 				#v_DISPLAYUSAGE#,
 				#v_DESCRIPTION#,
 				#v_SUBCATEGORYCODE#,
+				#itemSecurity#,
+				#isPublic#,
 				#companyID#,
 				#tenantID#)
 	    ]]>
@@ -2889,7 +2951,9 @@
 				sc3 = #v_SC3#,
 				displayusage = #v_DISPLAYUSAGE#,
 				description = #v_DESCRIPTION#,
-				subcategorycode = #v_SUBCATEGORYCODE#
+				subcategorycode = #v_SUBCATEGORYCODE#,
+				itemsecurity = #itemSecurity#,
+				ispublic = #isPublic#
 			WHERE
 				tenant_id = #tenantID#
 			AND

@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
+			var pUserID = "${userInfo.id}";
 		    var pListTypeValue = "${listType}";
 		    var PresentOpen = "APPROVAL";
 		    var CompanyID = '${userInfo.companyID}';
@@ -44,6 +45,7 @@
 		    var ViewLeftCount = "${viewLeftCount}";
 		    var primaryStr = "${userInfo.primary}";
 		    var tmpValue = "";
+		    var nodeIdx;
 		    $(function () {
 		      	if(approvalYN == "G") {
 	        		$(".approvalG").css("display","");
@@ -59,7 +61,12 @@
 		                $(this).addClass('instance');
 		            });
 		    });
-		    document.onselectstart = function () { return false; };
+		    document.onselectstart = function () {
+		    	 if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
+		                return false;
+		            else
+		                return true;
+		   	};
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
@@ -91,7 +98,21 @@
 			        }
 		        }
 		        
+		        
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
+		        if(approvalYN == "S") {
+		        	Tree_setconfig();
+		            var xmlDom2 = createXmlDom();
+		            xmlDom2 = loadXMLString('${userCont}');
+		            var treeView = new TreeView();
+		            treeView.SetID("UserContTree");
+		            treeView.SetUseAgency(true);
+		            treeView.SetRequestData("UserContRequestData");
+		            treeView.SetNodeClick("UserContNodeClick");
+		            treeView.DataSource(xmlDom2);
+		            treeView.DataBind("divUserContTree");
+		            
+		        }
 		        if (parseInt(pListTypeValue) < 10) {
 		            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue, "right");
 		
@@ -137,20 +158,24 @@
 		                DocManageMain("m02");
 		            }
 		        }
-		        if(approvalYN == "S") {
-		        	Tree_setconfig();
-		            var xmlDom2 = createXmlDom();
-		            xmlDom2 = loadXMLString('${userCont}');
-		            var treeView = new TreeView();
-		            treeView.SetID("UserContTree");
-		            treeView.SetUseAgency(true);
-		            treeView.SetRequestData("UserContRequestData");
-		            treeView.SetNodeClick("UserContNodeClick");
-		            treeView.DataSource(xmlDom2);
-		            treeView.DataBind("divUserContTree");
-		        }
-		    };
 		
+		    };
+		    
+		    function UserContRequestData(pNodeID, pTreeID) {
+	            nodeIdx = pNodeID;
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(pNodeID);
+
+	            var xmlHTTP = createXMLHttpRequest();
+	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>" + treeNode.GetNodeData("DATA1") + "</ParentContID><NAME></NAME></DATA>";
+	            xmlHTTP.open("POST", "/ezApprovalG/getUserContSubTree.do", false);
+	            xmlHTTP.send(strQuery);
+
+	            var treeView = new TreeView();
+	            treeView.LoadFromID(pTreeID);
+	            treeView.AppendChildNodes(loadXMLString(xmlHTTP.responseText).documentElement, pNodeID)
+	        }
+		    
 		    function Tree_setconfig() {
 		        var xmlHTTP = createXMLHttpRequest();
 		        xmlHTTP.open("GET", "/xml/ezApproval/conttree_config.xml", false);
@@ -190,6 +215,26 @@
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();
 	        }
+	        
+	        function TreeViewRefresh() {
+	            var xmlHTTP = createXMLHttpRequest();
+	            var strQuery = "<DATA><USERID>" + pUserID + "</USERID><ParentContID>ROOT</ParentContID><NAME></NAME></DATA>";
+	            xmlHTTP.open("POST", "/ezApprovalG/getUserContSubTree.do", false);
+	            xmlHTTP.send(strQuery);
+
+	            var xmlDomRet = createXmlDom();
+	            xmlDomRet = loadXMLString(getXmlString(loadXMLString(xmlHTTP.responseText).documentElement));
+
+	            document.getElementById('divUserContTree').innerHTML = '';
+	            var treeView = new TreeView();
+	            treeView.SetID("UserContTree");
+	            treeView.SetUseAgency(true);
+	            treeView.SetRequestData("UserContRequestData");
+	            treeView.SetNodeClick("UserContNodeClick");
+	            treeView.DataSource(xmlDomRet);
+	            treeView.DataBind("divUserContTree");
+	        }
+	        
 		    function Open_Func(pthis) {
 		        try {
 		            switch (pthis.id) {

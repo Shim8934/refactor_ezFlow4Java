@@ -315,7 +315,7 @@
 	            pheigth = pheigth - 350;
 	            pwidth = pwidth - 350;
 	
-	            window.open("/myoffice/ezCommunity/board/bbs_view_new.aspx?mode=content&no=" + sURL + "&bname=" + ttt, "게시글보기", "width=760,height=720,top=" + pheigth + ",left=" + pwidth);
+	            window.open("/myoffice/ezCommunity/board/bbs_view_new.aspx?mode=content&no=" + sURL + "&bname=" + ttt, "<spring:message code='ezCommunity.t166'/>", "width=760,height=720,top=" + pheigth + ",left=" + pwidth);
 	        }
 	
 	        function Copmore_btnClick() {

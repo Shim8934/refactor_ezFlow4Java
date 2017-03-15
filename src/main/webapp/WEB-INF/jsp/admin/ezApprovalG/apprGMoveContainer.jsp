@@ -26,7 +26,7 @@
 	            P_CompanyID = document.getElementById("ListCompany").value;
 	            document.getElementById('lvSDoc').innerHTML = "";
 	            document.getElementById('lvTDoc').innerHTML = "";
-	
+
 	            listview = new ListView();
 	            listview.SetID("lvSDocForm");
 	            listview.SetMulSelectable(true);
@@ -115,19 +115,27 @@
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
 	                pChackYN == "FALSE"
 	            }
-alert(retVal[0])
-alert(retVal[1])
 	            Flag = "SDeptName";
 	            getDocType(Flag);
 	            ScontID = document.getElementsByName("selSContName")[0].value;
-	
-	            getDocList();
+				
+	            if (ScontID != "") {
+	            	getDocList();
+	            } else {
+	            	document.getElementById('lvSDoc').innerHTML = "";
+		            document.getElementById('lvTDoc').innerHTML = "";
+		            
+		            listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
+		            listview.DataBind("lvSDoc");
+		            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
+		            listview2.DataBind("lvTDoc");
+	            }
 	        }
 	
 	        function bt_TDeptSelect_onclick() {
 	            organ_dialogArguments[0] = P_CompanyID;
 	            organ_dialogArguments[1] = bt_TDeptSelect_onclick_Complete;
-	            var result = GetOpenWindow("organ.do", "Organ_Cross", 290, 525, "NO");
+	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 525, "NO");
 	        }
 	        
 	        function bt_TDeptSelect_onclick_Complete(retVal) {
@@ -313,24 +321,24 @@ alert(retVal[1])
 	        <tr>
 	            <td>
 	                <table class="content" style="width: 368px">
+	                	<tr>
+	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t772'/></th>
+	                        <td>
+	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
+							</td>
+	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezApproval.t344'/></th>
 	                        <td>
 	                            <input type="text" id="SDeptName" name="SDeptName" style="WIDTH: 130px" readonly="true" />
-	                            <a class="imgbtn" name="SDeptSelect"><span onclick="return bt_SDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
+	                            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
 							</td>   
 	                    </tr>
 	                    <tr>
 	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t611'/></th>
 	                        <td>
 	                            <select name="selSContName" style="WIDTH: 150px" onchange="return bt_selSContName_onclick()"></select>
-	                            <a class="imgbtn" name="Search"><span onclick="return SearchCondi_onclick()"><spring:message code='ezApproval.t236'/></span></a>
-							</td>
-	                    </tr>
-	                    <tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t772'/></th>
-	                        <td>
-	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
+	                            <a class="imgbtn" name="Search"><span onclick="SearchCondi_onclick()"><spring:message code='ezApproval.t236'/></span></a>
 							</td>
 	                    </tr>
 	                </table>
@@ -342,29 +350,30 @@ alert(retVal[1])
 	                        <th><spring:message code='ezApproval.t344'/></th>
 	                        <td>
 	                            <input type="text" name="TDeptName" style="WIDTH: 130px;" readonly="true" />
-	                            <a class="imgbtn" name="TDeptSelect"><span onclick="return bt_TDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
+	                            <a class="imgbtn" name="TDeptSelect"><span onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
 	                        </td>    
 	                    </tr>
 	                    <tr>
 	                        <th><spring:message code='ezApproval.t611'/></th>
 	                        <td>
-	                            <select name="selTContName" style="WIDTH: 150px" onclick="return bt_selTContName_onclick()"></select>
+	                            <select name="selTContName" style="WIDTH: 150px" onclick="bt_selTContName_onclick()"></select>
 							</td>
 	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
-	    </table>
-	    <br/>
-	    <table>
-	        <tr id="PageNum"></tr>
-	    </table>
-	    <table>
+	    </table>	        
+	    <table style="margin-top:20px">
 	        <tr>
 	            <td>
 	                <div class="listview">
-	                    <div id="lvSDoc" style="BORDER: 0; HEIGHT: 270px; WIDTH: 367px; overflow-x: scroll; overflow-y: hidden" onclick="lvSDoc_onclick()" onrowdblclick="lvSDoc_onSel_DBclick()" onseldblclick="lvSDoc_onSel_DBclick()" onselclick="lvSDoc_onSel_Click()" onrowclick="lvSDoc_onSel_Click()" onselchanged="lvSDoc_onSel_Changed()"></div>
+	                    <div id="lvSDoc" style="BORDER: 0; HEIGHT: 297px; WIDTH: 367px; overflow-x: scroll; overflow-y: hidden" onclick="lvSDoc_onclick()" onrowdblclick="lvSDoc_onSel_DBclick()" onseldblclick="lvSDoc_onSel_DBclick()" onselclick="lvSDoc_onSel_Click()" onrowclick="lvSDoc_onSel_Click()" onselchanged="lvSDoc_onSel_Changed()"></div>
 	                </div>
+	                <div style="margin-top:5px;text-align:center;height:20px" align="center">
+	                	<table style="margin-top:5px;text-align:center" align="center">
+							<tr id="PageNum"></tr>
+						</table>					    
+					</div>
 	            </td>
 	            <td style="text-align: center; width: 30px">
 	                <img height="16" id="arrow_right" onclick="return  btnIns_onclick()" src="/images/arr_right.gif" style="cursor: pointer" width="16" /><br/>
@@ -376,11 +385,14 @@ alert(retVal[1])
 				</td>
 	            <td>
 	                <div class="listview">
-	                    <div id="lvTDoc" style="BORDER: 0; HEIGHT: 270px; WIDTH: 365px; overflow-x: hidden; overflow-y: auto"></div>
+	                    <div id="lvTDoc" style="BORDER: 0; HEIGHT: 297px; WIDTH: 365px; overflow-x: hidden; overflow-y: auto"></div>
 	                </div>
+	                <div style="margin-top:5px;text-align:center;height:20px" align="center">
+	                						    
+					</div>
 	            </td>
 	        </tr>
-	    </table>
+	    </table>	        
 	    <div class="btnposition" style="width: 756px; text-align: center;">
 	        <a class="imgbtn" onclick="bt_OK_onclick()"><span><spring:message code='ezApproval.t272'/></span></a>
 	    </div>

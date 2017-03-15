@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezPortal.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -42,6 +41,7 @@ import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPortal.service.EzPortalAdminService;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
 import egovframework.ezEKP.ezPortal.vo.PortalGetThemeListVO;
@@ -85,6 +85,9 @@ public class EzPortalController extends EgovFileMngUtil {
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
+	
+	@Resource(name="EzPortalAdminService")
+	private EzPortalAdminService ezPortalAdminService;
 	
 	@Resource(name = "EzPersonalService")
 	private EzPersonalService ezPersonalService;
@@ -2547,9 +2550,9 @@ public class EzPortalController extends EgovFileMngUtil {
 					
 					if (uID != null && uID.equals(newPortalParentUID)) {
 						sb.append("<ROW>");
-						sb.append("<UID_>" + tempNewMyPortalPageList.get(t).getuID_() + "</UID_>");
-						sb.append("<DISPLAYNAME>" + myPortalList.get(i).getDisplayName() + "</DISPLAYNAME>");
-						sb.append("<USEFLAG>" + tempNewMyPortalPageList.get(t).getUseFlag() + "</USEFLAG>");
+						sb.append("<UID_>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getuID_()) + "</UID_>");
+						sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(myPortalList.get(i).getDisplayName()) + "</DISPLAYNAME>");
+						sb.append("<USEFLAG>" + commonUtil.cleanValue(tempNewMyPortalPageList.get(t).getUseFlag()) + "</USEFLAG>");
 						sb.append("</ROW>");
 					}
 				}
@@ -3014,7 +3017,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String portletSearch(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		StringBuilder sb = new StringBuilder();
-		List<PortalTBLPortalPageCategoryVO> list = ezPortalService.getPortalPageCategory(userInfo.getTenantId());
+		List<PortalTBLPortalPageCategoryVO> list = ezPortalAdminService.getPortletCategory(userInfo.getTenantId());
 		
 		sb.append("<DATA>");
 		for (int i=0; i<list.size(); i++) {
@@ -3037,7 +3040,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPortal/portletSearchList.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String portletSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+	public String portletSearchList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pPageType = "";
@@ -3054,7 +3057,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			mode = req.getParameter("mode");
 		}
 		
-		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID(), userInfo.getTenantId());
+		String strXML = ezPortalService.searchPortletCheckRight("", pType, pPageType, mode, 1, 100, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), locale);
 		return strXML;
 	}
 	

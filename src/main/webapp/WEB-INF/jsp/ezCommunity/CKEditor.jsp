@@ -18,7 +18,6 @@
 		    // Setdata 후 실행 함수.
 		    CKEDITOR.on( 'afterSetData', function( ev )
 		    {
-		    	parent.FieldsAvailable();
 		    });
 			
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
@@ -44,7 +43,7 @@
 			}
 			
 			function BodySetAttribute(name, Value) {
-			    CKEDITOR.instances.editor1.document.$.body.setAttribute(name, Value, 0);
+			    CKEDITOR.instances.editor1.document.$.body.setAttribute(name, ConvMakeXMLString(Value), 0);
 			}
 		
 			// 웹에디터에 내용 삽입(MHT 파일 url 받음)
@@ -59,7 +58,7 @@
 
 			    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 			    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-			    return getNodeText(XmlBodyDATA);
+			    return ConvMakeXMLString(getNodeText(XmlBodyDATA));
 			}
 			
 			function SetEditorContent(strHtml){
@@ -95,11 +94,14 @@
 		        }
 		        return BODYTag;
 		    }
-		     
-
-		    function BodySetAttribute(name, Value){
-		        CKEDITOR.instances.editor1.document.$.body.setAttribute(name, Value, 0);
-		    }
+		    
+		    function ConvMakeXMLString(str) {
+                str = ReplaceText(str, "&amp;", "&");
+                str = ReplaceText(str, "&lt;", "<");
+                str = ReplaceText(str, "&gt;", ">");
+                str = ReplaceText(str, "&quot;", "\"");
+                return str;
+            }
 		</script>
 	</head>
 	<body>

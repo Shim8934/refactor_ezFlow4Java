@@ -334,8 +334,9 @@
 	    		<c:when test="${reservedList.attachments != '0'}">
 	    			<td><img src='/images/i_save01.gif'></td>
 	    		</c:when>
-<%-- 	    		<c:otherwise> --%>
-<%-- 	    		</c:otherwise> --%>
+	    		<c:otherwise>
+	    			<td></td>
+	    		</c:otherwise>
 		    	</c:choose>
 	    	</tr>
 <%-- 	    	<c:set target="${ListInfo}">${ListInfo} + ${reservedList.itemID} + "," + ${userInfo.id} + ";"}</c:set> --%>

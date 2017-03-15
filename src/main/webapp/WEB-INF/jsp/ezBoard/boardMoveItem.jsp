@@ -16,16 +16,22 @@
 		    var selectedBoard = "";
 		    var ItemIDList = "${itemIDList}";
 		    var BoardIDList = "${boardID}";
+		    var oldguBun = "${guBun}";
+		    var newguBun = "";
 		    var xmlDom_treeview = createXmlDom();
 		    var ReturnFunction;
 		
 		    function Select() {
-		        if (selectedBoard == "") {
+		    	if (selectedBoard == "") {
 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
-		        if (CheckIfAnonyBoard(selectedBoard) == "1") {
-		            alert("<spring:message code='ezBoard.t180'/>");
+		    	if (oldguBun != newguBun) {
+		        	alert("<spring:message code='ezBoard.jsh01'/>");
+		            return;
+		        }
+		    	if (oldguBun == "3" && newguBun == "3") {
+		        	alert("<spring:message code='ezBoard.t180'/>");
 		            return;
 		        }
 		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
@@ -86,12 +92,9 @@
 		        return retval;
 		    }
 		    window.onload = function () {
-		
 		        try {
 		            ReturnFunction = opener.moveboarditem_cross_dialogArguments[1];
 		        } catch (e) { }
-		
-		
 		
 		        var xmlDom_treeview = createXMLHttpRequest();
 		        xmlDom_treeview.open("GET", "/xml/organtree_config2.xml", false);
@@ -124,6 +127,7 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(pNodeID);
 		        selectedBoard = treeNode.GetNodeData("DATA1");
+		        newguBun = treeNode.GetNodeData("DATA5");
 		    }
 		    function DisplayTopBoard() {
 		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
