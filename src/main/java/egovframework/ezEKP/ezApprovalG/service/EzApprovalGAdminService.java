@@ -41,7 +41,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception;
 	
-	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception;
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID) throws Exception;
 
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
