@@ -25,7 +25,7 @@
 		    var ListIdx;
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
 		    var nodeIdx;
-		    var pEDITOR = "<c:out value = '${editor}' />";
+		    var pEDITOR = "<c:out value = '${useEditor}' />";
 		    
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function() {
@@ -151,7 +151,7 @@
 		    	if (retVal[0] == "TRUE") {
 		            if (nodeIdx != null) {
 		                var tmpDisplayFormName = "";
-		                if (g_multiDataNum == "") {
+		                if (g_multiDataNum == "1") {
 		                    tmpDisplayFormName = retVal[2];
 		                } else {
 		                    tmpDisplayFormName = retVal[7];
@@ -201,7 +201,7 @@
 		    function UpdateFCont_complete(retVal) {
 		    	if (retVal[0] == "TRUE") {
 	                var tmpDisplayFormName = "";
-	                if (g_multiDataNum == "") {
+	                if (g_multiDataNum == "1") {
 	                    tmpDisplayFormName = retVal[1];
 	                } else {
 	                    tmpDisplayFormName = retVal[5];
@@ -567,7 +567,14 @@
 			</TREEVIEWDATA>
 		</xml>
 		
-		<h1><spring:message code = 'ezApprovalG.t1612' /></h1>
+		<c:choose>
+			<c:when test="${approvalFlag == 'S' }">
+				<h1><spring:message code = 'ezApprovalG.t1463' /></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code = 'ezApprovalG.t1612' /></h1>
+			</c:otherwise>
+		</c:choose>
 		<div id="mainmenu">    
 		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 			    <select id="ListCompany" onChange="selectCompanyID()">

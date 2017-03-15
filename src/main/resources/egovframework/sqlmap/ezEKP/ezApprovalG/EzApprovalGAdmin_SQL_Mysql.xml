@@ -2176,38 +2176,74 @@
 			]]>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="2">
-			<![CDATA[
-				UPDATE
-					TBL_TASKMIDDLECATEGORY
-				SET
-					name = #v_NAME#,
-					name2 = #v_NAME2#,
-					description = #v_DESC#,
-					categorycode = #v_CODE#
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					mcategorycode = #v_CATECODE#
-			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					UPDATE
+						TBL_TASKMIDDLECATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					UPDATE
+						TBL_TASKMIDDLECATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#,
+						categorycode = #v_CODE#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						mcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
 		</isEqual>
 		<isEqual property="v_CATETYPE" compareValue="3">
-			<![CDATA[
-				UPDATE
-					TBL_TASKSUBCATEGORY
-				SET
-					name = #v_NAME#,
-					name2 = #v_NAME2#,
-					description = #v_DESC#,
-					mcategorycode = #v_CODE#
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					subcategorycode = #v_CATECODE#
-			]]>
+			<isEqual property="approvalFlag" compareValue="S">
+				<![CDATA[
+					UPDATE
+						TBL_TASKSUBCATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
+			<isEqual property="approvalFlag" compareValue="G">
+				<![CDATA[
+					UPDATE
+						TBL_TASKSUBCATEGORY
+					SET
+						name = #v_NAME#,
+						name2 = #v_NAME2#,
+						description = #v_DESC#,
+						mcategorycode = #v_CODE#
+					WHERE
+						tenant_id = #tenantID#
+					AND
+						companyid = #companyID#
+					AND
+						subcategorycode = #v_CATECODE#
+				]]>
+			</isEqual>
 		</isEqual>
 	</update>
 

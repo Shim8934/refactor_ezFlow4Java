@@ -106,21 +106,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 메뉴 호출 함수
+	 * 전자결재G관리 양식등록 메뉴 호출 함수
+	 * 전자결재관리 양식등록 메뉴 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formAdmin.do")
 	public String formAdmin(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("formAdmin started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
-		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-		String editor = ""; //config에는 CK등록되어있고 ""일때 폼프로세서적용 
+		String multiData = userInfo.getPrimary();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); //config에는 CK등록되어있고 ""일때 폼프로세서적용 
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -137,7 +139,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("docType", docType);
 		model.addAttribute("multiData", multiData);
 		model.addAttribute("list", resultList);
-		model.addAttribute("editor", editor);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("formAdmin ended.");
 		
@@ -145,7 +148,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 기안양식함목록 호출 함수
+	 * 전자결재G관리 양식등록 기안양식함목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormContInfo.do")
 	public String getFormContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -169,7 +172,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 기안양식목록 호출 함수
+	 * 전자결재G관리 양식등록 기안양식목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormList.do")
 	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -195,7 +198,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 기안양식목록 정렬순서 저장 실행 함수
+	 * 전자결재G관리 양식등록 기안양식목록 정렬순서 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setFormOrder.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -211,7 +214,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식함추가 화면 호출 함수
+	 * 전자결재G관리 양식등록 양식함추가 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -246,7 +249,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식함추가 실행 함수
+	 * 전자결재G관리 양식등록 양식함추가 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setFormContIns.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -270,7 +273,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식함수정 사용부서목록 호출 함수
+	 * 전자결재G관리 양식등록 양식함수정 사용부서목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getGroupDept.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -285,7 +288,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식함수정 실행 함수
+	 * 전자결재G관리 양식등록 양식함수정 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/setFormContMod.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -310,7 +313,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식함삭제 실행 함수
+	 * 전자결재G관리 양식등록 양식함삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/delFormCont.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
@@ -329,7 +332,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 화면 호출 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -369,7 +372,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 화면 호출 함수 (한글기안)
+	 * 전자결재G관리 양식등록 양식등록,양식수정 화면 호출 함수 (한글기안)
 	 */
 	@RequestMapping(value="admin/ezApprovalG/formMainHWP.do")
 	public String formMainHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -411,7 +414,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	//여기 ///////////////////////////////////////////////////////
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
+	 * 전자결재G관리 양식등록 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
 	 */
 	@RequestMapping(value="/admin/ezApprovalG/HWPEditor.do")
 	public String HWPEditor() throws Exception {
@@ -424,7 +427,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식기본정보 호출 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 양식기본정보 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -443,7 +446,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식작성기 저장 실행 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 양식작성기 저장 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
@@ -471,7 +474,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식작성기 속성조회함수
+	 * 전자결재G관리 양식등록 양식작성기 속성조회함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormPropList.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
@@ -490,7 +493,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 연동정보 추가 화면호출 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 연동정보 추가 화면호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -540,7 +543,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식등록,양식수정 양식별 고정수신처목록 호출 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 양식별 고정수신처목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getFormRecvAdmin.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -554,7 +557,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식삭제 실행 함수
+	 * 전자결재G관리 양식등록 양식삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/delForm.do", produces="text/html;charset=utf-8")
 	@ResponseBody
@@ -570,7 +573,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 미리보기 화면 호출 함수
+	 * 전자결재G관리 양식등록 미리보기 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formPreview.do")
 	public String formPreview(HttpServletRequest request, Model model) throws Exception {
@@ -582,7 +585,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식이동화면 호출함수
+	 * 전자결재G관리 양식등록 양식이동화면 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formSelect.do")
 	public String formSelect(@CookieValue ("loginCookie") String loginCookie) throws Exception {
@@ -596,7 +599,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) 양식이동 실행함수
+	 * 전자결재G관리 양식등록 양식이동 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMove.do")
 	public String formMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -618,7 +621,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) ActiveX 다운로드 목록 호출 함수
+	 * 전자결재G관리 양식등록 ActiveX 다운로드 목록 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/componentListTransfer.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
@@ -658,7 +661,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록(MHT) ActiveX 다운로드 실행 함수
+	 * 전자결재G관리 양식등록 ActiveX 다운로드 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
 	public String progressAdmin(Model model) {
