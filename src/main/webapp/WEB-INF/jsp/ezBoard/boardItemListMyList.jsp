@@ -748,21 +748,24 @@
 	            var arrList = new Array();
 	            var strItemList = "";
 	            var strBoardItemList = "";
+	            var guBun = "";
 	            var i = 0;
 	            arrList = strListInfo.split(";");
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
 	                try {
 		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
 					} catch (e) {
 		                strBoardItemList += document.getElementById(arrList[i] + "," + SSUserID + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
 					}
 	            }
 	            arrList = null;
 	
 	            if (CrossYN()) {
 	                moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList, "MoveBoardItem_Cross", GetOpenWindowfeature(340, 600));
+	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "MoveBoardItem_Cross", GetOpenWindowfeature(340, 600));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	            else {
