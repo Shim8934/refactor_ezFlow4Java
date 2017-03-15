@@ -366,7 +366,7 @@
 	        ContainerID = ContainerID + "'" + retVal[i] + "'";
 	        subCondition = "";
 	        if (ContainerID != "'undefined'") {
-	            document.getElementById("presentcell").innerHTML = unescape(" - <%=RM.GetString("t576")%>");
+	            document.getElementById("presentcell").innerHTML = unescape(" - <spring:message code='ezApproval.t576'/>");
 	            GetDocList();
 	        }
 	    }
