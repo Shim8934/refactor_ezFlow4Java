@@ -276,7 +276,7 @@
 							strXML += "<UID>" + tdsub_item.getAttribute("uid") + "</UID>";
 							strXML += "<PAGEUID>" + tdsub_item.getAttribute("pageuid") + "</PAGEUID>";
 							strXML += "<HEIGHT>" + tdsub_item.parentElement.style.height.toString().replace("px", "") + "</HEIGHT>";
-							strXML += "<DISPLAYNAME>" + tdsub_item.firstChild.innerHTML+ "</DISPLAYNAME>";
+							strXML += "<DISPLAYNAME>" + ReplaceValidString(tdsub_item.firstChild.innerHTML) + "</DISPLAYNAME>";
 							strXML += "<CANREMOVE>" + tdsub_item.getAttribute("canremove") + "</CANREMOVE>";
 							strXML += "<CANRESIZE>" + tdsub_item.getAttribute("canresize") + "</CANRESIZE>";
 							strXML += "<CANREPLACE>" + tdsub_item.getAttribute("canreplace") + "</CANREPLACE>";
