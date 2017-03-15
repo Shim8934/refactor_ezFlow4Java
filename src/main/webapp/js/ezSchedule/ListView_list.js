@@ -1617,7 +1617,7 @@ function getOriginXML(pTagetID)
        
         alert(objBodyData[i].cells.length);
         xmlBody += "<ROW><CELL>";
-        xmlBody += "<VALUE>" + objBodyData[i].innerText + "</VALUE>";
+        xmlBody += "<VALUE><![CDATA[" + objBodyData[i].innerText + "]]></VALUE>";
         for(var x=0; x<1; x++)
         {
             //debugger;
