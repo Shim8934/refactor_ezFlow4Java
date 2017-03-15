@@ -1170,15 +1170,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재 관리 분류,단위업무관리 분류목록에따른 단위업무 목록 호출함수
-	 * 전자결재 관리 분ㅂ류코드관리 체계목록에 따른 분류코드 목록 호출함수
+	 * 전자결재 관리 분류코드관리 체계목록에 따른 분류코드 목록 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String getTaskInSubCategoryForManage(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(data);
+	public String getTaskInSubCategoryForManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskInSubCategoryForManage started.");
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(doc, userInfo.getTenantId());
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String sCateCode = request.getParameter("sCateCode");
+		String langType = request.getParameter("langType");
+		String companyID = request.getParameter("companyID");
+		
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, langType, companyID, userInfo.getTenantId());
+		
+		logger.debug("getTaskInSubCategoryForManage ended.");
 		
 		return result;
 	}
@@ -2511,13 +2518,56 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pageNum = request.getParameter("pageNum");
 		String pageSize = request.getParameter("pageSize");
 		String companyID = request.getParameter("companyID");
-		String orderCell = request.getParameter("OC");
-		String orderOption = request.getParameter("OO");
 		
-		if (orderCell == null) orderCell = "";		
-		if (orderOption == null) orderOption = "";
-						
-		String result = ezApprovalGService.getContDocList(contID, userInfo.getId(), "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		StringBuilder subQuery = new StringBuilder();
+		
+		if (request.getParameter("docNO") != null && !request.getParameter("docNO").equals("")) {
+			subQuery.append(" TBL_ENDAPRDOCINFO.docNO LIKE '%" + request.getParameter("docNO") + "%' ");
+		}
+		
+		if (request.getParameter("docTitle") != null && !request.getParameter("docTitle").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_ENDAPRDOCINFO.docTitle LIKE '%" + request.getParameter("docTitle") + "%' ");
+		}
+		
+		if (request.getParameter("drafter") != null && !request.getParameter("drafter").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.writerName LIKE '%" + request.getParameter("drafter") + "%' OR TBL_ENDAPRDOCINFO.writerName2 LIKE '%" + request.getParameter("drafter") + "%')");
+		}
+		
+		if (request.getParameter("draftFrom") != null && !request.getParameter("draftFrom").equals("") && request.getParameter("draftTo") != null && !request.getParameter("draftTo").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.StartDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("draftFrom"), userInfo.getOffset(), true) + "' AND TBL_ENDAPRDOCINFO.StartDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("draftTo"), userInfo.getOffset(), true) + "')");
+		}
+		
+		if (request.getParameter("aprFrom") != null && !request.getParameter("aprFrom").equals("") && request.getParameter("aprTo") != null && !request.getParameter("aprTo").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.EndDate >= '" + commonUtil.getDateStringInUTC(request.getParameter("aprFrom"), userInfo.getOffset(), true) + "' AND TBL_ENDAPRDOCINFO.EndDate <= '" + commonUtil.getDateStringInUTC(request.getParameter("aprTo"), userInfo.getOffset(), true) + "')");
+		}
+		
+		if (request.getParameter("deptName") != null && !request.getParameter("deptName").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+		}
+		
+		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
+		}
+							
+		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 	
 		logger.debug("getDocList ended");
 		
@@ -2539,6 +2589,33 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("moveContainer ended");
 		
 		return result;
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서이동 검색 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/ezStatisticsSearch.do")
+	public String ezStatisticsSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ezStatisticsSearch started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String aprFlag = request.getParameter("ingFlag");
+		String listType = request.getParameter("listType");
+		String startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
+		model.addAttribute("aprFlag", aprFlag);
+		model.addAttribute("listType", listType);
+		model.addAttribute("startDate", startDate);
+		model.addAttribute("endDate", endDate);
+		model.addAttribute("monthEndDay", endDate.substring(5, 7));
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("initDate", startDate.substring(0, 10));
+		
+		logger.debug("ezStatisticsSearch ended");
+		
+		return "admin/ezApprovalG/apprGStatisticsSearch";
 	}
 
 }

@@ -775,6 +775,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CATETYPE", categoryType);
 		map.put("v_PARENTID", parentID);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -793,9 +794,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getMcategoryCode(), companyID, tenantID, approvalFlag);
 						break;
 					case "3":
-						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
+//						isLeaf = getTaskCategoryNodeExist(vo.getCategoryType(), vo.getSubCategoryCode(), companyID, tenantID, approvalFlag);
+						isLeaf = "FALSE";
 						break;
 				}
+				
 				isLeaf = isLeaf.equals("TRUE") ? "FALSE" : "TRUE";
 
 				sb.append("<NODE><EXPANDED>FALSE</EXPANDED>");
@@ -836,15 +839,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInSubCategoryForManage(Document doc, int tenantID) throws Exception {
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID) throws Exception {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		StringBuffer sb = new StringBuffer();
-		String companyID = doc.getElementsByTagName("COMPANYID").item(0).getTextContent();
-		String pSCateCode = doc.getElementsByTagName("SCATECODE").item(0).getTextContent();
-		String langType = doc.getElementsByTagName("LANGTYPE").item(0).getTextContent();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_SUBCATECODE", pSCateCode);
+		map.put("v_SUBCATECODE", sCateCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
