@@ -1420,12 +1420,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getTaskCodeNodeExist.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getTaskCodeNodeExist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getTaskCodeNodeExist started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String taskCode = request.getParameter("taskCode");
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
+		String result = "";
 		
-		String result = ezApprovalGAdminService.getTaskCodeNodeExist(taskCode, deptID, companyID, userInfo.getTenantId());
+		if (approvalFlag.equals("S")) {
+			result = "FALSE";
+		} else {
+			result = ezApprovalGAdminService.getTaskCodeNodeExist(taskCode, deptID, companyID, userInfo.getTenantId());
+		}
+		
+		logger.debug("getTaskCodeNodeExist ended.");
 		
 		return result;
 	}
@@ -1440,12 +1450,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("removeTaskCode started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String taskCode = request.getParameter("taskCode");
 		String companyID = request.getParameter("companyID");
 		
 		logger.debug("taskCode = " + taskCode + ", companyID = " + companyID);
 		
-		String result = ezApprovalGAdminService.removeTaskCode(taskCode, companyID, userInfo);
+		String result = ezApprovalGAdminService.removeTaskCode(taskCode, companyID, userInfo, approvalFlag);
 		
 		logger.debug("removeTaskCode ended.");
 		

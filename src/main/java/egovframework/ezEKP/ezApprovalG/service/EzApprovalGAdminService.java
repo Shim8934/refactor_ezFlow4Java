@@ -59,7 +59,7 @@ public interface EzApprovalGAdminService {
 
 	public String getTaskCodeNodeExist(String taskCode, String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo) throws Exception;
+	public String removeTaskCode(String taskCode, String companyID, LoginVO userInfo, String approvalFlag) throws Exception;
 	
 	public String getTaskCodeDeptInfo(String taskCode, String companyID, String lang, int tenantID) throws Exception;
 

@@ -443,6 +443,9 @@
 		    				},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function(jqXHR,textStatus,errorThrown) {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	
