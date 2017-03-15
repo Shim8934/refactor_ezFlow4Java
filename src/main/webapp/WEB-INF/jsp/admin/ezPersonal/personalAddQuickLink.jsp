@@ -411,7 +411,7 @@
 	                	<c:choose>
 	                		<c:when test="${host == 'jgw.cloud.kaoni.com'}">
 	                			 <tr class="primary">
-			                        <th><spring:message code = 'ezPersonal.s81' /></th>
+			                        <th><spring:message code = 'ezPersonal.s84' /></th>
 			                        <td>
 			                            <input name="Input" id="Title1" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" value="" maxLength="50"></td>
 			                    </tr>
