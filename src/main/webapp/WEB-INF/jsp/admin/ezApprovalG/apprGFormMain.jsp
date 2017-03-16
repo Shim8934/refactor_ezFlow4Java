@@ -767,11 +767,6 @@
             </tr>
         </table>
         
-        <!-- <form runat="server" id="bodyForm">
-            <asp:HiddenField ID="hidCompanyID" runat="server" />
-            <asp:HiddenField ID="hidFormID" runat="server" />
-            <asp:HiddenField ID="hidBeforeConnData" runat="server" />
-        </form> -->
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
         </script>

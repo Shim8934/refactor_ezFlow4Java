@@ -4,6 +4,17 @@
 <!DOCTYPE html>
 <html>
 	<head>
+
+
+
+<!-- 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>   -->
+<!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/FormMain_Cross.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script> -->
+<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script> -->
+		
+<!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
+		
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -13,10 +24,10 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ezForm.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
 				
 		<script type="text/javascript">
@@ -74,6 +85,7 @@
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 		        MakeListXML(pDocType);
 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        
 		        if (formID != "") {
 		            flag = false;
 		            get_FormInfo();
@@ -128,9 +140,9 @@
 		                        htmlData += GetChildNodes(Doc_ContentHtml)[i].outerHTML;
 		                    }
 		                }
-		            }
-		            else
+		            } else {
 		                Editor_Complete();
+		            }
 		        }
 		    }
 		
@@ -901,7 +913,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/hwpEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 100%; width: 1030px; overflow: auto; border:none"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/adnub/ezApprovalG/selectEditor?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 100%; width: 800px; overflow: auto; border:none;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/selectEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 100%; width: 800px; overflow: auto; border:none;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>
