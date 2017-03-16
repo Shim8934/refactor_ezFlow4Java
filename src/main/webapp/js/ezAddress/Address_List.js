@@ -435,6 +435,9 @@ function OderbyOptionExpression(obj) {
     document.getElementById(Old_OderName).innerHTML = "";
     document.getElementById(OderName).innerHTML = oderOption == "0" ? "<img border=\"0\" src=\"/images/view-sortup.gif\">" : "<img border=\"0\" src=\"/images/view-sortdown.gif\">";
     obj.setAttribute("_OrderOption", oderOption == "0" ? "1" : "0");
+    
+    document.getElementById("HeaderAllCheckBox").checked = false;
+    
     pCurrentPage = "1";
     if (searchFlag)
         Get_SearchAddressList();
@@ -442,6 +445,8 @@ function OderbyOptionExpression(obj) {
         Get_AddressList();
 }
 function goToPageByNum(szNum) {
+    document.getElementById("HeaderAllCheckBox").checked = false;
+    
     pCurrentPage = szNum;
     if(searchFlag)
         Get_SearchAddressList();

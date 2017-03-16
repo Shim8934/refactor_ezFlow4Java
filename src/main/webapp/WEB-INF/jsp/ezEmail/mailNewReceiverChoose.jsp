@@ -1779,9 +1779,10 @@
 		        			type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
-		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0)
-	                        alert(strLang155);
-	                    else {
+		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
+		        		    issearch = false;
+	                        alert(strLang155);	                        
+		        		} else {
 	                        listContentArry = new Array();
 	                        pSeach = true;
 	                        DisplayUserImageList();
@@ -1822,9 +1823,10 @@
 		        	data : {search : "displayname::" + document.getElementById("cnkeyword").value, cell : "displayName;description;title;telephoneNumber", prop : "mail", type : "user"},
 		        	success : function(result){	
 		        		pListXML_Info = loadXMLString(result);
-		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0)
+		        		if (pListXML_Info.getElementsByTagName("ROW").length == 0) {
+		        		    issearch = false;
 	                        alert(strLang155);
-	                    else {
+		        		} else {
 	                        listContentArry = new Array();
 	                        pSeach = true;
 	                        DisplayUserImageList();

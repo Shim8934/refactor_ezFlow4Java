@@ -8,6 +8,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
+<style>
+	select { width:100%; }
+</style>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript">
 	
@@ -27,32 +30,7 @@
 			},
 			async: false,
 			success : function(result) {
-				$("table").children().remove();
-				$("table").append('<tr><th><spring:message code="main.kms1"/>'+
-						'</th><th><spring:message code="main.kms3"/></th></tr>');
-				list = result;
-				for (var i = 0; i < list.length; i++) {
-					if(list[i].name=="USE_AdditionalROle"){
-						list[i].name="USE_AdditionalRole";
-					}
-					if(list[i].value != "YES" && list[i].value != "NO" ){
-						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><input type="text" value='+list[i].value+'></td></tr>');
-					}else if(list[i].value == "NO"){
-						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><select><option value="YES">YES</option><option value="NO" selected="selected">NO</option>'
-						+'</select></td></tr>');
-					}else{
-						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><select><option value="YES" selected="selected">YES</option><option value="NO">NO</option>'
-						+'</select></td></tr>');
-					}
-				}
-				$("table").append('<tr><td colspan="2" style="text-align: center; padding-top:5px;">'
-						+'<div class="imgbtn" style="padding-right: 3px;"><span onclick="check_change_Param()">'
-						+'<spring:message code='main.sp09'/></span></div>'
-						+'<div class="imgbtn"><span onclick=$("form")[0].reset()><spring:message code='main.sp11'/>'
-						+'</span></div></td></tr>');
+				after_get_Sys_Param(result);
 			},
 			error : function(error) {
 				alert("<spring:message code='main.kms2'/>" + error);
@@ -61,9 +39,64 @@
 
 	}
 	
+	function after_get_Sys_Param(result) {
+		$("table").children().remove();
+		$("table").append('<tr><th><spring:message code="main.kms1"/>'+
+				'</th><th><spring:message code="main.kms3"/></th></tr>');
+		list = result;
+		for (var i = 0; i < list.length; i++) {
+			if(list[i].name=="USE_AdditionalROle"){
+				list[i].name="USE_AdditionalRole";
+			}
+			
+				if(list[i].value != "YES" && list[i].value != "NO" ){
+					if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
+						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+						+'<td><input type="text" value='+list[i].value+'></td></tr>');
+					}else if(list[i].name == "PrimaryLang"){
+						if(list[i].value==3){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1"><spring:message code="ezPersonal.s81"/></option>'
+							+'<option value="3" selected="selected"><spring:message code="ezPersonal.s84"/></option>'
+							+'</select></td></tr>');
+						}else if(list[i].value==1){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1" selected="selected"><spring:message code="ezPersonal.s81"/></option>'
+							+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
+							+'</select></td></tr>');
+						}
+					}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
+						if(list[i].value == "1"){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1" selected="selected">YES</option><option value="0">NO</option>'
+							+'</select></td></tr>');
+						}else if(list[i].value == "0"){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1">YES</option><option value="0" selected="selected">NO</option>'
+							+'</select></td></tr>');
+						}		
+					}
+				}else if(list[i].value == "NO"){
+					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+					+'<td><select><option value="YES">YES</option><option value="NO" selected="selected">NO</option>'
+					+'</select></td></tr>');
+				}else{
+					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+					+'<td><select><option value="YES" selected="selected">YES</option><option value="NO">NO</option>'
+					+'</select></td></tr>');	
+				}
+		}
+		$("table").append('<tr><td colspan="2" style="text-align: center; padding-top:5px;">'
+		+'<div class="imgbtn" style="padding-right: 3px;"><span onclick="check_change_Param()">'
+		+'<spring:message code='main.sp09'/></span></div>'
+		+'<div class="imgbtn"><span onclick=$("form")[0].reset()><spring:message code='main.sp11'/>'
+		+'</span></div></td></tr>');
+	}
+	
 	function check_change_Param() {
 
 		var flag=false;
+		confirmChange = "";
 		
 		for (var i = 0; i < list.length; i++) {
 			if($("#tr_"+i+" input").val()==undefined){
@@ -72,8 +105,40 @@
 			value = $("#tr_"+i+" input").val();
 			}
 			if(value!=list[i].value){
-			 flag=true;
-			 confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
+				if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
+			 		flag=true;
+			 		confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
+				}else if(list[i].name == "PrimaryLang"){
+					flag=true;
+					var oldLang = "";
+					var newLang = "";
+ 					if(value==1){
+ 						newLang = "<spring:message code="ezPersonal.s81"/>";
+ 					}else if(value==3){
+ 						newLang = "<spring:message code="ezPersonal.s84"/>";
+ 					}
+ 					if(list[i].value==1){
+ 						oldLang = "<spring:message code="ezPersonal.s81"/>";
+ 					}else if(list[i].value==3){
+ 						oldLang = "<spring:message code="ezPersonal.s84"/>";
+ 					}
+					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
+				}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
+					flag=true;
+					var oldLang = "";
+					var newLang = "";
+ 					if(value==1){
+ 						newLang = "YES";
+ 					}else if(value==0){
+ 						newLang = "NO";
+ 					}
+ 					if(list[i].value==1){
+ 						oldLang = "YES";
+ 					}else if(list[i].value==0){
+ 						oldLang = "NO";
+ 					}
+					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
+				}
 			}
 		}
 		if(flag){
@@ -81,7 +146,6 @@
 			update_Sys_Param();
 			}
 		}
-		confirmChange = "";
 	}
 	
 	function update_Sys_Param() {
@@ -100,6 +164,9 @@
 				paramInfo.value = value;
 			
 				paramArray.push(paramInfo);
+				if(list[i].name == "PrimaryLang"){
+					change_PrimaryLang(paramArray,value);
+				}
 			}
 		}
 		
@@ -126,6 +193,70 @@
 				alert(e);
 			}
 		});	
+	}
+	
+	function change_PrimaryLang(paramArray,value) {
+		if(value == 1){
+			
+			var paramInfo1 = new Object();
+			
+			paramInfo1.name = "LangPrimary1";
+			paramInfo1.value = "한글";
+		
+			paramArray.push(paramInfo1);
+			
+			var paramInfo2 = new Object();
+			
+			paramInfo2.name = "LangPrimary2";
+			paramInfo2.value = "Korean";
+		
+			paramArray.push(paramInfo2);
+			
+			var paramInfo3 = new Object();
+			
+			paramInfo3.name = "LangPrimary3";
+			paramInfo3.value = "韓国語";
+		
+			paramArray.push(paramInfo3);
+			
+			var paramInfo4 = new Object();
+			
+			paramInfo4.name = "LangPrimary4";
+			paramInfo4.value = "韩国语";
+		
+			paramArray.push(paramInfo4);
+			
+		}else if(value == 3){
+			
+			var paramInfo1 = new Object();
+			
+			paramInfo1.name = "LangPrimary1";
+			paramInfo1.value = "일본어";
+		
+			paramArray.push(paramInfo1);
+			
+			var paramInfo2 = new Object();
+			
+			paramInfo2.name = "LangPrimary2";
+			paramInfo2.value = "Japanese";
+		
+			paramArray.push(paramInfo2);
+			
+			var paramInfo3 = new Object();
+			
+			paramInfo3.name = "LangPrimary3";
+			paramInfo3.value = "日本語";
+		
+			paramArray.push(paramInfo3);
+			
+			var paramInfo4 = new Object();
+			
+			paramInfo4.name = "LangPrimary4";
+			paramInfo4.value = "日本語";
+		
+			paramArray.push(paramInfo4);
+		}
+		
 	}
 </script>
 <title><spring:message code='main.kms1'/></title>
