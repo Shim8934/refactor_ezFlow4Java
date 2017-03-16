@@ -2812,7 +2812,7 @@ function setFirstDrafterAuto() {
     pxml = pxml + "<HEADER><NAME>" + strLang333 + "</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>"
     pxml = pxml + "<ROWS><ROW><COLUMN>1</COLUMN>"
     pxml = pxml + "<COLUMN>" + arr_userinfo[2] + "</COLUMN>"
-    pxml = pxml + "<COLUMN>" + arr_userinfo[3] + "</COLUMN>"
+    pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[3] + "]]></COLUMN>"
     pxml = pxml + "<COLUMN>" + arr_userinfo[5] + "</COLUMN>"
     pxml = pxml + "<COLUMN>" + strLang6 + "</COLUMN>"//전결
     pxml = pxml + "<COLUMN>" + strLang18 + "</COLUMN>"//진행
@@ -2828,8 +2828,8 @@ function setFirstDrafterAuto() {
     pxml = pxml + "<DATA name='isCompanyID'>" + pCompanyID + "</DATA>"
     pxml = pxml + "<DATA name='AprType'>" + strAprType4 + "</DATA>" //전결
     pxml = pxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>" //진행
-    pxml = pxml + "<DATA name='PMemberName'>" + arr_userinfo[11] + "</DATA>"
-    pxml = pxml + "<DATA name='SMemberName'>" + arr_userinfo[12] + "</DATA>"
+    pxml = pxml + "<DATA name='PMemberName'><![CDATA[" + arr_userinfo[11] + "]]></DATA>"
+    pxml = pxml + "<DATA name='SMemberName'><![CDATA[" + arr_userinfo[12] + "]]></DATA>"
     pxml = pxml + "<DATA name='PMemberDeptName'>" + arr_userinfo[15] + "</DATA>"
     pxml = pxml + "<DATA name='SMemberDeptName'>" + arr_userinfo[16] + "</DATA>"
     pxml = pxml + "<DATA name='PMemberJobTitle'>" + arr_userinfo[13] + "</DATA>"

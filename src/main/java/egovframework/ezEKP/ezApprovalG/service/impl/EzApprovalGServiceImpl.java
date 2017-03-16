@@ -9572,13 +9572,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean rtnVal = true;
 		
 		if (chkFlag) {
-			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("v_DOCID", orgDocID);
 			map.put("companyID", companyID);
 			map.put("v_TENANTID", tenantID);
 			
-			String temp =ezApprovalGDAO.chkDocDeleteTemp(map);
+			String temp = ezApprovalGDAO.chkDocDeleteTemp(map);
 			try {
 				if (temp!=null) {
 					map.put("v_temp", "1");
@@ -11701,7 +11700,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb1.append("</DATA>");
 		
 		Document tempXML = commonUtil.convertStringToDocument(sb1.toString());
-		
+
 		if (tempXML.getElementsByTagName("ORGDOCID").getLength() > 0) {
 			tempOrgDocID = makeListField(tempXML.getElementsByTagName("ORGDOCID").item(0).getTextContent());
 			String tempDocState = makeListField(tempXML.getElementsByTagName("DOCSTATE").item(0).getTextContent());
@@ -12433,7 +12432,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 
 				break;
 			}
-					insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID, companyID);
+			
+			insertNotifyItem(nextUserID, notyStr, docTitle, "2", docID, tenantID, companyID);
 		}
 		LOGGER.debug("sendMsg ended");
 
