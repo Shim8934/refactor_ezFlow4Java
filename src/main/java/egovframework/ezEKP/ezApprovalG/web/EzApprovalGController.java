@@ -833,6 +833,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String susinAdmin = "";
 		String aprTypeXML = "";
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
+		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		
 		if (request.getParameter("docSN") != null) {
 			docSN = request.getParameter("docSN");
@@ -867,6 +868,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("aprTypeXML", aprTypeXML);
+		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
@@ -5444,6 +5446,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do")
 	public String aprDeptAddressUserName() throws Exception{
 		return "ezApprovalG/apprGaprDeptAddressUserName";
+	}
+	
+	/**
+	 * 전자결재G 결재정보 수신처 민원인상세주소입력 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressName.do")
+	public String aprDeptAddressName() throws Exception{
+		return "ezApprovalG/apprGaprDeptAddressName";
 	}
 	
 	/**
