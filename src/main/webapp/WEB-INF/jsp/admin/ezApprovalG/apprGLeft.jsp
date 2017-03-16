@@ -37,7 +37,7 @@
 						break;
 				    case 4:
 				    	//문서삭제
-				        url = "/admin/ezApproval/docDelete.do";
+				        url = "/admin/ezApprovalG/docDelete.do";
 						break;
 				    case 5:
 				    	//수신처, 수신자 그룹지정

@@ -170,7 +170,8 @@
 	        var T1361andT1362 = "<spring:message code='ezApprovalG.t1361'/>" + "<br>" + "<spring:message code='ezApprovalG.t1362'/>";
 	        var SummaryOuterReceiverList = "";
 	        var approvalYN = "${approvalYN}";
-
+			var useAddressOpenAPI = "${useAddressOpenAPI}";
+	        
 // 	        $(function () {
 // 	        	$("#idDatepicker").val('${startDateTime}'.substring(0, 10));
 // 	        	if (document.getElementById("AprSecurity").checked){

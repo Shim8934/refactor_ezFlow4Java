@@ -954,63 +954,67 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				
 				// tbl_schedulerepetition에서 정보 가져옴
 				ResGetScheduleRepetitionVO vo = getRepDateTimes(reOwnerID, reCompanyID, Integer.parseInt(reNum), tenantID);
-				vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
-				vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
 				
-				// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
-				ResScheduleRepetitionVO rvo = resStruct(vo);
-				
-				// 반복예약의 반복되는 날짜리스트 뽑아옴
-				List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
-				
-				// 반복예약 중에 삭제된 예약 가져옴
-				List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
-				logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
-				
-				for (int j=0; j<deletedDateStrList.size(); j++) {
-					deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
-				}
-				
-				for (Date[] dateArr : returnRepDateTimes) {
+				if (vo != null) {
 					
-					// 삭제된 예약이면 넘어감
-					if (deletedDateStrList.contains(format.format(dateArr[0]))) {
-						continue;
+					vo.setStartDateTime(commonUtil.getDateStringInUTC(vo.getStartDateTime(), offset, false));
+					vo.setEndDateTime(commonUtil.getDateStringInUTC(vo.getEndDateTime(), offset, false));
+					
+					// ResGetScheduleRepetitionVO -> ResScheduleRepetitionVO
+					ResScheduleRepetitionVO rvo = resStruct(vo);
+					
+					// 반복예약의 반복되는 날짜리스트 뽑아옴
+					List<Date[]> returnRepDateTimes = getRepDateTimes(rvo, sDate, eDate, offset);
+					
+					// 반복예약 중에 삭제된 예약 가져옴
+					List<String> deletedDateStrList = getDeletedRepScheduleDate(Integer.parseInt(reNum), reCompanyID, reOwnerID, tenantID);
+					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
+					
+					for (int j=0; j<deletedDateStrList.size(); j++) {
+						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
 					}
 					
-					returnStr.append("<ROW>");
-					returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
-					returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
-					returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
-					returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
-					returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
-					returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
-					returnStr.append("<startDate>" + format.format(dateArr[0]) + "</startDate>");
-					returnStr.append("<endDate>" + format.format(dateArr[1]) + "</endDate>");
-					returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
-					returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
-					returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
-					returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
-					returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
-					returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
-					returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
-					returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
-					returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
-					returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
-					returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
-					returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
-					returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
-					
-					if (pType == null || pType.equals("")) {
-						returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
-						returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
-						returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
-						returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
+					for (Date[] dateArr : returnRepDateTimes) {
+						// 삭제된 예약이면 넘어감
+						if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+							continue;
+						}
+						
+						returnStr.append("<ROW>");
+						returnStr.append("<num>" + returnRepetitionDom.getElementsByTagName("NUM").item(i).getTextContent() + "</num>");
+						returnStr.append("<pnum>" + returnRepetitionDom.getElementsByTagName("PNUM").item(i).getTextContent() + "</pnum>");
+						returnStr.append("<ownerID>" + returnRepetitionDom.getElementsByTagName("OWNERID").item(i).getTextContent() + "</ownerID>");
+						returnStr.append("<title><![CDATA[" + returnRepetitionDom.getElementsByTagName("TITLE").item(i).getTextContent() + "]]></title>");
+						returnStr.append("<location><![CDATA[" + returnRepetitionDom.getElementsByTagName("LOCATION").item(i).getTextContent() + "]]></location>");
+						returnStr.append("<timeDisplay><![CDATA[" + returnRepetitionDom.getElementsByTagName("TIMEDISPLAY").item(i).getTextContent() + "]]></timeDisplay>");
+						returnStr.append("<startDate>" + format.format(dateArr[0]) + "</startDate>");
+						returnStr.append("<endDate>" + format.format(dateArr[1]) + "</endDate>");
+						returnStr.append("<alertTime>" + returnRepetitionDom.getElementsByTagName("ALERTTIME").item(i).getTextContent() + "</alertTime>");
+						returnStr.append("<reFlag>" + returnRepetitionDom.getElementsByTagName("REFLAG").item(i).getTextContent() + "</reFlag>");
+						returnStr.append("<gresFlag>" + returnRepetitionDom.getElementsByTagName("GRESFLAG").item(i).getTextContent() + "</gresFlag>");
+						returnStr.append("<writerID>" + returnRepetitionDom.getElementsByTagName("WRITERID").item(i).getTextContent() + "</writerID>");
+						returnStr.append("<importance>" + returnRepetitionDom.getElementsByTagName("IMPORTANCE").item(i).getTextContent() + "</importance>");
+						returnStr.append("<entryList>" + returnRepetitionDom.getElementsByTagName("ENTRYLIST").item(i).getTextContent() + "</entryList>");
+						returnStr.append("<allDay>" + returnRepetitionDom.getElementsByTagName("ALLDAY").item(i).getTextContent() + "</allDay>");
+						returnStr.append("<writeDay>" + commonUtil.getDateStringInUTC(returnRepetitionDom.getElementsByTagName("WRITEDAY").item(i).getTextContent(), offset, false) + "</writeDay>");
+						returnStr.append("<attachFlag>" + returnRepetitionDom.getElementsByTagName("ATTACHFLAG").item(i).getTextContent() + "</attachFlag>");
+						returnStr.append("<characterID>" + returnRepetitionDom.getElementsByTagName("CHARACTERID").item(i).getTextContent() + "</characterID>");
+						returnStr.append("<approveFlag>" + returnRepetitionDom.getElementsByTagName("APPROVEFLAG").item(i).getTextContent() + "</approveFlag>");
+						returnStr.append("<owner_nm><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM").item(i).getTextContent() + "]]></owner_nm>");
+						returnStr.append("<dept_name><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM").item(i).getTextContent() + "]]></dept_name>");
+						
+						if (pType == null || pType.equals("")) {
+							returnStr.append("<owner_nm2><![CDATA[" + returnRepetitionDom.getElementsByTagName("OWNERNM2").item(i).getTextContent() + "]]></owner_nm2>");
+							returnStr.append("<dept_name2><![CDATA[" + returnRepetitionDom.getElementsByTagName("DEPTNM2").item(i).getTextContent() + "]]></dept_name2>");
+							returnStr.append("<jobtitle><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE").item(i).getTextContent() + "]]></jobtitle>");
+							returnStr.append("<jobtitle2><![CDATA[" + returnRepetitionDom.getElementsByTagName("JOBTITLE2").item(i).getTextContent() + "]]></jobtitle2>");
+						}
+						
+						returnStr.append("</ROW>");
 					}
 					
-					returnStr.append("</ROW>");
-					
 				}
+				
 			}
 		}
 		returnStr.append("</DATA>");
@@ -2538,17 +2542,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		if (vo.getReNum() != null && !vo.getReNum().trim().equals("")) {
-			result.setInterval(Integer.parseInt(vo.getReNum()));
+			result.setInterval(Integer.parseInt(vo.getReNum().trim()));
 		}
 		
 		if (vo.getEndFlag() != null && !vo.getEndFlag().trim().equals("")) {
-			result.setEndRecurType(Integer.parseInt(vo.getEndFlag()));
+			result.setEndRecurType(Integer.parseInt(vo.getEndFlag().trim()));
 		} else {
 			result.setEndRecurType(-1);
 		}
 		
 		if (vo.getReCount() != null && !vo.getReCount().trim().equals("")) {
-			result.setInstances(Integer.parseInt(vo.getReCount()));
+			result.setInstances(Integer.parseInt(vo.getReCount().trim()));
 		}
 		
 		if (vo.getReYoil() != null && !vo.getReYoil().trim().equals("")) {
@@ -2563,15 +2567,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		if (vo.getReDay() != null && !vo.getReDay().trim().equals("")) {
-			result.setDaysOfMonth(Integer.parseInt(vo.getReDay()));
+			result.setDaysOfMonth(Integer.parseInt(vo.getReDay().trim()));
 		}
 		
 		if (vo.getReMonth() != null && !vo.getReMonth().trim().equals("")) {
-			result.setMonthsOfYear(Integer.parseInt(vo.getReMonth()));
+			result.setMonthsOfYear(Integer.parseInt(vo.getReMonth().trim()));
 		}
 		
 		if (vo.getReOrd() != null && !vo.getReOrd().trim().equals("")) {
-			result.setByPosition(Integer.parseInt(vo.getReOrd()));
+			result.setByPosition(Integer.parseInt(vo.getReOrd().trim()));
 		}
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -2581,7 +2585,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		if (vo.getEndDateTime() != null && !vo.getEndDateTime().trim().equals("")) {
-			result.setEndDate(format.parse(vo.getEndDateTime()));
+			result.setEndDate(format.parse(vo.getEndDateTime().trim()));
 		}
 		
 		if (vo.getAllDay() != null && vo.getAllDay().equals("1")) {

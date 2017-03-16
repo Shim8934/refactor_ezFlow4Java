@@ -4430,7 +4430,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 				sb.append("<WriteDate>" + itemVO.getWriteDate() + "</WriteDate>");
 				sb.append("<ParentWriteDate>" + itemVO.getParentWriteDate() + "</ParentWriteDate>");
 				sb.append("<Importance>" + itemVO.getImportance() + "</Importance>");
-				sb.append("<Title>" + itemVO.getTitle() + "</Title>");
+				sb.append("<Title>" + commonUtil.cleanValue(itemVO.getTitle()) + "</Title>");
 				sb.append("<ContentLocation>" + itemVO.getContentLocation() + "</ContentLocation>");
 				sb.append("<StartDate>" + itemVO.getStartDate() + "</StartDate>");
 				sb.append("<EndDate>" + itemVO.getEndDate() + "</EndDate>");

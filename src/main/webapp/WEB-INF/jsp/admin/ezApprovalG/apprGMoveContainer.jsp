@@ -254,15 +254,29 @@
 			    window.close();
 			}			
 			
-			function changeCompID() {
+			function changeCompID() {				
 			    if (P_CompanyID != document.getElementById("ListCompany").value) {
 			        P_CompanyID = document.getElementById("ListCompany").value;
 			
 			        lvSDoc.DataSource = FORMLIST;
 			        lvTDoc.DataSource = FORMLIST;
 			
-			        document.getElementsByName('SDeptName').value = "";
-			        document.getElementsByName('TDeptName').value = "";
+					document.getElementsByName('SDeptName')[0].value = "";
+					document.getElementsByName("TDeptName")[0].value = "";
+					
+					document.getElementById('lvSDoc').innerHTML = "";
+		            document.getElementById('lvTDoc').innerHTML = "";
+		            
+		            listview.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));                           
+		            listview.DataBind("lvSDoc");
+		            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
+		            listview2.DataBind("lvTDoc");
+		            
+		            document.getElementsByName("selSContName")[0].innerHTML = "";
+		            document.getElementsByName("selTContName")[0].innerHTML = "";
+		            
+		            document.getElementsByName("MoveALL")[0].checked = false;
+		            document.getElementById("PageNum").innerHTML = "";
 			    }
 			}
 			
@@ -315,13 +329,7 @@
 	    <table class="table_manage">
 	        <tr>
 	            <td>
-	                <table class="content" style="width: 368px">
-	                	<tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t772'/></th>
-	                        <td>
-	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
-							</td>
-	                    </tr>
+	                <table class="content" style="width: 368px">	                	
 	                    <tr>
 	                        <th><spring:message code='ezApproval.t344'/></th>
 	                        <td>
@@ -334,6 +342,12 @@
 	                        <td>
 	                            <select name="selSContName" style="WIDTH: 150px" onchange="return bt_selSContName_onclick()"></select>
 	                            <a class="imgbtn" name="Search"><span onclick="SearchCondi_onclick()"><spring:message code='ezApproval.t236'/></span></a>
+							</td>
+	                    </tr>
+	                    <tr>
+	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t772'/></th>
+	                        <td>
+	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
 							</td>
 	                    </tr>
 	                </table>
@@ -354,6 +368,9 @@
 	                            <select name="selTContName" style="WIDTH: 150px" onclick="bt_selTContName_onclick()"></select>
 							</td>
 	                    </tr>
+	                    <tr>
+	                        <td style="white-space: nowrap" colspan="2"></td>	                        
+	                    </tr>
 	                </table>
 	            </td>
 	        </tr>
@@ -373,9 +390,7 @@
 	            <td style="text-align: center; width: 30px">
 	                <img height="16" id="arrow_right" onclick="return  btnIns_onclick()" src="/images/arr_right.gif" style="cursor: pointer" width="16" /><br/>
 	                <img height="16" id="arrow_left" onclick="return  btndel_onclick()" src="/images/arr_left.gif" style="cursor: pointer" width="16" /><br/>
-	                <br/>
-	                <br/>
-	                <br/>
+	                <br/><br/><br/>
 	                <img height="16" id="arrow_all" onclick="return btnTotalIns_onclick()" src="/images/arr_rright.gif" style="cursor: pointer" width="16"/>
 				</td>
 	            <td>
@@ -388,7 +403,7 @@
 	            </td>
 	        </tr>
 	    </table>	        
-	    <div class="btnposition" style="width: 756px; text-align: center;">
+	    <div class="btnposition" style="width: 768px; text-align: center;">
 	        <a class="imgbtn" onclick="bt_OK_onclick()"><span><spring:message code='ezApproval.t272'/></span></a>
 	    </div>
 	</body>

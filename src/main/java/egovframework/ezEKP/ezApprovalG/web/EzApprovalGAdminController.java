@@ -2637,6 +2637,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}			
 			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
 		}
+		
+		if (request.getParameter("period") != null && !request.getParameter("period").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod LIKE '%" + request.getParameter("period") + "%' ");
+		}
 							
 		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 	
@@ -2687,6 +2694,57 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("ezStatisticsSearch ended");
 		
 		return "admin/ezApprovalG/apprGStatisticsSearch";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서삭제 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/docDelete.do")
+	public String docDelete (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("docDelete started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+				
+		String periodNode = ezApprovalGAdminService.getCodeType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("periodNode", periodNode);
+		
+		logger.debug("docDelete ended");
+		
+		return "admin/ezApprovalG/apprGDocDelete";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서삭제 삭제 로직
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delDocList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("delDocList started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.deleteDocList(xmlPara, userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delDocList ended");
+		
+		return result;
 	}
 
 }
