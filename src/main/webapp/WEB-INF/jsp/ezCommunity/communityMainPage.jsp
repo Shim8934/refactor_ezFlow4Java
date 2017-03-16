@@ -1151,13 +1151,14 @@
 						success: function(result){
 							if (result == "FALSE") {
 								var wWidth = "330";
-				                var wHeight = "220";
+				                var wHeight = "162";
 				                var heigth = window.screen.availHeight;
 				                var width = window.screen.availWidth;
 		                        var left = (width - wWidth) / 2;
 		                        var top = (heigth - wHeight) / 2;
 		                        var type = mainVal.getAttribute("type");
-		                        
+		                        alert(top);
+		                        alert(left);
 		                        if (type == "2") {
 		                            window.open("/ezCommunity/join1.do?no=" + idx, "", "location=1,toolbar=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=" + wHeight + ",width=" + wWidth + ",top=" + top + ",left = " + left);
 		                        } else if (type == "3") {

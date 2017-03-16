@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,6 +71,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private Properties globals;
 	
 	@Autowired
 	private EzOrganAdminService ezOrganAdminService;
@@ -214,10 +220,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID);
 						result = "OK";	
 					} catch (Exception e) {
+						e.printStackTrace();
 						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
 						ezEmailUserAdminService.removeGroup(mailAddr);
 						result = "EMAIL_ERROR";
 					}
+					
+					
 								
 				} else {
 				    ezEmailUserAdminService.removeGroup(mailAddr);

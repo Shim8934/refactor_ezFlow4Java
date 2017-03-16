@@ -3235,7 +3235,7 @@
 		]]>
 	</select>
 	
-	<update id="EzApprovalAdminDAO.moveAllDocListF" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveAllDocListF" parameterClass="Map">
 		<![CDATA[
 			update tbl_expendaprdocinfo
 			set
@@ -3259,7 +3259,7 @@
 		]]>	
 	</update>
 	
-	<update id="EzApprovalAdminDAO.moveAllDocListS" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveAllDocListS" parameterClass="Map">
 		<![CDATA[
 			update tbl_endaprdocinfo 
 			set 
@@ -3273,7 +3273,7 @@
 		]]>
 	</update>
 	
-	<update id="EzApprovalAdminDAO.moveDocListF" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveDocListF" parameterClass="Map">
 		<![CDATA[
 			update tbl_endaprdocinfo 
 			set 
@@ -3289,7 +3289,7 @@
 		]]>
 	</update>
 	
-	<update id="EzApprovalAdminDAO.moveDocListS" parameterClass="Map">
+	<update id="EzApprovalGAdminDAO.moveDocListS" parameterClass="Map">
 		<![CDATA[
 			update tbl_expendaprdocinfo 
 			set 
@@ -3300,6 +3300,55 @@
 				companyid = #companyID#
 			and
 				docid in ( $subQuery$ ) 
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteAllDocList" parameterClass="Map">
+		update tbl_expendaprdocinfo 
+		set 
+			delflag = 'Y'
+		where
+			tenant_id = #tenantID#
+		and
+			companyid = #companyID#
+		and	 
+			docid in ( 
+						select	
+							docid
+						from
+						  	tbl_endaprdocinfo
+						where
+							tenant_id = #tenantID#
+						and
+						  	companyid = #companyID#
+						and
+						  	containerid = #contID#
+						<isNotEmpty property="startPeriod">
+							<![CDATA[
+								and 
+									enddate >= #startDate# 
+								and 
+									enddate <= #endDate# 
+							]]>
+						</isNotEmpty> )
+		and
+			delflag is null
+		<isNotEmpty property="storagePeriod" prepend="AND">
+			storageperiod = #storagePeriod#
+		</isNotEmpty> 
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.deleteDocList" parameterClass="Map">
+		<![CDATA[
+			update tbl_expendaprdocinfo
+			set
+				delflag = 'Y'
+			where
+				tenant_id = #tenantID#
+		  	and
+		  		companyid = #companyID#
+		  	and
+		  		docid in ( $subQuery$ )
 		]]>
 	</update>
 </sqlMap>

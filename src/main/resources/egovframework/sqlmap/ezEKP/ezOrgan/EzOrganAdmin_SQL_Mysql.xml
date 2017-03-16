@@ -586,7 +586,327 @@
                  )
 		]]>
 	</insert>
+  
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I1" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6','top',1,'ba3541ea-8da9-4fcf-b24b-29b1fb1aedf6',null,'gisa1','기사원','14/06/27',null,-1,225,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I2" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3','top',1,'표준포탈페이지 A 테마','en_표준포탈페이지 A 테마','gisa1','기사원','14/06/27',null,-1,500,0,1,null,'9999;','1','Y         ',#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf','Y','D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I3" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'd6e9c786-3af3-4c46-809d-267c2fd96976','top',1,'d6e9c786-3af3-4c46-809d-267c2fd96976',null,'gisa1','기사원','14/06/27',null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I4" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'd8dc7da6-7572-4853-801a-14072d823c65','top',1,'d8dc7da6-7572-4853-801a-14072d823c65',null,'gisa1','기사원','14/06/27',null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I5" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c','top',1,'e6e189b3-6a83-4c5e-90f3-61cbfd50c59c',null,'gisa1','기사원','14/06/27',null,-1,110,0,2,null,'500;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I6" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( '054a5b35-d8d5-4b07-9e47-d7820bf59435','top',1,'054a5b35-d8d5-4b07-9e47-d7820bf59435',null,'gisa1','기사원','14/06/27',null,-1,110,0,3,null,'250;250;9999;','1',null,#companyID#,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I7" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTALPAGE_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,GUBUNFLAG,USEFLAG,COMPANYID,BASETYPE,THEMEUID,DEFAULTPAGE,TABLEVIEWOPTION,TENANT_ID )
+          VALUES
+            ( 'df178301-cfe4-46d9-8c0f-80e9f92673a9','top',1,'df178301-cfe4-46d9-8c0f-80e9f92673a9',null,'gisa1','gisa1','15/12/24',null,-1,110,0,1,null,'9999;','1',null,#companyID#,null,'69ae464d-e0ab-4558-b42b-4c9679474377',null,'D',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I8" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTAL_ACL
+            ( UID_,ACCESSID,ACCESSNAME,VIEW_RIGHT,EDIT_RIGHT,TENANT_ID )
+          VALUES
+            ( 'bd7d2263-939b-481e-ae95-7aa70e67c5c3',#companyID#,'가온아이',2,2,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I9" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'c06b1862-ce83-4472-91d7-fd92cee3a7ac','포토게시판_포틀릿','en_포토게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c06b1862-ce83-4472-91d7-fd92cee3a7ac',null,'0         ','1         ',225,'0',#companyID#,null,null,548,'iFrame    ',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I10" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'c08c6efa-7494-4185-b1dc-09ecc908f683','공지게시판_포틀릿','en_공지게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c08c6efa-7494-4185-b1dc-09ecc908f683',' ','0         ','1         ',225,'0',#companyID#,null,null,280,null,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I11" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'c1479aa0-824d-43ff-a7f6-999ad660378a','배너_우수사원_포틀릿','en_배너_우수사원_포틀릿',1,'/ezPortal/urlPortlet.do?uID=c1479aa0-824d-43ff-a7f6-999ad660378a',' ','0         ','1         ',225,'0',#companyID#,null,null,330,null,#tenantID# )
+      ]]>
+    </insert>
+    
+     <insert id="EzOrganAdminDAO.insertCompanyInfo_I12" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'f90b6413-c94c-4c6f-abe5-39480da308f1','우수커뮤니티_포틀릿','en_우수커뮤니티_포틀릿',1,'/ezPortal/urlPortlet.do?uID=f90b6413-c94c-4c6f-abe5-39480da308f1',' ','0         ','1         ',235,'0',#companyID#,null,null,330,null,#tenantID# )
+      ]]>
+    </insert>
+    
+     <insert id="EzOrganAdminDAO.insertCompanyInfo_I13" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3','슬라이드이미지_포틀릿','en_슬라이드이미지_포틀릿',1,'/ezPortal/urlPortlet.do?uID=0b4d7088-ea3c-4afb-ac2e-862cfa69bbb3',' ','0         ','1         ',225,'0',#companyID#,null,null,517,null,#tenantID# )
+      ]]>
+    </insert>
+    
+      <insert id="EzOrganAdminDAO.insertCompanyInfo_I14" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '69f68282-5617-45ca-9118-27b6170df5c3','포토_생일 통합 포틀릿','포토_생일 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=69f68282-5617-45ca-9118-27b6170df5c3',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# )
+      ]]>
+    </insert>
 	
+   <insert id="EzOrganAdminDAO.insertCompanyInfo_I15" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '73c0940e-5d44-4edc-bfa3-822fd6fd17b5','공지_슬라이드_이모저모 통합 포틀릿','공지_슬라이드_이모저모 통합 포틀릿_en',1,'/ezPortal/urlPortlet.do?uID=73c0940e-5d44-4edc-bfa3-822fd6fd17b5',' ','0         ','1         ',240,'0',#companyID#,null,null,1150,null,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I16" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '7851b606-aa1c-4f96-ba9b-562432b922a6','결재사용현황_포틀릿','en_결재사용현황_포틀릿',1,'/ezPortal/urlPortlet.do?uID=7851b606-aa1c-4f96-ba9b-562432b922a6',' ','0         ','1         ',225,'0',#companyID#,null,null,348,null,#tenantID# )
+      ]]>
+    </insert>
+    
+     <insert id="EzOrganAdminDAO.insertCompanyInfo_I17" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '8af6e9a5-0970-45a9-9495-ba0c7a9163fd','결재_메일 통합 포틀릿','en_결재_메일 통합 포틀릿',1,'/ezPortal/urlPortlet.do?uID=8af6e9a5-0970-45a9-9495-ba0c7a9163fd',' ','0         ','1         ',235,'0',#companyID#,null,null,797,null,#tenantID# )
+      ]]>
+    </insert>
+    
+     <insert id="EzOrganAdminDAO.insertCompanyInfo_I18" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '8fd70c9a-83b2-4294-a57b-9a59abe3850d','설문통계_포틀릿','en_설문통계_포틀릿',1,'/ezPortal/urlPortlet.do?uID=8fd70c9a-83b2-4294-a57b-9a59abe3850d',' ','0         ','1         ',225,'0',#companyID#,null,null,265,null,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I19" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '94dfe6d0-043a-4284-bde5-8275aba64d6e','마이게시판_포틀릿','en_마이게시판_포틀릿',1,'/ezPortal/urlPortlet.do?uID=94dfe6d0-043a-4284-bde5-8275aba64d6e',' ','0         ','1         ',225,'0',#companyID#,null,null,512,null,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I20" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( '9b157fdc-057d-4c5c-b036-f2107adf7f0b','활용하기_포틀릿','en_활용하기_포틀릿',1,'/ezPortal/urlPortlet.do?uID=9b157fdc-057d-4c5c-b036-f2107adf7f0b','2345235','0         ','1         ',225,'0',#companyID#,null,null,240,'DIV       ',#tenantID# )
+      ]]>
+    </insert>
+    
+      <insert id="EzOrganAdminDAO.insertCompanyInfo_I21" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'a37406b2-7a0a-48b0-a2a9-aacf811e9bd4','직원생일_포틀릿','en_직원생일_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a37406b2-7a0a-48b0-a2a9-aacf811e9bd4',null,'0         ','1         ',225,'0',#companyID#,null,null,338,'DIV       ',#tenantID# )
+      ]]>
+    </insert>
+    
+      <insert id="EzOrganAdminDAO.insertCompanyInfo_I22" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_PORTLET_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,PORTLET_TYPE,URL,MAXURL,SHOWTITLEBAR,USERTYPE,HEIGHT,GUBUNFLAG,COMPANYID,BASETYPE,USEPOTALGUBUN,WIDTH,FRAMETYPE,TENANT_ID )
+          VALUES
+            ( 'a2149765-4c0b-466c-9e61-310925139d3c','사용자정보통합_포틀릿','en_사용자정보통합_포틀릿',1,'/ezPortal/urlPortlet.do?uID=a2149765-4c0b-466c-9e61-310925139d3c',' ','0         ','1         ',220,'0',#companyID#,null,null,1150,null,#tenantID# )
+      ]]>
+    </insert>
+    
+      <insert id="EzOrganAdminDAO.insertCompanyInfo_I23" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_THEME_GENERAL
+            ( UID_,DISPLAYNAME,DISPLAYNAME2,DISPLAYNAME3,DISPLAYNAME4,IMAGEURL,TOPURL,MAINURL,COMPANAYID,CREATORID,CREATORNM,CREATEDATE,MODIFYDATE,TOPHEIGHT,TENANT_ID )
+          VALUES
+            ( 'f2de22b9-9a3f-49a9-884b-2e179e564cbf','표준모듈 A 테마 ','표준모듈 A 테마 _en','표준모듈 A 테마 _ja','표준모듈 A 테마 _zh','/files/upload_portal/S907000/Theme/08c5179c-1c9d-46e8-bea3-9c4495fa3704.jpg','/ezPortal/topMenu.do','/ezPortal/portalPage.do',#companyID#,'gisa1','기사원','14/03/17','16/10/05',100,#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I24" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( 'd4dcceee-01f5-42da-9093-a243d3056204','top',1,'표준메뉴_일본','표준메뉴_일본','gisa1','기사원','13/06/20',null,-1,200,0,1,' ',';','Y',#companyID#,'3',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I25" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( 'F3633607-8E8B-42A1-B777-6E2969072E58','top',1,'표준메뉴_한국','표준메뉴_한국','gisa1','김사원','07/10/23',null,-1,57,0,1,null,';','Y',#companyID#,'1',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I26" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( '174da7a0-e379-44bb-937d-a91216a7b459','top',1,'174da7a0-e379-44bb-937d-a91216a7b459','174da7a0-e379-44bb-937d-a91216a7b459','gisa1','기사원','13/06/20',null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert>
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I27" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( '29e70a07-904b-41c6-a683-4d06a0b15d85','top',1,'29e70a07-904b-41c6-a683-4d06a0b15d85','29e70a07-904b-41c6-a683-4d06a0b15d85','gisa1','기사원','13/06/20',null,-1,110,0,1,null,';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert> 
+    
+    <insert id="EzOrganAdminDAO.insertCompanyInfo_I28" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( '306fedec-66da-4070-8b54-8d1517a4545b','top',1,'306fedec-66da-4070-8b54-8d1517a4545b','306fedec-66da-4070-8b54-8d1517a4545b','gisa1','기사원','13/06/20',null,-1,110,0,4,' ','100;280;500;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert> 
+    
+       <insert id="EzOrganAdminDAO.insertCompanyInfo_I29" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( '64aa1712-8a96-4b25-aa9c-51e74282d54f','top',1,'64aa1712-8a96-4b25-aa9c-51e74282d54f','64aa1712-8a96-4b25-aa9c-51e74282d54f','gisa1','기사원','13/06/20',null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert>
+    
+       <insert id="EzOrganAdminDAO.insertCompanyInfo_I30" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( 'b0a4e923-d270-4353-9e81-e86c14424262','top',1,'표준메뉴_영어','표준메뉴_영어','gisa1','기사원','13/06/20',null,-1,200,0,1,' ',';','Y',#companyID#,'2',null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert> 
+    
+         <insert id="EzOrganAdminDAO.insertCompanyInfo_I31" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( 'cc6758b3-1f3f-483a-9d7a-861caca82f92','top',1,'cc6758b3-1f3f-483a-9d7a-861caca82f92','cc6758b3-1f3f-483a-9d7a-861caca82f92','gisa1','기사원','13/06/20',null,-1,110,0,3,null,'100;280;;',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert> 
+    
+         <insert id="EzOrganAdminDAO.insertCompanyInfo_I32" parameterClass="Map">
+      <![CDATA[
+        INSERT INTO
+          TBL_TOPMENU_GENERAL
+            ( UID_,PARENTUID,DEPTH,DISPLAYNAME,DISPLAYNAME2,CREATORID,CREATORNAME,CREATEDATE,MODIFYDATE,WIDTH,HEIGHT,ROWLENGTH,COLUMNLENGTH,ROWSPLIT,COLUMNSPLIT,USEFLAG,COMPANYID,LANG,TOPMNID,BASETYPE,THEMEUID,TENANT_ID )
+          VALUES
+            ( 'cd941931-9343-4186-b920-22106c63bfc1','top',1,'cd941931-9343-4186-b920-22106c63bfc1','cd941931-9343-4186-b920-22106c63bfc1','gisa1','기사원','13/06/20',null,-1,110,0,1,' ',';',null,#companyID#,null,null,null,'f2de22b9-9a3f-49a9-884b-2e179e564cbf',#tenantID# )
+      ]]>
+    </insert>
+  
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
 		<![CDATA[
 			DELETE FROM
