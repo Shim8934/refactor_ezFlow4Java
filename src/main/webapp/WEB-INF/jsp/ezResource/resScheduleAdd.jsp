@@ -139,7 +139,7 @@
 
 		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
-	    	        ItemArray[1] = Array("<c:out value='${brdName}' />");
+	    	        ItemArray[1] = Array("${brdName}");
 
 	        	    document.getElementById('itemList').innerHTML = "";
 	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' escapeXml='false'/>";
@@ -606,7 +606,7 @@
   			</table>
 		</div>
 
-	    <table id="printScreen" style="display: none; width:100%; border:0px; padding:10px;" class="layout">
+	    <table id="printScreen" style="display: none;">
   			<tr style="text-align:center">
     			<td style="vertical-align:top">
     				<table style="width:100%; border:0px; padding:1px; border-collapse:collapse; border-spacing:0px; " class="content2">

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -77,10 +78,9 @@
 	        var Udomain = "${userEmail}";
 	        var pOpenYaer = "${openYear}";
 	        var NonActiveX = "YES";
-	
+			var approvalYN = "${approvalYN}"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
-	
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
@@ -159,7 +159,23 @@
 	                condition[14] = nowday;
 	                condition[24] = "";
 	                DocListType == "GetDocSearch";
+	                
+	                if(approvalYN == 'G') {
+	                	 var settingDate = new Date();
+	                     settingDate.setYear(settingDate.getYear() - 1);
 
+	                     var settingmonth = settingDate.getMonth() + 1;
+	                     var settingday = settingDate.getDate();
+	                     if (settingmonth < 10)
+	                         settingmonth = "0" + settingmonth;
+	                     if (settingday < 10)
+	                         settingday = "0" + settingday;
+
+	                     condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+
+	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+	                }
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
@@ -182,14 +198,42 @@
 	                    GetDocList();
 	                }
 	                else if (LoadSquery != "") {
-	                    for (i = 0; i < 25; i++) {
-	                        condition[i] = "";
-	                    }
-	                    ContainerID = LoadContID;
-	                    subCondition = "TBEXPENDAPRDOCINFO.itemcode = '" + LoadSquery + "'";
-	                    pChackYN = "FALSE";
-	                    Init_Flag = "False";
-	                    GetDocSearch();
+	                	if (approvalYN == 'G') {
+		                    for (i = 0; i < 25; i++) {
+		                        condition[i] = "";
+		                    }
+		                    ContainerID = LoadContID;
+		                    subCondition = "TBL_EXPENDAPRDOCINFO.itemcode = '" + LoadSquery + "'";
+		                    pChackYN = "FALSE";
+		                    Init_Flag = "False";
+		                    GetDocSearch();
+	                	} else {
+	                		 for (i = 0; i <= 13; i++) {
+	                             condition[i] = "";
+	                         }
+	                         condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                         condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+// 	                         if (pItemCD != "") {
+// 	                             condition[12] += "CAPR;";
+// 	                             condition[13] += "<ITEMCODE>" + pItemCD + "</ITEMCODE>";
+// 	                         }
+
+// 	                         if (pEndAprType != "" && pEndAprState != "") {
+// 	                             condition[14] = "EAPRTYPE;";
+// 	                             condition[15] = "<ENDAPRTYPE>" + pEndAprType + "</ENDAPRTYPE>";
+// 	                             condition[16] = "EAPRSTATE;";
+// 	                             condition[17] = "<ENDAPRSTATE>" + pEndAprState + "</ENDAPRSTATE>";
+// 	                             document.getElementById("menuapr").style.display = "";
+// 	                             document.getElementById("menuend").style.display = "none";
+// 	                         }
+
+	                         ContainerID = LoadContID;
+	                         subCondition = LoadSquery;
+	                         pChackYN = "FALSE";
+	                         Init_Flag = "False";
+	                         MakeSubCondition();
+	                         GetDocSearch();
+	                	}
 	                }
 	                else {
 	                    ContainerID = LoadContID;
@@ -208,65 +252,125 @@
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
-	            if (GetSelectVal("sel_year") != "ALL") {
-	                condition[9] = GetSelectVal("sel_year");
-	                condition[10] = "01";
-	                condition[11] = "01";
-	                condition[12] = GetSelectVal("sel_year");
-	                condition[13] = "12";
-	                condition[14] = "31";
-	                condition[24] = "";
-	                DocListType == "GetDocSearch";
-	                GetDocSearch();
-	            }
-	            else {
-	                var nowyear = new Date().getFullYear();
-	                var nowmonth = new Date().getMonth() + 1;
-	                var nowday = new Date().getDate();
-	
-	                if (nowmonth < 10)
-	                    nowmonth = "0" + nowmonth;
-	
-	                if (nowday < 10)
-	                    nowday = "0" + nowday;
-	
-	                condition[9] = nowyear - 1;
-	                condition[10] = nowmonth;
-	                condition[11] = nowday;
-	                condition[12] = nowyear;
-	                condition[13] = nowmonth;
-	                condition[14] = nowday;
-	                condition[24] = "";
-	                DocListType == "GetDocSearch";
-	                GetDocSearch();
+	            if(approvalYN == 'G') {
+		            if (GetSelectVal("sel_year") != "ALL") {
+		                condition[9] = GetSelectVal("sel_year");
+		                condition[10] = "01";
+		                condition[11] = "01";
+		                condition[12] = GetSelectVal("sel_year");
+		                condition[13] = "12";
+		                condition[14] = "31";
+		                condition[24] = "";
+		                DocListType == "GetDocSearch";
+		                GetDocSearch();
+		            }
+		            else {
+		                var nowyear = new Date().getFullYear();
+		                var nowmonth = new Date().getMonth() + 1;
+		                var nowday = new Date().getDate();
+		
+		                if (nowmonth < 10)
+		                    nowmonth = "0" + nowmonth;
+		
+		                if (nowday < 10)
+		                    nowday = "0" + nowday;
+		
+		                condition[9] = nowyear - 1;
+		                condition[10] = nowmonth;
+		                condition[11] = nowday;
+		                condition[12] = nowyear;
+		                condition[13] = nowmonth;
+		                condition[14] = nowday;
+		                condition[24] = "";
+		                DocListType == "GetDocSearch";
+		                GetDocSearch();
+		            }
+	            } else {
+	            	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
+	                    if (GetSelectVal("sel_year") != "ALL") {
+	                        condition[5] = GetSelectVal("sel_year") + "-01-01 00:00:01";
+	                        condition[6] = GetSelectVal("sel_year") + "-12-31 23:59:59";
+	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("sel_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("sel_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+	                    }
+	                    else {
+	                        condition[5] = GetSelectVal("who_year") + "-01-01 00:00:01";
+	                        condition[6] = GetSelectVal("who_year") + "-12-31 23:59:59";
+	                        SQLPARADATA = "<ROOT><TYPE>ENDDATEAF;ENDDATEBF;</TYPE><DATA><ENDDATEAF>" + GetSelectVal("who_year") + "-01-01 00:00:01</ENDDATEAF><ENDDATEBF>" + GetSelectVal("who_year") + "-12-31 23:59:59</ENDDATEBF></DATA></ROOT>";
+	                    }
+	                }
+	                else {
+	                    var nowyear = new Date().getFullYear();
+	                    var nowmonth = new Date().getMonth() + 1;
+	                    var nowday = new Date().getDate();
+
+	                    if (nowmonth < 10)
+	                        nowmonth = "0" + nowmonth;
+
+	                    if (nowday < 10)
+	                        nowday = "0" + nowday;
+
+	                    var settingDate = new Date();
+	                    var settingmonth = settingDate.getMonth() + 1;
+	                    var settingday = settingDate.getDate();
+	                    if (settingmonth < 10)
+	                        settingmonth = "0" + settingmonth;
+	                    if (settingday < 10)
+	                        settingday = "0" + settingday;
+
+
+	                    condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
+	                    condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
+	                    SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
+	                }
+
+	                if (LoadSquery == "usercontlist") {
+	                    ContainerID = LoadContID;
+	                    GetUserContList();
+	                }
+	                else if (LoadSquery == "deptcontlist") {
+	                    ContainerID = LoadContID;
+	                    GetDeptContList();
+	                }
+	                else
+	                    GetDocSearch();
 	            }
 	        }
 	
 	    function lvtDetail_SelChange() { }
+	    
+	    var SelCont_dialogArgument = new Array();
 	    function SelCont_onclick() {
-	        var i;
 	        var para;
-	        var url = "selectContainer_Cross.aspx";
-	        var feature = "dialogWidth:550px;dialogHeight:354px;status:no;scroll:no;help:no;edge:sunken";
-	        feature = feature + GetShowModalPosition(550, 354);
-	        var retVal = window.showModalDialog(url, para, feature);
-	
+	        var url = "/ezApprovalG/selectContainer.do"
+	        SelCont_dialogArgument[0] = para;
+	        SelCont_dialogArgument[1] = SelCont_Complete;        
+	        var result = GetOpenWindow(url, "selectContainer", 950, 440, "NO");
+	    }
+	    
+	    function SelCont_Complete(retVal) {
+	        var i;
+	        try {
+	            if (retVal == "")
+	                return;
+	        } catch (e) { }
+
 	        ContainerID = "";
 	        Init_Flag = "False";
-	
+
 	        for (i = 0; i < retVal.length - 1; i++) {
 	            if (retVal[i]) {
 	                ContainerID = ContainerID + "'" + retVal[i] + "',";
 	            }
 	        }
-	
+
 	        ContainerID = ContainerID + "'" + retVal[i] + "'";
 	        subCondition = "";
 	        if (ContainerID != "'undefined'") {
-	            document.getElementById("presentcell").innerHTML = " - " + "<spring:message code='ezApprovalG.t1516'/>";
+	            document.getElementById("presentcell").innerHTML = unescape(" - <spring:message code='ezApproval.t576'/>");
 	            GetDocList();
 	        }
 	    }
+	    
 	    function SelCont_onclick2(cont, ContainerName) {
 	        if (ContainerName == "<spring:message code='ezApprovalG.t1517'/>") {
 	            GamSaFlag = true;
@@ -1018,19 +1122,34 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li style="display: none"><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
-	            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	        	<c:if test ="${approvalYN == 'S'}">
+	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
+	            <li id="tresend"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
+	            <li id="tenforce"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+	            <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
+	            </c:if>
 	            <li id="tbar1" style="background: none; padding-right: 2px; display: none;">
 	            <li id="tdEDMFolder" style="display: none"><span id="SelEDMFolder" onclick="return SelEDMFolder_onclick()"><spring:message code='ezApprovalG.t1525'/></span></li>
 	            <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
 	            <li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>
+	            <c:if test ="${approvalYN == 'S'}">
+	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
+	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
+			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
+		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t237'/></span></li>      
+		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		        <li id="Li2" style="background: none; padding-right: 2px;">
+		        <img src="/images/i_bar.gif"></li>
+	            </c:if>
+	            <c:if test ="${approvalYN == 'G'}">
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
-	            <li id="tbar2" style="background: none; padding-right: 2px; display: none;">
-	                <img src="/images/i_bar.gif"></li>
+	            <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li>
 	            <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>
 	            <li id="tViewDoc"><span id="ViewDoc" onclick="return ViewDoc_onclick()"><spring:message code='ezApprovalG.t367'/></span></li>
 	            <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 	            <li style="background: none; padding-right: 2px;"><img src="/images/i_bar.gif"></li>
+	            </c:if>
 	            <select id="sel_year" name="sel_year" style="width:70px;" onchange="onSelect_Year(this);">    
 	                <option value="ALL">ALL</option>
 	            </select>  

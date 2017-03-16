@@ -600,6 +600,32 @@
 		        window.close();
 		    }
 		    
+		    function getDeptId(userId) {
+		        var ReceiveDocument = "";
+
+		        try {
+		        	var result = "";
+		        	$.ajax({
+		        		type : "POST",
+		        		dataType : "text",
+		        		async : false,
+		        		url : "/admin/ezOrgan/getEntryInfo.do",
+		        		data : {
+		        			cn 	  : userId,
+		        			prop  : "department"
+		        		},
+		        		success: function(xml){
+		        			result = xml;
+		        		}        			
+		        	});
+		        	
+		            ReceiveDocument = SelectSingleNodeValueNew(loadXMLString(result), "DATA/DEPARTMENT");
+		        } catch (e) {
+		        } 
+		        
+		        return ReceiveDocument;
+		    }
+		    
 		    function btn_Add_onclick() {
 		        var pparsingXML = "";
 		        var pparsingXML2 = "";
@@ -626,6 +652,12 @@
 		            var UserAddjoblistview = new ListView();
 		            UserAddjoblistview.LoadFromID("lvAddjobList");
 		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+		            
+		            if (!bFlag) {
+    		            var cn = GetAttribute(p_ListOrderObject, "_data2");
+    		            var orgDeptId = getDeptId(cn);
+    		            bFlag = dept[0] == orgDeptId ? true : false;
+		        	}
 		            
 		            if (bFlag) {
 		                alert(strLang25);

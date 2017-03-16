@@ -4559,7 +4559,9 @@
 		SELECT 
 			APRMEMBERSN ,
             APRMEMBERDEPTID ,
-            APRMEMBERISDEPTYN 
+            APRMEMBERISDEPTYN ,
+            APRTYPE,
+            APRSTATE
         FROM 
         	TBL_APRLINEINFO 
         WHERE  
@@ -7496,21 +7498,8 @@
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_2(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.updateHabyuiResultAprMemberNM" parameterClass="Map" resultClass="String">
-		<isEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				APRMEMBERNAME 
-	        FROM 
-	        	TBL_APRLINEINFO 
-	        WHERE  
-	        	TENANT_ID = #v_TENANTID#
-	        AND
-	        	DOCID = #v_DOCID#
-	        AND 
-	        	APRTYPE IN ( '001','004' )
-        </isEqual>
-        <isNotEqual  property="v_LANGTYPE" compareValue="1">
         	SELECT 
-        		APRMEMBERNAME2 APRMEMBERNAME  
+        		APRMEMBERNAME$lang$ APRMEMBERNAME  
             FROM 
             	TBL_APRLINEINFO 
             WHERE
@@ -7519,29 +7508,13 @@
             	DOCID = #v_DOCID#
             AND 
             	APRTYPE IN ( '001','004' )
-        </isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_1(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String">
-		<isEqual property="v_LANGTYPE" compareValue="1">
 			SELECT 
-				APRMEMBERJOBTITLE 
-            FROM 
-            	TBL_APRLINEINFO 
-            WHERE  
-            	TENANT_ID = #v_TENANTID#
-            AND
-            	DOCID = #v_DOCID#
-            AND 
-            	APRTYPE IN ( '001','004' )
-           ORDER BY 
-           		APRMEMBERSN DESC
-		</isEqual>
-		<isNotEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				APRMEMBERJOBTITLE2 APRMEMBERJOBTITLE  
+				APRMEMBERJOBTITLE$lang$ APRMEMBERJOBTITLE  
             FROM 
             	TBL_APRLINEINFO 
             WHERE
@@ -7552,7 +7525,6 @@
             	APRTYPE IN ( '001','004' )
             ORDER BY 
             	APRMEMBERSN DESC 
-		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String"> -->

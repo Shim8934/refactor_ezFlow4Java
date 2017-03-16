@@ -139,7 +139,7 @@
 									
 									if (CrossYN()) {
 							        	if (UserAgentState.indexOf("chrome") > 0) {
-							        		window.resizeTo(340, 260);
+							        		window.resizeTo(346, 270);
 							        	} else {
 							        		window.resizeTo(346, 270);
 							        	}

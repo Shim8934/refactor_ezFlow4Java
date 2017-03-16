@@ -80,38 +80,29 @@ public class EzAddressController{
 	/**
 	 * 도로명 주소 팝업창 호출 함수 (Open API)
 	 */
-	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
-	public String addressZipCodePopup(Model model) throws Exception {
-		logger.debug("addressZipCodePopup(Open API) started.");
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUpOpen.do")
+	public String addressZipCodePopupOpen(Model model) throws Exception {
+		logger.debug("addressZipCodePopupOpen started.");
 		
 		String confirmKey = config.getProperty("config.ConfirmKey");
 		
 		model.addAttribute("confirmKey", confirmKey);
 		
-		logger.debug("addressZipCodePopup(Open API) ended.");
+		logger.debug("addressZipCodePopupOpen ended.");
 		
-		return "ezAddress/addressZipCodePopUp";
+		return "ezAddress/addressZipCodePopUpOpen";
 	}
 	
 	/**
-	 * 주소록 우편번호 팝업 호출 함수
+	 * 도로명 주소 팝업창 호출 함수 (Local)
 	 */
-	@RequestMapping(value = "/ezAddress/address_zip_select.do")
-	public String address_zip_select(Model model) throws Exception {
-		List<String> sidoList = ezAddressService.getZipCodeSido();
-		
-		StringBuilder sb = new StringBuilder();
-		for (String str : sidoList) {
-			sb.append("<option value='" + str + "'>" + str + "</option>");
-		}
-		
-		model.addAttribute("sido", sb.toString());
-		
+	@RequestMapping(value = "/ezAddress/addressZipCodePopUp.do")
+	public String addressZipCodePopup(Model model) throws Exception {
 		return "ezAddress/addressZipSelect";
 	}
 	
 	/**
-	 * 도로명 주소 검색 실행 함수
+	 * 도로명 주소 검색 실행 함수 (Local)
 	 */
 	@RequestMapping(value = "/ezAddress/addressZipCodeList.do", produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -124,40 +115,25 @@ public class EzAddressController{
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
-		List<AddressZipCodeVO> ZipCodeList = ezAddressService.getAddressZipCodeList(sido, keyword, Integer.parseInt(page));
-		int totalCount = ezAddressService.getAddressZipCodeCount(sido, keyword);
+		Map<String, Object> resultMap = ezAddressService.getAddressZipCodeList(sido, keyword, Integer.parseInt(page));
 		
-		for (AddressZipCodeVO vo : ZipCodeList) {
+		int totalCount = (Integer)resultMap.get("totalCount");
+		sb.append("<TOTALCOUNT>" + totalCount + "</TOTALCOUNT>");
+		
+		@SuppressWarnings("unchecked")
+		List<AddressZipCodeVO> list = (List<AddressZipCodeVO>)resultMap.get("list");
+		
+		for (AddressZipCodeVO vo : list) {
 			sb.append("<ROW>");
 			sb.append("<ZIPCODE>" + vo.getZipCode() + "</ZIPCODE>");
 			sb.append("<DORO>" + vo.getDoro() + "</DORO>");
 			sb.append("<JIBUN>" + vo.getJibun() + "</JIBUN>");
-			sb.append("<ROWNUM>" + vo.getRnum() + "</ROWNUM>");
 			sb.append("</ROW>");
 		}
-		
-		sb.append("<TOTALCOUNT>" + totalCount + "</TOTALCOUNT>");
 		
 		sb.append("</DATA>");
 		
 		return sb.toString();
-	}
-	
-	/**
-	 * 주소록 우편번호 검색 실행 함수
-	 */
-	@RequestMapping(value = "/ezAddress/address_zip_iframe.do")
-	public String address_zip_iframe(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
-		String dong = request.getParameter("dong");
-
-		if (dong != null) {
-			if (!dong.equals("")) {
-				List<AddressOldZipCodeVO> list = ezAddressService.getZipCodeInfo(dong);
-				model.addAttribute("list", list);
-			}
-		}		
-		
-		return "ezAddress/addressZipIframe";
 	}
 	
 	/**
@@ -399,6 +375,8 @@ public class EzAddressController{
 					+ "<option id='C' value='0' ownerid='" + userInfo.getCompanyID() + "'>" + egovMessageSource.getMessage("ezAddress.t147", userInfo.getLocale()) + "</option>";
 		}
 		
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
 		model.addAttribute("folderType", folderType);
@@ -410,12 +388,13 @@ public class EzAddressController{
 		model.addAttribute("userNM2", userNM2);
 		model.addAttribute("rootAddressSelection", rootAddressSelection);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
-		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primaryLang", primaryLang);
 		
 		logger.debug("addressWrite ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",folderType=" + folderType + ",ownerId=" + ownerId
 				 + ",changeKey=" + changeKey + ",photoUrl=" + photoUrl + ",textEmail=" + textEmail + ",userNM=" + userNM
-				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI);
+				 + ",userNM2=" + userNM2 + ",rootAddressSelection=" + rootAddressSelection + ",useAddressOpenAPI=" + useAddressOpenAPI
+				 + ",primaryLang=" + primaryLang);
 		
 		return "ezAddress/addressWrite";
 	}

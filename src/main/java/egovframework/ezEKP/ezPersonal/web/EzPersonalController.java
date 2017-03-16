@@ -579,7 +579,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String listXML = "";
 		for (int i=1; i<=count; i++) {
-			listXML += "<ROW><TITLE>" + i + ". " + xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent() + "</TITLE><COUNT>0</COUNT><PERCENT>0</PERCENT></ROW>";
+			listXML += "<ROW><TITLE>" + i + ". " + commonUtil.cleanValue(xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent()) + "</TITLE><COUNT>0</COUNT><PERCENT>0</PERCENT></ROW>";
 		}
 		
 		Document resultDom = commonUtil.convertStringToDocument("<DATA>"+listXML+"</DATA>");
@@ -802,6 +802,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String publicExponent = "10001";
 		
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
 		
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("txtInfo", pInfo);
@@ -825,6 +826,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("txtOldPassword", password);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("primaryLang", primaryLang);
 		
 		return "/ezPersonal/persChangePersonInfo";
 	}

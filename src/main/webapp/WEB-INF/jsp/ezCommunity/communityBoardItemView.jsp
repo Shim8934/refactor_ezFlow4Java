@@ -832,7 +832,7 @@
 											<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 					                        <li id='btn_Delete'><span onclick='btn_Delete_Onclick()'><spring:message code='ezCommunity.t208'/></span></li>
-					                        <li id='btn_Move'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
+					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
 					                        
 <%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
 <%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
@@ -850,14 +850,14 @@
 					                        	<li id='btn_Move'><span onclick='btn_Copy_Onclick()'><spring:message code='ezCommunity.t911'/></span></li>
 					                        </c:if>
 					                        
-					                        <li id='btn_Move'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
+					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t950'/></span></li>
 					                        
 <%-- 					                        <c:if test="${MSIE.indexOf('MSIE') > -1 || Trident.IndexOf('Trident') > -1}"> --%>
 <%-- 					                        	<li id='btn_Move'><span onclick='btn_SaveToPC_Onclick()'>PC<spring:message code='ezCommunity.t20'/></span></li> --%>
 <%-- 					                        </c:if> --%>
 					                        
 					                        <c:if test="${boardInfo.gubun != '2' }">
-					                        	<li id='btn_Move'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
+					                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
 					                        </c:if>
 					                        
 					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
@@ -877,9 +877,9 @@
 <%-- 					                        	</c:if> --%>
 					                        </c:if>	
 					                        
-				                        	<li id='btn_Move'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
+				                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
 					                        <li id='btn_Print'><span onclick='btn_Print_Onclick()'><spring:message code='ezCommunity.t951'/></span></li>
-					                        <li id='btn_Move'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t953'/></span></li>
+					                        <li id='btn_Mail'><span onclick='mail_boarditem()'><spring:message code='ezCommunity.t953'/></span></li>
 										</c:otherwise>
 									</c:choose>
 									
@@ -1101,7 +1101,6 @@
 	        </c:choose>
 
 			<c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
-	        
 		        <tr>
 		            <td style="height:20px">
 		                <table class="content">

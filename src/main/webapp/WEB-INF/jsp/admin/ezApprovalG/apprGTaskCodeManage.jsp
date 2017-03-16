@@ -4,7 +4,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code = 'ezApprovalG.t765' /></title>
+		<c:choose>
+			<c:when test="${approvalFlag == 'S'}">
+				<title><spring:message code = 'main.t40' /></title>
+			</c:when>
+			<c:otherwise>
+				<title><spring:message code = 'ezApprovalG.t789' /></title>
+			</c:otherwise>
+		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e3'/>" type="text/css">
@@ -22,6 +29,7 @@
 		    var companyID = "<c:out value = '${userInfo.companyID}' />";
 		    var langType = "<c:out value = '${userInfo.lang}' />";
 		    var primary = "<c:out value = '${userInfo.primary}' />";
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var listview = new ListView();
 		    
 		    $(document).ready(function(){
@@ -33,14 +41,10 @@
 		    });
 	
 		    function Tree_setconfig() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
-		        xmlHTTP.send();
-		        
-		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            var treeView = new TreeView();
-		            treeView.SetConfig(xmlHTTP.responseXML);
-				}
+		    	var xmlDom = createXmlDom();
+	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
+		    	var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
 			}
 	
 		    function InitListView() {
@@ -70,7 +74,9 @@
 						type : "POST",
 			        	url : "/admin/ezApprovalG/getTaskCategoryTree.do",
 			        	async : false,
-			        	data : {categoryType : pLevel, parentID : pGroupID, companyID : companyID},
+			        	data : {categoryType : pLevel,
+			        			parentID : pGroupID,
+			        			companyID : companyID},
 			        	success : function(result){
 			        		xmlTree = loadXMLString(result);
 			        		
@@ -144,14 +150,17 @@
 		        var pLevel = nodedata.GetNodeData("DATA1");
 		        var pGroupID = nodedata.GetNodeData("DATA2");
 		        document.getElementById("descript").innerText = pGroupID;
-	
-		        if (pLevel == "3") {
+		        
+		        if (approvalFlag == 'S') {
 		            getGroupItem(pGroupID);
 		        } else {
-		            getGroupItem("");
+		        	if (pLevel == "3") {
+			            getGroupItem(pGroupID);
+			        } else {
+			            getGroupItem("");
+			        }
 		        }
 		    }
-	
 	
 		    function lvtForm_onclick() {
 		    }
@@ -171,7 +180,7 @@
 		        if (nodeIdx) {
 		            var pLevel = nodeIdx.GetNodeData("DATA1");
 		            var pGroupID = nodeIdx.GetNodeData("DATA2");
-	
+		            
 		            if (pLevel == "3") {
 		                var pAlertContent = "<spring:message code = 'ezApprovalG.t766' />";
 						OpenAlertUI(pAlertContent);
@@ -284,19 +293,28 @@
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
-	
+		            
+		            //일반일때 getTaskCategoryNodeExist  수정해야함니다~ 
 		            var tempVal = GetTaskCategoryNodeExist(pLevel, pGroupID);
 		            
 		            if (tempVal != "FALSE") {
-		                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
-		                OpenAlertUI(pAlertContent);
-		                return;
+		            	if (approvalFlag == 'S') {
+			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
+			                OpenAlertUI(pAlertContent);
+			                
+			                return;		            		
+		            	} else {
+			                var pAlertContent = "<spring:message code = 'ezApprovalG.t773' />";
+			                OpenAlertUI(pAlertContent);
+			                
+			                return;
+		            	}
 		            }
 	
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t774' />\n<spring:message code = 'ezApprovalG.t775' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelTree_onclick_Complete;
 	
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t777' />";
@@ -339,32 +357,69 @@
 	
 		        if (nodeIdx) {
 		            var pLevel = nodeIdx.GetNodeData("DATA1");
+		            
+		            if (approvalFlag == 'S') {
+		            	if (pLevel == '0') {
+		            		var pAlertContent = "<spring:message code = 'ezApprovalG.lhj12' />";
+							OpenAlertUI(pAlertContent);
+			                
+			                return
+		            	}
+		            } else {
+			            if (pLevel != "3") {
+			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t778' />\n<spring:message code = 'ezApprovalG.t779' />";
+	 		                OpenAlertUI(pAlertContent);
 	
-		            if (pLevel != "3") {
-		            	var pAlertContent = "<spring:message code = 'ezApprovalG.t778' />\n<spring:message code = 'ezApprovalG.t779' />";
- 		                OpenAlertUI(pAlertContent);
-
-		                return;
+			                return;
+			            }
 		            }
 	
 		            var para = new Array();
+		            //code Info
 		            para[0] = "I";
-		            para[1] = "";
-		            para[2] = nodeIdx.GetNodeData("DATA2");
+		            para[1] = ""; //분류코드
+		            para[2] = nodeIdx.GetNodeData("DATA2"); //현재카테고리
 		            para[3] = companyID;
-	
+		            para[4] = nodeIdx.GetNodeData("DATA1"); //level
+		            
+		            //cate Info
+		            para[5] = nodeIdx.GetNodeData("VALUE"); //CateName
+					para[6] = nodeIdx.GetNodeData("VALUE2"); //CateName2
+					para[7] = nodeIdx.GetNodeData("DATA3"); //CateDesc
+
+		            
 		            if (CrossYN()) {
 		                taskcodeinsert_cross_dialogArguments[0] = para;
 		                taskcodeinsert_cross_dialogArguments[1] = btnAddItem_onclick_Complete;
-	
-		                var TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 780));
-		                try { TaskCodeInsert_Cross.focus(); } catch (e) { }
+		                
+		                var TaskCodeInsert_Cross = null;
+		                
+		                if (approvalFlag == 'S') {
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 300)); //이효진 추후수정  사이즈
+		                } else {
+			                TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins", "TaskCodeInsert", GetOpenWindowfeature(450, 780));
+		                }
+		                
+						try { TaskCodeInsert_Cross.focus(); } catch (e) { }
 		            } else {
 		                var url = "/admin/ezApprovalG/taskCodeInsert.do?tCheck=ins";
-		                var retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");
+		                var retVal = null;
+		                
+		                if (approvalFlag == 'S') {
+			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken"); //이효진 추후수정  사이즈
+		                } else {
+			                retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");		                	
+		                }
 	
 		                if (retVal == "TRUE") {
-		                    var pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                	var pAlertContent = "";
+		                	
+		                	if (approvalFlag == 'S') {
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+		                	} else {
+		                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		                	}
+		                    
  		                    OpenAlertUI(pAlertContent);
 	
 		                    TreeView_onNodeSelect();
@@ -378,7 +433,14 @@
 	
 		    function btnAddItem_onclick_Complete(retVal) {
 		        if (retVal == "TRUE") {
-		            var pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+		        	var pAlertContent = "";
+                	
+                	if (approvalFlag == 'S') {
+                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />";
+                	} else {
+                		pAlertContent = "<spring:message code = 'ezApprovalG.t780' />\n<spring:message code = 'ezApprovalG.t781' />";
+                	}
+		            
  		            OpenAlertUI(pAlertContent);
 	
 		            TreeView_onNodeSelect();
@@ -400,15 +462,33 @@
 		                para[1] = selRow[0].getAttribute("DATA1");
 		                para[2] = nodeIdx.GetNodeData("DATA2");
 		                para[3] = companyID;
+						para[4] = nodeIdx.GetNodeData("DATA1");
+						
+						para[5] = nodeIdx.GetNodeData("VALUE"); //CateName
+			            para[6] = nodeIdx.GetNodeData("VALUE2"); //CateName2
+			            para[7] = nodeIdx.GetNodeData("DATA3"); //CateDesc
 	
 		                if (CrossYN()) {
 		                    taskcodeinsert_cross_dialogArguments[0] = para;
 		                    taskcodeinsert_cross_dialogArguments[1] = btnEditItem_onclick_Complete;
-		                    var TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 780));
+		                    var TaskCodeInsert_Cross = null;
+		                    
+		                    if (approvalFlag == 'S') {
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 300));
+		                    } else {
+		                    	TaskCodeInsert_Cross = window.open("/admin/ezApprovalG/taskCodeInsert.do?tCheck=update", "TaskCodeInsert_Cross", GetOpenWindowfeature(450, 780));
+		                    }
+		                    
 		                    try { TaskCodeInsert_Cross.focus(); } catch (e) { }
 		                } else {
 		                    var url = "/admin/ezApprovalG/taskCodeInsert.do?tCheck=update";
-		                    var retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780px;status:no;help:no;scroll:no;edge:sunken");
+		                    var retVal = null;
+		                    
+		                    if (approvalFlag == 'S') {
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:300px;status:no;help:no;scroll:no;edge:sunken");
+		                    } else {
+		                    	retVal = window.showModalDialog(url, para, "dialogWidth:450px;dialogHeight:780;status:no;help:no;scroll:no;edge:sunken");
+		                    }
 		                    
 		                    if (retVal == "TRUE") {
 		                        var pAlertContent = "<spring:message code = 'ezApprovalG.t783' />";
@@ -439,19 +519,21 @@
 		        var selRow = listview.GetSelectedRows();
 		        
 		        if (selRow != "") {
-		            var tempVal = GetTaskCodeNodeExist(selRow[0].getAttribute("DATA1"), "");
-		            
-		            if (tempVal != "FALSE") {
-		            	var pAlertContent = "<spring:message code = 'ezApprovalG.t785' />";
- 		                OpenAlertUI(pAlertContent);
- 		                
-		                return;
-		            }
+		        	if (approvalFlag == 'G') {
+			            var tempVal = GetTaskCodeNodeExist(selRow[0].getAttribute("DATA1"), "");
+			            
+			            if (tempVal != "FALSE") {
+			            	var pAlertContent = "<spring:message code = 'ezApprovalG.t785' />";
+	 		                OpenAlertUI(pAlertContent);
+	 		                
+			                return;
+			            }
+		        	}
 	
 		            ezapropinion_cross_dialogArguments[0] = "<spring:message code = 'ezApprovalG.t786' />\n<spring:message code = 'ezApprovalG.t787' />";
 		            ezapropinion_cross_dialogArguments[1] = btnDelItem_onclick_Complete;
-	
-		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(330, 205));
+		            
+		            var ezAPROPINION_Cross = window.open("/ezApprovalG/ezAprOpinion.do", "ezAPROPINION", GetOpenWindowfeature(325, 200));
 		            try { ezAPROPINION_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t784' />";
@@ -468,7 +550,9 @@
 		            	type : "POST",
 		            	url : "/admin/ezApprovalG/removeTaskCode.do",
 		            	async : false,
-		            	data : {taskCode : selRow[0].getAttribute("DATA1"), companyID : companyID},
+		            	data : {taskCode : selRow[0].getAttribute("DATA1"),
+		            			companyID : companyID
+		            			},
 		            	success : function(result) {
 		            		if (result == "TRUE") {
 								var pAlertContent = "<spring:message code = 'ezApprovalG.t788' />";
@@ -476,6 +560,9 @@
 
 		 	                    TreeView_onNodeSelect();
 		            		}
+		            	},
+		            	error : function(jqXHR,textStatus,errorThrown) {
+		            		
 		            	}
 		            });
 		        }
@@ -537,12 +624,31 @@
 		</script>
 	</head>
 	<body class="mainbody">
+		<c:choose>
+			<c:when test="${approvalFlag == 'S' }">
+				<xml id="GROUP" style="display:none">
+					<TREEVIEWDATA>
+						<NODE>
+							<EXPANDED>TRUE</EXPANDED>
+							<ISLEAF>FALSE</ISLEAF>
+							<VALUE><spring:message code = 'ezApprovalG.t114' /></VALUE>
+							<VALUE2><spring:message code = 'ezApprovalG.t114' /></VALUE2>
+							<DATA1>0</DATA1>
+							<DATA2>ROOT</DATA2>
+							<DATA3></DATA3>
+							<DATA4>NULL</DATA4>
+						</NODE>
+					</TREEVIEWDATA>
+				</xml>
+			</c:when>
+		</c:choose>
 		<xml id="GROUP" style="display:none">
 			<TREEVIEWDATA>
 				<NODE>
 					<EXPANDED>TRUE</EXPANDED>
 					<ISLEAF>FALSE</ISLEAF>
 					<VALUE>/</VALUE>
+					<VALUE2>/</VALUE2>
 					<DATA1>0</DATA1>
 					<DATA2>ROOT</DATA2>
 					<DATA3></DATA3>
@@ -577,7 +683,15 @@
 			</LISTVIEWDATA>
 		</xml>
 		
-		<h1><spring:message code = 'ezApprovalG.t789' /></h1>
+		<c:choose>
+			<c:when test="${approvalFlag == 'S' }">
+				<h1><spring:message code = 'main.t40' /></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code = 'ezApprovalG.t789' /></h1>
+			</c:otherwise>
+		</c:choose>
+		
 		<div id="mainmenu">
 			<ul>
 		        <b><spring:message code = 'ezApprovalG.t1276' /></b>
@@ -586,27 +700,45 @@
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 		        </SELECT><br /><br />
-				<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
-				<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApprovalG.t791' /></span></li>
-				<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApprovalG.t792' /></span></li>
-				<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
-				<li><span onClick="return btnViewTaskInfo_onclick()"><spring:message code = 'ezApprovalG.t793' /></span></li>
-				<li><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code = 'ezApprovalG.t794' /></span></li>
-				<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
-				<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
-				<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
-				<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
-				<li><span onClick="return btnConItem_onclick()"><spring:message code = 'ezApprovalG.t798' /></span></li>
+		        
+		        <c:choose>
+		        	<c:when test="${approvalFlag == 'S'}">
+		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
+						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApproval.t709' /></span></li>
+						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApproval.t710' /></span></li>
+						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApproval.t711' /></span></li>
+						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApproval.t712' /></span></li>
+						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApproval.t713' /></span></li>
+		        	</c:when>
+		        	<c:otherwise>
+		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
+						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApprovalG.t791' /></span></li>
+						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApprovalG.t792' /></span></li>
+						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<li><span onClick="return btnViewTaskInfo_onclick()"><spring:message code = 'ezApprovalG.t793' /></span></li>
+						<li><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code = 'ezApprovalG.t794' /></span></li>
+						<li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li>
+						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
+						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
+						<li><span onClick="return btnConItem_onclick()"><spring:message code = 'ezApprovalG.t798' /></span></li>
+		        	</c:otherwise>
+		        </c:choose>
+				
 			</ul>
 		</div>
 		<table>
 			<tr>
-				<td><h2><spring:message code = 'ezApprovalG.t699' /></h2>
-					<div style="BORDER:#b6b6b6 1px solid; OVERFLOW-Y:auto; OVERFLOW-X:auto; 
-						WIDTH:220px;HEIGHT:400px; BACKGROUND-COLOR:#ffffff" 
-						id="TreeView"></div></td>
-				<td style="padding-left:5px" ><h2 id="descript">&nbsp;</h2><div class="listview">
-					<DIV id="lvtForm" style="BORDER:0; WIDTH: 530px; HEIGHT: 400px; OVERFLOW-Y:auto; OVERFLOW-X:auto;" ></DIV></div>
+				<td>
+					<h2></h2>
+					<div style="border:#b6b6b6 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
+				</td>
+				<td style="padding-left:5px">
+					<h2 id="descript"></h2>
+					<div class="listview">
+						<div id="lvtForm" style="border:0; width: 530px; height: 400px; overflow-y:auto; overflow-x:auto;" ></div>
+					</div>
 				</td>
 			</tr>
 		</table>

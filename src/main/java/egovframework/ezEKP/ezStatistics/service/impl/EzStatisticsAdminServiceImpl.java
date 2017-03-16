@@ -255,7 +255,6 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		try {
 			List<StatConnVO> connVo = ezStatisticsAdminDAO.getConnBrowser(statApprVO);
 			for (int i = 0; i < connVo.size(); i++) {
-				logger.debug("@@"+connVo.get(i).getConnectBrowser()+","+connVo.get(i).getTotal()+","+connVo.get(i).getConnectCnt());
 				sb.append(commonUtil.getQueryResult(connVo.get(i)));
 			}
 		}catch (Exception e) {

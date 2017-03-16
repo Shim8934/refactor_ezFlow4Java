@@ -99,6 +99,7 @@
 	            }
 	            catch (e) {
 	            }
+	            window.resizeTo(780, 750);
 	            document.getElementById("txtTitle").value = strTitle;
 	            imageViewInit();
 	            saveItemBoardId = pBoardID;
@@ -961,7 +962,7 @@
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
 	          <td style="width:70%" id="tdBoardName">${boardInfo.boardName}</td>
 	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
-	          <td style="width:120px; text-align:center">${userInfo.id}</td>
+	          <td style="width:120px; text-align:center">${userInfo.displayName1}</td>
 	        </tr>
 	        <tr>
 	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>

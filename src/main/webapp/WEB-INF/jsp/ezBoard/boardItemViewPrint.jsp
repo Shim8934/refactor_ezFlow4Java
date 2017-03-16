@@ -46,6 +46,7 @@
 			var pReservedItem = "${reservedItem}";
 			var OneLineReplyFlag = "${oneLineReplyFlag}";
 		    var gubun = "${boardInfo.guBun}";
+		    var AtttributeCount = "${boardAttrCount}";
 		
 		    var myVar;
 		    window.onload = function () {
@@ -181,10 +182,44 @@
 	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t289'/></th>
 	                  <td id="User_DeptNM" style="width:20%; white-space:nowrap">&nbsp;${boardItem.writerDeptName}</td>
 	                  <th style="width:10%; text-align:center"><spring:message code='ezBoard.t290'/></th>
-	                  <td id="User_JobTitle" style="width:25%; white-space:nowrap;">${boardItem.extensionAttribute3}<div></div></td>
+	                  <td id="User_JobTitle" style="width:25%; white-space:nowrap;">&nbsp;${boardItem.extensionAttribute3}<div></div></td>
 	                  <th style="width:10%; text-align:center;"><spring:message code='ezBoard.t38'/></th>
 	                  <td id="Telephone" style="width:25%; white-space:nowrap">&nbsp;${boardItem.extensionAttribute4}</td>
 		            </tr>
+		            <c:if test="${boardAttrCount > 0}">
+							<c:forEach var="boardAttr" items="${boardAttr}">
+								<tr>
+									<c:choose>
+										<c:when test="${extenLang == '1'}">
+							                <th style="text-align:center">&nbsp;${boardAttr.colName1}</th>
+										</c:when>
+										<c:otherwise>
+							                <th style="text-align:center">&nbsp;${boardAttr.colName2}</th>
+										</c:otherwise>
+									</c:choose>
+					                <td colspan="5">
+					                	<c:choose>
+					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
+					                			&nbsp;${boardItem.extensionAttribute6}
+					                		</c:when>
+					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
+					                			&nbsp;${boardItem.extensionAttribute7}
+					                		</c:when>
+					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
+					                			&nbsp;${boardItem.extensionAttribute8}
+					                		</c:when>
+					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
+					                			&nbsp;${boardItem.extensionAttribute9}
+					                		</c:when>
+					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
+					                			&nbsp;${boardItem.extensionAttribute10}
+					                		</c:when>
+					                		<c:otherwise></c:otherwise>
+					                	</c:choose>
+					                </td>
+					            </tr>
+							</c:forEach>
+						</c:if>
 		            <tr>
 	                  <th style="text-align:center"><spring:message code='ezBoard.t291'/></th>
 	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6">&nbsp;${boardItem.title} </td>

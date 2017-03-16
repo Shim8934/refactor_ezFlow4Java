@@ -9,6 +9,7 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -385,4 +386,13 @@ public interface EzApprovalGService {
 
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang) throws Exception;
+
+	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId) throws Exception;
+
+	public String insUserCont(String ownUserID, String parentContID, String ownUserName, String description, String companyID, String lang, int tenantID) throws Exception;
+
+	public String updateUserCont(String contID, String ownUserID, String parentContID, String userContName, String description, String companyID, String lang, int tenantID)  throws Exception;
+
+	public String delUserCont(String pContID, String pMode, String companyID, String lang, int tenantId)  throws Exception;	
 }

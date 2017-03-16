@@ -33,13 +33,13 @@
 		        
 		        if (CrossYN()) {
 		        	if (UserAgentState.indexOf("chrome") > 0) {
-		        		window.resizeTo(340, 260);
+		        		window.resizeTo(346, 270);
 		        	} else {
 		        		window.resizeTo(346, 270);
 		        	}
 		        } else {
 		        	if (UserAgentState.indexOf("firefox") != -1) {
-		                window.resizeTo(349, 279);
+		                window.resizeTo(349, 270);
 		            } else if (UserAgentState.indexOf("safari") > 0 && UserAgentState.indexOf("chrome") == -1) {
 		                window.resizeTo(346, 243);
 		            } else {

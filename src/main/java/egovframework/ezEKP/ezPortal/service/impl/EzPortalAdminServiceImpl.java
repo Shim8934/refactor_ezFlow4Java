@@ -87,10 +87,11 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public void deleteTheme(String uID, int tenantID) throws Exception {
+	public void deleteTheme(String uID, int tenantID, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PUID", uID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		ezPortalAdminDAO.deleteTheme(map);
 	}
 
@@ -417,12 +418,13 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	@Override
-	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID) throws Exception {
+	public PortalPortletGeneralVO getPortletProperties(String pUID, int tenantID, String companyID) throws Exception {
 		logger.debug("getPortletProperties started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pUID", pUID);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		String temp = ezPortalAdminDAO.getPortletProperties_S1(map);
 		
@@ -842,7 +844,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
    					+" FROM TBL_PORTALPAGE_CATEGORY "
    					+"WHERE TENANT_ID="+tenantID+" AND CATEGORY = REPLACE(A.GUBUNFLAG, 'C', '')) AS GUBUNNAME " 
    					+"FROM TBL_PORTALPAGE_GENERAL A "
-   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID "
+   					+"LEFT JOIN TBL_THEME_GENERAL B ON A.THEMEUID = B.UID_ AND A.TENANT_ID=B.TENANT_ID AND A.COMPANYID = B.COMPANAYID "
    					+"WHERE (NOT EXISTS(SELECT UID_ FROM TBL_PORTALPAGE_ITEMS WHERE UID_ = A.UID_ AND TENANT_ID=A.TENANT_ID)) "
    					+"AND A.DISPLAYNAME LIKE '%"+pDisplayName+"%'";
 		
@@ -874,19 +876,19 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		for (int i=0; i<list.size(); i++) {
 			if (i >= pStartRow -1) {
 				sb.append("<ROW>");
-                sb.append("<UID>" + list.get(i).getuID_() + "</UID>");
-                sb.append("<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>");
-                sb.append("<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>");
+                sb.append("<UID>" + commonUtil.cleanValue(list.get(i).getuID_()) + "</UID>");
+                sb.append("<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>");
+                sb.append("<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2()) + "</DISPLAYNAME2>");
                 sb.append("<DEPTH>" + list.get(i).getDepth() + "</DEPTH>");
-                sb.append("<CREATEDATE>" + list.get(i).getCreateDate() + "</CREATEDATE>");
-                sb.append("<GUBUNFLAG>" + list.get(i).getGubunFlag() + "</GUBUNFLAG>");
-                sb.append("<USEFLAG>" + list.get(i).getUseFlag() + "</USEFLAG>");
-                sb.append("<GUBUNNAME>" + list.get(i).getGubunName() + "</GUBUNNAME>");
-                sb.append("<DEFAULTPAGE>" + list.get(i).getDefaultPage() + "</DEFAULTPAGE>");
-                sb.append("<THEMENM>" + list.get(i).getThemeNm() + "</THEMENM>");
-                sb.append("<THEMENM2>" + list.get(i).getThemeNm2() + "</THEMENM2>");
-                sb.append("<THEMENM3>" + list.get(i).getThemeNm3() + "</THEMENM3>");
-                sb.append("<THEMENM4>" + list.get(i).getThemeNm4() + "</THEMENM4>");
+                sb.append("<CREATEDATE>" + commonUtil.cleanValue(list.get(i).getCreateDate()) + "</CREATEDATE>");
+                sb.append("<GUBUNFLAG>" + commonUtil.cleanValue(list.get(i).getGubunFlag()) + "</GUBUNFLAG>");
+                sb.append("<USEFLAG>" + commonUtil.cleanValue(list.get(i).getUseFlag()) + "</USEFLAG>");
+                sb.append("<GUBUNNAME>" + commonUtil.cleanValue(list.get(i).getGubunName()) + "</GUBUNNAME>");
+                sb.append("<DEFAULTPAGE>" + commonUtil.cleanValue(list.get(i).getDefaultPage()) + "</DEFAULTPAGE>");
+                sb.append("<THEMENM>" + commonUtil.cleanValue(list.get(i).getThemeNm()) + "</THEMENM>");
+                sb.append("<THEMENM2>" + commonUtil.cleanValue(list.get(i).getThemeNm2()) + "</THEMENM2>");
+                sb.append("<THEMENM3>" + commonUtil.cleanValue(list.get(i).getThemeNm3()) + "</THEMENM3>");
+                sb.append("<THEMENM4>" + commonUtil.cleanValue(list.get(i).getThemeNm4()) + "</THEMENM4>");
                 sb.append("</ROW>");
 			}
 		}
@@ -1038,7 +1040,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 					//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 					portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 					
-					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+					PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 					portletWidth = String.valueOf(widthDom2.getWidth());
 					
 					NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
@@ -1142,7 +1144,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 						
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
@@ -1363,7 +1365,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 						//portletDisplayName = xmlDom.getElementsByTagName("PORTLETDISPLAYNAME").item(j).getTextContent().trim();
 						portletDisplayName = nodesPortletDisplayName.item(j).getTextContent();
 						logger.debug("portletDisplayName["+j+"]="+portletDisplayName);
-						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID);
+						PortalPortletGeneralVO widthDom2 =  getPortletProperties(portletUID, tenantID, pComapnyID);
 						portletWidth = String.valueOf(widthDom2.getWidth());
 						
 						NodeList nodesPortletHeight = (NodeList)xpath.evaluate("//DATA/CELL["+(i+1)+"]/ROW/PORTLETHEIGHT", xmlDom, XPathConstants.NODESET);
@@ -1581,9 +1583,9 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		String result = "<DATA>";
 		for (int i=0; i<list.size(); i++) {
 			result += "<ROW>";
-			result += "<UID_>" + list.get(i).getuID_() + "</UID_>";
-			result += "<DISPLAYNAME>" + list.get(i).getDisplayName() + "</DISPLAYNAME>";
-			result += "<DISPLAYNAME2>" + list.get(i).getDisplayName2() + "</DISPLAYNAME2>";
+			result += "<UID_>" + commonUtil.cleanValue(list.get(i).getuID_()) + "</UID_>";
+			result += "<DISPLAYNAME>" + commonUtil.cleanValue(list.get(i).getDisplayName()) + "</DISPLAYNAME>";
+			result += "<DISPLAYNAME2>" + commonUtil.cleanValue(list.get(i).getDisplayName2()) + "</DISPLAYNAME2>";
 			if (list.get(i).getPortlet_Type() == 1)
 				result += "<TYPE>t4075</TYPE>";
 			if (list.get(i).getPortlet_Type() == 2)
@@ -1593,7 +1595,7 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 			if (list.get(i).getPortlet_Type() == 4)
 				result += "<TYPE>t4078</TYPE>";
 			
-			result += "<URL>" + list.get(i).getUrl() + "</URL>";
+			result += "<URL>" + commonUtil.cleanValue(list.get(i).getUrl()) + "</URL>";
 			result += "<HEIGHT>" + list.get(i).getHeight() + "</HEIGHT>";
 			result += "</ROW>";
 		}

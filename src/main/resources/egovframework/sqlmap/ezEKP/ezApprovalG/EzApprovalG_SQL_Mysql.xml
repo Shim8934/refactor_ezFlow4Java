@@ -34,7 +34,9 @@
 	<typeAlias  alias="ApprGDocInfoWebSrvVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocInfoWebSrvVO"/>
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
+	<typeAlias  alias="ApprUserContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO"/>
 	
+
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -4955,23 +4957,23 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.updateHabyuiResultSignInfo" parameterClass="Map" resultClass="ApprGSignInfoVO">
 		<![CDATA[ 
-		SELECT 
-			  SIGNTYPE ,
-              SIGNNAME ,
-              CONTENT 
-		FROM 	
-			  TBL_SIGNINFO 
-		WHERE 
-			  TENANT_ID = #v_TENANTID#
-		AND
-			  COMPANYID = #companyID#
-		AND 
-			  DOCID = #v_DOCID#
-        AND 
-        	  SIGNNAME LIKE 'sign%'
-		ORDER BY 
-			  SIGNNAME DESC 
-        LIMIT 1
+			SELECT 
+				  SIGNTYPE ,
+	              SIGNNAME ,
+	              CONTENT 
+			FROM 	
+				  TBL_SIGNINFO 
+			WHERE 
+				  TENANT_ID = #v_TENANTID#
+			AND
+				  COMPANYID = #companyID#
+			AND 
+				  DOCID = #v_DOCID#
+	        AND 
+	        	  SIGNNAME LIKE 'sign%'
+			ORDER BY 
+				  SIGNNAME DESC 
+	        LIMIT 1
         ]]>
 	</select>
 	
@@ -4982,7 +4984,9 @@
 		SELECT 
 			APRMEMBERSN ,
             APRMEMBERDEPTID ,
-            APRMEMBERISDEPTYN 
+            APRMEMBERISDEPTYN ,
+            APRTYPE,
+            APRSTATE 
         FROM 
         	TBL_APRLINEINFO 
         WHERE  
@@ -6389,24 +6393,20 @@
 				   						AND
 				   							  TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
 				   						AND
-				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID	 
-									<isEmpty property="v_CONTID" >
-										WHERE 
-											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
-									</isEmpty>
+				   							  TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID									
 									<isEmpty property="v_CONTID" >
 										WHERE 
 											  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
 									</isEmpty>
 									<isNotEmpty property="v_CONTID">
-									<isEqual property="v_CONTID" compareValue="ADMIN">
-										WHERE 
-											  CONTAINERID IS NOT NULL
-									</isEqual>
-									<isNotEqual property="v_CONTID" compareValue="ADMIN">
-									 	WHERE 	
-									 		  CONTAINERID IN (#v_CONTID#)
-									</isNotEqual>
+										<isEqual property="v_CONTID" compareValue="ADMIN">
+											WHERE 
+												  CONTAINERID IS NOT NULL
+										</isEqual>
+										<isNotEqual property="v_CONTID" compareValue="ADMIN">
+										 	WHERE 	
+										 		  CONTAINERID IN (#v_CONTID#)
+										</isNotEqual>
 									</isNotEmpty>
 									    AND 
 									  		  TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL 		
@@ -6417,11 +6417,11 @@
 										]]>
 									</isNotEqual>
 									<isEqual property="v_PUBFLAG" compareValue="Y">
-									<isNotEmpty property="v_CONTID">
-										<![CDATA[
-										AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-								      	]]>
-									</isNotEmpty>
+										<isNotEmpty property="v_CONTID">
+											<![CDATA[
+											AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+									      	]]>
+										</isNotEmpty>
 									</isEqual>
 									<isNotEmpty property="v_SUBQUERY">
 										AND 
@@ -6432,20 +6432,20 @@
 										AND
 											TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 									<isNotEmpty property="v_ORDEROPTION">
-									<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
-									<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
-										ORDER BY 
-											$v_ORDEROPTION$
-									</isEqual>
-									<isNotEqual  property="v_ORDEROPTIONVALUE" compareValue="enddate">
-										ORDER BY 
-											$v_ORDEROPTION$, ENDDATE DESC
-									</isNotEqual>
-									</isGreaterEqual>
-									<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
-										ORDER BY 
-											$v_ORDEROPTION$, ENDDATE DESC
-									</isLessThan>
+										<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
+											<isEqual property="v_ORDEROPTIONVALUE" compareValue="enddate">
+												ORDER BY 
+													$v_ORDEROPTION$
+											</isEqual>
+											<isNotEqual  property="v_ORDEROPTIONVALUE" compareValue="enddate">
+												ORDER BY 
+													$v_ORDEROPTION$, ENDDATE DESC
+											</isNotEqual>
+										</isGreaterEqual>
+										<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
+											ORDER BY 
+												$v_ORDEROPTION$, ENDDATE DESC
+										</isLessThan>
 									</isNotEmpty>
 									<isEmpty property="v_ORDEROPTION">
 										ORDER BY 
@@ -6456,36 +6456,36 @@
 									  ) B ) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
-						<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
-						<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
-						<![CDATA[
-							ORDER BY 
-								$v_ORDEROPTION2$  
-							LIMIT  #v_PAGESIZE2# )  C
-						]]>
-						</isEqual>
-						<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
-						<![CDATA[
-							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE  
-							LIMIT #v_PAGESIZE2# )
-						]]>
-						</isNotEqual>
-						</isGreaterEqual>
-						<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
-						<![CDATA[	
-							ORDER BY 
-								$v_ORDEROPTION2$, ENDDATE 
-							LIMIT #v_PAGESIZE2# )	
-						]]>
-						</isLessThan>
+							<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
+								<isEqual property="v_ORDEROPTION2VALUE" compareValue="enddate">
+								<![CDATA[
+									ORDER BY 
+										$v_ORDEROPTION2$  
+									LIMIT  #v_PAGESIZE2# ) C
+								]]>
+								</isEqual>
+								<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
+								<![CDATA[
+									ORDER BY 
+										$v_ORDEROPTION2$, ENDDATE  
+									LIMIT #v_PAGESIZE2# ) C
+								]]>
+								</isNotEqual>
+							</isGreaterEqual>
+							<isLessThan  property="v_ORDEROPTION2LENGTH" compareValue="7">
+								<![CDATA[	
+									ORDER BY 
+										$v_ORDEROPTION2$, ENDDATE 
+									LIMIT #v_PAGESIZE2# ) C	
+								]]>
+							</isLessThan>
 						</isNotEmpty>
 						<isEmpty property="v_ORDEROPTION2">
-						<![CDATA[	
-							ORDER BY 
-								ENDDATE 
-							LIMIT #v_PAGESIZE2#) 
-						]]>
+							<![CDATA[	
+								ORDER BY 
+									ENDDATE 
+								LIMIT #v_PAGESIZE2#) C
+							]]>
 						</isEmpty>
 		   			
 	</select>
@@ -6861,7 +6861,7 @@
    			AND
    					B.TENANT_ID = C.TENANT_ID
    			AND
-   					B.COMPANYID = C.CN		
+   					B.COMPANYID = C.EXTENSIONATTRIBUTE2		
    			WHERE 
    					ContainerTypeID = '500' 
    			AND 
@@ -6885,7 +6885,7 @@
    		AND
    				A.TENANT_ID = D.TENANT_ID
    		AND
-   				A.COMPANYID = D.CN
+   				A.COMPANYID = D.EXTENSIONATTRIBUTE2
    		AND 
    				(A.StartDate >=  STR_TO_DATE(#v_pStartDate#,'%Y-%m-%d %H:%i:%s') AND A.StartDate <= STR_TO_DATE(#v_pEndDate#,'%Y-%m-%d %H:%i:%s')) 
    		WHERE 
@@ -7746,6 +7746,10 @@
 		  								TENANT_ID = #v_TENANTID#
 		  							AND
 		  								COMPANYID = #companyID#)A )
+		WHERE 
+			TENANT_ID = #v_TENANTID#
+		AND
+			COMPANYID = #companyID#
      ]]>
 	</update>
 	<select id="EzApprovalG.selectAprGetNewID" parameterClass="Map" resultClass="String">
@@ -8251,23 +8255,8 @@
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_2(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.updateHabyuiResultAprMemberNM" parameterClass="Map" resultClass="String">
-		<isEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				APRMEMBERNAME 
-	        FROM 
-	        	TBL_APRLINEINFO 
-	        WHERE  
-	        	TENANT_ID = #v_TENANTID#
-	        AND
-        	    COMPANYID = #companyID#
-	        AND
-	        	DOCID = #v_DOCID#
-	        AND 
-	        	APRTYPE IN ( '001','004' )
-        </isEqual>
-        <isNotEqual  property="v_LANGTYPE" compareValue="1">
         	SELECT 
-        		APRMEMBERNAME2 APRMEMBERNAME  
+        		APRMEMBERNAME$lang$ APRMEMBERNAME  
             FROM 
             	TBL_APRLINEINFO 
             WHERE
@@ -8278,31 +8267,13 @@
             	DOCID = #v_DOCID#
             AND 
             	APRTYPE IN ( '001','004' )
-        </isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_UPDATEHABYUIRESULT_APRM_1(#v_DOCID#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.updateHabyuiResultAprMemberJobTitle" parameterClass="Map" resultClass="String">
-		<isEqual property="v_LANGTYPE" compareValue="1">
 			SELECT 
-				APRMEMBERJOBTITLE 
-            FROM 
-            	TBL_APRLINEINFO 
-            WHERE  
-            	TENANT_ID = #v_TENANTID#
-            AND
-            	COMPANYID = #companyID#
-            AND
-            	DOCID = #v_DOCID#
-            AND 
-            	APRTYPE IN ( '001','004' )
-           ORDER BY 
-           		APRMEMBERSN DESC
-		</isEqual>
-		<isNotEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				APRMEMBERJOBTITLE2 APRMEMBERJOBTITLE  
+				APRMEMBERJOBTITLE$lang$ APRMEMBERJOBTITLE  
             FROM 
             	TBL_APRLINEINFO 
             WHERE
@@ -8315,7 +8286,6 @@
             	APRTYPE IN ( '001','004' )
             ORDER BY 
             	APRMEMBERSN DESC 
-		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.chkDocDelete" parameterClass="Map" resultClass="String"> -->
@@ -10213,40 +10183,36 @@
    		   	TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
 		<isEmpty property="v_CONTID" >
 			WHERE 
-				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID# 
-		</isEmpty>
-		<isEmpty property="v_CONTID" >
-			WHERE 
 				  TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#
 		</isEmpty>
 		<isNotEmpty property="v_CONTID">
-		<isEqual property="v_CONTID" compareValue="ADMIN">
-			WHERE 
-				  CONTAINERID IS NOT NULL
-		</isEqual>
-		<isNotEqual property="v_CONTID" compareValue="ADMIN">
-		 	WHERE 	
-		 		  CONTAINERID IN (#v_CONTID#)
-		</isNotEqual>
+			<isEqual property="v_CONTID" compareValue="ADMIN">
+				WHERE 
+					  CONTAINERID IS NOT NULL
+			</isEqual>
+			<isNotEqual property="v_CONTID" compareValue="ADMIN">
+			 	WHERE 	
+			 		  CONTAINERID IN (#v_CONTID#)
+			</isNotEqual>
 		</isNotEmpty>
 		AND 
 			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
 		<isNotEqual property="v_USERSECCODE" compareValue="0">
-		<![CDATA[
-		AND 
-			#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
-		]]>
+			<![CDATA[
+			AND 
+				#v_USERSECCODE# <= TBL_EXPENDAPRDOCINFO.SECURITYCODE
+			]]>
 		</isNotEqual>
 		<isEqual property="v_PUBFLAG" compareValue="Y">
-		<isNotEmpty property="v_CONTID">
-		<![CDATA[
-		AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
-      	]]>
-		</isNotEmpty>
+			<isNotEmpty property="v_CONTID">
+				<![CDATA[
+				AND ( (TBL_ENDAPRDOCINFO.ISPUBLIC <> 'N' OR TBL_ENDAPRDOCINFO.ISPUBLIC IS NULL)	OR (TBL_ENDAPRDOCINFO.ISPUBLIC = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #v_USERID#))
+		      	]]>
+			</isNotEmpty>
 		</isEqual>
 		<isNotEmpty property="v_SUBQUERY">
-		AND 
-			$v_SUBQUERY$
+			AND 
+				$v_SUBQUERY$
 		</isNotEmpty>
 		AND
 			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
@@ -19902,4 +19868,227 @@
    		</isNotEqual>
    	</select>
    	
+   	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
+   		<isEqual property="v_LANGTYPE" compareValue="1">
+   		<![CDATA[
+   			SELECT 
+   				TASKNAME, KEEPINGPERIOD , tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID 
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     LEFT JOIN 
+                                                     	tbL_ContainerUseDep    
+                                                     ON 
+                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = tbL_ContainerUseDep.TENANT_ID
+                                                     AND
+                                                     	tbL_Container.COMPANYID = tbL_ContainerUseDep.COMPANYID
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
+                                                     OR 
+                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = 0
+                                                     AND
+                                                     	tbL_Container.COMPANYID = 'S907000'))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+          ]]>
+   		</isEqual>
+   	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
+   	 	<![CDATA[
+   	 		SELECT 
+   				TASKNAME2 TASKNAME, KEEPINGPERIOD, tbl_taskcode.taskcode
+			FROM 
+				TBl_ENDAPRDOCINFO
+			JOIN 
+				TBl_EXPENDAPRDOCINFO    
+			ON 
+				TBl_ENDAPRDOCINFO.DocID = TBl_EXPENDAPRDOCINFO.DocID
+			AND
+				TBl_ENDAPRDOCINFO.TENANT_ID = TBl_EXPENDAPRDOCINFO.TENANT_ID 
+			AND
+				TBl_ENDAPRDOCINFO.COMPANYID = TBl_EXPENDAPRDOCINFO.COMPANYID  
+			JOIN 
+				tbl_taskcode            
+			ON 
+				TBl_EXPENDAPRDOCINFO.taskcode = tbl_taskcode.taskcode 
+			AND
+				TBl_EXPENDAPRDOCINFO.TENANT_ID = tbl_taskcode.TENANT_ID 
+			AND
+				TBl_EXPENDAPRDOCINFO.COMPANYID = tbl_taskcode.COMPANYID  
+ 			AND 
+ 				( TBl_EXPENDAPRDOCINFO.taskcode IS NOT NULL )
+            AND 
+            	( TBl_EXPENDAPRDOCINFO.taskcode <> ' ' )
+			AND 
+				( TBl_ENDAPRDOCINFO.ContainerID IN ( SELECT 
+														tbL_Container.ContainerID 
+                                                     FROM 
+                                                     	tbL_Container 
+                                                     LEFT JOIN 
+                                                     	tbL_ContainerUseDep    
+                                                     ON 
+                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
+                                                     WHERE  
+                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
+                                                     OR 
+                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     AND
+                                                     	tbL_Container.TENANT_ID = 0
+                                                     AND
+                                                     	tbL_Container.COMPANYID = 'S907000'))
+           AND
+           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           AND
+           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+		   GROUP BY 
+		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
+           ORDER BY 
+           		TBL_EXPENDAPRDOCINFO.taskcode 
+           ]]> 
+   	 	</isNotEqual>
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContTree" parameterClass="Map" resultClass="ApprUserContInfoVO">
+   		SELECT 
+   			 USERCONTID ,
+             USERCONTNAME ,
+             DESCRIPTION 
+        FROM 
+        	TBL_USERCONT 
+        WHERE 
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND 
+        	PARENTCONTID = #v_PPARENTCONTID#
+        AND 
+        	OWNUSERID = #v_USERID#
+        ORDER BY 
+        	USERCONTNAME
+   	</select>
+   	
+    <select id="EzApprovalG.getUserContTreeLeaf" parameterClass="Map" resultClass="ApprUserContInfoVO">
+   		SELECT 
+   			USERCONTID ,
+            USERCONTNAME 
+        FROM 
+        	TBl_USERCONT 
+        WHERE  
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	PARENTCONTID = #v_USERCONTID#
+        ORDER BY 
+        	USERCONTID
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContMaxID" parameterClass="Map" resultClass="String">
+   		 SELECT 
+   		 	SUBSTR(CONCAT('0000000000' , ((CASE WHEN MAX(USERCONTID) IS NULL THEN '0000000000'  ELSE MAX(USERCONTID)  END) + 1 )), -10, 10)
+         FROM 
+         	TBL_USERCONT 
+         WHERE 
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.insertUserCont" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_USERCONT
+     	( USERCONTID, USERCONTNAME, PARENTCONTID, DESCRIPTION, OWNUSERID, TENANT_ID, COMPANYID )
+     	VALUES 
+     	( #v_PMAXCONTAINERID#, #v_USERCONTNAME#, #v_PARENTCONTID#, #v_DESCRIPTION#, #v_USERID#, #v_TENANTID#, #companyID# )
+   	</insert>
+   	
+   	<update id="EzApprovalG.updateUserCont" parameterClass="Map">
+   		UPDATE 
+   			TBL_USERCONT 
+   		SET 
+   			DESCRIPTION   = #v_PDESCRIPTION#
+   		<isNotEmpty property="v_POWNUSERID">
+   		, OWNUSERID   = #v_POWNUSERID#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PUSERCONTNAME">
+   		, USERCONTNAME   = #v_PUSERCONTNAME#
+   		</isNotEmpty>
+   		<isNotEmpty property="v_PPARENTCONTID">
+   		, PARENTCONTID   = #v_PPARENTCONTID#
+   		</isNotEmpty>
+   		WHERE 
+   			USERCONTID = #v_PCONTID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   	</update>
+   	
+   	<select id="EzApprovalG.delUserConutCnt" parameterClass="Map" resultClass="int">
+   		 SELECT 
+   		 	COUNT(DOCID)  
+         FROM 
+         	TBL_USERCONTLIST 
+         WHERE  
+         	USERCONTID = #v_PCONTID#
+         AND
+         	TENANT_ID = #v_TENANTID#
+         AND
+         	COMPANYID = #companyID#
+   	</select>
+   	
+   	<delete id="EzApprovalG.delUserConttList" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONTLIST
+    	WHERE 
+    	 	USERCONTID = #v_PCONTID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
+   	
+   	<delete id="EzApprovalG.delUserCont" parameterClass="Map">
+   		DELETE FROM
+   			TBL_USERCONT
+        WHERE  
+        	USERCONTID = #v_PCONTID#
+        AND
+    		TENANT_ID = #v_TENANTID#
+    	AND
+    		COMPANYID = #companyID#
+   	</delete>
 </sqlMap>

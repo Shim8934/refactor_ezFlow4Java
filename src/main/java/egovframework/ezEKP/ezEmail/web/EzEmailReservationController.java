@@ -400,9 +400,9 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 					
 	                attachXmlList.append("<NODE>");
 	                //TODO : <PUPLOADSN>" + (i + 1) + "</PUPLOADSN> 으로 수정(인덱스로 파일 지울 때)
-	                attachXmlList.append("<PUPLOADSN>" + fileInfo.get("filename") + "</PUPLOADSN>");
+	                attachXmlList.append("<PUPLOADSN>" + commonUtil.cleanValue(fileInfo.get("filename")) + "</PUPLOADSN>");
 	                attachXmlList.append("<RESULTUPLOADA>true</RESULTUPLOADA>");
-	                attachXmlList.append("<PFILENAME>" + fileInfo.get("filename") + "</PFILENAME>");
+	                attachXmlList.append("<PFILENAME>" + commonUtil.cleanValue(fileInfo.get("filename")) + "</PFILENAME>");
 	                attachXmlList.append("<FILESIZE>" + fileInfo.get("size") + "</FILESIZE>");
 	                attachXmlList.append("<FILELOCATION>" + uid + "</FILELOCATION>");
 	                attachXmlList.append("<PBIGFILEUPLOAD>N</PBIGFILEUPLOAD>");

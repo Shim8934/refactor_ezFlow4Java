@@ -134,7 +134,7 @@
 				
 				if (listOpt1.checked == true){
 					cellContent = "displayname;description;title";
-					typeContent = "user";
+					typeContent = "userWithMasterAdmin";
 				}else{
 					cellContent = "displayname;extensionAttribute9";
 					typeContent = "group";

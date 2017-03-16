@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
@@ -99,6 +100,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	@SuppressWarnings("unchecked")
 	public List<ScheduleGroupListVO> getInviteScheduleGroupList(Map<String, Object> map) throws Exception {
 		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getInviteScheduleGroupList", map);		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetScheduleVO> getResourceSchedule(Map<String, Object> map) throws Exception {
+		return (List<ResGetScheduleVO>) list("EzScheduleDAO.getResourceSchedule", map);		
 	}
 	
 	public ScheduleConfigVO getScheduleConfig(Map<String, Object> map){

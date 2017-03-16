@@ -238,7 +238,8 @@
 		        setAutoProperty();
 		        process_AfterOpen();
 		
-		        setFirstDrafter();
+		        //접수눌렀을때 최근결재선이 박히는건데 없는게 맞을듯
+// 		        setFirstDrafter();
 		        if (SignCount < 1) {
 		            pGubun = "12";
 		            document.getElementById("btnSetAprLine").style.display = "none";
@@ -275,7 +276,6 @@
 		                pFormHref = "";
 		            }
 		        }
-		
 		        if (flag == false) {
 		            flag = true;
 		            IsSkipDrafter = "FALSE";

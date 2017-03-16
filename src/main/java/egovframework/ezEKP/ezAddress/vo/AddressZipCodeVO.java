@@ -4,7 +4,6 @@ public class AddressZipCodeVO {
 	private String zipCode;
 	private String doro;
 	private String jibun;
-	private String rnum;
 	
 	public String getZipCode() {
 		return zipCode;
@@ -24,15 +23,9 @@ public class AddressZipCodeVO {
 	public void setJibun(String jibun) {
 		this.jibun = jibun;
 	}
-	public String getRnum() {
-		return rnum;
-	}
-	public void setRnum(String rnum) {
-		this.rnum = rnum;
-	}
 	
 	@Override
 	public String toString() {
-		return "AddressZipCodeVO [zipCode=" + zipCode + ", doro=" + doro + ", jibun=" + jibun + ", rnum=" + rnum + "]";
+		return "AddressZipCodeVO [zipCode=" + zipCode + ", doro=" + doro + ", jibun=" + jibun + "]";
 	}
 }

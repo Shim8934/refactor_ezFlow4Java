@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>egovframework.template.web</groupId>
-	<artifactId>Simple_Homepage</artifactId>
+	<groupId>com.kaoni</groupId>
+	<artifactId>ezFlow</artifactId>
 	<packaging>war</packaging>
-	<version>3.2.0</version>
-	<name>Template-Web-Simple_Homepage</name>
-	<url>http://www.egovframe.go.kr</url>
+	<version>1.0.0</version>
+	<name>ezFlow Java</name>
+	<url>http://www.kaoni.com</url>
 
 	<licenses>
 		<license>
@@ -19,6 +19,7 @@
 	<properties>
 		<spring.maven.artifact.version>4.0.9.RELEASE</spring.maven.artifact.version>
 		<egovframework.rte.version>3.5.0</egovframework.rte.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
     
 	<repositories>
@@ -262,32 +263,45 @@
             <artifactId>mariadb-java-client</artifactId>
             <version>1.5.7</version>
         </dependency>  
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.9.2</version>
+        </dependency>      
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.14</version>
+        </dependency>    
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-util</artifactId>
+            <version>8.0.41</version>
+        </dependency>              
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-coyote</artifactId>
+            <version>8.0.41</version>
+        </dependency>        
+        <dependency>
+            <groupId>com.sun.xml.security</groupId>
+            <artifactId>xml-security-impl</artifactId>
+            <version>1.0</version>
+        </dependency>        
 	</dependencies>
 
     <build>
         <defaultGoal>install</defaultGoal>
-        <directory>${basedir}/target</directory>
-        <finalName>sht_webapp</finalName>
+        <directory>${basedir}/output</directory>
+        <finalName>ezFlow</finalName>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <port>80</port>
-                        <path>/</path>
-                        <systemProperties>
-                            <JAVA_OPTS>-Xms256m -Xmx768m -XX:MaxPermSize=256m</JAVA_OPTS>
-                        </systemProperties>
-                    </configuration>
-                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>1.8</source>
+                        <target>1.8</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
@@ -330,6 +344,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
                 <configuration>
                     <skipTests>true</skipTests>
                     <forkMode>once</forkMode>

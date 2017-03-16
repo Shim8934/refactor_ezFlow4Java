@@ -1216,12 +1216,116 @@ public class EzApprovalGarchiveController {
 	@RequestMapping(value = "ezApprovalG/saveSingInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String saveSingInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
-		userInfo = commonUtil.userInfo(loginCookie);
+		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String fileName = request.getParameter("extensionAttribute3");
 		
 		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute3", fileName, "user", userInfo.getTenantId());
 
 		return "OK";
+	}
+	
+	/** 전자결재 G 개인함 관리*/
+	@RequestMapping(value = "ezApprovalG/mngUserCont.do", produces = "text/xml;charset=utf-8")
+	public String mngUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		 model.addAttribute("userCont", userCont.replace("\"", "\\\""));
+		 model.addAttribute("userInfo", userInfo);
+		return  "ezApprovalG/apprMngUserCont";
+	}
+	
+	/** 전자결재 G 개인함 관리 생성 호출*/
+	@RequestMapping(value = "ezApprovalG/getContName.do", produces = "text/xml;charset=utf-8")
+	public String getContName(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String title = request.getParameter("Title");
+		String titleText = request.getParameter("TitleText");
+		
+		if (title.equals("")) {
+			title = messageSource.getMessage("ezApproval.t297", userInfo.getLocale());
+		}
+		 model.addAttribute("titleText", titleText);
+		 model.addAttribute("title", title);
+		return  "ezApprovalG/apprGetContName";
+	}
+	
+	/** 전자결재 G 개인함 관리 생성*/
+	@RequestMapping(value = "ezApprovalG/insertUserCont.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String insertUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String OwnUserID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String ParentContID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String OwnUserName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String description = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+		
+		String result = ezApprovalGService.insUserCont(OwnUserID, ParentContID, OwnUserName, description, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return  result;
+	}
+	
+	/** 전자결재 G 개인함 관리 문서함 추가 생성*/
+	@RequestMapping(value = "ezApprovalG/getUserContSubTree.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUserContSubTree(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		String OwnUserID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String ParentContID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String OwnUserName = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		String result = ezApprovalGService.getUserContTree(OwnUserID, ParentContID, OwnUserName, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return  result;
+	}
+	
+	/** 전자결재 G 개인함 관리 이름 수정*/
+	@RequestMapping(value = "ezApprovalG/updateUserCont.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String ContID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String OwnUserID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String ParentContID = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String UserContName = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+		String Description = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        
+		String result = ezApprovalGService.updateUserCont(ContID, OwnUserID, ParentContID, UserContName, Description, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return  result;
+	}
+	
+	/** 전자결재 G 개인함 관리 삭제*/
+	@RequestMapping(value = "ezApprovalG/deleteUserCont.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String deleteUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model , @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String pContID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pMode = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        
+		String result = ezApprovalGService.delUserCont(pContID, pMode, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return  result;
+	}
+	
+	/** 전자결재 G 문서함 선택*/
+	@RequestMapping(value = "ezApprovalG/selectContainer.do", produces = "text/xml;charset=utf-8")
+	public String selectContainer(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String susinAdmin = "";
+		if(userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("susinAdmin", susinAdmin);
+		return  "ezApprovalG/apprGselectContainer";
 	}
 	
 	/** 전자결재 G 한글 양식 기안*/

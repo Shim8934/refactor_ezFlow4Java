@@ -317,7 +317,7 @@
 
 		    if (boolfirstlist) {
 		        var xmlString = "<LISTVIEWDATA><ROWS>";
-		        xmlString += "<ROW><CELL><VALUE>" + TreeView.getvalue(nodeIdx, "VALUE") + "</VALUE><CN>" + TreeView.getvalue(nodeIdx, "DATA1") + "</CN><NAME>" + TreeView.getvalue(nodeIdx, "DATA2") + "</NAME></CELL></ROW>";
+		        xmlString += "<ROW><CELL><VALUE><![CDATA[" + TreeView.getvalue(nodeIdx, "VALUE") + "]]></VALUE><CN>" + TreeView.getvalue(nodeIdx, "DATA1") + "</CN><NAME><![CDATA[" + TreeView.getvalue(nodeIdx, "DATA2") + "]]></NAME></CELL></ROW>";
 		        xmlString += "</ROWS></LISTVIEWDATA>";
 		        var emptyxml = createXmlDom();
 		        emptyxml = loadXMLString(xmlString);
@@ -326,7 +326,7 @@
 		        boolfirstlist = false;
 		    } else {
 		        var emptyxml = createXmlDom();
-		        emptyxml = loadXMLString("<ROW><CELL><VALUE>" + TreeView.getvalue(nodeIdx, "VALUE") + "</VALUE><CN>" + TreeView.getvalue(nodeIdx, "DATA1") + "</CN><NAME>" + TreeView.getvalue(nodeIdx, "DATA2") + "</NAME></CELL></ROW>");
+		        emptyxml = loadXMLString("<ROW><CELL><VALUE><![CDATA[" + TreeView.getvalue(nodeIdx, "VALUE") + "]]></VALUE><CN>" + TreeView.getvalue(nodeIdx, "DATA1") + "</CN><NAME><![CDATA[" + TreeView.getvalue(nodeIdx, "DATA2") + "]]></NAME></CELL></ROW>");
 		        pListView.AddRow(emptyxml);
 		        pListView.make();
 		    }

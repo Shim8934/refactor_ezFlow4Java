@@ -121,30 +121,6 @@
 		{CALL EZADDRESS.EZSP_GETSEARCHLIST(#v_PIDLIST#, #v_PORDERNAME#, #v_PORDER1#, #v_PORDER2#, #v_PFILTER#, #v_PFIELDLIST#, #v_PTOTAL#, #v_PSTART#, #v_PCOUNT#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 	</procedure>
 	
-	<procedure id="EzAddressDAO.getAddressZipCodeList" parameterClass="Map" resultClass="AddressZipCodeVO">
-		{CALL EZADDRESS.EZSP_ZIPCODE_LIST(#v_PSIDO#, #v_PKEYWORD#, #v_PSTARTROW#, #v_PENDROW#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<procedure id="EzAddressDAO.getAddressZipCodeCount" parameterClass="Map" resultClass="Integer">
-		{CALL EZADDRESS.EZSP_ZIPCODE_COUNT(#v_PSIDO#, #v_PKEYWORD#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
-	</procedure>
-	
-	<select id="EzAddressDAO.getAddressInfo" resultMap="addressList">
-		<![CDATA[
-			SELECT 
-				NVL(zipcode,'') as zipcode,
-				NVL(sido,'') as sido,
-				NVL(gugun,'') as gugun,
-				NVL(dong,'') as dong,
-				NVL(bunji,'') as bunji
-			FROM 
-				ezAddress.tb_ZipCode
-			WHERE
-				dong LIKE '%$dong$%'
-			ORDER BY dong
-		]]>
-	</select>	
-	
 	<select id="EzAddressDAO.getSubTreeInfo" parameterClass="Map" resultMap="addressFolderVO">
 		<![CDATA[
 			SELECT
@@ -192,15 +168,6 @@
 				ezAddress.tblfoldertree
 			WHERE 
 				folderid = #v_PFOLDERID#
-		]]>
-	</select>
-	
-	<select id="EzAddressDAO.getZipCodeSido" resultClass="String">
-		<![CDATA[
-			SELECT 
-				sido
-			FROM 
-				ezAddress.TB_NEWZIP_SIDO
 		]]>
 	</select>
 	

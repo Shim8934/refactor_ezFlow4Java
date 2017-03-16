@@ -69,27 +69,27 @@ public interface EzPortalService {
 	
 	public List<PortalMyPortalListVO> myPortalList (String pGubunFlag, String pAccessIDList, String pCompanyID, int tenantID) throws Exception;
 	
-	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID) throws Exception;
+	public List<PortalNewMyPortalPageListVO> newMyPortalList (String pUserID, String pGubunFlag, int tenantID, String companyID) throws Exception;
 	
 	public List<PortalFirstMainListVO> firstMainList (String pUseTopMenuID, String deptPath, int tenantID) throws Exception;
 	
 	public List<PortalTBLPortalACLVO> getAclItems (String pUID, int tenantID) throws Exception;
 	
-	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID, int tenantID) throws Exception;
+	public PortalGetRenderedTopMenuInsertVO getRenderedTopMenuInsert (String uID, int tenantID, String companyID) throws Exception;
 	
-	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID, int tenantID) throws Exception;
+	public PortalGetRenderedTopMenuInsertVO getRenderedPortalPageHtml (String pPortalPageID, int tenantID, String companyID) throws Exception;
 	
 	public PortalTBLUserInfoVO topGetUserInfo (String pUserID, int tenantID) throws Exception;
 	
 	public PortalTBLUserInfoVO topGetUserInfo2 (String pUserID, String pLang, int tenantID) throws Exception;
 	
-	public PortalTBLThemeGeneralVO getThemeInfo (String pUID, String pGubun, int tenantID) throws Exception;
+	public PortalTBLThemeGeneralVO getThemeInfo (String pUID, String pGubun, int tenantID, String companyID) throws Exception;
 	
 	public PortalMenuItemItemsImageVO getImageHtml (String pUID, String pParentUID, int pSkinNum, int tenantID) throws Exception;
 	
 	public PortalUrlPortletVO urlPortlet (String uID, String creatorID, int tenantID) throws Exception;
 	
-	public PortalPortletGeneralVO getPorletProperties (String pUID, int tenantID) throws Exception;
+	public PortalPortletGeneralVO getPorletProperties (String pUID, int tenantID, String companyID) throws Exception;
 	
 	public PortalTBLPortletURLVO getTBLPortletURL (String pUID, int tenantID) throws Exception;
 	
@@ -99,7 +99,7 @@ public interface EzPortalService {
 	
 	public PortalTBLPortletBoardVO getTBLPortletBoard (String pUID, int tenantID) throws Exception;
 	
-	public PortalImagePortletVO imagePortlet (String pUID, int tenantID) throws Exception;
+	public PortalImagePortletVO imagePortlet (String pUID, int tenantID, String companyID) throws Exception;
 	
 	public PortalTBLPortletBoardVO boardPortlet (Map<String, Object> map) throws Exception;
 	
@@ -115,13 +115,13 @@ public interface EzPortalService {
 	
 	public String checkCacheValue (String portalPageID, String accessIDList, int tenantID) throws Exception;
 	
-	public String topGetTopParentPageID (String uID, int tenantID) throws Exception;
+	public String topGetTopParentPageID (String uID, int tenantID, String companyID) throws Exception;
 	
-	public String getTopParentPageID (String pTemp, int tenantID) throws Exception;
+	public String getTopParentPageID (String pTemp, int tenantID, String companyID) throws Exception;
 	
-	public String getParentUID (String parentTopMenuID, int tenantID) throws Exception;
+	public String getParentUID (String parentTopMenuID, int tenantID, String companyID) throws Exception;
 	
-	public String getPortalParentUID (String temp, int tenantID) throws Exception;
+	public String getPortalParentUID (String temp, int tenantID, String companyID) throws Exception;
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception;
 	
@@ -135,7 +135,7 @@ public interface EzPortalService {
 	
 	public String getUserInfo (String pUserID, String langStr, int tenantID) throws Exception;
 	
-	public String getThemeInfoStr (String pThemeUID, String pGubun, int tenantID) throws Exception;
+	public String getThemeInfoStr (String pThemeUID, String pGubun, int tenantID, String companyID) throws Exception;
 	
 	public String useStartPageChack (String pUserID, String pCompanyID, int tenantID) throws Exception;
 	
@@ -143,7 +143,7 @@ public interface EzPortalService {
 	
 	public String getPortalConfigItem (String pItemName, String pPageID, int tenantID) throws Exception;
 	
-	public String getPortletConfigItem (String pItemName, String pPortletID, int tenantID) throws Exception;
+	public String getPortletConfigItem (String pItemName, String pPortletID, int tenantID, String companyID) throws Exception;
 	
 	public String getDefaultPortalPage() throws Exception;
 	
@@ -157,11 +157,11 @@ public interface EzPortalService {
 	
 	public String newMyPortalPageCreate (String pParentPageID, String pUserID, String pGubunFlag, String pCompanyID, String pPageID, int tenantID) throws Exception;
 	
-	public String getMainUrl (String pUID, int tenantID) throws Exception;
+	public String getMainUrl (String pUID, int tenantID, String companyID) throws Exception;
 	
-	public String getTopUrl (String pUID, int tenantID) throws Exception;
+	public String getTopUrl (String pUID, int tenantID, String companyID) throws Exception;
 	
-	public String getPorletPropertiesStr(String pUID, int tenantID) throws Exception;
+	public String getPorletPropertiesStr(String pUID, int tenantID, String companyID) throws Exception;
 	
 	public String getPortletSubProperties (String pUID, String pType, int tenantID) throws Exception;
 	
@@ -193,7 +193,7 @@ public interface EzPortalService {
 	
 	public String useTopMenuID( String pCompanyID, String pUseFlag, String pUserThemeUID, int tenantID) throws Exception;
 	
-	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, int tenantID) throws Exception;
+	public String searchStartPage( String pHomeUID, String pParentUID, String pImageUID, String pUserID, String pCompanyID, String pLinkURL, String lang, int tenantID) throws Exception;
 	
 	public String setUseMyStartPage (String pUID, String pOldUID, String pUserID, String pCompanyID, String langStr, int tenantID) throws Exception;
 	
@@ -203,7 +203,7 @@ public interface EzPortalService {
 	
 	public String searchPortalPage (String pDisplayName, String pUseFlag, String pGubunFlag, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception;
 	
-	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID, int tenantID) throws Exception;
+	public String searchPortletCheckRight (String pDisplayName, String pGubunFlag, String pPageGubunFlag, String pMode, int pStartRow, int pEndRow, LoginVO userInfo, String pCompanyID, int tenantID, Locale locale) throws Exception;
 	
 	public String searchMenuItem (String pDisplayName, int pStartRow, int pEndRow, String pAccessIDList, int tenantID) throws Exception;
 	

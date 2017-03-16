@@ -868,7 +868,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	nextTitle = egovMessageSource.getMessage("ezCommunity.t193", userInfo.getLocale());
             }
             
-//            if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0 || userInfo.getRollInfo().indexOf("t=1") > 0) {
             if (userInfo.getRollInfo().indexOf("c=1") > 0 || userInfo.getRollInfo().indexOf("k=1") > 0) {
             	cAdmin = "admin";
             }
@@ -1629,8 +1628,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
-		
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), keyword, sRadio, userInfo.getTenantId());
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, multiData, keyword, sRadio, userInfo.getTenantId());
 		
 		int iOutputCount = 1;
 		
@@ -1643,7 +1642,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				break;
 			}
 			
-			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+			CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), multiData, userInfo.getTenantId());
 			
 			sb.append("<tr>");
 			sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
@@ -3238,6 +3237,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int iOutputCount = 1;
 		int iList = 0;
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 //		String pURL = "";
 		
 		for (CommunityCBoardVO cBoard : cBoardList) {
@@ -3293,7 +3293,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
 			
-			if (commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()).equals("")) {
+			if (multiData.equals("")) {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
 			} else {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
@@ -3592,6 +3592,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 
 	@Override
 	public boolean guestEditOk(LoginVO userInfo, CommunityCClubGuestVO item, String code, String mode, String memo, String[] cNo, boolean bIsMyContent) throws Exception {
+		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		switch (mode) {
 			case "write" :
 				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("/'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
@@ -3599,7 +3600,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				break;
 			case "delete" :
 				for (String no : cNo){
-					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, multiData, no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -3610,7 +3611,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				break;
 			case "edit" :
 				for (String no : cNo){
-					item = guestEditGet(code, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), no, userInfo.getId(), userInfo.getTenantId());
+					item = guestEditGet(code, multiData, no, userInfo.getId(), userInfo.getTenantId());
 					
 					if (item != null) {
 						bIsMyContent = true;
@@ -5244,12 +5245,12 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			if (count >= pStartRow) {
 				sb.append("<NODE>");
 				sb.append("<BoardID>" + itemList.getBoardID() + "</BoardID>");
-				sb.append("<BoardName>" + itemList.getBoardName() + "</BoardName>");
+				sb.append("<BoardName>" + commonUtil.cleanValue(itemList.getBoardName()) + "</BoardName>");
 				sb.append("<ItemID>" + itemList.getItemID() + "</ItemID>");
-				sb.append("<WriterID>" + itemList.getWriterID() + "</WriterID>");
+				sb.append("<WriterID>" + commonUtil.cleanValue(itemList.getWriterID()) + "</WriterID>");
 				sb.append("<WriterName>" + commonUtil.cleanValue(itemList.getWriterName()) + "</WriterName>");
-				sb.append("<WriterDeptName>" + itemList.getWriterDeptName() + "</WriterDeptName>");
-				sb.append("<WriterCompanyName>" + itemList.getWriterCompanyName() + "</WriterCompanyName>");
+				sb.append("<WriterDeptName>" + commonUtil.cleanValue(itemList.getWriterDeptName()) + "</WriterDeptName>");
+				sb.append("<WriterCompanyName>" + commonUtil.cleanValue(itemList.getWriterCompanyName()) + "</WriterCompanyName>");
 				sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemList.getWriteDate(), offset, false) + "</WriteDate>");
 				sb.append("<Importance>" + itemList.getImportance() + "</Importance>");
 				sb.append("<Title>" + commonUtil.cleanValue(itemList.getTitle()) + "</Title>");

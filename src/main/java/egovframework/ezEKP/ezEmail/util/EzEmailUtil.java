@@ -301,7 +301,11 @@ public class EzEmailUtil {
 	public String getSubject(Message message) throws Exception {
         String subject = message.getSubject();
         
-        if (subject != null && !subject.equals("")) {
+        if (subject == null) {
+        	subject = "";
+        }
+        
+        if (!subject.equals("")) {
             String[] rawHeaders = message.getHeader("subject");
             String rawHeader = rawHeaders[0].trim();
                         
@@ -368,8 +372,11 @@ public class EzEmailUtil {
                     }                        
                 }
             }
+            
+            // 제목 중간에 Unicode 0x0(NULL)이 들어가 XML 파싱시 에러가 발생하는 메일이 발견되어 추가함.
+            subject = subject.replaceAll("[\\000]+", "");            
         }
-
+        
         return subject;
 	}
 	

@@ -1177,7 +1177,8 @@
 	                        </div>
 	                        <div id="OrganLineTab" style="display: none; padding-left: 3px">
 	                            <table style="margin-left: 0px;">
-	                                <tr>
+	                            <c:if test="${approvalYN == 'G'}">
+									 <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <span>
 	                                            <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 247px; width: 388px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;"></div>
@@ -1187,6 +1188,24 @@
 	                                        </span>
 	                                    </td>
 	                                </tr>
+	                            </c:if>
+	                            <c:if test="${approvalYN =='S'}">
+	                               <tr>
+                                    <td style="vertical-align: top;">
+                                        <div id="TreeView" style="margin-top: 5px; overflow-x: auto; overflow-y: auto; height: 290px; width: 386px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin: 1px 1px 1px 1px;">
+                                        </div>
+                                    </td>
+                               	 	</tr>
+                                	<tr>
+                                    <td style="border: 1px solid #b6b6b6;">
+                                        <div class="border_gray" style="border: 0px;">
+                                            <div id="UserList" style="border: 0px; margin: 0px 1px 1px 1px; Width: 383px; Height: 223px; overflow: auto;">
+                                            </div>
+                                        </div>
+                                    </td>
+                                	</tr>
+                                </c:if>
+
 	                                <tr>
 	                                    <td style="background-color: transparent; height: 28px;">
 	                                        <input id="textUser" style="width: 150px" name="textUser" onkeypress="return textUser_onkeypress(event)"  maxlength="50">
@@ -1223,8 +1242,14 @@
 	                                <tr>
 	                                    <td style="vertical-align: top;">
 	                                        <div class="border_gray">
+	                                        <c:if test="${approvalYN == 'G' }">
 	                                            <div id="APRTEMP" style="Width: 386px; Height: 295px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                            </div>
+	                                        </c:if>
+	                                        <c:if test="${approvalYN == 'S' }">
+	                                            <div id="APRTEMP" style="Width: 380px; Height: 262px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                            	</div>
+                                            </c:if>
 	                                        </div>
 	                                    </td>
 	                                </tr>
@@ -1244,12 +1269,18 @@
 	                                        </div>
 	                                    </h2>
 	                                    <div class="border_gray">
+	                                        <c:if test="${approvalYN == 'G' }">
 	                                        <div id="APRLINE" style="Width: 565px; Height: 490px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                        </div>
+	                                        </c:if>
+	                                        <c:if test="${approvalYN == 'S' }">
+	                                        <div id="APRLINE" style="Width: 560px; Height: 520px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                        	</div>
+                                        	</c:if>
 	                                    </div>
 	                                </td>
 	                            </tr>
-	                            <tr>
+	                            <tr class="approvalG">
 	                                <td>
 	                                    <div>
 	                                        <table class="content" style="margin-top: 5px; width: 100%;">
@@ -1282,7 +1313,7 @@
 	                            </tr>
 	                            <tr>
 	                                <td style="text-align: right;">
-	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn"><span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><spring:message code='ezApprovalG.t384'/></span></a>
+	                                    <a style="margin-top: 2px; padding-right: 5px" class="imgbtn"><span id="btn_SaveAprLineTemplet" onclick="return btn_SaveAprLineTemplet_onclick()"><c:if test="${approvalYN == 'G'}"><spring:message code='ezApprovalG.t384'/></c:if><c:if test="${approvalYN == 'S'}"><spring:message code='ezApproval.t270'/></c:if></span></a>
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1337,9 +1368,16 @@
                                 </c:if>
 	                            <tr>
 	                                <td height="30" style="background-color: transparent">
+	                                <c:if test="${approvalYN == 'G'}">
 	                                    <input id="txtDeptName" style="width: 150px" name="textUser" onkeyup="return btnSearchDept_onKeyPress(event)"  maxlength="50">
 	                                    <a style="margin-top: 2px" class="imgbtn"><span id="Span2" onkeyup="return btnSearchDept_onClick()" onclick="return btnSearchDept_onClick()" ><spring:message code='ezApprovalG.t250'/></span></a>
-	                                    <a class="imgbtn" style="margin-top: 2px; margin-right: 5px" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                	<a class="imgbtn" style="margin-top: 2px; margin-right: 5px" id="AprDeptAdd" onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApprovalG.G0002'/></span></a>
+	                                </c:if>
+	                                <c:if test="${approvalYN == 'S'}">
+	                                 	<input id="textUser2" style="width: 200px;" name="textUser" onkeypress="return textUser_onkeypress2()" maxlength="50">
+                                        <a class="imgbtn" style="vertical-align: middle"><span name="btn_searchUser" id="Span2" onkeypress="return btn_searchUser_onclick2()" onclick="return btn_searchUser_onclick2()"><spring:message code='ezApproval.t175'/></span></a>
+	                                	<a class="imgbtn" style="vertical-align: middle" id="AprDeptAdd"  onclick="AprDeptAdd_onclick('DEPT');"><span><spring:message code='ezApproval.t1101'/></span></a>
+	                                </c:if>
 	                                </td>
 	                            </tr>
 	                        </table>
@@ -1448,8 +1486,14 @@
 	                            <td style="vertical-align: top;" colspan="2">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.t253'/></h2>
 	                                <div class="border_gray">
+	                                <c:if test="${approvalYN == 'G'}">
 	                                    <div id="RECEPTLIST" style="Width: 550px; Height: 500px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
+	                                </c:if>
+	                                <c:if test="${approvalYN == 'S'}">
+	                                    <div id="RECEPTLIST" style="Width: 560px; Height: 520px; overflow: auto; border: 0; font-size: 9pt; margin: 0px 1px 1px 1px; padding-top: 0px;">
+                                        </div>
+                                    </c:if>
 	                                </div>
 	                            </td>
 	                        </tr>
@@ -1463,12 +1507,12 @@
 	                            </td>
 	                        </tr>
 	                        <tr>
-	                            <td style="text-align:left">
-	                                <a style="margin-top: 5px; display: none;"  class="imgbtn" id="btnaddress"><span onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+	                            <td class="approvalG" style="text-align:left">
+	                                <a style="margin-top: 5px; display: none;"  class="imgbtn" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
 	                                <a style="margin-top: 5px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><spring:message code='ezApprovalG.t348'/></span></a>
 	                            </td>
 	                            <td style="text-align:right">
-	                                <a class="imgbtn" style="padding-right: 5px;margin-top:5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
+	                                <a class="imgbtn" style="padding-right: 5px;margin-top:5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalYN == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if><c:if test="${approvalYN == 'S'}"><spring:message code='ezApproval.t223'/></c:if></span></a>
 	                            </td>
 	                        </tr>
 	                    </table>

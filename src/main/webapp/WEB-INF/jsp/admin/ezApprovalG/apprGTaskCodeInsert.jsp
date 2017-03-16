@@ -18,9 +18,12 @@
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
 	        var gRtnVal = "FALSE";
-	        var gState, TaskCode, PCode, companyID;
+	        var gState, TaskCode, PCode, companyID, pLevel;
+	        var cateName, cateName2, cateDesc; 
+            
 	        var RetValue;
 	        var ReturnFunction;
+	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        
 	        $(document).ready(function(){
 	            var ua = navigator.userAgent;
@@ -50,11 +53,22 @@
 	                }
 	            }
 
+	            if (approvalFlag == 'S') {
+	            	document.getElementsByName("isAllDept")[1].checked = true;
+	            	$('.approvalFlagG').hide();
+	            } else {
+	            	$('.approvalFlagS').hide();
+	            }
+	            
 	            if (RetValue[0] == "I") {
 	                gState = "I";
 	                TaskCode = RetValue[1];
 	                PCode = RetValue[2];
 	                companyID = RetValue[3];
+	                pLevel = RetValue[4];
+	                cateName = RetValue[5]; //CateName
+		            cateName2 = RetValue[6]; //CateName2
+		            cateDesc = RetValue[7]; //CateDesc
 
 	                InitCode();
 	            } else {
@@ -62,14 +76,22 @@
 	                TaskCode = RetValue[1];
 	                PCode = RetValue[2];
 	                companyID = RetValue[3];
+	                pLevel = RetValue[4];
+	                cateName = RetValue[5]; //CateName
+		            cateName2 = RetValue[6]; //CateName2
+		            cateDesc = RetValue[7]; //CateDesc
+		            
 	                document.getElementById("tbTaskCode").disabled = true;
-	                document.getElementById("btnDuplicate").disabled = true;
-	                document.getElementsByName("isAllDept")[0].disabled = true;
-	                document.getElementsByName("isAllDept")[1].disabled = true;
-	                if (TaskCode.length == 8) {
-	                    if (TaskCode.substring(0, 2) == "ZZ" || TaskCode == "99999999") {
-	                        document.getElementsByName("isAllDept")[1].checked = true;
-	                    }
+	                
+	                if (approvalFlag == 'G') {
+		                document.getElementById("btnDuplicate").disabled = true;
+		                document.getElementsByName("isAllDept")[0].disabled = true;
+		                document.getElementsByName("isAllDept")[1].disabled = true;
+		                if (TaskCode.length == 8) {
+		                    if (TaskCode.substring(0, 2) == "ZZ" || TaskCode == "99999999") {
+		                        document.getElementsByName("isAllDept")[1].checked = true;
+		                    }
+		                }
 	                }
 
 	                InitCode();
@@ -102,13 +124,16 @@
 
 			            var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
 			            InitCodeSelectBox(nodesKeepPlace, selKeepPlace);
+			            
+			            var nodeSecurityLevel = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
+			            InitCodeSelectBox(nodeSecurityLevel, securityLevel);
 		        	}
 	        	});
 	        }
 	        
 	        function InitTaskInfo() {
 	            var TaskXml = GetTaskInfo();
-
+	            
 	            if (SelectSingleNodeValue(TaskXml, "RESULT") == "FALSE") {
 	                OpenAlertUI("<spring:message code = 'ezApprovalG.t653' />");
 	        	} else if (SelectSingleNodeValue(TaskXml, "RESULT") == "NOITEM") {
@@ -124,6 +149,8 @@
 
 	            	SelectOption(selKeepMethod, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGMETHOD"));
 	            	SelectOption(selKeepPlace, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPLACE"));
+	            	SelectOption(securityLevel, SelectSingleNodeValue(TaskXml.documentElement, "ITEMSECURITY"));
+	            	SelectOption(isPublic, SelectSingleNodeValue(TaskXml.documentElement, "ISPUBLIC"));
 
 	            	var DispFlag = SelectSingleNodeValue(TaskXml.documentElement, "EXDISPLAYFREQUENCY");
 	            	
@@ -162,7 +189,7 @@
 					async : false,
 					data : {taskCode : TaskCode,
 							deptCode : "",
-							companyID : companyID
+							companyID : companyID,
 							},
 					success : function (result) {
 						tempRet = loadXMLString(result);
@@ -325,28 +352,28 @@
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t744' />");
 		            return;
 		        }
-	
+		        
 		        if (trim(document.getElementById("tbTaskName").value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t745' />");
 		            return;
 		        }
-	
-		        if (trim(document.getElementById("tbTaskDesc").value) == "") {
+
+		        if (approvalFlag == 'G' && trim(document.getElementById("tbTaskDesc").value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t746' />");
 		            return;
 		        }
 	
-		        if (trim(document.getElementById("tbKPReason").value) == "") {
+		        if (approvalFlag == 'G' && trim(document.getElementById("tbKPReason").value) == "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t747' />");
 		            return;
 		        }
 	
-		        if (trim(document.getElementById("tbList1").value) == "" && (trim(document.getElementById("tbList2").value) != "" || trim(document.getElementById("tbList3").value) != "")) {
+		        if (approvalFlag == 'G' && trim(document.getElementById("tbList1").value) == "" && (trim(document.getElementById("tbList2").value) != "" || trim(document.getElementById("tbList3").value) != "")) {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t748' />");
 		            return;
 		        }
 	
-		        if (trim(document.getElementById("tbList2").value) == "" && trim(document.getElementById("tbList3").value) != "") {
+		        if (approvalFlag == 'G' && trim(document.getElementById("tbList2").value) == "" && trim(document.getElementById("tbList3").value) != "") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t749' />");
 		            return;
 		        }
@@ -417,10 +444,19 @@
 		    				displayUsage : document.getElementById("selDisplayUsage").value,
 		    				description : document.getElementById("tbTaskDesc").value,
 		    				subCategoryCode : document.getElementById("tbSubCode").value,
-		    				companyID : companyID
+		    				itemSecurity : document.getElementById("securityLevel").value,
+		    				isPublic : document.getElementById("isPublic").value,
+		    				companyID : companyID,
+		    				level : pLevel,
+		    				categoryName : cateName,
+				            categoryName2 : cateName2,
+				            categoryDesc : cateDesc
 		    				},
 		    		success : function (result) {
 		    			tempRet = result;
+		    		},
+		    		error : function(jqXHR,textStatus,errorThrown) {
+		    			tempRet = "FALSE";
 		    		}
 		    	});
 		    	
@@ -464,15 +500,16 @@
 	    <h1><c:out value = '${title}' /></h1>
 	    <span style="color:red"><spring:message code = 'ezApprovalG.t00011' /></span>
 	    <table class="content">
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t751' /></th>
 	            <td>
 	                <input type="radio" name="isAllDept" value="0" checked>
 	                <spring:message code = 'ezApprovalG.t752' /><br />
 	                <input type="radio" name="isAllDept" value="1">
-	                <spring:message code = 'ezApprovalG.t753' /></td>
+	                <spring:message code = 'ezApprovalG.t753' />
+				</td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t733' /></th>
 	            <td>
 	                <input type="text" id="tbSubCode" name="tbSubCode" style="WIDTH: 200px" readonly="readonly">
@@ -480,63 +517,99 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <th><spring:message code = 'ezApprovalG.t576' /><br>
-	                (8<spring:message code = 'ezApprovalG.t754' /> <span style="color:red">*</span></th>
-	            <td>
-	                <input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 200px" maxlength="8">
-	                <a class="imgbtn"><span id="btnDuplicate" onclick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
-	            </td>
+	        	<c:choose>
+	        		<c:when test="${approvalFlag == 'S'}">
+	        			<th><spring:message code = 'ezApprovalG.t729' /> <span style="color:red">*</span></th>
+	        			<td><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 100%" maxlength="8"></td>
+	        		</c:when>
+	        		<c:otherwise>
+	        			<th><spring:message code = 'ezApprovalG.t576' /><br>(8<spring:message code = 'ezApprovalG.t754' /> <span style="color:red">*</span></th>
+	        			<td>
+			                <input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 200px" maxlength="8">
+			                <a class="imgbtn"><span id="btnDuplicate" onclick="return btnDuplicate_onclick()"><spring:message code = 'ezApprovalG.t730' /></span></a>
+			            </td>
+	        		</c:otherwise>
+	        	</c:choose>
 	        </tr>
 	        <tr>
-	            <th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
-	            <td>
-	                <input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
+	        	<c:choose>
+	        		<c:when test="${approvalFlag == 'S' }">
+	        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
+						<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
+	        		</c:when>
+	        		<c:otherwise>
+	        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1764' />) <span style="color:red">*</span></th>
+	            		<td><input type="text" id="tbTaskName" name="tbTaskName" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="20"></td>
+	        		</c:otherwise>
+	        	</c:choose>
 	        </tr>
 	        <tr>
-	            <th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
-	            <td>
-	                <input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td>
+	        	<c:choose>
+	        		<c:when test="${approvalFlag == 'S' }">
+	        			<th><spring:message code = 'ezApprovalG.t1641' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+            			<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td>
+	        		</c:when>
+	        		<c:otherwise>
+	        			<th><spring:message code = 'ezApprovalG.t597' />(<spring:message code = 'ezApprovalG.t1765' />) <span style="color:red">*</span></th>
+	            		<td><input type="text" id="tbTaskName2" name="tbTaskName2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="200"></td> 
+	        		</c:otherwise>
+	        	</c:choose>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t755' /> <span style="color:red">*</span></th>
-	            <td>
-	                <textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbTaskDesc" name="tbTaskDesc" maxlength="300"></textarea></td>
+	            <td><textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbTaskDesc" name="tbTaskDesc" maxlength="300"></textarea></td>
+	        </tr>
+	        <tr class = 'approvalFlagS'>
+	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
+	        	<td><select id="securityLevel" style="WIDTH: 100%"></select></td> 
 	        </tr>
 	        <tr>
-	            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>
-	            <td>
-	                <select id="selKeepPeriod" style="WIDTH: 100%"></select></td>
+	        	<c:choose>
+	        		<c:when test="${approvalFlag == 'S' }">
+			            <th><spring:message code = 'ezApprovalG.t1198' /> <span style="color:red">*</span></th>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%"></select></td>
+	        		</c:when>
+	        		<c:otherwise>
+			            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%"></select></td>
+	        		</c:otherwise>
+	        	</c:choose>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagS'>
+	        	<th><spring:message code = 'ezApprovalG.t109' /> *</th>
+	        	<td>
+		        	<select id="isPublic" style="width: 100%">
+	                    <option value="Y" id="Y"><spring:message code='ezApprovalG.t47'/></option>
+	                    <option value="N" id="N"><spring:message code='ezApprovalG.t46'/></option>
+	                </select>
+				</td>
+	        </tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t117' /> <spring:message code = 'ezApprovalG.t756' /> <span style="color:red">*</span></th>
-	            <td>
-	                <textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbKPReason" name="tbKPReason" maxlength="200"></textarea></td>
+	            <td><textarea style="WIDTH: 100%; HEIGHT: 60px; box-sizing: border-box; -moz-box-sizing: border-box;" id="tbKPReason" name="tbKPReason" maxlength="200"></textarea></td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t599' /></th>
-	            <td>
-	                <select id="selKeepMethod" style="WIDTH: 100%"></select></td>
+	            <td><select id="selKeepMethod" style="WIDTH: 100%"></select></td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t600' /></th>
-	            <td>
-	                <select id="selKeepPlace" style="WIDTH: 100%"></select></td>
+	            <td><select id="selKeepPlace" style="WIDTH: 100%"></select></td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t601' /></th>
 	            <td>
 	                <input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="0" checked onclick="return rdoDisplayFlag_onclick(this.value)"><spring:message code = 'ezApprovalG.t757' />
 	                <input type="radio" id="rdoDisplayFlag" name="rdoDisplayFlag" value="1" onclick="return rdoDisplayFlag_onclick(this.value)">
-	                <spring:message code = 'ezApprovalG.t601' /></td>
-	        </tr>
-	        <tr>
-	            <th><spring:message code = 'ezApprovalG.t601' /><br>
-	                <spring:message code = 'ezApprovalG.t758' /></th>
-	            <td>
-	                <input type="text" id="tbDispTransTime" name="tbDispTransTime" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
+	                <spring:message code = 'ezApprovalG.t601' />
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
+	            <th><spring:message code = 'ezApprovalG.t601' /><br>
+	                <spring:message code = 'ezApprovalG.t758' /></th>
+	            <td><input type="text" id="tbDispTransTime" name="tbDispTransTime" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
+	        </tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t611' /><br>
 	            <td>
 	                <select id="selExFrequency" style="width: 100%">
@@ -546,7 +619,7 @@
 	                </select>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t615' /></th>
 	            <td>
 	                <select id="selDisplayUsage" style="width: 100%">
@@ -558,7 +631,7 @@
 	                </select>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t605' /></th>
 	            <td>
 	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="0" checked onclick="return rdoSpecialFlag_onclick(this.value)">
@@ -566,25 +639,20 @@
 	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="1" onclick="return rdoSpecialFlag_onclick(this.value)">
 	                <spring:message code = 'ezApprovalG.t762' />
 	                <input type="radio" id="rdoSpecialFlag" name="rdoSpecialFlag" value="2" onclick="return rdoSpecialFlag_onclick(this.value)">
-	                <spring:message code = 'ezApprovalG.t683' /></td>
+	                <spring:message code = 'ezApprovalG.t683' />
+	            </td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t608' /></th>
-	            <td>
-	                <input type="text" id="tbList1" name="tbList1" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
-	            </td>
+	            <td><input type="text" id="tbList1" name="tbList1" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t609' /></th>
-	            <td>
-	                <input type="text" id="tbList2" name="tbList2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
-	            </td>
+	            <td><input type="text" id="tbList2" name="tbList2" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
-	        <tr>
+	        <tr class = 'approvalFlagG'>
 	            <th><spring:message code = 'ezApprovalG.t610' /></th>
-	            <td>
-	                <input type="text" id="tbList3" name="tbList3" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50">
-	            </td>
+	            <td><input type="text" id="tbList3" name="tbList3" style="WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;" maxlength="50"></td>
 	        </tr>
 	    </table>
 	    <div class="btnposition">

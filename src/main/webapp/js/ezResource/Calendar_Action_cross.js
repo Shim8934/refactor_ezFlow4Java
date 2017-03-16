@@ -11,7 +11,7 @@ var sz_DayOfWeek = "";
 var weekStartDate = "";
 var weekEndDate = "";
 
-var dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
+var DefaultView = 1;
 
 var resource_text = "";
 var tdcount = 0;
@@ -88,17 +88,30 @@ function weekonload(s_Year, s_Month, s_Date)
         sz_Date = weekSetDate.getDate();
         sz_DayOfWeek = weekSetDate.getDay();
     }
-    //오늘의 날짜를 기준으로 요번주의 시작날짜 0~6 / 일~토 를 구한다. 지금현재는 월요일시작기준으로 date에 + 1을 해주었다.
-    if (sz_DayOfWeek == 0)
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
-    else
-        weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
-    //오늘의 날짜를 기준으로 요번주의 마지막날짜를 가져온다.
+    
+    if (DefaultView == 0) { //일요일시작
+        if (sz_DayOfWeek == 0)
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 7);
+        else
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 0);
 
-    if (sz_DayOfWeek == 0)
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
-    else
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
+        if (sz_DayOfWeek == 0)
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek)-1);
+        else
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek));
+    } else { //월요일시작
+        //오늘의 날짜를 기준으로 요번주의 시작날짜 0~6 / 일~토 를 구한다. 지금현재는 월요일시작기준으로 date에 + 1을 해주었다.
+        if (sz_DayOfWeek == 0)
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) - 6);
+        else
+            weekStartDate = new Date(sz_Year, sz_Month, (sz_Date - sz_DayOfWeek) + 1);
+        //오늘의 날짜를 기준으로 요번주의 마지막날짜를 가져온다.
+        if (sz_DayOfWeek == 0)
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (sz_DayOfWeek));
+        else
+            weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 1);
+    }
+    
     
     mfGetSearchDate(weekStartDate);
     
@@ -162,19 +175,28 @@ function nextToday_onclick(result)
 }
 
 function nextWeek_onclick(result) {
-
-    if(result == "PREV")
-    {
-        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 7); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 7); 
-    }
-    else if(result == "NEXT")
-    {
-        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
-        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 7); 
-        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 7); 
-    }
+	
+	if (DefaultView == 0) { //일요일시작
+		if (result == "PREV") {
+	        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 7); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 7); 
+	    } else if (result == "NEXT") {
+	        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 7); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 7); 
+	    }
+	} else { //월요일시작
+		if (result == "PREV") {
+	        //지난주보기 : 처음 호출시 전역변수에 등록되어 있는 값을 가져와 저번주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek - 6); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) - 6); 
+	    } else if (result == "NEXT") {
+	        //다음주보기 : 처음 호출 시 전역변수에 넣어진 값을 가져와 다음주에 해당하는 날짜데이터를 뽑아온다.
+	        weekStartDate = new Date(sz_Year, sz_Month, sz_Date - sz_DayOfWeek + 8); 
+	        weekEndDate = new Date(sz_Year, sz_Month, sz_Date + (6 - sz_DayOfWeek) + 8); 
+	    }
+	}
     
     //weekStartDate에 대한 값이 설정되었으면 mfGetSearchDate함수를 통해 변수에 값을 저장해놓는다.
     mfGetSearchDate(weekStartDate);
@@ -244,6 +266,11 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
+	if (DefaultView == 0) { //일요일시작
+		dayname = new Array(strLang276, strLang270, strLang271, strLang272, strLang273, strLang274, strLang275);
+	}
+	
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
         var xmldom = createXmlDom();
         var XMLstring = c_xmlhttp.responseText;
@@ -294,12 +321,19 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-
-                if (countdayname == "0")
-                    _mth.style.color = "#0032cf";//blue
-                else if (countdayname == "1")
-                    _mth.style.color = "#ee1c25";//red
-//                "#0032cf";
+                
+                if (DefaultView == 0) { //일요일시작
+                	if (countdayname == "0")
+                        _mth.style.color = "#0032cf"; //blue
+                    else if (countdayname == "1")
+                        _mth.style.color = "#ee1c25"; //red
+                } else { //월요일시작
+                	if (countdayname == "6")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "0")
+                        _mth.style.color = "#ee1c25";
+                }
+                
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
@@ -327,11 +361,18 @@ function tableListControl_Week()
 
                 var AddDate = datanameweek(sz_Year, sz_Month + 1, i, "YES");
                 _mth = document.createElement("TH");
-
-                if (countdayname == "0")
-                    _mth.style.color = "#0032cf";
-                else if (countdayname == "1")
-                    _mth.style.color = "#ee1c25";
+                
+                if (DefaultView == 0) { //일요일시작
+                	if (countdayname == "0")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "1")
+                        _mth.style.color = "#ee1c25";
+                } else { //월요일시작
+                	if (countdayname == "6")
+                        _mth.style.color = "#0032cf";
+                    else if (countdayname == "0")
+                        _mth.style.color = "#ee1c25";
+                }
 
                 _mth.style.verticalAlign = "middle";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
@@ -376,18 +417,33 @@ function tableListControl_Week()
             else
                 _mtd.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:middle;'>" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
+            
+            if (DefaultView == 0) { //일요일시작
+            	for (var i = 0; i < 7; i++) {
+                    var y = i;
+                    if (i == 7) y = 0;
 
-            for (var i = 0; i < 7; i++) {
-                var y = i;
-                if (i == 7) y = 0;
+                    var _mtd2 = document.createElement("TD");
+                    _mtd2.style.width = "14.2%";
+                    _mtd2.setAttribute("class", "weektd_02");
+                    _mtd2.verticalAlign = "top";
+                    _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    _mtr2.appendChild(_mtd2);
+                    b++;
+                }
+            } else { //월요일시작
+            	for (var i = 1; i < 8; i++) {
+                    var y = i;
+                    if (i == 7) y = 0;
 
-                var _mtd2 = document.createElement("TD");
-                _mtd2.style.width = "14.2%";
-                _mtd2.setAttribute("class", "weektd_02");
-                _mtd2.verticalAlign = "top";
-                _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
-                _mtr2.appendChild(_mtd2);
-                b++;
+                    var _mtd2 = document.createElement("TD");
+                    _mtd2.style.width = "14.2%";
+                    _mtd2.setAttribute("class", "weektd_02");
+                    _mtd2.verticalAlign = "top";
+                    _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    _mtr2.appendChild(_mtd2);
+                    b++;
+                }
             }
 
             _mtable.appendChild(_mtr2);
@@ -718,9 +774,6 @@ function DataSetRemove(fs_Date, fe_Date) {
 
 function tableListControl_today() {
     if (c_xmlhttp.readyState == 4 && c_xmlhttp.status == 200) {
-
-        //c_xmlhttp.onreadystatechange = onAbort;
-
         var xmldom = createXmlDom();
 
         var XMLstring = c_xmlhttp.responseText;
@@ -798,7 +851,7 @@ function tableListControl_today() {
             document.getElementById("tdDateCalendarViewer").innerHTML = "<div style='padding-top:20px;'>" + strLang265 + "<div>";
         }
         else {
-
+        	
             if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0)
                 document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0))
 
@@ -810,8 +863,8 @@ function tableListControl_today() {
         for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
             if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == "1") {
                 var pObjectId = "Day_" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]);
-                var pObjectSP = (parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30) + 1;
-                var pObjectEP = (parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30);
+                var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
+                var pObjectEP = Math.ceil((parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30));
 
                 var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
                 var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
@@ -829,7 +882,7 @@ function tableListControl_today() {
                             pObjectEP = 48;
                         }
                 	}
-
+                	
                     for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
                         if (TCnt != pObjectSP) {
                         	try {document.getElementById(pObjectId + "_" + TCnt).remove();} catch (e) {}
@@ -892,19 +945,18 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
-                        document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
-                        document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
-                        document.getElementById(pObjectId + "_1").style.cursor = "pointer";
-                        document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
-                        document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
-                        document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                        document.getElementById(pObjectId + "_1").colSpan = 48;
+                    document.getElementById(pObjectId + "_1").style.backgroundColor = "#0090d0";
+                    document.getElementById(pObjectId + "_1").style.border = "1px solid #0090d0";
+                    document.getElementById(pObjectId + "_1").style.cursor = "pointer";
+                    document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
+                    document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
+                    document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                    document.getElementById(pObjectId + "_1").colSpan = 48;
                 }
                 
             }
         }
         var dateresult = "";
-        TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "ADD");
 
         // 비승인 처리
         headerweek = "";
@@ -917,8 +969,8 @@ function tableListControl_today() {
         _th.style.width = "250px";
         setNodeText(_th,strLang266);
         _tr.appendChild(_th);
+        
         for (var i = 0; i < 24; i++) {
-
             var headerday = "";
 
             if (i < 10)
@@ -935,13 +987,15 @@ function tableListControl_today() {
         }
         _table.appendChild(_tr);
 
-
         for (var k = 0; k < title_name.length; k++) {
             for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
                 var e_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0]);
                 
                 if (title_name[k].split("/")[0] == getNodeText(xmldom.getElementsByTagName("owner_id")[j]) && getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == 0) {
+                	
+                	TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "ADD");
+                	
                     if (DateTrueFalse(TodayDatename, TodayDatename, s_weekDateSet, e_weekDateSet, TodayDatename, "TODAY")) {
                         var _Tr2 = document.createElement("TR");
                         var _TD = document.createElement("TD");
@@ -958,65 +1012,39 @@ function tableListControl_today() {
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
+                        
                         var alldayevent = getNodeText(xmldom.getElementsByTagName("alldayevent")[j]);
                         if (alldayevent != "1") {
-                            for (var i = 0; i < 48; i++) {
-
-                                var t_Startdt = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[1];
-                                var t_Enddt = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[1];
-
-                                var s_Startdt = t_Startdt.split(":");
-                                var s_Enddt = t_Enddt.split(":");
-
-                                if (s_Startdt[1] == "30")
-                                    s_Startdt[0] = Number(s_Startdt[0]) + 0.5;
-                                else if (s_Enddt[1] == "30")
-                                    s_Enddt[0] = Number(s_Enddt[0]) + 0.5;
-                                else if (s_Enddt[1] == "59")
-                                    s_Enddt[0] = Number(s_Enddt[0]) + 1;
-
-                                var d1 = new Date(sz_Year, sz_Month, sz_Date, s_Startdt[0], s_Startdt[1]);
-                                var d2 = new Date(sz_Year, sz_Month, sz_Date, s_Enddt[0], s_Enddt[1]);
-                                //출력할 값
-                                var d3 = (d2 - d1) / 1800000;
-                                
-                                if (d3 < 0) {
-                                    d3 = Math.abs(d3);
-                                }
-                                
-                                var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
-                                var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
-
-                                var width_td = d3 * 2;
-                                TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
-                                if (TodayDatename == pObjectSPDay) {
-                                	if (pObjectSPDay != pObjectEPDay) {
-	                                    s_Enddt[0] = 24;
-	                                    d2 = new Date(sz_Year, sz_Month, sz_Date, s_Enddt[0], 00);
-	                                    width_td = ((d2 - d1) / 1800000);
-                                	}
+                            
+                            var pObjectSPDay = getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0];
+                            var pObjectEPDay = getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0];
+                            
+                            var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
+                            var pObjectEP = Math.ceil((parseInt(getNodeText(xmldom.getElementsByTagName("dendTime")[j])) / 30));
+                            
+                            TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
+                        	
+                            if (!(TodayDatename == pObjectSPDay) || !(TodayDatename == pObjectEPDay)) {
+                        		if (TodayDatename == pObjectSPDay) {
+                                    pObjectEP = 48;
                                 } else if (TodayDatename == pObjectEPDay) {
-                                    s_Startdt[0] = 0;
-                                    d1 = new Date(sz_Year, sz_Month, sz_Date, s_Startdt[0], 00);
-                                    width_td = ((d2 - d1) / 1800000);
-                                } else if (TodayDatename != pObjectSPDay && TodayDatename != pObjectEPDay) {
-                                    s_Startdt[0] = 0;
-                                    s_Enddt[0] = 24;
-                                    width_td = 48;
+                                    pObjectSP = 1;
+                                } else {
+                                    pObjectSP = 1;
+                                    pObjectEP = 48;
                                 }
-                                TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "ADD");
-                                
-                                if (s_Startdt[0] <= (i / 2) && s_Enddt[0] > (i / 2)) {
+                        	}
+                            
+                            width_td = pObjectEP - pObjectSP + 1;
+                            
+                            for (var i = 1; i <= 48; i++) {
+                                if (pObjectSP <= i && pObjectEP >= i) {
+                                	if (i != pObjectSP) {
+                                		continue;
+                                	}
+                                	
+                                    _TD = document.createElement("TD");
                                     
-                                    var _TD = document.createElement("TD");
-                                    _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
-                                    _TD.align = "center";
-                                    _TD.style.backgroundColor = "#0090d0";
-                                    _TD.style.border = "1px solid #0090d0";
-                                    _TD.style.width = width_td + "%";
-                                    _TD.setAttribute("class", "todaytd_02");
-                                    _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
-                                    _TD.style.cursor = "pointer";
                                     //tooltip 추가
                                     _TD.setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
                                     _TD.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
@@ -1040,32 +1068,35 @@ function tableListControl_today() {
                                     _TD.setAttribute("owner_nm", getNodeText(xmldom.getElementsByTagName("owner_nm")[j]));
                                     _TD.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                                     _TD.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
-
+                                    
+                                    _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
+                                    _TD.align = "center";
+                                    _TD.style.backgroundColor = "#0090d0";
+                                    _TD.style.border = "1px solid #0090d0";
+                                    _TD.style.width = Math.floor((100/48)*width_td) + "%";
+                                    _TD.setAttribute("class", "todaytd_02");
+                                    _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
+                                    _TD.style.cursor = "pointer";
                                     _TD.onmouseover = function (event) { onmouse_over_today(this, event); };
                                     _TD.onmouseout = new Function("onmouse_out_today(this);");
                                     _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
-                                    _TD.colSpan = d3;
+                                    _TD.colSpan = width_td;
+                                    
                                     _Tr2.appendChild(_TD);
                                     
                                 } else {
-                                    var _TD = document.createElement("TD");
+                                    _TD = document.createElement("TD");
                                     _TD.align = "center";
                                     _TD.setAttribute("class", "todaytd_02");
                                     _TD.style.width = "2%";
+                                    
                                     _Tr2.appendChild(_TD);
                                     
                                 }
                             }
                         } else {
-                            var _TD = document.createElement("TD");
-                            _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
-                            _TD.align = "center";
-                            _TD.style.backgroundColor = "#0090d0";
-                            _TD.style.border = "1px solid #0090d0";
-                            _TD.style.width = 100 + "%";
-                            _TD.setAttribute("class", "todaytd_02");
-                            _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
-                            _TD.style.cursor = "pointer";
+                            _TD = document.createElement("TD");
+                            
                             //tooltip 추가
                             _TD.setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
                             _TD.setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
@@ -1090,10 +1121,19 @@ function tableListControl_today() {
                             _TD.setAttribute("dept_name", getNodeText(xmldom.getElementsByTagName("dept_name")[j]));
                             _TD.setAttribute("writeDay", getNodeText(xmldom.getElementsByTagName("writeDay")[j]));
 
+                            _TD.title_name = strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + "&#13;" + strLang268 + " : " + getNodeText(xmldom.getElementsByTagName("dept_name")[j]);
+                            _TD.align = "center";
+                            _TD.style.backgroundColor = "#0090d0";
+                            _TD.style.border = "1px solid #0090d0";
+                            _TD.style.width = 100 + "%";
+                            _TD.setAttribute("class", "todaytd_02");
+                            _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
+                            _TD.style.cursor = "pointer";
                             _TD.onmouseover = function (event) { onmouse_over_today(this, event); };
                             _TD.onmouseout = new Function("onmouse_out_today(this);");
                             _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                             _TD.colSpan = 48;
+                            
                             _Tr2.appendChild(_TD);
                         }
                         _table.appendChild(_Tr2);

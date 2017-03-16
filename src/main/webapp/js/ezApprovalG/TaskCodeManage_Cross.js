@@ -64,37 +64,20 @@
 //}
 
 function getGroupItem(pGroupID) {
-    var xmlhttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var xmlRtn = createXmlDom();
-    var objNode;
+	$.ajax({
+		type : "POST",
+    	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+    	async : false,
+    	data : {sCateCode : pGroupID,
+    			langType : langType,
+    			companyID : companyID},
+    	success : function(result) {
+    	    document.getElementById('lvtForm').innerHTML = "";
 
-    createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "SCATECODE", pGroupID);
-    createNodeAndInsertText(xmlpara, objNode, "COMPANYID", companyID);
-    createNodeAndInsertText(xmlpara, objNode, "LANGTYPE", langType);
-   
-    xmlhttp.open("POST", "/admin/ezApprovalG/getTaskInSubCategoryForManage.do", false);
-    xmlhttp.send(xmlpara);
-
-    //var listview = new ListView();
-    //listview.LoadFromID("lvtFormID");
-    //listview.DataSource(xmlhttp.responseXML);
-    ////document.getElementById('lvtForm').innerHTML = "";
-    //listview.DataBind("lvtForm");
-
-    xmlRtn = loadXMLString(xmlhttp.responseText);
-
-    document.getElementById('lvtForm').innerHTML = "";
-
-    listview.DataSource(xmlRtn);
-    listview.DataBind("lvtForm");
-
-    //if (listview.GetRowCount() <= 0) {
-    //    document.getElementById('lvtForm').innerHTML = "";
-    //    listview.DataSource(ITEM);
-    //    listview.DataBind("lvtForm");
-    //}
+    	    listview.DataSource(loadXMLString(result));
+    	    listview.DataBind("lvtForm");
+    	}
+	});
 }
 
 var viewtaskinfo_cross_dialogArguments = new Array();

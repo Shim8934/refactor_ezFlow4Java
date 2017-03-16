@@ -92,8 +92,8 @@
 		                strName = RetValue[1][i];
 		                strCN = RetValue[0][i];
 		                pparsingXML = pparsingXML + "<ROW><CELL><CN>" + strCN + "</CN>";
-		                pparsingXML = pparsingXML + "<NAME>" + strName + "</NAME>";
-		                pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+		                pparsingXML = pparsingXML + "<NAME><![CDATA[" + strName + "]]></NAME>";
+		                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
 		                var Resultxml = loadXMLString(pparsingXML2);
 		                var listview = new ListView();
@@ -184,8 +184,8 @@
 	
 	
 		                    pparsingXML = pparsingXML + "<ROW><CELL><CN>" + strCN + "</CN>";
-		                    pparsingXML = pparsingXML + "<NAME>" + strName + "</NAME>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+		                    pparsingXML = pparsingXML + "<NAME><![CDATA[" + strName + "]]></NAME>";
+		                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	
 		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
 		                    var Resultxml = loadXMLString(pparsingXML2);

@@ -401,10 +401,10 @@
 		        var OpenWin;
 		    	if (useAddressOpenAPI == "YES") {
 		    		address_zip_select_dialogArguments[1] = jusoCallBack;
-		    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do","address_zip_select", 570, 420, "YES");
+		    		OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUpOpen.do","address_zip_select", 570, 420, "YES");
 		    	} else {
 		        	address_zip_select_dialogArguments[1] = GetPostCode_Complete;
-			        OpenWin = GetOpenWindow("/ezAddress/address_zip_select.do", "address_zip_select", 655, 620, "YES");
+			        OpenWin = GetOpenWindow("/ezAddress/addressZipCodePopUp.do", "address_zip_select", 655, 620, "YES");
 		    	}
 		    }
 		    function GetPostCode_Complete(Para) {
@@ -576,8 +576,7 @@
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
 	            <td style="width: 240px;">
-	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly" />
-	                <c:if test="${lang != '1'}"><br /></c:if>	                
+	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" readonly="readonly" />	                
 	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
 	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
 	            </td>
@@ -633,11 +632,11 @@
 	        <tr>
 	            <th style="width: 80px; text-align:center"><spring:message code='ezOrgan.t286' /></th>
 	            <td colspan="5">
-                    <c:if test="${userLang == '1'}">
+                    <c:if test="${primaryLang == '1'}">
 	                <input id="ZipCode" style="WIDTH: 100px;" maxlength="6" readonly="readonly" />
 	                <a class="imgbtn" style="vertical-align:middle"><span onclick="GetPostCode()"><spring:message code='ezOrgan.t286' /></span></a>
                     </c:if>
-                    <c:if test="${userLang != '1'}">
+                    <c:if test="${primaryLang != '1'}">
                     <input id="ZipCode" style="WIDTH: 100px;" maxlength="6" />
                     <span><spring:message code='ezOrgan.t286' /></span>
                     </c:if>
