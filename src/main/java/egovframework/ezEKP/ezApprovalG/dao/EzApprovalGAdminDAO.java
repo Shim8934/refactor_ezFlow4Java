@@ -373,18 +373,26 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 	
 	public void moveAllDocListF(Map<String, Object> map) throws Exception {
-		update("EzApprovalAdminDAO.moveAllDocListF", map);
+		update("EzApprovalGAdminDAO.moveAllDocListF", map);
 	}
 
 	public void moveAllDocListS(Map<String, Object> map) throws Exception {
-		update("EzApprovalAdminDAO.moveAllDocListS", map);
+		update("EzApprovalGAdminDAO.moveAllDocListS", map);
 	}
 
 	public void moveDocListF(Map<String, Object> map) throws Exception {
-		update("EzApprovalAdminDAO.moveDocListF", map);
+		update("EzApprovalGAdminDAO.moveDocListF", map);
 	}
 
 	public void moveDocListS(Map<String, Object> map) throws Exception {
-		update("EzApprovalAdminDAO.moveDocListS", map);
+		update("EzApprovalGAdminDAO.moveDocListS", map);
+	}
+	
+	public void deleteDocList(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.deleteDocList", map);
+	}
+	
+	public void deleteAllDocList(Map<String, Object> map) throws Exception {
+		update("EzApprovalGAdminDAO.deleteAllDocList", map);
 	}
 }

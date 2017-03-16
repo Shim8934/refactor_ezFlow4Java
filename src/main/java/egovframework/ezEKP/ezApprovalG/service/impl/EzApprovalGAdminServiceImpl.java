@@ -2788,4 +2788,89 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return rtnValue;
 	}
+
+	@Override
+	public String getCodeType(String lang, int tenantId, String companyID) throws Exception {
+		logger.debug("getCodeType started");
+		
+		StringBuilder rtnXML = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+				
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantId);
+		map.put("companyID", companyID);
+		
+		List<ApprGLeftVO> apprCodeVOs = ezApprovalGDAO.getKeepType(map);
+		
+		for (int k = 0; k < apprCodeVOs.size(); k++) {
+			String[] colOption = apprCodeVOs.get(k).getName().split(";");
+			
+			if (colOption[1].equals("")) {
+				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		logger.debug("getCodeType ended");
+		
+		return rtnXML.toString();
+	}
+	
+	@Override
+	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteDocList started");
+		
+		String rtnValue = "";
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String contID = docXML.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String startPeriod = docXML.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String storagePeriod = docXML.getDocumentElement().getChildNodes().item(2).getTextContent();
+		String deleteAll = docXML.getDocumentElement().getChildNodes().item(3).getTextContent();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("contID", contID);
+		map.put("storagePeriod", storagePeriod);
+		map.put("startPeriod", startPeriod);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		if (startPeriod != null && !startPeriod.equals("")) {
+			map.put("startDate", commonUtil.getDateStringInUTC(commonUtil.makeDate(startPeriod, "1", "1", true), offset, true));
+			map.put("endDate", commonUtil.getDateStringInUTC(commonUtil.makeDate(startPeriod, "12", "31", false), offset, true));
+		}
+		
+		try {
+			if (deleteAll.equals("true")) {
+				ezApprovalGAdminDAO.deleteAllDocList(map);
+			} else {
+				String subQuery = "";
+				
+				for (int k = 4; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
+					if (k == 4) {
+						subQuery += " '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					} else {
+						subQuery += ", '" + docXML.getDocumentElement().getChildNodes().item(k).getTextContent() + "' ";
+					}
+				}
+				
+				map.put("subQuery", subQuery);
+				
+				ezApprovalGAdminDAO.deleteDocList(map);
+			}
+			
+			rtnValue = "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>";
+		} catch (Exception e) {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			logger.error(e.getMessage());
+			rtnValue = "<PARAMETER><RESULT>FALSE</RESULT></PARAMETER>";
+		}
+		
+		logger.debug("deleteDocList ended");
+		
+		return rtnValue;
+	}
+	
+	
 }

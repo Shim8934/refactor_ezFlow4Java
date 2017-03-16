@@ -128,6 +128,10 @@ public interface EzApprovalGAdminService {
 	public String formMove(String companyID, String contID, String selContID, String formID, int tenantID) throws Exception;
 	
 	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
+
+	public String getCodeType(String lang, int tenantId, String companyID) throws Exception;
+
+	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantId) throws Exception;
 	
 
 	

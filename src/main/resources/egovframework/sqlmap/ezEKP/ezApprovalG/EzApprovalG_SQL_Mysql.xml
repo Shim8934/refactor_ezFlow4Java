@@ -19848,7 +19848,11 @@
       			TBL_CODELIST 
       		WHERE 
       			CODE1 = 'A52' 
-      		AND  
+      		AND
+   		 		TENANT_ID = #v_TENANTID#
+   		 	AND
+   				COMPANYID = #companyID#
+   			AND	  
       			ISUSE = 1
       		ORDER BY 
       			CODE2
@@ -19861,7 +19865,11 @@
       			TBL_CODELIST 
       		WHERE 
       			CODE1 = 'A52' 
-      		AND  
+      		AND
+   		 		TENANT_ID = #v_TENANTID#
+   		 	AND
+   				COMPANYID = #companyID#
+   			AND	  
       			ISUSE = 1
       		ORDER BY 
       			CODE2
