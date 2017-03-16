@@ -158,7 +158,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 			
 			// 현재 부서의 자식 부서들의 정보를 XML String으로 생성한다.
 			StringBuilder deptlist = new StringBuilder("<NODES>");
-	
+			
 	        for (int k = 0; k < memberCount; k++) {
 	            deptlist.append(memberInfo[k]);
 	        }
