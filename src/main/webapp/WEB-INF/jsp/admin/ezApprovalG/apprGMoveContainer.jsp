@@ -22,6 +22,7 @@
 	        var text1 = "<spring:message code='ezApproval.t434'/>";
 	        var text2 = "<spring:message code='ezApproval.t911'/>";
 	        var SearchCond = new Array();
+	        
 	        window.onload = function () {
 	            P_CompanyID = document.getElementById("ListCompany").value;
 	            document.getElementById('lvSDoc').innerHTML = "";
@@ -42,8 +43,7 @@
 	            listview2.DataSource(loadXMLString(document.getElementById("FORMLIST").innerHTML.toUpperCase()));
 	            listview2.DataBind("lvTDoc");
 	
-	            document.getElementsByName('SDeptName')[0].value = "";
-	
+	            document.getElementsByName('SDeptName')[0].value = "";	
 	            PageSize = 300;
 	            pChackYN = "FALSE";
 	        }
@@ -74,12 +74,12 @@
 	            }
 	            else {
 	                if (CrossYN()) {
-	                    openLocation = "/admin/ezApproval/contDocView.do";
+	                    openLocation = "/ezApprovalG/contDocView.do";
 	                } else {
 	                    if (pUse_Editor == "")
-	                        openLocation = "/myoffice/ezApproval/formContainer/contDocView.aspx";
+	                        openLocation = "/ezApprovalG/contDocView.do";
 	                    else
-	                        openLocation = "/myoffice/ezApproval/formContainer/contDocView_IE.aspx";
+	                        openLocation = "/ezApprovalG/contDocView.do";
 	                }
 	            }
 	            openLocation = openLocation + "?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(formID) + "&orgDocID=" + escape(orgDocid);
@@ -105,7 +105,7 @@
 	        function bt_SDeptSelect_onclick() {
 	            organ_dialogArguments[0] = P_CompanyID;
 	            organ_dialogArguments[1] = bt_SDeptSelect_onclick_Complete;
-	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 525, "NO");
+	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 485, "NO");
 	        }
 	
 	        function bt_SDeptSelect_onclick_Complete(retVal) {
@@ -135,7 +135,7 @@
 	        function bt_TDeptSelect_onclick() {
 	            organ_dialogArguments[0] = P_CompanyID;
 	            organ_dialogArguments[1] = bt_TDeptSelect_onclick_Complete;
-	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 525, "NO");
+	            var result = GetOpenWindow("/admin/ezApprovalG/apprGOrgan.do", "Organ_Cross", 290, 485, "NO");
 	        }
 	        
 	        function bt_TDeptSelect_onclick_Complete(retVal) {
@@ -156,8 +156,7 @@
 	            }
 	        }
 	
-	        function bt_selTContName_onclick() {
-	
+	        function bt_selTContName_onclick() {	
 	            var TcontID = document.getElementsByName("selTContName")[0].value;
 	            Check = false;
 	        }
@@ -183,8 +182,7 @@
 	                if (length > 0 && selLength > 0) {
 	                    var DocID = new Array();
 	                    var DocName = new Array();
-	                    var DocNum = new Array();
-	
+	                    var DocNum = new Array();	
 	                    
 	                    for (count1 = 0 ; count1 < unSelLength	; count1++) {
 	                        DocID[i] = GetAttribute(listview2.GetDataRows()[unSelRows[i]], "DATA1");
@@ -192,14 +190,12 @@
 	                        DocNum[i] = getNodeText(listview2.GetDataRows()[unSelRows[i]].cells[0]);
 	                        i++;
 	                    }
-	                    i = 0;
-	
+	                    i = 0;	
 	                    
 	                    for (count1 = length2 - 1 ; count1 >= 0 ; count1--) {
 	                        var tr = listview2.GetDataRows()[count1];
 	                        listview2.DeleteRow(GetAttribute(tr, "id"));
-	                    }
-	
+	                    }	
 	                    
 	                    for (count1 = 0 ; count1 < unSelLength ; count1++) {
 	                        var strXML = listAdd(DocNum[i], DocName[i], DocID[i]);
@@ -209,9 +205,9 @@
 	                        listview2.AddDataRow(objTr, xmlRtn);
 	                        i++;
 	                    }
-	                }
-	                else
+	                } else {
 	                    alert("<spring:message code='ezApproval.t232'/>");
+	                }
 				}
 			}
 			
@@ -236,11 +232,10 @@
 						        getDocList();
 						    }
 						}
-			        }
-			        else
+			        } else {
 			            alert("<spring:message code='ezApproval.t634'/>");
-			    }
-			    else {
+			        }
+			    } else {
 			        if (Check == false) {
 			            if (document.getElementsByName("selTContName")[0].value == "")
 			                alert("<spring:message code='ezApproval.t769'/>")
@@ -278,7 +273,7 @@
 			        return;
 			    }
 			
-			    var url = "/admin/ezApproval/ezStatisticsSearch.do?ingFlag=END";
+			    var url = "/admin/ezApprovalG/ezStatisticsSearch.do?ingFlag=END";
 			    ezStatisticsSearch_dialogArguments[1] = SearchCondi_onclick_Complete;
 			    var result = GetOpenWindow(url, "ezStatisticsSearch", 500, 330, "NO");
 			}

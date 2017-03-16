@@ -310,7 +310,7 @@
 	                }
 	            }
 	            catch (e)
-	            {alert(e.message); alert(100); }
+	            {alert(e.message); }
 	        }
 	
 	        var BODYTag;

@@ -875,49 +875,51 @@ public class EzAddressServiceImpl implements EzAddressService {
         }
 	}
 	
-	
-	
-	
-
-
-	
-	
-	
-	
-	
-	
-	
 	@Override
-	public List<AddressOldZipCodeVO> getZipCodeInfo(String dong) throws Exception {
-		return ezAddressDAO.getZipCodeInfo(dong);
-	}
-
-	@Override
-	public List<String> getZipCodeSido() throws Exception {
-		return ezAddressDAO.getZipCodeSido();
-	}
-
-	@Override
-	public List<AddressZipCodeVO> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception {
-		int startRow = (pPage - 1) * 20 + 1;
-        int endRow = pPage * 20;
+	public Map<String, Object> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception {
+		int start = (pPage - 1) * 20 + 1;
+        int end = pPage * 20;
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PSIDO", pSido);
-		map.put("v_PKEYWORD", pKeyword);
-		map.put("v_PSTARTROW", startRow);
-		map.put("v_PENDROW", endRow);
+		List<AddressZipCodeVO> list = new ArrayList<AddressZipCodeVO>();
+		int totalCount = 0;
 		
-		return ezAddressDAO.getAddressZipCodeList(map);
-	}
-
-	@Override
-	public int getAddressZipCodeCount(String pSido, String pKeyword) throws Exception {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_PSIDO", pSido);
-		map.put("v_PKEYWORD", pKeyword);
+		String sidoParam = "sido=" + URLEncoder.encode(pSido, "UTF-8");
+		String keywordParam = "keyword=" + URLEncoder.encode(pKeyword, "UTF-8");
+		String startParam = "start=" + start;
+		String endParam = "end=" + end;
 		
-		return ezAddressDAO.getAddressZipCodeCount(map);
+		String inputParams = sidoParam + "&" + keywordParam + "&" + startParam + "&" + endParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getAddressZipCodeList", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+		
+		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
+			JSONObject resultObject = (JSONObject)object.get("result");
+			totalCount = ((Long)resultObject.get("totalCount")).intValue();
+			JSONArray resultArray = (JSONArray)resultObject.get("list");
+			
+        	for (int i=0; i<resultArray.size(); i++) {
+        		JSONObject obj = (JSONObject)resultArray.get(i);
+        		
+        		AddressZipCodeVO vo = new AddressZipCodeVO();
+        		
+        		vo.setZipCode((String)obj.get("zipCode"));
+        		vo.setDoro((String)obj.get("doro"));
+        		vo.setJibun((String)obj.get("jibun"));
+        		
+				list.add(vo);
+        	}
+        }
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("totalCount", totalCount);
+		resultMap.put("list", list);
+		
+		return resultMap;
 	}
 
 }

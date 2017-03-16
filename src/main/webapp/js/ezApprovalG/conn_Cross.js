@@ -894,7 +894,7 @@ function CheckSignImg() {
         for (var i = 0 ; i < obj.length ; i++) {
             if (obj[i].parentNode.id.indexOf("sign") >= 0) {
                 if (!obj[i].complete) {
-alert(1002);
+
                     if (typeof (obj[i].spath) != "undefined") {
                     	obj[i].src = "/ezCommon/downloadAttach.do?filePath=" + obj[i].spath;
                     }

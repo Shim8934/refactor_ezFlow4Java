@@ -155,9 +155,9 @@
 	                    }
 
 	                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                    pparsingXML = pparsingXML + "<DATA2>" + strName + "</DATA2>";
+	                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
 	                    pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptName1 + "]]></DATA4>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+	                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 
 	                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                    var Resultxml = loadXMLString(pparsingXML2);
@@ -479,14 +479,14 @@
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + strName + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3>" + strName2 + "</DATA3>";
+	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
 	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-	                        pparsingXML = pparsingXML + "<DATA6>" + strName + "</DATA6>";
-	                        pparsingXML = pparsingXML + "<DATA7>" + jickwe + "</DATA7>";
+	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	
@@ -549,14 +549,14 @@
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + strName + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3>" + strName2 + "</DATA3>";
+	                        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
+	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strName2 + "]]></DATA3>";
 	                        pparsingXML = pparsingXML + "<DATA4><![CDATA[" + strDeptNM + "]]></DATA4>";
 	                        pparsingXML = pparsingXML + "<DATA5><![CDATA[" + strDeptNM2 + "]]></DATA5>";
-	                        pparsingXML = pparsingXML + "<DATA6>" + strName + "</DATA6>";
-	                        pparsingXML = pparsingXML + "<DATA7>" + jickwe + "</DATA7>";
+	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
+	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL></ROW>";
+	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	

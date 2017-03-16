@@ -4152,6 +4152,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	public String boardItemViewPrint(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		String extenLang = "1";
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String reservedItem = request.getParameter("reservedItem");
@@ -4164,6 +4165,19 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
+        
+		//추가항목 있을 경우 추가항목을 가져온다
+        List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
+        int boardAttrCount = 0;
+        
+        if (boardInfo.getAttributeYN() != null && boardInfo.getAttributeYN().equals("Y")) {
+        	boardAttr = ezBoardAdminService.getBoardAttribute(boardID, userInfo.getTenantId());
+        	boardAttrCount = boardAttr.size();
+        	
+            if (!commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()).equals("1")) {
+            	extenLang = "2";
+            }
+        }
 		
 		if (boardItem.getExtensionAttribute3() == null || boardItem.getExtensionAttribute3().equals("")) {
 			boardItem.setExtensionAttribute3(" ");
@@ -4199,6 +4213,9 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("oneLineReplyFlag", oneLineReplyFlag);
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
+		model.addAttribute("extenLang", extenLang);
+		model.addAttribute("boardAttr", boardAttr);
+        model.addAttribute("boardAttrCount", boardAttrCount);
 		
 		return "ezBoard/boardItemViewPrint";
 	}

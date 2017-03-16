@@ -79,7 +79,7 @@
 				<tr>
 					<th><spring:message code='ezEmail.t121' /></th>
 					<td>
-						<input id="expiretime" type="text" style="WIDTH:40px" name="text2">
+						<input id="expiretime" type="text" style="WIDTH:40px" name="text2" maxlength="5">
 						<spring:message code='ezEmail.t122' />
 					</td>
 				</tr>

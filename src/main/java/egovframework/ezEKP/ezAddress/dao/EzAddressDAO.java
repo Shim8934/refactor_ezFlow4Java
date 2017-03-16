@@ -14,11 +14,6 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzAddressDAO")
 public class EzAddressDAO extends EgovAbstractDAO {
-
-	@SuppressWarnings("unchecked")
-	public List<AddressOldZipCodeVO> getZipCodeInfo(String dong) throws Exception{
-		return (List<AddressOldZipCodeVO>) list("EzAddressDAO.getAddressInfo", dong);
-	}
 	
 	@SuppressWarnings("unchecked")
 	public List<SimpleAddressVO> getSimpleAddress(Map<String, Object> map) throws Exception{
@@ -114,20 +109,6 @@ public class EzAddressDAO extends EgovAbstractDAO {
 	
 	public AddressFolderVO getFolderInfo(Map<String, Object> map) throws Exception{
 		return (AddressFolderVO) select("EzAddressDAO.getFolderInfo", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<String> getZipCodeSido() throws Exception{
-		return (List<String>) list("EzAddressDAO.getZipCodeSido");
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<AddressZipCodeVO> getAddressZipCodeList(Map<String, Object> map) throws Exception{
-		return (List<AddressZipCodeVO>) list("EzAddressDAO.getAddressZipCodeList", map);
-	}
-	
-	public int getAddressZipCodeCount(Map<String, Object> map) throws Exception{
-		return (Integer) select("EzAddressDAO.getAddressZipCodeCount", map);
 	}
 	
 }
