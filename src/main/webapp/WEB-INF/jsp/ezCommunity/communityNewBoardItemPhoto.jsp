@@ -498,37 +498,14 @@
 		            xmlhttp = null;
 		            xmlDom = null;
 
-		            //Mail 부분
-		            if (document.getElementById("chk_reservation").checked == false) {
-		            	//2016-06-29 이효진 Mail부분
-		                /* if (strItemID == "") {
-		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "aspx/SendPostNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID, false);
-		                    xmlhttp.send();
-		                    xmlhttp = null			
-		                }
-		                
-		                if (pMode == "reply") {
-		                    xmlhttp = createXMLHttpRequest();
-		                    xmlhttp.open("POST", "aspx/SendReplyNoticeMail.aspx?BoardID=" + pBoardID + "&ItemID=" + newID + "&ItemTreeID=" + strUpperItemIDTree, false);
-		                    xmlhttp.send();
-		                    xmlhttp = null;
-		                } */
-		                
-		                alert("<spring:message code = 'ezCommunity.t282' />");
-		            } else {
-		                alert("<spring:message code = 'ezCommunity.t1150' />" + pStartDate.substr(0, 16) + "<spring:message code = 'ezCommunity.t1151' />");
-		            }
-		            
-		            try {
-						window.opener.location.reload(true);
-		            } catch(e) {
-		            }
+	                alert("<spring:message code = 'ezCommunity.t282' />");
+	                document.getElementById("menu").style.display = "none";
 		            
 		            window.close();		
 		        } else {
 		            alert("<spring:message code = 'ezCommunity.t283' />");
 		        }
+				window.opener.location.reload(true);
 		        
 		        xmlhttp = null;
 		        xmlDom = null;

@@ -986,7 +986,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void insertDBData_company(Map<String, Object> map) throws Exception {        
-        insertDBData_companyForJMocha(map);
+        
 
         if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
             try {
@@ -1000,6 +1000,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 
                 throw e;
             }
+        } else {
+        	insertDBData_companyForJMocha(map);
         }
 	}
 
@@ -1948,6 +1950,18 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         update("EzOrganAdminDAO.updateUserDeptDisplayName", vo);
         
         logger.debug("updateUserDeptDisplayName ended.");
-    }	
+    }
+    
+    
+    public void insertCompanyInfo_I1(Map<String, Object> map) throws Exception {
+    	for (int i = 1; i<33; i++) {
+    		insert("EzOrganAdminDAO.insertCompanyInfo_I"+i, map);
+    	}
+    }
+    
+    
+    
+
+    
 		
 }

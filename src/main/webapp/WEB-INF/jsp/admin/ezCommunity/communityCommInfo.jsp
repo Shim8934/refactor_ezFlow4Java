@@ -58,7 +58,7 @@
 		<form method="post" name="mod" action="admin_basic_ok.asp">
 			<input type="hidden" name="code" value="<c:out value = '${code }' />">
 	
-	   		<h1 style="height:30px;">Community <spring:message code = 'ezCommunity.t64' /></h1>
+	   		<h1 style="height:45px;">Community <spring:message code = 'ezCommunity.t64' /></h1>
 	   		
 			<table class="content" style="margin-top:10px;">
 				<tr> 
@@ -119,8 +119,7 @@
 									<spring:message code = 'ezCommunity.t70' />
 								</c:if>
 							</c:otherwise>
-						</c:choose>
-						
+						</c:choose>	
 					</td>
 				</tr>
 				<tr height="100%"> 
@@ -136,16 +135,16 @@
 						</c:otherwise>
 					</c:choose>
 				</tr>
-	
-			<div class="btnposition">
-		         <a class="imgbtn"><span onclick="return comClose_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t46' /></span></a>
-		         
-		         <c:if test="${type == 'New' }">
-		         	<a class="imgbtn"><span onclick="return closeCancel_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t44' /></span></a>	
-		         </c:if>            
-						
-		        <a class="imgbtn"><span onclick="window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>
-			</div>
+			</table>
 		</form>
+		<div class="btnposition" style="margin-top:5px;">
+		    <a class="imgbtn"><span onclick="return comClose_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t46' /></span></a>
+		         
+            <c:if test="${type == 'New' }">
+         		<a class="imgbtn"><span onclick="return closeCancel_onclick('${code}','${type}')" ><spring:message code = 'ezCommunity.t44' /></span></a>	
+         	</c:if>            
+						
+		    <a class="imgbtn"><span onclick="window.close()" ><spring:message code = 'ezCommunity.t21' /></span></a>
+		</div>
 	</body>
 </html>

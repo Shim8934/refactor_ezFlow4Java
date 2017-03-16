@@ -1,9 +1,10 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
 
 import java.lang.reflect.Field;
-import java.net.URLEncoder;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
-import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -56,12 +55,15 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private Properties globals;
+	
 	@Autowired	
 	private CommonUtil commonUtil;
 	
     @Autowired
-    private EzCommonService ezCommonService;	
-	
+    private EzCommonService ezCommonService;
+    
 	@Override
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception {
 	    logger.debug("getCompanyList started");
@@ -449,6 +451,60 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("nowDate", nowDate);
 		
 		ezOrganAdminDao.insertDBData_company(map);
+		
+		//script데이터 
+/*		Connection con = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = "insert into tbl_proxyinfo(userid, proxyuserid, proxyusername) values (?, ? , ?)";
+		
+		//try {
+			Class.forName(globals.getProperty("Globals.DriverClassName"));
+			//con = DriverManager.getConnection(globals.getProperty("Globals.Url"), globals.getProperty("Globals.UserName"), globals.getProperty("Globals.Password"));
+			con = DriverManager.getConnection(globals.getProperty("Globals.Url"), "jmocha", "jmocha_101");
+			pstmt = con.prepareStatement(sql);
+logger.debug("cn="+cn);
+			pstmt.setString(1, cn);
+			pstmt.setString(2, "");
+			pstmt.setString(3, "");
+			
+			pstmt.executeUpdate();*/
+			//
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("tenantID", tenantID);
+			map1.put("companyID", cn);
+			ezOrganAdminDao.insertCompanyInfo_I1(map1);
+			
+			
+		/*} catch (Exception e) {
+			e.printStackTrace();
+			
+			try {
+				con.rollback();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}*/
+			
+		/*} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+					pstmt = null;
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}
+			
+			if (con != null) {
+				try {
+					con.close();
+					con = null;
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+			}*/
+		//}
+		//
 		
 		logger.debug("insertDBData_company ended");
 	}
