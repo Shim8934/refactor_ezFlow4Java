@@ -27,7 +27,7 @@
 			},
 			async: false,
 			success : function(result) {
-				after_check_change_Param(result);
+				after_get_Sys_Param(result);
 			},
 			error : function(error) {
 				alert("<spring:message code='main.kms2'/>" + error);
@@ -36,7 +36,7 @@
 
 	}
 	
-	function after_check_change_Param(result) {
+	function after_get_Sys_Param(result) {
 		$("table").children().remove();
 		$("table").append('<tr><th><spring:message code="main.kms1"/>'+
 				'</th><th><spring:message code="main.kms3"/></th></tr>');
@@ -45,31 +45,42 @@
 			if(list[i].name=="USE_AdditionalROle"){
 				list[i].name="USE_AdditionalRole";
 			}
-			if(list[i].value != "YES" && list[i].value != "NO" ){
-				if(list[i].name != "PrimaryLang"){
-					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-					+'<td><input type="text" value='+list[i].value+'></td></tr>');
-				}else{
-					if(list[i].value==3){
+			
+				if(list[i].value != "YES" && list[i].value != "NO" ){
+					if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE"){
 						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><select><option value="1">한국어</option><option value="3" selected="selected">일본어</option>'
-						+'</select></td></tr>');
-					}else{
-						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-						+'<td><select><option value="1" selected="selected"><spring:message code="ezPersonal.s81"/></option>'
-						+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
-						+'</select></td></tr>');
+						+'<td><input type="text" value='+list[i].value+'></td></tr>');
+					}else if(list[i].name == "PrimaryLang"){
+						if(list[i].value==3){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1">한국어</option><option value="3" selected="selected">일본어</option>'
+							+'</select></td></tr>');
+						}else{
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1" selected="selected"><spring:message code="ezPersonal.s81"/></option>'
+							+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
+							+'</select></td></tr>');
+						}
+					}else if(list[i].name == "ONELINE_REPLY_ENABLE"){
+						if(list[i].value == "1"){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1" selected="selected">YES</option><option value="0">NO</option>'
+							+'</select></td></tr>');
+						}else if(list[i].value == "0"){
+							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+							+'<td><select><option value="1">YES</option><option value="0" selected="selected">NO</option>'
+							+'</select></td></tr>');
+						}		
 					}
+				}else if(list[i].value == "NO"){
+					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+					+'<td><select><option value="YES">YES</option><option value="NO" selected="selected">NO</option>'
+					+'</select></td></tr>');
+				}else{
+					$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
+					+'<td><select><option value="YES" selected="selected">YES</option><option value="NO">NO</option>'
+					+'</select></td></tr>');	
 				}
-			}else if(list[i].value == "NO"){
-				$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-				+'<td><select><option value="YES">YES</option><option value="NO" selected="selected">NO</option>'
-				+'</select></td></tr>');
-			}else{
-				$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-				+'<td><select><option value="YES" selected="selected">YES</option><option value="NO">NO</option>'
-				+'</select></td></tr>');
-			}
 		}
 		$("table").append('<tr><td colspan="2" style="text-align: center; padding-top:5px;">'
 		+'<div class="imgbtn" style="padding-right: 3px;"><span onclick="check_change_Param()">'
@@ -90,10 +101,10 @@
 			value = $("#tr_"+i+" input").val();
 			}
 			if(value!=list[i].value){
-				if(list[i].name != "PrimaryLang"){
+				if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE"){
 			 		flag=true;
 			 		confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
-				}else{
+				}else if(list[i].name == "PrimaryLang"){
 					flag=true;
 					var oldLang = "";
 					var newLang = "";
@@ -104,8 +115,23 @@
  					}
  					if(list[i].value==1){
  						oldLang = "<spring:message code="ezPersonal.s81"/>";
- 					}else if(value==3){
+ 					}else if(list[i].value==3){
  						oldLang = "<spring:message code="ezPersonal.s84"/>";
+ 					}
+					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
+				}else if(list[i].name == "ONELINE_REPLY_ENABLE"){
+					flag=true;
+					var oldLang = "";
+					var newLang = "";
+ 					if(value==1){
+ 						newLang = "YES";
+ 					}else if(value==0){
+ 						newLang = "NO";
+ 					}
+ 					if(list[i].value==1){
+ 						oldLang = "YES";
+ 					}else if(list[i].value==0){
+ 						oldLang = "NO";
  					}
 					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
 				}
