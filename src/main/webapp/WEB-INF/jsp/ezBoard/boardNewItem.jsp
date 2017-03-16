@@ -398,8 +398,8 @@
 		            filename = MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName"));
 		            
 		            str += "<ROW><CELL>";
-		            str += "<VALUE>" + filename + "</VALUE>";
-		            str += "<DATA1>" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "</DATA1>";
+		            str += "<VALUE><![CDATA[" + filename + "]]></VALUE>";
+		            str += "<DATA1><![CDATA[" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "]]></DATA1>";
 		            str += "<DATA2>" + MakeXMLString(filepath) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";

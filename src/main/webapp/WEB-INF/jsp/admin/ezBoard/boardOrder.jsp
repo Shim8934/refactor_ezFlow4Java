@@ -82,7 +82,7 @@
                     var boardName = SelectSingleNodeValue(xmldomNode.item(i), "DATA2");
                     var boardId = SelectSingleNodeValue(xmldomNode.item(i), "DATA1");
 
-                    strXML += listAdd(boardName, boardId);
+                    strXML += listAdd(MakeXMLString(boardName), boardId);
                 }
                 strXML += "</ROWS></LISTVIEWDATA>";
                 var xmlRtn = loadXMLString(strXML);

@@ -1611,6 +1611,8 @@ function SaveDraftDocInfo_ilban(pState) {
             startdate = "DRAFTSAVE";
         else
             startdate = "DRAFT";
+        
+        //여기서 다국어 안되고있는데 원래 스펙이라 일단 봐줌
         createNodeAndInsertText(xmlpara, objNode, "STARTDATE", startdate);
         createNodeAndInsertText(xmlpara, objNode, "ENDDATE", "DRAFT");
         createNodeAndInsertText(xmlpara, objNode, "WRITERID", arr_userinfo[1]);
@@ -2811,9 +2813,9 @@ function setFirstDrafterAuto() {
     pxml = pxml + "<HEADER><NAME>" + strLang332 + "</NAME><WIDTH>120</WIDTH></HEADER>"
     pxml = pxml + "<HEADER><NAME>" + strLang333 + "</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>"
     pxml = pxml + "<ROWS><ROW><COLUMN>1</COLUMN>"
-    pxml = pxml + "<COLUMN>" + arr_userinfo[2] + "</COLUMN>"
+    pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[2] + "]]></COLUMN>"
     pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[3] + "]]></COLUMN>"
-    pxml = pxml + "<COLUMN>" + arr_userinfo[5] + "</COLUMN>"
+    pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[5] + "]]></COLUMN>"
     pxml = pxml + "<COLUMN>" + strLang6 + "</COLUMN>"//전결
     pxml = pxml + "<COLUMN>" + strLang18 + "</COLUMN>"//진행
     pxml = pxml + "<DATA name='ProcessDate'></DATA>"
@@ -2830,10 +2832,10 @@ function setFirstDrafterAuto() {
     pxml = pxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>" //진행
     pxml = pxml + "<DATA name='PMemberName'><![CDATA[" + arr_userinfo[11] + "]]></DATA>"
     pxml = pxml + "<DATA name='SMemberName'><![CDATA[" + arr_userinfo[12] + "]]></DATA>"
-    pxml = pxml + "<DATA name='PMemberDeptName'>" + arr_userinfo[15] + "</DATA>"
-    pxml = pxml + "<DATA name='SMemberDeptName'>" + arr_userinfo[16] + "</DATA>"
-    pxml = pxml + "<DATA name='PMemberJobTitle'>" + arr_userinfo[13] + "</DATA>"
-    pxml = pxml + "<DATA name='SMemberJobTitle'>" + arr_userinfo[14] + "</DATA>"
+    pxml = pxml + "<DATA name='PMemberDeptName'><![CDATA[" + arr_userinfo[15] + "]]></DATA>"
+    pxml = pxml + "<DATA name='SMemberDeptName'><![CDATA[" + arr_userinfo[16] + "]]></DATA>"
+    pxml = pxml + "<DATA name='PMemberJobTitle'><![CDATA[" + arr_userinfo[13] + "]]></DATA>"
+    pxml = pxml + "<DATA name='SMemberJobTitle'><![CDATA[" + arr_userinfo[14] + "]]></DATA>"
     pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>"
 
     xmlpara = loadXMLString(pxml);

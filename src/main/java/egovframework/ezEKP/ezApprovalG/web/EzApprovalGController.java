@@ -5336,7 +5336,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String sendToMailApproval(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 
-		String docHref = request.getParameter("docHref");
+//		String docHref = request.getParameter("docHref");
 		String cmd = request.getParameter("cmd");
 		String docID = request.getParameter("docID");
 		String strImgCount = "";
