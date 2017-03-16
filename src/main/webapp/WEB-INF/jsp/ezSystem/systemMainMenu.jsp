@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
 <style>
-		select { width:100%; }
+	select { width:100%; }
 </style>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript">
@@ -50,7 +50,7 @@
 			}
 			
 				if(list[i].value != "YES" && list[i].value != "NO" ){
-					if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE"){
+					if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
 						$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
 						+'<td><input type="text" value='+list[i].value+'></td></tr>');
 					}else if(list[i].name == "PrimaryLang"){
@@ -65,7 +65,7 @@
 							+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
 							+'</select></td></tr>');
 						}
-					}else if(list[i].name == "ONELINE_REPLY_ENABLE"){
+					}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
 						if(list[i].value == "1"){
 							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
 							+'<td><select><option value="1" selected="selected">YES</option><option value="0">NO</option>'
@@ -105,7 +105,7 @@
 			value = $("#tr_"+i+" input").val();
 			}
 			if(value!=list[i].value){
-				if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE"){
+				if(list[i].name != "PrimaryLang" && list[i].name != "ONELINE_REPLY_ENABLE" && list[i].name != "FormProcSpelling"){
 			 		flag=true;
 			 		confirmChange += $("#tr_"+i+" th").text()+ " : " + list[i].value+ " -> " +value +"\n";
 				}else if(list[i].name == "PrimaryLang"){
@@ -123,7 +123,7 @@
  						oldLang = "<spring:message code="ezPersonal.s84"/>";
  					}
 					confirmChange += $("#tr_"+i+" th").text()+ " : " + oldLang+ " -> " +newLang +"\n";
-				}else if(list[i].name == "ONELINE_REPLY_ENABLE"){
+				}else if(list[i].name == "ONELINE_REPLY_ENABLE" || list[i].name == "FormProcSpelling"){
 					flag=true;
 					var oldLang = "";
 					var newLang = "";
