@@ -8,6 +8,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="/css/default_kr.css;" type="text/css">
+<style>
+		select { width:100%; }
+</style>
 <script type="text/javascript" src="/js/jquery/jquery.js"></script>
 <script type="text/javascript">
 	
@@ -53,9 +56,10 @@
 					}else if(list[i].name == "PrimaryLang"){
 						if(list[i].value==3){
 							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
-							+'<td><select><option value="1">한국어</option><option value="3" selected="selected">일본어</option>'
+							+'<td><select><option value="1"><spring:message code="ezPersonal.s81"/></option>'
+							+'<option value="3" selected="selected"><spring:message code="ezPersonal.s84"/></option>'
 							+'</select></td></tr>');
-						}else{
+						}else if(list[i].value==1){
 							$("table").append('<tr id=tr_'+i+'><th>'+list[i].name+'</th>'
 							+'<td><select><option value="1" selected="selected"><spring:message code="ezPersonal.s81"/></option>'
 							+'<option value="3"><spring:message code="ezPersonal.s84"/></option>'
