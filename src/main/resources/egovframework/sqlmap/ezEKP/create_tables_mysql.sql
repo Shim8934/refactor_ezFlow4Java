@@ -268,6 +268,23 @@ CREATE TABLE `jmocha_address_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `jmocha_address_search`
+--
+
+DROP TABLE IF EXISTS `jmocha_address_search`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `jmocha_address_search` (
+  `id` varchar(25) NOT NULL,
+  `zip_code` varchar(5) DEFAULT NULL,
+  `address` varchar(1000) DEFAULT NULL,
+  `old_address` varchar(1000) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `fulltext_idx` (`address`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `jmocha_address_simple`
 --
 
@@ -4398,13 +4415,13 @@ CREATE TABLE `tbl_portalpage_general` (
   `COLUMNSPLIT` varchar(100) DEFAULT NULL,
   `GUBUNFLAG` varchar(100) DEFAULT NULL,
   `USEFLAG` varchar(20) DEFAULT NULL,
-  `COMPANYID` varchar(510) DEFAULT NULL,
+  `COMPANYID` varchar(100) NOT NULL,
   `BASETYPE` varchar(20) DEFAULT NULL,
   `THEMEUID` varchar(76) DEFAULT NULL,
   `DEFAULTPAGE` varchar(4) DEFAULT NULL,
   `TABLEVIEWOPTION` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`UID_`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`UID_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -4514,13 +4531,13 @@ CREATE TABLE `tbl_portlet_general` (
   `USERTYPE` varchar(20) DEFAULT NULL,
   `HEIGHT` bigint(10) DEFAULT NULL,
   `GUBUNFLAG` varchar(100) DEFAULT NULL,
-  `COMPANYID` varchar(510) DEFAULT NULL,
+  `COMPANYID` varchar(100) NOT NULL,
   `BASETYPE` varchar(100) DEFAULT NULL,
   `USEPOTALGUBUN` varchar(100) DEFAULT NULL,
   `WIDTH` bigint(10) DEFAULT NULL,
   `FRAMETYPE` varchar(20) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`UID_`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`UID_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -5825,7 +5842,9 @@ CREATE TABLE `tbl_taskcode` (
   `SUBCATEGORYCODE` varchar(32) DEFAULT NULL,
   `DELFLAG` varchar(4) DEFAULT '0',
   `TASKNAME2` varchar(200) DEFAULT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
+  `ITEMSECURITY` varchar(4) DEFAULT NULL,
+  `ISPUBLIC` varchar(4) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`TASKCODE`),
   KEY `FK_TBL_TASKCODE_idx` (`TENANT_ID`,`COMPANYID`,`SUBCATEGORYCODE`),
@@ -6065,14 +6084,14 @@ CREATE TABLE `tbl_theme_general` (
   `IMAGEURL` varchar(1000) DEFAULT NULL,
   `TOPURL` varchar(1000) DEFAULT NULL,
   `MAINURL` varchar(1000) DEFAULT NULL,
-  `COMPANAYID` varchar(100) DEFAULT NULL,
+  `COMPANAYID` varchar(100) NOT NULL,
   `CREATORID` varchar(100) DEFAULT NULL,
   `CREATORNM` varchar(100) DEFAULT NULL,
   `CREATEDATE` datetime DEFAULT NULL,
   `MODIFYDATE` datetime DEFAULT NULL,
   `TOPHEIGHT` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`UID_`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANAYID`,`UID_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6353,13 +6372,13 @@ CREATE TABLE `tbl_topmenu_general` (
   `ROWSPLIT` varchar(100) DEFAULT NULL,
   `COLUMNSPLIT` varchar(100) DEFAULT NULL,
   `USEFLAG` varchar(2) DEFAULT NULL,
-  `COMPANYID` varchar(510) DEFAULT NULL,
+  `COMPANYID` varchar(100) NOT NULL,
   `LANG` varchar(20) DEFAULT NULL,
   `TOPMNID` varchar(100) DEFAULT NULL,
   `BASETYPE` varchar(100) DEFAULT NULL,
   `THEMEUID` varchar(76) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`TENANT_ID`,`UID_`)
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`UID_`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6392,6 +6411,44 @@ CREATE TABLE `tbl_topmenu_items` (
   `RIGHTMARGIN` bigint(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`UID_`,`PAGEUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_usercont`
+--
+
+DROP TABLE IF EXISTS `tbl_usercont`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_usercont` (
+  `USERCONTID` varchar(20) NOT NULL,
+  `USERCONTNAME` varchar(255) DEFAULT NULL,
+  `PARENTCONTID` varchar(20) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `OWNUSERID` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERCONTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_usercontlist`
+--
+
+DROP TABLE IF EXISTS `tbl_usercontlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_usercontlist` (
+  `DOCID` varchar(20) NOT NULL,
+  `USERCONTID` varchar(20) NOT NULL,
+  `LINKDATE` date DEFAULT NULL,
+  `DESRCRIPTION` varchar(255) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERCONTID`,`DOCID`),
+  CONSTRAINT `PK_USERCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERCONTID`) REFERENCES `tbl_usercont` (`TENANT_ID`, `COMPANYID`, `USERCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
