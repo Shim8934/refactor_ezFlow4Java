@@ -1973,91 +1973,106 @@ function btnAddAddress() {
     }
 
     var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
-    if (CrossYN()) {
+    //2017-03-16 이효민 : 안타는 코드 주석 
+//    if (CrossYN()) {
         aprdeptaddressusername_cross_dialogArguments[0] = "";
         aprdeptaddressusername_cross_dialogArguments[1] = btnAddAddress_Complete;
 
         DivPopUpShow(360, 220, windowName);
-    }
-    else {
-        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
-        parameter = parameter + GetShowModalPosition(330, 205);
-        var dialogValue = "";
-        var AddressUserName = window.showModalDialog(windowName, dialogValue, parameter);
-        if (AddressUserName == "cancel" || AddressUserName == "")
-            return;
-
-        var Para = window.showModalDialog("/ezAddress/addressZipCodePopUpOpen.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
-        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
-        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
-        parameter = parameter + GetShowModalPosition(330, 205);
-        var dialogValue = "";
-
-        if (typeof (Para) != "undefined") {
-            if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "")
-                dialogValue = strLang253 + Para[0].substring(0, 3) + "-" + Para[0].substring(4, 7) + " " + Para[1] + " " + Para[2] + " " + Para[3] + " ";
-            else
-                dialogValue = "";
-        }
-        else
-            dialogValue = "";
-
-        var AddressName = "";
-        if (dialogValue != "")
-            AddressName = window.showModalDialog(windowName, dialogValue, parameter);
-
-        var strAddress = "";
-        if (AddressName != "" && AddressName != "cancel")
-            strAddress = AddressUserName + " (" + dialogValue + AddressName + ")";
-        else
-            strAddress = AddressUserName + "(" + dialogValue + ")";
-
-        if (CheckLen(strAddress, 100) == false) {
-            var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
-            var parameter = "status:no;dialogWidth:335px;dialogHeight:185px;scroll:no;edge:sunken;help:no;";
-            parameter = parameter + GetShowModalPosition(330, 205);
-            var dialogValue = strAddress;
-            strAddress = window.showModalDialog(windowName, dialogValue, parameter);
-
-            if (strAddress == "cancel")
-                return;
-        }
-        if (AddressName != "cancel" || strAddress != "cancel") {
-            AprLineAddDeptAddress(strAddress);
-        }
-    }
+//    }
+//    else {
+//        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
+//        parameter = parameter + GetShowModalPosition(330, 205);
+//        var dialogValue = "";
+//        var AddressUserName = window.showModalDialog(windowName, dialogValue, parameter);
+//        if (AddressUserName == "cancel" || AddressUserName == "")
+//            return;
+//
+//        var Para = window.showModalDialog("/ezAddress/addressZipCodePopUp.do", "", "dialogWidth:655px;dialogHeight:420px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no" + GetShowModalPosition(330, 205));
+//        var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
+//        var parameter = "status:no;dialogWidth:335px;dialogHeight:195px;scroll:no;edge:sunken;help:no;";
+//        parameter = parameter + GetShowModalPosition(330, 205);
+//        var dialogValue = "";
+//
+//        if (typeof (Para) != "undefined") {
+//            if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "")
+//                dialogValue = strLang253 + Para[0].substring(0, 3) + "-" + Para[0].substring(4, 7) + " " + Para[1] + " " + Para[2] + " " + Para[3] + " ";
+//            else
+//                dialogValue = "";
+//        }
+//        else
+//            dialogValue = "";
+//
+//        var AddressName = "";
+//        if (dialogValue != "")
+//            AddressName = window.showModalDialog(windowName, dialogValue, parameter);
+//
+//        var strAddress = "";
+//        if (AddressName != "" && AddressName != "cancel")
+//            strAddress = AddressUserName + " (" + dialogValue + AddressName + ")";
+//        else
+//            strAddress = AddressUserName + "(" + dialogValue + ")";
+//
+//        if (CheckLen(strAddress, 100) == false) {
+//            var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
+//            var parameter = "status:no;dialogWidth:335px;dialogHeight:185px;scroll:no;edge:sunken;help:no;";
+//            parameter = parameter + GetShowModalPosition(330, 205);
+//            var dialogValue = strAddress;
+//            strAddress = window.showModalDialog(windowName, dialogValue, parameter);
+//
+//            if (strAddress == "cancel")
+//                return;
+//        }
+//        if (AddressName != "cancel" || strAddress != "cancel") {
+//            AprLineAddDeptAddress(strAddress);
+//        }
+//    }
 }
 
 var TempAddressUserName;
 var address_zip_select_dialogArguments = new Array();
 function btnAddAddress_Complete(AddressUserName) {
-    DivPopUpHidden();
     if (AddressUserName == "cancel" || AddressUserName == "") {
+    	DivPopUpHidden();
         return;
     }
-
-    address_zip_select_dialogArguments[0] = "";
-    address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
-
-    DivPopUpShow(655, 420, "/ezAddress/addressZipCodePopUpOpen.do");
+    
+    if (useAddressOpenAPI == "YES") {
+        address_zip_select_dialogArguments[0] = "";
+    	address_zip_select_dialogArguments[1] = jusoCallBack;
+    	
+    	var OpenWin = window.open("/ezAddress/addressZipCodePopUpOpen.do", "", GetOpenWindowfeature(570, 420));
+        try { OpenWin.focus(); } catch (e) { }
+        
+    } else {
+    	DivPopUpHidden();
+    	
+        address_zip_select_dialogArguments[0] = "";
+    	address_zip_select_dialogArguments[1] = btnAddAddress_Complete2;
+    	
+    	DivPopUpShow(655, 620, "/ezAddress/addressZipCodePopUp.do");
+    }
+    
     TempAddressUserName = AddressUserName;
 }
 
 var aprdeptaddressname_cross_dialogArguments = new Array();
 var TempdialogValue = "";
+
+//Local 주소검색 사용경우
 function btnAddAddress_Complete2(Para) {
     DivPopUpHidden();
-    var windowName = "/ezApprovalG/aprDeptAddressUserName.do";
+    var windowName = "/ezApprovalG/aprDeptAddressName.do";
 
     if (typeof (Para) != "undefined") {
         if ((typeof (Para) != "undefined" && Para[0] != "cancel") || Para[0] == "")
-            TempdialogValue = strLang253 + Para[0].substring(0, 3) + "-" + Para[0].substring(4, 7) + " " + Para[1] + " " + Para[2] + " " + Para[3] + " ";
+            TempdialogValue = strLang253 + Para[0] + " " + Para[1] + " ";
         else
             TempdialogValue = "";
     }
     else
         TempdialogValue = "";
-
+    
     if (TempdialogValue != "") {
         aprdeptaddressname_cross_dialogArguments[0] = TempdialogValue;
         aprdeptaddressname_cross_dialogArguments[1] = btnAddAddress_Complete3;
@@ -2070,6 +2085,8 @@ function btnAddAddress_Complete2(Para) {
 }
 
 var TempstrAddress = "";
+
+//Local 주소검색 사용경우 상세주소 입력후 실행되는 함수
 function btnAddAddress_Complete3(AddressName) {
     DivPopUpHidden();
     if (AddressName != "" && AddressName != "cancel")
@@ -2093,12 +2110,27 @@ function btnAddAddress_Complete3(AddressName) {
     }
 }
 
+//OpenAPI 주소검색 사용경우
+//나머지주소를 입력하라는 창이 필요없음.
+function jusoCallBack(roadFullAddr, roadAddrPart1, addrDetail, roadAddrPart2, engAddr, jibunAddr, zipNo, admCd, rnMgtSn, bdMgtSn){
+    DivPopUpHidden();
+
+    if (typeof (zipNo) != "undefined" && typeof (roadFullAddr) != "undefined" && zipNo != "") {
+    	TempdialogValue = strLang253 + zipNo + " " + roadFullAddr;
+    	
+    	TempstrAddress = TempAddressUserName + "(" + TempdialogValue + ")";
+    }
+    
+    btnAddAddress_Complete4(TempstrAddress);
+}
+
 function btnAddAddress_Complete4(AddressName) {
     DivPopUpHidden();
     if (AddressName != "cancel" || TempstrAddress != "cancel") {
         AprLineAddDeptAddress(TempstrAddress);
     }
 }
+
 function CheckLen(pStr, pSize) {
     var ch;
     var count = 0;
