@@ -122,7 +122,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		String multiData = userInfo.getPrimary();
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); //config에는 CK등록되어있고 ""일때 폼프로세서적용 
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//		폼프로세서 사용하려면 useEditor "" 으로 세팅
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -218,7 +219,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formContMain started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String serverName = userInfo.getServerName();
 		String tCheck = request.getParameter("tCheck");
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -244,6 +248,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("title", title);
 		model.addAttribute("topID", topID);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("formContMain ended.");
 		
 		return "admin/ezApprovalG/apprGFormContMain";
 	}
