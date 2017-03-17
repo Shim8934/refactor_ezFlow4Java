@@ -846,7 +846,8 @@
 	                    var SENDER = getNodeText(xmldom.getElementsByTagName("SENDER").item(i));
 	                    var DATE = getNodeText(xmldom.getElementsByTagName("DATE").item(i));
 	                    var HREF = getNodeText(xmldom.getElementsByTagName("HREF").item(i));
-	                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"><span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE.substring(0, DATE.length - 3) + "</span> <span class='name'>" + SENDER + "</span></li>";
+
+	                    listHTML += "<li onclick=\"open_mail('" + HREF + "')\"><span class='txt'>" + SUBJECT + "</span> <span class='date'>" + DATE + "</span> <span class='name'>" + SENDER + "</span></li>";
 	                }
 
 	                listHTML += "</ul>";
