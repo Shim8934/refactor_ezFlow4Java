@@ -205,6 +205,7 @@
 	        if (flag == "appr") {
 	            document.getElementById("appr_article").style.display = "";
 	            document.getElementById("mail_article").style.display = "none";
+	            getApprGraph();
 	        }
 	        else {
 	            document.getElementById("appr_article").style.display = "none";
@@ -216,7 +217,7 @@
 	    var xmlhttp_getApprGraph_NewApprMail = createXMLHttpRequest();
 	    
  	    function getApprGraph() {
-        	if ("${userApprovalG}" == "YES") {
+        	
         	      $.ajax({
       	        	type : "POST",
       	        	dataType : "text",
@@ -234,43 +235,17 @@
       	        		searchQuery : "",
       	        		subQuery : ""
       	        	},
-      	        	success : function(xml){		        		
+      	        	success : function(xml){
       	        		getDocList_after(loadXMLString(xml));
       	        	},
       	        	error : function(error){
       	        		console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail" + error);	
       	        	}
       	        });
-        	} else {
-        		 $.ajax({
-       	        	type : "POST",
-       	        	dataType : "text",
-       	        	url : "/ezApproval/getPortletAprDocList.do",
-       	        	data : {
-       	        		pListTypeName   : pListTypeValue, 
-       	        		pDocTypeName 	 : "A01000", 
-       	        		pUserID 	 : pUserID, 
-       	        		pUserDeptID 	 : arr_userinfo[4], 
-       	        		pPageSize : "1000",
-       	        		pPageNum : "1",
-       	        		companyID : companyID,
-       	        		orderCell : "",
-       	        		orderOption : "",
-       	        		searchQuery : "",
-       	        		subQuery : ""
-       	        	},
-       	        	success : function(xml){
-       	        		getDocList_after(loadXMLString(xml));
-       	        	},
-       	        	error : function(error){
-       	        		console.log("<spring:message code='ezBoard.t22'/>wpNewApprMail2" + error);	
-       	        	}
-       	        });	
-        	}
+        
 	    } 
 
 	    function getDocList_after(xml) {
-
 	        if (xml == null) return;
 
 	        try {
@@ -308,7 +283,7 @@
 	                        var APRMEMBERDEPTID = getNodeText(xmldom.getElementsByTagName("APRMEMBERDEPTID").item(i));
 	                        var DOCSTATE = getNodeText(xmldom.getElementsByTagName("DOCSTATE").item(i));
 	                        var FUNCTIONTYPE = getNodeText(xmldom.getElementsByTagName("FUNCTIONTYPE").item(i));
-	                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 3) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+	                        listHTML += "<li onclick=\"opendocview('" + DOCID + "','" + HREF + "','" + APRMEMBERID + "','" + APRMEMBERNAME + "','" + APRMEMBERDEPTID + "','" + DOCSTATE + "','" + FUNCTIONTYPE + "')\"><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE.substring(0, STARTDATE.length - 2) + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 	                     }                                 
 
 
