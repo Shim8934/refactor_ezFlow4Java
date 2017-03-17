@@ -87,7 +87,7 @@
 			    <td><c:out value = '${sysopName}' /></td>
 		  	</tr>
 		  	<tr>
-			    <th><spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t476' /></th>
+			    <th><spring:message code = 'ezCommunity.t9991' /></th>
 			    
 			    <c:choose>
 			    	<c:when test="${userInfo.lang == '2' }">
