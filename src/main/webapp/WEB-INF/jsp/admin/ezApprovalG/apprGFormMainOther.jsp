@@ -10,8 +10,8 @@
 <!-- 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>   -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/admin/FormMain_Cross.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script> -->
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
 		
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
 		
@@ -143,6 +143,8 @@
 		            } else {
 		                Editor_Complete();
 		            }
+		        } else {
+		        	//formID 널일때 selectBox 옵션 값들 init 해주는 거 필요
 		        }
 		    }
 		
@@ -153,6 +155,7 @@
 		            if (formURL != "") {
 		                if (useEditor == "HWP") {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
+		                    
 		                    message.HWP_LoadFile(formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
 		                        var ConnURL = ReplaceAll(ReplaceAll(message.HWP_GetDocumentElement(), "<CONNINFO>", ""), "</CONNINFO>", "");
@@ -161,34 +164,35 @@
 		                        g_XmlDoc.async = false;
 		                        g_XmlDoc.load(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ConnURL));
 		
-		                        if (g_XmlDoc.xml == "")
+		                        if (g_XmlDoc.xml == "") {
 		                            return;
+		                        }
 		
 		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
-		                            if (i == 0)
+		                            if (i == 0) {
 		                                setNodeText(txt_OpinionContent, g_XmlDoc.documentElement.childNodes(i).xml);
-		                            else
+		                            } else {
 		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + g_XmlDoc.documentElement.childNodes(i).xml);
+		                            }
 		                        }
 		                    }
-		                }
-		                else {
+		                } else {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
 		                    message.SetEditorContent(htmlData);
 		                }
-		            }
-		            else {
+		            } else {
 		                if (useEditor != "HWP") {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
-		                }
-		                else
+		                } else {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
+		                }
 		            }
 		        }
+		        
 		        add_doc_maker();
 		    }
 		
@@ -820,9 +824,9 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApproval.t00003'/></span></p>
-                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApproval.t518'/></span></p>
-                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApproval.t00005'/></span></p>
+                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
+                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4" style="display:none"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApproval.t730'/></span></p>
                 <p id = "ApvForm_sub6" style="display:none"><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
@@ -834,12 +838,12 @@
              </h2>
              <table class="content" style="width:100%;">                
                 <tr>                
-                    <th style="width:100px; text-align:center">${langPrimary}</th>
+                    <th style="width:100px; text-align:center">${primary}</th>
                     <td style="width:40%;">
                         <input type="text" id="tbFormName" name="tbFormName" maxlength="50" style="width:100%">
                         <input type="text" id="tbFormID" name="tbFormID" style="display: none" readonly>
                     </td>
-                    <th style="width:100px; text-align:center">${langSecondary}</th>
+                    <th style="width:100px; text-align:center">${secondary}</th>
                     <td style="width:40%;" colspan="5">
                         <input type="text" id="tbFormName2" name="tbFormName2" maxlength="50" style="width:100%" >
                     </td>        

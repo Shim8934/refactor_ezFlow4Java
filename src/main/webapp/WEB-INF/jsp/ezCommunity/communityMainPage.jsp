@@ -1232,8 +1232,8 @@
 			                <div class="tabpartMycommunity02">
 			                    <div class="left_tabpart">
 			                        <ul class="left_tabpartTitle">
-			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t81' /></span></li>
-			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
+			                            <li id="work" class="on" onclick ="change_tab('WORK')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t80' /></span></li>
+			                            <li id="type" class="line" onclick ="change_tab('TYPE')" style="cursor:pointer"><span><spring:message code = 'ezCommunity.t81' /></span></li>
 			                        </ul>
 			                        
 			                        <div class="left_tabpartList_layout" id ="categorytab"></div>
