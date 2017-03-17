@@ -920,8 +920,8 @@
 		        Resultxml = Resultxml + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t383'/>" + "</NAME><WIDTH>80</WIDTH></HEADER>";
 		        Resultxml = Resultxml + "</HEADERS><ROWS><ROW>";
 		        Resultxml = Resultxml + "<COLUMN>1</COLUMN>";
-		        Resultxml = Resultxml + "<COLUMN>" + DisplayName + "</COLUMN>";
-		        Resultxml = Resultxml + "<COLUMN>" + Position + "</COLUMN>";
+		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DisplayName) + "</COLUMN>";
+		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(Position) + "</COLUMN>";
 		
 		        Resultxml = Resultxml + "<COLUMN>" + MakeXMLString(DeptName) + "</COLUMN>";
 		

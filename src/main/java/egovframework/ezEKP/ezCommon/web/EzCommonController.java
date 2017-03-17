@@ -221,7 +221,8 @@ public class EzCommonController extends EgovFileMngUtil{
         		result = "<BODYDATA>" + strHTML + "</BODYDATA>";
         	} else {
         		if (strHTML.indexOf("<body>") > -1) {
-        			strHTML = commonUtil.cleanValue(strHTML.substring(strHTML.indexOf("<body") + 6, strHTML.indexOf("</body>")));
+        			strHTML = strHTML.substring(strHTML.indexOf("<body") + 6, strHTML.indexOf("</body>"));
+        			strHTML = commonUtil.cleanValue(strHTML);
         		} else {
         			strHTML = strHTML.substring(strHTML.indexOf(">", strHTML.indexOf("<body")) + 1, strHTML.indexOf("</body>"));
         			strHTML = commonUtil.cleanValue(strHTML);

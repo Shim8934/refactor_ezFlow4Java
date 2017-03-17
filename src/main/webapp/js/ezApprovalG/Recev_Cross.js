@@ -1984,9 +1984,9 @@ function SaveDraftDocInfo()
         pxml = pxml + "<HEADER><NAME>" + strLang110 + "</NAME><WIDTH>120</WIDTH></HEADER>";
         pxml = pxml + "<HEADER><NAME>" + strLang111 + "</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>";
         pxml = pxml + "<ROWS><ROW><COLUMN>1</COLUMN>";
-        pxml = pxml + "<COLUMN>" + arr_userinfo[2] + "</COLUMN>";
-        pxml = pxml + "<COLUMN>" + arr_userinfo[3] + "</COLUMN>";
-        pxml = pxml + "<COLUMN>" + arr_userinfo[5] + "</COLUMN>";
+        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[2] + "]]></COLUMN>";
+        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[3] + "]]></COLUMN>";
+        pxml = pxml + "<COLUMN><![CDATA[" + arr_userinfo[5] + "]]></COLUMN>";
 	 
         pxml = pxml + "<COLUMN>" + strLangAprType2 + "</COLUMN>";
         pxml = pxml + "<COLUMN>" + strLangAprState2 + "</COLUMN>";
@@ -2005,12 +2005,12 @@ function SaveDraftDocInfo()
         pxml = pxml + "<DATA name='AprState'>" + strAprState2 + "</DATA>";
 	
         // 수정(2007.06.18) : multidata 기능추가 
-        pxml = pxml + "<DATA name='PMemberName'>" + arr_userinfo[11] + "</DATA>";		//primary usernm
-        pxml = pxml + "<DATA name='SMemberName'>" + arr_userinfo[12] + "</DATA>";		//secondary usernm
-        pxml = pxml + "<DATA name='PMemberDeptName'>" + arr_userinfo[15] + "</DATA>";	//primary deptname
-        pxml = pxml + "<DATA name='SMemberDeptName'>" + arr_userinfo[16] + "</DATA>";	//secondary deptname
-        pxml = pxml + "<DATA name='PMemberJobTitle'>" + arr_userinfo[13] + "</DATA>";	//primary title
-        pxml = pxml + "<DATA name='SMemberJobTitle'>" + arr_userinfo[14] + "</DATA>";	//secondary title
+        pxml = pxml + "<DATA name='PMemberName'><![CDATA[" + arr_userinfo[11] + "]]></DATA>";		//primary usernm
+        pxml = pxml + "<DATA name='SMemberName'><![CDATA[" + arr_userinfo[12] + "]]></DATA>";		//secondary usernm
+        pxml = pxml + "<DATA name='PMemberDeptName'><![CDATA[" + arr_userinfo[15] + "]]></DATA>";	//primary deptname
+        pxml = pxml + "<DATA name='SMemberDeptName'><![CDATA[" + arr_userinfo[16] + "]]></DATA>";	//secondary deptname
+        pxml = pxml + "<DATA name='PMemberJobTitle'><![CDATA[" + arr_userinfo[13] + "]]></DATA>";	//primary title
+        pxml = pxml + "<DATA name='SMemberJobTitle'><![CDATA[" + arr_userinfo[14] + "]]></DATA>";	//secondary title
 	
         pxml = pxml + "</ROW></ROWS></LISTVIEWDATA>";
         xmlpara.loadXML(pxml);

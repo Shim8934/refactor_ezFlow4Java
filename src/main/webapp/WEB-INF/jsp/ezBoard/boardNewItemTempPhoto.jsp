@@ -142,8 +142,8 @@
                     imgpath = imgpath.split('/')[7];
                     
                     attachXml += "<ROW><CELL>";
-                    attachXml += "<DATA1>" + imgpath + "</DATA1>";
-                    attachXml += "<DATA2>" + imgUniqueID + imgpath.substring(imgpath.lastIndexOf("."), imgpath.length) +"</DATA2>";
+                    attachXml += "<DATA1><![CDATA[" + imgpath + "]]></DATA1>";
+                    attachXml += "<DATA2><![CDATA[" + imgUniqueID + imgpath.substring(imgpath.lastIndexOf("."), imgpath.length) +"]]></DATA2>";
                     attachXml += "<DATA3></DATA3>";
                     attachXml += "<DATA4></DATA4>";
                     attachXml += "<DATA5>Y</DATA5>";
