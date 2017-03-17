@@ -621,6 +621,7 @@
 		            }
 		        }
 		        signInfo = AprrovMappingSign(signtype);
+
 		        var rtnVal = true;
 		        if ((LastKyulSN == pAprMemberSN && pAprLineType != strAprType2) || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
 		            if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
@@ -643,12 +644,12 @@
 		                return;
 		            }
 		        }
-
+		        
 		        if (rtnVal) {
 		        	rtnVal = SaveApproveInfo("1");
 		        }
-		        
-		        if (rtnVal != "TRUE") {
+
+		        if (rtnVal != "TRUE")  {
 		            if (pDraftFlag != "SUSIN") {
 		                if (docAccess) {
 		                    rollbackDocNumber(drafterDeptid, "");

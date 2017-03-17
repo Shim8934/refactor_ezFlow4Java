@@ -2382,9 +2382,9 @@ function addGamsabu(pSN,pAprType,pDraftDayFlag,pAprState)
 	var GamsabuName = getDeptInfo_nodName(optGamsabu,"DisplayName");
 	GetXml = "<ROW>";
 	GetXml = GetXml + "<COLUMN>" + pSN + "</COLUMN>";
-	GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
-	GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
-	GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
+	GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
+	GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
+	GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
 	GetXml = GetXml + "<COLUMN>" + pAprType + "</COLUMN>";
 	GetXml = GetXml + "<COLUMN>" + pAprState + "</COLUMN>";
 	GetXml = GetXml + "<DATA name='ProcessDate'>" + "" + "</DATA>";
@@ -3407,7 +3407,7 @@ function AddWorkFlowUser(pAprType, pClass, pValue, AprLineRow, DeptYN)
 		pparsingXML = pparsingXML + "</CELL><CELL>";
 		pparsingXML = pparsingXML + "<VALUE>" + "-" + "</VALUE>";
 		pparsingXML = pparsingXML + "</CELL><CELL>";
-		pparsingXML = pparsingXML + "<VALUE>" + getDeptInfo_nodName(pValue, "DISPLAYNAME") + "</VALUE>";
+		pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(getDeptInfo_nodName(pValue, "DISPLAYNAME")) + "</VALUE>";
 		pparsingXML = pparsingXML + "</CELL><CELL>";
      	pparsingXML = pparsingXML + "<VALUE>" + pAprType + "</VALUE>";
 		pparsingXML = pparsingXML + "</CELL><CELL>";

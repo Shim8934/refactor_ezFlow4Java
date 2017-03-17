@@ -318,6 +318,7 @@ img { border:0px;}
 }
 #cmhome_type1 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -547,6 +548,7 @@ img { border:0px;}
 }
 #cmhome_type2 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -556,7 +558,7 @@ img { border:0px;}
 	line-height:33px;
 	word-break:keep-all;
 	white-space:nowrap;
-	z-index:10;
+	z-index:10;background:none;
 	background-color:#f8f8f8;
 	display: block;
 }
@@ -767,6 +769,7 @@ img { border:0px;}
 
 #cmhome_type3 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #cac2ba;
@@ -777,6 +780,7 @@ img { border:0px;}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:10;
+	background:none;
 	background-color:#f3f1ee;
 	display: block;
 }
@@ -989,6 +993,7 @@ img { border:0px;}
 }
 #cmhome_type4 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -999,6 +1004,7 @@ img { border:0px;}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:10;
+	background:none;
 	background-color:#f8f8f8;
 	display: block;
 }
@@ -1221,6 +1227,7 @@ img { border:0px;}
 }
 #cmhome_type5 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -1231,6 +1238,7 @@ img { border:0px;}
 	word-break:keep-all;
 	white-space:nowrap;
 	z-index:10;
+	background:none;
 	background-color:#f8f8f8;
 	display: block;
 }

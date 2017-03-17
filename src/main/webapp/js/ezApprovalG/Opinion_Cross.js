@@ -687,9 +687,9 @@ function AutoSaveOpinionInfo(pContent) {
     GetXml = GetXml + "</HEADERS><ROWS>";
     GetXml = GetXml + "<ROW>";
     GetXml = GetXml + "<COLUMN>" + GetOpinionTypeName(pOpinionType) + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + arr_userinfo[2] + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + arr_userinfo[3] + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + arr_userinfo[5] + "</COLUMN>";
+    GetXml = GetXml + "<COLUMN><![CDATA[" + arr_userinfo[2] + "]]></COLUMN>";
+    GetXml = GetXml + "<COLUMN><![CDATA[" + arr_userinfo[3] + "]]></COLUMN>";
+    GetXml = GetXml + "<COLUMN><![CDATA[" + arr_userinfo[5] + "]]></COLUMN>";
     GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
     GetXml = GetXml + "<DATA name='UserID'>" + pUserID + "</DATA>";
     GetXml = GetXml + "<DATA name='Content'>" + pContent + "</DATA>";

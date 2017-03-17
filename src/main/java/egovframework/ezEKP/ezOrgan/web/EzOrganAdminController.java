@@ -217,7 +217,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
 					try {
-						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID);
+						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID, userInfo);
 						result = "OK";	
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -398,8 +398,8 @@
 		            filename = MakeXMLString(SelectSingleNodeValue(xmldomNodes[i], "FileName"));
 		            
 		            str += "<ROW><CELL>";
-		            str += "<VALUE>" + filename + "</VALUE>";
-		            str += "<DATA1>" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "</DATA1>";
+		            str += "<VALUE><![CDATA[" + filename + "]]></VALUE>";
+		            str += "<DATA1><![CDATA[" + "${boardListVO.extensionAttribute4}".substring(0, "${boardListVO.extensionAttribute4}".length - 1) + "]]></DATA1>";
 		            str += "<DATA2>" + MakeXMLString(filepath) + "</DATA2>";
 		            str += "<DATA3></DATA3>";
 		            str += "<DATA4></DATA4>";
@@ -2227,7 +2227,7 @@
 			                <table style="width: 100%; height: 100%">
 			                    <tr>
 			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; height: 400px; overflow: auto; border-top-width: 0px;"></iframe>
+		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
 			                        </td>
 			                    </tr>
 			                </table>
@@ -2278,7 +2278,7 @@
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
 				        <tr>
-				            <td style="height: 146px">
+				            <td style="height: 143px">
 				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />

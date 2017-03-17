@@ -426,7 +426,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID) throws Exception {
+	public void insertDBData_company(String cn, String displayName,	String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID, LoginVO userInfo) throws Exception {
 	    logger.debug("insertDBData_company started");
 	    logger.debug("cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 
 	            + ",parentCn=" + parentCn + ",tenantID=" + tenantID);
@@ -452,59 +452,18 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		ezOrganAdminDao.insertDBData_company(map);
 		
-		//script데이터 
-/*		Connection con = null;
-		PreparedStatement pstmt = null;
-		
-		String sql = "insert into tbl_proxyinfo(userid, proxyuserid, proxyusername) values (?, ? , ?)";
-		
-		//try {
-			Class.forName(globals.getProperty("Globals.DriverClassName"));
-			//con = DriverManager.getConnection(globals.getProperty("Globals.Url"), globals.getProperty("Globals.UserName"), globals.getProperty("Globals.Password"));
-			con = DriverManager.getConnection(globals.getProperty("Globals.Url"), "jmocha", "jmocha_101");
-			pstmt = con.prepareStatement(sql);
-logger.debug("cn="+cn);
-			pstmt.setString(1, cn);
-			pstmt.setString(2, "");
-			pstmt.setString(3, "");
-			
-			pstmt.executeUpdate();*/
-			//
-			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("tenantID", tenantID);
-			map1.put("companyID", cn);
-			ezOrganAdminDao.insertCompanyInfo_I1(map1);
-			
-			
-		/*} catch (Exception e) {
-			e.printStackTrace();
-			
-			try {
-				con.rollback();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}*/
-			
-		/*} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-					pstmt = null;
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}
-			
-			if (con != null) {
-				try {
-					con.close();
-					con = null;
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-			}*/
-		//}
-		//
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("tenantID", tenantID);
+		map1.put("companyID", cn);
+		map1.put("companyName", displayName);
+		map1.put("userID", userInfo.getId());
+		map1.put("userName", userInfo.getName());
+		map1.put("nowDate", nowDate);
+		ezOrganAdminDao.insertCompanyInfo_I1(map1);
+		ezOrganAdminDao.insertCompanyInfo_I2(map1);
+		ezOrganAdminDao.insertCompanyInfo_I3(map1);
+		ezOrganAdminDao.insertCompanyInfo_I4(map1);
+		ezOrganAdminDao.insertCompanyInfo_I5(map1);
 		
 		logger.debug("insertDBData_company ended");
 	}
