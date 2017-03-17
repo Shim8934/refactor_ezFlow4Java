@@ -1306,36 +1306,36 @@
 			  </c:otherwise>
 		  </c:choose>
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
-		  <tr>
-		    <td style="vertical-align: top;">
-		        <table class="content">
-		        <tr>
-		          <th><spring:message code='ezBoard.t327' /></th>
-		          <c:choose>
-			          <c:when test="${adjacentItem.previousItemID == ''}">
-				          <td width="100%">
-			          </c:when>
-			          <c:otherwise>
-				          <td style="cursor:pointer" width="100%">
-			          </c:otherwise>
-		          </c:choose>
-		          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
-		        </tr>
-		        <tr>
-		          <th><spring:message code='ezBoard.t328' /></th>
-		          <c:choose>
-		          	<c:when test="${adjacentItem.nextItemID == ''}">
-			          <td>
-		          	</c:when>
-		          	<c:otherwise>
-			          <td style="cursor:pointer">
-		          	</c:otherwise>
-		          </c:choose>
-		            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
-		        </tr>
-		      </table>
-		    </td>
-		  </tr>
+			  <tr>
+			    <td style="vertical-align: top;">
+			        <table class="content">
+			        <tr>
+			          <th><spring:message code='ezBoard.t327' /></th>
+			          <c:choose>
+				          <c:when test="${adjacentItem.previousItemID == ''}">
+					          <td width="100%">
+				          </c:when>
+				          <c:otherwise>
+					          <td style="cursor:pointer" width="100%">
+				          </c:otherwise>
+			          </c:choose>
+			          <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.previousItemID}')">${adjacentItem.previousTitle}</div>
+			        </tr>
+			        <tr>
+			          <th><spring:message code='ezBoard.t328' /></th>
+			          <c:choose>
+			          	<c:when test="${adjacentItem.nextItemID == ''}">
+				          <td>
+			          	</c:when>
+			          	<c:otherwise>
+				          <td style="cursor:pointer">
+			          	</c:otherwise>
+			          </c:choose>
+			            <div align="left" style="overflow-y:auto;width: 100%; height:18px" onClick="OpenItem('${adjacentItem.nextItemID}')">${adjacentItem.nextTitle}</div>
+			        </tr>
+			      </table>
+			    </td>
+			  </tr>
 		  </c:if>
 		</table>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>

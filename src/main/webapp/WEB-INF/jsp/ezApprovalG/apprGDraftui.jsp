@@ -1092,6 +1092,7 @@
 		        parameter[17] = AprLineArea;
 		        parameter[18] = HapyuiArea;
 		        parameter[28] = onlydocinfiview;
+		        parameter[29] = TaskCode;
 		        parameter[30] = cabinetID;
 		        parameter[31] = tempSecurity;
 		        parameter[32] = tempUrgent;

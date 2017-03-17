@@ -56,6 +56,7 @@
 			var AttachDelFlag = false;
 			var NonActiveX = "YES";
 			var pDraftFlag = "${draftFlag}";
+			var approvalFlag = "${approvalFlag}";
 			
 			// 문서정보를 가져오는 함수
 			function getDocInfo()

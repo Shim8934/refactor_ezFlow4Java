@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -2401,5 +2400,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
 		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
+	}
+
+	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
+		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
 }

@@ -394,5 +394,9 @@ public interface EzApprovalGService {
 
 	public String updateUserCont(String contID, String ownUserID, String parentContID, String userContName, String description, String companyID, String lang, int tenantID)  throws Exception;
 
-	public String delUserCont(String pContID, String pMode, String companyID, String lang, int tenantId)  throws Exception;	
+	public String delUserCont(String pContID, String pMode, String companyID, String lang, int tenantId)  throws Exception;
+
+	public String getCodeTreeInfo(String code, String level, LoginVO userInfo) throws Exception;
+
+	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception;	
 }

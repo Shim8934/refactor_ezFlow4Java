@@ -106,6 +106,8 @@ public class ApprGTaskVO {
 	private String itemSecurity;
 	/** 공개여부*/
 	private String isPublic;
+	/** 밑에 뎁스 있는지 여부 있으면 FALSE*/
+	private int isLeaf;
 	
 	/** 기록물철등록 */
 	private String numOfRec;
@@ -626,6 +628,12 @@ public class ApprGTaskVO {
 	}
 	public void setIsPublic(String isPublic) {
 		this.isPublic = isPublic;
+	}
+	public int getIsLeaf() {
+		return isLeaf;
+	}
+	public void setIsLeaf(int isLeaf) {
+		this.isLeaf = isLeaf;
 	}
 	
 }

@@ -1,0 +1,800 @@
+﻿var xmlhttp;
+function Draftinfo_ini() {
+    if (!Draftinfoini) {       
+        if (pItemCode == "" || pItemCode == undefined) 
+            TreeViewinitializeCodeGroup("0", "1" );
+        else
+            TreeViewinitializeCodeGroup(pItemCode, "1");
+
+        var treeView = new TreeView();
+        treeView.LoadFromID("infotreeView");
+        var selnode = treeView.GetSelectNode();
+       
+        var code = selnode.GetNodeData("DATA1");
+        
+        xmlhttp = createXMLHttpRequest();
+        var xmlpara = createXmlDom();
+        var objRoot, objNode;
+
+        objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+        createNodeAndInsertText(xmlpara, objNode, "CODE", code);
+        
+        xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
+        xmlhttp.send(xmlpara);
+        try {
+            var xmlDoc = loadXMLString(xmlhttp.responseText);
+
+            if (xmlDoc == null) {
+                xmlDoc = loadXMLString(xmlhttp.responseText);
+            }
+
+            if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
+            var FormList = new ListView();
+            FormList.SetID("lvinfolist");
+            FormList.SetMulSelectable(false);
+            FormList.SetHeightFree(true);
+            FormList.SetSelectFlag(false);
+            FormList.SetRowOnClick("lvtinfolist_onclick");
+            FormList.DataSource(xmlDoc);
+            FormList.DataBind("infolist");
+            FormList = null;
+            Draftinfoini = true;
+            if (pkeeperiod == "") {
+            }
+            else {
+                var i = 0;
+                var element = GetElementsByTagName(xmlDoc, "DATA1");
+                if (CrossYN()) {
+                    for (i = 0; i < element.length; i++) {
+                        if (trim(pItemCode) == trim(getNodeText(element[i]))) {
+                            break;
+                        }
+                    }
+                }
+                else {
+                    for (i = 0; i < element.length; i++) {
+                        if (pItemCode == getNodeText(element[i])) {
+                            break;
+                        }
+                    }
+                }
+
+                getdocinfolist(i);
+            }
+            xmlhttp = null;
+        }
+        catch (ErrMsg) {
+            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+        }
+        getMyGroupItem();
+    }
+}
+function event_Draftinfo_ini() {
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+    try {
+        var xmlDoc = loadXMLString(xmlhttp.responseText);
+
+        if (xmlDoc == null) {
+            xmlDoc = loadXMLString(xmlhttp.responseText);
+        }
+
+        if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
+        var FormList = new ListView();
+        FormList.SetID("lvinfolist");
+        FormList.SetMulSelectable(false);
+        FormList.SetHeightFree(true);
+        FormList.SetSelectFlag(false);
+        FormList.SetRowOnClick("lvtinfolist_onclick");
+        FormList.DataSource(xmlDoc);
+        FormList.DataBind("infolist");
+        FormList = null;
+        Draftinfoini = true;
+        if (pkeeperiod == "") {
+        }
+        else {
+            var i = 0;
+            var element = GetElementsByTagName(xmlDoc, "DATA1");
+            if (CrossYN()) {
+                for (i = 0; i < element.length; i++) {
+                    if (pItemCode == getNodeText(element[i])) {
+                        break;
+                    }
+                }
+            }
+            else {
+                for (i = 0; i < element.length; i++) {
+                    if (pItemCode == getNodeText(element[i])) {
+                        break;
+                    }
+                }
+            }
+          
+            getdocinfolist(i);
+        }
+        xmlhttp = null;
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
+}
+
+function lvtinfolist_onclick() {
+
+    allUnSelectFrequency();
+    
+    var FormList = new ListView();
+    FormList.LoadFromID("lvinfolist");
+    var pSelectedRow = FormList.GetSelectedRows();
+    var pTaskCode, pTaskName, pTaskP, pTaskS, pTaskY;
+    pTaskCode = GetAttribute(pSelectedRow[0], "DATA1");
+    pTaskName = GetAttribute(pSelectedRow[0], "DATA2");
+    pTaskP = GetAttribute(pSelectedRow[0], "DATA3");
+    pTaskS = GetAttribute(pSelectedRow[0], "DATA4");
+    pTaskY = GetAttribute(pSelectedRow[0], "DATA5");
+    var Cnt = 0;
+    setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+    document.getElementById("tbItemCode").value = pTaskCode;
+    document.getElementById("tbItemName").value = pTaskName
+    document.getElementById("tbItemName2").value = pTaskName;
+
+    for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
+            document.getElementsByName("RSecurity")[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < document.getElementsByName("RKeeptype").length; Cnt++) {
+        if (pTaskP == document.getElementsByName("RKeeptype")[Cnt].value) {
+            document.getElementsByName("RKeeptype")[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < document.getElementsByName("isPublic").length; Cnt++) {
+        if (pTaskY == document.getElementsByName("isPublic")[Cnt].value) {
+            document.getElementsByName("isPublic")[Cnt].checked = true; break;
+        }
+    }
+    checkdocinfo = true;
+}
+
+function MakeDocInfo() {
+    var xmlhttp = createXMLHttpRequest();
+    var xmlpara = createXmlDom();
+
+    var pPublicFlagcheck;
+    var psecuritylevelcheck;
+    var psecuritylevelvaltemp;
+    var pkeeperiodcheck;
+    var pkeeperiodvaltemp;
+    var psecuritylevelvaltemp;
+
+    if (document.getElementById("urgent").checked)
+        pUrgentFlag = "Y";
+    else
+        pUrgentFlag = "N";
+
+    pPublicFlagcheck = document.getElementsByName("isPublic");
+    for (var i = 0; i < pPublicFlagcheck.length; i++) {
+        if (pPublicFlagcheck[i].checked) {
+            pPublicFlag = GetAttribute(pPublicFlagcheck[i], "value");
+            break;
+        }
+    }
+
+    psecuritylevelcheck = document.getElementsByName("RSecurity");
+    for (var i = 0; i < psecuritylevelcheck.length; i++) {
+        if (psecuritylevelcheck[i].checked) {
+            psecuritylevel = GetAttribute(psecuritylevelcheck[i], "value");
+            psecuritylevelvaltemp = GetAttribute(psecuritylevelcheck[i], "value2");
+            break;
+        }
+    }
+
+    pkeeperiodcheck = document.getElementsByName("RKeeptype");
+    for (var i = 0; i < pkeeperiodcheck.length; i++) {
+        if (pkeeperiodcheck[i].checked) {
+            pkeeperiod = GetAttribute(pkeeperiodcheck[i], "value");
+            pkeeperiodvaltemp = GetAttribute(pkeeperiodcheck[i], "value2");
+            break;
+        }
+    }
+    pkeyword = document.getElementById("keyword").value;
+
+
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "pkeeperiod", pkeeperiod);
+    createNodeAndInsertText(xmlpara, objNode, "psecuritylevel", psecuritylevel);
+    createNodeAndInsertText(xmlpara, objNode, "pUrgentFlag", pUrgentFlag);
+    createNodeAndInsertText(xmlpara, objNode, "pPublicFlag", pPublicFlag);
+    createNodeAndInsertText(xmlpara, objNode, "psecuritylevelvaltemp", psecuritylevelvaltemp);
+    createNodeAndInsertText(xmlpara, objNode, "pkeyword", pkeyword);
+    createNodeAndInsertText(xmlpara, objNode, "tbItemCode", document.getElementById("tbItemCode").value);
+    createNodeAndInsertText(xmlpara, objNode, "tbItemName", document.getElementById("tbItemName").value);
+    createNodeAndInsertText(xmlpara, objNode, "tbItemName2", document.getElementById("tbItemName2").value);
+    createNodeAndInsertText(xmlpara, objNode, "pkeeperiodvaltemp", pkeeperiodvaltemp);
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "SUMMARY", document.getElementById("taSummery").value);
+    return xmlpara;
+}
+
+function GetExtraDocInfo() {
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
+    createNodeAndInsertText(xmlpara, objNode, "MODE", "ALL");
+
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getExtraDocInfo.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    var ResultXML = loadXMLString(xmlhttp.responseText);
+
+    if (ResultXML.getElementsByTagName("SUMMARY").length > 0 && trim_Cross(getNodeText(ResultXML.getElementsByTagName("SUMMARY")[0])))
+        document.getElementById("taSummery").value = ResultXML.getElementsByTagName("SUMMARY")[0].childNodes[0].nodeValue;
+    else
+        document.getElementById("taSummery").value = "";
+}
+
+function getdocinfolist(i) {
+    var FormList = new ListView();
+    FormList.LoadFromID("lvinfolist");
+   
+    selectedid = "lvinfolist_TR_" + i
+    
+    FormList.SetSelectedID(selectedid);
+    var Cnt = 0;
+
+    if (pUrgentFlag == "Y")
+        document.getElementById("urgent").checked = true;
+    else
+        document.getElementById("urgent").checked = false;
+
+    var temptRSecurity = document.getElementsByName("RSecurity");
+    var temptRKeeptype = document.getElementsByName("RKeeptype");
+    var temptisPublic = document.getElementsByName("isPublic");
+
+    for (Cnt = 0; Cnt < temptRSecurity.length; Cnt++) {
+        if (psecuritylevel == temptRSecurity[Cnt].value) {
+            temptRSecurity[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < temptRKeeptype.length; Cnt++) {
+        if (pkeeperiod == temptRKeeptype[Cnt].value) {
+            temptRKeeptype[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < temptisPublic.length; Cnt++) {
+        if (pPublicFlag == temptisPublic[Cnt].value) {
+            temptisPublic[Cnt].checked = true; break;
+        }
+    }
+
+    setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
+    document.getElementById("tbItemCode").value = pItemCode;
+    document.getElementById("tbItemName").value = pItemName;
+    document.getElementById("tbItemName2").value = pItemName2;
+    document.getElementById("keyword").value = pkeyword;
+
+    GetExtraDocInfo();
+}
+
+function CheckDraftinfo() {
+    if (pkeeperiod == "") {
+        document.getElementById("btndocinfo").style.display = "";
+        document.getElementById("btndocinfo2").style.display = "";
+    }
+    else {
+        document.getElementById("btndocinfo").style.display = "none";
+        document.getElementById("btndocinfo2").style.display = "none";
+
+        for (Cnt = 0; Cnt < RSecurity.length; Cnt++) {
+            if (psecuritylevel == RSecurity[Cnt].value) {
+                RSecurity[Cnt].checked = true; break;
+            }
+        }
+        for (Cnt = 0; Cnt < RKeeptype.length; Cnt++) {
+            if (pkeeperiod == RKeeptype[Cnt].value) {
+                RKeeptype[Cnt].checked = true; break;
+            }
+        }
+        for (Cnt = 0; Cnt < isPublic.length; Cnt++) {
+            if (pPublicFlag == isPublic[Cnt].value) {
+                isPublic[Cnt].checked = true; break;
+            }
+        }
+
+        setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
+        document.getElementById("tbItemCode").value = pItemCode;
+        document.getElementById("tbItemName").value = pItemName;
+        document.getElementById("tbItemName2").value = pItemName2;
+        document.getElementById("keyword").value = pkeyword;
+
+        GetExtraDocInfo();
+    }
+}
+
+function Draftinfo_reload() {
+    Draftinfoini = false;
+    Draftinfo_ini();
+}
+function CodeSearch_onclick() {
+    var SearchOPtion = GetAttribute(document.getElementById("selSearchOption")[document.getElementById("selSearchOption").selectedIndex], "id");
+    var SearchValue = document.getElementById("txtCodeSearch").value;
+    if (SearchValue.trim() == "") {
+        alert(strLang554);
+        return;
+    }
+
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "OPTION", SearchOPtion);
+    createNodeAndInsertText(xmlpara, objNode, "VALUE", SearchValue);
+
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getCodeSearch.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    try {
+        var xmlDoc = loadXMLString(xmlhttp.responseText);
+
+        if (xmlDoc == null) {
+            xmlDoc = loadXMLString(xmlhttp.responseText);
+        }
+
+        if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
+        var FormList = new ListView();
+        FormList.SetID("lvinfolist");
+        FormList.SetMulSelectable(false);
+        FormList.SetHeightFree(true);
+        FormList.SetSelectFlag(false);
+        FormList.SetRowOnClick("lvtinfolist_onclick");
+        FormList.DataSource(xmlDoc);
+        FormList.DataBind("infolist");
+        FormList = null;
+        Draftinfoini = true;
+        if (pkeeperiod == "") {
+        }
+        else {
+            var i = 0;
+            var element = GetElementsByTagName(xmlDoc, "DATA1");
+            if (CrossYN()) {
+                for (i = 0; i < element.length; i++) {
+                    if (pItemCode == getNodeText(element[i])) {
+                        break;
+                    }
+                }
+            }
+            else {
+                for (i = 0; i < element.length; i++) {
+                    if (pItemCode == getNodeText(element[i])) {
+                        break;
+                    }
+                }
+            }
+            
+        }
+        xmlhttp = null;
+    }
+    catch (ErrMsg) {
+        alert(" CodeSearch_onclick : " + ErrMsg.description + ErrMsg);
+    }
+
+}
+function CodeSearch_Press(e) {
+    if (window.event) {
+        if (window.event.keyCode != 13)
+            return;
+    }
+    else {
+        if (e.which != 13)
+            return;
+    }
+    CodeSearch_onclick();
+}
+
+function TreeViewinitializeCodeGroup(code, level) {
+    try {
+        Tree_setconfig();
+
+        var xmlTree = createXmlDom();
+        var objNode;
+        var result = "";
+        
+        $.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+    		url : "/ezApprovalG/getCodeTreeInfo.do",
+    		data : {
+    			code  : code,
+    			level : level
+    		},
+    		success: function(text){
+    			result = text;
+    		}        			
+    	});
+        
+        xmlTree = loadXMLString(result);
+        
+        if (xmlTree.childNodes.length > 0) {
+            var xmlRtn = loadXMLString(result).documentElement;
+            if (GetChildNodes(GetChildNodes(xmlTree)[0])[0] == null)
+                TreeViewinitializeCodeGroup("0", "1");
+            GetChildNodes(GetChildNodes(xmlTree)[0])[0].appendChild(xmlRtn);
+        }
+
+        if (document.getElementById("infotree").innerHTML != "") document.getElementById("infotree").innerHTML = "";
+        var treeView = new TreeView();
+        treeView.SetID("infotreeView");
+        treeView.SetUseAgency(true);
+        treeView.SetNodeClick("TreeViewCodeNodeClick");
+        treeView.SetRequestData("TreeViewCodeRequestData");
+        treeView.DataSource(xmlTree);
+        treeView.DataBind("infotree");
+        xmlHTTP = null;
+
+    }
+    catch (ErrMsg) {
+        alert(" TreeViewinitialize : " + ErrMsg.description);
+    }
+}
+
+function TreeViewCodeRequestData(pNodeID, pTreeID) {
+    var TreeIdx = pNodeID;
+    var treeNode = new TreeNode();
+    treeNode.LoadFromID(TreeIdx);
+    var code = treeNode.GetNodeData("DATA1");
+    var level = treeNode.GetNodeData("DATA2");
+    GetDeptSubCodeTreeInfo(code, level, TreeIdx);
+}
+
+
+function GetDeptSubCodeTreeInfo(code, level, TreeIdx) {
+    var xmlRtn = createXmlDom();
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getCodeSubTreeInfo.do",
+		data : {
+			code  : code,
+			level : level
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+
+    xmlRtn = loadXMLString(result);
+    
+    if (xmlRtn.childNodes.length > 0) {
+        if (CrossYN()) {
+            xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].appendChild(xmlRtn.getElementsByTagName("NODES")[0].getElementsByTagName("NODE")[0].getElementsByTagName("VALUE")[0]);
+        } else {
+            xmlRtn.selectNodes("NODES/NODE")[0].appendChild(xmlRtn.selectNodes("NODES/NODE/VALUE")[0]);
+        }
+    }
+
+    var treeView = new TreeView();
+    treeView.LoadFromID("infotreeView");
+    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
+}
+
+function TreeViewCodeNodeClick()
+{
+    var treeView = new TreeView();
+    treeView.LoadFromID("infotreeView");
+    var selnode = treeView.GetSelectNode();
+    
+    var code = selnode.GetNodeData("DATA1");
+    var level = selnode.GetNodeData("DATA2");
+    
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "CODE", code);
+
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
+    xmlhttp.send(xmlpara);
+    try {
+        var xmlDoc = loadXMLString(xmlhttp.responseText);
+
+        if (xmlDoc == null) {
+            xmlDoc = loadXMLString(xmlhttp.responseText);
+        }
+
+        if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
+        var FormList = new ListView();
+        FormList.SetID("lvinfolist");
+        FormList.SetMulSelectable(false);
+        FormList.SetHeightFree(true);
+        FormList.SetSelectFlag(false);
+        FormList.SetRowOnClick("lvtinfolist_onclick");
+        FormList.DataSource(xmlDoc);
+        FormList.DataBind("infolist");
+        FormList = null;
+        Draftinfoini = true;
+        if (pkeeperiod == "") {
+        }
+        else {
+            var i = 0;
+            var element = GetElementsByTagName(xmlDoc, "DATA1");
+            if (CrossYN()) {
+                for (i = 0; i < element.length; i++) {
+                    
+                    if (trim(pItemCode) == trim(getNodeText(element[i]))) {
+                        
+                        break;
+                    }
+                }
+            }
+            else {
+                for (i = 0; i < element.length; i++) {
+                    if (pItemCode == getNodeText(element[i])) {
+                        break;
+                    }
+                }
+            }
+            getdocinfolist(i);
+        }
+        xmlhttp = null;
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
+}
+
+function btnAddCode_onclick() {
+
+    var FormList = new ListView();
+    FormList.LoadFromID("lvinfolist");
+    var pAprRow = FormList.GetSelectedRows();
+
+    if (pAprRow.length == 0) {
+        var pAlertContent = strLang600;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+    
+    var dup = false;
+    var curSelCode = GetAttribute(pAprRow[0],"DATA1");
+    var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
+   
+    var frequencyList = new ListView();
+    frequencyList.LoadFromID("lvinfofrequencylist");
+    var frequencyRow = frequencyList.GetDataRows();
+    for(var i = 0 ; i < frequencyRow.length;i++)
+    {
+        if (curSelCode == GetAttribute(frequencyRow[i],"DATA1")) {
+            var pAlertContent = strLang601;
+            OpenAlertUI(pAlertContent);
+
+            dup = true;
+            break;
+
+        }
+    }
+    if (dup == true)
+        return;
+    else
+        InsMyGroupItem(curSelCode, curSelGroupCode);
+}
+
+function InsMyGroupItem(curSelCode, curSelGroupCode) {
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "CURSELCODE", curSelCode);
+    createNodeAndInsertText(xmlpara, objNode, "CURSELGROUPCODE", curSelGroupCode);
+
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/SaveFrequencyClassList.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    var Resultxml = loadXMLString(xmlhttp.responseText);
+    var objNodes = SelectNodes(Resultxml, "RETURN");
+    
+
+    if(getNodeText(objNodes[0]) == "OK")
+    {
+        var pAlertContent = strLang602;
+        OpenAlertUI(pAlertContent);
+
+        getMyGroupItem();
+    }
+    else {
+        var pAlertContent = strLang604;
+        OpenAlertUI(pAlertContent);
+    }
+}
+
+function btnDelCode_onclick() {
+
+    var frequencyList = new ListView();
+    frequencyList.LoadFromID("lvinfofrequencylist");
+
+    var pAprRow = frequencyList.GetSelectedRows();
+
+    if (pAprRow.length == 0) {
+        var pAlertContent = strLang600;
+        OpenAlertUI(pAlertContent);
+        return;
+    }
+
+    var curSelCode = GetAttribute(pAprRow[0],"DATA1");
+    var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
+
+
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "CURSELCODE", curSelCode);
+    createNodeAndInsertText(xmlpara, objNode, "CURSELGROUPCODE", curSelGroupCode);
+
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/DeleteFrequencyClassList.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    var Resultxml = loadXMLString(xmlhttp.responseText);
+    var objNodes = SelectNodes(Resultxml, "RETURN");
+
+
+    if (getNodeText(objNodes[0]) == "OK") {
+        var pAlertContent = strLang603;
+        OpenAlertUI(pAlertContent);
+
+        getMyGroupItem();
+    }
+    else {
+        var pAlertContent = strLang605;
+        OpenAlertUI(pAlertContent);
+    }
+}
+function getMyGroupItem()
+{
+    var xmlhttp = createXMLHttpRequest();
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetFrequencyClassList.aspx", false);
+    xmlhttp.send("");
+
+    try {
+        var xmlDoc = loadXMLString(xmlhttp.responseText);
+
+        if (xmlDoc == null) {
+            xmlDoc = loadXMLString(xmlhttp.responseText);
+        }
+
+        if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
+        var FormList = new ListView();
+        FormList.SetID("lvinfofrequencylist");
+        FormList.SetMulSelectable(false);
+        FormList.SetHeightFree(true);
+        FormList.SetSelectFlag(false);
+        FormList.SetRowOnClick("lvinfofrequencylist_onclick");
+        FormList.DataSource(xmlDoc);
+        FormList.DataBind("infofrequencylist");
+        FormList = null;
+        Draftinfoini = true;
+       
+        xmlhttp = null;
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
+}
+function lvinfofrequencylist_onclick() {
+    allUnSelect();
+
+    var FrequencyFormList = new ListView();
+    FrequencyFormList.LoadFromID("lvinfofrequencylist");
+    var pSelectedRow = FrequencyFormList.GetSelectedRows();
+    var pTaskCode, pTaskName, pTaskP, pTaskS, pTaskY;
+    pTaskCode = GetAttribute(pSelectedRow[0],"DATA1");
+    pTaskName = GetAttribute(pSelectedRow[0],"DATA2");
+    pTaskP = GetAttribute(pSelectedRow[0],"DATA3");
+    pTaskS = GetAttribute(pSelectedRow[0],"DATA4");
+    pTaskY = GetAttribute(pSelectedRow[0],"DATA5");
+    var Cnt = 0;
+    setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+    document.getElementById("tbItemCode").value = pTaskCode;
+    document.getElementById("tbItemName").value = pTaskName
+    document.getElementById("tbItemName2").value = pTaskName;
+
+    for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
+            document.getElementsByName("RSecurity")[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < document.getElementsByName("RKeeptype").length; Cnt++) {
+        if (pTaskP == document.getElementsByName("RKeeptype")[Cnt].value) {
+            document.getElementsByName("RKeeptype")[Cnt].checked = true; break;
+        }
+    }
+    for (Cnt = 0; Cnt < document.getElementsByName("isPublic").length; Cnt++) {
+        if (pTaskY == document.getElementsByName("isPublic")[Cnt].value) {
+            document.getElementsByName("isPublic")[Cnt].checked = true; break;
+        }
+    }
+    checkdocinfo = true;
+}
+
+function allUnSelectFrequency() {
+    var FrequencyFormList = new ListView();
+    FrequencyFormList.SetUnSelected("lvinfofrequencylist");
+
+}
+
+function allUnSelect() {
+    var FormList = new ListView();
+    FormList.SetUnSelected("lvinfolist");
+
+}
+function exceptionDocInfo()
+{
+
+    var xmlpara = createXmlDom();
+    var xmlhttp = createXMLHttpRequest();
+
+    var objRoot, objNode;
+
+    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
+    createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", pOrgDocID);
+    
+    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getexpaprdocinfo.aspx", false);
+    xmlhttp.send(xmlpara);
+
+    var ResultXML = loadXMLString(xmlhttp.responseText);
+
+    if (ResultXML.getElementsByTagName("ITEMCODE").length > 0)
+    {
+        
+        psecuritylevel = getNodeText(SelectNodes(ResultXML, "SECURITYCODE")[0]);
+        pkeeperiod = getNodeText(SelectNodes(ResultXML, "STORAGEPERIOD")[0]);
+        pPublicFlag = getNodeText(SelectNodes(ResultXML, "ISPUBLIC")[0]);
+
+        pkeyword = getNodeText(SelectNodes(ResultXML, "KEYWORD")[0]);
+        pItemName = getNodeText(SelectNodes(ResultXML, "ITEMNAME")[0]);
+        pItemName2 = getNodeText(SelectNodes(ResultXML, "ITEMNAME2")[0]);
+        pItemCode = getNodeText(SelectNodes(ResultXML, "ITEMCODE")[0]);
+
+        var temptRSecurity = document.getElementsByName("RSecurity");
+        var temptRKeeptype = document.getElementsByName("RKeeptype");
+        var temptisPublic = document.getElementsByName("isPublic");
+
+        for (Cnt = 0; Cnt < temptRSecurity.length; Cnt++) {
+            if (psecuritylevel == temptRSecurity[Cnt].value) {
+                temptRSecurity[Cnt].checked = true; break;
+            }
+        }
+        
+        for (Cnt = 0; Cnt < temptRKeeptype.length; Cnt++) {
+            if (pkeeperiod == temptRKeeptype[Cnt].value) {
+                temptRKeeptype[Cnt].checked = true; break;
+            }
+        }
+        
+        for (Cnt = 0; Cnt < temptisPublic.length; Cnt++) {
+            if (pPublicFlag == temptisPublic[Cnt].value) {
+                temptisPublic[Cnt].checked = true; break;
+            }
+        }
+        
+        setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
+        document.getElementById("tbItemCode").value = pItemCode;
+        document.getElementById("tbItemName").value = pItemName;
+        document.getElementById("tbItemName2").value = pItemName2;
+        document.getElementById("keyword").value = pkeyword;
+    }
+}
