@@ -37,7 +37,7 @@
 	    		},
 	    		success : function(result) {   			
 	    			 if (result == "OK") {
-	    				 alert("<spring:message code='ezPersonal.s2'/>");
+	    				 alert("<spring:message code='ezPersonal.t191'/>");
 	    				 window.parent.parent.location = window.parent.parent.location.href;
 	    			} 
 				},

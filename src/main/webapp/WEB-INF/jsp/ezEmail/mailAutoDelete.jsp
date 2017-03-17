@@ -27,7 +27,7 @@
 		        if (!confirm("<spring:message code='ezEmail.t113' />"))
 		            return;
 		
-		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURI(seqno) + "&folderPath=" + encodeURI(path);
+		        window.location.href = "/ezEmail/mailAutoDeleteDelete.do?itemseq=" + encodeURIComponent(seqno) + "&folderPath=" + encodeURIComponent(path);
 		    }
 		    function add_condition() {
 		        if (document.getElementById("folderpath").value == "") {
@@ -43,9 +43,9 @@
 		            return;
 		        }
 		        if (document.getElementById("deleteunread").checked == true)
-		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURI(document.getElementById("expiretime").value) + "&unread=1" + "&foldername=" + encodeURI(document.getElementById("folderpath").value);
+		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=1" + "&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
 		        else
-		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURI(document.getElementById("expiretime").value) + "&unread=0" + "&foldername=" + encodeURI(document.getElementById("folderpath").value);
+		            window.location.href = "/ezEmail/mailAutoDeleteAdd.do?path=" + encodeURIComponent(document.getElementById("folderpath").lealfolderPath) + "&expiretime=" + encodeURIComponent(document.getElementById("expiretime").value) + "&unread=0" + "&foldername=" + encodeURIComponent(document.getElementById("folderpath").value);
 		    }
 		    var mail_selectfolder_cross_dialogArguments = new Array();
 		    function getFolder() {

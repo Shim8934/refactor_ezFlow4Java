@@ -97,7 +97,7 @@
                     }
 
                     if (ret == "OK") {
-                        alert("<spring:message code='ezEmail.t134' />");
+                        alert("<spring:message code='ezEmail.t42' />");
                         document.getElementById("btnSave").style.display = "none";
                         document.getElementById("ForwardDel").style.display = "";
                         Button_Enabled();

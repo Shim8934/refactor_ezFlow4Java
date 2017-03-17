@@ -15989,7 +15989,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (docCnt <= 7) {
 				resultXML.append("<CELL>");
 				resultXML.append("<DOCTITLE><![CDATA[" + docList.get(j).getDocTitle() + "]]></DOCTITLE>");
-				resultXML.append("<WRITERNAME<![CDATA[>" + docList.get(j).getWriterName() + "]]></WRITERNAME>");
+				resultXML.append("<WRITERNAME><![CDATA[" + docList.get(j).getWriterName() + "]]></WRITERNAME>");
 				resultXML.append("<STARTDATE>" + docList.get(j).getStartDate() + "</STARTDATE>");
 				resultXML.append("<DOCID>" + docList.get(j).getDocID() + "</DOCID>");
 				resultXML.append("<HREF><![CDATA[" + docList.get(j).getHref() + "]]></HREF>");

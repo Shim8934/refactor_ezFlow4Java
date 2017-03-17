@@ -109,10 +109,10 @@
 	
 	<resultMap class="ResBrdListVO" 				id="resBrdListVO">
 		<result property="attachSize"				column="ATTACH_SIZE"			columnIndex="1"/>
-		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue="0"	/>
+		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="2" 		nullValue=""/>
 		<result property="brdCompany"			column="BRD_COMPANY"		columnIndex="3"/>
 		<result property="brdCount"				column="BRD_COUNT"				columnIndex="4"/>
-		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="5"			nullValue="0"/>
+		<result property="brdExplain"			column="BRD_EXPLAIN"			columnIndex="5"			nullValue=""/>
 		<result property="brdGb"					column="BRD_GB"					columnIndex="6"/>
 		<result property="brdGroup"				column="BRD_GROUP"				columnIndex="7"/>
 		<result property="brdID"					column="BRD_ID"					columnIndex="8"/>
@@ -122,16 +122,16 @@
 		<result property="brdRef"					column="BRD_REF"					columnIndex="12" 		nullValue="0"/>
 		<result property="brdStep"				column="BRD_STEP"				columnIndex="13"/>
 		<result property="brdUpper"				column="BRD_UPPER"				columnIndex="14"/>
-		<result property="brdUrl"					column="BRD_URL"					columnIndex="15"		nullValue="0"/>
+		<result property="brdUrl"					column="BRD_URL"					columnIndex="15"		nullValue=""/>
 		<result property="makeDate"				column="MAKEDATE"				columnIndex="16"/>
 		<result property="ownDeptID"			column="OWNDEPTID"			columnIndex="17"/>
 		<result property="ownDeptNm"			column="OWNDEPTNM"			columnIndex="18"/>
-		<result property="ownerCall"				column="OWNERCALL"			columnIndex="19"		nullValue="0"/>
+		<result property="ownerCall"				column="OWNERCALL"			columnIndex="19"		nullValue=""/>
 		<result property="ownerID"				column="OWNERID"				columnIndex="20"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
 		<result property="ownerPosition"		column="OWNERPOSITION"		columnIndex="22"/>
 		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
-		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue="0"/>
+		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="ResBrdVO" 					id="resBrdVO">

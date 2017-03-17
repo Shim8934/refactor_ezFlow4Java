@@ -13,7 +13,9 @@ import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -681,8 +683,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
 		String strWriterFakeName = "";
+		String startDateTime = "";
 		
 		if (!pUrl.equals("")) {
+			startDateTime = item.getStartDate();
 			item.setStartDate(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 			item.setEndDate(commonUtil.getDateStringInUTC(EgovDateUtil.addDay(commonUtil.getTodayUTCTime(""), 30, "yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false));
 			expireDays = "-1";
@@ -692,7 +696,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			} else {
 				item.setBoardName(boardInfo.getBoardName());
 			}
-
+			
+			startDateTime = item.getStartDate();
 			expireDays = boardInfo.getExpireDays();
 			if (pMode.equals("new")) {
 				if (expireDays.equals("-1")) {
@@ -732,7 +737,21 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 		}
 		
+		ZoneId utc = ZoneId.ofOffset("UTC", ZoneOffset.of(userInfo.getOffset().split("\\|")[1]));
+		ZonedDateTime getTime = ZonedDateTime.of(LocalDateTime.now(utc), utc);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH");
+		
+		if (getTime.getMinute() > 30) {
+			getTime = getTime.plusHours(1);
+			startDateTime = getTime.format(formatter);
+			startDateTime = startDateTime + ":00:00"; 
+		} else {
+			startDateTime = getTime.format(formatter);
+			startDateTime = startDateTime + ":30:00"; 
+		}
+		
 		model.addAttribute("item", item);
+		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("strWriterFakeName", strWriterFakeName);
 	}
 

@@ -399,14 +399,10 @@
 			}
 
 			var xmlHttp_getnewapprovalcount_total = null;
-			function getnewapprovalcount() 
-			{
+			function getnewapprovalcount()  {
 			    xmlHttp_getnewapprovalcount_total = createXMLHttpRequest();//new ActiveXObject("Microsoft.XMLHTTP");
-				if (("${userApprovalG}") == ("YES"))
-				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
-				else
-				    xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
-			    xmlHttp_getnewapprovalcount_total.onreadystatechange = event_newapprovalcount;
+				xmlHttp_getnewapprovalcount_total.open("Post", "/ezApprovalG/getWebPartCount.do", true);
+				xmlHttp_getnewapprovalcount_total.onreadystatechange = event_newapprovalcount;
 			    xmlHttp_getnewapprovalcount_total.send("<DATA><FLAG>1</FLAG></DATA>");
 			}
 			

@@ -34,6 +34,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -340,7 +341,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 화면호출함수(폼프로세서)
-	 * 전자결재관리 양식등록 양식등록,양식수정 화면호출함수(Other)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -472,7 +472,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectEditor started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String type = request.getParameter("type");
 		
@@ -500,20 +499,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식기본정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do", produces="text/html;charset=utf-8")
-	@ResponseBody
-	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do")
+	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getFormInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getFormContent(formID, userInfo.getLang(), companyID, userInfo.getTenantId());
+		ApprGFormVO vo = ezApprovalGAdminService.getFormContent(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
+		
+		model.addAttribute("vo", vo);
 		
 		logger.debug("getFormInfo ended.");
 		
-		return result;
+		return "json";
 	}
 	
 	/**
@@ -619,11 +620,15 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getFormRecvAdmin.do", produces="text/html;charset=utf-8")
 	@ResponseBody
 	public String getFormRecvAdmin(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFormRecvAdmin started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String formID = request.getParameter("node1");
 		
 		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
-
+		
+		logger.debug("getFormRecvAdmin ended.");
+		
 		return result;
 	}
 	

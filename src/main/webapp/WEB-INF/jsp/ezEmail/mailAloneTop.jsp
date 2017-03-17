@@ -1367,7 +1367,7 @@
             var pSearchString = txtSearch.value;
             
             
-            parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + escape(pSearchString);
+            parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + encodeURIComponent(pSearchString);
         }
         function keyword_Clear(obj) {
             obj.value = "";

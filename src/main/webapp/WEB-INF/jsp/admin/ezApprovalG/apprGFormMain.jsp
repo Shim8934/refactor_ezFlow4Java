@@ -112,20 +112,19 @@
 		    function get_FormInfo() {
 		        $.ajax({
 		        	type : "POST",
+		        	dataType : "json",
 		        	url : "/admin/ezApprovalG/getFormInfo.do",
 		        	async : false,
 		        	data : {formID : formID, companyID : companyID},
 		        	success : function(result) {
 		        		if (result != "") {
-			                var xmldom = loadXMLString(result);
-
-			                document.getElementsByName("tbFormName")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]);
-			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
-			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
-			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
+			                document.getElementsByName("tbFormName")[0].value = result.vo.formName;
+			                document.getElementsByName("tbFormName2")[0].value = result.vo.formName;
+			                document.getElementsByName("tbDescript")[0].value = result.vo.formDescription;
+			                document.getElementsByName("selFormKind")[0].value = result.vo.formDocType;
 			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
 			                
-			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
+			                if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
 			            }
@@ -737,7 +736,7 @@
                         <h2>
                             <spring:message code = 'ezApprovalG.t232' />
                         </h2>
-                        <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
+                        <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; border: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                     </td>
                     <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>

@@ -4,7 +4,7 @@ function showProgress() {
     document.getElementById("progressviewerRayer").style.top = "200px";
     document.getElementById("progressviewerRayer").style.left = (document.documentElement.clientWidth / 2) - 240 + "px";
     document.getElementById("progressviewerRayer").style.display = "";
-    document.getElementById("progressviewer").src = "/myoffice/common/show_progress.aspx?fileinfo=" + escape(strLang147);
+    document.getElementById("progressviewer").src = "/myoffice/common/show_progress.aspx?fileinfo=" + encodeURIComponent(strLang147);
 }
 function hideProgress() {
     try {

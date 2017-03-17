@@ -318,6 +318,7 @@ img { border:0px;}
 }
 #cmhome_type1 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -547,6 +548,7 @@ img { border:0px;}
 }
 #cmhome_type2 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -767,6 +769,7 @@ img { border:0px;}
 
 #cmhome_type3 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #cac2ba;
@@ -990,6 +993,7 @@ img { border:0px;}
 }
 #cmhome_type4 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;
@@ -1223,6 +1227,7 @@ img { border:0px;}
 }
 #cmhome_type5 .leftmenu h3 {
 	font-size:12px;
+	font-weight: bold;
 	margin:0px;
 	padding:0 0 0 10px;
 	border-top:1px solid #c6c6ca;

@@ -56,7 +56,7 @@ function ReSend(pURL, pEmail) {
     var pLeft = (pwidth - 890) / 2;
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
-    window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURI(pEmail), "", feature);
+    window.open("/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail), "", feature);
     /*if (CrossYN() || pNoneActiveX == "YES") {
         window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + pEmail, "", feature);
     }
@@ -357,14 +357,14 @@ function download_mail() {
 
         form1.iptURL.value = g_paramURL;
         var newwin = window.open("", "download", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(encodeURI(fileName), "\\+", "%2B") + "&regData=" + regData;
+        form1.action = "remote/mail_readattach.aspx?filename=" + encodeURIComponent(fileName) + "&regData=" + regData;
         form1.target = "download";
         form1.submit();
     }
     else {
         var regData = navigator.systemLanguage
         form1.iptURL.value = g_paramURL;
-        form1.action = "remote/mail_readattach.aspx?filename=" + ReplaceText(encodeURI(fileName), "\\+", "%2B") + "&regData=" + regData;
+        form1.action = "remote/mail_readattach.aspx?filename=" + encodeURIComponent(fileName) + "&regData=" + regData;
         form1.target = "_self";
         form1.submit();
     }
@@ -623,7 +623,7 @@ function show_personinfo(email) {
 
     var feature = "height=500px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
     feature = feature + GetOpenPosition(420, 500);
-    window.open("/ezCommon/showPersonInfo.do?email=" + encodeURI(email), "", feature);
+    window.open("/ezCommon/showPersonInfo.do?email=" + encodeURIComponent(email), "", feature);
 }
 function attach_SelectAll() {
     if (CrossYN()) {
@@ -924,15 +924,15 @@ function Item_View_New_Community(pBoardID, pItemID, pCommunityID) {
 // 결재 보기
 function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc) {
     if (typeof (pWhat) == "undefined" || podoc == "") {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURIComponent(pDocID) + "&DocHref=" + encodeURIComponent(pURL);
         openwindow(openLocation, "", 880, 550);
     }
     else if (pWhat == "1") {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL) + "&OpinionFlag=" + encodeURI(pOpinionFlag) + "&docState=" + encodeURI(pdocState) + "&ListSusin=" + encodeURI(pListSusin) + "&odoc=" + encodeURI(podoc);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURIComponent(pDocID) + "&DocHref=" + encodeURIComponent(pURL) + "&OpinionFlag=" + encodeURIComponent(pOpinionFlag) + "&docState=" + encodeURIComponent(pdocState) + "&ListSusin=" + encodeURIComponent(pListSusin) + "&odoc=" + encodeURIComponent(podoc);
         openwindow(openLocation, "", 880, 550);
     }
     else {
-        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
+        openLocation = "/ezflow/AprDocView.asp?DocID=" + encodeURIComponent(pDocID) + "&DocHref=" + encodeURIComponent(pURL);
         openwindow(openLocation, "", 880, 550);
     }
 }

@@ -98,7 +98,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezSchedule.t1012' /></h1>
+		<h1><spring:message code='ezSchedule.t00010' /></h1>
    		<div class="portlet_tabpart01" style="margin-top:3px;text-align:right">
        		<div class="portlet_tabpart01_top" id="tab1">
            		<p><span id="1tab1" divname="scheduleTab"><spring:message code='ezSchedule.t133' /></span></p>

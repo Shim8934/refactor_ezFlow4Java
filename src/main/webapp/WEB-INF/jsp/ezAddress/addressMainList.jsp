@@ -107,7 +107,7 @@
 	            var conWidth = 970;
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - conWidth) / 2;
-	            window.open("/ezAddress/addressWriteGroup.do?ownerid=" + encodeURI(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
+	            window.open("/ezAddress/addressWriteGroup.do?ownerid=" + encodeURIComponent(pOwerID) + "&folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType, "",
 	            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ",height = 655px, width = 970px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 	        }
 	        function write_letter() {
@@ -529,9 +529,9 @@
 	            var feature = "dialogWidth:390px; dialogHeight:290px; scroll:no; status:no; help:no;edge:sunken";
 	            feature = feature + GetShowModalPosition(390, 290);
 	            if (which == 0)
-	                window.showModalDialog("address_export.aspx?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + escape(pOwerID), null, feature);
+	                window.showModalDialog("address_export.aspx?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID), null, feature);
 	            else {
-	                window.showModalDialog("address_import.aspx?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + escape(pOwerID), null, feature);
+	                window.showModalDialog("address_import.aspx?folderid=" + encodeURIComponent(pFolderID) + "&foldertype=" + pFolderType + "&ownerid=" + encodeURIComponent(pOwerID), null, feature);
 	                window.location.reload();
 	            }
 	        }

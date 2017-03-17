@@ -359,12 +359,12 @@
 	    	function btn_Save() {
 	        	var check = true;
 	        	if (ItemArray[0].length == 0) {
-	            	alert(unescape(strLang252));
+	            	alert(strLang252);
 	            	return;
 	        	}
 	        	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 	            	if (DupCheck(ItemArray[0][i]) == false) {
-	                	alert(unescape("[" + ItemArray[1][i] + "] " + strLang248));
+	                	alert("[" + ItemArray[1][i] + "] " + strLang248);
 	                	check = false;
 	            	}
 	        	}

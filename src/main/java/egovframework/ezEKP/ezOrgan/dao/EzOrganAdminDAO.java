@@ -1950,16 +1950,23 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         logger.debug("updateUserDeptDisplayName ended.");
     }
     
-    
     public void insertCompanyInfo_I1(Map<String, Object> map) throws Exception {
-    	for (int i = 1; i<33; i++) {
-    		insert("EzOrganAdminDAO.insertCompanyInfo_I"+i, map);
-    	}
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I1", map);
     }
     
+    public void insertCompanyInfo_I2(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I2", map);
+    }
     
+    public void insertCompanyInfo_I3(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I3", map);
+    }
     
-
+    public void insertCompanyInfo_I4(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I4", map);
+    }
     
-		
+    public void insertCompanyInfo_I5(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I5", map);
+    }
 }

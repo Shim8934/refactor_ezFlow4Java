@@ -47,6 +47,16 @@ public class ApprGFormVO {
 	
 	private String upperCode;
 	
+	/** 일반 */
+	private String keepPeriod;
+	private String securityLevel;
+	private String isPublic;
+	private String itemCode;
+	private String itemName;
+	private String itemName2;
+	private String useFlag;
+	private String keepPeriodCode;
+	
 	public String getFormContID() {
 		return formContID;
 	}
@@ -178,6 +188,54 @@ public class ApprGFormVO {
 	}
 	public void setUpperCode(String upperCode) {
 		this.upperCode = upperCode;
+	}
+	public String getKeepPeriod() {
+		return keepPeriod;
+	}
+	public void setKeepPeriod(String keepPeriod) {
+		this.keepPeriod = keepPeriod;
+	}
+	public String getSecurityLevel() {
+		return securityLevel;
+	}
+	public void setSecurityLevel(String securityLevel) {
+		this.securityLevel = securityLevel;
+	}
+	public String getIsPublic() {
+		return isPublic;
+	}
+	public void setIsPublic(String isPublic) {
+		this.isPublic = isPublic;
+	}
+	public String getItemCode() {
+		return itemCode;
+	}
+	public void setItemCode(String itemCode) {
+		this.itemCode = itemCode;
+	}
+	public String getItemName() {
+		return itemName;
+	}
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+	public String getItemName2() {
+		return itemName2;
+	}
+	public void setItemName2(String itemName2) {
+		this.itemName2 = itemName2;
+	}
+	public String getUseFlag() {
+		return useFlag;
+	}
+	public void setUseFlag(String useFlag) {
+		this.useFlag = useFlag;
+	}
+	public String getKeepPeriodCode() {
+		return keepPeriodCode;
+	}
+	public void setKeepPeriodCode(String keepPeriodCode) {
+		this.keepPeriodCode = keepPeriodCode;
 	}
 	
 }

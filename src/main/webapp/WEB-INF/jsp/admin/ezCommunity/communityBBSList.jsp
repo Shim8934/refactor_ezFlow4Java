@@ -199,7 +199,7 @@
 	        }
 				
 			function goToPage(page) {
-				var href = "/ezCommunity/board/bbsList.do?bName=<c:out value = '${bName}' />&code="+ encodeURIComponent("<c:out value = '${code}' />") + "&keyword=" + make_searchstring(pKeyWord) + "&s_radio=" + encodeURIComponent("<c:out value = '${sRadio}' />") + "&block="+encodeURIComponent("<c:out value = '${nowBlock}' />");
+				var href = "/ezCommunity/board/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
 					document.location.href = href + "&GotoPage=" + encodeURIComponent(parseInt(page));
 				}

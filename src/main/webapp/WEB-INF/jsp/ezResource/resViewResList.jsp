@@ -321,56 +321,56 @@
 		    function selafterBlock() {
 		        var pageNum = parseInt(pcurpage);
 		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-	        goToPageByNum(pageNum);
-	    }
-
-	    function selafterBlock_one() {
-	        var pageNum = parseInt(pcurpage);
-	        if (parseInt(pageNum + 1) <= ptotalPage)
-	            goToPageByNum(parseInt(pageNum + 1));
-	        else
-	            return;
-	    }
-
-	    function movePage(newPage) {
-	        var pURL;
-	        if (parseInt(newPage) > 0 && parseInt(newPage) != "" && parseInt(newPage) <= parseInt(ptotalPage)) {
-	            document.frmRefresh.target = "_self"
-	            document.frmRefresh.brdID.value = pBrdid
-	            document.frmRefresh.accessCode.value = pAccessCode
-	            document.frmRefresh.brdNm.value = pBrdnm
-	            document.frmRefresh.goToPage.value = newPage
-	            document.frmRefresh.submit();
-	        }
-	    }
-
-	    function SearchPage_Set() {
-	        if (event.keyCode == 13) {
-	            var GotoPage = document.getElementById("SearchPage").value;
-	            Search_Set(GotoPage);
-	            return false;
-	        }
-	        return true;
-	    }
-
-	    function Search_Set(pGoToPage) {
-	        var pURL;
-	        if (parseInt(pGoToPage) > 0 && parseInt(pGoToPage) != "" && parseInt(pGoToPage) <= parseInt(ptotalPage)) {
-	            document.frmRefresh.target = "_self"
-	            document.frmRefresh.brdID.value = pBrdid
-	            document.frmRefresh.accessCode.value = pAccessCode
-	            document.frmRefresh.brdNm.value = pBrdnm
-	            document.frmRefresh.goToPage.value = pGoToPage
-	            document.frmRefresh.submit();
-	        }
-
-	    }
-
-	    function btnCcalendar_Click() {
-	        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
-	        strUrl = strUrl + "&brdNm=" + encodeURI(pBrdnm);
-	        window.open(strUrl, 'right');
-	    }
+		        goToPageByNum(pageNum);
+		    }
+	
+		    function selafterBlock_one() {
+		        var pageNum = parseInt(pcurpage);
+		        if (parseInt(pageNum + 1) <= ptotalPage)
+		            goToPageByNum(parseInt(pageNum + 1));
+		        else
+		            return;
+		    }
+	
+		    function movePage(newPage) {
+		        var pURL;
+		        if (parseInt(newPage) > 0 && parseInt(newPage) != "" && parseInt(newPage) <= parseInt(ptotalPage)) {
+		            document.frmRefresh.target = "_self"
+		            document.frmRefresh.brdID.value = pBrdid
+		            document.frmRefresh.accessCode.value = pAccessCode
+		            document.frmRefresh.brdNm.value = pBrdnm
+		            document.frmRefresh.goToPage.value = newPage
+		            document.frmRefresh.submit();
+		        }
+		    }
+	
+		    function SearchPage_Set() {
+		        if (event.keyCode == 13) {
+		            var GotoPage = document.getElementById("SearchPage").value;
+		            Search_Set(GotoPage);
+		            return false;
+		        }
+		        return true;
+		    }
+	
+		    function Search_Set(pGoToPage) {
+		        var pURL;
+		        if (parseInt(pGoToPage) > 0 && parseInt(pGoToPage) != "" && parseInt(pGoToPage) <= parseInt(ptotalPage)) {
+		            document.frmRefresh.target = "_self"
+		            document.frmRefresh.brdID.value = pBrdid
+		            document.frmRefresh.accessCode.value = pAccessCode
+		            document.frmRefresh.brdNm.value = pBrdnm
+		            document.frmRefresh.goToPage.value = pGoToPage
+		            document.frmRefresh.submit();
+		        }
+	
+		    }
+	
+		    function btnCcalendar_Click() {
+		        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
+		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
+		        window.open(strUrl, 'right');
+		    }
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
@@ -397,10 +397,10 @@
     			<th style="width:80px"> <spring:message code='ezResource.t106' /></th>
     			<th style="width:60px"> <spring:message code='ezResource.t37' /></th>
     			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
-    			<th style="width:100px;"> <spring:message code='ezResource.t148' /></th>
+    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
   			</tr>
 			<c:if test="${!empty resBrdList}" >
-				<c:forEach var="list"  items="${resBrdList}">
+				<c:forEach var="list"  items="${resBrdList}" begin="${start}">
   					<tr>
     					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
 						<td title="<c:out value='${list.brdNm}' />" onClick="Item_View('${list.brdID}');"	style="cursor: pointer; text-overflow: ellipsis; overflow: hidden" align="left"><nobr><c:out value='${list.brdNm}' /></nobr> </td>

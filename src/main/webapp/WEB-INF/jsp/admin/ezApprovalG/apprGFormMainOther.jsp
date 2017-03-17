@@ -10,8 +10,8 @@
 <!-- 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>   -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/admin/FormMain_Cross.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script> -->
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
 		
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
 		
@@ -53,6 +53,7 @@
 		    var ConnData = "";
 		    var WorkData = "";
 		    var useEditor = "${useEditor}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -143,6 +144,8 @@
 		            } else {
 		                Editor_Complete();
 		            }
+		        } else {
+		        	//formID 널일때 selectBox 옵션 값들 init 해주는 거 필요
 		        }
 		    }
 		
@@ -153,6 +156,7 @@
 		            if (formURL != "") {
 		                if (useEditor == "HWP") {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
+		                    
 		                    message.HWP_LoadFile(formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
 		                        var ConnURL = ReplaceAll(ReplaceAll(message.HWP_GetDocumentElement(), "<CONNINFO>", ""), "</CONNINFO>", "");
@@ -161,34 +165,35 @@
 		                        g_XmlDoc.async = false;
 		                        g_XmlDoc.load(document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ConnURL));
 		
-		                        if (g_XmlDoc.xml == "")
+		                        if (g_XmlDoc.xml == "") {
 		                            return;
+		                        }
 		
 		                        for (i = 0; i < g_XmlDoc.documentElement.childNodes.length; i++) {
-		                            if (i == 0)
+		                            if (i == 0) {
 		                                setNodeText(txt_OpinionContent, g_XmlDoc.documentElement.childNodes(i).xml);
-		                            else
+		                            } else {
 		                                setNodeText(txt_OpinionContent, getNodeText(txt_OpinionContent) + "\n" + g_XmlDoc.documentElement.childNodes(i).xml);
+		                            }
 		                        }
 		                    }
-		                }
-		                else {
+		                } else {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
 		                    message.SetEditorContent(htmlData);
 		                }
-		            }
-		            else {
+		            } else {
 		                if (useEditor != "HWP") {
 		                    document.getElementById("ApvForm_sub4").style.display = "";
 		                    document.getElementById("ApvForm_sub6").style.display = "";
 		                    document.getElementById("rootTD").style.display = "";
-		                }
-		                else
+		                } else {
 		                    document.getElementById("btn_OpinionSave").style.display = "";
+		                }
 		            }
 		        }
+		        
 		        add_doc_maker();
 		    }
 		
@@ -197,54 +202,39 @@
 		        setNodeText(BottonTDValue[2],""); 
 		        document.getElementById("EditInput").value = "";
 		    }
-		
+		    
 		    function get_FormInfo() {
-		    	$.ajax({
-		    		type : "POST",
-		    		async : false,
-		    		url : "/admin/ezApprovalG/getFormInfo.do",
-		    		data : {
-		    			formID           : formID,
-		    			companyID  		 : companyID
-		    		},
-		    		success: function(result){
-// 		    			if (text != "") {
-// 		    				var xmldom = createXmlDom();
-// 			                xmldom = loadXMLString(text);
-			
-// 			                tbFormName.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME")[0]);
-// 			                tbFormName2.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME2")[0]);
-// 			                tbDescript.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDESCRIPTION")[0]);
-// 			                selFormKind.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDOCTYPE")[0]);
-// 			                formURL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
-			
-// 			                if (getNodeText(SelectNodes(xmldom, "DATA/USEFLAG")[0]) == "Y") {
-// 			                    setAutoItemCode.checked = true;
-// 			                    document.getElementById('tr_setAutoItemCode').style.display = "";
-// 			                    document.getElementById("isPublic").value = getNodeText(SelectNodes(xmldom, "DATA/ISPUBLIC")[0]);
-// 			                    document.getElementById("tbItemCode").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMCODE")[0]);
-// 			                    document.getElementById("tbItemName").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME")[0]);
-// 			                    document.getElementById("tbItemName2").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME2")[0]);
-// 			                    document.getElementById("keepperiod").value = getNodeText(SelectNodes(xmldom, "DATA/KEEPPERIODCODE")[0]);
-// 			                    document.getElementById("securitylevel").value = getNodeText(SelectNodes(xmldom, "DATA/SECURITYLEVEL")[0]);
-// 			                }              
-// 			            }
-		    			
-		    			if (result != "") {
-			                var xmldom = loadXMLString(result);
-
-			                $("#tbFormName").value(getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]));
-			                $("#tbFormName2").value(getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]));
-			                $("#tbDescript").value(getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]));
-			                $("#selFormKind").value(getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]));
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "json",
+		        	url : "/admin/ezApprovalG/getFormInfo.do",
+		        	async : false,
+		        	data : {formID : formID,
+		        			companyID : companyID
+		        	},
+		        	success : function(result) {
+		        		if (result != "") {
+		        			tbFormName.value = result.vo.formName;
+		        			tbFormName2.value = result.vo.formName;
+		        			tbDescript.value = result.vo.formDescription;
+		        			selFormKind.value = result.vo.formDocType;
 			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
 			                
-			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
-			                    document.getElementById("setConnFlag").checked = true;
+			                if (approvalFlag == 'S') {
+				                if (result.vo.useFlag == "Y") {
+				                    setAutoItemCode.checked = true;
+				                    document.getElementById('tr_setAutoItemCode').style.display = "";
+				                    document.getElementById("isPublic").value = result.vo.isPublic;
+				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
+				                    document.getElementById("tbItemName").value = result.vo.itemName;
+				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
+				                    document.getElementById("keepperiod").value = result.vo.keepPeriod;
+				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
+			                	}
 			                }
 			            }
-		    		}
-		    	});
+		        	}
+		        });
 		    }
 		
 		    function SaveFormInfo_after(text) {
@@ -820,9 +810,9 @@
         </div>
         <div class="portlet_tabpart01">
 	        <div class="portlet_tabpart01_top" id="tab1">
-                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApproval.t00003'/></span></p>
-                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApproval.t518'/></span></p>
-                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApproval.t00005'/></span></p>
+                <p id = "ApvForm_sub1"><span divname="ApvForm_div1" id="1tab1"><spring:message code='ezApprovalG.t00004'/></span></p>
+                <p id = "ApvForm_sub2"><span divname="ApvForm_div2" id="1tab2"><spring:message code='ezApprovalG.t1456'/></span></p>
+                <p id = "ApvForm_sub3"><span divname="ApvForm_div3" id="1tab3"><spring:message code='ezApprovalG.t00005'/></span></p>
                 <p id = "ApvForm_sub4" style="display:none"><span divname="ApvForm_div4" id="1tab4">WORKFLOW</span></p>
                 <p id = "ApvForm_sub5"><span divname="ApvForm_div5" id="1tab5"><spring:message code='ezApproval.t730'/></span></p>
                 <p id = "ApvForm_sub6" style="display:none"><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
@@ -834,12 +824,12 @@
              </h2>
              <table class="content" style="width:100%;">                
                 <tr>                
-                    <th style="width:100px; text-align:center">${langPrimary}</th>
+                    <th style="width:100px; text-align:center">${primary}</th>
                     <td style="width:40%;">
                         <input type="text" id="tbFormName" name="tbFormName" maxlength="50" style="width:100%">
                         <input type="text" id="tbFormID" name="tbFormID" style="display: none" readonly>
                     </td>
-                    <th style="width:100px; text-align:center">${langSecondary}</th>
+                    <th style="width:100px; text-align:center">${secondary}</th>
                     <td style="width:40%;" colspan="5">
                         <input type="text" id="tbFormName2" name="tbFormName2" maxlength="50" style="width:100%" >
                     </td>        

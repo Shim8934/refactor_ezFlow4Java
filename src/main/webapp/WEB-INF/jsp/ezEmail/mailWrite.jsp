@@ -256,7 +256,7 @@
 	            }    
 	            
 	            mail_message_cross_dialogArguments[1] = window_close_Complete;
-	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURI("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURI("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURI("<spring:message code='ezEmail.t671' />");
+	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezEmail.t671' />");
 	            DivPopUpShow(330, 205, pUrl);	            
 	        } else {
 	            window.close();
@@ -691,13 +691,13 @@
 		                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 		                size = SelectSingleNodeValue(filelist[i], "SIZE");
 		                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
+		                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
 		                if (big_yn == "Y") {
 		                    bigtrue = bigtrue + 1;
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURI(path) + "&filedate=" + encodeURI(attid.split('/')[0]);
+		                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('/')[0]);
 		                }
 		                else {
-		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
+		                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
 		                }
 		                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 		                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
