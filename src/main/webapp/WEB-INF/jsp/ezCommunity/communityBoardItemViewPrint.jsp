@@ -219,7 +219,7 @@
 		    		<table class="content" style="width:100%">
 				        <tr>
 				        	<th><spring:message code = 'ezCommunity.t138' /></th>
-				        	<td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:120px;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''>&nbsp;<c:out value = '${item.writerName}' /></div></td>
+				        	<td id="WriteUserNM" style="CURSOR: pointer;white-space:nowrap;width:120px;"><div id = title style="vertical-align:middle;width:115px;height:17px;overflow-y:auto;" onClick=''><c:out value = '${item.writerName}' /></div></td>
 				          	<th><spring:message code = 'ezCommunity.t209' /></th>
 				          	<td id="PostDate" style="padding-right:15px;width:auto;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.writeDate }' /></div></td>
 				          	<th><spring:message code = 'ezCommunity.t931' /></th>
@@ -228,11 +228,11 @@
 				          	
 				          	<c:choose>
 	                        	<c:when test="${item.endDate == t930}">
-	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:80px;height:17px;overflow-y:auto;"><spring:message code = 'ezCommunity.t930' /></div></td>
+	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><spring:message code = 'ezCommunity.t930' /></div></td>
 	                        	</c:when>
 	                        	
 	                        	<c:otherwise>
-	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:80px;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td>
+	                        		<td id="EndDate" style="padding-right:15px;width:80px;white-space:nowrap"><div id = title style="vertical-align:middle;width:auto;height:17px;overflow-y:auto;"><c:out value = '${item.endDate }' /></div></td>
 	                        	</c:otherwise>
 	                        </c:choose>
 	                        
