@@ -397,7 +397,7 @@
     			<th style="width:80px"> <spring:message code='ezResource.t106' /></th>
     			<th style="width:60px"> <spring:message code='ezResource.t37' /></th>
     			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
-    			<th style="width:100px;"> <spring:message code='ezResource.t148' /></th>
+    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
   			</tr>
 			<c:if test="${!empty resBrdList}" >
 				<c:forEach var="list"  items="${resBrdList}">
