@@ -51,7 +51,7 @@
          	WHERE
          		A.TENANT_ID = #tenantID#
          	AND 
-         		REGDATE IS NOT NULL 
+         		(REGDATE IS NOT NULL AND REGDATE <> '') 
          	AND 
          		DTIME != 0 
          	AND 
@@ -107,7 +107,7 @@
             AND 
             	DTIME != '0'
             AND 
-            	REGDATE IS NOT NULL
+            	(REGDATE IS NOT NULL AND REGDATE <> '')
            	ORDER BY 
            		A.CN,
                 REGDATE,
@@ -159,7 +159,7 @@
             AND 
             	B.DTIME != 0
             AND 
-            	REGDATE IS NOT NULL
+            	(REGDATE IS NOT NULL AND REGDATE <> '')
            	ORDER BY 
            		A.CN,
                 REGDATE,
@@ -213,7 +213,7 @@
             WHERE
             	A.TENANT_ID = #tenantID#
             AND
-            	REGDATE IS NOT NULL 
+            	(REGDATE IS NOT NULL AND REGDATE <> '')
             AND 
             	B.FORMID = #searchID# 
             AND 
@@ -263,7 +263,7 @@
              AND
              	B.USERID = A.CN
              AND 
-             	REGDATE IS NOT NULL
+             	(REGDATE IS NOT NULL AND REGDATE <> '')
              WHERE  
              	A.TENANT_ID = #tenantID#
              AND
@@ -317,7 +317,7 @@
           	WHERE
           		A.TENANT_ID = #tenantID#
           	AND  
-          		REGDATE IS NOT NULL
+          		(REGDATE IS NOT NULL AND REGDATE <> '')
             AND 
             	A.CN = #searchID#
             AND 
