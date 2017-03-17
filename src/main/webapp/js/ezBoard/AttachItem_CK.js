@@ -40,9 +40,9 @@ function APRAttachXMLParsing()
 	
     for( i = 0 ; i < pTotalRowsLen ; i++)
     {
-        strXML = strXML + "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]).replace(re, "&amp;") + "</VALUE>";
-        strXML = strXML + "<DATA1>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]).replace(re, "&amp;") + "</DATA1>";
-        strXML = strXML + "<DATA2>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]).replace(re, "&amp;") + "</DATA2>";
+        strXML = strXML + "<ROW><CELL><VALUE><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "]]></VALUE>";
+        strXML = strXML + "<DATA1><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[1]) + "]]></DATA1>";
+        strXML = strXML + "<DATA2><![CDATA[" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[2]) + "]]></DATA2>";
         strXML = strXML + "<DATA3>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[3]) + "</DATA3>";
         strXML = strXML + "<DATA4>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[4]) + "</DATA4>";
         strXML = strXML + "<DATA5>" + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[5]) + "</DATA5>";
@@ -196,9 +196,9 @@ function AddAttachFileInfoXmlParsing(resultXML) {
         pstrXML += "</HEADERS><ROWS>";
         for (i = 0; i < nodes.length; i++) {
             if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
-                pstrXML += "<ROW><CELL><VALUE>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;") + "</VALUE>";//파일명
-                pstrXML += "<DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]).replace(re, "&amp;")+ "</DATA1>"; //파일명
-                pstrXML += "<DATA2>" + getNodeText(GetChildNodes(nodes[i])[0]).replace(re, "&amp;") + "</DATA2>"; //저장될 파일명
+                pstrXML += "<ROW><CELL><VALUE><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[2]) + "]]></VALUE>";//파일명
+                pstrXML += "<DATA1><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[2]) + "]]></DATA1>"; //파일명
+                pstrXML += "<DATA2><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[0]) + "]]></DATA2>"; //저장될 파일명
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
                 pstrXML += "<DATA5>Y</DATA5>";

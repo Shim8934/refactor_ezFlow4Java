@@ -68,7 +68,7 @@ function APRLINEXMLParsing(APRLINE) {
             GetXml = GetXml + "<ROW>";
             GetXml = GetXml + "<COLUMN>" + (AprLineTotalLen - k) + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[1], "VALUE") + "</COLUMN>";
-            GetXml = GetXml + "<COLUMN>" + arr_userinfo[3] + "</COLUMN>";
+            GetXml = GetXml + "<COLUMN>" + MakeXMLString(arr_userinfo[3]) + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + MakeXMLString(arr_userinfo[5]) + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[4], "VALUE") + "</COLUMN>";
             GetXml = GetXml + "<COLUMN>" + SelectSingleNodeValue(Cell[5], "VALUE") + "</COLUMN>";

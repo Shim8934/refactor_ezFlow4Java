@@ -2076,8 +2076,7 @@ function putSignXML(SignXML) {
                     retVal = true;
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
-                    }
-                    else {
+                    } else {
                         var img = SignCont.split("::");
                         var signWidth = parseInt(field.offsetWidth) - 4 - 15;
                         var signHeight = parseInt(field.offsetHeight) - 4
@@ -2089,14 +2088,11 @@ function putSignXML(SignXML) {
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
                             strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-                            //message.BodySetAttribute(SignName, img[0]);
                         }
-
 
                         if (img.length >= 2 && img[1] != "") {
                             field.innerHTML = img[1] + "<br>" + strimg;
-                        }
-                        else {
+                        } else {
                             field.innerHTML = strimg;
                         }
                     }

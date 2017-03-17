@@ -454,7 +454,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + pSelectedRow.cells[0].innerText + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
-                pparsingXML = pparsingXML + "<VALUE>" + preDeptJobTitle + "</VALUE>";
+                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";
                 pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
                 pparsingXML = pparsingXML + "</CELL><CELL>";

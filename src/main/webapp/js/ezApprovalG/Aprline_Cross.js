@@ -525,7 +525,7 @@ function AprLineAddUser(Mode, tr, pSelectedRow) {
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + pSelectedRow[0].childNodes[0].innerText + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
-            pparsingXML = pparsingXML + "<VALUE>" + preDeptJobTitle + "</VALUE>";
+            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
             pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
             pparsingXML = pparsingXML + "</CELL><CELL>";
@@ -1838,9 +1838,9 @@ function addGamsabu(pSN, pAprType, pDraftDayFlag, pAprState) {
     var GamsabuName2 = getDeptInfo_nodName(optGamsabu, "DisplayName2");
     GetXml = "<ROW>";
     GetXml = GetXml + "<COLUMN>" + pSN + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
-    GetXml = GetXml + "<COLUMN>" + GamsabuName + "</COLUMN>";
+    GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
+    GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
+    GetXml = GetXml + "<COLUMN>" + MakeXMLString(GamsabuName) + "</COLUMN>";
     GetXml = GetXml + "<COLUMN>" + pAprType + "</COLUMN>";
     GetXml = GetXml + "<COLUMN>" + pAprState + "</COLUMN>";
     GetXml = GetXml + "<DATA name='ProcessDate'>" + "" + "</DATA>";

@@ -37,9 +37,13 @@
 	                    tempXML = loadXMLString(tempStr);
 	                    XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                    XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-	
-	                    var _DocContentHtml = getNodeText(XmlBodyDATA);
-	
+
+	                    var Content = getNodeText(XmlBodyDATA);
+	                    if (Content.indexOf("error") > -1)
+	                        parent.document.getElementById("btnRefresh").style.display = "";
+
+	                    var _DocContentHtml = Content;
+
 	                    var ConXmlDiv = document.createElement("DIV");
 	                    ConXmlDiv.innerHTML = _DocContentHtml;
 	                    if (ConXmlDiv.getElementsByTagName("XML").length > 0) {
@@ -47,18 +51,21 @@
 	                        CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
 	                        _DocContentHtml = ConXmlDiv.innerHTML;
 	                    }
-	
-	                    document.getElementById('div_Content').innerHTML = _DocContentHtml.replace(/(<p)/igm, '<div style=\"font-size:10pt;\"').replace(/<\/p>/igm, '</div>');
+
+	                    document.getElementById('div_Content').innerHTML = _DocContentHtml;
 	                    _htmlcontent = document.getElementById('div_Content').innerHTML;
-	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
+	                    var TDRows = document.getElementById('div_Content').getElementsByTagName("TD")
 	                    for (var i = 0; i < TDRows.length; i++) {
-	                        if (TDRows.item(i).getAttribute("class") == "FIELD") {
+	                        if (GetAttribute(TDRows.item(i),"id") != null) {
 	                            if (TDRows.item(i).childNodes.length == 0) {
 	                                if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
 	                                    TDRows.item(i).innerHTML = "&nbsp;";
 	                                }
 	                            }
 	                        }
+	                    }
+	                    for (var i = 0; i < GetElementsByTagName(XmlBodyATT, "NODE").length; i++) {
+	                        SetAttribute(document.getElementsByTagName("body")[0], getNodeText(GetElementsByTagName(XmlBodyATT, "NODENAME")[i]), getNodeText(GetElementsByTagName(XmlBodyATT, "NODEVALUE")[i]));
 	                    }
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable();
@@ -76,9 +83,9 @@
 	                tempXML = loadXMLString(tempStr);
 	                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 	                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-	
+
 	                var _DocContentHtml = getNodeText(XmlBodyDATA);
-	
+
 	                var ConXmlDiv = document.createElement("DIV");
 	                ConXmlDiv.innerHTML = _DocContentHtml;
 	                if (ConXmlDiv.getElementsByTagName("XML").length > 0) {
@@ -86,11 +93,11 @@
 	                    CONNINFO2.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
 	                    _DocContentHtml = ConXmlDiv.innerHTML;
 	                }
-	                document.getElementById('div_Content').innerHTML = _DocContentHtml.replace(/(<p)/igm, '<div style=\"font-size:10pt;\"').replace(/<\/p>/igm, '</div>');
+	                document.getElementById('div_Content').innerHTML = _DocContentHtml;
 	                _htmlcontent = document.getElementById('div_Content').innerHTML;
-	                var TDRows = document.getElementById('div_Content').getElementsByTagName("TD");
+	                var TDRows = document.getElementById('div_Content').getElementsByTagName("TD")
 	                for (var i = 0; i < TDRows.length; i++) {
-	                    if (TDRows.item(i).getAttribute("class") == "FIELD") {
+	                    if (GetAttribute(TDRows.item(i),"id") != null) {
 	                        if (TDRows.item(i).childNodes.length == 0) {
 	                            if (TDRows.item(i).innerHTML == "" || TDRows.item(i).innerHTML == " ") {
 	                                TDRows.item(i).innerHTML = "&nbsp;";
