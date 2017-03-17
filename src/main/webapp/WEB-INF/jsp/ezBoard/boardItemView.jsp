@@ -79,10 +79,13 @@
 							html = result;
 						}        			
 					});
+
 					var doc = document.getElementById('message').contentWindow.document;
 					doc.open();
 					doc.write(html);
 					doc.close();
+					
+					$("#message").contents().find("body").css("word-wrap", "break-word");
 					
 					rsa.setPublic(document.getElementById('publicModulus').value, document.getElementById('publicExponent').value);
 					
