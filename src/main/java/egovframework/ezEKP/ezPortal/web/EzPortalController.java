@@ -1050,7 +1050,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		String department = "";
 		String title = "";
 		String companyNm = "";
-		String userApprovalG = "";
 		String lastLogin = "";
 		String pollNum = "";
 		String userPhoto = "";
@@ -1074,8 +1073,6 @@ public class EzPortalController extends EgovFileMngUtil {
 			title = userInfo.getTitle2();
 			companyNm = userInfo.getCompanyName2();
 		}
-		
-		userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		
 		lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
 		lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
@@ -1101,7 +1098,6 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("department", department);
 		model.addAttribute("title", title);
 		model.addAttribute("companyNm", companyNm);
-		model.addAttribute("userApprovalG", userApprovalG);
 		model.addAttribute("lastLogin", lastLogin);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useIE11Browser", useIE11Browser);
@@ -1946,7 +1942,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("useIE11Browser", config.getProperty("config.IE11EDITOR"));
+		model.addAttribute("useIE11Browser", ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()));
 		
 		logger.debug("theme1wpThemeComm ended");
 		return "/ezPortal/theme1/portalTheme1WpThemeComm";
