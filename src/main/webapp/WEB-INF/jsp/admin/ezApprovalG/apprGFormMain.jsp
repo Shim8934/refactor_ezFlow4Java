@@ -183,14 +183,10 @@
 		    }
 	
 		    function Tree_setconfig() {
-		        var xmlHTTP = createXMLHttpRequest();
-		        xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
-		        xmlHTTP.send();
-	
-		        if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-		            var treeView = new TreeView();
-		            treeView.SetConfig(xmlHTTP.responseXML);
-		        }
+		    	var xmlDom = loadXMLFile("/xml/organtree_config.xml");
+		        
+	            var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
 		    }
 	
 		    function RequestData(pNodeID, pTreeID) {
@@ -735,15 +731,15 @@
             	<span style="min-width: 45px;" id="groupstr"><spring:message code = 'ezApprovalG.t1577' /></span>
             </h2>
 
-            <table class="content" style="width:100%; height:565px;">         
+            <table style="width:100%; height:565px; border : none;">         
                 <tr>
-                    <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
+                    <td style="width:400px; vertical-align:top; padding-top:5px; border:none">
                         <h2>
                             <spring:message code = 'ezApprovalG.t232' />
                         </h2>
                         <div id="divUserContTree" style="height: 530px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                     </td>
-                    <td style="text-align:center; width:50px; border-left:none; border-right:none">
+                    <td style="text-align:center; width:50px; border-left:none; border:none">
                         <img style="cursor:pointer" src="/images/arr_r.gif" width="24" height="24" onclick="return insertCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_l.gif" width="24" height="24" onclick="return deleteCont_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_rr.gif" width="24" height="24" onclick="return insertAllCont_onclick()"><br>
@@ -751,7 +747,7 @@
                         <img style="cursor:pointer" src="/images/arr_u.gif" width="24" height="24" onclick="return moveUp_onclick()"><br>
                         <img style="cursor:pointer" src="/images/arr_d.gif" width="24" height="24" onclick="return moveDown_onclick()">
                     </td>
-                    <td style="width:600px; vertical-align:top; padding-top:5px; border-left:none;">
+                    <td style="width:600px; vertical-align:top; padding-top:5px; border:none;">
                         <h2>
                             <spring:message code = 'ezApprovalG.t999932' />
                         </h2>
@@ -771,11 +767,6 @@
             </tr>
         </table>
         
-        <!-- <form runat="server" id="bodyForm">
-            <asp:HiddenField ID="hidCompanyID" runat="server" />
-            <asp:HiddenField ID="hidFormID" runat="server" />
-            <asp:HiddenField ID="hidBeforeConnData" runat="server" />
-        </form> -->
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");
         </script>

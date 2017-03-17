@@ -661,9 +661,9 @@
 	                    pparsingXML = pparsingXML + "<DATA17>" + MakeXMLString(preDeptJobTitle1) + "</DATA17>";
 	                    pparsingXML = pparsingXML + "<DATA18>" + MakeXMLString(preDeptJobTitle2) + "</DATA18>";
 	                    pparsingXML = pparsingXML + "</CELL><CELL>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + preWriterName1 + "</VALUE>";
+	                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preWriterName1) + "</VALUE>";
 	                    pparsingXML = pparsingXML + "</CELL><CELL>";
-	                    pparsingXML = pparsingXML + "<VALUE>" + preDeptJobTitle + "</VALUE>";
+	                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptJobTitle) + "</VALUE>";
 	                    pparsingXML = pparsingXML + "</CELL><CELL>";
 	                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(preDeptName) + "</VALUE>";
 	                    pparsingXML = pparsingXML + "</CELL><CELL>";

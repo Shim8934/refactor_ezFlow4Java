@@ -2327,7 +2327,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public String getFormContent(String formID, String lang, String companyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMID", formID);
-		map.put("v_PLANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		

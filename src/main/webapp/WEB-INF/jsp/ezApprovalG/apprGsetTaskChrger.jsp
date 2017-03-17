@@ -176,10 +176,10 @@
         var pparsingXML = "<LISTVIEWDATA><HEADERS>";
         pparsingXML = pparsingXML + "<HEADER><NAME><spring:message code='ezApprovalG.t229'/></NAME><WIDTH>30</WIDTH></HEADER>";;
         pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
-        pparsingXML = pparsingXML + "<VALUE>" + selRow.cells[0].innerText + "</VALUE>";
-        pparsingXML = pparsingXML + "<DATA1>" + GetAttribute(selRow, "DATA2") + "</DATA1>";
-        pparsingXML = pparsingXML + "<DATA2>" + GetAttribute(selRow, "DATA4") + "</DATA2>";
-        pparsingXML = pparsingXML + "<DATA3>" + GetAttribute(selRow, "DATA5") + "</DATA3>";
+        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + selRow.cells[0].innerText + "]]></VALUE>";
+        pparsingXML = pparsingXML + "<DATA1><![CDATA[" + GetAttribute(selRow, "DATA2") + "]]></DATA1>";
+        pparsingXML = pparsingXML + "<DATA2><![CDATA[" + GetAttribute(selRow, "DATA4") + "]]></DATA2>";
+        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + GetAttribute(selRow, "DATA5") + "]]></DATA3>";
         pparsingXML = pparsingXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
         var Resultxml = loadXMLString(pparsingXML);
 
