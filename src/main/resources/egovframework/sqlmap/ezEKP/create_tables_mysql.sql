@@ -6831,3 +6831,21 @@ SET character_set_client = @saved_cs_client;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+DROP TABLE IF EXISTS `tbl_autodocnum_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_autodocnum_item` (
+  `FORMID` char(1) NOT NULL,
+  `KEEPPERIOD` varchar(8),
+  `SECURITYLEVEL` varchar(4),
+  `ISPUBLIC` varchar(4),
+  `ITEMCODE` varchar(20),
+  `ITEMNAME` varchar(100),
+  `ITEMNAME2` varchar(100),
+  `USEFLAG` varchar(1),
+  `KEEPPERIODCODE` varchar(100),
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
