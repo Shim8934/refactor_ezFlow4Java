@@ -32,7 +32,7 @@
 				xmlHTTP.send(xmlDom);
 		
 				if (xmlHTTP.status == 200) 
-					alert("<spring:message code='ezAddress.t378' />");
+					alert("<spring:message code='ezEmail.t42' />");
 				else
 					alert("<spring:message code='ezAddress.t34' /> -" + xmlHTTP.statusText);	
 						
