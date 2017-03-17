@@ -70,7 +70,7 @@
 		        	boolfirstlist = false;
 		        	var xmlString = "<LISTVIEWDATA><ROWS>";
 		        	for (var i = 0 ; i < m_Arguments[0].length ; i++) {
-			            xmlString += "<ROW><CELL><VALUE>" + unescape(m_Arguments[1][i]) + "</VALUE><CN>" + m_Arguments[0][i] + "</CN><NAME>" + unescape(m_Arguments[1][i]) + "</NAME></CELL></ROW>";
+			            xmlString += "<ROW><CELL><VALUE>" + m_Arguments[1][i] + "</VALUE><CN>" + m_Arguments[0][i] + "</CN><NAME>" + m_Arguments[1][i] + "</NAME></CELL></ROW>";
 			        }
 
 		        	xmlString += "</ROWS></LISTVIEWDATA>";
@@ -173,7 +173,7 @@
 		    	        var brd_nm = brd_nm.replace(rep, "chr(38)");
 
 		        	    var strUrl = "/ezResource/viewResList.do?brdID=" + brd_id + "&accessCode=" + g_AccessCode;
-		            	strUrl = strUrl + "&brdNm=" + encodeURI(brd_nm);
+		            	strUrl = strUrl + "&brdNm=" + encodeURIComponent(brd_nm);
 		        	}
 		    	} else {
 			        strUrl = "/ezResource/scheduleMain.do?resID=" + brd_id + "&accessCode=" + g_AccessCode;

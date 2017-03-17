@@ -246,9 +246,9 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
                     big_yn = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("BIG").text
                     size = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("SIZE").text
                     attid = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("ITEMID").text
-                    var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews2.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+                    var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews2.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
                     if (big_yn == "Y") {
-                        var aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + escape(path) + "&filedate=" + escape(attid.split('\\')[0]);
+                        var aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('\\')[0]);
                     }
                     AtthacDivUpdate("addattach", aitem, attid, filename, size, big_yn)
                 }
@@ -480,10 +480,10 @@ function attach_Add1(ocx_file) {
             size = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("SIZE").text
             attid = xmlDoc.getElementsByTagName("FILE")[i].selectSingleNode("ITEMID").text
 
-            var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURI(g_url) + "&ATTID=" + encodeURI(attid);
+            var aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
 
             if (big_yn == "Y") {
-                var aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?filepath=" + encodeURI(path) + "&filename=" + encodeURI(filename);
+                var aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?filepath=" + encodeURIComponent(path) + "&filename=" + encodeURIComponent(filename);
             }
             AtthacDivUpdate("addattach", aitem, attid, filename, size, big_yn)
         }
@@ -550,7 +550,7 @@ function AtthacDivUpdate(attachMode, sorcePath, AttachID, filename, filesize, Bi
 }
 
 function show_progress(fileinfo) {
-    g_progresswin = window.showModelessDialog("mail_progress.aspx?fileinfo=" + encodeURI(fileinfo), "", "dialogWidth=390px; dialogHeight:190px; center:yes; status:no; help:no; edge:sunken");
+    g_progresswin = window.showModelessDialog("mail_progress.aspx?fileinfo=" + encodeURIComponent(fileinfo), "", "dialogWidth=390px; dialogHeight:190px; center:yes; status:no; help:no; edge:sunken");
 }
 
 function status_change(fileinfo) {
@@ -1615,7 +1615,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         }
         else {
             if (DocHref.toLowerCase().indexOf(".mht") > -1) {
-                var fullPath = encodeURI(DocHref);
+                var fullPath = encodeURIComponent(DocHref);
                 var tempXML = createXmlDom();
                 var XmlBodyATT = createXmlDom();
                 var XmlBodyDATA = createXmlDom();
@@ -1788,7 +1788,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         if (pRetransType != "boardAttach")
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
 
-        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURI(Rurl) + "&title=" + encodeURI(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -3197,7 +3197,7 @@ function pzFormProc_FieldsAvailable() {
 
 function GetUpmooItemInfo_New(Itemid, DocHref) {
     objMHT = new ActiveXObject("MhtFormat.Convert");
-    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURI(DocHref);
+    var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURIComponent(DocHref);
     objMHT.sync = true;
     var strMht = objMHT.DownloadURL(fullPath);
 

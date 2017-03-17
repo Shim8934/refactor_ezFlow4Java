@@ -66,7 +66,7 @@
 		            return;
 		        }
 		        photourl = oPoster.Response;
-		        document.getElementById("LiteralPhoto").innerHTML = "<IMG SRC='/myoffice/Common/DownloadAttach.aspx?filepath=" + escape("/Upload_Address/Photo/" + photourl) + "' width=119 height=128>";
+		        document.getElementById("LiteralPhoto").innerHTML = "<IMG SRC='/myoffice/Common/DownloadAttach.aspx?filepath=" + encodeURIComponent("/Upload_Address/Photo/" + photourl) + "' width=119 height=128>";
 		    }
 		    function delete_photo() {
 		        document.getElementById("LiteralPhoto").innerHTML = "<IMG <spring:message code='ezAddress.i1' />>";
@@ -160,7 +160,7 @@
 			        document.getElementById("attachedfileDIV").innerHTML = document.getElementById("attachedfileDIV").innerHTML + attachText;
 			}
 		    function show_progress(fileinfo) {
-		        g_progresswin = window.showModelessDialog("address_progress.aspx?fileinfo=" + escape(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken");
+		        g_progresswin = window.showModelessDialog("address_progress.aspx?fileinfo=" + encodeURIComponent(fileinfo), "", "dialogWidth=390px; dialogHeight:170px; center:yes; status:no; help:no; edge:sunken");
 		    }
 		
 		    function status_change(fileinfo) {
