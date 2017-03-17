@@ -354,6 +354,9 @@
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t151'/></b> :  ${ownerDeptNm} </td>
 									</tr>
 									<tr>
+										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t155'/></b> :  ${ownerCall} </td>
+									</tr>
+									<tr>
 										<td style="height:24px"><img src="/images/main/portlet_dot01.gif"> <b><spring:message code='ezResource.t148'/></b></td>
 									</tr>
 									<tr>

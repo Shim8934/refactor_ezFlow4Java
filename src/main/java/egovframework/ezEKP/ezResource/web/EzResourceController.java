@@ -1029,6 +1029,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		//String strOwnerCall = resBrd.getOwnerCall();
 		//String strMakeDate = ezResourceService.getLocalTime(resBrd.getMakeDate() + " " + EgovDateUtil.getCurrentDate("HH:mm:ss"));
 		String strApproveFlag = resBrd.getApproveFlag();
+		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
 		
@@ -1073,6 +1074,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("nonActiveX", "YES");
 		model.addAttribute("adminFg", pAdminFg);
 		model.addAttribute("resLocation", strResLocation);
+		model.addAttribute("ownerCall", strOwnerCall);
 		model.addAttribute("brdExplain", strBrdExplain);
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		model.addAttribute("startDay", startDay);
