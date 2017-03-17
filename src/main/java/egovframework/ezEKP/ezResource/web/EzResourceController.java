@@ -628,7 +628,9 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 
 		int topCount = (Integer.parseInt(curPage.trim()) * pageSize);
-
+		
+		int start = (Integer.parseInt(curPage.trim()) - 1) * pageSize;
+		
 		String brdNmStr = "";
 		String ownDeptNm = "";
 		String ownerNm = "";
@@ -659,6 +661,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("sortGbn", sortGbn);
 		model.addAttribute("adminFg", adminFg);
 		model.addAttribute("totalCnt", totalCnt);
+		model.addAttribute("start", start);
 		
 		return "/ezResource/resViewResList";
 	}
