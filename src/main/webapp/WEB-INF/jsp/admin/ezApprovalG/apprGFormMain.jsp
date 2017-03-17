@@ -112,20 +112,19 @@
 		    function get_FormInfo() {
 		        $.ajax({
 		        	type : "POST",
+		        	dataType : "json",
 		        	url : "/admin/ezApprovalG/getFormInfo.do",
 		        	async : false,
 		        	data : {formID : formID, companyID : companyID},
 		        	success : function(result) {
 		        		if (result != "") {
-			                var xmldom = loadXMLString(result);
-
-			                document.getElementsByName("tbFormName")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]);
-			                document.getElementsByName("tbFormName2")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]);
-			                document.getElementsByName("tbDescript")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]);
-			                document.getElementsByName("selFormKind")[0].value = getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]);
+			                document.getElementsByName("tbFormName")[0].value = result.vo.formName;
+			                document.getElementsByName("tbFormName2")[0].value = result.vo.formName;
+			                document.getElementsByName("tbDescript")[0].value = result.vo.formDescription;
+			                document.getElementsByName("selFormKind")[0].value = result.vo.formDocType;
 			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
 			                
-			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
+			                if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
 			            }

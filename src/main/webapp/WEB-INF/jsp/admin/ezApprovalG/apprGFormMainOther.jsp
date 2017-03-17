@@ -53,6 +53,7 @@
 		    var ConnData = "";
 		    var WorkData = "";
 		    var useEditor = "${useEditor}";
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -201,54 +202,39 @@
 		        setNodeText(BottonTDValue[2],""); 
 		        document.getElementById("EditInput").value = "";
 		    }
-		
+		    
 		    function get_FormInfo() {
-		    	$.ajax({
-		    		type : "POST",
-		    		async : false,
-		    		url : "/admin/ezApprovalG/getFormInfo.do",
-		    		data : {
-		    			formID           : formID,
-		    			companyID  		 : companyID
-		    		},
-		    		success: function(result){
-// 		    			if (text != "") {
-// 		    				var xmldom = createXmlDom();
-// 			                xmldom = loadXMLString(text);
-			
-// 			                tbFormName.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME")[0]);
-// 			                tbFormName2.value = getNodeText(SelectNodes(xmldom, "DATA/FORMNAME2")[0]);
-// 			                tbDescript.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDESCRIPTION")[0]);
-// 			                selFormKind.value = getNodeText(SelectNodes(xmldom, "DATA/FORMDOCTYPE")[0]);
-// 			                formURL = document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(getNodeText(SelectNodes(xmldom, "DATA/FORMFILELOCATION")[0]));
-			
-// 			                if (getNodeText(SelectNodes(xmldom, "DATA/USEFLAG")[0]) == "Y") {
-// 			                    setAutoItemCode.checked = true;
-// 			                    document.getElementById('tr_setAutoItemCode').style.display = "";
-// 			                    document.getElementById("isPublic").value = getNodeText(SelectNodes(xmldom, "DATA/ISPUBLIC")[0]);
-// 			                    document.getElementById("tbItemCode").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMCODE")[0]);
-// 			                    document.getElementById("tbItemName").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME")[0]);
-// 			                    document.getElementById("tbItemName2").value = getNodeText(SelectNodes(xmldom, "DATA/ITEMNAME2")[0]);
-// 			                    document.getElementById("keepperiod").value = getNodeText(SelectNodes(xmldom, "DATA/KEEPPERIODCODE")[0]);
-// 			                    document.getElementById("securitylevel").value = getNodeText(SelectNodes(xmldom, "DATA/SECURITYLEVEL")[0]);
-// 			                }              
-// 			            }
-		    			
-		    			if (result != "") {
-			                var xmldom = loadXMLString(result);
-
-			                $("#tbFormName").value(getNodeText(SelectNodes(xmldom, "ROW/FORMNAME")[0]));
-			                $("#tbFormName2").value(getNodeText(SelectNodes(xmldom, "ROW/FORMNAME2")[0]));
-			                $("#tbDescript").value(getNodeText(SelectNodes(xmldom, "ROW/FORMDESCRIPTION")[0]));
-			                $("#selFormKind").value(getNodeText(SelectNodes(xmldom, "ROW/FORMDOCTYPE")[0]));
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "json",
+		        	url : "/admin/ezApprovalG/getFormInfo.do",
+		        	async : false,
+		        	data : {formID : formID,
+		        			companyID : companyID
+		        	},
+		        	success : function(result) {
+		        		if (result != "") {
+		        			tbFormName.value = result.vo.formName;
+		        			tbFormName2.value = result.vo.formName;
+		        			tbDescript.value = result.vo.formDescription;
+		        			selFormKind.value = result.vo.formDocType;
 			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
 			                
-			                if (getNodeText(SelectNodes(xmldom, "ROW/FORMCONNFLAG")[0]) == "Y") {
-			                    document.getElementById("setConnFlag").checked = true;
+			                if (approvalFlag == 'S') {
+				                if (result.vo.useFlag == "Y") {
+				                    setAutoItemCode.checked = true;
+				                    document.getElementById('tr_setAutoItemCode').style.display = "";
+				                    document.getElementById("isPublic").value = result.vo.isPublic;
+				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
+				                    document.getElementById("tbItemName").value = result.vo.itemName;
+				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
+				                    document.getElementById("keepperiod").value = result.vo.keepPeriod;
+				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
+			                	}
 			                }
 			            }
-		    		}
-		    	});
+		        	}
+		        });
 		    }
 		
 		    function SaveFormInfo_after(text) {

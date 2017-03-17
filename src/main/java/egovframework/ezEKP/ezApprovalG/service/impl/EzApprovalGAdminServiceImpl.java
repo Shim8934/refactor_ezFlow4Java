@@ -2324,7 +2324,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getFormContent(String formID, String lang, String companyID, int tenantID) throws Exception {
+	public ApprGFormVO getFormContent(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMID", formID);
 		map.put("companyID", companyID);
@@ -2334,9 +2334,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		logger.debug("getFormContent ended.");
 		
-		String result = commonUtil.getQueryResult(vo);
-		
-		return result;
+		return vo;
 	}
 
 	@Override

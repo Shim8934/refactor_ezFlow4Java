@@ -821,25 +821,64 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
 		resultClass="ApprGFormVO">
-		<![CDATA[
-			SELECT
-				formcontid,
-				formid,
-				formname,
-				formname2,
-				formdoctype,
-				formdescription,
-				formfilelocation,
-				formconnflag 
-			FROM
-				TBL_FORMINFO
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				formid = #v_PFORMID#
-		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					formcontid,
+					formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag,
+					keepPeriod,
+					TBL_AUTODOCNUM_ITEM.securityLevel,
+					TBL_AUTODOCNUM_ITEM.isPublic,
+					TBL_AUTODOCNUM_ITEM.itemCode,
+					TBL_AUTODOCNUM_ITEM.itemName,
+					TBL_AUTODOCNUM_ITEM.itemName2,
+					TBL_AUTODOCNUM_ITEM.useFlag,
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
+				FROM
+					TBL_FORMINFO
+				JOIN 
+	            	TBL_AUTODOCNUM_ITEM   
+	            ON 
+	            	TBL_FORMINFO.tenant_id = TBL_AUTODOCNUM_ITEM.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
+	            AND
+	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_PFORMID#
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					formcontid,
+					formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag 
+				FROM
+					TBL_FORMINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_PFORMID#
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->
