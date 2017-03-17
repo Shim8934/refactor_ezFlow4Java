@@ -635,13 +635,13 @@
 			                big_yn = SelectSingleNodeValue(filelist[i], "BIG");
 			                size = SelectSingleNodeValue(filelist[i], "SIZE");
 			                attid = SelectSingleNodeValue(filelist[i], "ITEMID");
-			                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+			                aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
 			                if (big_yn == "Y") {
 			                    bigtrue = bigtrue + 1;
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + escape(path) + "&filedate=" + escape(attid.split('\\')[0]);
+			                    aitem = document.location.protocol + "//" + document.location.hostname + "/Common/DownloadAttach_Common.aspx?fileid=" + encodeURIComponent(path) + "&filedate=" + encodeURIComponent(attid.split('\\')[0]);
 			                }
 			                else {
-			                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + escape(g_url) + "&ATTID=" + escape(attid);
+			                    aitem = document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_ReadAttach_Ews.aspx?mode=Attach&ID=" + encodeURIComponent(g_url) + "&ATTID=" + encodeURIComponent(attid);
 			                }
 			                objRows = createNodeAndAppandNode(xmlReturnValue, objNode, objRows, "ROW");
 			                createNodeAndAppandNodeText(xmlReturnValue, objRows, objRow, "FILEPATH", path);
