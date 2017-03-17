@@ -4,6 +4,7 @@ import java.util.List;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzOrganAdminService {
 	
@@ -39,7 +40,7 @@ public interface EzOrganAdminService {
 	
 	public int getPermissionListCount(String companyID, String type, String strLang, int tenantID) throws Exception;
 
-	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID) throws Exception;
+	public void insertDBData_company(String cn, String displayName, String displayName2, String mailAddr, String parentCn, String ldapPath, int tenantID, LoginVO userInfo) throws Exception;
 	
 	public void insertDBData_dept(OrganDeptVO vo) throws Exception;
 	
