@@ -79,7 +79,7 @@
 			    var strWriteDate = "<c:out value = '${item.writeDate}' />";
 			    var strParentWriteDate = "<c:out value = '${item.parentWriteDate}' />";
 			    var strImportance = "<c:out value = '${item.importance}' />";
-			    var strStartDate = "<c:out value = '${item.startDate}' />";
+			    var strStartDate = "<c:out value = '${startDateTime}' />";
 			    var strEndDate = "<c:out value = '${item.endDate}' />";
 			    var strAttachments = "<c:out value = '${item.attachments}' />";
 			    var strContentLocation = "<c:out value = '${item.contentLocation}' />";
@@ -563,7 +563,7 @@
 			    }
 		
 			    function btn_PostDate_Clear() {
-		        	settime = strNow;
+		        	settime = strStartDate;
 			        
 			        NowDate = new Date(settime.substring(0, 4), settime.substring(5, 7), settime.substring(8, 10), settime.substring(11, 13), settime.substring(14, 16));
 			        NowDate.setMonth(NowDate.getMonth() - 1);
