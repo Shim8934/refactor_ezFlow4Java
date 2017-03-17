@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><c:out value = '${title }' /></title>
+		<title>${title}</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
@@ -17,13 +17,12 @@
 
 		<script type="text/javascript">
 			var OrderCell = "";
-			var xmlhttp = createXMLHttpRequest();
-			var xmldoc = createXmlDom();
 			var gManageID, gFContID, gParant, Flag, RtnState, gParantName;
 			var companyID;
 			var gParantName2 = "";
 			var gMultiDataNum = "";
 			var returnFunction
+			var approvalFlag = "<c:out value = '${approvalFlag}' />";
 			
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {
@@ -32,6 +31,15 @@
 			}
 			
 			$(document).ready(function () {
+				if (approvalFlag == 'S') {
+					$(".approvalG").hide();
+					$(".approvalS").show();
+				} else {
+					$(".approvalS").hide();
+					$(".approvalG").show();
+				}
+				
+				
 			    var RtnVal = new Array();
 			    var Para = opener.formContMain_dialogArguments[0];
 			    returnFunction = opener.formContMain_dialogArguments[1];
@@ -240,32 +248,38 @@
 			}
 			
 			function Tree_setconfig() {
-			    var xmlHTTP = createXMLHttpRequest();
-			    xmlHTTP.open("GET", "/xml/organtree_config.xml", false);
-			    xmlHTTP.send();
-			    
-			    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-			        var treeView = new TreeView();
-			        treeView.SetConfig(xmlHTTP.responseXML);
-			    }
+				var xmlDom = createXmlDom();
+	            xmlDom = loadXMLFile("/xml/organtree_config.xml");
+		    	var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
 			}
 			
 			function rdGroup_onclick() {
 			    document.getElementById("rdTotal").checked = false;
 			    gManageID = "";
 			    
-			    document.getElementById("btnManage").style.display = "";
-	            document.getElementById("btnUseDept").style.display = "";
-	            document.getElementById("btnDelDept").style.display = "";
+			    if (approvalFlag == 'S') {
+			    	document.getElementsByName("btnUseDept")[0].style.display = "";
+		            document.getElementsByName("btnDelDept")[0].style.display = "";
+			    } else {
+				    document.getElementById("btnManage").style.display = "";
+		            document.getElementById("btnUseDept").style.display = "";
+		            document.getElementById("btnDelDept").style.display = "";
+			    }
 			}
 			
 			function rdTotal_onclick() {
 			    document.getElementById("rdGroup").checked = false;
 			    gManageID = "ALL";
-			
-			    document.getElementById("btnManage").style.display = "none";
-	            document.getElementById("btnUseDept").style.display = "none";
-	            document.getElementById("btnDelDept").style.display = "none";
+				
+			    if (approvalFlag == 'S') {
+			    	document.getElementsByName("btnUseDept")[0].style.display = "none";
+		            document.getElementsByName("btnDelDept")[0].style.display = "none";
+			    } else {
+			    	document.getElementById("btnManage").style.display = "none";
+		            document.getElementById("btnUseDept").style.display = "none";
+		            document.getElementById("btnDelDept").style.display = "none";
+			    }
 			}
 			
 			function btnManage_onclick() {
@@ -330,7 +344,7 @@
 				if (index != -1) {
 					document.getElementById("selDept").remove(index);
 				} else {
-					alert("<spring:message code = 'ezApprovalG.t1646' />");
+						alert("<spring:message code = 'ezApprovalG.t1646' />");
 				}
 			}
 			
@@ -455,18 +469,30 @@
 	    </table>
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
-	            <td valign="top" style="width:45%">
-	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 357px; HEIGHT: 288px; BACKGROUND-COLOR: #ffffff;overflow:auto"></div>
+	            <td valign="top" style="width:43%">
+	                <div id="TreeView" style="border: #b6b6b6 1px solid;width: 100%; height: 400px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
-	            <td align="center" style="width:10%">
+	            <td class = 'approvalG' align="center" style="width:14%">
 	               <a class="imgbtn" id="btnManage" style="display:none"><span onclick="btnManage_onclick()"><spring:message code = 'ezApprovalG.t1661' /></span></a>
 	               <a class="imgbtn" id="btnUseDept" style="display:none"><span onclick="btnUseDept_onclick()"><spring:message code = 'ezApprovalG.t1662' /></span></a>
 	               <a class="imgbtn" id="btnDelDept" style="display:none"><span onclick="btnDelDept_onclick()"><spring:message code = 'ezApprovalG.t1650' /></span></a>
 	            </td>
-	            <td valign="top" style="width:45%">
-	                <input type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
-	                <select id="selDept" name="selDept" size="2" style="BORDER: #b6b6b6 1px solid; HEIGHT: 270px; WIDTH: 100%; Z-INDEX: 100">
-	                </select>
+	            <td class = 'approvalS' style="width:5%; text-align:center">               
+	               <img name="btnUseDept" style="cursor:pointer; display:none" src="/images/arr_r.gif" width="24" height="24" onclick="btnUseDept_onclick()"><br /><br />
+	               <img name="btnDelDept" style="cursor:pointer; display:none" src="/images/arr_l.gif" width="24" height="24" onclick="btnDelDept_onclick()">              
+	            </td>
+	            <td valign="top" style="width:43%">
+	                <input class = 'approvalG' type="text" id="tbManage" name="tbManage" style="Width: 100%" readonly>
+	                <c:choose>
+	                	<c:when test="approvalS">
+			                <select id="selDept" name="selDept" size="2" style="border: #b6b6b6 1px solid; height: 400px; width: 100%; z-index: 100">
+			                </select>
+	                	</c:when>
+	                	<c:otherwise>
+			                <select id="selDept" name="selDept" size="2" style="border: #b6b6b6 1px solid; height: 388px; width: 100%; z-index: 100">
+			                </select>
+	                	</c:otherwise>
+	                </c:choose>
 	            </td>
 	        </tr>
 	    </table>

@@ -25,7 +25,8 @@
 		    var ListIdx;
 		    var g_multiDataNum = "<c:out value = '${multiData}' />";
 		    var nodeIdx;
-		    var pEDITOR = "<c:out value = '${useEditor}' />";
+		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
+		    var pEditor = "<c:out value = '${useEditor}' />";
 		    
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function() {
@@ -300,10 +301,19 @@
 							
 							parameter = parameter + HWP;
 						} else {
-							if (pEDITOR == "DEXT" || pEDITOR == "NAMO") {
-								url = "/myoffice/ezApprovalG/manage/FormMaker/FormMain_Cross.aspx";
+							//일반일때 ck
+							if (approvalFlag =='S') {
+								if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO") {
+									url = "/admin/ezApprovalG/formMainOther.do";
+								} else {
+									url = "/admin/ezApprovalG/formMain.do";
+								}
 							} else {
-								url = "/admin/ezApprovalG/formMain.do";
+								if (pEditor == "DEXT" || pEditor == "NAMO") {
+									url = "/admin/ezApprovalG/formMainOther.do";
+								} else {
+									url = "/admin/ezApprovalG/formMain.do";
+								}
 							}
 						}
 						

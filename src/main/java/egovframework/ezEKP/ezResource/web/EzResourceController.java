@@ -488,7 +488,6 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("scheduleGet End");
-		logger.debug("reVal=" + reVal.toString());
 		return reVal.toString();
 	}
 	

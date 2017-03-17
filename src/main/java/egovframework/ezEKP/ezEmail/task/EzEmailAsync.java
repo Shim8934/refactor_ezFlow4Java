@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 
@@ -35,6 +36,9 @@ public class EzEmailAsync {
 	@Autowired
 	private EzEmailService ezEmailService;
 	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+	
 	@Autowired
 	private Properties config;
 	
@@ -42,7 +46,7 @@ public class EzEmailAsync {
     private String jspw;
 	
 	@Async
-	public void cancelMailDelete(String num) {
+	public void cancelMailDelete(String num, int tenantID) {
 		try {
 			logger.debug("cancelMailDelete async methoed started.");
 			logger.debug("num=" + num);
@@ -59,6 +63,8 @@ public class EzEmailAsync {
 			Locale locale = Locale.getDefault();
 			
 			List<String[]> receiveDetailList = new ArrayList<String[]>();
+			
+			String isReadDelete = ezCommonService.getTenantConfig("IS_READ_DELETE", tenantID);
 			
 			for (String address : addresses) {
 				//jobCode - 1:발견후 삭제, 2:발견하였으나 읽은 메일, 3:발견하지 못함
@@ -99,7 +105,7 @@ public class EzEmailAsync {
 					messages = folder.search(searchTerm);
 					if (messages.length > 0) { //메일 발견
 						if (messages[0].isSet(Flags.Flag.SEEN)) { //메일 읽음
-							if (config.getProperty("config.IS_READ_DELETE").equals("YES")) { //읽어도 지움
+							if (isReadDelete.equals("YES")) { //읽어도 지움
 								jobCode = "1";
 								messages[0].setFlag(Flags.Flag.DELETED, true);
 							} else { //읽으면 안지움

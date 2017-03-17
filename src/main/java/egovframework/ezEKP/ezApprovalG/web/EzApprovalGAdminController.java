@@ -122,7 +122,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		String multiData = userInfo.getPrimary();
-		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()); //config에는 CK등록되어있고 ""일때 폼프로세서적용 
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+//		폼프로세서 사용하려면 useEditor "" 으로 세팅
 
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
@@ -218,7 +219,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formContMain.do")
 	public String formContMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formContMain started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String serverName = userInfo.getServerName();
 		String tCheck = request.getParameter("tCheck");
 		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
@@ -244,6 +248,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("title", title);
 		model.addAttribute("topID", topID);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("formContMain ended.");
 		
 		return "admin/ezApprovalG/apprGFormContMain";
 	}
@@ -332,7 +339,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재G관리 양식등록 양식등록,양식수정 화면 호출 함수
+	 * 전자결재G관리 양식등록 양식등록,양식수정 화면호출함수(폼프로세서)
+	 * 전자결재관리 양식등록 양식등록,양식수정 화면호출함수(Other)
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formMain.do")
 	public String formMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -369,6 +377,50 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("formMain ended.");
 		
 		return "admin/ezApprovalG/apprGFormMain";
+	}
+	
+	/**
+	 * 전자결재관리 양식등록 양식추가,양식수정 화면호출함수 CK에디터
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/formMainOther.do")
+	public String formMainOther(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("formMainOther started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		//관리자 권한 체크
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String formProcSpelling = ezCommonService.getTenantConfig("FormProcSpelling", userInfo.getTenantId()); 
+		String primary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
+		String tCheck = request.getParameter("tCheck");
+		String contID = request.getParameter("contID");
+		String formID = request.getParameter("formID");
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
+		String companyID = request.getParameter("companyID");
+		
+		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
+		
+		model.addAttribute("formProcSpelling", formProcSpelling);
+		model.addAttribute("topID", userInfo.getCompanyID());
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("title", title);
+		model.addAttribute("isInsUp", tCheck);
+		model.addAttribute("contID", contID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("docType", docType);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("formMainOther ended.");
+		
+		return "admin/ezApprovalG/apprGFormMainOther";
 	}
 	
 	/**
@@ -412,7 +464,26 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/apprGFormMainHWP";
 	}
 	
-	//여기 ///////////////////////////////////////////////////////
+	/**
+	 * 전자결재관리 양식등록 양식등록,양식수정 양식작성기 화면호출함수 (Other 일경우 CK,Dext, TagFree 등등)
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/selectEditor.do")
+	public String selectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("selectEditor started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String type = request.getParameter("type");
+		
+		model.addAttribute("type", type);
+		model.addAttribute("useEditor", useEditor);
+		
+		logger.debug("selectEditor ended.");
+		
+		return "admin/ezApprovalG/apprGCKEditor";
+	}
+		
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식작성기 화면 호출함수 (한글기안)
 	 */
@@ -2566,6 +2637,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}			
 			subQuery.append(" TBL_ENDAPRDOCINFO.formId ='" + request.getParameter("formID") + "'");
 		}
+		
+		if (request.getParameter("period") != null && !request.getParameter("period").equals("")) {
+			if (!subQuery.toString().equals("")) {
+				subQuery.append(" AND ");
+			}			
+			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod LIKE '%" + request.getParameter("period") + "%' ");
+		}
 							
 		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 	
@@ -2616,6 +2694,57 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("ezStatisticsSearch ended");
 		
 		return "admin/ezApprovalG/apprGStatisticsSearch";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서삭제 메인화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/docDelete.do")
+	public String docDelete (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("docDelete started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		StringBuilder companySel = new StringBuilder();
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "main/warning";
+		}
+				
+		String periodNode = ezApprovalGAdminService.getCodeType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		
+		for (int k = 0; k < deptVOs.size(); k++) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+			}
+		}
+		
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("companySel", companySel);
+		model.addAttribute("periodNode", periodNode);
+		
+		logger.debug("docDelete ended");
+		
+		return "admin/ezApprovalG/apprGDocDelete";
+	}
+	
+	/**
+	 * 전자결재g 관리자 문서삭제 삭제 로직
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/delDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delDocList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("delDocList started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.deleteDocList(xmlPara, userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("delDocList ended");
+		
+		return result;
 	}
 
 }

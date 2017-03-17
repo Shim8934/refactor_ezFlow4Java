@@ -2227,7 +2227,7 @@
 			                <table style="width: 100%; height: 100%">
 			                    <tr>
 			                        <td style="vertical-align: top; height: 100%" >
-		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; height: 400px; overflow: auto; border-top-width: 0px;"></iframe>
+		                                <iframe id="message" class="viewbox" name="message" src="/ezBoard/ckEditor.do" style="padding: 0px; width: 99.7%; height: 100%; overflow: auto; border-top-width: 0px;"></iframe>
 			                        </td>
 			                    </tr>
 			                </table>
@@ -2278,7 +2278,7 @@
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
 				        <tr>
-				            <td style="height: 146px">
+				            <td style="height: 143px">
 				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />

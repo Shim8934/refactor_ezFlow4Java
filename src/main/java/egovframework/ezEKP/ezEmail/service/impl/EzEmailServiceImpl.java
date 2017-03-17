@@ -630,7 +630,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		//회수처리 함수 호출(비동기)
 		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx);
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId);
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}

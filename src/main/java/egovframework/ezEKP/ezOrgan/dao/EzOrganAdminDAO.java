@@ -986,7 +986,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
 	
 	public void insertDBData_company(Map<String, Object> map) throws Exception {        
-        
+        insertDBData_companyForJMocha(map);
 
         if (config.getProperty("config.IsJMochaStandAlone").equals("NO")) {
             try {
@@ -1000,8 +1000,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
                 
                 throw e;
             }
-        } else {
-        	insertDBData_companyForJMocha(map);
         }
 	}
 

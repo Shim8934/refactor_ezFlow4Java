@@ -910,7 +910,7 @@
 	                	    DisplayUserImageList();
 	                	}
 	            	} else {
-	                	alert("오류발생" + g_xmlHTTP.statusText);
+	                	alert(g_xmlHTTP.statusText);
 	            	}
 
 	            	g_xmlHTTP = null;
