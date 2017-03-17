@@ -368,7 +368,7 @@
 	
 		    function btnCcalendar_Click() {
 		        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
-		        strUrl = strUrl + "&brdNm=" + encodeURI(pBrdnm);
+		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
 		        window.open(strUrl, 'right');
 		    }
 		</script>

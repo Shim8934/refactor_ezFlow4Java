@@ -17,7 +17,7 @@
 	    	var pAdminFg   = "${adminFg}";
 	    	var pCompanyID = "${userInfo.companyID}";
 	    	var pResID = "${resID}";
-	    	var pbrdName = "<c:out value='${brdName}' />";
+	    	var pbrdName = "${brdName}";
 	    	var result;
 	    	var rtnVal;
 	    	

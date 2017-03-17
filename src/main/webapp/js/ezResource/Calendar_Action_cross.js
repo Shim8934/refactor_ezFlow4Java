@@ -550,7 +550,7 @@ function tableListControl_Week()
                 _span.onmouseout = new Function("onmouse_out(this);");
                 var pResourceName = "";
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + escape(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
                 setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[j]));
                 _td.appendChild(_span);
                 _tr.appendChild(_td);
@@ -667,7 +667,7 @@ function makeTable(xmldom, pNum, dayType) {
     _span.onmouseout = new Function("onmouse_out(this);");
     var pResourceName = "";
     pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + escape(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + encodeURIComponent(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
     setNodeText(_span,getNodeText(xmldom.getElementsByTagName("subject")[pNum]));
     _td.appendChild(_span);
     _tr.appendChild(_td);
@@ -1190,9 +1190,9 @@ function idCalendarViewer_OnDoubleClickAppointment2(sz_Num, sz_OwnerID, sz_Start
     if (sz_Num != "" && sz_Num != null) {
         ////읽기창////
         //if (pUse_Editor == "TAGFREE")
-        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_TFX.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_TFX.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
         //else
-        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + escape(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        //    window.open("/myoffice/ezResource/ResSch/Schedule_add_ck.aspx?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + encodeURIComponent(sz_BrdName), "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 
         window.open("/ezResource/scheduleRead.do?cmd=mod&from=schedule&" + "num=" + sz_Num + "&ownerID=" + sz_OwnerID + "&type=Master&startDate=" + sz_Start + "&endDate=" + sz_End + "&brdName=" + sz_BrdName, "", "left=" + px + ",top=" + py + ",width=" + c_Width + ", height=" + c_Height + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
     } else if (p_Type != "MAIN") {
