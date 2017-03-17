@@ -2733,7 +2733,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String style = "";
-		String useMultiData = ezCommonService.getTenantConfig("Use_MultiData"+userInfo.getLang(), userInfo.getTenantId());
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary"+userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary"+userInfo.getLang(), userInfo.getTenantId());
 		
@@ -2771,7 +2770,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("code", code);
-		model.addAttribute("useMultiData", useMultiData);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
 		model.addAttribute("boardInfo", boardInfo);
