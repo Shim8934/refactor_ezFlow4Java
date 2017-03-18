@@ -8,6 +8,9 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<link rel="stylesheet" href="<spring:message code="ezResource.e2" />" type="text/css" />
 		<link type="text/css" rel="stylesheet" href="<spring:message code="main.lhm01" />" />
+		<style>
+			.box{border:1px solid #b6b6b6; padding:1px 18px 1px 1px; background-color:#fff;}
+		</style>
 		<script type="text/javascript" src="<spring:message code='ezResource.e1'/>?ver=0.2"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezResource/organtreeview.htc.js"></script>

@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<title><spring:message code='ezPersonal.t210'/></title>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
@@ -851,7 +852,7 @@
                             			<option value="telephonenumber" usedefault="1"><spring:message code='ezPersonal.t177'/></option>
                             			<option value="mobile" usedefault="0"><spring:message code='ezPersonal.t178'/></option>
                             			<option value="HomePhone" usedefault="0"><spring:message code='ezPersonal.t70'/></option>
-                            			<option vaue="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPersonal.t179'/></option>
+                            			<option value="facsimileTelephoneNumber" usedefault="0"><spring:message code='ezPersonal.t179'/></option>
                             			<option value="mail" usedefault="0"><spring:message code='ezPersonal.t176'/></option>
                             			<option value="streetAddress" usedefault="0"><spring:message code='ezPersonal.t180'/></option>
                             		</select>
