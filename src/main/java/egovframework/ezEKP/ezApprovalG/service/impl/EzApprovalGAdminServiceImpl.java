@@ -21,7 +21,6 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -2328,10 +2327,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public ApprGFormVO getFormContent(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMID", formID);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("getFormContent started.");
+		logger.debug("getFormContent started. formID = " + formID);
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		logger.debug("getFormContent ended.");
 		
