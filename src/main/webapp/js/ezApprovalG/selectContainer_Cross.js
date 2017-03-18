@@ -29,18 +29,21 @@ function getUseContainer(pOtherDeptID, pOWN)
 
 function Init()
 {
-	var xmlpara = createXmlDom();
-	var xmlRtn = createXmlDom();
-	
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER"); 	
-	createNodeAndInsertText(xmlpara, objNode, "DeptID", pDeptID);
-			
-	xmlhttp.open("POST", "/ezApprovalG/getcontuseGroup.do", false);
-	xmlhttp.send(xmlpara);
+	  tempDeptID = DeptID;
+      var xmlRtn = createXmlDom();		 
+      
+      $.ajax({
+      	type : "POST",
+      	dataType : "text",
+      	url : "/admin/ezApprovalG/apprGMgetContInfo.do",
+      	async : false,
+      	data : {deptID : pDeptID, comID : companyID},
+      	success : function(result){
+      		xmlRtn = loadXMLString(result);	        		
+      		 document.getElementById('divlvtDept').innerHTML = "";
+      	}
+      });
 
-    document.getElementById('divlvtDept').innerHTML = "";
-    xmlRtn = loadXMLString(xmlhttp.responseText);
     var listview = new ListView();                        
     listview.SetID("lvtDept");                           
     listview.SetMulSelectable(false);                      

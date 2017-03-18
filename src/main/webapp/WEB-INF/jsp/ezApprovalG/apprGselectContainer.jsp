@@ -19,6 +19,7 @@
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();		
 		    var pDeptID ;
+		    var companyID = "${userInfo.companyID}";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();

@@ -85,7 +85,7 @@
 		    var pLClass = "";
 		    var pMClass = "";
 		    var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
-		    var approvalYN = "${approvalYN}";
+		    var approvalFlag = "${approvalFlag}";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
@@ -1261,7 +1261,7 @@
 		                <li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		                <li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 		                <li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-		                <c:if test="${approvalYN eq 'G'}">
+		                <c:if test="${approvalFlag eq 'G'}">
 		                <li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                </c:if>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
