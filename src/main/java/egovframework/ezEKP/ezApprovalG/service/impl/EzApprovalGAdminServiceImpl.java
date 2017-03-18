@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -2869,5 +2870,71 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return rtnValue;
 	}
 	
+	@Override
+	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception {
+		logger.debug("getSecurityType started");
+		
+		StringBuilder result = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (approvalFlag.equals("S")) {
+			map.put("code1", "SA51");
+		} else {
+			map.put("code1", "A51");
+		}
+		
+		map.put("primary", userInfo.getPrimary());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[1].equals(selected)) {
+				result.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				result.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getSecurityType ended");
+		
+		return result.toString();
+	}
 	
+	@Override
+	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception {
+		logger.debug("getKeepType started");
+		
+		StringBuilder result = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (approvalFlag.equals("S")) {
+			map.put("code1", "SA52");
+		} else {
+			map.put("code1", "A52");
+		}
+		
+		map.put("primary", userInfo.getPrimary());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[1].equals(selected)) {
+				result.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				result.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getKeepType ended");
+		
+		return result.toString();
+	}
 }

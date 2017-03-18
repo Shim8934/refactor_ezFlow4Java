@@ -134,6 +134,7 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantId) throws Exception;
 	
+	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 
-	
+	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 }

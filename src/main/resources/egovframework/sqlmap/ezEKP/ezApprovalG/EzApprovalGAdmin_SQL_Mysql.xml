@@ -1988,6 +1988,25 @@
 			]]>
 		</isNotEqual>
 	</select>
+	
+	<select id="EzApprovalGAdminDAO.getCodeType" parameterClass="Map" resultClass="ApprGLeftVO">
+		SELECT
+			code2,
+			CASE #primary# WHEN '1' THEN name WHEN '2' THEN name2 END AS NAME 
+		FROM 
+			TBL_CODELIST 
+		WHERE 
+			tenant_id = #tenantID#
+		AND
+			companyid = #companyID#
+		AND
+			code1 = #code1# 
+		AND 
+			isuse = '1' 
+		ORDER BY 
+			code2
+	</select>
+	
 
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->
