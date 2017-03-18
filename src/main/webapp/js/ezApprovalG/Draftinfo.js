@@ -217,27 +217,6 @@ function MakeDocInfo() {
     return xmlpara;
 }
 
-function GetExtraDocInfo() {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "MODE", "ALL");
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getExtraDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var ResultXML = loadXMLString(xmlhttp.responseText);
-
-    if (ResultXML.getElementsByTagName("SUMMARY").length > 0 && trim_Cross(getNodeText(ResultXML.getElementsByTagName("SUMMARY")[0])))
-        document.getElementById("taSummery").value = ResultXML.getElementsByTagName("SUMMARY")[0].childNodes[0].nodeValue;
-    else
-        document.getElementById("taSummery").value = "";
-}
-
 function getdocinfolist(i) {
     var FormList = new ListView();
     FormList.LoadFromID("lvinfolist");
@@ -276,9 +255,10 @@ function getdocinfolist(i) {
     document.getElementById("tbItemCode").value = pItemCode;
     document.getElementById("tbItemName").value = pItemName;
     document.getElementById("tbItemName2").value = pItemName2;
-    document.getElementById("keyword").value = pkeyword;
 
-    GetExtraDocInfo();
+    //요약을 넣어야됨
+    document.getElementById("taSummery").value = "";
+//    GetExtraDocInfo();
 }
 
 function CheckDraftinfo() {
@@ -310,9 +290,10 @@ function CheckDraftinfo() {
         document.getElementById("tbItemCode").value = pItemCode;
         document.getElementById("tbItemName").value = pItemName;
         document.getElementById("tbItemName2").value = pItemName2;
-        document.getElementById("keyword").value = pkeyword;
+        //요약 넣어야됨
+        document.getElementById("taSummery").value = "";
 
-        GetExtraDocInfo();
+//        GetExtraDocInfo();
     }
 }
 
@@ -399,7 +380,7 @@ function CodeSearch_Press(e) {
 }
 
 function TreeViewinitializeCodeGroup(code, level) {
-    try {
+//    try {
         Tree_setconfig();
 
         var xmlTree = createXmlDom();
@@ -439,10 +420,10 @@ function TreeViewinitializeCodeGroup(code, level) {
         treeView.DataBind("infotree");
         xmlHTTP = null;
 
-    }
-    catch (ErrMsg) {
-        alert(" TreeViewinitialize : " + ErrMsg.description);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" TreeViewinitialize : " + ErrMsg.description);
+//    }
 }
 
 function TreeViewCodeRequestData(pNodeID, pTreeID) {
@@ -497,21 +478,23 @@ function TreeViewCodeNodeClick()
     var code = selnode.GetNodeData("DATA1");
     var level = selnode.GetNodeData("DATA2");
     
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "CODE", code);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
-    xmlhttp.send(xmlpara);
-    try {
-        var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-        if (xmlDoc == null) {
-            xmlDoc = loadXMLString(xmlhttp.responseText);
-        }
+    var result = "";
+    
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+    	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+    	data : {
+    			sCateCode : code
+    			},
+    	success : function(text) {
+    		result = text;
+    	}
+	});
+	
+//    try {
+        var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
         var FormList = new ListView();
@@ -547,11 +530,10 @@ function TreeViewCodeNodeClick()
             }
             getdocinfolist(i);
         }
-        xmlhttp = null;
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 
 function btnAddCode_onclick() {
