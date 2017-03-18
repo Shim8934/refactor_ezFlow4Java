@@ -87,7 +87,7 @@
 		
 		        getDeptFullTree("${topID}");
 		        getFormRecv();
-		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
+// 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 		        MakeListXML(pDocType);
 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
@@ -1163,7 +1163,7 @@
         	<input type="hidden" id="hidListHeader" value="${listHeader}">
         	<input type="hidden" id="hidAprRule" value="${aprRule}">
         	<input type="hidden" id="hidAprRuleLine" value="${aprRuleLine}">
-        	<input type="hidden" id="hidAprTypeXml" value="${aprTypeXML}">
+<%--         	<input type="hidden" id="hidAprTypeXml" value="${aprTypeXML}"> --%>
 <!--             <asp:HiddenField ID="hidBeforeConnData" runat="server" /> -->
 <!--             <asp:HiddenField ID="hidXslt" runat="server" /> -->
         </form>

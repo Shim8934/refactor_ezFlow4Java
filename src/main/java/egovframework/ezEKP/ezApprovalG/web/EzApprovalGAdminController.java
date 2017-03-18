@@ -1267,6 +1267,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String sCateCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		
+		//사용자에서 부를때 컴패니 추가
+		if (companyID == null || companyID.equals("")) {
+			companyID = userInfo.getCompanyID();
+		}
+		
 		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId());
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
