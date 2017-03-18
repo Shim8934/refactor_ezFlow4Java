@@ -20226,4 +20226,27 @@
 				TASKCODE = #code#
 		]]>
    	</select>
+   	
+   	<select id="EzApprovalG.userContListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(DOCID)  
+        FROM 
+        	TBL_USERCONTLIST 
+    	WHERE  
+    		USERCONTID = #v_CONTID#
+        AND 
+        	DOCID = #v_DOCID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.inserUserContList" parameterClass="Map">
+   		 INSERT INTO 
+   			 TBL_USERCONTLIST
+        ( DOCID, USERCONTID, LINKDATE, DESCRIPTION, COMPANYID, TENANT_ID )
+        VALUES 
+        ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
+   	</insert>
 </sqlMap>

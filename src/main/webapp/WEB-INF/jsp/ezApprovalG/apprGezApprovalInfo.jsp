@@ -268,15 +268,68 @@
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
-	            CheckGubunInit();
-	            if (pReDraftFlag == "DRAFT") {
-	                document.getElementById("btnaddress").style.display = "";
+            
+	            if(approvalFlag == "G") {
+		            CheckGubunInit();
+		
+		            if (pReDraftFlag == "DRAFT") {
+		                document.getElementById("btnaddress").style.display = "";
+		            }
+		            if (window.screen.height <= 768) {
+		                window.resizeTo(1000, 720);
+		                document.getElementById("bodytag").style.overflow = "auto";
+		                document.getElementById("htmlhag").style.overflow = "auto";
+		            }
+	            } else {
+	            	 try {
+	                     if (pIniGubun == "1") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab1").onclick();
+	                         else
+	                             document.getElementById("1tab1").click();
+	                     }
+	                     else if (pIniGubun == "2") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab2").onclick();
+	                         else
+	                             document.getElementById("1tab2").click();
+	                     }
+	                     else if (pIniGubun == "3") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab3").onclick();
+	                         else
+	                             document.getElementById("1tab3").click();
+	                     }
+	                     else if (pIniGubun == "4") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab2").onclick();
+	                         else
+	                             document.getElementById("1tab2").click();
+	                     }
+	                     else if (pIniGubun == "5") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab3").onclick();
+	                         else
+	                             document.getElementById("1tab3").click();
+	                     }
+	                 }
+	                 catch (e) {
+	                 }
+	                 try {
+	                     var ua = navigator.userAgent;
+	                     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                         KeEventControl(document.getElementById("textUser"));
+	                         KeEventControl(document.getElementById("textUser2"));
+	                     }
+	                 }
+	                 catch (e)
+	                 { }
+	                     if (pHapYuiCount == 0) {
+	                         document.getElementById("deptaddbtn").style.display = "none";
+	                 }
+
 	            }
-	            if (window.screen.height <= 768) {
-	                window.resizeTo(1000, 720);
-	                document.getElementById("bodytag").style.overflow = "auto";
-	                document.getElementById("htmlhag").style.overflow = "auto";
-	            }
+	            
 	        };
 	
 	        function KeEventControl(obj) {

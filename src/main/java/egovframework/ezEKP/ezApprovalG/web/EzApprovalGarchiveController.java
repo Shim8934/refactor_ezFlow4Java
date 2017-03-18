@@ -1340,7 +1340,7 @@ public class EzApprovalGarchiveController {
 		return result ;
 	}
 	
-	/** 전자결재 G 개인함 등록*/
+	/** 전자결재 G 개인함 등록 화면*/
 	@RequestMapping(value = "ezApprovalG/selUserCont.do", produces = "text/xml;charset=utf-8")
 	public String selUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1350,7 +1350,20 @@ public class EzApprovalGarchiveController {
 		return "ezApprovalG/apprGseluserCont";
 	}
 	
-	
+	/** 전자결재 G 개인함 등록*/
+	@RequestMapping(value = "ezApprovalG/setUserContDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String setUserContDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String description = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		String result = ezApprovalGService.registerUserContDoc(docID, contID, description, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		return result;
+	}
 	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")

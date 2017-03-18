@@ -87,8 +87,9 @@
                 return;
             }
 
-            if (ReturnFunction != null)
+            if (ReturnFunction != null) {
                 ReturnFunction(treeNode.GetNodeData("DATA1"));
+            }
             else {
                 window.returnValue = treeNode.GetNodeData("DATA1");
             }
