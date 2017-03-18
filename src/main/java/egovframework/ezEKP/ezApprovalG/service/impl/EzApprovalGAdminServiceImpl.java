@@ -2693,7 +2693,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("upperCode", vo1.getCode());
 			
+			logger.debug("vo1.getCode() = " + vo1.getCode());
+			
 			List<ApprGFormVO> propList2 = ezApprovalGAdminDAO.getFormProperty(map);
+			
+			logger.debug("listSize = " + propList2.size());
 			
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");

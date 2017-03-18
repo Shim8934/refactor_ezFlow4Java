@@ -563,6 +563,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getFormPropList started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String companyID = request.getParameter("companyID");
 		
