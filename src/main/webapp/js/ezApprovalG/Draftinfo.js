@@ -12,21 +12,23 @@ function Draftinfo_ini() {
        
         var code = selnode.GetNodeData("DATA1");
         
-        xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objRoot, objNode;
-
-        objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-        createNodeAndInsertText(xmlpara, objNode, "CODE", code);
+        var result = "";
         
-        xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
-        xmlhttp.send(xmlpara);
-        try {
-            var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-            if (xmlDoc == null) {
-                xmlDoc = loadXMLString(xmlhttp.responseText);
-            }
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+        	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+        	data : {
+        			sCateCode : code
+        			},
+        	success : function(text) {
+        		result = text;
+        	}
+    	});
+        
+//        try {
+            var xmlDoc = loadXMLString(result);
 
             if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
             var FormList = new ListView();
@@ -61,11 +63,10 @@ function Draftinfo_ini() {
 
                 getdocinfolist(i);
             }
-            xmlhttp = null;
-        }
-        catch (ErrMsg) {
-            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-        }
+//        }
+//        catch (ErrMsg) {
+//            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//        }
         getMyGroupItem();
     }
 }
