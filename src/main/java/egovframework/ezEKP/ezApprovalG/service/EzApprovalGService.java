@@ -398,5 +398,7 @@ public interface EzApprovalGService {
 
 	public String getCodeTreeInfo(String code, String level, LoginVO userInfo) throws Exception;
 
-	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception;	
+	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception;
+
+	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception;
 }

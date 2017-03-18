@@ -18860,5 +18860,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>FALSE</RESULT>";
 		}
 		return "<RESULT>TRUE</RESULT>";
+	}
+
+	@Override
+	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception {
+		StringBuffer resultXML = new StringBuffer();
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		resultXML.append("<HEADER>");
+		resultXML.append("<NAME>" +  getCode2Name("L04", "001", companyID, lang, tenantId) + "</NAME>");
+		resultXML.append("<WIDTH>250</WIDTH>");
+		resultXML.append("</HEADER>");
+		resultXML.append("</HEADERS>");
+		resultXML.append("<ROWS>");
+		resultXML.append("<ROW>");
+		resultXML.append("<CELL>");
+		resultXML.append("<VALUE>" + ezOrganService.getPropertyValue(pDeptID, "DisplayName" + commonUtil.getMultiData(lang, tenantId), tenantId) + "</VALUE>");
+		resultXML.append("<DATA1>" + pDeptID + "</DATA1>");
+		resultXML.append("<DATA2>"+ "0" +  "</DATA2>");
+		resultXML.append("</CELL>");
+		resultXML.append("</ROW>");
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+
+
+		return resultXML.toString();
 	}	
 }

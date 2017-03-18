@@ -1231,6 +1231,7 @@ public class EzApprovalGarchiveController {
 		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		 model.addAttribute("userCont", userCont.replace("\"", "\\\""));
 		 model.addAttribute("userInfo", userInfo);
+		 
 		return  "ezApprovalG/apprMngUserCont";
 	}
 	
@@ -1327,6 +1328,29 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("susinAdmin", susinAdmin);
 		return  "ezApprovalG/apprGselectContainer";
 	}
+	
+	/** 전자결재 G 문서함 사용 부서*/
+	@RequestMapping(value = "ezApprovalG/getContUseGroup.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getContUseGroup(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String pDeptID = request.getParameter("deptID");
+		
+		String result = ezApprovalGService.getContUseDeptInfo(pDeptID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		return result ;
+	}
+	
+	/** 전자결재 G 개인함 등록*/
+	@RequestMapping(value = "ezApprovalG/selUserCont.do", produces = "text/xml;charset=utf-8")
+	public String selUserCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		 model.addAttribute("userCont", userCont);
+		 model.addAttribute("userInfo", userInfo);
+		return "ezApprovalG/apprGseluserCont";
+	}
+	
+	
 	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")

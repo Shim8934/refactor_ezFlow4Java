@@ -1,21 +1,20 @@
-function getUseContainer(pOtherDeptID, pOWN)
+function getUseContainer()
 {
-	alert(300);
-	var xmlpara = createXmlDom();
-	var xmlRtn  = createXmlDom();
+    var xmlRtn = createXmlDom();		 
+    
+    $.ajax({
+    	type : "POST",
+    	dataType : "text",
+    	url : "/admin/ezApprovalG/apprGMgetContInfo.do",
+    	async : false,
+    	data : {deptID : pDeptID, comID : companyID},
+    	success : function(result){
+    		xmlRtn = loadXMLString(result);	        		
+    		 document.getElementById('divlvtCont').innerHTML = "";
+    	}
+    });
 	
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER"); 	
-	createNodeAndInsertText(xmlpara, objNode, "myDeptID", pDeptID);
-	createNodeAndInsertText(xmlpara, objNode, "otherDeptID", pOtherDeptID);
-	createNodeAndInsertText(xmlpara, objNode, "OWN", pOWN);
-	
-	xmlhttp.open("POST", "/myoffice/ezApproval/formContainer/aspx/getUseContainer.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	xmlRtn = loadXMLString(xmlhttp.responseText);
 
-    document.getElementById('divlvtCont').innerHTML = "";
     var listview = new ListView();                         
     listview.SetID("lvtCont");                       
     listview.SetMulSelectable(false);                     
@@ -29,13 +28,12 @@ function getUseContainer(pOtherDeptID, pOWN)
 
 function Init()
 {
-	  tempDeptID = DeptID;
       var xmlRtn = createXmlDom();		 
       
       $.ajax({
       	type : "POST",
       	dataType : "text",
-      	url : "/admin/ezApprovalG/apprGMgetContInfo.do",
+      	url : "/ezApprovalG/getContUseGroup.do",
       	async : false,
       	data : {deptID : pDeptID, comID : companyID},
       	success : function(result){
@@ -57,7 +55,6 @@ function Init()
 		listview.SetSelectFlag(true);
 		var DeptID = GetAttribute(selRow, "DATA1");
 		var isOwnflag = GetAttribute(selRow, "DATA2");
-				
 		getUseContainer(DeptID, isOwnflag);
 	}
 }

@@ -160,7 +160,7 @@
 	                condition[24] = "";
 	                DocListType == "GetDocSearch";
 	                
-	                if(approvalFlag == 'G') {
+	                
 	                	 var settingDate = new Date();
 	                     settingDate.setYear(settingDate.getYear() - 1);
 
@@ -175,7 +175,7 @@
 	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 
 	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
-	                }
+	                
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
