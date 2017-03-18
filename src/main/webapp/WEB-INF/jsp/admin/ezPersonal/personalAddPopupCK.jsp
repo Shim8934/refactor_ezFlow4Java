@@ -167,13 +167,13 @@
 				var tmpStartDateTime = idDatepicker.startFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.startMonth()) + 1)) + "-"
 								+ CheckTimeRevision(idDatepicker.startDate()) + " "
-						        + CheckTimeRevision(idDatepicker.startHours()) + ":"
-								+ CheckTimeRevision(idDatepicker.startMinutes()) + ":01";
+						        + CheckTimeRevision(idDatepicker.startHours()) + ":00:00"
+								//+ CheckTimeRevision(idDatepicker.startMinutes()) + ":01";
 				var tmpEndDateTime = idDatepicker.endFullYear() + "-"
 								+ CheckTimeRevision((parseInt(idDatepicker.endMonth()) + 1)) + "-"
 								+ CheckTimeRevision(parseInt(idDatepicker.endDate() + 1)) + " "
-								+ CheckTimeRevision(idDatepicker.endHours()) + ":"
-								+ CheckTimeRevision(idDatepicker.endMinutes()) + ":01";
+								+ CheckTimeRevision(idDatepicker.endHours()) + ":00:00"
+								//+ CheckTimeRevision(idDatepicker.endMinutes()) + ":01";
 
 				$.ajax({
 		        	type : "POST",
