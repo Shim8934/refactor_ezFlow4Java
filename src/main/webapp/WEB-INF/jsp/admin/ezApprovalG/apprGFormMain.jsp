@@ -33,7 +33,7 @@
 		    var formURL = "";
 		    var beforeHTML = "";
 		    var FormProcSpelling = "0";
-	
+		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -122,8 +122,7 @@
 			                document.getElementsByName("tbFormName2")[0].value = result.vo.formName;
 			                document.getElementsByName("tbDescript")[0].value = result.vo.formDescription;
 			                document.getElementsByName("selFormKind")[0].value = result.vo.formDocType;
-			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(getNodeText(SelectNodes(xmldom, "ROW/FORMFILELOCATION")[0]));
-			                
+			                formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);			                
 			                if (result.vo.formConnFlag == "Y") {
 			                    document.getElementById("setConnFlag").checked = true;
 			                }
