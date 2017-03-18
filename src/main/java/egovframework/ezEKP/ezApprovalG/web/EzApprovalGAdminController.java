@@ -1263,6 +1263,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String sCateCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
@@ -1272,7 +1273,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			companyID = userInfo.getCompanyID();
 		}
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
 		

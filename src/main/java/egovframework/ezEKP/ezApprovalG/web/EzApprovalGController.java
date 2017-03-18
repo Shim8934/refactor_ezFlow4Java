@@ -1338,12 +1338,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String getTaskInSubCategory(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("getTaskInSubCategory started.");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String deptCode = request.getParameter("deptCode");
 		String companyID = request.getParameter("companyID");
 		String cateCode = request.getParameter("cateCode");
 		String strType = request.getParameter("strType");
-		String result = ezApprovalGService.getTaskInSubCategory(deptCode, companyID, cateCode, strType, userInfo.getPrimary(), userInfo.getTenantId());
+		String result = ezApprovalGService.getTaskInSubCategory(deptCode, companyID, cateCode, strType, userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("getTaskInSubCategory ended.");
 		
@@ -1385,7 +1386,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezApprovalG/findTaskList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String findTaskList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("findTaskList started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String deptCode = request.getParameter("deptCode");
 		String title = request.getParameter("title");
@@ -1395,7 +1399,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String langType = request.getParameter("langType");
 		String pageSize = request.getParameter("pageSize");
 		String pageNO = request.getParameter("pageNO");
-		String result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId());
+		String result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("findTaskList ended.");
 		
 		return result;
 	}

@@ -3249,7 +3249,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID) throws Exception {
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_SUBCATECODE", cateCode.trim());
 		map.put("v_TENANTID", tenantID);
@@ -3267,7 +3267,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String resultXML = makeTaskListXml(docXML, companyID, langType, tenantID);
+		String resultXML = makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag);
 		
 		return resultXML;
 	}
@@ -3357,7 +3357,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID) throws Exception {
+	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("findTask Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -3404,7 +3404,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if (flag.equals("2")) {
 			resultXML = makeTaskListXmlAll(docXML, companyID, langType, tenantID);
 		} else {
-			resultXML = makeTaskListXml(docXML, companyID, langType, tenantID);
+			resultXML = makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag);
 		}
 		logger.debug("findTask Ended");
 
@@ -13791,11 +13791,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID) throws Exception{
+	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag) throws Exception{
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
 		
-		listString = getListHeader("097", companyID, strType, tenantID);
+		if (approvalFlag.equals("S")) {
+			listString = getListHeader("S200", companyID, strType, tenantID);
+		} else {			
+			listString = getListHeader("097", companyID, strType, tenantID);
+		}
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
@@ -13810,6 +13814,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
 			resultXML.append("</HEADER>");
 		}
+		
 		resultXML.append("</HEADERS>");
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -13817,54 +13822,117 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
-			resultXML.append("<ROW>");
-			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></VALUE>");
-			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA1>");
-			resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</DATA2>");
-			if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
-				resultXML.append("<DATA3>" + "0" + "</DATA3>");
+			if (approvalFlag.equals("S")) {
+				resultXML.append("<ROW>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></VALUE>");
+				resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA1>");
+				resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</DATA2>");
+				
+				if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA3>" + "0" + "</DATA3>");
+				} else {
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()) + "</DATA3>");
+				}
+				
+				if (makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA4>" + "0" + "</DATA4>");
+				} else {
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()) + "</DATA4>");
+				}
+				
+				if (makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA5>" + "0" + "</DATA5>");
+				} else {
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()) + "</DATA5>");
+				}
+				
+				resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("SC1").item(k).getTextContent()) + "</DATA6>");
+				resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("SC2").item(k).getTextContent()) + "</DATA7>");
+				resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "</DATA8>");
+				resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "</DATA9>");
+				resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "</DATA10>");
+				resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA11>");
+				resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA12>");
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				
+				if (primaryData.equals("1")) {
+					resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
+				} else {
+					resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></VALUE>");
+				}
+				
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + getKeepPeriodString(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), companyID, strType, tenantID) + "</VALUE>");
+				resultXML.append("</CELL>");
+				
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("</CELL>");
+				
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("</CELL>");
+				
+				resultXML.append("</ROW>");
 			} else {
-				resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()) + "</DATA3>");
+				resultXML.append("<ROW>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></VALUE>");
+				resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA1>");
+				resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</DATA2>");
+				
+				if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA3>" + "0" + "</DATA3>");
+				} else {
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()) + "</DATA3>");
+				}
+				
+				if (makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA4>" + "0" + "</DATA4>");
+				} else {
+					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()) + "</DATA4>");
+				}
+				
+				if (makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()).length() <= 0) {
+					resultXML.append("<DATA5>" + "0" + "</DATA5>");
+				} else {
+					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()) + "</DATA5>");
+				}
+				
+				resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("SC1").item(k).getTextContent()) + "</DATA6>");
+				resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("SC2").item(k).getTextContent()) + "</DATA7>");
+				resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "</DATA8>");
+				resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "</DATA9>");
+				resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "</DATA10>");
+				resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA11>");
+				resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA12>");
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				
+				if (primaryData.equals("1")) {
+					resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
+				} else {
+					resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></VALUE>");
+				}
+				
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + getKeepPeriodString(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), companyID, strType, tenantID) + "</VALUE>");
+				resultXML.append("</CELL>");
+				resultXML.append("<CELL>");
+				
+				if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).equals("1")) {
+					resultXML.append("<VALUE>" + "Y" + "</VALUE>");
+				} else {
+					resultXML.append("<VALUE>" + "N" + "</VALUE>");
+				}
+				
+				resultXML.append("</CELL>");
+				resultXML.append("</ROW>");
 			}
-			
-			if (makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()).length() <= 0) {
-				resultXML.append("<DATA4>" + "0" + "</DATA4>");
-			} else {
-				resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()) + "</DATA4>");
-			}
-			
-			if (makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()).length() <= 0) {
-				resultXML.append("<DATA5>" + "0" + "</DATA5>");
-			} else {
-				resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()) + "</DATA5>");
-			}
-			resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("SC1").item(k).getTextContent()) + "</DATA6>");
-			resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("SC2").item(k).getTextContent()) + "</DATA7>");
-			resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "</DATA8>");
-			resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "</DATA9>");
-			resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "</DATA10>");
-			resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA11>");
-			resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA12>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
-			} else {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></VALUE>");
-			}
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + getKeepPeriodString(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), companyID, strType, tenantID) + "</VALUE>");
-			resultXML.append("</CELL>");
-			resultXML.append("<CELL>");
-			if (makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()).equals("1")) {
-				resultXML.append("<VALUE>" + "Y" + "</VALUE>");
-			} else {
-				resultXML.append("<VALUE>" + "N" + "</VALUE>");
-			}
-			resultXML.append("</CELL>");
-			resultXML.append("</ROW>");
         }
 		
 		resultXML.append("</ROWS>");

@@ -111,11 +111,11 @@ public interface EzApprovalGService {
 	
 	public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType, int tenantID) throws Exception;
 	
-	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID) throws Exception;
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID) throws Exception;
 	
-	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID) throws Exception;
+	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID, String approvalFlag) throws Exception;
 	
 	public String deleteOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -236,7 +236,7 @@ public interface EzApprovalGService {
 	
 	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID) throws Exception;
+	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag) throws Exception;
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
