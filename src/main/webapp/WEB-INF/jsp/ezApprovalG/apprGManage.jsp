@@ -86,7 +86,7 @@
 		    var ViewLeftCount = "${viewLeftCount}";
 		    var CurrentHeight = 0;
 		    var CurrentWidth = 0;
-		    var approvalYN = "${approvalYN}";
+		    var approvalFlag = "${approvalFlag}";
 
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -219,7 +219,7 @@
 		    }
 		
 		    $(function () {
-		      	if(approvalYN == "G") {
+		      	if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
 	        	} else{
