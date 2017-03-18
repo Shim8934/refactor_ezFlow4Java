@@ -27,7 +27,7 @@
 <!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script> -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script> -->
 		
-		<script type="text/javascript" src="/js/ezApprovalG/admin/ezForm_Cross.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
