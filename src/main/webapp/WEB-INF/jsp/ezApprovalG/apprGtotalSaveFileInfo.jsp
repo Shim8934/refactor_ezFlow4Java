@@ -131,8 +131,8 @@
 	            var xmlpara = createXmlDom();
 	            var xmlstring = "<DATA>";
 	            xmlstring += "<PDOCID>" + pDocID + "</PDOCID>";
-	            xmlstring += "<PTITLE>" + ReplaceText(document.getElementById('spn_title').innerHTML, "\n", "") + "</PTITLE>";
-	            xmlstring += "<PTYPEINFO>" + strTypeInfo + "</PTYPEINFO>";
+	            xmlstring += "<PTITLE><![CDATA[" + ReplaceText(document.getElementById('spn_title').innerHTML, "\n", "") + "]]></PTITLE>";
+	            xmlstring += "<PTYPEINFO><![CDATA[" + strTypeInfo + "]]></PTYPEINFO>";
 	            xmlstring += "<PPATHINFO><![CDATA[" + strPathInfo.replace("&amp;", "&") + "]]></PPATHINFO>";
 	            xmlstring += "<PFILEINFO><![CDATA[" + ReplaceText(strFileName, "\n", "") + "]]></PFILEINFO>";
 	            xmlstring += "</DATA>";
