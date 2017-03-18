@@ -2719,7 +2719,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 						
 						for (int j = 0; j < proxyUserArray.length; j++) {
