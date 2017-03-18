@@ -388,6 +388,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -404,6 +405,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
+		
+		if (approvalFlag.equals("S")) {
+			String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
+			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
+			
+			model.addAttribute("securityNode", securityNode);
+			model.addAttribute("periodNode", periodNode);
+		}
 		
 		model.addAttribute("formProcSpelling", formProcSpelling);
 		model.addAttribute("topID", userInfo.getCompanyID());
@@ -1256,10 +1265,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String sCateCode = request.getParameter("sCateCode");
-		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, langType, companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId());
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
 		

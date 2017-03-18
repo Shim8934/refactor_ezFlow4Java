@@ -69,7 +69,6 @@ function getGroupItem(pGroupID) {
     	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
     	async : false,
     	data : {sCateCode : pGroupID,
-    			langType : langType,
     			companyID : companyID},
     	success : function(result) {
     	    document.getElementById('lvtForm').innerHTML = "";

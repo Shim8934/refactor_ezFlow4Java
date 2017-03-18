@@ -9,9 +9,8 @@
 
 <!-- 		<script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>   -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/FormMain_Cross.js"></script> -->
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
+		
+		
 		
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
 		
@@ -24,11 +23,17 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
+		
 		<script type="text/javascript" src="/js/ezApprovalG/admin/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
-		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		
+	    
+	    <script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
+<!-- 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		 -->
 				
 		<script type="text/javascript">
 			var companyID = "${companyID}";
@@ -926,7 +931,7 @@
                         &lt;/connroot&gt;<br>
                         &lt;/xml&gt; </td>
                     <th>
-                        <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApproval.t193'/></span></a><br>                              
+                        <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>                              
                         <a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApproval.t66'/></span></a><br>
                     </th>
                 </tr>
@@ -961,7 +966,7 @@
                 <tr>
                     <td style="width:400px; vertical-align:top; padding-top:5px; border-right:none">
                         <h2>
-                            <spring:message code='ezApproval.t173'/>
+                            <spring:message code='ezApprovalG.t232'/>
                         </h2>
                         <div id="divUserContTree" style="height: 330px; width: 100%; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff;"></div>
                         <br />
@@ -996,7 +1001,7 @@
             </h2>
             <table>
 	            <tr>
-		            <th><spring:message code='ezApproval.t603'/></th>
+		            <th><spring:message code='ezApprovalG.t1540'/></th>
 		            <td><select id="selDocType" name="selDocType" onChange="return OnChange_DocType()">				
 				            ${docType}
 			            </select>

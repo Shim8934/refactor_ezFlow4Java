@@ -395,4 +395,9 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void deleteAllDocList(Map<String, Object> map) throws Exception {
 		update("EzApprovalGAdminDAO.deleteAllDocList", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getCodeType(Map<String, Object> map) {
+		return (List<ApprGLeftVO>) list("EzApprovalGAdminDAO.getCodeType", map);
+	}
 }
