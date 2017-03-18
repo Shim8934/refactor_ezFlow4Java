@@ -7,6 +7,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezPersonal.e3'/>" type="text/css" />
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
+		<title><spring:message code='ezPersonal.t210'/></title>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezOrgan/ListView_list.js"></script>
