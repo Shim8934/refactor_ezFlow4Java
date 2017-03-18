@@ -269,7 +269,6 @@
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
 	            CheckGubunInit();
-	
 	            if (pReDraftFlag == "DRAFT") {
 	                document.getElementById("btnaddress").style.display = "";
 	            }
@@ -331,8 +330,9 @@
 	
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
-	            pItemName = RetValue[40];
-	            pItemName2 = RetValue[41];
+	            pkeeperiod = "";
+	            pItemName = RetValue[41];
+	            pItemName2 = RetValue[42];
 	            g_SelCabID = RetValue[30];
 	
 	            //문서정보 추가
@@ -506,8 +506,9 @@
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    
 	                    if (approvalFlag == "G") {
-		                    if (!bool4)
+		                    if (!bool4) {
 		                        Docinfo_ini();
+		                    }
 	                    } else {
 		                    if (!bool4)
 		                    	CheckDraftinfo();
@@ -676,9 +677,8 @@
 		    }
 		
 		    function btn_OK() {
-		        try {
+// 		        try {
 		            if (!onlydocinfiview) {
-		                ret[0] = "OK";
 	
 		                var line = Checkline();
 		                if (line == false) {
@@ -690,52 +690,56 @@
 		                    if (!rtnVal)
 		                        return;
 		                }
-	
-		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-		                    var List = new ListView();
-		                    List.LoadFromID("DivTaskSCateList");
+		                
+		                if (approvalFlag == "G") {
+			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
+			                    var List = new ListView();
+			                    List.LoadFromID("DivTaskSCateList");
+			
+			                    var MyList = new ListView();
+			                    MyList.LoadFromID("DivMyTaskSCateList");
+			
+			                    var totalRows = List.GetSelectedRows();
+			                    var MyRows = MyList.GetSelectedRows();
+			
+			                    if (totalRows.length == 0 && MyRows.length == 0) {
+			                        OpenAlertUI(Cabinet4);
+			                        document.getElementById("1tab3").onclick();
+			                        return;
+			                    } else {
+			                        if (MyRows.length > 0) {
+			                            if (GetAttribute(MyRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                            else
+			                                totalRows = MyRows;
+			                        } else if (totalRows.length > 0) {
+			                            if (GetAttribute(totalRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                        }
+			                    }
+			                }
 		
-		                    var MyList = new ListView();
-		                    MyList.LoadFromID("DivMyTaskSCateList");
-		
-		                    var totalRows = List.GetSelectedRows();
-		                    var MyRows = MyList.GetSelectedRows();
-		
-		                    if (totalRows.length == 0 && MyRows.length == 0) {
-		                        OpenAlertUI(Cabinet4);
-		                        document.getElementById("1tab3").onclick();
-		                        return;
-		                    }
-		                    else {
-		                        if (MyRows.length > 0) {
-		                            if (GetAttribute(MyRows[0], "DATA1") == "") {
-		                                OpenAlertUI(Cabinet4);
-		                                document.getElementById("1tab3").onclick();
-		                                return;
-		                            }
-		                            else
-		                                totalRows = MyRows;
-		                        }
-		                        else if (totalRows.length > 0) {
-		                            if (GetAttribute(totalRows[0], "DATA1") == "") {
-		                                OpenAlertUI(Cabinet4);
-		                                document.getElementById("1tab3").onclick();
-		                                return;
-		                            }
-		                        }
-		                    }
+			                if (SummaryFlag) {
+			                    Docinfo_ini();
+			                }
+			
+			                var chkDocinfoFlag = checkDocinfo();
+			                if (!chkDocinfoFlag) {
+			                    var tabshow = document.getElementById("1tab4");
+			                    Tab1_MouseClick(tabshow);
+			                    return;
+			                }
+		                } else {
+		                	docinfo = MakeDocInfo();
 		                }
-	
-		                if (SummaryFlag)
-		                    Docinfo_ini();
 		
-		                var chkDocinfoFlag = checkDocinfo();
-		                if (!chkDocinfoFlag) {
-		                    var tabshow = document.getElementById("1tab4");
-		                    Tab1_MouseClick(tabshow);
-		                    return;
-		                }
-		
+		                ret[0] = "OK";
 		                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		
 		                CheckAprPerson();
@@ -751,7 +755,11 @@
 		                    ret[2] = "";
 		
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-		                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                if (approvalFlag == "G") {
+			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                } else {
+			                	ret[4] = setCabInfoXML();
+			                }
 		                }
 	
 		                if (pReDraftAprLineChangeFlag) {
@@ -761,27 +769,39 @@
 		                    ret[5] = "C";
 		                }
 		
-		                ret[7] = selSecLevel.value;
-		                if (AprUrgency.checked)
-		                    ret[8] = "Y";
-		                else
-		                    ret[8] = "N";
+		                if (approvalFlag == "G") {
+			                ret[7] = selSecLevel.value;
+			                
+			                if (AprUrgency.checked)
+			                    ret[8] = "Y";
+			                else
+			                    ret[8] = "N";
+		                } else {
+			                ret[7] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevel");
+			                ret[8] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pUrgentFlag");
+		                }
 		                ret[9] = document.getElementById("taSummery").value;
-		                ret[10] = getdocdisplay();
-		                ret[11] = getPublicFlag();
-		                ret[12] = txtLimitRange.value;
-		                ret[13] = txtPageNum.value;
+
+		                if (approvalFlag == "G") {
+			                ret[10] = getdocdisplay();
+			                ret[11] = getPublicFlag();
+			                ret[12] = txtLimitRange.value;
+			                ret[13] = txtPageNum.value;
+		                } else {
+		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
+		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
 		                    ret[14] = document.getElementById("idDatepicker").value.substring(0, 10);
-	
 		                else
 		                    ret[14] = "";
 		
-		                if (document.getElementById("inputSummaryOuterReceiverList").value != "") {
-		                    ret[15] = document.getElementById("inputSummaryOuterReceiverList").value;
-		                } else {
-		                    ret[15] = "";
+		                if (approvalFlag == "G") {
+			                if (document.getElementById("inputSummaryOuterReceiverList").value != "") {
+			                    ret[15] = document.getElementById("inputSummaryOuterReceiverList").value;
+			                } else {
+			                    ret[15] = "";
+			                }
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -799,11 +819,28 @@
 		                ret[1] = docinfo;
 		                ret[6] = "OnlyDocInfo";
 		            }
-		        }
-		        catch (e) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-		            ret[0] = "FALSE";
-		        }
+// 		        }
+// 		        catch (e) {
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+// 		            ret[0] = "FALSE";
+// 		        }
+		    }
+		    
+		    function setCabInfoXML() {
+		    	var i;
+		        var rtnXml = createXmlDom();
+		        var Root, objItem, objData;
+		        
+		        Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
+		        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "approvalS");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", document.getElementById("tbItemCode").value);
+		        
+		        return getXmlString(rtnXml);
 		    }
 		
 		    function CheckAprPerson() {  	
@@ -1007,12 +1044,11 @@
 		        document.getElementById("taSummery").value = "";
 		
 		        onload_window();
-		        if (approvalFlag == "G") {
-			        if (vSecurity.trim() == "")
-			            document.getElementById("selSecLevel").options[0].selected = true;
-			        else
-			            document.getElementById("selSecLevel").value = vSecurity;
-		        }
+		        if (vSecurity.trim() == "")
+		            document.getElementById("selSecLevel").options[0].selected = true;
+		        else
+		            document.getElementById("selSecLevel").value = vSecurity;
+		        
 		        if (vAprUrgency.trim() == "Y")
 		            document.getElementById("AprUrgency").checked = true;
 		        else
@@ -1103,6 +1139,7 @@
 	                            isPublic[Cnt].checked = true; break;
 	                        }
 	                    }
+alert(300);
 
 	                    setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
 	                    document.getElementById("tbItemCode").value = pItemCode;

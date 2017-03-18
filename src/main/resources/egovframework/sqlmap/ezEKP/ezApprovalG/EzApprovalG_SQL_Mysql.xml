@@ -19937,8 +19937,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+      		<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#
@@ -19954,8 +19960,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+			<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#

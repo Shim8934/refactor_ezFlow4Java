@@ -2256,13 +2256,18 @@ function Checkline() {
     if (!bool2) {
         Receptinfo_ini();
     }
-    if (!bool3) {
-        Cabinetinfo_ini();
+    if (approvalFlag == "G") {
+    	if (!bool3) {
+    		Cabinetinfo_ini();
+    	}
+    	if (!bool4) { //2013.09.10. 에너지관리공단 lyn : 반송문서 재기안 시 쪽수를 입력하라는 문구 떠서 추가 (Docinfo_ini 만 빠져있었음)
+    		Docinfo_ini();
+    	}
+    } else {
+    	if (!bool3) {
+            Draftinfo_ini();
+    	}
     }
-    if (!bool4) { //2013.09.10. 에너지관리공단 lyn : 반송문서 재기안 시 쪽수를 입력하라는 문구 떠서 추가 (Docinfo_ini 만 빠져있었음)
-        Docinfo_ini();
-    }
-
 
     var pAPRLINE = new ListView();
     pAPRLINE.LoadFromID("lvAPRLINE");
@@ -2289,11 +2294,22 @@ function Checkline() {
         }
     }
     
-    //else {
-    //    document.getElementById("1tab3").onclick();
-    //    List.LoadFromID("DivTaskSCateList");
-    //    var List = new ListView();
-    //}
+    if (approvalFlag == "S") {
+    	var FormList = new ListView();
+        FormList.LoadFromID("lvinfolist");
+        var cnt = FormList.GetSelectedRows().length;
+        if (cnt == 0 && pkeeperiod == "") {
+            var FrequencyFormList = new ListView();
+            FrequencyFormList.LoadFromID("lvinfofrequencylist");
+            var cnt2 = FrequencyFormList.GetSelectedRows().length;
+            if (cnt2 == 0 && pkeeperiod == "")
+            {
+                OpenAlertUI(strLangS599);
+                document.getElementById("1tab1").onclick();
+                return false;
+            }
+        }
+    }
 }
 
 
