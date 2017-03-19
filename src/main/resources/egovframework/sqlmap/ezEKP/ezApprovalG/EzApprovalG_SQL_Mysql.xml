@@ -11062,8 +11062,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
-        ( ItemSeq, USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
-       VALUES ( #v_itemSeq#, #v_PUSERID#,  #v_SYSDATE#, #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
+        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
+       VALUES ( #v_PUSERID#,  #v_SYSDATE#, #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
 	</insert>
 	
 	<select id="EzApprovalG.notifiCationSeq" parameterClass="Map" resultClass="String">
@@ -11080,7 +11080,8 @@
 <!-- 		{CALL EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.addNewVolume" parameterClass="Map">
-		INSERT 	INTO TBL_CABINET ( 
+		INSERT 	INTO 
+			TBL_CABINET ( 
         		 CABINETID,     VOLUMENO,     CABINETCLASSNO, CREATEDATE, CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID, COMPANYID
         )VALUES ( 
    				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_SYSDATE#,      '0',                '0' , #v_TENANTID#, #companyID#)
