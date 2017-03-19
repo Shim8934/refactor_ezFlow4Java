@@ -48,7 +48,7 @@ function nodelUser()
     pAPRLINE.LoadFromID("lvAPRLINE");
     var SelRow = pAPRLINE.GetSelectedRows();
     
-	if(SelRow[0].getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && SelRow[0].childNodes[0].innerHTML == "1")
+	if(SelRow[0].getAttribute("DATA4").toLowerCase() == pUserID.toLowerCase() && SelRow[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1")
 	{
 	    OpenAlertUI(strLang945);
 	    return false;
@@ -447,7 +447,7 @@ function APRLINESNUPPERFunction() {
         var pSelectedRows = pAPRLINE.GetSelectedRows();
 
         if (pSelectedRows.length != 0) {
-            if (pSelectedRows[0].childNodes[0].innerHTML == 1) {
+            if (pSelectedRows[0].childNodes[0].innerHTML.replace("★","").replace("⊙","") == 1) {
                 var pAlertContent = "" + strLang306 + "";
                 OpenAlertUI(pAlertContent);
                 return;
@@ -474,7 +474,7 @@ function APRLINESNUPPERFunction() {
                     var TmpAprLineState = pSelectedRows[0].cells[5].innerText;
                     TmpAprLineState = ConvertAprLineState(TmpAprLineState, "Code");
 
-                    if (((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRows[0], "DATA4") == pUserID || pSelectedRows[0].cells[0].innerText == "1"))  //다음결재자가 결재선변경자인경우
+                    if (((TmpAprLineState == "002" || TmpAprLineState == "005") && GetAttribute(pSelectedRows[0], "DATA4") == pUserID || pSelectedRows[0].cells[0].innerText.replace("★").replace("⊙") == "1"))  //다음결재자가 결재선변경자인경우
                     {
                         var pAlertContent = "" + strLang310 + "";
                         OpenAlertUI(pAlertContent);
