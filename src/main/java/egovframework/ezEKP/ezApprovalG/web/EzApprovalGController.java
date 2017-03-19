@@ -5684,4 +5684,5 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
 }
