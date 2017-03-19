@@ -11490,21 +11490,21 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<REGSN>" + regSN + "</REGSN>");
 		resultXML.append("<CABINETID><![CDATA[" + cabinetID + "]]></CABINETID>");
 		if (title.length() > 50) {
-			resultXML.append("<TITLE>" + title.substring(0, 50) + "</TITLE>");
+			resultXML.append("<TITLE><![CDATA[" + title.substring(0, 50) + "]]></TITLE>");
 		} else {
-			resultXML.append("<TITLE>" + title + "</TITLE>");
+			resultXML.append("<TITLE><![CDATA[" + title + "]]></TITLE>");
 		}
 		resultXML.append("<DEPTCODE>" + deptCode + "</DEPTCODE>");
-		resultXML.append("<DEPTNAME>" + deptName + "</DEPTNAME>");
-		resultXML.append("<DEPTNAME2>" + deptName2 + "</DEPTNAME2>");
+		resultXML.append("<DEPTNAME><![CDATA[" + deptName + "]]></DEPTNAME>");
+		resultXML.append("<DEPTNAME2><![CDATA[" + deptName2 + "]]></DEPTNAME2>");
 		resultXML.append("<REGISTERTYPE>" + registerType + "</REGISTERTYPE>");
-		resultXML.append("<APRMEMBERTITLE>" + aprMemberTitle + "</APRMEMBERTITLE>");
-		resultXML.append("<APRMEMBERTITLE2>" + aprMemberTitle2 + "</APRMEMBERTITLE2>");
-		resultXML.append("<DRAFTERNAME>" + drafterName + "</DRAFTERNAME>");
-		resultXML.append("<DRAFTERNAME2>" + drafterName2 + "</DRAFTERNAME2>");
+		resultXML.append("<APRMEMBERTITLE><![CDATA[" + aprMemberTitle + "]]></APRMEMBERTITLE>");
+		resultXML.append("<APRMEMBERTITLE2><![CDATA[" + aprMemberTitle2 + "]]></APRMEMBERTITLE2>");
+		resultXML.append("<DRAFTERNAME><![CDATA[" + drafterName + "]]></DRAFTERNAME>");
+		resultXML.append("<DRAFTERNAME2><![CDATA[" + drafterName2 + "]]></DRAFTERNAME2>");
 		resultXML.append("<EXECUTEDATE>" + executeDate + "</EXECUTEDATE>");
-		resultXML.append("<RECEIPTMEMBER>" + receiptMember + "</RECEIPTMEMBER>");
-		resultXML.append("<RECEIPTMEMBER2>" + receiptMember2 + "</RECEIPTMEMBER2>");
+		resultXML.append("<RECEIPTMEMBER><![CDATA[" + receiptMember + "]]></RECEIPTMEMBER>");
+		resultXML.append("<RECEIPTMEMBER2><![CDATA[" + receiptMember2 + "]]></RECEIPTMEMBER2>");
 		resultXML.append("<DELIVERYNO>" + deleveryNo + "</DELIVERYNO>");
 		resultXML.append("<ELECTRONICRECFLAG>" + electronic + "</ELECTRONICRECFLAG>");
 		resultXML.append("<ORIGINREGSN>" + sourceDocID + "</ORIGINREGSN>");
@@ -11521,10 +11521,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			for (int k = 0; k < seperateXML.getDocumentElement().getChildNodes().getLength(); k++) {
 				resultXML.append("<SEPATTACH>");
 				resultXML.append("<CABINETID>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(0).getTextContent().trim() + "</CABINETID>");
-				resultXML.append("<TITLE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent().trim() + "</TITLE>");
+				resultXML.append("<TITLE><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(1).getTextContent().trim() + "]]></TITLE>");
 				resultXML.append("<NUMOFPAGE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(2).getTextContent().trim() + "</NUMOFPAGE>");
 				resultXML.append("<REGTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(3).getTextContent().trim() + "</REGTYPE>");
-				resultXML.append("<SUMMARY>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(4).getTextContent().trim() + "</SUMMARY>");
+				resultXML.append("<SUMMARY><![CDATA[" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(4).getTextContent().trim() + "]]></SUMMARY>");
 				resultXML.append("<AVTYPE>" + seperateXML.getDocumentElement().getChildNodes().item(k).getChildNodes().item(5).getTextContent().trim() + "</AVTYPE>");
 				resultXML.append("</SEPATTACH>");
 			}
