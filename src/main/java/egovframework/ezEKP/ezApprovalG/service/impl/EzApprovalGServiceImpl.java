@@ -356,7 +356,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Override
 	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getCodeSubTreeInfo started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
@@ -2175,23 +2174,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
 				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
-				System.out.println(rowNode.item(k).getChildNodes().item(0).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(1).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(2).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(3).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(4).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(5).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(6).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(7).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(8).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(9).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(10).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(11).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(12).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(13).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(14).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(15).getTextContent());
-
 				
 				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
 					if(approvalFlag.equals("G")) {
