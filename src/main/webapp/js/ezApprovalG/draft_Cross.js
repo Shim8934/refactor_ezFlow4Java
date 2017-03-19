@@ -1056,13 +1056,6 @@ function SetBtnStateFalse() {
         setMenuBar("btnOpinion", false);
         setMenuBar("btnSave", false);
         setMenuBar("btnConn", false);
-
-        if (pDraftFlag == "REDRAFT") {
-            setMenuBar("btnSaveServer", false);
-        }
-        else {
-            setMenuBar("btnSaveServer", true);
-        }
     } catch (e) {
         alert("SetBtnStateFalse()" + e.description);
     }
@@ -1083,14 +1076,6 @@ function SetBtnStateTrue() {
         if (pDraftFlag == "SUSIN" || pDraftFlag == "HAPYUI") {
             setMenuBar("btnSelForm", false);
         }
-
-        if (pDraftFlag == "REDRAFT") {
-            setMenuBar("btnSaveServer", false);
-        }
-        else {
-            setMenuBar("btnSaveServer", true);
-        }
-
     } catch (e) {
         alert("SetBtnStateTrue()" + e.description);
     }

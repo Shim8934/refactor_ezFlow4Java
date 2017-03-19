@@ -66,7 +66,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 
 	@Override
-	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID) throws Exception {
+	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID, String companyID) throws Exception {
 		String result = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -74,6 +74,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		map.put("v_PFLAG", flag);
 		map.put("v_PPWD", newPWD);
 		map.put("v_PPWDTYPE", pwdType);
+		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
 		try {
@@ -241,9 +242,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date()); 
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
 		
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);

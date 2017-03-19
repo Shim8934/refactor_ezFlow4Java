@@ -1919,7 +1919,7 @@
 		    </isGreaterEqual>
 		<isLessThan property="v_temp" compareValue="1">
 			<isNotEmpty property="v_temp3"> 
-			<isGreaterEqual property="v_temp3" compareValue="1">
+			<isLessThan property="v_temp3" compareValue="1">
 			<![CDATA[
 				  SELECT 
 				  		'1' DOCID  ,
@@ -1927,8 +1927,8 @@
                         NULL RECEIVEDDEPTID  
                   FROM DUAL  
                   ]]>
-			</isGreaterEqual>
-			<isLessThan property="v_temp3" compareValue="1">
+			</isLessThan>
+			<isGreaterEqual property="v_temp3" compareValue="1">
 				<isNotEmpty property="v_temp4">
 				<isGreaterThan property="v_temp4" compareValue="0" >
 				<![CDATA[
@@ -1965,7 +1965,7 @@
 							]]>	
 				</isLessEqual>
 				</isNotEmpty>
-			</isLessThan>
+			</isGreaterEqual>
 			</isNotEmpty>
 		</isLessThan>
 		</isEqual>
@@ -3139,7 +3139,8 @@
 <!-- 	<procedure id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKCATEGORY(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
 			SELECT 
 					DISTINCT CATEGORYCODE ,
 		                     CNAME ,
@@ -3150,17 +3151,48 @@
 		                OR TASKCODE LIKE 'ZZ%'
 		                OR TASKCODE = '99999999' )
 		    AND
-		    		TENANT_ID = #v_TENANTID#
+		    		TENANT_ID = #tenantID#
 		    AND
 		    		COMPANYID = #companyID#
 		    ORDER BY 
 		    		CNAME ASC
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+			SELECT 
+					DISTINCT B.CATEGORYCODE,
+					CASE 
+                    	WHEN (B.CNAME$lang$ IS NULL OR B.CNAME$lang$ = '')  
+                    	THEN B.CNAME
+                    	ELSE B.CNAME$lang$
+                    END NAME,
+					( SELECT
+						COUNT(*)
+					  FROM
+					  	VTASKCLASS A
+					  WHERE
+					  	A.TENANT_ID = #tenantID#
+					  AND
+					  	A.COMPANYID = #companyID#
+					  AND
+					  	A.CATEGORYCODE = B.CATEGORYCODE 
+					  AND
+					  	A.MCATEGORYCODE != B.CATEGORYCODE ) as ISLEAF	
+		    FROM 
+		    		VTASKCLASS B
+		    WHERE  
+		    		B.TENANT_ID = #tenantID#
+		    AND
+		    		B.COMPANYID = #companyID#
+		    ORDER BY 
+		    		B.CNAME ASC
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKMIDDLECATEGORY(#v_DEPTCODE#, #v_CATECODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
 	 		SELECT 
 	 				DISTINCT MCATEGORYCODE ,
                       		 MCNAME ,
@@ -3174,58 +3206,116 @@
             AND 
             		CATEGORYCODE = #v_CATECODE#
             AND
-            		TENANT_ID = #v_TENANTID#
+            		TENANT_ID = #tenantID#
             AND
 		    		COMPANYID = #companyID#
         	ORDER BY 
         			MCNAME ASC
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+	 		SELECT 
+	 				DISTINCT B.MCATEGORYCODE CATEGORYCODE,
+                    CASE 
+                    	WHEN (B.MCNAME$lang$ IS NULL OR B.MCNAME$lang$ = '')  
+                    	THEN B.MCNAME
+                    	ELSE B.MCNAME$lang$
+                    END NAME,
+                    ( SELECT
+						COUNT(*)
+					  FROM
+					  	TBL_TASKSUBCATEGORY A
+					  WHERE
+					  	A.TENANT_ID = #tenantID#
+					  AND
+					  	A.COMPANYID = #companyID#
+					  AND
+					  	A.MCATEGORYCODE = B.MCATEGORYCODE 
+					  AND
+					  	A.SUBCATEGORYCODE != B.MCATEGORYCODE ) as ISLEAF
+        	FROM 
+        			VTASKCLASS B
+       		WHERE  
+            		B.CATEGORYCODE = #categoryCode#
+            AND
+            		B.MCATEGORYCODE != #categoryCode#
+            AND
+            		B.TENANT_ID = #tenantID#
+            AND
+		    		B.COMPANYID = #companyID#
+        	ORDER BY 
+        			MCNAME ASC
+		</isNotEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKSUBCATEGORY(#v_DEPTCODE#, #v_CATECODE#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO">
-		<isEqual property="v_STRLANG" compareValue="1"> 
+	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
+		<isEmpty property="approvalFlag">
+			<isEqual property="v_STRLANG" compareValue="1"> 
+				SELECT 
+					DISTINCT SUBCATEGORYCODE ,
+	                         SCNAME 
+	           	FROM 
+	           		VTASKCLASS  
+	          	WHERE  ( 
+	          				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
+	                   	OR 
+	                   		TASKCODE LIKE 'ZZ%'
+	                   	OR 
+	                   		TASKCODE = '99999999' )
+	            AND 
+	            	MCATEGORYCODE = #v_CATECODE#
+	            AND
+	            	TENANT_ID = #tenantID#    
+	            AND	
+	            	COMPANYID = #companyID#   	
+	            ORDER BY 
+	           		SCNAME ASC
+			</isEqual>
+			<isNotEqual property="v_STRLANG" compareValue="1">
+			   SELECT 
+			   		DISTINCT SUBCATEGORYCODE ,
+	                IFNULL(SCNAME, SCNAME2) SCNAME  
+	           FROM 
+	           		VTASKCLASS 
+	           WHERE  ( 
+	           				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
+	                   OR 
+	                   		TASKCODE LIKE 'ZZ%'
+	                   OR 
+	                   		TASKCODE = '99999999' )
+	           AND 
+	               MCATEGORYCODE = #v_CATECODE#
+	           AND
+	               TENANT_ID = #tenantID#  
+	           AND	
+	               COMPANYID = #companyID#  
+	           ORDER BY 
+	           	   SCNAME ASC
+			</isNotEqual>
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
 			SELECT 
-				DISTINCT SUBCATEGORYCODE ,
-                         SCNAME 
+				DISTINCT SUBCATEGORYCODE CATEGORYCODE,
+                CASE 
+                   	WHEN (SCNAME$lang$ IS NULL OR SCNAME$lang$ = '')  
+                   	THEN SCNAME
+                   	ELSE SCNAME$lang$
+                END NAME,
+                0 as ISLEAF
            	FROM 
            		VTASKCLASS  
-          	WHERE  ( 
-          				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
-                   	OR 
-                   		TASKCODE LIKE 'ZZ%'
-                   	OR 
-                   		TASKCODE = '99999999' )
-            AND 
-            	MCATEGORYCODE = #v_CATECODE#
+          	WHERE  
+            	MCATEGORYCODE = #categoryCode#
             AND
-            	TENANT_ID = #v_TENANTID#    
+            	SUBCATEGORYCODE != #categoryCode#
+            AND
+            	TENANT_ID = #tenantID#    
             AND	
             	COMPANYID = #companyID#   	
             ORDER BY 
            		SCNAME ASC
-		</isEqual>
-		<isNotEqual property="v_STRLANG" compareValue="1">
-		   SELECT 
-		   		DISTINCT SUBCATEGORYCODE ,
-                IFNULL(SCNAME, SCNAME2) SCNAME  
-           FROM 
-           		VTASKCLASS 
-           WHERE  ( 
-           				TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
-                   OR 
-                   		TASKCODE LIKE 'ZZ%'
-                   OR 
-                   		TASKCODE = '99999999' )
-           AND 
-               MCATEGORYCODE = #v_CATECODE#
-           AND
-               TENANT_ID = #v_TENANTID#  
-           AND	
-               COMPANYID = #companyID#  
-           ORDER BY 
-           	   SCNAME ASC
-		</isNotEqual>
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -10972,8 +11062,8 @@
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.insertNotifyItem" parameterClass="Map">
 	  INSERT INTO TBL_NOTIFICATION
-        ( ItemSeq, USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
-       VALUES ( #v_itemSeq#, #v_PUSERID#,  #v_SYSDATE#, #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
+        ( USERID, POSTDATE, SENDER, SUBJECT, TYPE, ETCDATA , TENANT_ID, COMPANYID)
+       VALUES ( #v_PUSERID#,  #v_SYSDATE#, #v_PSENDER#,#v_PSUBJECT#, #v_PTYPE#, #v_PETCDATA#, #v_TENANTID#, #companyID# )
 	</insert>
 	
 	<select id="EzApprovalG.notifiCationSeq" parameterClass="Map" resultClass="String">
@@ -10990,7 +11080,8 @@
 <!-- 		{CALL EZSP_ADDNEWVOLUME(#v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_CREATEDATE#)} -->
 <!-- 	</procedure> -->
 	<insert id="EzApprovalG.addNewVolume" parameterClass="Map">
-		INSERT 	INTO TBL_CABINET ( 
+		INSERT 	INTO 
+			TBL_CABINET ( 
         		 CABINETID,     VOLUMENO,     CABINETCLASSNO, CREATEDATE, CABINETTRANSFERFLAG, 	DELFLAG , TENANT_ID, COMPANYID
         )VALUES ( 
    				 #v_CABINETID#, #v_VOLUMENO#, #v_CABCLASSNO#, #v_SYSDATE#,      '0',                '0' , #v_TENANTID#, #companyID#)
@@ -16912,7 +17003,7 @@
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID) 
    	    (SELECT 
    	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
 		 FROM 
@@ -19847,8 +19938,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+      		<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#
@@ -19864,8 +19961,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+			<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#
@@ -19908,26 +20011,17 @@
 														tbL_Container.ContainerID 
                                                      FROM 
                                                      	tbL_Container 
-                                                     LEFT JOIN 
-                                                     	tbL_ContainerUseDep    
-                                                     ON 
-                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
-                                                     AND
-                                                     	tbL_Container.TENANT_ID = tbL_ContainerUseDep.TENANT_ID
-                                                     AND
-                                                     	tbL_Container.COMPANYID = tbL_ContainerUseDep.COMPANYID
                                                      WHERE  
-                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
-                                                     OR 
-                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     	( tbL_Container.ContainerOwnDepID = #v_DEPTID# )
+                                                    
                                                      AND
-                                                     	tbL_Container.TENANT_ID = 0
+                                                     	tbL_Container.TENANT_ID = #v_TENANTID#
                                                      AND
-                                                     	tbL_Container.COMPANYID = 'S907000'))
+                                                     	tbL_Container.COMPANYID = #companyID#))
            AND
-           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           		TBl_ENDAPRDOCINFO.TENANT_ID =#v_TENANTID#
            AND
-           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME
            ORDER BY 
@@ -19965,22 +20059,16 @@
 														tbL_Container.ContainerID 
                                                      FROM 
                                                      	tbL_Container 
-                                                     LEFT JOIN 
-                                                     	tbL_ContainerUseDep    
-                                                     ON 
-                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
                                                      WHERE  
-                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
-                                                     OR 
-                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     	( tbL_Container.ContainerOwnDepID =  #v_DEPTID# )
                                                      AND
-                                                     	tbL_Container.TENANT_ID = 0
+                                                     	tbL_Container.TENANT_ID =  #v_TENANTID#
                                                      AND
-                                                     	tbL_Container.COMPANYID = 'S907000'))
+                                                     	tbL_Container.COMPANYID =  #companyID#))
            AND
-           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           		TBl_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
            AND
-           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
            ORDER BY 
@@ -20099,4 +20187,52 @@
     	AND
     		COMPANYID = #companyID#
    	</delete>
+   	
+   	<select id="EzApprovalG.getAllCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+   		<![CDATA[
+   			SELECT 
+   				TASKCODE,
+   				SUBCATEGORYCODE,
+   				MCATEGORYCODE, 
+   				CATEGORYCODE,
+   				CASE
+   					WHEN (CATEGORYCODE = MCATEGORYCODE AND MCATEGORYCODE = SUBCATEGORYCODE)  
+   					THEN '1'
+   					WHEN (CATEGORYCODE != MCATEGORYCODE AND MCATEGORYCODE = SUBCATEGORYCODE)
+   					THEN '2'
+   					ELSE '3'
+   				END LEVEL
+			FROM 
+				VTASKCLASS
+			WHERE 
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				TASKCODE = #code#
+		]]>
+   	</select>
+   	
+   	<select id="EzApprovalG.userContListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(DOCID)  
+        FROM 
+        	TBL_USERCONTLIST 
+    	WHERE  
+    		USERCONTID = #v_CONTID#
+        AND 
+        	DOCID = #v_DOCID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.inserUserContList" parameterClass="Map">
+   		 INSERT INTO 
+   			 TBL_USERCONTLIST
+        ( DOCID, USERCONTID, LINKDATE, DESCRIPTION, COMPANYID, TENANT_ID )
+        VALUES 
+        ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
+   	</insert>
 </sqlMap>

@@ -220,10 +220,22 @@
 		    }
 		    function btnAddForm_onclick(type) {
 		        var listView = new ListView();
+		        var listView2 = new ListView();
 		        if (type == "2")
 		            listView.LoadFromID("lvtFavForm");
-		        else
+		        else {
 		            listView.LoadFromID("lvtForm");
+		            listView2.LoadFromID("lvtFavForm");
+		            
+		            var FavList = listView2.GetDataRows();
+		            
+		            for (var i = 0; i < FavList.length; i++) {
+		                if (GetAttribute(FavList[i], "DATA1") == GetAttribute(listView.GetSelectedRows()[0], "DATA1")) {
+		                    OpenAlertUI("<spring:message code='ezApprovalG.t20001'/>");
+		                    return;
+		                }
+		            }
+		        }
 		
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FormTreeView");
@@ -246,7 +258,7 @@
 		                        Get_Favoritelist();
 		                    }
 		                    else {
-		                        OpenAlertUI("<spring:message code='ezApprovalG.t801'/>");
+		                        OpenAlertUI(strLang1003);
 		                        Get_Favoritelist();
 		                    }
 		                }
@@ -445,7 +457,7 @@
 		</TREEVIEWDATA>
 		</xml>
 		<h1><spring:message code='ezApprovalG.t152'/></h1>
-		    <table class="content" style="width:684px;">
+		    <table class="content" style="width:697px;">
 			    <tr>
 				    <th><spring:message code='ezApprovalG.t1540'/></th>
 				    <td><select name="select" onChange="return select_onchange()" id="FromList">
@@ -464,7 +476,7 @@
 		            </td>
 			    </tr>
 		    </table>
-		        <div class="portlet_tabpart01" style="margin-top: 3px; width: 684px">
+		        <div class="portlet_tabpart01" style="margin-top: 3px; width: 697px">
 		        <div class="portlet_tabpart01_top" id="tab1">
 		            <p><span id="1tab1" divname="favoritelist"><spring:message code='ezApprovalG.G0001'/></span></p>
 		            <p><span id="1tab2" divname="formlist"><spring:message code='ezApprovalG.t1537'/></span></p>
@@ -474,7 +486,7 @@
 		            </div>
 		        </div>
 		    </div>
-		    <table id="favoritetable" style="margin-top: 5px; width: 684px;">
+		    <table id="favoritetable" style="margin-top: 5px; width: 697px;">
 		        <tr>
 		            <td style="padding-right: 1px; vertical-align: top;">
 		                <div class="border_gray">

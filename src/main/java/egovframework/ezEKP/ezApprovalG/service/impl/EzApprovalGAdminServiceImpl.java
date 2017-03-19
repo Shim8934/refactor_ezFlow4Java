@@ -839,7 +839,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID) throws Exception {
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		StringBuffer sb = new StringBuffer();
 		
@@ -858,9 +858,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID);
+		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag);
 		
-		logger.debug("getTaskInSubCategoryForManage ended.");
+		logger.debug("getTaskInSubCategoryForManage ended. sb = " + sb.toString());
 		
 		return result;
 	}
@@ -2324,19 +2324,18 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getFormContent(String formID, String lang, String companyID, int tenantID) throws Exception {
+	public ApprGFormVO getFormContent(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMID", formID);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("getFormContent started.");
+		logger.debug("getFormContent started. formID = " + formID);
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		logger.debug("getFormContent ended.");
 		
-		String result = commonUtil.getQueryResult(vo);
-		
-		return result;
+		return vo;
 	}
 
 	@Override
@@ -2694,7 +2693,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("upperCode", vo1.getCode());
 			
+			logger.debug("vo1.getCode() = " + vo1.getCode());
+			
 			List<ApprGFormVO> propList2 = ezApprovalGAdminDAO.getFormProperty(map);
+			
+			logger.debug("listSize = " + propList2.size());
 			
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");
@@ -2871,5 +2874,96 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		return rtnValue;
 	}
 	
+	@Override
+	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception {
+		logger.debug("getSecurityType started");
+		
+		StringBuilder result = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (approvalFlag.equals("S")) {
+			map.put("code1", "SA51");
+		} else {
+			map.put("code1", "A51");
+		}
+		
+		map.put("primary", userInfo.getPrimary());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[1].equals(selected)) {
+				result.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				result.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getSecurityType ended");
+		
+		return result.toString();
+	}
 	
+	@Override
+	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception {
+		logger.debug("getKeepType started");
+		
+		StringBuilder result = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		if (approvalFlag.equals("S")) {
+			map.put("code1", "SA52");
+		} else {
+			map.put("code1", "A52");
+		}
+		
+		map.put("primary", userInfo.getPrimary());
+		map.put("tenantID", userInfo.getTenantId());
+		map.put("companyID", userInfo.getCompanyID());
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[1].equals(selected)) {
+				result.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
+			} else {
+				result.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getKeepType ended");
+		
+		return result.toString();
+	}
+	
+	@Override
+	public String getEtcName(String code1, String selected, String primary, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code1", code1);
+		map.put("primary", primary);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getEtcName param code1=" + code1 + " primary=" + primary + "companyID=" + companyID + "tenantID=" + tenantID);
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		String result = "";
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[2].equals(selected)) {
+				result = colOption[1];
+			}
+		}
+		
+		return result;
+	}
 }

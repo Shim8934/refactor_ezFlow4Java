@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -41,7 +42,7 @@ public interface EzApprovalGAdminService {
 	
 	public String getTaskCategoryTree(String categoryType, String parentID, String companyID, int tenantID, String approvalFlag) throws Exception;
 	
-	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID) throws Exception;
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String getTaskCategoryDuplicate(String categoryType, String categoryCode, String companyID, int tenantID) throws Exception;
 
@@ -109,7 +110,7 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteFormContainer(String contID, String companyID, int tenantID) throws Exception;
 	
-	public String getFormContent(String formID, String lang, String companyID,int tenantID) throws Exception;
+	public ApprGFormVO getFormContent(String formID, String lang, String companyID,int tenantID, String approvalFlag) throws Exception;
 	
 	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
 	
@@ -133,6 +134,9 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantId) throws Exception;
 	
+	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 
+	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 	
+	public String getEtcName(String code1, String selected, String langType, String companyID, int tenantID) throws Exception;
 }

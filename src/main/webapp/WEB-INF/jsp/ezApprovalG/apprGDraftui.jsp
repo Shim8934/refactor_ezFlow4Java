@@ -85,7 +85,7 @@
 		    var pLClass = "";
 		    var pMClass = "";
 		    var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
-		    var approvalYN = "${approvalYN}";
+		    var approvalFlag = "${approvalFlag}";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
@@ -1091,7 +1091,9 @@
 		        parameter[12] = "DRAFT";
 		        parameter[17] = AprLineArea;
 		        parameter[18] = HapyuiArea;
+		        parameter[20] = tempKeep;
 		        parameter[28] = onlydocinfiview;
+		        parameter[29] = TaskCode;
 		        parameter[30] = cabinetID;
 		        parameter[31] = tempSecurity;
 		        parameter[32] = tempUrgent;
@@ -1104,6 +1106,8 @@
 		        parameter[39] = SummaryFlag;
 		        /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		        parameter[40] = SummaryOuterReceiverList;
+		        parameter[41] = "itemName";
+		        parameter[42] = "itemName2";
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1121,7 +1125,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		
 		                if (ret[1] != false) {
@@ -1144,9 +1148,11 @@
 		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                    savexmlhttp.send(ret[2]);
 		
-		                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
-		                    SummaryOuterReceiverList = ret[15];
-		
+		                    if (approvalFlag == "G") {
+			                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
+			                    SummaryOuterReceiverList = ret[15];
+		                    }
+		                    
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                }
@@ -1165,24 +1171,28 @@
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];
-		                pSpecialRecordCode = ret[10];
-		                pPublicityCode = ret[11];
-		                pLimitRange = ret[12];
-		                pPageNum = ret[13];
 		                tempSecurityDate = ret[14];
-		                
-		                if (ret[11].substring(0,1) == 3) {
-		                	tempPublic = "N";
+		                if (approvalFlag == "G") {
+			                pSpecialRecordCode = ret[10];
+			                pPublicityCode = ret[11];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                
+			                if (ret[11].substring(0,1) == 3) {
+			                	tempPublic = "N";
+			                }
+			                
+			                setPublicFlag();
 		                }
-		                setPublicFlag();
+		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
 		
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		
@@ -1260,7 +1270,7 @@
 		                <li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		                <li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 		                <li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-		                <c:if test="${approvalYN eq 'G'}">
+		                <c:if test="${approvalFlag eq 'G'}">
 		                <li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                </c:if>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>

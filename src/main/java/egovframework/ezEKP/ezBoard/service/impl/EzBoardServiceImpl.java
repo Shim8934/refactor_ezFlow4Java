@@ -328,7 +328,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public int getThumbNailCount(BoardMyFavoriteVO myFavoriteVO) throws Exception {
 		String tempString = ezBoardDAO.getBoardApprList(myFavoriteVO);
 		int rtnCount = 0;
-
+		
 		if (tempString != null && !tempString.equals("")) {
 			rtnCount = ezBoardDAO.getThumbNailCount(myFavoriteVO);
 		} else {
@@ -1809,6 +1809,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		myFavoriteVO.setBoardId(pBoardID);
 		myFavoriteVO.setUserId(userInfo.getId());
         myFavoriteVO.setType(pBoardType);
+        myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
 		
 		StringBuilder sb = new StringBuilder();
 		String orderOption1 = "";
@@ -1823,7 +1824,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		int boardCount = getThumbNailCount(myFavoriteVO);
 		BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
-        
         int personalCount = boardConfigVO.getListCount();
 		
 		sb.append("<DOCLIST>");

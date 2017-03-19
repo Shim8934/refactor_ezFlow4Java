@@ -78,7 +78,7 @@
 	        var Udomain = "${userEmail}";
 	        var pOpenYaer = "${openYear}";
 	        var NonActiveX = "YES";
-			var approvalYN = "${approvalYN}"
+			var approvalFlag = "${approvalFlag}"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
 	        document.onselectstart = function () { return false; };
@@ -160,7 +160,7 @@
 	                condition[24] = "";
 	                DocListType == "GetDocSearch";
 	                
-	                if(approvalYN == 'G') {
+	                
 	                	 var settingDate = new Date();
 	                     settingDate.setYear(settingDate.getYear() - 1);
 
@@ -175,7 +175,7 @@
 	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 
 	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
-	                }
+	                
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
@@ -198,7 +198,7 @@
 	                    GetDocList();
 	                }
 	                else if (LoadSquery != "") {
-	                	if (approvalYN == 'G') {
+	                	if (approvalFlag == 'G') {
 		                    for (i = 0; i < 25; i++) {
 		                        condition[i] = "";
 		                    }
@@ -252,7 +252,7 @@
 	        var SelYearFlag = false;
 	        function onSelect_Year() {
 	            SelYearFlag = true;
-	            if(approvalYN == 'G') {
+	            if(approvalFlag == 'G') {
 		            if (GetSelectVal("sel_year") != "ALL") {
 		                condition[9] = GetSelectVal("sel_year");
 		                condition[10] = "01";
@@ -1122,7 +1122,7 @@
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	        	<c:if test ="${approvalYN == 'S'}">
+	        	<c:if test ="${approvalFlag == 'S'}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
 	            <li id="tresend"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
 	            <li id="tenforce"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
@@ -1133,7 +1133,7 @@
 	            <li id="tdEDMFolder" style="display: none"><span id="SelEDMFolder" onclick="return SelEDMFolder_onclick()"><spring:message code='ezApprovalG.t1525'/></span></li>
 	            <li id="tbtnExcel"><span id="btnExcel" onclick="return btnExcel_onclick(0)"><spring:message code='ezApprovalG.t1526'/></span></li>
 	            <li id="tbtnExcelAll"><span id="btnExcelAll" onclick="return btnExcel_onclick(1)"><spring:message code='ezApprovalG.t1527'/></span></li>
-	            <c:if test ="${approvalYN == 'S'}">
+	            <c:if test ="${approvalFlag == 'S'}">
 	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
 	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
@@ -1142,7 +1142,7 @@
 		        <li id="Li2" style="background: none; padding-right: 2px;">
 		        <img src="/images/i_bar.gif"></li>
 	            </c:if>
-	            <c:if test ="${approvalYN == 'G'}">
+	            <c:if test ="${approvalFlag == 'G'}">
 	            <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>
 	            <li id="tbar2" style="background: none; padding-right: 2px; display: none;"><img src="/images/i_bar.gif"></li>
 	            <li id="tSearchCondi"><span id="SearchCondi" onclick="return SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></li>

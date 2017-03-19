@@ -145,51 +145,97 @@ function getAttachFilePageNum(PageNum, DisplayName, CompleteFunction) {
 
 function AddAttachFileInfoXmlParsing_Complete(retValue) {
     DivPopUpHidden();
-    pAttachxml = "<LISTVIEWDATA><HEADERS>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-    pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
-    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
-    pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
-    pAttachxml = pAttachxml + "<DATA2>" + pAttachSN + "</DATA2>";
-    pAttachxml = pAttachxml + "<DATA3>" + pDocID + "</DATA3>";
-    pAttachxml = pAttachxml + "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
-    pAttachxml = pAttachxml + "<DATA5>" + MakeXMLString(pUserJobTitle) + "</DATA5>";
-    pAttachxml = pAttachxml + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
-    pAttachxml = pAttachxml + "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
-    pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
-    pAttachxml = pAttachxml + "<DATA9>" + MakeXMLString(retValue[1]) + "</DATA9>";
-    pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
-    pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
-    pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue[2]) + "</DATA12>";
-    pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
-    pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
-    pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";
-    pAttachxml = pAttachxml + "<DATA16>" + MakeXMLString(arr_userinfo[14]) + "</DATA16>";
-    pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
-    pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
-    pAttachxml = pAttachxml + "</CELL><CELL>";
-    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[2]) + "</VALUE>";
-    pAttachxml = pAttachxml + "</CELL><CELL>";
-
-    var strSize;
-    if (temppFileSize > 1024 * 1024) {
-        temppFileSize = temppFileSize / 1024 / 1024;
-        strSize = parseInt(temppFileSize) + "MB";
+    if (approvalFlag == "G") {
+    	pAttachxml = "<LISTVIEWDATA><HEADERS>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang221 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
+    	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
+    	pAttachxml = pAttachxml + "<DATA2>" + pAttachSN + "</DATA2>";
+    	pAttachxml = pAttachxml + "<DATA3>" + pDocID + "</DATA3>";
+    	pAttachxml = pAttachxml + "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
+    	pAttachxml = pAttachxml + "<DATA5>" + MakeXMLString(pUserJobTitle) + "</DATA5>";
+    	pAttachxml = pAttachxml + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
+    	pAttachxml = pAttachxml + "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
+    	pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
+    	pAttachxml = pAttachxml + "<DATA9>" + MakeXMLString(retValue[1]) + "</DATA9>";
+    	pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
+    	pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
+    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue[2]) + "</DATA12>";
+    	pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
+    	pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
+    	pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";
+    	pAttachxml = pAttachxml + "<DATA16>" + MakeXMLString(arr_userinfo[14]) + "</DATA16>";
+    	pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
+    	pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[2]) + "</VALUE>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	
+    	var strSize;
+    	if (temppFileSize > 1024 * 1024) {
+    		temppFileSize = temppFileSize / 1024 / 1024;
+    		strSize = parseInt(temppFileSize) + "MB";
+    	}
+    	else if (temppFileSize > 1024) {
+    		temppFileSize = temppFileSize / 1024;
+    		strSize = parseInt(temppFileSize) + "KB";
+    	}
+    	else
+    		strSize = parseInt(temppFileSize) + "B";
+    	
+    	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
+    	pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
+    } else {
+    	pAttachxml = "<LISTVIEWDATA><HEADERS>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang220 + "</NAME><WIDTH>80</WIDTH></HEADER>";
+    	pAttachxml = pAttachxml + "</HEADERS><ROWS><ROW><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(pUserName) + "</VALUE>";
+    	pAttachxml = pAttachxml + "<DATA1>" + MakeXMLString(temppFileLocation) + "</DATA1>";
+    	pAttachxml = pAttachxml + "<DATA2>" + pAttachSN + "</DATA2>";
+    	pAttachxml = pAttachxml + "<DATA3>" + pDocID + "</DATA3>";
+    	pAttachxml = pAttachxml + "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
+    	pAttachxml = pAttachxml + "<DATA5>" + MakeXMLString(pUserJobTitle) + "</DATA5>";
+    	pAttachxml = pAttachxml + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
+    	pAttachxml = pAttachxml + "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
+    	pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
+    	pAttachxml = pAttachxml + "<DATA9>1</DATA9>";
+    	pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
+    	pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
+    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue) + "</DATA12>";
+    	pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
+    	pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
+    	pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";
+    	pAttachxml = pAttachxml + "<DATA16>" + MakeXMLString(arr_userinfo[14]) + "</DATA16>";
+    	pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
+    	pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue) + "</VALUE>";
+    	pAttachxml = pAttachxml + "</CELL><CELL>";
+    	
+    	var strSize;
+    	if (temppFileSize > 1024 * 1024) {
+    		temppFileSize = temppFileSize / 1024 / 1024;
+    		strSize = parseInt(temppFileSize) + "MB";
+    	}
+    	else if (temppFileSize > 1024) {
+    		temppFileSize = temppFileSize / 1024;
+    		strSize = parseInt(temppFileSize) + "KB";
+    	}
+    	else
+    		strSize = parseInt(temppFileSize) + "B";
+    	
+    	pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE></CELL>";
+    	pAttachxml = pAttachxml + "</ROW></ROWS></LISTVIEWDATA>";
+    	
     }
-    else if (temppFileSize > 1024) {
-        temppFileSize = temppFileSize / 1024;
-        strSize = parseInt(temppFileSize) + "KB";
-    }
-    else
-        strSize = parseInt(temppFileSize) + "B";
-
-    pAttachxml = pAttachxml + "<VALUE>" + strSize + "</VALUE>";
-    pAttachxml = pAttachxml + "</CELL><CELL>";
-    pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[1]) + "</VALUE>";
-    pAttachxml = pAttachxml + "</CELL></ROW></ROWS></LISTVIEWDATA>";
 
     Resultxml = loadXMLString(pAttachxml);
     InsertAttachFileInfo(ATTACH, Resultxml);
@@ -211,18 +257,28 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     pTempURL = pFileLocation.replace(pTmp, "");
 
     pFileLocation = pTempURL + pTmp;
-    if (BodyAttach == "Y")
-        var retValue = getAttachFilePageNum("1", "(" + strLang219 + pFileName, AddAttachFileInfoXmlParsing_Complete);
-    else
-        var retValue = getAttachFilePageNum("1", pFileName, AddAttachFileInfoXmlParsing_Complete);
-
+    
     if (CrossYN()) {
-        temppFileLocation = pFileLocation;
-        temppFileSize = pFileSize;
-        temppFileName = pFileName;
-        return;
+	    if (approvalFlag == "G") {
+	    	if (BodyAttach == "Y") {
+	    		var retValue = getAttachFilePageNum("1", "(" + strLang219 + pFileName, AddAttachFileInfoXmlParsing_Complete);
+	    	} else {
+	    		var retValue = getAttachFilePageNum("1", pFileName, AddAttachFileInfoXmlParsing_Complete);
+	    	}
+	    	
+	    	temppFileLocation = pFileLocation;
+	        temppFileSize = pFileSize;
+	        temppFileName = pFileName;
+	        return;
+	    } else {
+	    	temppFileLocation = pFileLocation;
+	        temppFileSize = pFileSize;
+	        temppFileName = pFileName;
+	    	AddAttachFileInfoXmlParsing_Complete(pFileName);
+	    	return;
+	    }
     }
-
+    
     pAttachxml = "<LISTVIEWDATA><HEADERS>";
     pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang214 + "</NAME><WIDTH>50</WIDTH></HEADER>";
     pAttachxml = pAttachxml + "<HEADER><NAME>" + strLang215 + "</NAME><WIDTH>260</WIDTH></HEADER>";

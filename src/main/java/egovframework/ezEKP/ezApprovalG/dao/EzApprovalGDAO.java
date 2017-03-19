@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import egovframework.ezEKP.ezApproval.vo.ApprFormInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -1082,6 +1081,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.delUserConutCnt", map);
 	}
 	
+	public int userContListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.userContListCount", map);
+	}
+	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getUserContMaxID", map);
 	}
@@ -1802,6 +1805,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		insert("EzApprovalG.insertUserCont", map);
 	}
 	
+	public void inserUserContList(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.inserUserContList", map);
+	}
+	
 	public void setJijung(Map<String, Object> map) throws Exception{
 		update("EzApprovalG.setJijung", map);
 	}
@@ -2401,5 +2408,9 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
 		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
+	}
+
+	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
+		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
 }

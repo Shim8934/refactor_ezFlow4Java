@@ -13,12 +13,14 @@
 		<script type="text/javascript" src="/js/ezApprovalG/ListView_list.js"></script> 
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/ezApprovalG/selectContainer_Cross.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
 			var OrderCell = "";
 		    var labelcolor = "gray";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var xmldoc = createXmlDom();		
 		    var pDeptID ;
+		    var companyID = "${userInfo.companyID}";
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -175,7 +177,6 @@
 		            var xmlRtn = createXmlDom();
 
 		            var strXML = listAdd(DeptName, ContName, DeptID, ContID, lastRowIdx)
-
 		            xmlRtn = loadXMLString(strXML);
 
 		            if (lastRowIdx < 1) {

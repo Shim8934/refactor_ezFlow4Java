@@ -116,17 +116,26 @@
 		        	success : function(result){
 		        		result = loadXMLString(result);
 		        		
-		        		var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE");
-			            InitCodeSelectBox(nodesKeepPeriod, selKeepPeriod);
+		        		if (approvalFlag == 'S') {
+		        			var nodesKeepMethod = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
+				            InitCodeSelectBox(nodesKeepMethod, selKeepMethod);
 
-			            var nodesKeepMethod = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
-			            InitCodeSelectBox(nodesKeepMethod, selKeepMethod);
+				            var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
+				            InitCodeSelectBox(nodesKeepPlace, selKeepPlace);
+		        		} else {
+		        			var nodesKeepPeriod = SelectNodes(result, "CODELIST/KEEPINGPERIOD/CODE");
+				            InitCodeSelectBox(nodesKeepPeriod, selKeepPeriod);
 
-			            var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
-			            InitCodeSelectBox(nodesKeepPlace, selKeepPlace);
-			            
-			            var nodeSecurityLevel = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
-			            InitCodeSelectBox(nodeSecurityLevel, securityLevel);
+				            var nodesKeepMethod = SelectNodes(result, "CODELIST/KEEPINGMETHOD/CODE");
+				            InitCodeSelectBox(nodesKeepMethod, selKeepMethod);
+
+				            var nodesKeepPlace = SelectNodes(result, "CODELIST/KEEPINGPLACE/CODE");
+				            InitCodeSelectBox(nodesKeepPlace, selKeepPlace);
+				            
+				            var nodeSecurityLevel = SelectNodes(result, "CODELIST/SECURITYLEVEL/CODE");
+				            InitCodeSelectBox(nodeSecurityLevel, securityLevel);
+		        		}
+		        		
 		        	}
 	        	});
 	        }
@@ -561,13 +570,13 @@
 	        </tr>
 	        <tr class = 'approvalFlagS'>
 	        	<th><spring:message code = 'ezApprovalG.t118' /></th>
-	        	<td><select id="securityLevel" style="WIDTH: 100%"></select></td> 
+	        	<td><select id="securityLevel" style="WIDTH: 100%">${securityNode }</select></td> 
 	        </tr>
 	        <tr>
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S' }">
 			            <th><spring:message code = 'ezApprovalG.t1198' /> <span style="color:red">*</span></th>
-			            <td><select id="selKeepPeriod" style="WIDTH: 100%"></select></td>
+			            <td><select id="selKeepPeriod" style="WIDTH: 100%">${periodNode }</select></td>
 	        		</c:when>
 	        		<c:otherwise>
 			            <th><spring:message code = 'ezApprovalG.t117' /> <span style="color:red">*</span></th>

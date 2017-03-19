@@ -34,6 +34,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -142,7 +143,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
-//		model.addAttribute("approvalFlag", "S");
 		
 		logger.debug("formAdmin ended.");
 		
@@ -388,6 +388,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -405,6 +406,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
+		if (approvalFlag.equals("S")) {
+			String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
+			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
+			
+			model.addAttribute("securityNode", securityNode);
+			model.addAttribute("periodNode", periodNode);
+		}
+		
 		model.addAttribute("formProcSpelling", formProcSpelling);
 		model.addAttribute("topID", userInfo.getCompanyID());
 		model.addAttribute("primary", primary);
@@ -417,7 +426,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyID", companyID);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalFlag", approvalFlag);
-//		model.addAttribute("approvalFlag", "S");
 		
 		logger.debug("formMainOther ended.");
 		
@@ -473,7 +481,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("selectEditor started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String type = request.getParameter("type");
 		
@@ -501,20 +508,22 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식기본정보 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do", produces="text/html;charset=utf-8")
-	@ResponseBody
-	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	@RequestMapping(value = "/admin/ezApprovalG/getFormInfo.do")
+	public String getFormInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getFormInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String formID = request.getParameter("formID");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getFormContent(formID, userInfo.getLang(), companyID, userInfo.getTenantId());
+		ApprGFormVO vo = ezApprovalGAdminService.getFormContent(formID, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
+		
+		model.addAttribute("vo", vo);
 		
 		logger.debug("getFormInfo ended.");
 		
-		return result;
+		return "json";
 	}
 	
 	/**
@@ -1254,12 +1263,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String sCateCode = request.getParameter("sCateCode");
-		String langType = request.getParameter("langType");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, langType, companyID, userInfo.getTenantId());
+		//사용자에서 부를때 컴패니 추가
+		if (companyID == null || companyID.equals("")) {
+			companyID = userInfo.getCompanyID();
+		}
+		
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
 		
@@ -1422,6 +1436,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String tCheck = request.getParameter("tCheck");
+		String companyID = request.getParameter("companyID");
+		
 		String title = "";
 		
 		if (approvalFlag.equals("S")) {
@@ -1430,6 +1446,12 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			} else {
 				title = egovMessageSource.getMessage("ezApprovalG.t1643", userInfo.getLocale());
 			}
+			
+			String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
+			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
+			
+			model.addAttribute("securityNode", securityNode);
+			model.addAttribute("periodNode", periodNode);
 		} else {
 			if (tCheck.equals("ins")) {
 				title = egovMessageSource.getMessage("ezApprovalG.t763", userInfo.getLocale());
@@ -1437,6 +1459,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				title = egovMessageSource.getMessage("ezApprovalG.t764", userInfo.getLocale());
 			}
 		}
+		
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", title);
@@ -2354,8 +2377,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
-		
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		return result;
 	}

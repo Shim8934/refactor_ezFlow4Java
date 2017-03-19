@@ -1,21 +1,20 @@
-function getUseContainer(pOtherDeptID, pOWN)
+function getUseContainer()
 {
-	alert(300);
-	var xmlpara = createXmlDom();
-	var xmlRtn  = createXmlDom();
+    var xmlRtn = createXmlDom();		 
+    
+    $.ajax({
+    	type : "POST",
+    	dataType : "text",
+    	url : "/admin/ezApprovalG/apprGMgetContInfo.do",
+    	async : false,
+    	data : {deptID : pDeptID, comID : companyID},
+    	success : function(result){
+    		xmlRtn = loadXMLString(result);	        		
+    		 document.getElementById('divlvtCont').innerHTML = "";
+    	}
+    });
 	
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER"); 	
-	createNodeAndInsertText(xmlpara, objNode, "myDeptID", pDeptID);
-	createNodeAndInsertText(xmlpara, objNode, "otherDeptID", pOtherDeptID);
-	createNodeAndInsertText(xmlpara, objNode, "OWN", pOWN);
-	
-	xmlhttp.open("POST", "/myoffice/ezApproval/formContainer/aspx/getUseContainer.aspx", false);
-	xmlhttp.send(xmlpara);
-	
-	xmlRtn = loadXMLString(xmlhttp.responseText);
 
-    document.getElementById('divlvtCont').innerHTML = "";
     var listview = new ListView();                         
     listview.SetID("lvtCont");                       
     listview.SetMulSelectable(false);                     
@@ -29,18 +28,20 @@ function getUseContainer(pOtherDeptID, pOWN)
 
 function Init()
 {
-	var xmlpara = createXmlDom();
-	var xmlRtn = createXmlDom();
-	
-	var objNode;
-	createNodeInsert(xmlpara, objNode, "PARAMETER"); 	
-	createNodeAndInsertText(xmlpara, objNode, "DeptID", pDeptID);
-			
-	xmlhttp.open("POST", "/ezApprovalG/getcontuseGroup.do", false);
-	xmlhttp.send(xmlpara);
+      var xmlRtn = createXmlDom();		 
+      
+      $.ajax({
+      	type : "POST",
+      	dataType : "text",
+      	url : "/ezApprovalG/getContUseGroup.do",
+      	async : false,
+      	data : {deptID : pDeptID, comID : companyID},
+      	success : function(result){
+      		xmlRtn = loadXMLString(result);	        		
+      		 document.getElementById('divlvtDept').innerHTML = "";
+      	}
+      });
 
-    document.getElementById('divlvtDept').innerHTML = "";
-    xmlRtn = loadXMLString(xmlhttp.responseText);
     var listview = new ListView();                        
     listview.SetID("lvtDept");                           
     listview.SetMulSelectable(false);                      
@@ -54,7 +55,6 @@ function Init()
 		listview.SetSelectFlag(true);
 		var DeptID = GetAttribute(selRow, "DATA1");
 		var isOwnflag = GetAttribute(selRow, "DATA2");
-				
 		getUseContainer(DeptID, isOwnflag);
 	}
 }
@@ -67,8 +67,8 @@ function listAdd(pDeptName, pContName, pDeptID, pContID, lastRowIdx)
 	{
 		
 	    pparsingXML = "<LISTVIEWDATA><HEADERS>";
-	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang40 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang390 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang62 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang797 + "</NAME><WIDTH>50</WIDTH></HEADER>";
 	    pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
 	    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDeptName) + "</VALUE>";
 	    pparsingXML = pparsingXML + "<DATA1>" + pDeptID + "</DATA1>";
