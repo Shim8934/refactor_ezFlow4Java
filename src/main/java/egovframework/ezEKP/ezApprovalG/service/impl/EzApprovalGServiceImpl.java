@@ -12931,7 +12931,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		}
 		
-		tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
+ 		tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
 		
 		if (!tempValue.equals("")) {
 			if (firstFlag) {
