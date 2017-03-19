@@ -471,15 +471,20 @@
 		        	}
 		        });
 		    }
-	
+		    
 		    function btnFormListView_onclick() {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvtForm");
 		        var oArrRows = listview.GetSelectedRows();
 		        var tr = oArrRows[0];
-
+				
+		        if(encodeURI(GetAttribute(tr, "DATA4"))==""){
+				alert("<spring:message code = 'ezPortal.t60' />");
+				return;
+				}else{
 		        var url = "/admin/ezApprovalG/formPreview.do?href=" + encodeURI(GetAttribute(tr, "DATA4"));
 		        var retVal = GetOpenWindow(url, "Form_Preview", 1050, 1000, "no");
+				}
 		    }
 		    
 		    function searchform() {
