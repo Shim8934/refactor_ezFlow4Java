@@ -834,10 +834,10 @@
 		        Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
 		        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "approvalS");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "");
+// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
+// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
+// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
+// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "");
 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", document.getElementById("tbItemCode").value);
 		        
 		        return getXmlString(rtnXml);

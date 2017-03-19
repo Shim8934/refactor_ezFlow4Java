@@ -1124,7 +1124,6 @@
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
-alert(ret[0]);
 		        if (ret != undefined && ret[0] == "OK") {
 // 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
@@ -1149,9 +1148,11 @@ alert(ret[0]);
 		                    savexmlhttp.setRequestHeader("Content-Type", "text/plain;charset=UTF-8");
 		                    savexmlhttp.send(ret[2]);
 		
-		                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
-		                    SummaryOuterReceiverList = ret[15];
-		
+		                    if (approvalFlag == "G") {
+			                    /* 2015-06-30 표준모듈:추가(외부수신자요약) */
+			                    SummaryOuterReceiverList = ret[15];
+		                    }
+		                    
 		                    btnReceivLineEnable = false;
 		                    setRecevInfo(ret[3]);
 		                }
@@ -1163,6 +1164,7 @@ alert(ret[0]);
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = createXmlDom();
 			                xmlCab = loadXMLString(g_SelCabXml);
+alert(SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
