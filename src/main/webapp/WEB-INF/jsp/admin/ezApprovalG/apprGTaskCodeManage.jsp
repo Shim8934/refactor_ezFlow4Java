@@ -202,7 +202,7 @@
 		            taskcategoryinsert_cross_dialogArguments[0] = para;
 		            taskcategoryinsert_cross_dialogArguments[1] = btnAddTree_onclick_Complete;
 	
-		            TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=ins", "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
+		            TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=ins&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
 		            try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t768' />";
@@ -247,7 +247,7 @@
 	
 	                taskcategoryinsert_cross_dialogArguments[0] = para;
 	                taskcategoryinsert_cross_dialogArguments[1] = btnEditTree_onclick_Complete;
-	                var TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=update", "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
+	                var TaskCategoryInsert_Cross = window.open("/admin/ezApprovalG/taskCategoryInsert.do?tCheck=update&companyID=" + encodeURIComponent(companyID), "TaskCategoryInsert", GetOpenWindowfeature(470, 300));
 	                try { TaskCategoryInsert_Cross.focus(); } catch (e) { }
 		        } else {
 		            var pAlertContent = "<spring:message code = 'ezApprovalG.t771' />";

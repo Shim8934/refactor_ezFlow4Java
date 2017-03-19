@@ -14015,7 +14015,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				resultXML.append("</CELL>");
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + getKeepPeriodString(makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), companyID, strType, tenantID) + "</VALUE>");
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</VALUE>");
 				resultXML.append("</CELL>");
 				
 				resultXML.append("<CELL>");
