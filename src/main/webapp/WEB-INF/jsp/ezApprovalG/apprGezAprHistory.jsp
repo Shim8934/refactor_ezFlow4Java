@@ -176,7 +176,7 @@
 		    }
 		    function getLineHistoryInfo(pChangeSN) {
 				var result = "";
-		    	
+				
 		    	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -306,7 +306,7 @@
 		    </td>
 		  </tr>
 		  <tr id="HisLine"> 
-		    <td><div class="listview" style="overflow:auto;"> 
+		    <td><div class="listview" style="overflow:auto;">
 		      <div id=divAprLine style="border:0; width:700px; Height:165px;margin:1px 1px 1px 1px;"></div>
 		      </div>
 			  <div class="listview" style="margin-top:5px;overflow:auto;" >
