@@ -17003,7 +17003,7 @@
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID) 
    	    (SELECT 
    	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
 		 FROM 
