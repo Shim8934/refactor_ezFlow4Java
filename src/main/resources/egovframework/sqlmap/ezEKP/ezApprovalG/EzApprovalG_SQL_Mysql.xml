@@ -17003,7 +17003,7 @@
    <insert id="EzApprovalG.insertLastDeptLine" parameterClass="Map">
    	    INSERT INTO 
    	    	TBL_LASTDEPTLINE 
-   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID 
+   	    (    UserID,       FormID,     ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN, ProcessYN, ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, ProcessDate, ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID) 
    	    (SELECT 
    	    	#v_USERID# , #v_FORMID# , ReceiptPointID, ReceiptPointName, ReceiptPointName2, ExtReceptYN,     'N',     ProcessSN, CanEditYN, ExtReceptEmail, ReceiptMemberID, ReceiptMemberName, ReceiptMemberName2, NULL,        ReceiptMemberJobTitle, ReceiptMemberJobTitle2, DeptMemberSN, TENANT_ID, COMPANYID
 		 FROM 
@@ -20011,26 +20011,17 @@
 														tbL_Container.ContainerID 
                                                      FROM 
                                                      	tbL_Container 
-                                                     LEFT JOIN 
-                                                     	tbL_ContainerUseDep    
-                                                     ON 
-                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
-                                                     AND
-                                                     	tbL_Container.TENANT_ID = tbL_ContainerUseDep.TENANT_ID
-                                                     AND
-                                                     	tbL_Container.COMPANYID = tbL_ContainerUseDep.COMPANYID
                                                      WHERE  
-                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
-                                                     OR 
-                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     	( tbL_Container.ContainerOwnDepID = #v_DEPTID# )
+                                                    
                                                      AND
-                                                     	tbL_Container.TENANT_ID = 0
+                                                     	tbL_Container.TENANT_ID = #v_TENANTID#
                                                      AND
-                                                     	tbL_Container.COMPANYID = 'S907000'))
+                                                     	tbL_Container.COMPANYID = #companyID#))
            AND
-           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           		TBl_ENDAPRDOCINFO.TENANT_ID =#v_TENANTID#
            AND
-           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME
            ORDER BY 
@@ -20068,22 +20059,16 @@
 														tbL_Container.ContainerID 
                                                      FROM 
                                                      	tbL_Container 
-                                                     LEFT JOIN 
-                                                     	tbL_ContainerUseDep    
-                                                     ON 
-                                                     	tbL_Container.ContainerID = tbL_ContainerUseDep.ContainerID
                                                      WHERE  
-                                                     	( tbL_Container.ContainerOwnDepID = 'opensol' )
-                                                     OR 
-                                                     	( tbL_ContainerUseDep.UseDepID = 'opensol' ) 
+                                                     	( tbL_Container.ContainerOwnDepID =  #v_DEPTID# )
                                                      AND
-                                                     	tbL_Container.TENANT_ID = 0
+                                                     	tbL_Container.TENANT_ID =  #v_TENANTID#
                                                      AND
-                                                     	tbL_Container.COMPANYID = 'S907000'))
+                                                     	tbL_Container.COMPANYID =  #companyID#))
            AND
-           		TBl_ENDAPRDOCINFO.TENANT_ID = 0
+           		TBl_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
            AND
-           		TBl_ENDAPRDOCINFO.COMPANYID = 'S907000'
+           		TBl_ENDAPRDOCINFO.COMPANYID = #companyID#
 		   GROUP BY 
 		   		TBL_EXPENDAPRDOCINFO.taskcode,tbl_taskcode.TASKNAME2
            ORDER BY 

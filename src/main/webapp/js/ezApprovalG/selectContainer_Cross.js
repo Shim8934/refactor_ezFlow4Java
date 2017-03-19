@@ -67,8 +67,8 @@ function listAdd(pDeptName, pContName, pDeptID, pContID, lastRowIdx)
 	{
 		
 	    pparsingXML = "<LISTVIEWDATA><HEADERS>";
-	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang40 + "</NAME><WIDTH>50</WIDTH></HEADER>";
-	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang390 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang62 + "</NAME><WIDTH>50</WIDTH></HEADER>";
+	    pparsingXML = pparsingXML + "<HEADER><NAME>" + strLang797 + "</NAME><WIDTH>50</WIDTH></HEADER>";
 	    pparsingXML = pparsingXML + "</HEADERS><ROWS><ROW><CELL>";
 	    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(pDeptName) + "</VALUE>";
 	    pparsingXML = pparsingXML + "<DATA1>" + pDeptID + "</DATA1>";
