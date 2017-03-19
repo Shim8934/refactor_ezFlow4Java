@@ -2941,4 +2941,29 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result.toString();
 	}
+	
+	@Override
+	public String getEtcName(String code1, String selected, String primary, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code1", code1);
+		map.put("primary", primary);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getEtcName param code1=" + code1 + " primary=" + primary + "companyID=" + companyID + "tenantID=" + tenantID);
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		String result = "";
+		
+		for (int k = 0; k < list.size(); k++) {
+			String[] colOption = list.get(k).getName().split(";");
+			
+			if (colOption[2].equals(selected)) {
+				result = colOption[1];
+			}
+		}
+		
+		return result;
+	}
 }
