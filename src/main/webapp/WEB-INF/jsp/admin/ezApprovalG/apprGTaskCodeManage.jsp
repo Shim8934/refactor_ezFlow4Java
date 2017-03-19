@@ -634,7 +634,7 @@
 							<VALUE><spring:message code = 'ezApprovalG.t114' /></VALUE>
 							<VALUE2><spring:message code = 'ezApprovalG.t114' /></VALUE2>
 							<DATA1>0</DATA1>
-							<DATA2>ROOT</DATA2>
+							<DATA2><spring:message code = 'ezApprovalG.t114' /></DATA2>
 							<DATA3></DATA3>
 							<DATA4>NULL</DATA4>
 						</NODE>

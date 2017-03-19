@@ -3876,6 +3876,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String registerCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		logger.debug("xmlPara = " + xmlPara);
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String result = ezApprovalGService.registerCabinet(xmlDom, userInfo.getLang(), userInfo.getTenantId());
@@ -5684,4 +5686,5 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
 }
