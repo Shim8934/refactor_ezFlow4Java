@@ -1365,6 +1365,60 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 전자결재 일반 결재문서 첨부*/
+	@RequestMapping(value = "ezApprovalG/aprDocAttach.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprDocAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String _pSusinAdmin = "";
+
+		String detpID = "";
+		String detpNM = "";
+		String detpNM1 = "";
+		String detpNM2 = "";
+		String titel = "";
+		String titel1 = "";
+		String titel2 = "";
+		String docID = request.getParameter("pDocID");
+        
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+            _pSusinAdmin = "YES";
+		} else {
+			_pSusinAdmin = "NO";
+		}
+        
+//		if( docID != null && docID != "") {
+//			String result = ezApprovalGService.docAttachLineInfo(docID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+//			String strSQL = "SELECT AprMemberDeptID, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptName, AprMemberDeptName2 "
+//                    + "FROM TBAPRLINEINFO WHERE DocID='" + docID + "' AND AprMemberID='" + userInfo.getId() + "'";
+//			String strXML = GetQueryResult("ezApproval_" + userinfo.CompanyID, strSQL, true);
+//                xmldoc = GetXmlReaderString(strXML);
+//                if (xmldoc.GetElementsByTagName("APRMEMBERDEPTID").Count > 0) {
+//                    pDetpID = xmldoc.GetElementsByTagName("APRMEMBERDEPTID").Item(0).InnerText;
+//                    pDetpNM1 = xmldoc.GetElementsByTagName("APRMEMBERDEPTNAME").Item(0).InnerText;
+//                    pDetpNM2 = xmldoc.GetElementsByTagName("APRMEMBERDEPTNAME2").Item(0).InnerText;
+//                    pTitel1 = xmldoc.GetElementsByTagName("APRMEMBERJOBTITLE").Item(0).InnerText;
+//                    pTitel2 = xmldoc.GetElementsByTagName("APRMEMBERJOBTITLE2").Item(0).InnerText;
+//                } else {
+//                	detpID = userInfo.getDeptID();
+//                    detpNM1 = userInfo.getDeptName1();
+//                    detpNM2 = userInfo.getDeptName2();
+//                    titel1 = userInfo.getTitle1();
+//                    titel2 = userInfo.getTitle2();
+//                }
+//		} else {
+//            detpID = userInfo.getDeptID();
+//            detpNM1 = userInfo.getDeptName1();
+//            detpNM2 = userInfo.getDeptName2();
+//            titel1 = userInfo.getTitle1();
+//            titel2 = userInfo.getTitle2();
+//        }
+//		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		return "aa";
+	}
+	
+	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody

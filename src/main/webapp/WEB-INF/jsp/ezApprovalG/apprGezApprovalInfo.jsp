@@ -383,9 +383,12 @@
 	
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
-	            pkeeperiod = "";
+	            pkeeperiod = RetValue[20];
 	            pItemName = RetValue[41];
 	            pItemName2 = RetValue[42];
+	            pUrgentFlag = RetValue[32];
+	            psecuritylevel = RetValue[31]; 
+	            pPublicFlag = RetValue[35];
 	            g_SelCabID = RetValue[30];
 	
 	            //문서정보 추가
@@ -546,12 +549,14 @@
 	                    	if (approvalFlag == "G") {
 		                        Cabinetinfo_ini();
 		                        Docinfo_ini();
+		                        
+			                    bool3 = true;
+			                    bool4 = true;
 	                    	} else {
 	                    		Draftinfo_ini();
+			                    bool3 = true;
 	                    	}
 	                    }
-	                    bool3 = true;
-	                    bool4 = true;
 	                    break;
 	                case "Docinfo":
 	                    document.getElementById("Lineinfo").style.display = "none";
@@ -832,6 +837,9 @@
 		                } else {
 			                ret[7] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevel");
 			                ret[8] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pUrgentFlag");
+			                ret[16] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiod");
+			                ret[17] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName");
+			                ret[18] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName2");
 		                }
 		                ret[9] = document.getElementById("taSummery").value;
 
@@ -1168,7 +1176,6 @@
 		    }
 		    
 	        function CheckDraftinfo() {
-alert(300 + " :: CheckDraftinfo");
 				initdatepicker();
 				
 				if (vAprSecurity.trim() != "") {
@@ -1239,7 +1246,7 @@ alert(300 + " :: CheckDraftinfo");
 	                    document.getElementById("tbItemName2").value = pItemName2;
 
 						//요약 넣어야됨
-						document.getElementById("taSummery").value = "";
+						document.getElementById("taSummery").value = vSummery;
 	                }
 	            }
 	        }
@@ -1257,16 +1264,16 @@ alert(300 + " :: CheckDraftinfo");
 		        idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
 		        idDatepicker.firstDayOfWeek = "0";
 		        idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
-		            idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
+		        idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
 		        idDatepicker.textDecimal = ".";
 		        idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
-		            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
+		        idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
 		        idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
 		        idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
 		        idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
 		        idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
 		        idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
-		            idDatepicker.isoDateUTF = "${startDateTime}";
+		        idDatepicker.isoDateUTF = "${startDateTime}";
 		        idDatepicker.isoEndDateUTF = "${endDateTime}";
 		        idDatepicker.ready();
 		    }

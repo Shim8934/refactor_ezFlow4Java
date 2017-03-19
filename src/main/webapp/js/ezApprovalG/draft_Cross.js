@@ -1496,18 +1496,33 @@ var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
     try {
         var parameter = pDocID;
-        var url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
-
+        var url ;
+        
+        if(approvalFlag == "G") {
+        	url = "/ezApprovalG/aprCabinetAttach.do?" + "draftFlag=" + DraftFlag;
+        } else {
+        	url = "/ezApprovalG/aprDocAttach.do";
+        }
+        	
         if (CrossYN()) {
             aprcabinetattach_cross_dialogArguments[0] = parameter;
             aprcabinetattach_cross_dialogArguments[1] = openAaprDocAttachUI_Complete;
-
-            DivPopUpShow(800, 370, url);
+            
+            if(approvalFlag == "G") {
+            	DivPopUpShow(800, 370, url);
+            } else {
+            	DivPopUpShow(850, 650, url);
+            }
         }
         else {
-            var feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
-            feature = feature + GetShowModalPosition(675, 395);
-
+        	var feature;
+        	if(approvalFlag == "G") {
+        		feature = "status:no;dialogWidth:805px;dialogHeight:395px;edge:sunken;scroll:no;help:no";
+        		feature = feature + GetShowModalPosition(675, 395);
+        	} else {
+        		feature = "status:no;dialogWidth:850px;dialogHeight:650px;edge:sunken;scroll:no";
+        	}
+           
             var ret = window.showModalDialog(url, parameter, feature);
             if (ret != "cancel") {
                 setAttachInfo(pDocID, "APR", lstAttachLink);
