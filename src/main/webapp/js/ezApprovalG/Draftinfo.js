@@ -26,7 +26,6 @@ function Draftinfo_ini() {
         		result = text;
         	}
     	});
-        
 //        try {
             var xmlDoc = loadXMLString(result);
 
@@ -41,6 +40,7 @@ function Draftinfo_ini() {
             FormList.DataBind("infolist");
             FormList = null;
             Draftinfoini = true;
+alert(pkeeperiod);
             if (pkeeperiod == "") {
             }
             else {
@@ -121,7 +121,6 @@ alert(1000);
 }
 
 function lvtinfolist_onclick() {
-
     allUnSelectFrequency();
     
     var FormList = new ListView();
@@ -220,10 +219,11 @@ function MakeDocInfo() {
 }
 
 function getdocinfolist(i) {
+alert(600);
     var FormList = new ListView();
     FormList.LoadFromID("lvinfolist");
    
-    selectedid = "lvinfolist_TR_" + i
+    selectedid = "lvinfolist_TR_" + i;
     
     FormList.SetSelectedID(selectedid);
     var Cnt = 0;
@@ -238,6 +238,7 @@ function getdocinfolist(i) {
     var temptisPublic = document.getElementsByName("isPublic");
 
     for (Cnt = 0; Cnt < temptRSecurity.length; Cnt++) {
+alert(psecuritylevel + " ::: " + temptRSecurity[Cnt].value);
         if (psecuritylevel == temptRSecurity[Cnt].value) {
             temptRSecurity[Cnt].checked = true; break;
         }
@@ -248,23 +249,24 @@ function getdocinfolist(i) {
         }
     }
     for (Cnt = 0; Cnt < temptisPublic.length; Cnt++) {
+alert(pPublicFlag + " ::: " + temptisPublic[Cnt].value);
         if (pPublicFlag == temptisPublic[Cnt].value) {
             temptisPublic[Cnt].checked = true; break;
         }
     }
-alert(100);
+
     setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
     document.getElementById("tbItemCode").value = pItemCode;
     document.getElementById("tbItemName").value = pItemName;
     document.getElementById("tbItemName2").value = pItemName2;
 
     //요약을 넣어야됨
-    document.getElementById("taSummery").value = "";
+    document.getElementById("taSummery").value = vSummery;
 //    GetExtraDocInfo();
 }
 
 function CheckDraftinfo() {
-	alert(200);
+alert(200);
     if (pkeeperiod == "") {
         document.getElementById("btndocinfo").style.display = "";
         document.getElementById("btndocinfo2").style.display = "";
@@ -294,7 +296,7 @@ function CheckDraftinfo() {
         document.getElementById("tbItemName").value = pItemName;
         document.getElementById("tbItemName2").value = pItemName2;
         //요약 넣어야됨
-        document.getElementById("taSummery").value = "";
+        document.getElementById("taSummery").value = vSummery;
 
 //        GetExtraDocInfo();
     }

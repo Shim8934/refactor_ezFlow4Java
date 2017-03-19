@@ -189,6 +189,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		StringBuilder codeList = new StringBuilder();
 		String lastCodeList = "";
+		List<ApprGTaskVO> apprGTaskVOs = null;
+		String categoryCode = "";
+		String mCategoryCode = "";
+		String sCategoryCode = "";
+		String tempCodeList = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", userInfo.getCompanyID());
@@ -201,10 +206,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ApprGTaskVO apprGTaskVO = ezApprovalGDAO.getAllCategory(map);
 			
+			categoryCode = apprGTaskVO.getCategoryCode();
+			mCategoryCode = apprGTaskVO.getMcategoryCode();
+			sCategoryCode = apprGTaskVO.getSubCategoryCode();
+			
 			level = apprGTaskVO.getLevel();
 		}
 		
-		List<ApprGTaskVO> apprGTaskVOs = null;
+		//최상위 문서분류
+		ApprGTaskVO tempApprGTaskVO = new ApprGTaskVO();
+		tempApprGTaskVO.setCategoryCode("0");
+		tempApprGTaskVO.setLevel("0");
+		tempApprGTaskVO.setName("문서분류");
+		tempApprGTaskVO.setIsLeaf(1);
 		
 		switch (level) {
 		case "1":
@@ -213,33 +227,83 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			codeList.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
-				codeList.append(getCodeTreeNodeInfo(k, "", "", "", level));
+				codeList.append(getCodeTreeNodeInfo(k, categoryCode, "", "", level));
 			}
 			
 			codeList.append("</NODES>");
-			
-			ApprGTaskVO tempApprGTaskVO = new ApprGTaskVO();
-			
-			tempApprGTaskVO.setCategoryCode("0");
-			tempApprGTaskVO.setLevel("0");
-			tempApprGTaskVO.setName("문서분류");
-			tempApprGTaskVO.setIsLeaf(1);
 			
 			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 		case "2":
+			map.put("categoryCode", categoryCode);
+			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
+			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, mCategoryCode, "", "", level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			//stringbuilder 초기화
+			codeList.setLength(0);
+			
 			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
 			
-			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 		case "3":
-			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
+			map.put("categoryCode", categoryCode);
+			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
 			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, sCategoryCode, "", "", level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			codeList.setLength(0);
+			
+			map.put("categoryCode", mCategoryCode);
 			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
 			
-			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", mCategoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			codeList.setLength(0);
+			
+			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
+			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 
