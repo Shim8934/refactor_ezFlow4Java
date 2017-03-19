@@ -1157,6 +1157,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			String fileName = multiFile.getOriginalFilename();
+			logger.debug("## " + multiFile.getName());
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
@@ -1198,7 +1199,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             
             logger.debug("signImangeUpload ended");
             
-            return fileName + "png";
+            return multiFile.getOriginalFilename();
 			
 		} catch (Exception e) {
 		    logger.debug("signImangeUpload failed");
