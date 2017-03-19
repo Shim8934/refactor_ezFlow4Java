@@ -298,6 +298,9 @@
 	            gManageID = "ALL";
 	            document.getElementsByName("btnUseDept")[0].style.display = "none";
 	            document.getElementsByName("btnDelDept")[0].style.display = "none";
+	            
+	            $("#tbManage").val("");
+			    $("#selDept option").text("");
 	        }
 	
 	        function btnUseDept_onclick() {
@@ -463,7 +466,7 @@
 	            </td>
 	        </tr>
 	    </table>
-	    <table style="margin-top: 10px; width:100%">
+	    <table style="margin-top: 10px; width:100%; max-width: 336px;">
 	        <tr>
 	            <td style="width:55%;height:400px;">
 	                <div id="TreeView" style="BORDER: #b6b6b6 1px solid;WIDTH: 100%; HEIGHT: 400px; BACKGROUND-COLOR: #ffffff"></div>

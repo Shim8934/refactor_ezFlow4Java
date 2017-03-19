@@ -269,7 +269,7 @@
 			}
 			
 			function rdTotal_onclick() {
-			    document.getElementById("rdGroup").checked = false;
+				document.getElementById("rdGroup").checked = false;
 			    gManageID = "ALL";
 				
 			    if (approvalFlag == 'S') {
@@ -280,6 +280,8 @@
 		            document.getElementById("btnUseDept").style.display = "none";
 		            document.getElementById("btnDelDept").style.display = "none";
 			    }
+			    $("#tbManage").val("");
+			    $("#selDept option").text("");
 			}
 			
 			function btnManage_onclick() {
@@ -469,7 +471,7 @@
 	    </table>
 	    <table style="margin-top: 10px; width:100%">
 	        <tr>
-	            <td valign="top" style="width:43%">
+	            <td valign="top" style="width:43%; max-width: 336px;">
 	                <div id="TreeView" style="border: #b6b6b6 1px solid;width: 100%; height: 400px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td class = 'approvalG' align="center" style="width:14%">
