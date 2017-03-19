@@ -537,7 +537,6 @@ function btnAddCode_onclick() {
 }
 
 function InsMyGroupItem(curSelCode, curSelGroupCode) {
-alert(curSelGroupCode);
 	var result = "";
 	
 	$.ajax({
