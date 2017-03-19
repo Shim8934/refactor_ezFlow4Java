@@ -1106,8 +1106,8 @@
 		        parameter[39] = SummaryFlag;
 		        /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		        parameter[40] = SummaryOuterReceiverList;
-		        parameter[41] = "itemName";
-		        parameter[42] = "itemName2";
+		        parameter[41] = tempItemName;
+		        parameter[42] = tempItemName2;
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1183,8 +1183,11 @@
 			                }
 			                
 			                setPublicFlag();
+		                } else {
+		                	tempKeep = ret[16];
+		                	tempItemName = ret[17];
+		                	tempItemName2 = ret[18];
 		                }
-		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;

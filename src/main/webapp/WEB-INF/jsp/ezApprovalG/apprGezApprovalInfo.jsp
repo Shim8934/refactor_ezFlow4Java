@@ -383,9 +383,11 @@
 	
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
-	            pkeeperiod = "";
+	            pkeeperiod = RetValue[20];
 	            pItemName = RetValue[41];
 	            pItemName2 = RetValue[42];
+	            psecuritylevel = RetValue[31]; 
+	            pPublicFlag = RetValue[35];
 	            g_SelCabID = RetValue[30];
 	
 	            //문서정보 추가
@@ -546,12 +548,14 @@
 	                    	if (approvalFlag == "G") {
 		                        Cabinetinfo_ini();
 		                        Docinfo_ini();
+		                        
+			                    bool3 = true;
+			                    bool4 = true;
 	                    	} else {
 	                    		Draftinfo_ini();
+			                    bool3 = true;
 	                    	}
 	                    }
-	                    bool3 = true;
-	                    bool4 = true;
 	                    break;
 	                case "Docinfo":
 	                    document.getElementById("Lineinfo").style.display = "none";
@@ -832,6 +836,9 @@
 		                } else {
 			                ret[7] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevel");
 			                ret[8] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pUrgentFlag");
+			                ret[16] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiod");
+			                ret[17] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName");
+			                ret[18] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName2");
 		                }
 		                ret[9] = document.getElementById("taSummery").value;
 
@@ -1239,7 +1246,7 @@ alert(300 + " :: CheckDraftinfo");
 	                    document.getElementById("tbItemName2").value = pItemName2;
 
 						//요약 넣어야됨
-						document.getElementById("taSummery").value = "";
+						document.getElementById("taSummery").value = vSummery;
 	                }
 	            }
 	        }
