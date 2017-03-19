@@ -2220,7 +2220,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docID = request.getParameter("docID");
 		String modifySN = request.getParameter("changeSN");
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());		
 		String result = ezApprovalGService.getHistoryForLineDetail(docID, modifySN, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		return result;

@@ -52,7 +52,7 @@ public class ApprGHistoryLineVO {
 	/** 결재자회사아이디*/
 	private String aprMemberLdapPath;
 	/** 발의자여부*/
-	private String isProposeYN;
+	private String isProposerYN;
 	/** 보고자여부*/
 	private String isBriefUserYN;
 	
@@ -205,12 +205,12 @@ public class ApprGHistoryLineVO {
 	}
 	public void setAprMemberLdapPath(String aprMemberLdapPath) {
 		this.aprMemberLdapPath = aprMemberLdapPath;
+	}	
+	public String getIsProposerYN() {
+		return isProposerYN;
 	}
-	public String getIsProposeYN() {
-		return isProposeYN;
-	}
-	public void setIsProposeYN(String isProposeYN) {
-		this.isProposeYN = isProposeYN;
+	public void setIsProposerYN(String isProposerYN) {
+		this.isProposerYN = isProposerYN;
 	}
 	public String getIsBriefUserYN() {
 		return isBriefUserYN;
