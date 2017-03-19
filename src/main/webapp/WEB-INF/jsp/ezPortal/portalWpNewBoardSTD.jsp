@@ -201,10 +201,24 @@
 		                            else
 		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
 
-		                            var WRITERNAME = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(5));
-		                            var STARTDATE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(6));
-		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
+		                            //var WRITERNAME = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(5));
+		                            //var STARTDATE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(6));
+		                            var STARTDATE = "";
+                            		var WRITERNAME = "";
 
+                            		for (var j = 0; j < xmldom.getElementsByTagName("HEADER").length; j++) {
+                                		if (getNodeText(xmldom.getElementsByTagName("HEADER").item(j).getElementsByTagName("COLNAME").item(0)) == "WRITERNAME") {
+                                    		WRITERNAME = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(j));
+                                		}
+                                		if (getNodeText(xmldom.getElementsByTagName("HEADER").item(j).getElementsByTagName("COLNAME").item(0)) == "WRITEDATE") {
+                                    		STARTDATE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(j));
+                                		}
+	
+    		                            if (STARTDATE != "" && WRITERNAME != "")
+                                    		break;
+                            		}
+		                            
+		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
 		                            var boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA10").item(0));
 		                          //2016-10-31
 		                          //boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
