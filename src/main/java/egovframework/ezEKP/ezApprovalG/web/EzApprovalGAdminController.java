@@ -563,6 +563,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getFormPropList started");
 
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String companyID = request.getParameter("companyID");
 		
@@ -1263,11 +1264,17 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String sCateCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId());
+		//사용자에서 부를때 컴패니 추가
+		if (companyID == null || companyID.equals("")) {
+			companyID = userInfo.getCompanyID();
+		}
+		
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
 		
@@ -2362,8 +2369,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("flag");
 		String companyID = request.getParameter("companyID");
-		
-		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
+		String result = ezApprovalGService.getReceiptInfo(docID, mode, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
 		
 		return result;
 	}

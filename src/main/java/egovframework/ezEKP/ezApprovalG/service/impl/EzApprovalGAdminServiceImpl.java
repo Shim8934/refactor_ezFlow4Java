@@ -21,7 +21,6 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApproval.vo.ApprCodeVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -840,7 +839,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID) throws Exception {
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		StringBuffer sb = new StringBuffer();
 		
@@ -859,9 +858,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID);
+		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag);
 		
-		logger.debug("getTaskInSubCategoryForManage ended.");
+		logger.debug("getTaskInSubCategoryForManage ended. sb = " + sb.toString());
 		
 		return result;
 	}
@@ -2328,10 +2327,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	public ApprGFormVO getFormContent(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_PFORMID", formID);
+		map.put("approvalFlag", approvalFlag);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("getFormContent started.");
+		logger.debug("getFormContent started. formID = " + formID);
 		ApprGFormVO vo = ezApprovalGAdminDAO.getFormContent(map);
 		logger.debug("getFormContent ended.");
 		
@@ -2693,7 +2693,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("upperCode", vo1.getCode());
 			
+			logger.debug("vo1.getCode() = " + vo1.getCode());
+			
 			List<ApprGFormVO> propList2 = ezApprovalGAdminDAO.getFormProperty(map);
+			
+			logger.debug("listSize = " + propList2.size());
 			
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");

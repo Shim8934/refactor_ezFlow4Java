@@ -84,7 +84,7 @@
 				                var xmlDom2 = createXmlDom();
 				                
 				                xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML);
-
+				                
 				                if (SelectNodes(xmlTree, "NODES/NODE/VALUE").length > 0) {
 				                    if (CrossYN()) {
 				                        var xmlRtn = xmlTree.documentElement;
@@ -641,47 +641,82 @@
 					</TREEVIEWDATA>
 				</xml>
 			</c:when>
+			<c:otherwise>
+				<xml id="GROUP" style="display:none">
+					<TREEVIEWDATA>
+						<NODE>
+							<EXPANDED>TRUE</EXPANDED>
+							<ISLEAF>FALSE</ISLEAF>
+							<VALUE>/</VALUE>
+							<VALUE2>/</VALUE2>
+							<DATA1>0</DATA1>
+							<DATA2>ROOT</DATA2>
+							<DATA3></DATA3>
+							<DATA4>NULL</DATA4>
+						</NODE>
+					</TREEVIEWDATA>
+				</xml>
+			</c:otherwise>
 		</c:choose>
-		<xml id="GROUP" style="display:none">
-			<TREEVIEWDATA>
-				<NODE>
-					<EXPANDED>TRUE</EXPANDED>
-					<ISLEAF>FALSE</ISLEAF>
-					<VALUE>/</VALUE>
-					<VALUE2>/</VALUE2>
-					<DATA1>0</DATA1>
-					<DATA2>ROOT</DATA2>
-					<DATA3></DATA3>
-					<DATA4>NULL</DATA4>
-				</NODE>
-			</TREEVIEWDATA>
-		</xml>
-		<xml id="ITEM" style="display:none">
-			<LISTVIEWDATA>
-				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code = 'ezApprovalG.t115' /></NAME>
-						<WIDTH>50</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME> <spring:message code = 'ezApprovalG.t116' /></NAME>
-						<WIDTH>250</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code = 'ezApprovalG.t117' /></NAME>
-						<WIDTH>80</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code = 'ezApprovalG.t118' /></NAME>
-						<WIDTH>80</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code = 'ezApprovalG.t109' /></NAME>
-						<WIDTH>80</WIDTH>
-					</HEADER>
-				</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
+		
+		<c:choose>
+			<c:when test="${approvalFlag == 'S'}">
+				<xml id='ITEM' style="display: none">
+					<LISTVIEWDATA>
+						<HEADERS>
+							<HEADER>
+								<NAME><spring:message code='ezApproval.t78'/></NAME>
+								<WIDTH>50</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code='ezApproval.t79'/></NAME>
+								<WIDTH>250</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code='ezApproval.t80'/></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code='ezApproval.t81'/></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code='ezApproval.t82'/></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+						</HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:when>
+			<c:otherwise>
+				<xml id="ITEM" style="display:none">
+					<LISTVIEWDATA>
+						<HEADERS>
+							<HEADER>
+								<NAME><spring:message code = 'ezApprovalG.t115' /></NAME>
+								<WIDTH>50</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME> <spring:message code = 'ezApprovalG.t116' /></NAME>
+								<WIDTH>250</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code = 'ezApprovalG.t117' /></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code = 'ezApprovalG.t118' /></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+							<HEADER>
+								<NAME><spring:message code = 'ezApprovalG.t109' /></NAME>
+								<WIDTH>80</WIDTH>
+							</HEADER>
+						</HEADERS>
+					</LISTVIEWDATA>
+				</xml>
+			</c:otherwise>
+		</c:choose>
 		
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">

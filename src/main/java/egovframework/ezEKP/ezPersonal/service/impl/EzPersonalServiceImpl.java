@@ -241,9 +241,7 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	public List<PersonalGetPopUpListUserVO> getPopUpListUser(String pComapnyID, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		date.setTimeZone(TimeZone.getTimeZone("GMT"));
-		String nowDate = date.format(new Date()); 
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"); 
 		
 		map.put("v_pCompanyID", pComapnyID);
 		map.put("nowDate", nowDate);

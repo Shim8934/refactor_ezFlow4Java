@@ -12,21 +12,23 @@ function Draftinfo_ini() {
        
         var code = selnode.GetNodeData("DATA1");
         
-        xmlhttp = createXMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objRoot, objNode;
-
-        objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-        createNodeAndInsertText(xmlpara, objNode, "CODE", code);
+        var result = "";
         
-        xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
-        xmlhttp.send(xmlpara);
-        try {
-            var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-            if (xmlDoc == null) {
-                xmlDoc = loadXMLString(xmlhttp.responseText);
-            }
+    	$.ajax({
+    		type : "POST",
+    		dataType : "text",
+    		async : false,
+        	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+        	data : {
+        			sCateCode : code
+        			},
+        	success : function(text) {
+        		result = text;
+        	}
+    	});
+        
+//        try {
+            var xmlDoc = loadXMLString(result);
 
             if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
             var FormList = new ListView();
@@ -46,7 +48,7 @@ function Draftinfo_ini() {
                 var element = GetElementsByTagName(xmlDoc, "DATA1");
                 if (CrossYN()) {
                     for (i = 0; i < element.length; i++) {
-                        if (trim(pItemCode) == trim(getNodeText(element[i]))) {
+                        if (pItemCode.trim() == getNodeText(element[i]).trim()) {
                             break;
                         }
                     }
@@ -61,15 +63,15 @@ function Draftinfo_ini() {
 
                 getdocinfolist(i);
             }
-            xmlhttp = null;
-        }
-        catch (ErrMsg) {
-            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-        }
+//        }
+//        catch (ErrMsg) {
+//            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//        }
         getMyGroupItem();
     }
 }
 function event_Draftinfo_ini() {
+alert(1000);
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
     try {
         var xmlDoc = loadXMLString(xmlhttp.responseText);
@@ -125,20 +127,21 @@ function lvtinfolist_onclick() {
     var FormList = new ListView();
     FormList.LoadFromID("lvinfolist");
     var pSelectedRow = FormList.GetSelectedRows();
-    var pTaskCode, pTaskName, pTaskP, pTaskS, pTaskY;
+    var pTaskCode, pTaskName, pTaskName2, pTaskP, pTaskS, pTaskY;
     pTaskCode = GetAttribute(pSelectedRow[0], "DATA1");
-    pTaskName = GetAttribute(pSelectedRow[0], "DATA2");
-    pTaskP = GetAttribute(pSelectedRow[0], "DATA3");
-    pTaskS = GetAttribute(pSelectedRow[0], "DATA4");
-    pTaskY = GetAttribute(pSelectedRow[0], "DATA5");
+    pTaskName = GetAttribute(pSelectedRow[0], "DATA11");
+    pTaskName2 = GetAttribute(pSelectedRow[0], "DATA12");
+    pTaskP = GetAttribute(pSelectedRow[0], "DATA2");
+    pTaskS = pSelectedRow[0].cells[3].innerText;
+    pTaskY = pSelectedRow[0].cells[4].innerText;
     var Cnt = 0;
     setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
     document.getElementById("tbItemCode").value = pTaskCode;
     document.getElementById("tbItemName").value = pTaskName
-    document.getElementById("tbItemName2").value = pTaskName;
+    document.getElementById("tbItemName2").value = pTaskName2;
 
     for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
-        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value.substring(0, 1)) {
             document.getElementsByName("RSecurity")[Cnt].checked = true; break;
         }
     }
@@ -156,7 +159,7 @@ function lvtinfolist_onclick() {
 }
 
 function MakeDocInfo() {
-    var xmlhttp = createXMLHttpRequest();
+//    var xmlhttp = createXMLHttpRequest();
     var xmlpara = createXmlDom();
 
     var pPublicFlagcheck;
@@ -196,8 +199,7 @@ function MakeDocInfo() {
             break;
         }
     }
-    pkeyword = document.getElementById("keyword").value;
-
+//    pkeyword = document.getElementById("keyword").value;
 
     var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -206,35 +208,15 @@ function MakeDocInfo() {
     createNodeAndInsertText(xmlpara, objNode, "pUrgentFlag", pUrgentFlag);
     createNodeAndInsertText(xmlpara, objNode, "pPublicFlag", pPublicFlag);
     createNodeAndInsertText(xmlpara, objNode, "psecuritylevelvaltemp", psecuritylevelvaltemp);
-    createNodeAndInsertText(xmlpara, objNode, "pkeyword", pkeyword);
+//    createNodeAndInsertText(xmlpara, objNode, "pkeyword", pkeyword);
     createNodeAndInsertText(xmlpara, objNode, "tbItemCode", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "tbItemName", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "tbItemName2", document.getElementById("tbItemName2").value);
     createNodeAndInsertText(xmlpara, objNode, "pkeeperiodvaltemp", pkeeperiodvaltemp);
     createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
     createNodeAndInsertText(xmlpara, objNode, "SUMMARY", document.getElementById("taSummery").value);
+    
     return xmlpara;
-}
-
-function GetExtraDocInfo() {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
-    createNodeAndInsertText(xmlpara, objNode, "MODE", "ALL");
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getExtraDocInfo.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var ResultXML = loadXMLString(xmlhttp.responseText);
-
-    if (ResultXML.getElementsByTagName("SUMMARY").length > 0 && trim_Cross(getNodeText(ResultXML.getElementsByTagName("SUMMARY")[0])))
-        document.getElementById("taSummery").value = ResultXML.getElementsByTagName("SUMMARY")[0].childNodes[0].nodeValue;
-    else
-        document.getElementById("taSummery").value = "";
 }
 
 function getdocinfolist(i) {
@@ -270,14 +252,15 @@ function getdocinfolist(i) {
             temptisPublic[Cnt].checked = true; break;
         }
     }
-
+alert(100);
     setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
     document.getElementById("tbItemCode").value = pItemCode;
     document.getElementById("tbItemName").value = pItemName;
     document.getElementById("tbItemName2").value = pItemName2;
-    document.getElementById("keyword").value = pkeyword;
 
-    GetExtraDocInfo();
+    //요약을 넣어야됨
+    document.getElementById("taSummery").value = "";
+//    GetExtraDocInfo();
 }
 
 function CheckDraftinfo() {
@@ -304,14 +287,15 @@ function CheckDraftinfo() {
                 isPublic[Cnt].checked = true; break;
             }
         }
-
+alert(200);
         setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
         document.getElementById("tbItemCode").value = pItemCode;
         document.getElementById("tbItemName").value = pItemName;
         document.getElementById("tbItemName2").value = pItemName2;
-        document.getElementById("keyword").value = pkeyword;
+        //요약 넣어야됨
+        document.getElementById("taSummery").value = "";
 
-        GetExtraDocInfo();
+//        GetExtraDocInfo();
     }
 }
 
@@ -398,7 +382,7 @@ function CodeSearch_Press(e) {
 }
 
 function TreeViewinitializeCodeGroup(code, level) {
-    try {
+//    try {
         Tree_setconfig();
 
         var xmlTree = createXmlDom();
@@ -438,10 +422,10 @@ function TreeViewinitializeCodeGroup(code, level) {
         treeView.DataBind("infotree");
         xmlHTTP = null;
 
-    }
-    catch (ErrMsg) {
-        alert(" TreeViewinitialize : " + ErrMsg.description);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" TreeViewinitialize : " + ErrMsg.description);
+//    }
 }
 
 function TreeViewCodeRequestData(pNodeID, pTreeID) {
@@ -496,21 +480,23 @@ function TreeViewCodeNodeClick()
     var code = selnode.GetNodeData("DATA1");
     var level = selnode.GetNodeData("DATA2");
     
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "CODE", code);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetClassList.aspx", false);
-    xmlhttp.send(xmlpara);
-    try {
-        var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-        if (xmlDoc == null) {
-            xmlDoc = loadXMLString(xmlhttp.responseText);
-        }
+    var result = "";
+    
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+    	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+    	data : {
+    			sCateCode : code
+    			},
+    	success : function(text) {
+    		result = text;
+    	}
+	});
+	
+//    try {
+        var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
         var FormList = new ListView();
@@ -531,8 +517,7 @@ function TreeViewCodeNodeClick()
             if (CrossYN()) {
                 for (i = 0; i < element.length; i++) {
                     
-                    if (trim(pItemCode) == trim(getNodeText(element[i]))) {
-                        
+                    if (pItemCode.trim() == getNodeText(element[i]).trim()) {
                         break;
                     }
                 }
@@ -546,11 +531,10 @@ function TreeViewCodeNodeClick()
             }
             getdocinfolist(i);
         }
-        xmlhttp = null;
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 
 function btnAddCode_onclick() {
@@ -665,34 +649,34 @@ function btnDelCode_onclick() {
 }
 function getMyGroupItem()
 {
-    var xmlhttp = createXMLHttpRequest();
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetFrequencyClassList.aspx", false);
-    xmlhttp.send("");
-
-    try {
-        var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-        if (xmlDoc == null) {
-            xmlDoc = loadXMLString(xmlhttp.responseText);
-        }
-
-        if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
-        var FormList = new ListView();
-        FormList.SetID("lvinfofrequencylist");
-        FormList.SetMulSelectable(false);
-        FormList.SetHeightFree(true);
-        FormList.SetSelectFlag(false);
-        FormList.SetRowOnClick("lvinfofrequencylist_onclick");
-        FormList.DataSource(xmlDoc);
-        FormList.DataBind("infofrequencylist");
-        FormList = null;
-        Draftinfoini = true;
-       
-        xmlhttp = null;
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    var xmlhttp = createXMLHttpRequest();
+//    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetFrequencyClassList.aspx", false);
+//    xmlhttp.send("");
+//
+//    try {
+//        var xmlDoc = loadXMLString(xmlhttp.responseText);
+//
+//        if (xmlDoc == null) {
+//            xmlDoc = loadXMLString(xmlhttp.responseText);
+//        }
+//
+//        if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
+//        var FormList = new ListView();
+//        FormList.SetID("lvinfofrequencylist");
+//        FormList.SetMulSelectable(false);
+//        FormList.SetHeightFree(true);
+//        FormList.SetSelectFlag(false);
+//        FormList.SetRowOnClick("lvinfofrequencylist_onclick");
+//        FormList.DataSource(xmlDoc);
+//        FormList.DataBind("infofrequencylist");
+//        FormList = null;
+//        Draftinfoini = true;
+//       
+//        xmlhttp = null;
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 function lvinfofrequencylist_onclick() {
     allUnSelect();

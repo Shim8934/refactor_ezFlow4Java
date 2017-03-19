@@ -159,6 +159,8 @@
 	        var rtnVal = new Array();
 	        var g_SelCabID = "";
 	        var pItemCode = "";
+	        var pItemName = "";
+	        var pItemName2 = "";
 	        var APRLINE = "";
 	        var vSecurity, vAprUrgency, vSummery, vAprSecurity;
 	        var vdocdisplay, vPublicFlag, vtreatment, vPageNum;
@@ -266,16 +268,68 @@
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
 	            }
-	            CheckGubunInit();
-	
-	            if (pReDraftFlag == "DRAFT") {
-	                document.getElementById("btnaddress").style.display = "";
+            
+	            if(approvalFlag == "G") {
+		            CheckGubunInit();
+		
+		            if (pReDraftFlag == "DRAFT") {
+		                document.getElementById("btnaddress").style.display = "";
+		            }
+		            if (window.screen.height <= 768) {
+		                window.resizeTo(1000, 720);
+		                document.getElementById("bodytag").style.overflow = "auto";
+		                document.getElementById("htmlhag").style.overflow = "auto";
+		            }
+	            } else {
+	            	 try {
+	                     if (pIniGubun == "1") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab1").onclick();
+	                         else
+	                             document.getElementById("1tab1").click();
+	                     }
+	                     else if (pIniGubun == "2") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab2").onclick();
+	                         else
+	                             document.getElementById("1tab2").click();
+	                     }
+	                     else if (pIniGubun == "3") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab3").onclick();
+	                         else
+	                             document.getElementById("1tab3").click();
+	                     }
+	                     else if (pIniGubun == "4") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab2").onclick();
+	                         else
+	                             document.getElementById("1tab2").click();
+	                     }
+	                     else if (pIniGubun == "5") {
+	                         if (CrossYN())
+	                             document.getElementById("1tab3").onclick();
+	                         else
+	                             document.getElementById("1tab3").click();
+	                     }
+	                 }
+	                 catch (e) {
+	                 }
+	                 try {
+	                     var ua = navigator.userAgent;
+	                     if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+	                         KeEventControl(document.getElementById("textUser"));
+	                         KeEventControl(document.getElementById("textUser2"));
+	                     }
+	                 }
+	                 catch (e)
+	                 { }
+	                     if (pHapYuiCount == 0) {
+	                         document.getElementById("deptaddbtn").style.display = "none";
+	                 }
+
 	            }
-	            if (window.screen.height <= 768) {
-	                window.resizeTo(1000, 720);
-	                document.getElementById("bodytag").style.overflow = "auto";
-	                document.getElementById("htmlhag").style.overflow = "auto";
-	            }
+	            
 	        };
 	
 	        function KeEventControl(obj) {
@@ -329,6 +383,9 @@
 	
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
+	            pkeeperiod = "";
+	            pItemName = RetValue[41];
+	            pItemName2 = RetValue[42];
 	            g_SelCabID = RetValue[30];
 	
 	            //문서정보 추가
@@ -502,11 +559,12 @@
 	                    document.getElementById("Cabinetinfo").style.display = "none";
 	                    
 	                    if (approvalFlag == "G") {
-		                    if (!bool4)
+		                    if (!bool4) {
 		                        Docinfo_ini();
+		                    }
 	                    } else {
 		                    if (!bool4)
-		                        Docinfo_ini();
+		                    	CheckDraftinfo();
 		                    if (!bool3) {
 		                    	Draftinfo_ini();
 		                    }
@@ -672,9 +730,8 @@
 		    }
 		
 		    function btn_OK() {
-		        try {
+// 		        try {
 		            if (!onlydocinfiview) {
-		                ret[0] = "OK";
 	
 		                var line = Checkline();
 		                if (line == false) {
@@ -686,52 +743,56 @@
 		                    if (!rtnVal)
 		                        return;
 		                }
-	
-		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-		                    var List = new ListView();
-		                    List.LoadFromID("DivTaskSCateList");
+		                
+		                if (approvalFlag == "G") {
+			                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
+			                    var List = new ListView();
+			                    List.LoadFromID("DivTaskSCateList");
+			
+			                    var MyList = new ListView();
+			                    MyList.LoadFromID("DivMyTaskSCateList");
+			
+			                    var totalRows = List.GetSelectedRows();
+			                    var MyRows = MyList.GetSelectedRows();
+			
+			                    if (totalRows.length == 0 && MyRows.length == 0) {
+			                        OpenAlertUI(Cabinet4);
+			                        document.getElementById("1tab3").onclick();
+			                        return;
+			                    } else {
+			                        if (MyRows.length > 0) {
+			                            if (GetAttribute(MyRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                            else
+			                                totalRows = MyRows;
+			                        } else if (totalRows.length > 0) {
+			                            if (GetAttribute(totalRows[0], "DATA1") == "") {
+			                                OpenAlertUI(Cabinet4);
+			                                document.getElementById("1tab3").onclick();
+			                                return;
+			                            }
+			                        }
+			                    }
+			                }
 		
-		                    var MyList = new ListView();
-		                    MyList.LoadFromID("DivMyTaskSCateList");
-		
-		                    var totalRows = List.GetSelectedRows();
-		                    var MyRows = MyList.GetSelectedRows();
-		
-		                    if (totalRows.length == 0 && MyRows.length == 0) {
-		                        OpenAlertUI(Cabinet4);
-		                        document.getElementById("1tab3").onclick();
-		                        return;
-		                    }
-		                    else {
-		                        if (MyRows.length > 0) {
-		                            if (GetAttribute(MyRows[0], "DATA1") == "") {
-		                                OpenAlertUI(Cabinet4);
-		                                document.getElementById("1tab3").onclick();
-		                                return;
-		                            }
-		                            else
-		                                totalRows = MyRows;
-		                        }
-		                        else if (totalRows.length > 0) {
-		                            if (GetAttribute(totalRows[0], "DATA1") == "") {
-		                                OpenAlertUI(Cabinet4);
-		                                document.getElementById("1tab3").onclick();
-		                                return;
-		                            }
-		                        }
-		                    }
+			                if (SummaryFlag) {
+			                    Docinfo_ini();
+			                }
+			
+			                var chkDocinfoFlag = checkDocinfo();
+			                if (!chkDocinfoFlag) {
+			                    var tabshow = document.getElementById("1tab4");
+			                    Tab1_MouseClick(tabshow);
+			                    return;
+			                }
+		                } else {
+		                	docinfo = MakeDocInfo();
 		                }
-	
-		                if (SummaryFlag)
-		                    Docinfo_ini();
 		
-		                var chkDocinfoFlag = checkDocinfo();
-		                if (!chkDocinfoFlag) {
-		                    var tabshow = document.getElementById("1tab4");
-		                    Tab1_MouseClick(tabshow);
-		                    return;
-		                }
-		
+		                ret[0] = "OK";
 		                ret[1] = SaveAprLineList(); //결재선 저장 XML
 		
 		                CheckAprPerson();
@@ -747,7 +808,11 @@
 		                    ret[2] = "";
 		
 		                if (pIniGubun != 5 && pIniGubun != 6 && pIniGubun != 7 && pIniGubun != 8 && pIniGubun != 9 && pIniGubun != 10) {
-		                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                if (approvalFlag == "G") {
+			                    ret[4] = GetSelCabInfoXml(totalRows); //기록물철 XML
+			                } else {
+			                	ret[4] = setCabInfoXML();
+			                }
 		                }
 	
 		                if (pReDraftAprLineChangeFlag) {
@@ -757,27 +822,39 @@
 		                    ret[5] = "C";
 		                }
 		
-		                ret[7] = selSecLevel.value;
-		                if (AprUrgency.checked)
-		                    ret[8] = "Y";
-		                else
-		                    ret[8] = "N";
+		                if (approvalFlag == "G") {
+			                ret[7] = selSecLevel.value;
+			                
+			                if (AprUrgency.checked)
+			                    ret[8] = "Y";
+			                else
+			                    ret[8] = "N";
+		                } else {
+			                ret[7] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevel");
+			                ret[8] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pUrgentFlag");
+		                }
 		                ret[9] = document.getElementById("taSummery").value;
-		                ret[10] = getdocdisplay();
-		                ret[11] = getPublicFlag();
-		                ret[12] = txtLimitRange.value;
-		                ret[13] = txtPageNum.value;
+
+		                if (approvalFlag == "G") {
+			                ret[10] = getdocdisplay();
+			                ret[11] = getPublicFlag();
+			                ret[12] = txtLimitRange.value;
+			                ret[13] = txtPageNum.value;
+		                } else {
+		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
+		                }
 	
 		                if (document.getElementById("AprSecurity").checked)
 		                    ret[14] = document.getElementById("idDatepicker").value.substring(0, 10);
-	
 		                else
 		                    ret[14] = "";
 		
-		                if (document.getElementById("inputSummaryOuterReceiverList").value != "") {
-		                    ret[15] = document.getElementById("inputSummaryOuterReceiverList").value;
-		                } else {
-		                    ret[15] = "";
+		                if (approvalFlag == "G") {
+			                if (document.getElementById("inputSummaryOuterReceiverList").value != "") {
+			                    ret[15] = document.getElementById("inputSummaryOuterReceiverList").value;
+			                } else {
+			                    ret[15] = "";
+			                }
 		                }
 		
 		                if (ReturnFunction != null) {
@@ -795,11 +872,28 @@
 		                ret[1] = docinfo;
 		                ret[6] = "OnlyDocInfo";
 		            }
-		        }
-		        catch (e) {
-		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
-		            ret[0] = "FALSE";
-		        }
+// 		        }
+// 		        catch (e) {
+// 		            OpenAlertUI("<spring:message code='ezApprovalG.t1600'/>");
+// 		            ret[0] = "FALSE";
+// 		        }
+		    }
+		    
+		    function setCabInfoXML() {
+		    	var i;
+		        var rtnXml = createXmlDom();
+		        var Root, objItem, objData;
+		        
+		        Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
+		        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "approvalS");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", document.getElementById("tbItemCode").value);
+		        
+		        return getXmlString(rtnXml);
 		    }
 		
 		    function CheckAprPerson() {  	
@@ -1003,12 +1097,11 @@
 		        document.getElementById("taSummery").value = "";
 		
 		        onload_window();
-		        if (approvalFlag == "G") {
-			        if (vSecurity.trim() == "")
-			            document.getElementById("selSecLevel").options[0].selected = true;
-			        else
-			            document.getElementById("selSecLevel").value = vSecurity;
-		        }
+		        if (vSecurity.trim() == "")
+		            document.getElementById("selSecLevel").options[0].selected = true;
+		        else
+		            document.getElementById("selSecLevel").value = vSecurity;
+		        
 		        if (vAprUrgency.trim() == "Y")
 		            document.getElementById("AprUrgency").checked = true;
 		        else
@@ -1073,6 +1166,45 @@
 		            window.returnValue = rtnVal;
 		        }
 		    }
+		    
+	        function CheckDraftinfo() {
+	            if (pkeeperiod == "" && !checkdocinfo) {
+	                document.getElementById("btndocinfo").style.display = "";
+	                document.getElementById("btndocinfo2").style.display = "";
+	            }
+	            else {
+	                document.getElementById("btndocinfo").style.display = "none";
+	                document.getElementById("btndocinfo2").style.display = "none";
+
+	                if (!checkdocinfo) {
+	                    for (Cnt = 0; Cnt < RSecurity.length; Cnt++) {
+	                        if (psecuritylevel == RSecurity[Cnt].value) {
+	                            RSecurity[Cnt].checked = true; break;
+	                        }
+	                    }
+	                    for (Cnt = 0; Cnt < RKeeptype.length; Cnt++) {
+	                        if (pkeeperiod == RKeeptype[Cnt].value) {
+	                            RKeeptype[Cnt].checked = true; break;
+	                        }
+	                    }
+	                    for (Cnt = 0; Cnt < isPublic.length; Cnt++) {
+	                        if (pPublicFlag == isPublic[Cnt].value) {
+	                            isPublic[Cnt].checked = true; break;
+	                        }
+	                    }
+alert(300);
+
+	                    setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
+	                    document.getElementById("tbItemCode").value = pItemCode;
+	                    document.getElementById("tbItemName").value = pItemName;
+	                    document.getElementById("tbItemName2").value = pItemName2;
+
+						//요약 넣어야됨
+						document.getElementById("taSummery").value = "";
+	                }
+	            }
+	        }
+	        
 		    function initdatepicker() {
 		        var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
 		        idDatepicker.attachEvent('datechange', onStartDateChanged);
@@ -1678,158 +1810,196 @@
 	    </c:if>
 	    
 	    <!-- 문서정보 -->
-	    <div id="Docinfo" style="border: 2px solid #dbdbda; width: 976px; height: 597px; display: none;">
-	
-	        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1204'/></h2>
-	        <table class="content">
-	            <tr class="approvalG" >
-	                <th><spring:message code='ezApprovalG.t875'/></th>
-	                <td>
-	                    <div style="padding-top: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1205'/></span>
-	                    </div>
-	                    <div style="padding-top: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t984'/></span>
-	                    </div>
-	                    <div style="padding-top: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1206'/></span>
-	                    </div>
-	                    <div style="padding-top: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t986'/></span>
-	                    </div>
-	                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1207'/></span>
-	                    </div>
-	
-	                </td>
-	            </tr>
-	            <c:if test="${approvalFlag eq 'S' }">
-	                 <tr>
-                    <th><spring:message code="ezApproval.t706"/></th>
-                    <td>
-                        <table>
-                            <tr>
-                                <td>
-                                    <div id="tbitemCodeName" style="height: 20px; width:auto; vertical-align:middle; padding-top:5px; text-align:left;" ></div>
-                                    <input type="hidden" id="tbItemCode" style="WIDTH: 80px; height: 20px;" />
-                                    <input type="hidden" id="tbItemName" style="WIDTH: 100px; height: 20px;" />
-                                    <input type="hidden" id="tbItemName2" />
-                                </td>
-                                <td>
-                                    <a class="imgbtn" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code="ezApproval.t335"/><spring:message code="ezApproval.t321"/></span></a>
-                                </td>
-                            </tr>
-                        </table>                                                
-                    </td>
-                </tr>
-                 <tr>
-                    <th><spring:message code="ezApproval.t81"/></th>
-                    <td>
-                        <table class="popuplist" style="width: auto;">
-                            <tr>
-                                <td style="width: auto; vertical-align: top; padding-left: 4px; padding-bottom: 4px"> ${securityNode3} </td>
-                            </tr>
-                        </table>
-
-                    </td>
-                </tr>
-                 <tr>
-                    <th><spring:message code="ezApproval.t80"/></th>
-                    <td>
-                        <table class="popuplist" style="width: auto;">
-                            <tr>
-                                <td style="width: auto; vertical-align: top; padding-left: 4px; padding-bottom: 4px"> ${periodnode}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <th><spring:message code="ezApproval.t82"/></th>
-                    <td>
-                        <table class="popuplist" style="width: 100%;">
-                            <tr>
-                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-top: 4px; padding-bottom: 4px">
-                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="Y" /><span><spring:message code="ezApproval.t50"/> (<spring:message code="ezApproval.t2000"/>)</span></td>
-                            </tr>
-                            <tr>
-                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-bottom: 4px">
-                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="N" /><span><spring:message code="ezApproval.t49"/> (<spring:message code="ezApproval.t2001"/>)</span></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
-                </c:if>
-	            <tr class="approvalG">
-	                <th><spring:message code='ezApprovalG.t118'/></th>
-	                <td>
-	                    <select id="selSecLevel" name="select" style="WIDTH: 85px">
-	                        ${securityNode3}
-	                    </select>
-	                </td>
-	            </tr>
-	            <tr class="approvalG" >
-	                <th><spring:message code='ezApprovalG.t109'/></th>
-	                <td>
-	                    <div style="padding-left: 3px; padding-top: 5px; padding-bottom: 5px;">
-	                        <spring:message code='ezApprovalG.t10029'/><br />
-	                    </div>
-	                    <div style="padding-left: 3px; padding-bottom: 5px;">
-	                        <input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
-	                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
-	                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
-	                    </div>
-	                </td>
-	
-	            </tr>
-	            
-	            <tr class="approvalG">
-	                <th><spring:message code='ezApprovalG.t989'/></th>
-	                <td>
-	                    <div style="padding-top: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 1<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
-	                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 2<spring:message code='ezApprovalG.t991'/></span>
-	                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 3<spring:message code='ezApprovalG.t991'/></span>
-	                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 4<spring:message code='ezApprovalG.t991'/></span><br>
-	                    </div>
-	                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
-	                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 5<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
-	                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 6<spring:message code='ezApprovalG.t991'/></span>
-	                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 7<spring:message code='ezApprovalG.t991'/></span>
-	                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 8<spring:message code='ezApprovalG.t991'/></span>
-	                    </div>
-	                </td>
-	            </tr>
-	            <tr class="approvalG" >
-	                <th><spring:message code='ezApprovalG.t876'/></th>
-	                <td>
-	                    <input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span></td>
-	                <tr class="approvalG">
-	                    <th><spring:message code='ezApprovalG.t979'/></th>
-	                    <td>
-	                        <input type="text" name="txtPageNum" id="txtPageNum" class="text" style="Width: 170px; font-size: 9pt"></td>
-	                </tr>
-	            <tr>
-	                <th><spring:message code='ezApprovalG.t1199'/></th>
-	                <td>
-	                    <input type="checkbox" name="AprUrgency" id="AprUrgency" value="checkbox"><spring:message code='ezApprovalG.t10090'/>
-	                </td>
-	            </tr>
-	            <tr class="approvalG"> 
-	                <th><spring:message code='ezApprovalG.t1210'/></th>
-	                <td>
-	                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
-	                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
-	                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
-<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
-	                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
-	                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
-	                </td>
-	            </tr>
-	        </table>
-	        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
-	        <textarea id="taSummery" name="taSummery" style="HEIGHT: 198px; WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
-	    </div>
+	    <c:if test="${approvalFlag eq 'G' }">
+		    <div id="Docinfo" style="border: 2px solid #dbdbda; width: 976px; height: 597px; display: none;">
+		
+		        <h2 class="h2_dot" style="margin-left: 5px;"><spring:message code='ezApprovalG.t1204'/></h2>
+		        <table class="content">
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t875'/></th>
+		                <td>
+		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1205'/></span>
+		                    </div>
+		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t984'/></span>
+		                    </div>
+		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="special3" id="special3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1206'/></span>
+		                    </div>
+		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="special4" id="special4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t986'/></span>
+		                    </div>
+		                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="special5" id="special5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> <spring:message code='ezApprovalG.t1207'/></span>
+		                    </div>
+		
+		                </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t118'/></th>
+		                <td>
+		                    <select id="selSecLevel" name="select" style="WIDTH: 85px">
+		                        ${securityNode3}
+		                    </select>
+		                </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t109'/></th>
+		                <td>
+		                    <div style="padding-left: 3px; padding-top: 5px; padding-bottom: 5px;">
+		                        <spring:message code='ezApprovalG.t10029'/><br />
+		                    </div>
+		                    <div style="padding-left: 3px; padding-bottom: 5px;">
+		                        <input type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t47'/></span>&nbsp;
+		                        <input type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t150'/></span>&nbsp;
+		                        <input type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span><spring:message code='ezApprovalG.t46'/></span>&nbsp;
+		                    </div>
+		                </td>
+		
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t989'/></th>
+		                <td>
+		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 1<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
+		                        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 2<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 3<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 4<spring:message code='ezApprovalG.t991'/></span><br>
+		                    </div>
+		                    <div style="padding-top: 5px; padding-bottom: 5px; padding-left: 3px;">
+		                        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 5<spring:message code='ezApprovalG.t991'/>&nbsp;</span>
+		                        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 6<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 7<spring:message code='ezApprovalG.t991'/></span>
+		                        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;"><span> 8<spring:message code='ezApprovalG.t991'/></span>
+		                    </div>
+		                </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t876'/></th>
+		                <td>
+		                    <input type="text" name="txtLimitRange" id="txtLimitRange" class="text" style="Width: 170px; font-size: 9pt"><span>(<spring:message code='ezApprovalG.t1209'/></span></td>
+		                <tr>
+		                    <th><spring:message code='ezApprovalG.t979'/></th>
+		                    <td>
+		                        <input type="text" name="txtPageNum" id="txtPageNum" class="text" style="Width: 170px; font-size: 9pt"></td>
+		                </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t1199'/></th>
+		                <td>
+		                    <input type="checkbox" name="AprUrgency" id="AprUrgency" value="checkbox"><spring:message code='ezApprovalG.t10090'/>
+		                </td>
+		            </tr>
+		            <tr>
+		                <th><spring:message code='ezApprovalG.t1210'/></th>
+		                <td>
+		                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
+		                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
+		                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
+	<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
+		                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
+		                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
+		                </td>
+		            </tr>
+		        </table>
+		        <h2 style="margin-left: 5px;"><spring:message code='ezApprovalG.t1203'/></h2>
+		        <textarea id="taSummery" name="taSummery" style="HEIGHT: 198px; WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
+		    </div>
+	    </c:if>
+	    
+	    <c:if test="${approvalFlag eq 'S' }">
+	    	<div id="Docinfo" style="width: 976px; height: 597px; display: none;">
+        		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
+		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
+		            <table class="content">
+		                <tr>
+		                    <th><spring:message code='ezApproval.t706'/></th>
+		                    <td>
+		                        <table>
+		                            <tr>
+		                                <td>
+		                                    <div id="tbitemCodeName" style="height: 20px; width:auto; vertical-align:middle; padding-top:5px; text-align:left;" ></div>
+		                                    <input type="hidden" id="tbItemCode" style="WIDTH: 80px; height: 20px;" />
+		                                    <input type="hidden" id="tbItemName" style="WIDTH: 100px; height: 20px;" />
+		                                    <input type="hidden" id="tbItemName2" />
+		                                </td>
+		                                <td>
+		                                    <a class="imgbtn" id="btndocinfo"><span id="btndocinfo2" onclick="movedraftinfo()"><spring:message code='ezApproval.t335'/><spring:message code='ezApproval.t321'/></span></a>
+		                                </td>
+		                            </tr>
+		                        </table>                                                
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <th><spring:message code='ezApproval.t81'/></th>
+		                    <td>
+		                        <table class="popuplist" style="width: auto;">
+		                            <tr>
+		                                <td style="width: auto; vertical-align: top; padding-left: 4px; padding-bottom: 4px">${securityNode3}</td>
+		                            </tr>
+		                        </table>
+		
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <th><spring:message code='ezApproval.t80'/></th>
+		                    <td>
+		                        <table class="popuplist" style="width: auto;">
+		                            <tr>
+		                                <td style="width: auto; vertical-align: top; padding-left: 4px; padding-bottom: 4px">${periodnode}</td>
+		                            </tr>
+		                        </table>
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <th><spring:message code='ezApproval.t82'/></th>
+		                    <td>
+		                        <table class="popuplist" style="width: 100%;">
+		                            <tr>
+		                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-top: 4px; padding-bottom: 4px">
+		                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="Y" /><span><spring:message code='ezApproval.t50'/> (<spring:message code='ezApproval.t2000'/>)</span></td>
+		                            </tr>
+		                            <tr>
+		                                <td style="width: 100%; padding-left: 4px; height: 18px; padding-bottom: 4px">
+		                                    <input type="radio" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: middle;" id="isPublic" name="isPublic" value="N" /><span><spring:message code='ezApproval.t49'/> (<spring:message code='ezApproval.t2001'/>)</span></td>
+		                            </tr>
+		                        </table>
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <th><spring:message code='ezApproval.t337'/></th>
+		                    <td>
+		                        <input id="urgent" type="checkbox" name="checkbox" value="checkbox" />(<spring:message code='ezApproval.t2002'/>)</td>
+		                </tr>
+<!-- 		                보안결재 추가 -->
+			            <tr>
+			                <th><spring:message code='ezApprovalG.t1210'/></th>
+			                <td>
+			                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
+			                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
+			                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
+		<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
+			                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
+			                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
+			                </td>
+			            </tr>
+		                <tr>
+		                    <td colspan="2">
+		                        <h2 class="h2_dot"><spring:message code='ezApproval.t339'/></h2>
+		                    </td>
+		                </tr>
+		                <tr>
+		                    <td colspan="2">
+		                        <div class="nobox">
+		                            <textarea id="taSummery" name="taSummery" style="HEIGHT: 300px; WIDTH: 100%; box-sizing: border-box; -moz-box-sizing: border-box;"></textarea>
+		                        </div>
+		                    </td>
+		                </tr>
+		            </table>
+		        </td>
+		    </div>
+	    </c:if>
+	    
 	    <br />
 	    <div style="text-align: center;" id="orgbtnArea">
 	        <table style="width: 976px">

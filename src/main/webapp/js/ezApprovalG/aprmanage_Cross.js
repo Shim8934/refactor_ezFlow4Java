@@ -2544,11 +2544,13 @@ function RemoveTmpDoc(pDocID) {
     var RtnVal = result;
     if (RtnVal.indexOf("TRUE") == -1) {
         var pAlertContent = strLang872;
-        OpenAlertUI(pAlertContent);
+        //OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
     }
     else {
         var pAlertContent = strLang802;
-        OpenAlertUI(pAlertContent);
+        //OpenAlertUI(pAlertContent);
+        alert(pAlertContent);
         openergetDocInfo();
     }
 }

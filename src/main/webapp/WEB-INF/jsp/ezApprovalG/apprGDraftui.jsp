@@ -1091,6 +1091,7 @@
 		        parameter[12] = "DRAFT";
 		        parameter[17] = AprLineArea;
 		        parameter[18] = HapyuiArea;
+		        parameter[20] = tempKeep;
 		        parameter[28] = onlydocinfiview;
 		        parameter[29] = TaskCode;
 		        parameter[30] = cabinetID;
@@ -1105,6 +1106,8 @@
 		        parameter[39] = SummaryFlag;
 		        /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		        parameter[40] = SummaryOuterReceiverList;
+		        parameter[41] = "itemName";
+		        parameter[42] = "itemName2";
 		
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
@@ -1121,8 +1124,9 @@
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
+alert(ret[0]);
 		        if (ret != undefined && ret[0] == "OK") {
-		            try {
+// 		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		
 		                if (ret[1] != false) {
@@ -1166,24 +1170,28 @@
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];
-		                pSpecialRecordCode = ret[10];
-		                pPublicityCode = ret[11];
-		                pLimitRange = ret[12];
-		                pPageNum = ret[13];
 		                tempSecurityDate = ret[14];
-		                
-		                if (ret[11].substring(0,1) == 3) {
-		                	tempPublic = "N";
+		                if (approvalFlag == "G") {
+			                pSpecialRecordCode = ret[10];
+			                pPublicityCode = ret[11];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                
+			                if (ret[11].substring(0,1) == 3) {
+			                	tempPublic = "N";
+			                }
+			                
+			                setPublicFlag();
 		                }
-		                setPublicFlag();
+		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
 		
-		            }
-		            catch (e) {
-		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-		            }
+// 		            }
+// 		            catch (e) {
+// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+// 		            }
 		        }
 		    }
 		

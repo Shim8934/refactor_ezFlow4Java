@@ -39,7 +39,7 @@ public interface EzApprovalGService {
 	
 	public String getAttachInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getReceiptInfo(String docID, String flag, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
 	public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
@@ -89,7 +89,7 @@ public interface EzApprovalGService {
 	
 	public String getReceiptTempletInfo(String formID, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String getReceiptTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID) throws Exception;
+	public String getReceiptTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception;
 	
 	public String getTempList(String companyID, String lang, int tenantID) throws Exception;
 	
@@ -99,11 +99,11 @@ public interface EzApprovalGService {
 	
 	public String getListXML(String groupID, String lang, String companyID, int tenantID) throws Exception;
 	
-	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
 	public String deleteReceiptTempletDetailInfo(String formID, String userID, String aprDeptSN, String companyID, int tenantID) throws Exception;
 	
-	public String updateReceiptTempletDetailInfo(Document doc, String companyID, int tenantID) throws Exception;
+	public String updateReceiptTempletDetailInfo(Document doc, String companyID, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getTaskCategory(String deptCode, String companyID, String type, int tenantID) throws Exception;
 	
@@ -111,11 +111,11 @@ public interface EzApprovalGService {
 	
 	public String getTaskSubCategory(String deptCode, String companyID, String cateCode, String strType, int tenantID) throws Exception;
 	
-	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID) throws Exception;
+	public String getTaskInSubCategory(String deptCode, String companyID, String cateCode, String strType, String langType, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getSimpleCabinetList(String companyID, String processDeptCode, String productionYear, String taskCode, String flag, String langType, int tenantID) throws Exception;
 	
-	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID) throws Exception;
+	public String findTask(String deptCode, String title, String code, String flag, String companyID, String langType, String pageSize, String pageNO, int tenantID, String approvalFlag) throws Exception;
 	
 	public String deleteOpinionInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -168,9 +168,9 @@ public interface EzApprovalGService {
 	
 	public String getHistoryForLine(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
-	public String getHistoryForLineDetail(String docID, String modifySN, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getHistoryForLineDetail(String docID, String modifySN, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
 	public String deleteTmpDocInfo(String userID, String sn, String path, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -236,7 +236,7 @@ public interface EzApprovalGService {
 	
 	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID) throws Exception;
+	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag) throws Exception;
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -398,5 +398,9 @@ public interface EzApprovalGService {
 
 	public String getCodeTreeInfo(String code, String level, LoginVO userInfo) throws Exception;
 
-	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception;	
+	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception;
+
+	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception;
+
+	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantId) throws Exception;
 }

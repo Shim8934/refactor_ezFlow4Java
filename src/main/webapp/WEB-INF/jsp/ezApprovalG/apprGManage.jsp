@@ -502,7 +502,8 @@
 		                openViewDocInfo();
 		            else {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
 		            }
 		        }
 		        else {
@@ -528,7 +529,8 @@
 		        var pCurSelRow = oArrRows[0];
 		        if (CheckFormConnFlag(pCurSelRow.getAttribute("DATA1"))) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
-		            OpenAlertUI(pAlertContent);
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            return;
 		        }
 		        if (pCurSelRow) {
@@ -536,7 +538,8 @@
 		            if (ret != "OK") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
-		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
 		                return;
 		            }
 		        }
@@ -579,7 +582,8 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        if (oArrRows == 0) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		            OpenAlertUI(pAlertContent);
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            return;
 		        }
 		
@@ -653,7 +657,8 @@
 		                }
 		                else {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1730'/>";
-		                    OpenAlertUI(pAlertContent);
+		                    //OpenAlertUI(pAlertContent);
+		                    alert(pAlertContent);
 		                }
 		            }
 		        }
@@ -676,7 +681,8 @@
 		            if (pCurSelRow.cells.length >= 7) {
 		                if (pCurSelRow.cells[6].innerHTML == "<spring:message code='ezApprovalG.t1731'/>") {
 		                    var pAlertContent = "<spring:message code='ezApprovalG.t1732'/>";
-		                    OpenAlertUI(pAlertContent);
+		                    //OpenAlertUI(pAlertContent);
+		                    alert(pAlertContent);
 		                    return;
 		                }
 		            }
@@ -960,7 +966,8 @@
 		        var tr = oArrRows[0];
 		        if (oArrRows.length == 0) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		            OpenAlertUI(pAlertContent);
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            return;
 		        }
 		        if (tr) {
@@ -968,7 +975,8 @@
 		            if (ret != "OK") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
-		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
 		                return;
 		            }
 		        }
@@ -1036,7 +1044,8 @@
 		            if (ret != "OK") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
 		                            "<spring:message code='ezApprovalG.t1712'/>" + ret + "<spring:message code='ezApprovalG.t1713'/>";
-		                OpenAlertUI(pAlertContent);
+		                //OpenAlertUI(pAlertContent);
+		                alert(pAlertContent);
 		                return;
 		            }
 		            if (tr.getAttribute("DATA10") == "015") {
@@ -1058,7 +1067,8 @@
 		        }
 		        else {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1533'/>";
-		            OpenAlertUI(pAlertContent);
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            return;
 		        }
 		    }
@@ -1123,7 +1133,8 @@
 		        var pCurSelRow = DocList.GetSelectedRows();
 		        if (pCurSelRow.length == 0) {
 		            var pAlertContent = strLang930 + "<br>" + strLang336;
-		            OpenAlertUI(pAlertContent);
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            return;
 		        }
 		        var xmlpara = createXmlDom();

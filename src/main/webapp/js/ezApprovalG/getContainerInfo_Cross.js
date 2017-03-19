@@ -2,7 +2,7 @@
 var subTabLastCol = 1;
 
 function GetDocList(p_FormCd) {
-    DocListType = "DocList";
+    DocListType = "GetDocSearch";
 
     var pDocstate = "000";
     if (contFlag == "END")
@@ -10,7 +10,7 @@ function GetDocList(p_FormCd) {
     else
         pDocstate = "011";
 
-    if (pChackYN == "FALSE") {
+    if (pChackYN == "FALSE" || SelYearFlag) {
         curpage = 1;
         nowblock = 0;
         totalPage = 0;
@@ -18,22 +18,43 @@ function GetDocList(p_FormCd) {
         OrderCell = "";
     }
 
+    var objNode, i, nodeName
     var xmlpara = createXmlDom();
-    var objNode;
     createNodeInsert(xmlpara, objNode, "PARAMETER");
-    createNodeAndInsertText(xmlpara, objNode, "ID", ContainerID);
-    createNodeAndInsertText(xmlpara, objNode, "FLAG", "DETAIL");
-    createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
-    createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+
+    for (i = 0; i < condition.length - 1 ; i++) {
+        if (typeof(condition[i]) == "undefined")
+            createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+        else
+            createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+    }
+    if (typeof(ContainerID) == "undefined") {
+    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "Param24", ContainerID);
+    }
+
+
+    createNodeAndInsertText(xmlpara, objNode, "Param25", UserID);   	        
+    createNodeAndInsertText(xmlpara, objNode, "Param26", arr_userinfo[4]);  	
+    createNodeAndInsertText(xmlpara, objNode, "Param27", "DETAIL");             
+    createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);              
+    createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);            
     createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+
+    if (subCondition == "")
+        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", condition[condition.length - 1]);
+    else if (condition[condition.length - 1] == "")
+        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
+    else
+        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition + " AND " + condition[condition.length - 1]);
+
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
-    createNodeAndInsertText(xmlpara, objNode, "subCondition", subCondition);
-
     if (GamSaFlag)
-        xmlhttp.open("POST", "aspx/getGamSaDocList.aspx", true);
+        xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
     else
-        xmlhttp.open("POST", "aspx/getFormDocList.aspx", true);
+        xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
 
     xmlhttp.onreadystatechange = getDocList_after;
     xmlhttp.send(xmlpara);
@@ -51,7 +72,6 @@ function getDocList_after() {
             NodeList = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA/ROWS/ROW");
             NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
             NodeListLen = 0;
-
             
             if (NodeList2 != null) {
                 var cnt = getNodeText(NodeList2);
@@ -288,10 +308,12 @@ function selFirstRow(Resultxml) {
         document.getElementById("tbtnExcel").style.display = "";
         document.getElementById("tbtnExcelAll").style.display = "";
 
-        if (tr.getAttribute("DATA5").trim() != "")
-            document.getElementById("tDocInfo").style.display = "";
-        else
-            document.getElementById("tDocInfo").style.display = "none";
+        if (approvalFlag == "G") {
+	        if (tr.getAttribute("DATA5").trim() != "")
+	            document.getElementById("tDocInfo").style.display = "";
+	        else
+	            document.getElementById("tDocInfo").style.display = "none";
+        }
     }
     else {
         DocID = "";
@@ -301,7 +323,9 @@ function selFirstRow(Resultxml) {
         document.getElementById("tViewDoc").style.display = "none";
         document.getElementById("tbtnExcel").style.display = "none";
         document.getElementById("tbtnExcelAll").style.display = "none";
-        document.getElementById("tDocInfo").style.display = "none";
+        if (approvalFlag == "G") {
+        	document.getElementById("tDocInfo").style.display = "none";
+        }
     }
 
     switch (jobState) {
@@ -411,7 +435,38 @@ function lvtDoclist_SelChange() {
         DocID = tr.getAttribute("DATA1");
         pURL = tr.getAttribute("DATA2");
         WriterID = tr.getAttribute("DATA3");
-
+        if (approvalFlag == "S") {
+	        if (DocType == strDocType4) {
+	            document.getElementById("tenforce").style.display = "none";
+	            document.getElementById("tresend").style.display = "none";
+	        }
+	        else {
+	            document.getElementById("tenforce").style.display = "";
+	            document.getElementById("tresend").style.display = "";
+	        }
+	
+	        if (DocState == strDocState31) {
+	            document.getElementById("tenforce").style.display = "none";
+	        }
+	
+	        var CheckContainerType = CheckResend(DocID);
+	
+	        var pExt = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
+	        if (CheckContainerType == "610") {
+	            if (pExt == "hwp" || pExt == "doc") {
+	                document.getElementById("tresend").style.display = "none";
+	            } else {
+	                if (DocType == strDocType4) {
+	                    document.getElementById("tresend").style.display = "none";
+	                }
+	                else {
+	                    document.getElementById("tresend").style.display = "";
+	                }
+	            }
+	        } else {
+	            document.getElementById("tresend").style.display = "none";
+	        }
+        }
         switch (jobState) {
             case "ATTACH":
                 Attach_onclick();
@@ -784,4 +839,48 @@ function check_presence2() {
         }
 
         SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
+    }
+
+    var SelUserCont_dialogArgument = new Array();
+    function btnRegUserCont_onclick() {
+        SelUserCont_dialogArgument[0] = "";
+        SelUserCont_dialogArgument[1] = RegUserCont_Complete;;
+        var url = "/ezApprovalG/selUserCont.do";
+        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+        try { ContOpen.focus() } catch (e) { }
+    }
+    
+    function RegUserCont_Complete(RtnVal)
+    {
+        ContOpen.close();
+        var DocList = new ListView();
+        DocList.LoadFromID("DocList");
+        var selRow = DocList.GetSelectedRows();
+
+        if (selRow.length <= 0) {
+            var InformationString = strLang385;
+            OpenAlertUI(InformationString);
+            return;
+        }
+        if (RtnVal != "cancel") {
+            for (i = 0; i < selRow.length; i++) {
+                var xmlhttp = createXMLHttpRequest();
+                var xmlpara = createXmlDom();
+                var objNode;
+                var tr = selRow[i];
+                createNodeInsert(xmlpara, objNode, "PARAMETER");
+                createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+                createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);
+                createNodeAndInsertText(xmlpara, objNode, "Desc", "");
+
+                xmlhttp.open("POST", "/ezApprovalG/setUserContDoc.do", false);
+                xmlhttp.send(xmlpara);
+            }
+            var InformationString
+            if (xmlhttp.responseText.indexOf("TRUE") > -1)
+                InformationString = strLang386;
+            else
+                InformationString = strLang1124;
+            alert(InformationString);
+        }
     }

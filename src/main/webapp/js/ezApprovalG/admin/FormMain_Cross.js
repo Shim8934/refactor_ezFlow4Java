@@ -192,19 +192,19 @@ function SaveFormInfo() {
         return;
     }
     
-    var yoonURL = "";
+    var url = "";
     
     if(pEditorType == "HWP") {
-    	yoonURL = "/admin/ezApproval/formSaveHwp.do";
+    	url = "/admin/ezApproval/formSaveHwp.do";
     } else {
-    	yoonURL = "/admin/ezApproval/formSave.do";
+    	url = "/admin/ezApproval/formSave.do";
     }
     
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : true,
-		url : yoonURL,
+		url : url,
 		data : {
 			companyID  : companyID,
 			formContID : contID,

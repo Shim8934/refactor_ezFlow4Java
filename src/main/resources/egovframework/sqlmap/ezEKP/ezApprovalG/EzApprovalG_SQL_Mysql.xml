@@ -3139,7 +3139,7 @@
 <!-- 	<procedure id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKCATEGORY(#v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			SELECT 
 					DISTINCT CATEGORYCODE ,
@@ -3191,7 +3191,7 @@
 <!-- 	<procedure id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKMIDDLECATEGORY(#v_DEPTCODE#, #v_CATECODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskMiddleCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 	 		SELECT 
 	 				DISTINCT MCATEGORYCODE ,
@@ -3249,7 +3249,7 @@
 <!-- 	<procedure id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETTASKSUBCATEGORY(#v_DEPTCODE#, #v_CATECODE#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			<isEqual property="v_STRLANG" compareValue="1"> 
 				SELECT 
@@ -19937,8 +19937,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+      		<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#
@@ -19954,8 +19960,14 @@
       		FROM 
       			TBL_CODELIST 
       		WHERE 
+			<isEqual property="approvalFlag" compareValue="G">
       			CODE1 = 'A52' 
       		AND
+      		</isEqual>
+      		<isEqual property="approvalFlag" compareValue="S">
+      			CODE1 = 'SA52' 
+      		AND
+      		</isEqual>
    		 		TENANT_ID = #v_TENANTID#
    		 	AND
    				COMPANYID = #companyID#
@@ -20214,4 +20226,27 @@
 				TASKCODE = #code#
 		]]>
    	</select>
+   	
+   	<select id="EzApprovalG.userContListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(DOCID)  
+        FROM 
+        	TBL_USERCONTLIST 
+    	WHERE  
+    		USERCONTID = #v_CONTID#
+        AND 
+        	DOCID = #v_DOCID#
+        AND
+        	COMPANYID = #companyID#
+        AND
+        	TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<insert id="EzApprovalG.inserUserContList" parameterClass="Map">
+   		 INSERT INTO 
+   			 TBL_USERCONTLIST
+        ( DOCID, USERCONTID, LINKDATE, DESCRIPTION, COMPANYID, TENANT_ID )
+        VALUES 
+        ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
+   	</insert>
 </sqlMap>

@@ -1310,3 +1310,11 @@ var strLang1138 = "부서아이디가 없습니다.";
 var strLang1139 = "이 문서를 열람할 권한이 없습니다.";
 var strLang1148 = "첨부 정보";
 var strLang1149 = "결재선 정보";
+
+
+
+//일반용 S를 붙일 것 
+var strLangS599 = "분류 코드가 지정되어 있지 않습니다.";
+var strLang385 = "문서를 선택하여 주십시오"
+var strLang386 = "문서를 등록하였습니다."
+

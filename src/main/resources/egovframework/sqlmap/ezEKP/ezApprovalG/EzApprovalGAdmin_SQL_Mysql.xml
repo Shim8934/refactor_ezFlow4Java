@@ -144,7 +144,9 @@
 				keepingplace,
 				taskname,
 				taskname2,
-				subcategorycode
+				subcategorycode,
+				itemSecurity,
+				isPublic
 			FROM
 				TBL_TASKCODE
 			WHERE
@@ -820,7 +822,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT

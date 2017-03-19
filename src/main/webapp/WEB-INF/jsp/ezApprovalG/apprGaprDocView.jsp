@@ -124,7 +124,8 @@
 		    
 		    function putSignXML(SignXML) {
 		        var retVal = false;
-		        try {
+		        /* 2017-03-18 장진혁 try 주석처리 : mht 파일은 save하는 이유를 알수없음, 스크립트오류만 안내게 수정함 */
+		        /* try { */
 		            var NodeList;
 		            var fields = message.GetFieldsList();
 		            NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
@@ -170,10 +171,10 @@
 		                    }
 		                }
 		            }
-		        } catch (e) {
+		        /* } catch (e) {
 		            alert("putSignXML : " + e.description);
 		            return false;
-		        }
+		        } */
 		        return retVal;
 		    }
 		    
