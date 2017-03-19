@@ -215,7 +215,7 @@
                             _Td = document.createElement("TD");
                             _Td.innerHTML = "0";
                             _Tr3.appendChild(_Td);
-                            //i--;
+                            i--;
                         }
                         j++;
                     }

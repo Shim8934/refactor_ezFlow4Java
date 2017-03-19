@@ -26,8 +26,8 @@ function Draftinfo_ini() {
         		result = text;
         	}
     	});
-        
-//        try {
+    	
+        try {
             var xmlDoc = loadXMLString(result);
 
             if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
@@ -41,6 +41,7 @@ function Draftinfo_ini() {
             FormList.DataBind("infolist");
             FormList = null;
             Draftinfoini = true;
+
             if (pkeeperiod == "") {
             }
             else {
@@ -63,10 +64,10 @@ function Draftinfo_ini() {
 
                 getdocinfolist(i);
             }
-//        }
-//        catch (ErrMsg) {
-//            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//        }
+        }
+        catch (ErrMsg) {
+            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+        }
         getMyGroupItem();
     }
 }
@@ -121,7 +122,6 @@ alert(1000);
 }
 
 function lvtinfolist_onclick() {
-
     allUnSelectFrequency();
     
     var FormList = new ListView();
@@ -141,7 +141,7 @@ function lvtinfolist_onclick() {
     document.getElementById("tbItemName2").value = pTaskName2;
 
     for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
-        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].getAttribute("value2")) {
             document.getElementsByName("RSecurity")[Cnt].checked = true; break;
         }
     }
@@ -223,7 +223,7 @@ function getdocinfolist(i) {
     var FormList = new ListView();
     FormList.LoadFromID("lvinfolist");
    
-    selectedid = "lvinfolist_TR_" + i
+    selectedid = "lvinfolist_TR_" + i;
     
     FormList.SetSelectedID(selectedid);
     var Cnt = 0;
@@ -252,52 +252,15 @@ function getdocinfolist(i) {
             temptisPublic[Cnt].checked = true; break;
         }
     }
-alert(100);
+
     setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
     document.getElementById("tbItemCode").value = pItemCode;
     document.getElementById("tbItemName").value = pItemName;
     document.getElementById("tbItemName2").value = pItemName2;
 
     //요약을 넣어야됨
-    document.getElementById("taSummery").value = "";
+    document.getElementById("taSummery").value = vSummery;
 //    GetExtraDocInfo();
-}
-
-function CheckDraftinfo() {
-	alert(200);
-    if (pkeeperiod == "") {
-        document.getElementById("btndocinfo").style.display = "";
-        document.getElementById("btndocinfo2").style.display = "";
-    }
-    else {
-        document.getElementById("btndocinfo").style.display = "none";
-        document.getElementById("btndocinfo2").style.display = "none";
-
-        for (Cnt = 0; Cnt < RSecurity.length; Cnt++) {
-            if (psecuritylevel == RSecurity[Cnt].value) {
-                RSecurity[Cnt].checked = true; break;
-            }
-        }
-        for (Cnt = 0; Cnt < RKeeptype.length; Cnt++) {
-            if (pkeeperiod == RKeeptype[Cnt].value) {
-                RKeeptype[Cnt].checked = true; break;
-            }
-        }
-        for (Cnt = 0; Cnt < isPublic.length; Cnt++) {
-            if (pPublicFlag == isPublic[Cnt].value) {
-                isPublic[Cnt].checked = true; break;
-            }
-        }
-
-        setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
-        document.getElementById("tbItemCode").value = pItemCode;
-        document.getElementById("tbItemName").value = pItemName;
-        document.getElementById("tbItemName2").value = pItemName2;
-        //요약 넣어야됨
-        document.getElementById("taSummery").value = "";
-
-//        GetExtraDocInfo();
-    }
 }
 
 function Draftinfo_reload() {
@@ -383,7 +346,7 @@ function CodeSearch_Press(e) {
 }
 
 function TreeViewinitializeCodeGroup(code, level) {
-//    try {
+    try {
         Tree_setconfig();
 
         var xmlTree = createXmlDom();
@@ -423,10 +386,10 @@ function TreeViewinitializeCodeGroup(code, level) {
         treeView.DataBind("infotree");
         xmlHTTP = null;
 
-//    }
-//    catch (ErrMsg) {
-//        alert(" TreeViewinitialize : " + ErrMsg.description);
-//    }
+    }
+    catch (ErrMsg) {
+        alert(" TreeViewinitialize : " + ErrMsg.description);
+    }
 }
 
 function TreeViewCodeRequestData(pNodeID, pTreeID) {
@@ -496,7 +459,7 @@ function TreeViewCodeNodeClick()
     	}
 	});
 	
-//    try {
+    try {
         var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
@@ -532,10 +495,10 @@ function TreeViewCodeNodeClick()
             }
             getdocinfolist(i);
         }
-//    }
-//    catch (ErrMsg) {
-//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//    }
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
 }
 
 function btnAddCode_onclick() {
@@ -698,7 +661,7 @@ function lvinfofrequencylist_onclick() {
     document.getElementById("tbItemName2").value = pTaskName;
 
     for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
-        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].getAttribute("value2")) {
             document.getElementsByName("RSecurity")[Cnt].checked = true; break;
         }
     }
