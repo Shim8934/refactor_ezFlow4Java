@@ -141,7 +141,7 @@ function lvtinfolist_onclick() {
     document.getElementById("tbItemName2").value = pTaskName2;
 
     for (Cnt = 0; Cnt < document.getElementsByName("RSecurity").length; Cnt++) {
-        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value.substring(0, 1)) {
+        if (pTaskS == document.getElementsByName("RSecurity")[Cnt].value) {
             document.getElementsByName("RSecurity")[Cnt].checked = true; break;
         }
     }
@@ -264,6 +264,7 @@ alert(100);
 }
 
 function CheckDraftinfo() {
+	alert(200);
     if (pkeeperiod == "") {
         document.getElementById("btndocinfo").style.display = "";
         document.getElementById("btndocinfo2").style.display = "";
@@ -287,7 +288,7 @@ function CheckDraftinfo() {
                 isPublic[Cnt].checked = true; break;
             }
         }
-alert(200);
+
         setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
         document.getElementById("tbItemCode").value = pItemCode;
         document.getElementById("tbItemName").value = pItemName;

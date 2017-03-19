@@ -1168,6 +1168,46 @@
 		    }
 		    
 	        function CheckDraftinfo() {
+alert(300 + " :: CheckDraftinfo");
+				initdatepicker();
+				
+				if (vAprSecurity.trim() != "") {
+				    document.getElementById("AprSecurity").checked = true;
+				    var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
+				    idDatepicker.attachEvent('datechange', onStartDateChanged);
+				    idDatepicker.attachEvent('enddatechange', onEndDateChanged);
+				    idDatepicker.elemDateButtons = "img_Post_D1;img_Post_D2";
+				    idDatepicker.elemDateInputs = "idDatepicker;Post_D2";
+				    idDatepicker.popupType = "both";
+				    idDatepicker.pickerDateFormat = "[yyyy]" + "<spring:message code='ezApprovalG.t1108'/>";
+				    idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
+				    idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
+				    idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
+				    idDatepicker.firstDayOfWeek = "0";
+				    idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
+				    idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
+				    idDatepicker.textDecimal = ".";
+				    idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
+				    idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
+				    idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
+				    idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
+				    idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
+				    idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
+				    idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
+				    idDatepicker.isoDateUTF = vAprSecurity + "T00:00:00.000Z";
+				    idDatepicker.isoEndDateUTF = vAprSecurity + "T00:00:00.000Z";
+				    idDatepicker.ready();
+				}
+				else {
+				    document.getElementById("AprSecurity").checked = false;
+				    AprSecurity_onClick();
+				}
+				
+				if (document.getElementById("AprSecurity").checked)
+				    rtnVal[7] = vAprSecurity;
+				else
+				    rtnVal[7] = "";
+				
 	            if (pkeeperiod == "" && !checkdocinfo) {
 	                document.getElementById("btndocinfo").style.display = "";
 	                document.getElementById("btndocinfo2").style.display = "";
@@ -1192,7 +1232,6 @@
 	                            isPublic[Cnt].checked = true; break;
 	                        }
 	                    }
-alert(300);
 
 	                    setNodeText(document.getElementById("tbitemCodeName"),"[" + pItemCode + "]" + pItemName);
 	                    document.getElementById("tbItemCode").value = pItemCode;
