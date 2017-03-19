@@ -402,7 +402,12 @@
 		            }
 		            window.close();
 		        } else {
-		            OpenAlertUI("<spring:message code = 'ezApprovalG.t750' />");
+alert(22);
+		        	if (approvalFlag == 'S') {
+		        		OpenAlertUI("<spring:message code = 'ezApprovalG.t727' />");
+		        	} else {
+			            OpenAlertUI("<spring:message code = 'ezApprovalG.t750' />");		        		
+		        	}
 		        }
 		    }
 		    

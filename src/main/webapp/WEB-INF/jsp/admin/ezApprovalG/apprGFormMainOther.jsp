@@ -451,8 +451,7 @@
 		        if (TYPE == "D") {
 		            setNodeText(GetChildNodes(objNodes[0])[2], "");
 		            setNodeText(GetChildNodes(objNodes[1])[0], "");
-		        }
-		        else {
+		        } else {
 		            var pUserList = new ListView();
 		            pUserList.LoadFromID("lvUserList");
 		
@@ -476,10 +475,10 @@
 		        }
 		
 		        var MaxID = 0;
+		        
 		        if (noitem) {
 		            MaxID = 0;
-		        }
-		        else {
+		        } else {
 		            for (var j = 0; j < length; j++) {
 		                var curnum = Number(lvtFormView.GetSelectedRowID(j).substring(lvtFormView.GetSelectedRowID(j).lastIndexOf('_') + 1), lvtFormView.GetSelectedRowID(j).length);
 		                if (MaxID < curnum)
