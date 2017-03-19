@@ -177,7 +177,6 @@
 		            var xmlRtn = createXmlDom();
 
 		            var strXML = listAdd(DeptName, ContName, DeptID, ContID, lastRowIdx)
-
 		            xmlRtn = loadXMLString(strXML);
 
 		            if (lastRowIdx < 1) {

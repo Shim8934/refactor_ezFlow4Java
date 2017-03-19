@@ -256,7 +256,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String pwdType = request.getParameter("pwdType");
 		String newTempPass = EgovFileScrty.decryptRsa(pk, newPWD);
 		String newPassword = EgovFileScrty.encryptPassword(newTempPass, userInfo.getId());
-		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType, userInfo.getTenantId());
+		String result = ezPersonalService.setApprovalPwd(userInfo.getId(), flag, newPassword, pwdType, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		return result;
 	}

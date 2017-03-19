@@ -137,4 +137,6 @@ public interface EzApprovalGAdminService {
 	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 
 	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
+	
+	public String getEtcName(String code1, String selected, String langType, String companyID, int tenantID) throws Exception;
 }

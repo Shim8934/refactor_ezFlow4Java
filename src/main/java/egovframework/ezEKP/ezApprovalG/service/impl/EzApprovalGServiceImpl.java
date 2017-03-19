@@ -39,6 +39,7 @@ import org.w3c.dom.html.HTMLTableRowElement;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
@@ -99,6 +100,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzCommonService")
 	private EzCommonService ezCommonService;
+	
+	@Resource(name = "EzApprovalGAdminService")
+	private EzApprovalGAdminService ezApprovalGAdminService;
 	
 	@Resource(name = "egovMessageSource")
     private EgovMessageSource messageSource;
@@ -14015,11 +14019,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				resultXML.append("</CELL>");
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA52", makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()), primaryData, companyID, tenantID) + "</VALUE>");
 				resultXML.append("</CELL>");
 				
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()) + "</VALUE>");
+				resultXML.append("<VALUE>" + ezApprovalGAdminService.getEtcName("SA51", makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()), primaryData, companyID, tenantID) + "</VALUE>");
 				resultXML.append("</CELL>");
 				
 				resultXML.append("<CELL>");
@@ -18886,7 +18890,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getUserContTree(String OwnUserID, String ParentContID, String OwnUserName, String companyID, String lang, int tenantID) throws Exception {
-		String strSQL = "";
 		String tempOwnUserName = OwnUserName;
         StringBuilder rtnXML = new StringBuilder("");
 		try 
@@ -19147,5 +19150,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
             return "<RESULT>TRUE</RESULT>";
 		}
-	}	
+	}
+	
 }
