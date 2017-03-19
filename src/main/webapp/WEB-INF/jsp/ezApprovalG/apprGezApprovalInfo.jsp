@@ -1175,7 +1175,6 @@
 		    }
 		    
 	        function CheckDraftinfo() {
-alert(300 + " :: CheckDraftinfo");
 				initdatepicker();
 				
 				if (vAprSecurity.trim() != "") {
@@ -1264,16 +1263,16 @@ alert(300 + " :: CheckDraftinfo");
 		        idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
 		        idDatepicker.firstDayOfWeek = "0";
 		        idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
-		            idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
+		        idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
 		        idDatepicker.textDecimal = ".";
 		        idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
-		            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
+		        idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
 		        idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
 		        idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
 		        idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
 		        idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
 		        idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
-		            idDatepicker.isoDateUTF = "${startDateTime}";
+		        idDatepicker.isoDateUTF = "${startDateTime}";
 		        idDatepicker.isoEndDateUTF = "${endDateTime}";
 		        idDatepicker.ready();
 		    }

@@ -67,7 +67,7 @@ public interface EzApprovalGService {
 	
 	public String updateLineInfo(String ret, String companyID, String lang, LoginVO userInfo) throws Exception;
 	
-	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID) throws Exception;
+	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getLineTempletInfo(String formID, String userID, String companyID, int tenantID) throws Exception;
 	
@@ -97,7 +97,7 @@ public interface EzApprovalGService {
 	
 	public String getTempList3(String userID, String formID, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getListXML(String groupID, String lang, String companyID, int tenantID) throws Exception;
+	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
 	
 	public String addToAprDept(String userID, String formID, String aprDeptSN, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
@@ -403,4 +403,6 @@ public interface EzApprovalGService {
 	public String getContUseDeptInfo(String pDeptID, String companyID,	String lang, int tenantId) throws Exception;
 
 	public String registerUserContDoc(String docID, String contID, String description, String companyID, String lang, int tenantId) throws Exception;
+
+	public String docAttachLineInfo(String docID, String id, String companyID, int tenantId) throws Exception;
 }

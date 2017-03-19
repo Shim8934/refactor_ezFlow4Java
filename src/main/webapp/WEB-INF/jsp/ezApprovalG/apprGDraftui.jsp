@@ -1172,9 +1172,10 @@
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];
 		                tempSecurityDate = ret[14];
+		                pPublicityCode = ret[11];
+		                
 		                if (approvalFlag == "G") {
 			                pSpecialRecordCode = ret[10];
-			                pPublicityCode = ret[11];
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
