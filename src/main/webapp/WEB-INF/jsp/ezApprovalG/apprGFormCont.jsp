@@ -220,10 +220,22 @@
 		    }
 		    function btnAddForm_onclick(type) {
 		        var listView = new ListView();
+		        var listView2 = new ListView();
 		        if (type == "2")
 		            listView.LoadFromID("lvtFavForm");
-		        else
+		        else {
 		            listView.LoadFromID("lvtForm");
+		            listView2.LoadFromID("lvtFavForm");
+		            
+		            var FavList = listView2.GetDataRows();
+		            
+		            for (var i = 0; i < FavList.length; i++) {
+		                if (GetAttribute(FavList[i], "DATA1") == GetAttribute(listView.GetSelectedRows()[0], "DATA1")) {
+		                    OpenAlertUI("<spring:message code='ezApprovalG.t20001'/>");
+		                    return;
+		                }
+		            }
+		        }
 		
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FormTreeView");
@@ -246,7 +258,7 @@
 		                        Get_Favoritelist();
 		                    }
 		                    else {
-		                        OpenAlertUI("<spring:message code='ezApprovalG.t801'/>");
+		                        OpenAlertUI(strLang1003);
 		                        Get_Favoritelist();
 		                    }
 		                }

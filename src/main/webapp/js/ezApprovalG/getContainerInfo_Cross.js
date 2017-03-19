@@ -862,14 +862,12 @@ function check_presence2() {
             OpenAlertUI(InformationString);
             return;
         }
-
         if (RtnVal != "cancel") {
             for (i = 0; i < selRow.length; i++) {
                 var xmlhttp = createXMLHttpRequest();
                 var xmlpara = createXmlDom();
                 var objNode;
                 var tr = selRow[i];
-
                 createNodeInsert(xmlpara, objNode, "PARAMETER");
                 createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
                 createNodeAndInsertText(xmlpara, objNode, "ContID", RtnVal);

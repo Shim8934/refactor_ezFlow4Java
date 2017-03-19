@@ -1081,6 +1081,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.delUserConutCnt", map);
 	}
 	
+	public int userContListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.userContListCount", map);
+	}
+	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getUserContMaxID", map);
 	}
@@ -1799,6 +1803,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void insertUserCont(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertUserCont", map);
+	}
+	
+	public void inserUserContList(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.inserUserContList", map);
 	}
 	
 	public void setJijung(Map<String, Object> map) throws Exception{
