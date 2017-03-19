@@ -189,6 +189,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		StringBuilder codeList = new StringBuilder();
 		String lastCodeList = "";
+		List<ApprGTaskVO> apprGTaskVOs = null;
+		String categoryCode = "";
+		String mCategoryCode = "";
+		String sCategoryCode = "";
+		String tempCodeList = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", userInfo.getCompanyID());
@@ -201,10 +206,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ApprGTaskVO apprGTaskVO = ezApprovalGDAO.getAllCategory(map);
 			
+			categoryCode = apprGTaskVO.getCategoryCode();
+			mCategoryCode = apprGTaskVO.getMcategoryCode();
+			sCategoryCode = apprGTaskVO.getSubCategoryCode();
+			
 			level = apprGTaskVO.getLevel();
 		}
 		
-		List<ApprGTaskVO> apprGTaskVOs = null;
+		//최상위 문서분류
+		ApprGTaskVO tempApprGTaskVO = new ApprGTaskVO();
+		tempApprGTaskVO.setCategoryCode("0");
+		tempApprGTaskVO.setLevel("0");
+		tempApprGTaskVO.setName("문서분류");
+		tempApprGTaskVO.setIsLeaf(1);
 		
 		switch (level) {
 		case "1":
@@ -213,33 +227,83 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			codeList.append("<NODES>");
 			
 			for (ApprGTaskVO k : apprGTaskVOs) {
-				codeList.append(getCodeTreeNodeInfo(k, "", "", "", level));
+				codeList.append(getCodeTreeNodeInfo(k, categoryCode, "", "", level));
 			}
 			
 			codeList.append("</NODES>");
-			
-			ApprGTaskVO tempApprGTaskVO = new ApprGTaskVO();
-			
-			tempApprGTaskVO.setCategoryCode("0");
-			tempApprGTaskVO.setLevel("0");
-			tempApprGTaskVO.setName("문서분류");
-			tempApprGTaskVO.setIsLeaf(1);
 			
 			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 		case "2":
+			map.put("categoryCode", categoryCode);
+			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
+			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, mCategoryCode, "", "", level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			//stringbuilder 초기화
+			codeList.setLength(0);
+			
 			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
 			
-			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 		case "3":
-			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
+			map.put("categoryCode", categoryCode);
+			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
 			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, sCategoryCode, "", "", level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			codeList.setLength(0);
+			
+			map.put("categoryCode", mCategoryCode);
 			apprGTaskVOs = ezApprovalGDAO.getTaskMiddleCategory(map);
 			
-			apprGTaskVOs = ezApprovalGDAO.getTaskSubCategory(map);
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", mCategoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			tempCodeList = codeList.toString();
+			codeList.setLength(0);
+			
+			apprGTaskVOs = ezApprovalGDAO.getTaskCategory(map);
+			
+			codeList.append("<NODES>");
+			
+			for (ApprGTaskVO k : apprGTaskVOs) {
+				codeList.append(getCodeTreeNodeInfo(k, "", categoryCode, tempCodeList, level));
+			}
+			
+			codeList.append("</NODES>");
+			
+			lastCodeList = getCodeTreeNodeInfo(tempApprGTaskVO, "0", "0", codeList.toString(), "0");
 			
 			break;
 
@@ -2089,14 +2153,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID) throws Exception {
+	public String updateReceiptInfo(String ret2, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
 		Document docXML = commonUtil.convertStringToDocument(ret2);
 		String susinGroupIcon = getCode2Name("A53", "001", companyID, lang, tenantID);
 		String susinGroupUseFlag = getCode2Name("A53", "002", companyID, lang, tenantID);
-		
+		String strDocID  = "";
 		NodeList rowNode = docXML.getElementsByTagName("ROW");
 		
-		String strDocID = rowNode.item(0).getChildNodes().item(2).getTextContent();
+		if(approvalFlag.equals("G")) {
+			strDocID = rowNode.item(0).getChildNodes().item(2).getTextContent();
+		} else {
+			strDocID = rowNode.item(0).getChildNodes().item(3).getTextContent();
+		}
 		String rtnVal = deleteReceiptInfo(strDocID, companyID, tenantID);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2107,26 +2175,64 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
 				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
+				System.out.println(rowNode.item(k).getChildNodes().item(0).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(1).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(2).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(3).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(4).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(5).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(6).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(7).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(8).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(9).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(10).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(11).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(12).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(13).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(14).getTextContent());
+				System.out.println(rowNode.item(k).getChildNodes().item(15).getTextContent());
+
 				
 				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
-					map.put("v_DOCID", strDocID);
-					map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
-					map.put("v_ReceiptPointName", makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()));
-					map.put("v_ReceiptPointName2", makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()));
-					map.put("v_ExtReceptYN", makeRightField(rowNode.item(k).getChildNodes().item(4).getTextContent()));
-					map.put("v_ProcessYN", makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()));
-					map.put("v_ProcessSN", "1");
-					map.put("v_CanEditYN", makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()));
-					map.put("v_ExtReceptEmail", makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()));
-					map.put("v_ReceiptMemberID", makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()));
-					map.put("v_ReceiptMemberName", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
-					map.put("v_ReceiptMemberName2", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
-					map.put("v_ProcessDate", "''");
-					map.put("v_ReceiptMemberJobTitle", makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()));
-					map.put("v_ReceiptMemberJobTitle2", makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()));
-					map.put("v_DeptMemberSN", j);
-					map.put("companyID", companyID);
-					map.put("v_TENANTID", tenantID);
+					if(approvalFlag.equals("G")) {
+						map.put("v_DOCID", strDocID);
+						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
+						map.put("v_ReceiptPointName", makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()));
+						map.put("v_ReceiptPointName2", makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()));
+						map.put("v_ExtReceptYN", makeRightField(rowNode.item(k).getChildNodes().item(4).getTextContent()));
+						map.put("v_ProcessYN", makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()));
+						map.put("v_ProcessSN", "1");
+						map.put("v_CanEditYN", makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()));
+						map.put("v_ExtReceptEmail", makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()));
+						map.put("v_ReceiptMemberID", makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()));
+						map.put("v_ReceiptMemberName", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
+						map.put("v_ReceiptMemberName2", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
+						map.put("v_ProcessDate", "''");
+						map.put("v_ReceiptMemberJobTitle", makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()));
+						map.put("v_ReceiptMemberJobTitle2", makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()));
+						map.put("v_DeptMemberSN", j);
+						map.put("companyID", companyID);
+						map.put("v_TENANTID", tenantID);
+					} else {
+						map.put("v_DOCID", strDocID);
+						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
+						map.put("v_ReceiptPointName", makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()));
+						map.put("v_ReceiptPointName2", makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()));
+						map.put("v_ExtReceptYN", makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()));
+						map.put("v_ProcessYN", makeRightField(rowNode.item(k).getChildNodes().item(6).getTextContent()));
+						map.put("v_ProcessSN", "1");
+						map.put("v_CanEditYN", makeRightField(rowNode.item(k).getChildNodes().item(7).getTextContent()));
+						map.put("v_ExtReceptEmail", makeRightField(rowNode.item(k).getChildNodes().item(8).getTextContent()));
+						map.put("v_ReceiptMemberID", makeRightField(rowNode.item(k).getChildNodes().item(9).getTextContent()));
+						map.put("v_ReceiptMemberName", makeRightField(rowNode.item(k).getChildNodes().item(10).getTextContent()));
+						map.put("v_ReceiptMemberName2", makeRightField(rowNode.item(k).getChildNodes().item(14).getTextContent()));
+						map.put("v_ProcessDate", "''");
+						map.put("v_ReceiptMemberJobTitle", makeRightField(rowNode.item(k).getChildNodes().item(11).getTextContent()));
+						map.put("v_ReceiptMemberJobTitle2", makeRightField(rowNode.item(k).getChildNodes().item(15).getTextContent()));
+						map.put("v_DeptMemberSN", j);
+						map.put("companyID", companyID);
+						map.put("v_TENANTID", tenantID);
+					}
 					
 					try {
 						ezApprovalGDAO.insertReciptInfo(map);
@@ -2857,10 +2963,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getListXML(String groupID, String lang, String companyID, int tenantID) throws Exception {
+	public String getListXML(String groupID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
-		listString = getListHeader("023", companyID, lang, tenantID);
+		if (approvalFlag.equals("G")) {
+			listString = getListHeader("023", companyID, lang, tenantID);
+		} else {
+			listString = getListHeader("S023", companyID, lang, tenantID);
+		}
 		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
@@ -2923,6 +3033,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
 			}
 			resultXML.append("</CELL>");
+			if(approvalFlag.equals("S")) {
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE/>");
+				resultXML.append("</CELL>");
+			}
 			resultXML.append("</ROW>");
 		}
 		resultXML.append("</ROWS>");
@@ -19150,6 +19265,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
             return "<RESULT>TRUE</RESULT>";
 		}
+	}
+
+	@Override
+	public String docAttachLineInfo(String docID, String id, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_ID", id);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		return null;
 	}
 	
 }

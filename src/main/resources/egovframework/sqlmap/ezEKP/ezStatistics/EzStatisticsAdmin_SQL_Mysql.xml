@@ -21,7 +21,7 @@
          		TBL_FORMINFO A  
          	LEFT OUTER JOIN
          		( SELECT 
-         				SUBSTR(REGDATE,0,7) AS REGDATE, 
+         				SUBSTR(REGDATE, 1, 7) AS REGDATE, 
          				FORMID, 
          				SUM(DRAFTENDCNT) AS DRAFTENDCNT, 
          				SUM(DRAFTTIME * DRAFTENDCNT)  AS DTIME,
@@ -35,7 +35,7 @@
          		  AND 
          		  		REGDATE < #endDate#
          		  GROUP BY 
-         		  		SUBSTR(REGDATE,0,7), 
+         		  		SUBSTR(REGDATE, 1, 7), 
          		  		FORMID,
          		  		TENANT_ID ) B  
          	ON 
@@ -79,7 +79,7 @@
            		TBL_DEPTMASTER A
             LEFT JOIN 
             	( SELECT 
-            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            			SUBSTR(REGDATE, 1, 7) REGDATE  ,
             			DEPTID ,
                         SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
@@ -93,7 +93,7 @@
                   AND 
                   		REGDATE < #endDate#
                   GROUP BY 
-                  		SUBSTR(REGDATE, 0, 7),
+                  		SUBSTR(REGDATE, 1, 7),
                   		DEPTID,
                   		TENANT_ID ) B   
             ON 
@@ -131,7 +131,7 @@
            		TBL_USERMASTER A
             JOIN 
             	( SELECT 
-            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            			SUBSTR(REGDATE, 1, 7) REGDATE  ,
                         USERID ,
                         SUM(DRAFTENDCNT)  DRAFTENDCNT  ,
                         SUM(DRAFTTIME * DRAFTENDCNT)  DTIME,
@@ -145,7 +145,7 @@
                   AND 
                   		REGDATE < #endDate#
                   GROUP BY 
-                  		SUBSTR(REGDATE, 0, 7),
+                  		SUBSTR(REGDATE, 1, 7),
                   		USERID,
                   		TENANT_ID ) B   
             ON 
@@ -181,7 +181,7 @@
             	TBL_FORMINFO A  
             LEFT OUTER JOIN
             	( SELECT 
-            			SUBSTR(REGDATE,0,7) AS REGDATE, 
+            			SUBSTR(REGDATE, 1, 7) AS REGDATE, 
             			FORMID, 
             			SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT) AS DRAFTCNT, 
             			SUM(DRAFTINGCNT + SUSININGCNT) AS  DRAFTINGCNT, 
@@ -197,7 +197,7 @@
             	  AND 
             	  		REGDATE < #endDate#
             	  GROUP BY 
-            	  		SUBSTR(REGDATE,0,7), 
+            	  		SUBSTR(REGDATE, 1, 7), 
             	  		FORMID,
             	  		TENANT_ID ) B  
             ON 
@@ -239,7 +239,7 @@
             	TBL_USERMASTER A
             JOIN 
             	( SELECT 
-            		SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            		SUBSTR(REGDATE, 1, 7) REGDATE  ,
                     USERID ,
                     SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
                     SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
@@ -255,7 +255,7 @@
                   AND 
                   	REGDATE < #endDate#
                   GROUP BY 
-                  	SUBSTR(REGDATE, 0, 7),
+                  	SUBSTR(REGDATE, 1, 7),
                   	USERID,
                   	TENANT_ID ) B   
              ON 
@@ -291,7 +291,7 @@
            		TBL_DEPTMASTER A
             LEFT JOIN 
             	( SELECT 
-            			SUBSTR(REGDATE, 0, 7) REGDATE  ,
+            			SUBSTR(REGDATE, 1, 7) REGDATE  ,
                         DEPTID ,
                         SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
                         SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
@@ -307,7 +307,7 @@
                   AND 
                   		REGDATE < #endDate#
                   GROUP BY 
-                  		SUBSTR(REGDATE, 0, 7),
+                  		SUBSTR(REGDATE, 1, 7),
                   		DEPTID,
                   		TENANT_ID ) B   
             ON 
@@ -538,7 +538,7 @@
 	<select id="EzStatisticsAdminDAO.getMainList" parameterClass="StatApprVO" resultClass="StatDailyDocCountLogVO">
 		<![CDATA[
 			SELECT 
-				SUBSTR(REGDATE, 0, 7) REGDATE  ,
+				SUBSTR(REGDATE, 1, 7) REGDATE  ,
              	SUM(DRAFTINGCNT + DRAFTENDCNT + RETURNCNT)  DRAFTCNT  ,
              	SUM(DRAFTINGCNT + SUSININGCNT)  DRAFTINGCNT  ,
              	SUM(DRAFTENDCNT + SUSINENDCNT)  DRAFTENDCNT  ,
@@ -560,7 +560,7 @@
             AND 
             	A.EXTENSIONATTRIBUTE2 = #company#
         	GROUP BY 
-        		SUBSTR(REGDATE, 0, 7)
+        		SUBSTR(REGDATE, 1, 7)
 		]]>
 	</select>
 	

@@ -20192,6 +20192,10 @@
    		<![CDATA[
    			SELECT 
    				TASKCODE,
+   				CASE 
+   					WHEN (TASKNAME$lang$ = '' OR TASKNAME$lang$ IS NULL) THEN TASKNAME
+   					ELSE TASKNAME$lang$
+   				END TASKNAME,
    				SUBCATEGORYCODE,
    				MCATEGORYCODE, 
    				CATEGORYCODE,
@@ -20209,7 +20213,7 @@
 			AND
 				COMPANYID = #companyID#
 			AND
-				TASKCODE = #code#
+				TASKCODE = #taskCode#
 		]]>
    	</select>
    	
