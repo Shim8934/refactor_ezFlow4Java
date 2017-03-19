@@ -894,7 +894,7 @@
 		        
 		        Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
 		        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "approvalS");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", document.getElementById("cabinetID").value);
 // 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
 // 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
 // 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
@@ -1966,6 +1966,7 @@
 		                                <td>
 		                                    <div id="tbitemCodeName" style="height: 20px; width:auto; vertical-align:middle; padding-top:5px; text-align:left;" ></div>
 		                                    <input type="hidden" id="tbItemCode" style="WIDTH: 80px; height: 20px;" />
+		                                    <input type="hidden" id="cabinetID" style="WIDTH: 80px; height: 20px;" />
 		                                    <input type="hidden" id="tbItemName" style="WIDTH: 100px; height: 20px;" />
 		                                    <input type="hidden" id="tbItemName2" />
 		                                </td>

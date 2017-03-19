@@ -5687,4 +5687,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/getFrequencyClassList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFrequencyClassList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFrequencyClassList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGService.getFrequencyClassList(userInfo);
+
+		logger.debug("getFrequencyClassList ended");
+		
+		return result;
+	}
+
+	
 }

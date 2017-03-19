@@ -847,6 +847,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_SUBCATECODE", sCateCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInSubCategoryForManage(map);
 		
