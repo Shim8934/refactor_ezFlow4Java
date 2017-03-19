@@ -116,7 +116,7 @@ function LineAprTyepSetAll() {
             if (pTotalRows[i].childNodes[0].innerHTML != pTotalRows.length && pTotalRows[i].getAttribute("DATA11") == "001") {
                 pTotalRows[i].setAttribute("DATA11", "019");
             }
-            else if (pTotalRows[i].childNodes[0].innerHTML == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
+            else if (pTotalRows[i].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
                 pTotalRows[i].setAttribute("DATA11", "018");
             }
             var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
