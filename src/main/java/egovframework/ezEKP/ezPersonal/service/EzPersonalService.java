@@ -39,7 +39,7 @@ public interface EzPersonalService {
 	
 	public PersonalLightPollVO getPollInfo (int pItemSeq, int tenantID) throws Exception;
 	
-	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID) throws Exception;
+	public String setApprovalPwd(String userID, String flag, String newPWD, String pwdType, int tenantID, String companyID) throws Exception;
 
 	public String getApprovNotiConfig(String userID, int tenantID) throws Exception;
 

@@ -18886,7 +18886,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String getUserContTree(String OwnUserID, String ParentContID, String OwnUserName, String companyID, String lang, int tenantID) throws Exception {
-		String strSQL = "";
 		String tempOwnUserName = OwnUserName;
         StringBuilder rtnXML = new StringBuilder("");
 		try 
