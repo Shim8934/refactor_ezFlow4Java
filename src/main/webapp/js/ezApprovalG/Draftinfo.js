@@ -384,8 +384,6 @@ function TreeViewinitializeCodeGroup(code, level) {
         treeView.SetRequestData("TreeViewCodeRequestData");
         treeView.DataSource(xmlTree);
         treeView.DataBind("infotree");
-        xmlHTTP = null;
-
     }
     catch (ErrMsg) {
         alert(" TreeViewinitialize : " + ErrMsg.description);
@@ -516,7 +514,7 @@ function btnAddCode_onclick() {
     var dup = false;
     var curSelCode = GetAttribute(pAprRow[0],"DATA1");
     var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
-   
+    
     var frequencyList = new ListView();
     frequencyList.LoadFromID("lvinfofrequencylist");
     var frequencyRow = frequencyList.GetDataRows();
@@ -538,30 +536,29 @@ function btnAddCode_onclick() {
 }
 
 function InsMyGroupItem(curSelCode, curSelGroupCode) {
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/setMyTaskCode.do",
+		data : {
+			cabinetID : "cabinetID 넣어줘야함",
+			taskCode  : curSelCode,
+			type      : "INS"
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
 
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "CURSELCODE", curSelCode);
-    createNodeAndInsertText(xmlpara, objNode, "CURSELGROUPCODE", curSelGroupCode);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/SaveFrequencyClassList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var Resultxml = loadXMLString(xmlhttp.responseText);
-    var objNodes = SelectNodes(Resultxml, "RETURN");
-    
-
-    if(getNodeText(objNodes[0]) == "OK")
-    {
+    if (result == "OK") {
         var pAlertContent = strLang602;
         OpenAlertUI(pAlertContent);
 
         getMyGroupItem();
-    }
-    else {
+    } else {
         var pAlertContent = strLang604;
         OpenAlertUI(pAlertContent);
     }
@@ -584,23 +581,24 @@ function btnDelCode_onclick() {
     var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
 
 
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "CURSELCODE", curSelCode);
-    createNodeAndInsertText(xmlpara, objNode, "CURSELGROUPCODE", curSelGroupCode);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/DeleteFrequencyClassList.aspx", false);
-    xmlhttp.send(xmlpara);
-
-    var Resultxml = loadXMLString(xmlhttp.responseText);
-    var objNodes = SelectNodes(Resultxml, "RETURN");
-
-
-    if (getNodeText(objNodes[0]) == "OK") {
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/setMyTaskCode.do",
+		data : {
+			cabinetID : "cabinetID 넣어줘야함",
+			taskCode  : curSelCode,
+			type      : "DEL"
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+	
+    if (result == "OK") {
         var pAlertContent = strLang603;
         OpenAlertUI(pAlertContent);
 
@@ -613,34 +611,41 @@ function btnDelCode_onclick() {
 }
 function getMyGroupItem()
 {
-//    var xmlhttp = createXMLHttpRequest();
-//    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/GetFrequencyClassList.aspx", false);
-//    xmlhttp.send("");
-//
-//    try {
-//        var xmlDoc = loadXMLString(xmlhttp.responseText);
-//
-//        if (xmlDoc == null) {
-//            xmlDoc = loadXMLString(xmlhttp.responseText);
-//        }
-//
-//        if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
-//        var FormList = new ListView();
-//        FormList.SetID("lvinfofrequencylist");
-//        FormList.SetMulSelectable(false);
-//        FormList.SetHeightFree(true);
-//        FormList.SetSelectFlag(false);
-//        FormList.SetRowOnClick("lvinfofrequencylist_onclick");
-//        FormList.DataSource(xmlDoc);
-//        FormList.DataBind("infofrequencylist");
-//        FormList = null;
-//        Draftinfoini = true;
-//       
-//        xmlhttp = null;
-//    }
-//    catch (ErrMsg) {
-//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//    }
+    var result = "";
+    
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getMyTaskCode.do",
+		data : {
+			deptID    : arr_userinfo[4],
+			userID    : arr_userinfo[1]
+		},
+		success: function(xml){
+			result = xml;
+		}
+	});
+	
+    try {
+        var xmlDoc = loadXMLString(result);
+
+        if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
+        var FormList = new ListView();
+        FormList.SetID("lvinfofrequencylist");
+        FormList.SetMulSelectable(false);
+        FormList.SetHeightFree(true);
+        FormList.SetSelectFlag(false);
+        FormList.SetRowOnClick("lvinfofrequencylist_onclick");
+        FormList.DataSource(xmlDoc);
+        FormList.DataBind("infofrequencylist");
+        FormList = null;
+        Draftinfoini = true;
+       
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
 }
 function lvinfofrequencylist_onclick() {
     allUnSelect();

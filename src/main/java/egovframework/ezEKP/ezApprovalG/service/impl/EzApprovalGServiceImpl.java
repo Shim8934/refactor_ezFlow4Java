@@ -356,7 +356,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Override
 	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception {
-		// TODO Auto-generated method stub
 		logger.debug("getCodeSubTreeInfo started");
 		
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());

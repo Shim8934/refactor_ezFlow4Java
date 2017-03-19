@@ -88,10 +88,10 @@
 		
 		        getDeptFullTree("${topID}");
 		        getFormRecv();
-// 		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 // 		        MakeListXML(pDocType);
 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
 		            flag = false;
@@ -227,7 +227,7 @@
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
 				                    setAutoItemCode.checked = true;
-				                    document.getElementById('tr_setAutoItemCode').style.display = "";
+				                    $('#tr_setAutoItemCode').show();
 				                    document.getElementById("isPublic").value = result.vo.isPublic;
 				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
 				                    document.getElementById("tbItemName").value = result.vo.itemName;
@@ -451,8 +451,7 @@
 		        if (TYPE == "D") {
 		            setNodeText(GetChildNodes(objNodes[0])[2], "");
 		            setNodeText(GetChildNodes(objNodes[1])[0], "");
-		        }
-		        else {
+		        } else {
 		            var pUserList = new ListView();
 		            pUserList.LoadFromID("lvUserList");
 		
@@ -476,10 +475,10 @@
 		        }
 		
 		        var MaxID = 0;
+		        
 		        if (noitem) {
 		            MaxID = 0;
-		        }
-		        else {
+		        } else {
 		            for (var j = 0; j < length; j++) {
 		                var curnum = Number(lvtFormView.GetSelectedRowID(j).substring(lvtFormView.GetSelectedRowID(j).lastIndexOf('_') + 1), lvtFormView.GetSelectedRowID(j).length);
 		                if (MaxID < curnum)
@@ -567,11 +566,11 @@
 		
 		    function viewAutoItemCode() {
 		        if (setAutoItemCode.checked) {
-		            document.getElementById("tr_setAutoItemCode").style.display = "";
+		            $("#tr_setAutoItemCode").show();
 		            btnItemCode_onclick();
 		        }
 		        else {
-		            document.getElementById("tr_setAutoItemCode").style.display = "none";
+		            $("#tr_setAutoItemCode").hide();
 		            DeleteItemCode();
 		        }
 		    }
@@ -850,7 +849,7 @@
             <br />
             <div style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
             <table class="content" style="width:100%;">               
-				<tr id="tr_setAutoItemCode" style="">
+				<tr id="tr_setAutoItemCode">
 					<th style="width:10%; text-align:center"><spring:message code='ezApproval.t335'/></th>
                     <td style="width:400px;">
                         <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 50px" readonly>

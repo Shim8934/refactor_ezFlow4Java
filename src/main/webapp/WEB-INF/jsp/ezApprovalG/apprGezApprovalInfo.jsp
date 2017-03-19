@@ -386,6 +386,7 @@
 	            pkeeperiod = RetValue[20];
 	            pItemName = RetValue[41];
 	            pItemName2 = RetValue[42];
+	            pUrgentFlag = RetValue[32];
 	            psecuritylevel = RetValue[31]; 
 	            pPublicFlag = RetValue[35];
 	            g_SelCabID = RetValue[30];
