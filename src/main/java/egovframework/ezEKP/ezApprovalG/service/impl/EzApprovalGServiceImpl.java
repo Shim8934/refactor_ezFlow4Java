@@ -10931,13 +10931,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (config.getProperty("hideCabinet") == "0") {
-				if (rtnVal) {
-					subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
-				}
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
+				} 
 			}
 			
 			if (rtnVal) {
@@ -10995,12 +10997,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (config.getProperty("hideCabinet") == "0") {
-				if (rtnVal) {
-					subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
 				}
 			}
 			
@@ -11050,12 +11054,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			if (config.getProperty("hideCabinet") == "0") {
-				if (rtnVal) {
-					subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
 				}
 			}
 			
@@ -11094,12 +11100,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 
 				if (config.getProperty("hideCabinet") == "0") {
-					if (rtnVal) {
-						subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-						
-						if (subSQL.toUpperCase().equals("FALSE")) {
-							rtnVal = false;
-						} 
+					if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+						if (rtnVal) {
+							subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+							
+							if (subSQL.toUpperCase().equals("FALSE")) {
+								rtnVal = false;
+							} 
+						}
 					}
 				}
 				
