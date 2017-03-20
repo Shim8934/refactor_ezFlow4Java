@@ -986,6 +986,9 @@ function PreviewRayerChange(pGubun) {
         MailOptionHidden();
         PreviewMode_ChangeBtn();
         isPreviewChange = false;
+        
+        mailGeneralSave();
+        
         if (g_bPrevShow)
             prevShow();
     } catch (e) { }
