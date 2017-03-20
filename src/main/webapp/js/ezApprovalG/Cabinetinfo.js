@@ -677,13 +677,13 @@ function GetTaskXml(TaskXml) {
         strXml = strXml + "<DATA18><![CDATA[" + getNodeText(GetElementsByTagName(TaskXml, "TASKNAME2").item(i)) + "]]></DATA18>"; // VTASKCLASS.TASKNAME2
         strXml = strXml + "</CELL>";
         strXml = strXml + "<CELL>";
-        strXml = strXml + "<VALUE>" + getNodeText(GetElementsByTagName(TaskXml, "SCNAME").item(i)) + "(" + getNodeText(GetElementsByTagName(TaskXml, "SUBCATEGORYCODE").item(i)) + ")" + "</VALUE>"; //소분류 & 코드 SCNAME(
-        strXml = strXml + "<DATA1>" + getNodeText(GetElementsByTagName(TaskXml, "SCNAME").item(i)) + "</DATA1>";
+        strXml = strXml + "<VALUE><![CDATA[" + getNodeText(GetElementsByTagName(TaskXml, "SCNAME").item(i)) + "(" + getNodeText(GetElementsByTagName(TaskXml, "SUBCATEGORYCODE").item(i)) + ")" + "]]></VALUE>"; //소분류 & 코드 SCNAME(
+        strXml = strXml + "<DATA1><![CDATA[" + getNodeText(GetElementsByTagName(TaskXml, "SCNAME").item(i)) + "]]></DATA1>";
         strXml = strXml + "</CELL>";
         //단위업무
         strXml = strXml + "<CELL><VALUE><![CDATA[" + getNodeText(GetElementsByTagName(TaskXml, "TASKNAME").item(i)) + "(" + getNodeText(GetElementsByTagName(TaskXml, "TASKCODE").item(i)) + ")" + "]]></VALUE>"; //VTASKCLASS.TASKNAME(VTASKCLASS.TASKCODE)
         strXml = strXml + "</CELL>";
-        strXml = strXml + "<CELL><VALUE>" + getNodeText(GetElementsByTagName(TaskXml, "RECTYPECODE").item(i)) + "</VALUE></CELL>"; //형태 TBCABINETCLASS.RECTYPECODE
+        strXml = strXml + "<CELL><VALUE><![CDATA[" + getNodeText(GetElementsByTagName(TaskXml, "RECTYPECODE").item(i)) + "]]></VALUE></CELL>"; //형태 TBCABINETCLASS.RECTYPECODE
         strXml = strXml + "<CELL><VALUE>" + getNodeText(GetElementsByTagName(TaskXml, "REGSERIALNO").item(i)) + "</VALUE></CELL>"; //연변 TBCABINETCLASS.REGSERIALNO
         strXml = strXml + "<CELL><VALUE>" + getNodeText(GetElementsByTagName(TaskXml, "VOLUMENO").item(i)) + "</VALUE></CELL>"; //권호수 TBCABINET.VOLUMENO
         strXml = strXml + "</ROW>";
