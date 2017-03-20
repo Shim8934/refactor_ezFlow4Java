@@ -3876,6 +3876,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String registerCabinet(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		logger.debug("xmlPara = " + xmlPara);
+		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		
 		String result = ezApprovalGService.registerCabinet(xmlDom, userInfo.getLang(), userInfo.getTenantId());
@@ -5684,4 +5686,20 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFrequencyClassList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFrequencyClassList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getFrequencyClassList started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGService.getFrequencyClassList(userInfo);
+
+		logger.debug("getFrequencyClassList ended");
+		
+		return result;
+	}
+
+	
 }

@@ -281,7 +281,7 @@
 		            document.getElementById("btnDelDept").style.display = "none";
 			    }
 			    $("#tbManage").val("");
-			    $("#selDept option").text("");
+			    $("#selDept option").remove();
 			}
 			
 			function btnManage_onclick() {

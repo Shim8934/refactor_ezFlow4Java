@@ -386,6 +386,7 @@
 	            pkeeperiod = RetValue[20];
 	            pItemName = RetValue[41];
 	            pItemName2 = RetValue[42];
+	            pUrgentFlag = RetValue[32];
 	            psecuritylevel = RetValue[31]; 
 	            pPublicFlag = RetValue[35];
 	            g_SelCabID = RetValue[30];
@@ -893,11 +894,7 @@
 		        
 		        Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
 		        objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "approvalS");
-// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "");
-// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "");
-// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "");
-// 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "");
+		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", document.getElementById("cabinetID").value);
 		        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", document.getElementById("tbItemCode").value);
 		        
 		        return getXmlString(rtnXml);
@@ -1803,7 +1800,7 @@
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>
 	                                            <option id="GROUPNAME">
-	                                                <spring:message code='ezApproval.t77'/>
+	                                                <spring:message code='ezApprovalG.t114'/>
 	                                            </option>
 	                                        </select>
 	                                        <input type="text" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
@@ -1965,6 +1962,7 @@
 		                                <td>
 		                                    <div id="tbitemCodeName" style="height: 20px; width:auto; vertical-align:middle; padding-top:5px; text-align:left;" ></div>
 		                                    <input type="hidden" id="tbItemCode" style="WIDTH: 80px; height: 20px;" />
+		                                    <input type="hidden" id="cabinetID" style="WIDTH: 80px; height: 20px;" />
 		                                    <input type="hidden" id="tbItemName" style="WIDTH: 100px; height: 20px;" />
 		                                    <input type="hidden" id="tbItemName2" />
 		                                </td>

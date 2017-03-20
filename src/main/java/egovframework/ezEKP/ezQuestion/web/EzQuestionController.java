@@ -1736,12 +1736,12 @@ public class EzQuestionController extends EgovFileMngUtil {
         pAnsNo = request.getParameter("ansNo");
         pAttID = request.getParameter("attID");
         
-        if(request.getParameter("fileName") != null){
+        if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
         	pFileName = request.getParameter("fileName");
         }
         
         if(pType.equals("QUESTION")){
-            if (!pFileName.equals("")) {
+            if (pFileName != null && !pFileName.equals("")) {
             	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", userInfo.getTenantId())+commonUtil.separator+pFileName;
             } else {
             	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, userInfo.getTenantId());

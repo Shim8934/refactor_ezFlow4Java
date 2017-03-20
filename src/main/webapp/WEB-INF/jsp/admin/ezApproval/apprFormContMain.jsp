@@ -300,7 +300,7 @@
 	            document.getElementsByName("btnDelDept")[0].style.display = "none";
 	            
 	            $("#tbManage").val("");
-			    $("#selDept option").text("");
+			    $("#selDept option").remove();
 	        }
 	
 	        function btnUseDept_onclick() {

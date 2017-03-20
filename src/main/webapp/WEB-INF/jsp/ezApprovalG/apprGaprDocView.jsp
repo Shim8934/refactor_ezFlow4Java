@@ -59,13 +59,23 @@
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
 		    pUserID = arr_userinfo[1];
-		    
+		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 	        var callBackType = "${callBackType}";
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
 		    var NonActiveX = "YES";
 		
+		    $(function () {
+		      	if(approvalFlag == "G") {
+	        		$(".approvalG").css("display","");
+	        		$(".approval").css("display","none");
+	        	} else{
+	        		$(".approvalG").css("display","none");
+	        		$(".approval").css("display","");
+	        	}
+		    });
+		    
 		    function btnOpinion_onclick() {
 		        openOpinionViewUI();
 		    }
@@ -465,7 +475,7 @@
 		          <li id="btnMail"><span onClick="return btnMail_onclick()" ><spring:message code='ezApprovalG.t1513'/></span></li>
 		          <li id="btnOpinion"><span onClick="return btnOpinion_onclick()" ><spring:message code='ezApprovalG.t55'/></span></li>
 		          <li id="btnPrint" ><span  onClick="return btnPrint_onclick()" ><spring:message code='ezApprovalG.t60'/></span></li>
-		          <li id="btnDocInfo"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnDocInfo" class="approvalG"><span onClick="return btnDocInfo_onclick()" ><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		          <li id="tbtncallback" style="display: none;"><span id="btncallback" onclick="return btncallback_onclick()"><spring:message code='ezApprovalG.t66'/></span></li>

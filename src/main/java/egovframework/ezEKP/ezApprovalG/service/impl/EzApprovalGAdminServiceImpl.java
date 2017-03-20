@@ -847,6 +847,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_SUBCATECODE", sCateCode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInSubCategoryForManage(map);
 		
@@ -1188,6 +1189,40 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
             map2.put("tenantID", tenantID);
            
             ezApprovalGAdminDAO.insertTaskCode(map2);
+            
+            if (approvalFlag.equals("S")) {
+            	StringBuilder sb = new StringBuilder();
+            	
+            	sb.append("<PARAMETERS>");            	
+            	sb.append("<DEPTCODE>" + commonUtil.cleanValue(userInfo.getDeptID()) + "</DEPTCODE>");
+            	sb.append("<DEPTNAME>" + commonUtil.cleanValue(userInfo.getDeptName1()) + "</DEPTNAME>");
+            	sb.append("<DEPTNAME2>" + commonUtil.cleanValue(userInfo.getDeptName2()) + "</DEPTNAME2>");
+            	sb.append("<TASKCODE>" + vo.getTaskCode() + "</TASKCODE>");
+            	sb.append("<TASKNAME>" + vo.getTaskName() + "</TASKNAME>");
+            	sb.append("<TASKNAME2>" + vo.getTaskName2() + "</TASKNAME2>");
+            	sb.append("<TITLE>" + vo.getTaskName() + "</TITLE>");
+            	sb.append("<TITLE2>" + vo.getTaskName2() + "</TITLE2>");
+            	sb.append("<RECTYPE>1</RECTYPE>");
+            	sb.append("<EXPIREYEAR></EXPIREYEAR>");
+            	sb.append("<KEEPPERIOD>" + vo.getKeepingPeriod() + "</KEEPPERIOD>");
+            	sb.append("<KEEPMETHOD>" + vo.getKeepingMethod() + "</KEEPMETHOD>");
+            	sb.append("<KEEPPLACE>" + vo.getKeepingPlace() + "</KEEPPLACE>");
+            	sb.append("<DISPLAYFLAG>" + vo.getDisplayUsage() + "</DISPLAYFLAG>");
+            	sb.append("<DISPLAYENDDATE></DISPLAYENDDATE>");
+            	sb.append("<DISPLAYREASON></DISPLAYREASON>");
+            	sb.append("<OWNERID>" + userInfo.getId() + "</OWNERID>");
+            	sb.append("<OWNERNAME>" + commonUtil.cleanValue(userInfo.getDisplayName1()) + "</OWNERNAME>");
+            	sb.append("<OWNERNAME2>" + commonUtil.cleanValue(userInfo.getDisplayName2()) + "</OWNERNAME2>");
+            	sb.append("<VOLNUM>1</VOLNUM>");
+            	sb.append("<SPECIALFLAG>0</SPECIALFLAG>");
+            	sb.append("<SPECIALCATALOGINFO></SPECIALCATALOGINFO>");
+            	sb.append("<COMPANYID>" + commonUtil.cleanValue(companyID) + "</COMPANYID>");
+            	sb.append("</PARAMETERS>");
+            	
+            	Document xmlDom = commonUtil.convertStringToDocument(sb.toString());
+            	
+            	ezApprovalGService.registerCabinet(xmlDom, userInfo.getLang(), userInfo.getTenantId());
+            }
 		}
 		
 		logger.debug("setTaskCode ended.");
@@ -2132,7 +2167,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			int index = 0;
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pFORMCONTID", formContID);
+			map.put("v_pFormContID", formContID);
 			map.put("companyID", companyID);
 			map.put("tenantID", tenantID);
 			
@@ -2141,7 +2176,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("formContID=" + formContID);
 			
 			for (String formID : formIDList.split(";")) {
-				map.put("v_pFORMID", formID);
+				map.put("v_pFormID", formID);
 				map.put("order", ++index);
 				
 				logger.debug("index=" + index);
