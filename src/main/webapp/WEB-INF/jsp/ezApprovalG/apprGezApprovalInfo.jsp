@@ -846,6 +846,8 @@
 			                ret[16] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiod");
 			                ret[17] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName");
 			                ret[18] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName2");
+			                ret[19] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevelvaltemp");
+			                ret[20] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiodvaltemp");
 		                }
 		                ret[9] = document.getElementById("taSummery").value;
 
@@ -1542,7 +1544,9 @@
 	                    <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
 	                        <div class="portlet_tabpart01_top" id="tab3">
 	                            <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
+	                            <c:if test= "${hideCabinet == '0'}">
 	                            <p><span id="3tab4" divname="Outer" class ="approvalG"><spring:message code='ezApprovalG.t330'/></span></p>
+	                            </c:if>
 	                            <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                            <p><span id="3tab3" divname="Group"><spring:message code='ezApprovalG.t1568'/></span></p>
 	                        </div>
@@ -1713,7 +1717,9 @@
 	                        </tr>
 	                        <tr>
 	                            <td class="approvalG" style="text-align:left">
+	                            	<c:if test= "${hideCabinet == '0'}">
 	                                <a style="margin-top: 5px; display: none;"  class="imgbtn" id="btnaddress"><span  onclick="return btnAddAddress()" ><spring:message code='ezApprovalG.t334'/></span></a>
+	                                </c:if>
 	                                <a style="margin-top: 5px; display: none;" class="imgbtn" id="btnaddressChange" ><span onclick="return btnaddressChange()" ><spring:message code='ezApprovalG.t348'/></span></a>
 	                            </td>
 	                            <td style="text-align:right">

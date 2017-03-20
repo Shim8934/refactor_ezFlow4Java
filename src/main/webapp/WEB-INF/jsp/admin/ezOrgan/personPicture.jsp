@@ -118,8 +118,8 @@
 		        	document.getElementById("file1").value = "";
 		        	document.getElementById("tempFilePath").value = "";
 		        }else{
-		        	document.getElementById("tempFilePath").value = xhr.responseText;
-		        	document.getElementById("imagefile").value = xhr.responseText;
+		        	document.getElementById("tempFilePath").value = xhr.responseText.split("/")[0];
+		        	document.getElementById("imagefile").value = xhr.responseText.split("/")[1];
 		        }
 		        //returnvalue(xhr.responseText);
 		    }
