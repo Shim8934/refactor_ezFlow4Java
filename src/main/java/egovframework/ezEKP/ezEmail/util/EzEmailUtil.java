@@ -438,6 +438,29 @@ public class EzEmailUtil {
 		return result;
 	}
 	
+	private InputStream getContentInputStream(Part part) throws Exception {
+		InputStream is = null; 
+		
+		try {
+			is = part.getInputStream();
+		// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
+		// 예) Content-Type: Text/Html; Charset="utf-8"
+		//	  Content-Transfer-Encoding: 
+		} catch (IOException ioe) {
+			// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
+			if (part instanceof MimeBodyPart) {
+				is = ((MimeBodyPart)part).getRawInputStream();
+			} else if (part instanceof MimeMessage) {
+				is = ((MimeMessage)part).getRawInputStream();
+			}
+			else {
+				throw ioe;
+			}
+		}		
+		
+		return is;
+	}
+	
 	/**
 	 * 메일 Multipart 정보 반환 함수
 	 */
@@ -559,39 +582,34 @@ public class EzEmailUtil {
 			filesize = (Double.parseDouble(filesize) + size) + "";
 			filecnt = (Integer.parseInt(filecnt) + 1) + "";
 		} else if(part.isMimeType("text/html")){
-			String strContent = null;
+			String strContent = null;			
+			String contentType = part.getContentType();
 			
-			try {
-				strContent = part.getContent().toString();
-			// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-			// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-			} catch (Exception e) {
-				e.printStackTrace();
-				
-				InputStream is = null; 
-					
-				try {
-					is = part.getInputStream();
-				// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
-				// 예) Content-Type: Text/Html; Charset="utf-8"
-				//	  Content-Transfer-Encoding: 
-				} catch (IOException ioe) {
-					// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
-					if (part instanceof MimeBodyPart) {
-						is = ((MimeBodyPart)part).getRawInputStream();
-					} else if (part instanceof MimeMessage) {
-						is = ((MimeMessage)part).getRawInputStream();
-					}
-					else {
-						throw ioe;
-					}
-				}
+			if (contentType.contains("ks_c_5601-1987")) {
+				InputStream is = getContentInputStream(part);
 				
 				if (is.available() > 0) {
 					byte[] buf = new byte[is.available()];
 					is.read(buf);
 					
-					strContent = decodeNonAsciiBytes(buf);						
+					strContent = new String(buf, "ms949");
+				}				
+			} else {							
+				try {
+					strContent = part.getContent().toString();
+				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+				} catch (Exception e) {
+					e.printStackTrace();
+					
+					InputStream is = getContentInputStream(part); 
+											
+					if (is.available() > 0) {
+						byte[] buf = new byte[is.available()];
+						is.read(buf);
+						
+						strContent = decodeNonAsciiBytes(buf);						
+					}
 				}
 			}
 			
@@ -649,24 +667,8 @@ public class EzEmailUtil {
 			if (headers == null) {
 				logger.debug("no Content-Type header");
 				
-				InputStream is = null; 
-				
-				try {
-					is = part.getInputStream();
-				// Content-Transfer-Encoding 값에 문제가 있을 때, IOException이 발생할 수 있다.
-				// 예) Content-Transfer-Encoding: 
-				} catch (IOException ioe) {
-					// gerRawInputStream()은 Content-Transfer-Encoding에 의한 Decoding을 수행하지 않은 Raw Data를 반환한다.
-					if (part instanceof MimeBodyPart) {
-						is = ((MimeBodyPart)part).getRawInputStream();
-					} else if (part instanceof MimeMessage) {
-						is = ((MimeMessage)part).getRawInputStream();
-					}
-					else {
-						throw ioe;
-					}
-				}
-				
+				InputStream is = getContentInputStream(part); 
+								
 				if (is.available() > 0) {
 					byte[] buf = new byte[is.available()];
 					is.read(buf);
@@ -675,7 +677,35 @@ public class EzEmailUtil {
 				}					
 			}
 			else {
-				strContent = part.getContent().toString();
+				String contentType = part.getContentType();
+				
+				if (contentType.contains("ks_c_5601-1987")) {
+					InputStream is = getContentInputStream(part);
+					
+					if (is.available() > 0) {
+						byte[] buf = new byte[is.available()];
+						is.read(buf);
+						
+						strContent = new String(buf, "ms949");
+					}				
+				} else {							
+					try {
+						strContent = part.getContent().toString();
+					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						InputStream is = getContentInputStream(part); 
+												
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							strContent = decodeNonAsciiBytes(buf);						
+						}
+					}
+				}				
 			}
 			
 			htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
