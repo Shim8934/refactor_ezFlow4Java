@@ -1212,7 +1212,6 @@
 			                var g_SelCabXml = ret[4];
 			                var xmlCab = createXmlDom();
 			                xmlCab = loadXMLString(g_SelCabXml);
-alert(SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID"));
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		                }
