@@ -290,6 +290,7 @@
 	            }
 	        }
 	        function search_click() {
+	        	listContentArry="";
 	            if (document.all("keyword").value == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
 	                document.all("keyword").focus();

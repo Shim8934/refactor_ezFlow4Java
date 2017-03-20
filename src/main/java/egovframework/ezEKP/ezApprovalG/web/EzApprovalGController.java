@@ -245,7 +245,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	
         	for (int k = 0; k < deptList.length; k++) {
         		String[] subList = deptList[k].split(":");
-        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
+        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[0]) : commonUtil.cleanValue(subList[1]);
                 String pTitle1_ = ""; 
                 String pTitle2_ = "";
                 
@@ -754,6 +754,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		
 		return "ezApprovalG/apprGDraftui";
 	}

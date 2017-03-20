@@ -1064,7 +1064,6 @@ function SaveApproveInfo(pApproveFlag) {
         createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
     }
     else {
-
         var field = message.GetListItem(fields, "docnumber");
         if (field)
             createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
