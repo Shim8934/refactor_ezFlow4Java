@@ -754,6 +754,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docSN", docSN);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		
 		return "ezApprovalG/apprGDraftui";
 	}
