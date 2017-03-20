@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link href="/css/default_kr.css" rel="stylesheet" type="text/css">
 		<style>
 		</style>
 		<script language="JavaScript" type="text/javascript" ID="clientEventHandlersJS">
@@ -56,7 +57,7 @@
 		    }
 		</script>
 	</head>
-	<body class="mainbody">
+	<body class="popup">
 		<form id="Form1" method="post" runat="server"> 
 			<h1><spring:message code='ezQuestion.t262' /></h1>
   			<table class="content"> 

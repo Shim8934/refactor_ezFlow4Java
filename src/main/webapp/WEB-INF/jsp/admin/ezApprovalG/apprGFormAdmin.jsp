@@ -355,14 +355,40 @@
 		            para[8] = GetAttribute(selRow[0], "DATA6");
 	
 		            var url = "";
-	
-		            if (GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") >  0) {
-		                url = "/myoffice/ezApprovalG/ezViewHWP/FormMain_HWP.aspx?TCheck=FUpdate&contID=" + escape(nodeIdx.GetNodeData("DATA1")) + "&formID=" + escape(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + escape(companyID);
-		            } else {
-		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURI(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURI(companyID);
+		            var HWP = "&type=HWP";
+		            var parameter = "?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+		            if ((GetAttribute(selRow[0], "DATA4") != null ? GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") : -1) > 0) {
+		                if (isIE)
+		                    url = "/admin/ezApproval/formMainOther.do";
+		                else
+		                    return;
+		                parameter = parameter + HWP;
+		            }
+		            else {
+		            	if (approvalFlag =='S') {
+							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO") {
+								url = "/admin/ezApprovalG/formMainOther.do";
+							} else {
+								url = "/admin/ezApprovalG/formMain.do";
+							}
+						} else {
+							if (pEditor == "DEXT" || pEditor == "NAMO") {
+								url = "/admin/ezApprovalG/formMainOther.do";
+							} else {
+								url = "/admin/ezApprovalG/formMain.do";
+							}
+						}
 		            }
 		            
-		            GetOpenWindow(url, "FormMain", 1050, 950, "no");
+		            
+	
+// 		            if (GetAttribute(selRow[0], "DATA4").toLowerCase().indexOf(".hwp") >  0) {
+// 		                url = "/admin/ezApprovalG/formMainHWP.do?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+// 		            } else {
+// 		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURIComponent(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURIComponent(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURIComponent(companyID);
+// 		            }
+		            
+		            GetOpenWindow(url + parameter, "FormMain", 1050, 950, "no");
 		           // window.showModalDialog(url, window, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();

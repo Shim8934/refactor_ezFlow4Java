@@ -827,7 +827,7 @@
 			<![CDATA[
 				SELECT
 					formcontid,
-					formid,
+					TBL_FORMINFO.formid,
 					formname,
 					formname2,
 					formdoctype,
@@ -841,7 +841,7 @@
 					TBL_AUTODOCNUM_ITEM.itemName,
 					TBL_AUTODOCNUM_ITEM.itemName2,
 					TBL_AUTODOCNUM_ITEM.useFlag,
-					TBL_AUTODOCNUM_ITEM.keepPeriodCode,
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode
 				FROM
 					TBL_FORMINFO
 				JOIN 
@@ -853,11 +853,11 @@
 	            AND
 	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
 				WHERE
-					tenant_id = #tenantID#
+					TBL_FORMINFO.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					TBL_FORMINFO.companyid = #companyID#
 				AND
-					formid = #v_PFORMID#
+					TBL_FORMINFO.formid = #v_PFORMID#
 			]]>
 		</isEqual>
 		<isEqual property="approvalFlag" compareValue="G">

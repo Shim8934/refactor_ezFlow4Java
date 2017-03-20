@@ -101,6 +101,7 @@
 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
 		                var tempStr = "";
+		                alert(formURL);
 		                tempStr = ConvertMHTtoHTML(formURL);
 		
 		                if (BroswerAndNonActiveXCheck() == "CROSS") {

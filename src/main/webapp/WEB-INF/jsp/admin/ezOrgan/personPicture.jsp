@@ -25,6 +25,7 @@
 		<script type="text/javascript" language="javascript">
 		    var ReturnFunction;
 		    var RetValue;
+	    	var imageName="";
 	    	
 			$(document).ready(function(){
 				try {
@@ -102,10 +103,10 @@
 	            	
 		            var fd = new FormData();		            
 		            fd.append("file1", document.getElementById("form").file1.files[0]);
-		            
+		          
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
-		            
+		            imageName = document.getElementById("form").file1.files[0].name;
 		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode=PICTURE&userID=" + RetValue);
 		            xhr.send(fd);
 	            }
@@ -118,8 +119,8 @@
 		        	document.getElementById("file1").value = "";
 		        	document.getElementById("tempFilePath").value = "";
 		        }else{
-		        	document.getElementById("tempFilePath").value = xhr.responseText.split("/")[0];
-		        	document.getElementById("imagefile").value = xhr.responseText.split("/")[1];
+		        	document.getElementById("tempFilePath").value = xhr.responseText;
+		        	document.getElementById("imagefile").value = imageName;
 		        }
 		        //returnvalue(xhr.responseText);
 		    }
