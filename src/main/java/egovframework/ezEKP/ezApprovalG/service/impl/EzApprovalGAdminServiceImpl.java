@@ -2167,7 +2167,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			int index = 0;
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_pFORMCONTID", formContID);
+			map.put("v_pFormContID", formContID);
 			map.put("companyID", companyID);
 			map.put("tenantID", tenantID);
 			
@@ -2176,7 +2176,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("formContID=" + formContID);
 			
 			for (String formID : formIDList.split(";")) {
-				map.put("v_pFORMID", formID);
+				map.put("v_pFormID", formID);
 				map.put("order", ++index);
 				
 				logger.debug("index=" + index);
