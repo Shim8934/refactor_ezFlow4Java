@@ -56,8 +56,10 @@
 	<resultMap id="boardAttribute" class="BoardAttributeVO">
 		<result property="colName1" 				column="NAME1" 						columnIndex="1"/>
 		<result property="colName2" 				column="NAME2" 						columnIndex="2"/>
-		<result property="sn" 						column="COLNAME" 					columnIndex="3"/>
-		<result property="value" 					column="WIDTH" 						columnIndex="4"/>		
+		<result property="colName3" 				column="NAME3" 						columnIndex="3"/>
+		<result property="colName4" 				column="NAME4" 						columnIndex="4"/>
+		<result property="sn" 						column="COLNAME" 					columnIndex="5"/>
+		<result property="value" 					column="WIDTH" 						columnIndex="6"/>		
 	</resultMap>
 	
 	<resultMap id="boardAccessList" class="BoardPropertyVO">
