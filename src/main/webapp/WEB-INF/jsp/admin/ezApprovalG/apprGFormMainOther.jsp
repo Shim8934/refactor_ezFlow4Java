@@ -580,7 +580,7 @@
 		
 		        itemcode_dialogArgument[0] = "";
 		        itemcode_dialogArgument[1] = btnItemCode_Complete;
-		        var url = "/admin/ezApproval/docNumUI.do";
+		        var url = "/admin/ezApprovalG/apprGDocNumUI.do";
 		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
 		    }
 		
