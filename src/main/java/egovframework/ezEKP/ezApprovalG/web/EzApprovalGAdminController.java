@@ -579,7 +579,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formWorkFlow = request.getParameter("formWorkFlow");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-logger.debug("formMHT = " + formMHT);
 		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
 		
 		logger.debug("formSave started. result = " + result);
@@ -618,9 +617,9 @@ logger.debug("formMHT = " + formMHT);
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
-		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String path = config.getProperty("upload_approvalG.ROOT");
 		
-		File file = new File(realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
+		File file = new File(realPath + path + commonUtil.separator + "form" + commonUtil.separator + "conninfo.xml");
 		
 		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file);
 		
