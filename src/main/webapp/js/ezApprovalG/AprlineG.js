@@ -1830,6 +1830,31 @@ function GetSelCabInfoXml(totalRows) {
     }
     return getXmlString(rtnXml);
 }
+////////////////////////////////////////////////////////////////////////////////////////기록물철 저장 XML2
+function GetSelCabInfoXml2() {
+	
+	//참고용 이거 기준으로 하면됨
+//	<tr id="DivTaskSCateList_TR_0" style="cursor: pointer; background-color: rgb(219, 225, 231);" selected="true" DATA1="opensolOS0000022017000018001" DATA2="OS000002" DATA3="opensolOS0000022017000018" DATA4="seokz" DATA5="8989898" DATA6="9898989" DATA7="OS000002" DATA8="01" DATA9="0" DATA10="1" DATA11="1" DATA12="3" DATA13="3" DATA14="3" DATA15="1" DATA16="1" DATA17="오솔철" DATA18="OSCABINET">
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">8989898</td>
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">기록물철(OS000001)</td>
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">오솔철(OS000002)</td>
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">일반문서</td>
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">000018</td>
+//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">001</td>
+//	</tr>
+	var i;
+	var rtnXml = createXmlDom();
+	var Root, objItem, objData;
+	Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
+	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "opensolOS0000022017000018001");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "8989898");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "opensolOS0000022017000018");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "기록물철(OS000001)");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "오솔철(OS000002)");
+	createNodeAndAppandNodeText(rtnXml, objItem, objData, "OS000002");
+	return getXmlString(rtnXml);
+}
 
 
 // 결재참가자 flag 별 Save 함수
