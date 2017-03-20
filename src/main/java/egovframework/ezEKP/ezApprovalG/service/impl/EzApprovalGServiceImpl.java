@@ -9979,12 +9979,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							userDNames[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName", userInfo.getTenantId());
 							userDNames2[k + 1] = ezOrganService.getPropertyValue(arr2[0], "displayName2", userInfo.getTenantId());
 							
+							if(arr2.length > 1) {
 							if (arr2[1].trim().equals("")) {
 								userTitles[k + 1] = userJobTitle;
 								userTitles2[k + 1] = userJobTitle2;
 							} else {
 								userTitles[k + 1] = arr2[1].trim();
 								userTitles2[k + 1] = arr2[2].trim();
+							}
 							}
 						}
 						

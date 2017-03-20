@@ -135,7 +135,7 @@
 		    var hideCabinet = "${hideCabinet}";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
-		
+		    var hideCabinet = "${hideCabinet}";
 		    window.onload = function ()
 		    {
 		        try{
