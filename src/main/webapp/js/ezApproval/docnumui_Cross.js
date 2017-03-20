@@ -1,85 +1,84 @@
 ﻿function getGroupTree(pNodeIdx, pLevel, pGroupID, pFirst) {
     try {
-        var result = "";
-        
-    	$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/admin/ezApproval/getDocNumGroupNode.do",
-    		data : {
-    			g_level      : pLevel,
-    			groupID      : pGroupID,
-    			companyID    : companyID
-    		},
-    		success: function(text){
-    			result = text;
-    		}
-    	});
-    	
-        var xmlRtn = loadXMLString(result);
-
-        if (pFirst) {
-            var xmlDom2 = createXmlDom();
-            xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML.toUpperCase());
-
-            if (SelectNodes(xmlRtn, "NODES/NODE/VALUE")) {
-                var xmlRtn = loadXMLString(result).documentElement;
-                GetChildNodes(xmlDom2.documentElement)[0].appendChild(xmlRtn);
-                
-            }
-            document.getElementById('TreeView').innerHTML = "";
+        if (pLevel > 3) {
             var treeView = new TreeView();
-            treeView.SetID("FormTreeView");
-            treeView.SetUseAgency(true);
-            treeView.SetRequestData("TreeViewRequestData");
-            treeView.SetNodeClick("TreeViewNodeClick");
-            treeView.DataSource(xmlDom2);
-            treeView.DataBind("TreeView");
-
+            treeView.LoadFromID("FromTreeView");
+            
+            treeView.AppendChildNodes("<NODES></NODES>", treeView.GetSelectNode().NodeID);
+            
+            return;
         }
-        else {
-            var XmlNode = loadXMLString(result);
-            if (XmlNode.xml == "") return;
-            var treeView = new TreeView();
-            treeView.LoadFromID("FormTreeView");
-            treeView.AppendChildNodes(XmlNode.documentElement, pNodeIdx);
+        var xmlTree = createXmlDom();
 
-        }
+		$.ajax({
+			type : "POST",
+        	url : "/admin/ezApprovalG/getTaskCategoryTree.do",
+        	async : false,
+        	data : {categoryType : pLevel,
+        			parentID : pGroupID,
+        			companyID : companyID},
+        	success : function(result){
+        		xmlTree = loadXMLString(result);
+        		
+        		if (pFirst) {
+	                var xmlDom2 = createXmlDom();
+	                
+	                xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML);
+	                
+	                if (SelectNodes(xmlTree, "NODES/NODE/VALUE").length > 0) {
+	                    if (CrossYN()) {
+	                        var xmlRtn = xmlTree.documentElement;
+	                        var Node = xmlTree.importNode(xmlRtn, true);
+
+	                        xmlDom2.documentElement.childNodes[1].appendChild(Node);
+	                    } else {
+	                        var xmlRtn = xmlTree.documentElement;
+	                        xmlDom2.childNodes[0].childNodes[0].appendChild(xmlRtn);
+	                    }
+	                }
+	                
+	                document.getElementById('TreeView').innerHTML = "";
+	                var treeView = new TreeView();
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetRequestData("TreeView_onRequestData");
+	                treeView.SetNodeClick("TreeView_onNodeSelect");
+	                treeView.DataSource(xmlDom2);
+	                treeView.DataBind("TreeView");
+	            } else {
+	                if (xmlTree.xml == "") {
+	                	return;
+	                }
+
+	                var treeView = new TreeView();
+	                treeView.LoadFromID("FromTreeView");
+	                
+	                treeView.AppendChildNodes(xmlTree.documentElement, treeView.GetSelectNode().NodeID);
+	            }
+        	}
+		});
     } catch (e) {
         alert(e.description);
     }
 }
 
 function getGroupItem(pGroupID) {
-    var result = "";
-    
 	$.ajax({
 		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/admin/ezApproval/getDocNumItem.do",
-		data : {
-			groupID      : pGroupID,
-			companyID    : companyID
-		},
-		success: function(text){
-			result = text;
-		}
+    	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
+    	async : false,
+    	data : {sCateCode : pGroupID,
+    			companyID : companyID},
+    	success : function(result) {
+    	    document.getElementById('lvtForm').innerHTML = "";
+
+    	    listview.DataSource(loadXMLString(result));
+    	    listview.DataBind("lvtForm");
+    	}
 	});
-
-    var xmlDoc = loadXMLString(result);
-
-    if (document.getElementById("lvtForm").innerHTML != "") document.getElementById("lvtForm").innerHTML = "";
-    var FormList = new ListView();
-    FormList.SetID("FormList");
-    FormList.SetMulSelectable(false);
-    FormList.SetRowOnClick("lvtForm_onclick");
-    FormList.SetRowOnDblClick("lvtForm_onSel_DBclick");
-    FormList.DataSource(xmlDoc);
-    FormList.DataBind("lvtForm");
-    FormList = null;
 }
+
+
 
 function OpenAlertUI(pAlertContent) {
     var parameter = pAlertContent;
