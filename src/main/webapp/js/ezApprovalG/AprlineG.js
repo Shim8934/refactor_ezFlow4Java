@@ -1832,27 +1832,38 @@ function GetSelCabInfoXml(totalRows) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////기록물철 저장 XML2
 function GetSelCabInfoXml2() {
-	
 	//참고용 이거 기준으로 하면됨
-//	<tr id="DivTaskSCateList_TR_0" style="cursor: pointer; background-color: rgb(219, 225, 231);" selected="true" DATA1="opensolOS0000022017000018001" DATA2="OS000002" DATA3="opensolOS0000022017000018" DATA4="seokz" DATA5="8989898" DATA6="9898989" DATA7="OS000002" DATA8="01" DATA9="0" DATA10="1" DATA11="1" DATA12="3" DATA13="3" DATA14="3" DATA15="1" DATA16="1" DATA17="오솔철" DATA18="OSCABINET">
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">8989898</td>
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">기록물철(OS000001)</td>
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">오솔철(OS000002)</td>
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">일반문서</td>
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">000018</td>
-//	<td align="left" style="overflow: hidden; white-space: nowrap; -ms-text-overflow: ellipsis;">001</td>
+//	<tr id="DivTaskSCateList_TR_0" selected="true" class="" data1="test1ZZ4569062017000003001" data2="ZZ456906" data3="test1ZZ4569062017000003" data4="test001" data5="방산철" data6="방산철_ENG" data7="ZZ456906" data8="10" data9="0" data10="2" data11="0" data12="" data13="" data14="" data15="1" data16="1" data17="방산단위업무" data18="방산단위업무_ENG" style="cursor: pointer; background-color: rgb(219, 225, 231);">
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">방산철</td>
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">테스트용(12345112)</td>
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">방산단위업무(ZZ456906)</td>
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">일반문서</td>
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">000003</td>
+//	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">001</td>
 //	</tr>
+	//kt에 넣을것
 	var i;
 	var rtnXml = createXmlDom();
 	var Root, objItem, objData;
 	Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
 	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "opensolOS0000022017000018001");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "8989898");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "opensolOS0000022017000018");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "기록물철(OS000001)");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "오솔철(OS000002)");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "OS000002");
+	
+	if (hideCabinet == "1") {
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "devteamZZ3782312017000002001");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "devteamZZ3782312017000002");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "경비(a8989891)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "경비신청(ZZ378231)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
+	} else {
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "test1ZZ4569062017000003001");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "방산철");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "test1ZZ4569062017000003");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "테스트용(12345112)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "방산단위업무(ZZ456906)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ456906");
+	}
+	
 	return getXmlString(rtnXml);
 }
 

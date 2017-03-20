@@ -1186,7 +1186,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					file1.mkdirs();
 				}
 			}
-			
+
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
 			File imageFile = new File(tempPath + fileName + extension);			
 			
@@ -1198,8 +1198,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             deleteFile(tempPath + fileName + extension);
             
             logger.debug("signImangeUpload ended");
-            
-            return multiFile.getOriginalFilename();
+
+            return fileName + "png";
 			
 		} catch (Exception e) {
 		    logger.debug("signImangeUpload failed");

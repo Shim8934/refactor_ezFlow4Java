@@ -24,8 +24,8 @@
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script> -->
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
 		
 		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
@@ -163,7 +163,7 @@
 		                    
 		                    message.HWP_LoadFile(formURL);
 		                    if (message.HWP_GetDocumentElement() != "") {
-		                        var ConnURL = ReplaceAll(ReplaceAll(message.HWP_GetDocumentElement(), "<CONNINFO>", ""), "</CONNINFO>", "");
+		                        var ConnURL = message.HWP_GetDocumentElement().replace("<CONNINFO>", "").replace("</CONNINFO>", "");
 		
 		                        var g_XmlDoc = createXmlDom();
 		                        g_XmlDoc.async = false;
@@ -229,9 +229,9 @@
 				                    setAutoItemCode.checked = true;
 				                    $('#tr_setAutoItemCode').show();
 				                    document.getElementById("isPublic").value = result.vo.isPublic;
-				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
-				                    document.getElementById("tbItemName").value = result.vo.itemName;
-				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
+				                    document.getElementById("tbItemCode").value = result.vo.taskCode;
+				                    document.getElementById("tbItemName").value = result.vo.taskName;
+				                    document.getElementById("tbItemName2").value = result.vo.taskName2;
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriod;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
@@ -580,7 +580,7 @@
 		
 		        itemcode_dialogArgument[0] = "";
 		        itemcode_dialogArgument[1] = btnItemCode_Complete;
-		        var url = "/admin/ezApproval/docNumUI.do";
+		        var url = "/admin/ezApprovalG/apprGDocNumUI.do";
 		        GetOpenWindow(url, "docnumui_Cross", 745, 370, "NO");
 		    }
 		

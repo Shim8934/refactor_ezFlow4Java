@@ -44,9 +44,9 @@
 		                        getXml += "<VALUE>";
 		                        getXml += "<spring:message code='ezPersonal.t3002'/>" +i;
 		                        getXml += "</VALUE>";
-		                        getXml += "<DATA1>";
+		                        getXml += "<DATA1><![CDATA[";
 		                        getXml += imagelist[i];
-		                        getXml += "</DATA1>";
+		                        getXml += "]]></DATA1>";
 		                        getXml += "</CELL></ROW>";
 		                    }
 		                    getXml += "</ROWS></LISTVIEWDATA>";
@@ -73,8 +73,9 @@
 	        }
 	        var selData;
 	        function event_click(obj) {
-	            var fname = document.getElementById(obj).getAttribute("DATA1");
-	            selData = fname;
+	            var fname = document.getElementById(obj).getAttribute("DATA1");	            
+	            selData = fname;	            
+	            
 	            ContentDescription.innerHTML = "<img style='padding-top: 60px;' src=" + "/ezApprovalG/approvalGSign.do?type=" + SignPath + "&fileName=" + fname + " width=50 height=50>";
 	        }
 		

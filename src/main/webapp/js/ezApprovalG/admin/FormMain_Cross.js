@@ -194,10 +194,10 @@ function SaveFormInfo() {
     
     var url = "";
     
-    if(pEditorType == "HWP") {
-    	url = "/admin/ezApproval/formSaveHwp.do";
+    if(useEditor == "HWP") {
+    	url = "/admin/ezApprovalG/formSaveHwp.do";
     } else {
-    	url = "/admin/ezApproval/formSave.do";
+    	url = "/admin/ezApprovalG/formSave.do";
     }
     
     $.ajax({
@@ -260,7 +260,7 @@ function MakeFormInfoXML_Detail() {
     var xmlpara = createXmlDom();
     var objNode;
     createNodeInsert(xmlpara, objNode, "FORMINFO");
-    createNodeAndInsertText(xmlpara, objNode, "FormName", document.getElementById("tbFormName").value); 
+    createNodeAndInsertText(xmlpara, objNode, "FormName", document.getElementById("tbFormName").value);
     createNodeAndInsertText(xmlpara, objNode, "FormName2", document.getElementById("tbFormName2").value);
     createNodeAndInsertText(xmlpara, objNode, "FormDescript", document.getElementById("tbDescript").value);
     createNodeAndInsertText(xmlpara, objNode, "FormKind", document.getElementById("selFormKind").value);
@@ -282,7 +282,7 @@ function MakeFormInfoXML_Detail() {
 
 function MakeFormMHTXML() {
     var retValue = new Array();
-    if (pEditorType == "HWP") {
+    if (useEditor == "HWP") {
         retValue[0] = "TRUE";
         retValue[1] = message.HWP_GetCloneData();
         retValue[2] = "";
@@ -370,13 +370,14 @@ function MakeFormMHTXML_Detail() {
         Div.innerHTML = message.GetEditorContent();
         
         if (message.GetEditorContent().indexOf("BodyContent") > -1)
-            BODY.innerHTML = ReplaceAll(ReplaceAll(ReplaceAll(XMLInfo, /\r\n/g, "<br>"), /\n/g, "<br>"), /\r/g, "<br>") + Div.innerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.innerHTML;
         else {
             Div.id = "BodyContent";
-            BODY.innerHTML = ReplaceAll(ReplaceAll(ReplaceAll(XMLInfo, /\r\n/g, "<br>"), /\n/g, "<br>"), /\r/g, "<br>") + Div.outerHTML;
+            BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.outerHTML;
         }
+        
         HTML.appendChild(BODY);
-        return HTML.innerHTML;
+        return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");
 }
 
 function MakeFormConnXML() {

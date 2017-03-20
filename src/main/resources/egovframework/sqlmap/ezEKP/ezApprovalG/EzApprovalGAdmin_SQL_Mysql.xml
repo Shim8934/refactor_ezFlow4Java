@@ -129,81 +129,37 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
-		parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
-		<isEqual property="approvalFlag" compareValue="G">
-			<![CDATA[
-				SELECT
-					taskcode,
-					keepingperiod,
-					tempflag,
-					displayrecflag,
-					specialcatalogflag,
-					sc1,
-					sc2,
-					sc3,
-					keepingmethod,
-					keepingplace,
-					taskname,
-					taskname2,
-					subcategorycode,
-					itemSecurity,
-					isPublic
-				FROM
-					TBL_TASKCODE
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					subcategorycode = #v_SUBCATECODE#
-				AND
-					delflag = '0'
-				ORDER BY
-					taskcode
-			]]>
-		</isEqual>
-		<isEqual property="approvalFlag" compareValue="S">
-			<![CDATA[
-				SELECT
-					taskcode,
-					keepingperiod,
-					tempflag,
-					displayrecflag,
-					specialcatalogflag,
-					sc1,
-					sc2,
-					sc3,
-					keepingmethod,
-					keepingplace,
-					taskname,
-					taskname2,
-					subcategorycode,
-					itemSecurity,
-					isPublic,
-					(SELECT
-				    	CONCAT(CABINETCLASSNO, '001')
-				     FROM
-				     	TBL_CABINETCLASS A
-				     WHERE
-				     	TENANT_ID = #tenantID#
-				     AND
-				     	COMPANYID = #companyID#
-				     AND
-				     	A.TASKCODE = B.TASKCODE ) CABINETID 
-				FROM
-					TBL_TASKCODE B
-				WHERE
-					tenant_id = #tenantID#
-				AND
-					companyid = #companyID#
-				AND
-					subcategorycode = #v_SUBCATECODE#
-				AND
-					delflag = '0'
-				ORDER BY
-					taskcode
-			]]>
-		</isEqual>
+		parameterClass="Map" resultClass="ApprGTaskVO">
+		<![CDATA[
+			SELECT
+				taskcode,
+				keepingperiod,
+				tempflag,
+				displayrecflag,
+				specialcatalogflag,
+				sc1,
+				sc2,
+				sc3,
+				keepingmethod,
+				keepingplace,
+				taskname,
+				taskname2,
+				subcategorycode,
+				itemSecurity,
+				isPublic
+			FROM
+				TBL_TASKCODE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				subcategorycode = #v_SUBCATECODE#
+			AND
+				delflag = '0'
+			ORDER BY
+				taskcode
+		]]>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -1620,6 +1576,73 @@
 				#companyID#,
 				#tenantID#)
 		]]>
+	</insert>
+	
+	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT 
+				'OK' 
+        	FROM 
+        		DUAL
+       		WHERE 
+       			EXISTS ( SELECT 
+       						formid 
+                      	 FROM 
+                      	 	TBL_AUTODOCNUM_ITEM 
+                       	 WHERE  
+                       	 	tenant_id = #tenantID#
+                       	 AND
+                       	 	companyid = #companyID#
+                       	 AND
+                       	 	formid = #v_PID# )
+		</selectKey>
+		
+		<isEqual property="id" compareValue="OK">
+			UPDATE
+				TBL_AUTODOCNUM_ITEM
+         	SET 
+         		keepperiod = #keepPeriod#,
+             	keepperiodcode = #keepPeriodCode#,
+             	securitylevel = #securityLevel#,
+             	ispublic = #isPublic#,
+             	itemcode = #tbItemCode#,
+             	itemname = #tbItemName#,
+             	itemname2 = #tbItemName2#,
+             	useflag = #useFlag#
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			companyid = #companyID#
+       		AND
+       			formid = #v_PID#
+		</isEqual>
+		
+		<isNotEqual property="id" compareValue="OK">
+			INSERT INTO TBL_AUTODOCNUM_ITEM
+				(formid,
+				keepperiod,
+				securitylevel,
+				ispublic,
+				itemcode,
+				itemname,
+				itemname2,
+				useflag,
+				keepperiodcode,
+				companyid,
+				tenant_id)
+        	VALUES
+        		(#v_PID#,
+        		#keepPeriod#,
+        		#securityLevel#,
+        		#isPublic#,
+        		#tbItemCode#,
+        		#tbItemName#,
+        		#tbItemName2#,
+        		#useFlag#,
+        		#keepPeriodCode#,
+        		#companyID#,
+        		#tenantID#)
+		</isNotEqual>
 	</insert>
 
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->

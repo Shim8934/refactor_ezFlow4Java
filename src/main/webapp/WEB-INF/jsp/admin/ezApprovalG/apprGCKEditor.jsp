@@ -39,10 +39,11 @@
 	        }
 	        function GetEditorContent() {
 	            try {
-	            	if (type == "APPROVAL" || type == "APPROVALG")
+	            	if (type == "APPROVAL" || type == "APPROVALG") {
 	                    return Get_BodyUnlock(CKEDITOR.instances.editor1.getData());
-	                else
+	            	} else {
 	                    return CKEDITOR.instances.editor1.getData();
+	            	}
 	            } catch (e) { return ""; }
 	        }
 	
@@ -187,6 +188,48 @@
 	                    ElementObj.innerHTML = Html;
 	                }
 	                
+	            } catch (e) {
+	            }
+	        }
+	        
+	        function FormInfoCheck(type) {
+	            try {
+	                switch (type) {
+	                    case "null":
+	                        if (CKEDITOR.instances.editor1 == null)
+	                            return true;
+	                        else
+	                            return false;
+	                        break;
+	                    case "body":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitle":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitlefield":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                return GetAttribute(HtmlTag[i], "doctitlefield");
+	                        }
+	                        break;
+	                    default:
+	                }
+
 	            } catch (e) {
 	            }
 	        }

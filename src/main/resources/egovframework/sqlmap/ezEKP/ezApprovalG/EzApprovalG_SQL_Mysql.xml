@@ -6767,10 +6767,6 @@
                         COMPANYID = #companyID#   ) TMP
              WHERE  
              	DOCID = #v_DOCID#
-             AND
-             	TENANT_ID = #v_TENANTID#
-             AND
-                COMPANYID = #companyID# 
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="7">
 		<![CDATA[
@@ -6779,45 +6775,44 @@
             FROM ( 
             		SELECT 
             			ATTACHFILENAME ATTACHNAME  ,
-                        ATTACHFILEHREF ATTACHFILEHREF  ,
-                        ATTACHFILESIZE ATTACHFILESIZE  
+                    	ATTACHFILEHREF ATTACHFILEHREF  ,
+                    	ATTACHFILESIZE ATTACHFILESIZE  
                     FROM ( 
                     		SELECT 
-                    			ONCAT(OWNERID , '@' ,SN ) DOCID  ,
-                                 ATTACHFILENAME ,
-                                 ATTACHFILEHREF ,
-                                 ATTACHFILESIZE 
+                    			CONCAT(OWNERID , '@' ,SN ) DOCID  ,
+                            	ATTACHFILENAME ,
+                            	ATTACHFILEHREF ,
+                            	ATTACHFILESIZE 
                             FROM 
                             	TBL_TMPATTACHINFO
                             WHERE
                             	TENANT_ID = #v_TENANTID#
                             AND
                 				COMPANYID = #companyID# ) TMP
-                     WHERE  
-                     	DOCID = #v_DOCID#
+                    WHERE  
+                    	DOCID = #v_DOCID#
                    
-                   UNION ALL 
+                    UNION ALL 
                     
-                   SELECT 
+                    SELECT 
                    		ATTACHDOCNAME ATTACHNAME  ,
-                        ATTACHDOCURL ATTACHFILEHREF  ,
-                        TO_BINARY_FLOAT(NULL) ATTACHFILESIZE  
-                   FROM ( 
+                    	ATTACHDOCURL ATTACHFILEHREF  ,
+                    	0 ATTACHFILESIZE  
+                    FROM ( 
                    			SELECT 
-                   				ONCAT(OWNERID , '@' ,SN ) DOCID  ,
+                   				CONCAT(OWNERID , '@' ,SN ) DOCID  ,
                                 ATTACHDOCNAME ,
                                 ATTACHDOCURL 
-                           FROM 
-                           		TBL_TMPAPRDOCATTACHINFO  ) TMP
-                           WHERE  
-                           		DOCID = #v_DOCID#
-                           	AND 
+                            FROM 
+                           		TBL_TMPAPRDOCATTACHINFO  
+                            WHERE  
                            		TENANT_ID= #v_TENANTID#
                            	AND
-                				COMPANYID = #companyID# ) A
-                   WHERE  A.ATTACHFILEHREF <> ' '
-                   ]]>
-		
+                				COMPANYID = #companyID# ) TMP
+                	WHERE 
+                		DOCID = #v_DOCID# ) A
+        	WHERE  A.ATTACHFILEHREF <> ' '
+        ]]>
 		</isEqual>
 	</select>
 	

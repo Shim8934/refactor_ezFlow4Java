@@ -709,14 +709,25 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             String strTemp = m_BackImageList[i].substring(0, 4);
             
             if (strTemp.equals("http")) {
-            	URL url = new URL(m_BackImageList[i]);
-            	in = url.openStream();
-                int len = 0;
-                byte[] buf = new byte[1024];
-                
-                while ((len = in.read(buf)) != -1) {
-                	byteOutStream.write(buf, 0, len);
-                }
+            	m_BackImageList[i] = m_BackImageList[i].substring(m_BackImageList[i].indexOf("/fileroot/"));
+            	
+            	File file = new File(realPath + m_BackImageList[i]);
+            	in = new FileInputStream(file);
+            	int len = 0;
+            	byte[] buf = new byte[1024];
+            	
+            	while ((len = in.read(buf)) != -1) {
+            		byteOutStream.write(buf, 0, len);
+            	}
+            	//URL 안쓰지만 훗날 쓰일지도 몰라서
+//            	URL url = new URL(m_BackImageList[i]);
+//            	in = url.openStream();
+//                int len = 0;
+//                byte[] buf = new byte[1024];
+//                
+//                while ((len = in.read(buf)) != -1) {
+//                	byteOutStream.write(buf, 0, len);
+//                }
             } else {
             	File file = new File(realPath + m_BackImageList[i]);
             	in = new FileInputStream(file);

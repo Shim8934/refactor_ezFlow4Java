@@ -504,6 +504,39 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/apprGHWPEditor";
 	}
 
+	/**
+	 * 전자결재G관리 양식등록 자동분류코드 메뉴 화면 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/apprGDocNumUI.do")
+	public String apprGDocNumUI(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("apprGTaskCodeManage started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("list", resultList);
+		
+		logger.debug("apprGTaskCodeManage ended.");
+		
+		return "admin/ezApprovalG/apprGDocNumUI";
+	}
 	
 	/**
 	 * 전자결재G관리 양식등록 양식등록,양식수정 양식기본정보 호출 함수
@@ -532,7 +565,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("formSave started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String companyID = request.getParameter("companyID");
 		String contID = request.getParameter("formContID");
@@ -543,9 +579,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formWorkFlow = request.getParameter("formWorkFlow");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo);
+logger.debug("formMHT = " + formMHT);
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
 		
-		logger.debug("result = " + result);
+		logger.debug("formSave started. result = " + result);
 		
 		if (result.indexOf("ERROR") > 0) {
 			return "<DATA>" + result + "</DATA>";
