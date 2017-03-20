@@ -13,6 +13,10 @@ public class BoardAttributeVO {
 	/** */
 	private String colName2;	
 	/** */
+	private String colName3;
+	/** */
+	private String colName4;	
+	/** */
 	private String value;
 	/** */
 	private String colType;
@@ -74,6 +78,18 @@ public class BoardAttributeVO {
 	}
 	public void setTenantID(int tenantID) {
 		this.tenantID = tenantID;
+	}
+	public String getColName3() {
+		return colName3;
+	}
+	public void setColName3(String colName3) {
+		this.colName3 = colName3;
+	}
+	public String getColName4() {
+		return colName4;
+	}
+	public void setColName4(String colName4) {
+		this.colName4 = colName4;
 	}
 
 }

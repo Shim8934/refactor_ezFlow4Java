@@ -707,7 +707,17 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			for (int i = 1; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				
+				if (userInfo.getLang().equals("1")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName1()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				} else if (userInfo.getLang().equals("2")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				} else if (userInfo.getLang().equals("3")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName3()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				} else if (userInfo.getLang().equals("4")) {
+					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName4()) + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				}
+				
 				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(obj.getColName2()) + "</VALUE></CELL>");
 				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");

@@ -3831,12 +3831,14 @@ public class EzBoardController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezBoard/moveBoardItem.do")
 	public String moveBoardItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
 		userInfo = commonUtil.userInfo(loginCookie);
-		String itemIDList = request.getParameter("itemIDList");
 		
+		String itemIDList = request.getParameter("itemIDList");
 		String boardID = request.getParameter("boardID");
 		String guBun = request.getParameter("guBun");
 		
-		guBun = guBun.replace(";", "");
+		if (guBun != null) {
+			guBun = guBun.replace(";", "");
+		}
 		
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardID);
