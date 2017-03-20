@@ -4,14 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-
-
-
-		
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
-		
-		
-		
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
 		
 		<title><c:out value = '${title}' /></title>
@@ -101,18 +94,11 @@
 		                var XmlBodyATT = createXmlDom();
 		                var XmlBodyDATA = createXmlDom();
 		                var tempStr = "";
-		                alert(formURL);
+		                
 		                tempStr = ConvertMHTtoHTML(formURL);
 		
-		                if (BroswerAndNonActiveXCheck() == "CROSS") {
-		                    var parser = new DOMParser();
-		                    tempXML = parser.parseFromString(tempStr, "text/xml");
-		                    parser = null;
-		                }
-		                else {
-		                    tempXML.async = "false";
-		                    tempXML.loadXML(tempStr);
-		                }
+	                    tempXML.async = "false";
+	                    tempXML = loadXMLString(tempStr);
 		
 		                XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
 		                XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
@@ -223,7 +209,8 @@
 		        			tbFormName2.value = result.vo.formName;
 		        			tbDescript.value = result.vo.formDescription;
 		        			selFormKind.value = result.vo.formDocType;
-		        			formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);
+// 		        			formURL = document.location.protocol+"//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + encodeURI(result.vo.formFileLocation);
+		        			formURL = encodeURI(result.vo.formFileLocation);
 			                
 			                if (approvalFlag == 'S') {
 				                if (result.vo.useFlag == "Y") {
@@ -543,7 +530,9 @@
 		    }
 		
 		    function idSetField_onclick() {
-		        message.View_CellProperty(SetFlag);
+		    	g_toggleFlag = !g_toggleFlag
+		    	
+		        message.View_CellProperty(g_toggleFlag);
 		    }
 		
 		    var FormConnInfo_dialogarguments = new Array();
