@@ -10930,11 +10930,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
+			if (config.getProperty("hideCabinet") == "0") {
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
 				} 
 			}
 			
@@ -10992,12 +10996,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-				} 
+			if (config.getProperty("hideCabinet") == "0") {
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
+				}
 			}
 			
 			if (rtnVal) {
@@ -11045,12 +11053,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (rtnVal) {
-				subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-				} 
+			if (config.getProperty("hideCabinet") == "0") {
+				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+					if (rtnVal) {
+						subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+						
+						if (subSQL.toUpperCase().equals("FALSE")) {
+							rtnVal = false;
+						} 
+					}
+				}
 			}
 			
 			if (rtnVal) {
@@ -11087,12 +11099,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} 
 				}
 
-				if (rtnVal) {
-					subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
-					
-					if (subSQL.toUpperCase().equals("FALSE")) {
-						rtnVal = false;
-					} 
+				if (config.getProperty("hideCabinet") == "0") {
+					if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
+						if (rtnVal) {
+							subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+							
+							if (subSQL.toUpperCase().equals("FALSE")) {
+								rtnVal = false;
+							} 
+						}
+					}
 				}
 				
 				if (rtnVal) {
@@ -11456,13 +11472,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<DOCID>" + orgDocID + "</DOCID>");
 		resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 		resultXML.append("<SIGNNAME>" + susinSN + "habyui" + aprSN + "</SIGNNAME>");
-		resultXML.append("<CONTENT>" + deptName + "</CONTENT>");
+		resultXML.append("<CONTENT>" + commonUtil.cleanValue(deptName) + "</CONTENT>");
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("<SIGNINFO>");
 		resultXML.append("<DOCID>" + orgDocID + "</DOCID>");
 		resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 		resultXML.append("<SIGNNAME>" + susinSN + "habyuipositon" + aprSN + "</SIGNNAME>");
-		resultXML.append("<CONTENT>" + signTitle + "</CONTENT>");
+		resultXML.append("<CONTENT>" + commonUtil.cleanValue(signTitle) + "</CONTENT>");
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("<SIGNINFO>");
 		resultXML.append("<DOCID>" + orgDocID + "</DOCID>");
@@ -11477,6 +11493,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("").substring(6, 10).replace("-", ".") + "</CONTENT>");
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("</SIGNINFOS>");
+		
+		System.out.println(resultXML.toString());
 		
 		subSQL = updateSignInfo(resultXML, orgCompanyID, "QUERY", userInfo.getTenantId());
 		
@@ -12331,7 +12349,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 								ezApprovalGDAO.insertDoSendAprDocInfo(map);
 								ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
-								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
+ 								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 								ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
 								
 	                            int susinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map3);

@@ -173,6 +173,8 @@ public interface EzQuestionService {
 	
 	public void questionDelete2(int brdID, int itemNo, int tenantID) throws Exception;
 	
+	public void questionDelete2_D(int brdID, int itemNo, int tenantID) throws Exception;
+	
 	public void questionDelete1(int brdID, int itemNo, int quesNo, int tenantID) throws Exception;
 	
 	public void updateTblPollItem(String endDate, int brdID, int itemNo, int tenantID) throws Exception;

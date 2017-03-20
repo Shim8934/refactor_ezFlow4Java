@@ -1198,8 +1198,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             deleteFile(tempPath + fileName + extension);
             
             logger.debug("signImangeUpload ended");
-            
-            return fileName + extension + "/" + multiFile.getOriginalFilename();
+
+            return fileName + "png";
 			
 		} catch (Exception e) {
 		    logger.debug("signImangeUpload failed");

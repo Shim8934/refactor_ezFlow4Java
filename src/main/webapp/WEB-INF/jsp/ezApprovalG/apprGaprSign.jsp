@@ -56,7 +56,7 @@
 		                    tempImg.style.width = document.getElementById("SIGNVIEW").style.width;
 		                    tempImg.style.height = document.getElementById("SIGNVIEW").style.height;
 		                    tempImg.setAttribute("width", document.getElementById("SIGNVIEW").style.width);
-		                    tempImg.setAttribute("height", document.getElementById("SIGNVIEW").style.height);
+		                    tempImg.setAttribute("height", document.getElementById("SIGNVIEW").style.height);                 
 		                    tempImg.src = "/ezApprovalG/approvalGSign.do?fileName=" + pSignSelcur.getAttribute("DATA1");
 		                    document.getElementById("SIGNVIEW").appendChild(tempImg);
 		                }
