@@ -440,11 +440,17 @@
 		                OpenAlertUI(pAlertContent, check_btnSendDraft);
 		                return;
 		            }
-		            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
-		                OpenAlertUI(pAlertContent);
-		                return;
+		            
+		            if (hideCabinet == "0") {
+			            if (approvalFlag == "G") {
+				            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
+				                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
+				                OpenAlertUI(pAlertContent);
+				                return;
+				            }
+			            }
 		            }
+		            
 		            if (btnSendDraftEnable == "false") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
 		               OpenInformationUI(pAlertContent, check_btnSendDraft2);

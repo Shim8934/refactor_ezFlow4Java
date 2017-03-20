@@ -171,8 +171,8 @@
 					alert("<spring:message code='ezOrgan.t188' />");
 					return;
 				}
-				
-				if (!confirm("'" + signlist.options[signlist.selectedIndex].innerText + "'<spring:message code='ezOrgan.t130' />")) {
+
+				if (!confirm("'" + signlist.options[signlist.selectedIndex].text + "'<spring:message code='ezOrgan.t130' />")) {
 					return;
 				}
 				
