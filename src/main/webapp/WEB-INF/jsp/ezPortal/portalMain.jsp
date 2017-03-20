@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: KT비즈메카 Groupware :::</title>
+		<title>::: ezEKP Java :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<style>
 			.layerpopup {
