@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: KT비즈메카 Groupware :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">		
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />		
@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
 		<script type="text/javascript">
 		
-			function actionLogin() {				
+			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
 			        return;
@@ -98,51 +98,34 @@
 	<body class="login_body" onload="fnInit()">
 		<div class="login_warpper">
 			<section class="login_layout">
-				<div class="set1">             
-					<article class="login_flash">
-	                    <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="464" height="309">
-	                        <param name="movie" value="/images/kr/login/login_flash.swf" />
-	                        <param name="wmode" value="transparent"> 
-	                        <object type="application/x-shockwave-flash" data="/images/kr/login/login_flash.swf"  width="464" height="309">
-	                            <param name="movie" value="/images/kr/login/login_flash.swf" />
-	                            <param name="wmode" value="transparent"> 
-	                            <a><img src="/images/kr/login/loginimg.gif" width="464" height="309"></a>
-	                        </object>
-	                    </object>
-	                </article>
-					<article class="login_form">
-		                <p class="title"><img src="/images/kr/login/form_title.gif" alt="Groupware login" width="235" height="28"></p>
+				<div class="set1">
+					<article class="login_form">		                
+		                <p class="title"><img src="/images/kr/login/logo.png" alt="bizmeka그룹웨어" width="240" height="40"></p>
 		                <form id="loginForm" name="loginForm" method="post">
 		                	<input type="hidden" name="publicModulus" value="${publicModulus}"/>
 		                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 		                	<input type="hidden" name="encryptID" />
 		                	<input type="hidden" name="encryptPass"/>
 		                    <fieldset>		                        
-		                        <p class="id"><input id="TextUserID" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" /></p>
-		                        <p class="pw"><input id="TextPassword" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" /></p>	                        
-		                        <img src="/images/kr/login/btn_login.gif" id="LoginButton"  tabindex="3" border="0" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
-		                        <p class="saveid"><input type="checkbox" value="" id="checkId" name="checkId" /><label for="save_login"> ID Save</label></p>	                        	                        
+		                        <p class="id">
+		                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+		                        </p>		                 
+		                        <p class="pw">
+		                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+		                        </p>
+		                        <!-- <input type="image" name="LoginButton" id="LoginButton" tabindex="3" src="/images/kr/login/btn_login.png" border="0" class="btn_login" > -->
+		                        <img src="/images/kr/login/btn_login.png" id="LoginButton"  tabindex="3" border="0" class="btn_login" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
+		                        <p class="saveid">
+		                        	<input type="checkbox" value="" id="checkId" name="checkId" class="inp_checkbox" />
+		                        	<label for="save_login">ID Save</label>
+		                        </p>	                        	                        
 		                    </fieldset>
 		                    <input type="hidden" name="message" value="${message}" />
 					    </form>
 					</article>
-				</div>
-	             
-			  <div class="set2">
-					<article class="login_logo"><img src="/images/kr/login/logo.gif" alt="ezEKP그룹웨어" width="417" height="80"></article>
-					<!-- 2016-10-12 지정석 / IE11세팅, 유저가이드 필요할 때 까지 주석 -->
-	                <!-- <article class="login_banner">
-		                <dl>
-		                	<dd><img src="/images/kr/login/banner01.gif" width="140" height="55" alt="User Guide" onclick="setting_click()" /></dd>
-		                </dl>
-		                <dl>
-		                	<dd><img src="/images/kr/login/banner02.gif" width="140" height="55" alt="IE Setting" /></dd>
-		                </dl>
-	                </article> -->
-			  </div>
-			  <address><span>COPYRIGHT(C) KAONI. ALL RIGHTS RESERVED.</span></address>
-	            <div style="color:white;font-size:large;text-align:center;"></div>
+				</div>			  		            
 			</section>
+			<address><span>COPYRIGHT(C) KAONI. ALL RIGHTS RESERVED.</span></address>
 		</div>		
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">
