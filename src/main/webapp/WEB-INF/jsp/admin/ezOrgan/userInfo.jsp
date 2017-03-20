@@ -489,7 +489,7 @@
 	    <div style="margin-top:4px;margin-bottom:2px"><span style="color:red;"><spring:message code='ezOrgan.t00018' /></span></div>
 	    <table id="Tbl_UserInfo" class="content" style="width:800px">
 	        <tr>
-	            <td rowspan="5" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center">
+	            <td rowspan="5" id="UserPhotoDiv" style="width:119px; height:180px; text-align:center; min-width:119px;">
 	                <b><spring:message code='ezOrgan.t272' /></b> 
 	            </td>
 	            <th style="width: 71px; text-align:center">&nbsp;&nbsp;<spring:message code='ezOrgan.t275' /><span style="color:red"> *</span></th>
