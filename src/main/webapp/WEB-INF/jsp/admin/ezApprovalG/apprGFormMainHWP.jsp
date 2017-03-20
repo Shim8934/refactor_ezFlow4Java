@@ -38,7 +38,8 @@
 	        var ConnData = "";
 	        var WorkData = "";
 	        var flag = false;
-	        var pEditorType = "<c:out value = '${pEditorType}' />";
+	        var useEditor = "<c:out value = '${useEditor}' />";
+	        
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
 	                window.focus();
@@ -126,7 +127,7 @@
 	                    if (pEditorType == "HWP") {
 	                        message.HWP_LoadFile(formURL);
 	                        if (message.HWP_GetDocumentElement() != "") {
-	                            var ConnURL = ReplaceAll(ReplaceAll(message.HWP_GetDocumentElement(), "<CONNINFO>", ""), "</CONNINFO>", "");
+	                            var ConnURL = replaceAll(ReplaceAll(message.HWP_GetDocumentElement(), "<CONNINFO>", ""), "</CONNINFO>", "");
 	
 	                            var g_XmlDoc = createXmlDom();
 	                            g_XmlDoc.async = false;
@@ -881,11 +882,7 @@
 	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
 	        <iframe src="/blank.htm" style="border: none;" id="iFrameLayer"></iframe>
 	    </div>
-	    <form runat="server" id="bodyForm">
-	        <asp:HiddenField ID="hidCompanyID" runat="server" />
-	        <asp:HiddenField ID="hidFormID" runat="server" />
-	        <asp:HiddenField ID="hidBeforeConnData" runat="server" />
-	    </form>
+	    
 	    <script type="text/javascript">
 	        Tab1_NewTabIni("tab1");
 	    </script>
