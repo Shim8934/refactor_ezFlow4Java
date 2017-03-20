@@ -272,36 +272,41 @@
 		        }
 		    }
 		    
+		    function mailGeneralSave() {
+	            var _pPreview;
+	            if (g_bPrevShow)
+	                _pPreview = pPreviewShow_HOW;
+	            else
+	                _pPreview = "OFF";
+	
+	            if (parseInt(pMailListDiv) + parseInt(pMailPreVDiv) != 100)
+	                pMailPreVDiv = 100 - parseInt(pMailListDiv);
+	            if (parseInt(pMailListDiv_H) + parseInt(pMailPreVDiv_H) != 100)
+	                pMailPreVDiv_H = 100 - parseInt(pMailListDiv_H);
+	
+	            var xmlpara = createXmlDom();
+	            var objNode;
+	            objNode = createNodeInsert(xmlpara, objNode, "DATA");
+	            var xmlhttp = createXMLHttpRequest();
+	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
+	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
+	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", " ${mailGeneral.refreshInterval}");
+	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", " ${mailGeneral.keepDeleteLength} ");
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", _pPreview);
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWLIST", parseInt(pMailListDiv));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
+	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
+	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
+	            xmlhttp.send(xmlpara);		  
+		    }
+		    
 		    var Save_unloadSave = false;
 		    
 		    function Window_onunload() {
 		        if (window_onunload_Event && !Save_unloadSave) {		        	
-		            var _pPreview;
-		            if (g_bPrevShow)
-		                _pPreview = pPreviewShow_HOW;
-		            else
-		                _pPreview = "OFF";
-		
-		            if (parseInt(pMailListDiv) + parseInt(pMailPreVDiv) != 100)
-		                pMailPreVDiv = 100 - parseInt(pMailListDiv);
-		            if (parseInt(pMailListDiv_H) + parseInt(pMailPreVDiv_H) != 100)
-		                pMailPreVDiv_H = 100 - parseInt(pMailListDiv_H);
-		
-		            var xmlpara = createXmlDom();
-		            var objNode;
-		            objNode = createNodeInsert(xmlpara, objNode, "DATA");
-		            var xmlhttp = createXMLHttpRequest();
-		            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
-		            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
-		            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", " ${mailGeneral.refreshInterval}");
-		            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", " ${mailGeneral.keepDeleteLength} ");
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", _pPreview);
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWLIST", parseInt(pMailListDiv));
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
-		            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
-		            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
-		            xmlhttp.send(xmlpara);
+		            mailGeneralSave();
+		            
 		            Save_unloadSave = true;
 		        }
 		    }
