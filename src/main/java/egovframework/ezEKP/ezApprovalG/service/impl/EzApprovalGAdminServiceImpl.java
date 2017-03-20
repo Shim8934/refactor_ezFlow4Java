@@ -2513,9 +2513,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String keepPeriodCode = "";
 		String securityLevel = "";
 		String isPublic = "";
-		String tbTaskCode = "";
-		String tbTaskName = "";
-		String tbTaskName2 = "";
+		String tbItemCode = "";
+		String tbItemName = "";
+		String tbItemName2 = "";
+		String useFlag = "";
 		String formConnFlag = "";
 		
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
@@ -2528,9 +2529,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			keepPeriodCode = doc.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent();
 			securityLevel = doc.getElementsByTagName("SECURITYLEVEL").item(0).getTextContent();
 			isPublic = doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
-			tbTaskCode = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
-			tbTaskName = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
-			tbTaskName2 = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			tbItemCode = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			tbItemName = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			tbItemName2 = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 		}
@@ -2548,17 +2550,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String validationsXML = "";
 		String statusXML = "";
 		logger.debug("formWorkFlow" + formWorkFlow);
-		if (!formWorkFlow.equals("")) {
+		if (formWorkFlow != null && !formWorkFlow.equals("")) {
 			doc = commonUtil.convertStringToDocument(formWorkFlow);
 //			validationsXML = doc.getElementsByTagName("VALIDATIONS").item(0).getTextContent();
 //			statusXML = doc.getElementsByTagName("STATUS").item(0).getTextContent();
 		}
 
 		String recevGroupXML = "";
-		if (!formRecevGroup.equals("")) {
+		if (formRecevGroup != null && !formRecevGroup.equals("")) {
 			recevGroupXML = formRecevGroup;
 		}
-     
+		
 		boolean isUpdate = false;
 		String saveFileName = "";
 
@@ -2612,6 +2614,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
 			map.put("v_PID", result);
+			
+			if (approvalFlag.equals("S")) {
+				map.put("keepPeriod", keepPeriod);
+				map.put("keepPeriodCode", keepPeriodCode);
+				map.put("securityLevel", securityLevel);
+				map.put("isPublic", isPublic);
+				map.put("tbItemCode", tbItemCode);
+				map.put("tbItemName", tbItemName);
+				map.put("tbItemName2", tbItemName2);
+				map.put("useFlag", useFlag);
+				
+				ezApprovalGAdminDAO.setAutoDocNum(map);
+			}
 			
 			logger.debug("setFormDataInsert1 started.");
 			ezApprovalGAdminDAO.setFormDataInsert1(map);

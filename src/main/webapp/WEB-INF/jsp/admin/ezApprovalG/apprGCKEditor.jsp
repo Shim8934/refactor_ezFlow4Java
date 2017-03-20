@@ -39,10 +39,11 @@
 	        }
 	        function GetEditorContent() {
 	            try {
-	            	if (type == "APPROVAL" || type == "APPROVALG")
+	            	if (type == "APPROVAL" || type == "APPROVALG") {
 	                    return Get_BodyUnlock(CKEDITOR.instances.editor1.getData());
-	                else
+	            	} else {
 	                    return CKEDITOR.instances.editor1.getData();
+	            	}
 	            } catch (e) { return ""; }
 	        }
 	

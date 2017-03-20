@@ -579,6 +579,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formWorkFlow = request.getParameter("formWorkFlow");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
+logger.debug("formMHT = " + formMHT);
 		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
 		
 		logger.debug("formSave started. result = " + result);

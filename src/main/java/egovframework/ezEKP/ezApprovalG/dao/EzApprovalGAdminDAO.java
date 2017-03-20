@@ -397,7 +397,11 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getCodeType(Map<String, Object> map) {
+	public List<ApprGLeftVO> getCodeType(Map<String, Object> map) throws Exception {
 		return (List<ApprGLeftVO>) list("EzApprovalGAdminDAO.getCodeType", map);
+	}
+
+	public void setAutoDocNum(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.setAutoDocNum", map);
 	}
 }

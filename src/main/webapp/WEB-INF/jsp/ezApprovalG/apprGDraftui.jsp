@@ -132,9 +132,10 @@
 		    var pPageType = "DRAFTUI";
 		    var pUse_Editor = "${useEditor}";
 		    var NonActiveX = "YES";
+		    var hideCabinet = "${hideCabinet}";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
-		
+		    var hideCabinet = "${hideCabinet}";
 		    window.onload = function ()
 		    {
 		        try{
@@ -435,19 +436,31 @@
 		                return;
 		            }
 		            
-		            if (cabinetID == "") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
-		                OpenAlertUI(pAlertContent, check_btnSendDraft);
-		                return;
-		            }
-		            
 		            if (hideCabinet == "0") {
 			            if (approvalFlag == "G") {
+				            if (cabinetID == "") {
+				                var pAlertContent = "<spring:message code='ezApprovalG.t134'/>";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
+				            }
+				            
 				            if (cabinetID.substring(0, arr_userinfo[4].length).toLowerCase() != arr_userinfo[4].toLowerCase()) {
 				                var pAlertContent = "<spring:message code='ezApprovalG.t135'/>" + "<br>" + "<spring:message code='ezApprovalG.t136'/>";
 				                OpenAlertUI(pAlertContent);
 				                return;
 				            }
+			            } else {
+				            if (cabinetID == "") {
+				                var pAlertContent = "분류코드 지정하라고 메세지 삽입";
+				                OpenAlertUI(pAlertContent, check_btnSendDraft);
+				                return;
+				            }
+			            }
+		            } else {
+			            if (cabinetID == "") {
+			            	//하드코딩
+			            	cabinetID = "devteamZZ3782312017000002001";
+			            	TaskCode = "ZZ378231";
 			            }
 		            }
 		            
@@ -1312,7 +1325,9 @@
 		                <li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 		                <li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
 		                <c:if test="${approvalFlag eq 'G'}">
+		                <c:if test="${hideCabinet eq '0'}">
 		                <li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
+		                </c:if>
 		                </c:if>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 		                <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>

@@ -375,8 +375,9 @@ function MakeFormMHTXML_Detail() {
             Div.id = "BodyContent";
             BODY.innerHTML = XMLInfo.replace(/\r\n/g, "<br>").replace( /\n/g, "<br>").replace(/\r/g, "<br>") + Div.outerHTML;
         }
+        
         HTML.appendChild(BODY);
-        return HTML.innerHTML;
+        return ConvertHTMLtoMHT("<HTML>" + HTML.innerHTML + "</HTML>");
 }
 
 function MakeFormConnXML() {

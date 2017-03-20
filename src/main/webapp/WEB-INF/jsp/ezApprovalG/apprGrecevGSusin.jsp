@@ -1257,7 +1257,11 @@
 			<li id="btnOpinion"><span onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 			<li id="btnFileAttach"style="display:none" ><span onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 			<li id="btnAprDocAttach" style="display:none"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t1429'/></span></li>
+			<c:if test="${approvalFlag eq 'G'}">
+		    <c:if test="${hideCabinet eq '0'}">
 			<li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()"  ><spring:message code='ezApprovalG.t58'/></span></li>
+			</c:if>
+			</c:if>
 			<li id="btnAssign" ><span  onClick="return btnAssign_onclick()"><spring:message code='ezApprovalG.t1430'/></span></li>
 			<li id="btnDistribute"><span  onClick="return btnDistribute_onclick()"><spring:message code='ezApprovalG.t1432'/></span></li>
 			<li id="btnReturn"><span  onClick="return btnReturn_onclick()"><spring:message code='ezApprovalG.t1434'/></span></li>
