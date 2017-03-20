@@ -3930,7 +3930,7 @@ function AprDeptParameter(pAprNDeptNumber, pAprDeptFlag) {
     createNodeAndInsertText(xmlpara, objNode, "pAprNDeptNumber", pAprNDeptNumber);
     createNodeAndInsertText(xmlpara, objNode, "pAprDeptFlag", pAprDeptFlag);
 
-    return xmlpara
+    return xmlpara;
 }
 function APRDeptXMLParsing(APRDEPT, pDocID) {
     var listview = new ListView();

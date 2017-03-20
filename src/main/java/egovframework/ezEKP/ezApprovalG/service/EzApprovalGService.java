@@ -407,5 +407,7 @@ public interface EzApprovalGService {
 	public String docAttachLineInfo(String docID, String id, String companyID, int tenantId) throws Exception;
 
 	public String getFrequencyClassList(LoginVO userInfo) throws Exception;
+	
+	public String getContainerInfoManage(String deptID, String mode, String companyID, int tenantId) throws Exception;
 
 }

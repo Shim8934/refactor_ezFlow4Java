@@ -72,7 +72,6 @@ function Draftinfo_ini() {
     }
 }
 function event_Draftinfo_ini() {
-alert(1000);
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 //    try {
         var xmlDoc = loadXMLString(xmlhttp.responseText);
