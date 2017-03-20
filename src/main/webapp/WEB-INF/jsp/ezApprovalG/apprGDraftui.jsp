@@ -451,7 +451,7 @@
 				            }
 			            } else {
 				            if (cabinetID == "") {
-				                var pAlertContent = "분류코드 지정하라고 메세지 삽입";
+				                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
 				                OpenAlertUI(pAlertContent, check_btnSendDraft);
 				                return;
 				            }
