@@ -3808,7 +3808,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<CELL>");
 			
 			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "]]<</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "]]></VALUE>");
 			} else {
 				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME2").item(k).getTextContent()) + "]]></VALUE>");
 			}
