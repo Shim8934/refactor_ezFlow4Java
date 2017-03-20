@@ -74,8 +74,10 @@
 	        var selData;
 	        function event_click(obj) {
 	            var fname = document.getElementById(obj).getAttribute("DATA1");
-	            selData = fname;
-	            ContentDescription.innerHTML = "<img style='padding-top: 60px;' src=" + "/ezApprovalG/approvalGSign.do?type=" + SignPath + "&fileName=" + fname + " width=50 height=50>";
+	            var encryptName = fname.split("/")[0];
+	            selData = fname;	            
+	            
+	            ContentDescription.innerHTML = "<img style='padding-top: 60px;' src=" + "/ezApprovalG/approvalGSign.do?type=" + SignPath + "&fileName=" + encryptName + " width=50 height=50>";
 	        }
 		
 		    function trim(str) {
