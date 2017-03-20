@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>::: ezEKP Java :::</title>
+		<title>::: KT비즈메카 Groupware :::</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link rel="stylesheet" href="<spring:message code='main.e15'/>" type="text/css">		
 		<link href="/css/login.css" rel="stylesheet" type="text/css" />		
