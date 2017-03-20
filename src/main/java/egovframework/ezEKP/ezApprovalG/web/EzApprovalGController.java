@@ -459,13 +459,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
         int tenantID = userInfo.getTenantId();        
-        
         logger.debug("tenantID=" + tenantID);       
+        
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
