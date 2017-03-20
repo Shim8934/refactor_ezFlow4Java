@@ -846,6 +846,8 @@
 			                ret[16] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiod");
 			                ret[17] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName");
 			                ret[18] = SelectSingleNodeValueNew(docinfo, "PARAMETER/tbItemName2");
+			                ret[19] = SelectSingleNodeValueNew(docinfo, "PARAMETER/psecuritylevelvaltemp");
+			                ret[20] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pkeeperiodvaltemp");
 		                }
 		                ret[9] = document.getElementById("taSummery").value;
 

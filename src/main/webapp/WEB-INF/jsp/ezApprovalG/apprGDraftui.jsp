@@ -934,28 +934,57 @@
 		            strRtn = strRtn + ")";
 		        return strRtn;
 		    }
-		    function SetDocOption(tempSecurityValue) {
-		        var fields = pzFormProc.Fields;
-		        field = fields.item("keepperiod");
-		        if (field)
-		            field.textContent = tempKeep;
-		        field = fields.item("securitylevel");
-		        if (field)
-		            field.textContent = tempSecurityValue;
-		        field = fields.item("publication");
-		        if (field) {
-		            if (tempPublic == "N")
-		                field.textContent = "<spring:message code='ezApprovalG.t46'/>";
-		            else
-		                field.textContent = "<spring:message code='ezApprovalG.t47'/>";
-		        }
-		        field = fields.item("docnumber");
-		        if (field && tempItemCode != "") {
-		            var tempdocnumber = field.textContent;
-		            tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
-		            field.textContent = tempdocnumber;
-		        }
-		    }
+		    
+// 		    function SetDocOption(tempSecurityValue) {
+// 		        var fields = message.GetFieldsList();
+// 		        field = fields.item("keepperiod");
+// 		        if (field)
+// 		            field.textContent = tempKeep;
+// 		        field = fields.item("securitylevel");
+// 		        if (field)
+// 		            field.textContent = tempSecurityValue;
+// 		        field = fields.item("publication");
+// 		        if (field) {
+// 		            if (tempPublic == "N")
+// 		                field.textContent = "<spring:message code='ezApprovalG.t46'/>";
+// 		            else
+// 		                field.textContent = "<spring:message code='ezApprovalG.t47'/>";
+// 		        }
+// 		        field = fields.item("docnumber");
+// 		        if (field && tempItemCode != "") {
+// 		            var tempdocnumber = field.textContent;
+// 		            tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
+// 		            field.textContent = tempdocnumber;
+// 		        }
+// 		    }
+		    
+	        function SetDocOption(pkeeperiodvaltemp) {
+	            var fields = message.GetFieldsList();
+
+	            field = message.GetListItem(fields, "keepperiod");
+	            if (field)
+	                setNodeText(field , pkeeperiodvaltemp);
+
+	            field = message.GetListItem(fields, "securitylevel");
+	            if (field)
+	                setNodeText(field , tempSecurityValue);
+
+	            field = message.GetListItem(fields, "publication");
+	            if (field) {
+	                if (tempPublic == "N")
+	                    setNodeText(field , "<spring:message code='ezApproval.t49'/>");
+	                else
+	                    setNodeText(field , "<spring:message code='ezApproval.t50'/>");
+	            }
+
+	            field = message.GetListItem(fields, "docnumber");
+	            if (field && tempItemCode != "") {
+	                var tempdocnumber = getNodeText(field);
+	                tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
+	                setNodeText(field , tempdocnumber);
+	            }
+	        }
+	        
 		    function btnSetTaskCode_onclick() {
 		        try {
 		            var para = new Array();
@@ -1179,16 +1208,18 @@
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
-			                if (ret[11].substring(0,1) == 3) {
-			                	tempPublic = "N";
-			                }
-			                
 			                setPublicFlag();
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
+		                	SetDocOption(ret[20]);
 		                }
+		                
+		                if (ret[11].substring(0,1) == 3) {
+		                	tempPublic = "N";
+		                }
+		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
