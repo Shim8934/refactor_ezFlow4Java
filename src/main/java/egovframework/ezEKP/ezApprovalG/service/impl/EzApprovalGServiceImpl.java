@@ -14209,6 +14209,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "</DATA10>");
 				resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA11>");
 				resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA12>");
+				resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("ITEMSECURITY").item(k).getTextContent()) + "</DATA13>");
+				resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA14>");
 				resultXML.append("</CELL>");
 				resultXML.append("<CELL>");
 				
