@@ -1618,7 +1618,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		docSN = apprGDocListVO2.getDocNumCode();
         	}
         	
-        	docSN = docSN.substring(docSN.length() - 6);
+        	if (docSN != null && !docSN.equals("")) {
+        		docSN = docSN.substring(docSN.length() - 6);
+        	}
         	
         	String hasAttach = "0";
         	
@@ -11580,7 +11582,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (docXML.getElementsByTagName("DOCNO").getLength() > 0) {
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
-			docSN = docSN.substring(docSN.length() - 6);
+			
+			if (docSN != null && !docSN.equals("")) {
+				docSN = docSN.substring(docSN.length() - 6);
+			}
 			
 			String hasAttach = "0";
 			
@@ -11686,11 +11691,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (docXML.getElementsByTagName("DOCNO").getLength() > 0) {
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
 			
-			docSN = docSN.substring(docSN.length() - 6);
-			//뭐하는짓
-			int pDocSN = Integer.parseInt(docSN);
-			
-			docSN = String.valueOf(pDocSN);
+			if (docSN != null && !docSN.equals("")) {
+				docSN = docSN.substring(docSN.length() - 6);
+				
+				int pDocSN = Integer.parseInt(docSN);
+				
+				docSN = String.valueOf(pDocSN);
+			} else {
+				docSN = "";
+			}
 			
 			String hasAttach = "0";
 			
