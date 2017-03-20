@@ -6767,10 +6767,6 @@
                         COMPANYID = #companyID#   ) TMP
              WHERE  
              	DOCID = #v_DOCID#
-             AND
-             	TENANT_ID = #v_TENANTID#
-             AND
-                COMPANYID = #companyID# 
 		</isEqual>
 		<isEqual property="v_FLAG" compareValue="7">
 		<![CDATA[
@@ -6815,8 +6811,8 @@
                            		TENANT_ID= #v_TENANTID#
                            	AND
                 				COMPANYID = #companyID# ) A
-                   WHERE  A.ATTACHFILEHREF <> ' '
-                   ]]>
+        	WHERE  A.ATTACHFILEHREF <> ' '
+        ]]>
 		
 		</isEqual>
 	</select>
