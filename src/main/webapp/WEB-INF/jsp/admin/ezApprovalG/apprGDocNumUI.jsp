@@ -5,18 +5,21 @@
 	<head>
 	    <title><spring:message code='ezApproval.t75'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
+	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApproval.e1'/>"></script>
+	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    <script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>
-	    <script type="text/javascript" src="/js/ezApproval/control_Cross/TreeView.js" ></script>
-	    <script type="text/javascript" src="/js/ezApproval/control_Cross/ListView_list.js" ></script>
-	    <script type="text/javascript" src="/js/ezApproval/docnumui_Cross.js"></script>
-	    <script type="text/javascript" id="clientEventHandlersJS">
+		<script type="text/javascript" src="/js/ezApprovalG/TaskCodeManage_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrl_Cross.js"></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js" ></script>
+	    <script type="text/javascript" src="/js/ezApprovalG/ListView_list.js" ></script>
+	    
+	    <script type="text/javascript">
 	        var Rtnval = new Array();
 	        var companyID = "";
+	        var OrderCell = "";
+	        var listview = new ListView();
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 	            window.onblur = function () {
 	                window.focus();
@@ -25,16 +28,18 @@
 	
 	        var ReturnFunction;
 	        window.onload = function () {
+	            companyID = opener.companyID;
+	            
 	            var xmlDom = createXmlDom();
 	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
-	            companyID = opener.companyID;
-	            var treeView = new TreeView();
+		    	var treeView = new TreeView();
 	            treeView.SetID("FormTreeView");
 	            treeView.SetConfig(xmlDom);
+	            
 	            getGroupTree(1, 1, 0, true);
-	            getGroupItem(0);            
-	            if (CrossYN())
-	            {
+	            InitListView();
+	            getGroupItem("");
+	            if (CrossYN()) {
 	                try {
 	                    ReturnFunction = parent.itemcode_dialogArgument[1];
 	                } catch (e) {
@@ -42,38 +47,67 @@
 	                        ReturnFunction = opener.itemcode_dialogArgument[1];
 	                    } catch (e) {
 	                    }
-	                }                
-	            }
-	            else {
+	                }
+	            } else {
 	                Rtnval[0] = "cancel"
 	                window.returnValue = Rtnval;
 	            }
 	        }
+	        
+	        function Tree_setconfig() {
+		    	var xmlDom = createXmlDom();
+	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
+		    	var treeView = new TreeView();
+	            treeView.SetConfig(xmlDom);
+			}
 	
-	        function TreeViewRequestData(pNodeID, pTreeID) {
-	            var treeNode = new TreeNode();
-	            treeNode.LoadFromID(pNodeID);
-	            node_select(pNodeID, "", pTreeID, TreeViewNodeClick);
-	            var pGroupID = treeNode.GetNodeData("DATA1");
-	            var pLevel = treeNode.GetNodeData("DATA3");
+		    function InitListView() {
+		        var xmlTree = createXmlDom();
+		        xmlTree = loadXMLString(ITEM.innerHTML.toUpperCase());
+		        
+		        listview.SetID("lvtDocForm");
+		        listview.SetMulSelectable(false);
+		        listview.SetTableWidth = 420 - 14;
+		        listview.DataSource(xmlTree);
+		        listview.DataBind("lvtForm");
+		    }
 	
-	            getGroupTree(pNodeID, parseInt(pLevel) + 1, pGroupID, false);
-	            getGroupItem(pGroupID);
-	        }
+		    function TreeView_onRequestData(pNodeID, pTreeID) {
+		        var treeview = new TreeView();
+		        treeview.LoadFromID("FromTreeView");
+		        node_select(pNodeID, "", pTreeID, TreeView_onNodeSelect);
+		        nodeIdx = treeview.GetSelectNode();
+		       
+		        var pLevel = nodeIdx.GetNodeData("DATA1");
+		        var pGroupID = nodeIdx.GetNodeData("DATA2");
+		        
+		        getGroupTree(nodeIdx, parseInt(pLevel) + 1, pGroupID, false);
+		    }
+		    
+		    function RequestData(pNodeID, pTreeID) {
+		        var TreeIdx = pNodeID;
+		        var treeNode = new TreeNode();
+		        treeNode.LoadFromID(TreeIdx);
+		        var deptID = treeNode.GetNodeData("CN");
+
+		        GetDeptSubTreeInfo(deptID, TreeIdx);
+		    }
 	
-	        function TreeViewNodeClick(pNodeID, pNodeNM) {
-	            var treeNode = new TreeNode();
-	            treeNode.LoadFromID(pNodeID);
+		    function TreeView_onNodeSelect() {
+		        var treeview = new TreeView();
+		        treeview.LoadFromID("FromTreeView");
+		        var nodedata = treeview.GetSelectNode();
+		        var pLevel = nodedata.GetNodeData("DATA1");
+		        var pGroupID = nodedata.GetNodeData("DATA2");
+		        
+		        getGroupItem(pGroupID);
+		    }
 	
-	            var pGroupID = treeNode.GetNodeData("DATA1");
-	            getGroupItem(pGroupID);
-	        }
-	
-	        function lvtForm_onclick() {
-	        }
-	
-	        function lvtForm_onSel_Changed() {
-	        }
+		    function lvtForm_onclick() {
+		    }
+		    
+		    function lvtForm_onSel_Changed() {
+		    }
 	
 	        function lvtForm_onSel_DBclick() {
 	            btn_OK();
@@ -81,19 +115,20 @@
 	
 	        function btn_OK() {
 	            var listview = new ListView();
-	            listview.LoadFromID("FormList");
+	            listview.LoadFromID("lvtDocForm");
 	            var oArrRows = listview.GetSelectedRows();
-	
+	            
+	            
 	            if (oArrRows.length > 0) {
 	                var selRow = oArrRows[0];
 	                Rtnval[0] = getNodeText(selRow.cells[0]);
 	                Rtnval[1] = getNodeText(selRow.cells[1]);
 	                Rtnval[2] = GetAttribute(selRow, "DATA2");
-	                Rtnval[3] = GetAttribute(selRow, "DATA3");
-	                Rtnval[4] = GetAttribute(selRow, "DATA4");
-	                Rtnval[5] = GetAttribute(selRow, "DATA1");
-	                Rtnval[6] = GetAttribute(selRow, "DATA5");
-	
+	                Rtnval[3] = GetAttribute(selRow, "DATA13");
+	                Rtnval[4] = GetAttribute(selRow, "DATA14");
+// 	                Rtnval[5] = GetAttribute(selRow, "DATA1");
+	                Rtnval[6] = GetAttribute(selRow, "DATA1");
+	                
 	                if (CrossYN())
 	                {
 	                    ReturnFunction(Rtnval);

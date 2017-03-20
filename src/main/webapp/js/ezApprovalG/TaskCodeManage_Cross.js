@@ -1,67 +1,66 @@
-//function getGroupTree(pNodeIdx, pLevel, pGroupID, pFirst) {
-//    try {
-//        if (pLevel > 3) {
-//            treeView.LoadFromID("FromTreeView");
+function getGroupTree(pNodeIdx, pLevel, pGroupID, pFirst) {
+    try {
+        if (pLevel > 3) {
+            var treeView = new TreeView();
+            treeView.LoadFromID("FromTreeView");
+            
+            treeView.AppendChildNodes("<NODES></NODES>", treeView.GetSelectNode().NodeID);
+            
+            return;
+        }
+        var xmlTree = createXmlDom();
 
-//            treeView.AppendChildNodes("<NODES></NODES>", TreeIdx);
+		$.ajax({
+			type : "POST",
+        	url : "/admin/ezApprovalG/getTaskCategoryTree.do",
+        	async : false,
+        	data : {categoryType : pLevel,
+        			parentID : pGroupID,
+        			companyID : companyID},
+        	success : function(result){
+        		xmlTree = loadXMLString(result);
+        		
+        		if (pFirst) {
+	                var xmlDom2 = createXmlDom();
+	                
+	                xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML);
+	                
+	                if (SelectNodes(xmlTree, "NODES/NODE/VALUE").length > 0) {
+	                    if (CrossYN()) {
+	                        var xmlRtn = xmlTree.documentElement;
+	                        var Node = xmlTree.importNode(xmlRtn, true);
 
-//            return;
-//        }
+	                        xmlDom2.documentElement.childNodes[1].appendChild(Node);
+	                    } else {
+	                        var xmlRtn = xmlTree.documentElement;
+	                        xmlDom2.childNodes[0].childNodes[0].appendChild(xmlRtn);
+	                    }
+	                }
+	                
+	                document.getElementById('TreeView').innerHTML = "";
+	                var treeView = new TreeView();
+	                treeView.SetID("FromTreeView");
+	                treeView.SetUseAgency(true);
+	                treeView.SetRequestData("TreeView_onRequestData");
+	                treeView.SetNodeClick("TreeView_onNodeSelect");
+	                treeView.DataSource(xmlDom2);
+	                treeView.DataBind("TreeView");
+	            } else {
+	                if (xmlTree.xml == "") {
+	                	return;
+	                }
 
-//        var objRoot;
-//        var objNode;
-
-//        var xmlpara = createXmlDom();
-//        var xmlhttp = createXMLHttpRequest();
-//        var xmlTree = createXmlDom();
-
-//        var xmlBrdInfo;
-
-//        createNodeInsert(xmlpara, objNode, "ROW");
-//        createNodeAndInsertText(xmlpara, objNode, "categoryType", pLevel);
-//        createNodeAndInsertText(xmlpara, objNode, "ParentID", pGroupID);
-//        createNodeAndInsertText(xmlpara, objNode, "companyID", companyID);
-//        xmlhttp.open("POST", "aspx/API_GetTaskCategoryTree.aspx", false);
-//        xmlhttp.send(xmlpara);
-
-//        xmlTree = loadXMLString(xmlhttp.responseText);
-
-//        if (pFirst) {
-//            var xmlDom2 = createXmlDom();
-
-//            xmlDom2 = loadXMLString(document.getElementById("GROUP").innerHTML);
-
-//            if (SelectNodes(xmlhttp.responseXML, "NODES/NODE/VALUE").length > 0) {
-//                if (CrossYN()) {
-//                    var xmlRtn = xmlhttp.responseXML.documentElement;
-//                    var Node = xmlTree.importNode(xmlRtn, true);
-
-//                    xmlDom2.documentElement.childNodes[1].appendChild(Node);
-//                }
-//                else {
-//                    var xmlRtn = xmlhttp.responseXML.documentElement;
-//                    xmlDom2.childNodes[0].childNodes[0].appendChild(xmlRtn);
-//                }
-//            }
-//            document.getElementById('TreeView').innerHTML = "";
-//            var treeView = new TreeView();
-//            treeView.SetID("FromTreeView");
-//            treeView.SetUseAgency(true);
-//            treeView.SetRequestData("TreeView_onRequestData");
-//            treeView.SetNodeClick("TreeView_onNodeSelect");
-//            treeView.DataSource(xmlDom2);
-//            treeView.DataBind("TreeView");
-//        }
-//        else {
-//            if (xmlhttp.responseXML.xml == "") return;
-
-//            TreeView.putchildxml(pNodeIdx, xmlhttp.responseXML);
-//        }
-//    }
-//    catch (e) {
-//        alert(e.description);
-//    }
-//}
+	                var treeView = new TreeView();
+	                treeView.LoadFromID("FromTreeView");
+	                
+	                treeView.AppendChildNodes(xmlTree.documentElement, treeView.GetSelectNode().NodeID);
+	            }
+        	}
+		});
+    } catch (e) {
+        alert(e.description);
+    }
+}
 
 function getGroupItem(pGroupID) {
 	$.ajax({
