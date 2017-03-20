@@ -1342,6 +1342,13 @@
 		        SetAttribute(CurSelRow[0], "DATA10", AddressName);
 		        SetAttribute(CurSelRow[0], "DATA11", AddressName);
 		    }
+		    
+	        function movedraftinfo() {
+	            if (CrossYN())
+	                document.getElementById("1tab1").onclick();
+	            else
+	                document.getElementById("1tab1").click();
+	        }
 	    </script>
 	</head>
 	<body id="bodytag" class="popup" style="background-color: #ffffff; overflow: hidden">

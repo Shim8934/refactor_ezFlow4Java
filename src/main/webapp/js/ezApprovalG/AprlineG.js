@@ -1832,7 +1832,6 @@ function GetSelCabInfoXml(totalRows) {
 }
 ////////////////////////////////////////////////////////////////////////////////////////기록물철 저장 XML2
 function GetSelCabInfoXml2() {
-	
 	//참고용 이거 기준으로 하면됨
 //	<tr id="DivTaskSCateList_TR_0" selected="true" class="" data1="test1ZZ4569062017000003001" data2="ZZ456906" data3="test1ZZ4569062017000003" data4="test001" data5="방산철" data6="방산철_ENG" data7="ZZ456906" data8="10" data9="0" data10="2" data11="0" data12="" data13="" data14="" data15="1" data16="1" data17="방산단위업무" data18="방산단위업무_ENG" style="cursor: pointer; background-color: rgb(219, 225, 231);">
 //	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">방산철</td>
@@ -1864,6 +1863,7 @@ function GetSelCabInfoXml2() {
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "방산단위업무(ZZ456906)");
 		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ456906");
 	}
+	
 	return getXmlString(rtnXml);
 }
 
