@@ -362,7 +362,8 @@
 		                url = "/admin/ezApprovalG/formMain.do?tCheck=fUpdate&contID=" + encodeURI(nodeIdx.GetNodeData("DATA1")) + "&formID=" + encodeURI(GetAttribute(selRow[0], "DATA1")) + "&companyID=" + encodeURI(companyID);
 		            }
 		            
-		            window.showModalDialog(url, para, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
+		            GetOpenWindow(url, "FormMain", 1050, 950, "no");
+		           // window.showModalDialog(url, window, "dialogWidth:1050px;dialogHeight:1000px;status:no;help:no;scroll:no;edge:sunken");
 
 		            Tree_setconfig();
 // 		            InitFormCont();
