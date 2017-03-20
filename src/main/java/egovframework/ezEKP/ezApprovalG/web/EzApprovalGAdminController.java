@@ -565,7 +565,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/formSave.do", produces="text/xml;charset=utf-8")
 	@ResponseBody
 	public String formSave (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("formSave started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
 		String companyID = request.getParameter("companyID");
 		String contID = request.getParameter("formContID");
@@ -576,9 +579,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formWorkFlow = request.getParameter("formWorkFlow");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo);
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
 		
-		logger.debug("result = " + result);
+		logger.debug("formSave started. result = " + result);
 		
 		if (result.indexOf("ERROR") > 0) {
 			return "<DATA>" + result + "</DATA>";

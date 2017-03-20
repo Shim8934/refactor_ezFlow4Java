@@ -190,6 +190,48 @@
 	            } catch (e) {
 	            }
 	        }
+	        
+	        function FormInfoCheck(type) {
+	            try {
+	                switch (type) {
+	                    case "null":
+	                        if (CKEDITOR.instances.editor1 == null)
+	                            return true;
+	                        else
+	                            return false;
+	                        break;
+	                    case "body":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitle":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "doctitle")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
+	                    case "doctitlefield":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "body")
+	                                return GetAttribute(HtmlTag[i], "doctitlefield");
+	                        }
+	                        break;
+	                    default:
+	                }
+
+	            } catch (e) {
+	            }
+	        }
 		</script>
 	</head>
 	<body style="margin: 0px; padding: 0px;">
