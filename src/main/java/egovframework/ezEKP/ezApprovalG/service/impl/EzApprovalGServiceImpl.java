@@ -2301,7 +2301,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_TENANTID", tenantID);
 					} else {
 						map.put("v_DOCID", strDocID);
-						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(3).getTextContent());
+						map.put("v_ReceiptPointID", rowNode.item(k).getChildNodes().item(4).getTextContent());
 						map.put("v_ReceiptPointName", makeRightField(rowNode.item(k).getChildNodes().item(12).getTextContent()));
 						map.put("v_ReceiptPointName2", makeRightField(rowNode.item(k).getChildNodes().item(13).getTextContent()));
 						map.put("v_ExtReceptYN", makeRightField(rowNode.item(k).getChildNodes().item(5).getTextContent()));
@@ -19360,6 +19360,47 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ID", id);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+		
+		List<ApprGAprLineVO> attachLineInfoList = ezApprovalGDAO.docAttachLineInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < attachLineInfoList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(attachLineInfoList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getContainerInfoManage(String deptID, String mode, String companyID, int tenantID) throws Exception {
+		StringBuffer resultXML = new StringBuffer();
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DEPTID", deptID);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		
+		List<ApprGLeftVO> containerManage = ezApprovalGDAO.getContainerInfo(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < containerManage.size(); i++) {
+			sb.append(commonUtil.getQueryResult(containerManage.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		if(mode.equals("LIST")) {
+			resultXML.append("<LISTVIEWDATA>");
+			resultXML.append("<HEADERS>");
+			resultXML.append("<ROWS>");
+		}
+		
 		return null;
 	}
 	

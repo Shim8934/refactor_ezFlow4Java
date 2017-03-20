@@ -20300,4 +20300,23 @@
         VALUES 
         ( #v_DOCID#, #v_CONTID#, #v_SYSDATE#, #v_DESCRIPTION#, #companyID#, #v_TENANTID# )
    	</insert>
+   	
+   	<select id="EzApprovalG.docAttachLineInfo" parameterClass="Map" resultClass="ApprGAprLineVO">
+   		SELECT 
+   			AprMemberDeptID, 
+   			AprMemberJobTitle, 
+   			AprMemberJobTitle2, 
+   			AprMemberDeptName, 
+   			AprMemberDeptName2 
+         FROM 
+         	TBL_APRLINEINFO 
+         WHERE 
+         	DOCID = #docID# 
+         AND 
+         	APRMEMBERID = #v_ID#
+         AND
+         	COMPANYID = #companyID#
+         AND
+          	TENANT_ID = #v_TENANTID#
+   	</select>
 </sqlMap>

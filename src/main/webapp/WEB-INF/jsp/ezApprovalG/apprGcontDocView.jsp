@@ -53,10 +53,18 @@
 		    var SignCheckFlag = "${signCheck}";
 		    var pUse_Editor = "${editor}";
 		    var NonActiveX = "YES";
+		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 			        QuitWindow();
 			    }
+		      	if(approvalFlag == "G") {
+	        		$(".approvalG").css("display","");
+	        		$(".approval").css("display","none");
+	        	} else{
+	        		$(".approvalG").css("display","none");
+	        		$(".approval").css("display","");
+	        	}
 		    });
 	
 		    var aprendopinion_dialogArgument = new Array();
@@ -468,7 +476,7 @@
 		          <li id="btnMail"><span id="span_btnMail" onClick="return btnMail_onclick()"><spring:message code='ezApprovalG.t1513'/></span></li>
 		          <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
 		          <li id="btnPrint"><span id="span_btnPrint" onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
-		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnDocInfo" class ="approvalG"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        </ul>

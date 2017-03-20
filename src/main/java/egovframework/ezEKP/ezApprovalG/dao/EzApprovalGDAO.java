@@ -2404,10 +2404,20 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public List<ApprUserContInfoVO> getUserContTree(Map<String, Object> map) throws Exception{
 		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
 	}
-
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> docAttachLineInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.docAttachLineInfo", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
 		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
+	}
+			
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getContainerInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGLeftVO>) list("EzApprovalG.getContainerInfo", map);
 	}
 
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
