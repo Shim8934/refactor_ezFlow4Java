@@ -1346,7 +1346,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-		
+System.out.println("qstCnt="+qstCnt);
 		for(int i=0; i<qstCnt; i++) {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			
@@ -1376,8 +1376,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 			
 			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
 			
+System.out.println("여기1");
 			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
-			
+System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());			
 			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
 				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
 					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
@@ -1408,6 +1409,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 			}
 			
 			NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+			//NodeList nodes = (NodeList)xpath.evaluate("//QUESTION/ROW/ANSWER", doc, XPathConstants.NODESET);
+				
 			if(nodes.getLength() > 0) {
 				int ansCnt = nodes.getLength();
 				for(int iAns=0; iAns < ansCnt; iAns++ ) {
@@ -1419,13 +1422,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
 					NodeList nodes2 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER/ATTACH", doc, XPathConstants.NODESET);
-					
-					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && nodes2.getLength() > 0) {
-						nList = doc.getElementsByTagName("ANSWER");	
+					logger.debug("nodes2Length="+nodes2.getLength());
+					if(nodes2.getLength() > 0) {
+						nList = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER", doc, XPathConstants.NODESET);
+						//nList = doc.getElementsByTagName("ANSWER");	
 						
 						if(nList.item(iAns).getChildNodes().item(1) != null){
 							if(nList.item(iAns).getChildNodes().item(1).getNodeName().equals("ATTACH")) {
 								int ansAttachCnt = nList.item(iAns).getChildNodes().item(1).getChildNodes().getLength();
+								
+								logger.debug("ansAttachCnt="+ansAttachCnt);
 								for(int aa=0; aa<ansAttachCnt; aa++) {
 									String ansAttachType = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(0).getTextContent();
 									String ansAttachUrl = nList.item(iAns).getChildNodes().item(1).getChildNodes().item(aa).getChildNodes().item(2).getTextContent();
@@ -3623,6 +3629,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 
 		ezQuestionService.questionDelete2(5, itemNo, loginVO.getTenantId());
+		ezQuestionService.questionDelete2_D(5, itemNo, loginVO.getTenantId());
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
 		arrQuestion = strQuestion.trim().split("\\;\\;");
@@ -3692,13 +3699,16 @@ public class EzQuestionController extends EgovFileMngUtil {
 							Node nodeData2 = resultXML.createElement("ROW");
 							nodeData.appendChild(nodeData2);
 							Node nodeData3 = resultXML.createElement("TYPE");
-							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent()));
+							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent())));
+							nodeData2.appendChild(nodeData3);
 							
 							nodeData3 = resultXML.createElement("TITLE");
-							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent()));
+							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent())));
+							nodeData2.appendChild(nodeData3);
 							
 							nodeData3 = resultXML.createElement("HREF");
-							nodeData2.appendChild(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent()));
+							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent())));
+							nodeData2.appendChild(nodeData3);
 						}
 					}
 					

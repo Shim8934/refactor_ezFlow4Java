@@ -53,7 +53,7 @@
 			            offset += search.length
 			            // set index of beginning of value
 			            end = document.cookie.indexOf(";", offset);     
-			            document.getElementById("TextUserID").className = "input_text focus";
+			            document.getElementById("uid").className = "input_text focus";
 			            // 쿠키 값의 마지막 위치 인덱스 번호 설정
 			            if (end == -1)
 			                end = document.cookie.length

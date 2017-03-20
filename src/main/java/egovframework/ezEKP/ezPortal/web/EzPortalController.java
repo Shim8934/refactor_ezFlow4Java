@@ -1054,6 +1054,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		String pollNum = "";
 		String userPhoto = "";
 		String userOffset = userInfo.getOffset().split("\\|")[1];
+		String userApprovalG = config.getProperty("config.UserInfo_ApprovalG"); 
 		logger.debug("userOffset="+userOffset);
 		
 		if ((req.getHeader("User-Agent").indexOf("rv:11") > 0 || req.getHeader("User-Agent").indexOf("Trident/7.0") > 0) && ezCommonService.getTenantConfig("IE11EDITOR", userInfo.getTenantId()).equals("CK")) {
@@ -1110,6 +1111,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("refreshSecond", refreshSecond);
 		model.addAttribute("host", userInfo.getServerName());
+		model.addAttribute("userApprovalG", userApprovalG);
 		
 		logger.debug("wpTotalSection ended");
 		return "/ezPortal/portalWpTotalSection";
