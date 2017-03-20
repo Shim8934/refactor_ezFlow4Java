@@ -1804,7 +1804,7 @@
 	                                                <spring:message code='ezApproval.t79'/>
 	                                            </option>
 	                                            <option id="GROUPNAME">
-	                                                <spring:message code='ezApproval.t77'/>
+	                                                <spring:message code='ezApprovalG.t114'/>
 	                                            </option>
 	                                        </select>
 	                                        <input type="text" id="txtCodeSearch" onkeypress="CodeSearch_Press(event)" />
