@@ -89,7 +89,7 @@
      					previewHContent : PreviewHContent	
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
-	     				alert('<spring:message code="ezBoard.t0014" />');
+	     				alert('<spring:message code="ezEmail.t42" />');
      				},
      				error : function(jqXHR, textStatus, errorThrown) {
                 	    alert('Error : ' + jqXHR.status + ", " + textStatus);
