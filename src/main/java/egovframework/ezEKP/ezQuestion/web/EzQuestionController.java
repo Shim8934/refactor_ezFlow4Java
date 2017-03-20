@@ -1418,7 +1418,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstCompleteVO.setAnswerContent(nodes.item(iAns).getChildNodes().item(0).getTextContent().replace("'", "\'"));
 					ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 					
-					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && doc.getElementsByTagName("ATTACH").getLength() != 0) {
+					NodeList nodes2 = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ANSWER/ATTACH", doc, XPathConstants.NODESET);
+					
+					if(doc.getElementsByTagName("ANSWER").getLength() != 0 && nodes2.getLength() > 0) {
 						nList = doc.getElementsByTagName("ANSWER");	
 						
 						if(nList.item(iAns).getChildNodes().item(1) != null){

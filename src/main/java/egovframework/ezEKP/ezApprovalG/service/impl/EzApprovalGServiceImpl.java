@@ -2588,7 +2588,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
             rtnXML.append("<ROW><NAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + langData).item(0).getTextContent()));
             rtnXML.append("</NAME><DEPTID><![CDATA[" + docXML.getElementsByTagName("DEPTID").item(k).getTextContent().trim());
-            rtnXML.append("]]></DEPTID><DEPTNAME><![CDATA[" + docID + "]]></DEPTNAME><EXTRECEPTYN>" + extYN);
+            rtnXML.append("]]></DEPTID><DEPTNAME><![CDATA[" + docXML.getElementsByTagName("RECEIPTPOINTNAME").item(k).getTextContent() + "]]></DEPTNAME><EXTRECEPTYN>" + extYN);
 			rtnXML.append("</EXTRECEPTYN><PROCESSYN>N</PROCESSYN><CANEDITYN>N</CANEDITYN><EMAIL>");
             rtnXML.append(deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "</EMAIL>");
             rtnXML.append("<DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + langData).item(0).getTextContent()) + "</DISPLAYNAME>");
@@ -2629,15 +2629,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             			rtnVal = "<ROWS/>";
                 	}
                     
-                    rtnXML.append("<ROW><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("RECEIPTPOINTNAME" + langData).item(p).getTextContent()));
-                    rtnXML.append("</NAME><DEPTID>" + docXML.getElementsByTagName("RECEIPTPOINTID").item(p).getTextContent().trim());
-                    rtnXML.append("</DEPTID><DEPTNAME>" + docID + "</DEPTNAME><EXTRECEPTYN>" + docXML.getElementsByTagName("EXTRECEPTYN").item(p).getTextContent().trim());
+                    rtnXML.append("<ROW><NAME><![CDATA[" + commonUtil.cleanValue(docXML.getElementsByTagName("RECEIPTPOINTNAME" + langData).item(p).getTextContent()));
+                    rtnXML.append("]]></NAME><DEPTID><![CDATA[" + docXML.getElementsByTagName("RECEIPTPOINTID").item(p).getTextContent().trim());
+                    rtnXML.append("]]></DEPTID><DEPTNAME><![CDATA[" + docXML.getElementsByTagName("RECEIPTPOINTNAME").item(p).getTextContent() + "]]></DEPTNAME><EXTRECEPTYN>" + docXML.getElementsByTagName("EXTRECEPTYN").item(p).getTextContent().trim());
 					rtnXML.append("</EXTRECEPTYN><PROCESSYN>N</PROCESSYN><CANEDITYN>N</CANEDITYN><EMAIL>");
 					rtnXML.append(docXML.getElementsByTagName("EXTRECEPTEMAIL").item(p).getTextContent().trim() + "</EMAIL>");
 //                    rtnXML.append("<DISPLAYNAME>" + commonUtil.cleanValue(deptXML.getElementsByTagName("DISPLAYNAME" + commonUtil.getMultiData(lang)).item(0).getTextContent()) + "</DISPLAYNAME><JOBTITLE>");
-                    rtnXML.append("<DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE>");
-                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "</JOBTITLE><JOBTITLE2>");
-                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "</JOBTITLE2></ROW>");
+                    rtnXML.append("<DISPLAYNAME>" + "" + "</DISPLAYNAME><JOBTITLE><![CDATA[");
+                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE").item(p).getTextContent().trim() + "]]></JOBTITLE><JOBTITLE2><![CDATA[");
+                    rtnXML.append(docXML.getElementsByTagName("RECEIPTMEMBERJOBTITLE2").item(p).getTextContent().trim() + "]]></JOBTITLE2></ROW>");
         		}
         	}
         }
@@ -3808,7 +3808,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<CELL>");
 			
 			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "]]<</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "]]></VALUE>");
 			} else {
 				resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME2").item(k).getTextContent()) + "]]></VALUE>");
 			}
