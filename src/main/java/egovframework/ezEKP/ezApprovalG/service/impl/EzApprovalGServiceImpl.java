@@ -444,7 +444,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("</CELL>");
 			
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + k.getIsPublic().equals("Y") + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + k.getIsPublic() + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			
 			resultXML.append("</ROW>");
@@ -629,7 +629,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_USERID", userID);
 		boolean rtnVal = true;
-		
+
 		mode = mode.trim().toUpperCase();
 		
 		if (mode.length() != 3) {
@@ -649,7 +649,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				publicityCode = "1";
 			} else {
 				publicityCode = publicityCode.substring(0, 1);
-			}
+			}		//내일하자
 			publicityFlag = getCode2Name("A50", publicityCode, companyID, lang, tenantID);
 			
 
