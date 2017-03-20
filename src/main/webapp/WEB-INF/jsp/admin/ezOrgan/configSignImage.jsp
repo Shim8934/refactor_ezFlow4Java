@@ -260,14 +260,14 @@
 		    }
 		    
 			function uploadComplete() {		        
-		        if(xhr.responseText == "UPLOAD_ERROR"){
+		        if(xhr.responseText.split("/")[0] == "UPLOAD_ERROR"){
 		        	alert("<spring:message code='ezBoard.hyj02' />");
 		        	
 		        	document.getElementById("file1").value = "";
 		        	document.getElementById("tempFilePath").value = "";
 		        }else{
-		        	document.getElementById("tempFilePath").value = xhr.responseText;		        			        	
-		        	var fileName = encodeURI(xhr.responseText);
+		        	document.getElementById("tempFilePath").value = xhr.responseText.split("/")[0];		        			        	
+		        	var fileName = encodeURI(xhr.responseText.split("/")[0]);
 		            
 		        	var imagelist = "";
 		            for (var i = 0; i < signlist.length; i++)
