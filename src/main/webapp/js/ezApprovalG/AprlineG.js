@@ -1843,23 +1843,27 @@ function GetSelCabInfoXml2() {
 //	<td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" align="left">001</td>
 //	</tr>
 	//kt에 넣을것
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "devteamZZ3782312017000002001");
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "devteamZZ3782312017000002");
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "경비(a8989891)");
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "경비신청(ZZ378231)");
-//	createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
 	var i;
 	var rtnXml = createXmlDom();
 	var Root, objItem, objData;
 	Root = createNodeInsert(rtnXml, Root, "CABINETINFO");
 	objItem = createNodeAndAppandNode(rtnXml, Root, objItem, "CABINET");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "test1ZZ4569062017000003001");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "방산철");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "test1ZZ4569062017000003");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "테스트용(12345112)");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "방산단위업무(ZZ456906)");
-	createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ456906");
+	
+	if (hideCabinet == "1") {
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "devteamZZ3782312017000002001");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "임시기록물");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "devteamZZ3782312017000002");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "경비(a8989891)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "경비신청(ZZ378231)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ378231");
+	} else {
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETID", "test1ZZ4569062017000003001");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETNAME", "방산철");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "RECTYPE", "test1ZZ4569062017000003");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", "테스트용(12345112)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", "방산단위업무(ZZ456906)");
+		createNodeAndAppandNodeText(rtnXml, objItem, objData, "ZZ456906");
+	}
 	return getXmlString(rtnXml);
 }
 
