@@ -27,7 +27,7 @@ function Draftinfo_ini() {
         	}
     	});
     	
-        try {
+//        try {
             var xmlDoc = loadXMLString(result);
 
             if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
@@ -64,17 +64,17 @@ function Draftinfo_ini() {
 
                 getdocinfolist(i);
             }
-        }
-        catch (ErrMsg) {
-            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-        }
+//        }
+//        catch (ErrMsg) {
+//            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//        }
         getMyGroupItem();
     }
 }
 function event_Draftinfo_ini() {
 alert(1000);
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
-    try {
+//    try {
         var xmlDoc = loadXMLString(xmlhttp.responseText);
 
         if (xmlDoc == null) {
@@ -115,10 +115,10 @@ alert(1000);
             getdocinfolist(i);
         }
         xmlhttp = null;
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 
 function lvtinfolist_onclick() {
@@ -127,8 +127,9 @@ function lvtinfolist_onclick() {
     var FormList = new ListView();
     FormList.LoadFromID("lvinfolist");
     var pSelectedRow = FormList.GetSelectedRows();
-    var pTaskCode, pTaskName, pTaskName2, pTaskP, pTaskS, pTaskY;
+    var pTaskCode, pTaskName, pTaskName2, pTaskP, pTaskS, pTaskY, pCabinetID;
     pTaskCode = GetAttribute(pSelectedRow[0], "DATA1");
+    pCabinetID = GetAttribute(pSelectedRow[0], "DATA6");
     pTaskName = GetAttribute(pSelectedRow[0], "DATA11");
     pTaskName2 = GetAttribute(pSelectedRow[0], "DATA12");
     pTaskP = GetAttribute(pSelectedRow[0], "DATA2");
@@ -136,6 +137,7 @@ function lvtinfolist_onclick() {
     pTaskY = pSelectedRow[0].cells[4].innerText;
     var Cnt = 0;
     setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+    document.getElementById("cabinetID").value = pCabinetID;
     document.getElementById("tbItemCode").value = pTaskCode;
     document.getElementById("tbItemName").value = pTaskName
     document.getElementById("tbItemName2").value = pTaskName2;
@@ -208,7 +210,6 @@ function MakeDocInfo() {
     createNodeAndInsertText(xmlpara, objNode, "pUrgentFlag", pUrgentFlag);
     createNodeAndInsertText(xmlpara, objNode, "pPublicFlag", pPublicFlag);
     createNodeAndInsertText(xmlpara, objNode, "psecuritylevelvaltemp", psecuritylevelvaltemp);
-//    createNodeAndInsertText(xmlpara, objNode, "pkeyword", pkeyword);
     createNodeAndInsertText(xmlpara, objNode, "tbItemCode", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "tbItemName", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "tbItemName2", document.getElementById("tbItemName2").value);
@@ -287,7 +288,7 @@ function CodeSearch_onclick() {
     xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getCodeSearch.aspx", false);
     xmlhttp.send(xmlpara);
 
-    try {
+//    try {
         var xmlDoc = loadXMLString(xmlhttp.responseText);
 
         if (xmlDoc == null) {
@@ -327,10 +328,10 @@ function CodeSearch_onclick() {
             
         }
         xmlhttp = null;
-    }
-    catch (ErrMsg) {
-        alert(" CodeSearch_onclick : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" CodeSearch_onclick : " + ErrMsg.description + ErrMsg);
+//    }
 
 }
 function CodeSearch_Press(e) {
@@ -346,7 +347,7 @@ function CodeSearch_Press(e) {
 }
 
 function TreeViewinitializeCodeGroup(code, level) {
-    try {
+//    try {
         Tree_setconfig();
 
         var xmlTree = createXmlDom();
@@ -384,10 +385,10 @@ function TreeViewinitializeCodeGroup(code, level) {
         treeView.SetRequestData("TreeViewCodeRequestData");
         treeView.DataSource(xmlTree);
         treeView.DataBind("infotree");
-    }
-    catch (ErrMsg) {
-        alert(" TreeViewinitialize : " + ErrMsg.description);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" TreeViewinitialize : " + ErrMsg.description);
+//    }
 }
 
 function TreeViewCodeRequestData(pNodeID, pTreeID) {
@@ -457,7 +458,7 @@ function TreeViewCodeNodeClick()
     	}
 	});
 	
-    try {
+//    try {
         var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
@@ -493,10 +494,10 @@ function TreeViewCodeNodeClick()
             }
             getdocinfolist(i);
         }
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 
 function btnAddCode_onclick() {
@@ -512,8 +513,8 @@ function btnAddCode_onclick() {
     }
     
     var dup = false;
-    var curSelCode = GetAttribute(pAprRow[0],"DATA1");
-    var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
+    var curSelGroupCode = GetAttribute(pAprRow[0], "DATA6");
+    var curSelCode = GetAttribute(pAprRow[0], "DATA1");
     
     var frequencyList = new ListView();
     frequencyList.LoadFromID("lvinfofrequencylist");
@@ -544,7 +545,7 @@ function InsMyGroupItem(curSelCode, curSelGroupCode) {
 		async : false,
 		url : "/ezApprovalG/setMyTaskCode.do",
 		data : {
-			cabinetID : "cabinetID 넣어줘야함",
+			cabinetID : curSelGroupCode,
 			taskCode  : curSelCode,
 			type      : "INS"
 		},
@@ -589,7 +590,7 @@ function btnDelCode_onclick() {
 		async : false,
 		url : "/ezApprovalG/setMyTaskCode.do",
 		data : {
-			cabinetID : "cabinetID 넣어줘야함",
+			cabinetID : curSelGroupCode,
 			taskCode  : curSelCode,
 			type      : "DEL"
 		},
@@ -617,17 +618,12 @@ function getMyGroupItem()
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/getMyTaskCode.do",
-		data : {
-			deptID    : arr_userinfo[4],
-			userID    : arr_userinfo[1]
-		},
+		url : "/ezApprovalG/getFrequencyClassList.do",
 		success: function(xml){
 			result = xml;
 		}
 	});
-	
-    try {
+//    try {
         var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
@@ -642,10 +638,10 @@ function getMyGroupItem()
         FormList = null;
         Draftinfoini = true;
        
-    }
-    catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-    }
+//    }
+//    catch (ErrMsg) {
+//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+//    }
 }
 function lvinfofrequencylist_onclick() {
     allUnSelect();
@@ -653,14 +649,16 @@ function lvinfofrequencylist_onclick() {
     var FrequencyFormList = new ListView();
     FrequencyFormList.LoadFromID("lvinfofrequencylist");
     var pSelectedRow = FrequencyFormList.GetSelectedRows();
-    var pTaskCode, pTaskName, pTaskP, pTaskS, pTaskY;
+    var pTaskCode, pTaskName, pTaskP, pTaskS, pTaskY, pCabinetID;
     pTaskCode = GetAttribute(pSelectedRow[0],"DATA1");
+    pCabinetID = GetAttribute(pSelectedRow[0], "DATA7");
     pTaskName = GetAttribute(pSelectedRow[0],"DATA2");
     pTaskP = GetAttribute(pSelectedRow[0],"DATA3");
     pTaskS = GetAttribute(pSelectedRow[0],"DATA4");
     pTaskY = GetAttribute(pSelectedRow[0],"DATA5");
     var Cnt = 0;
     setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
+    document.getElementById("cabinetID").value = pCabinetID;
     document.getElementById("tbItemCode").value = pTaskCode;
     document.getElementById("tbItemName").value = pTaskName
     document.getElementById("tbItemName2").value = pTaskName;

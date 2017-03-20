@@ -36,7 +36,7 @@ article,aside,canvas,details,figcaption,figure, footer,header,hgroup,menu,nav,se
 header{height:42px; background:url(../images/kr/cm/header_bg.gif) repeat-x; clear:both; overflow:hidden;}
 nav {height:33px; background:url(../images/kr/cm/nav_bg.gif) repeat-x; clear:both;}
 aside {position:absolute; top:0px; right:0; width:88px; height:100%; z-index:9; overflow:visible;  min-height:100%; }
-.section1_bg { width:100%; height:265px;background:url(../images/kr/main/personalization_bg.gif) repeat-x bottom #dfdfdf; padding:0px; margin:0px;}
+.section1_bg { width:100%; height:265px;background:url(../images/kr/main/personalization_bg.gif) repeat-x bottom #f2f2f2; padding:0px; margin:0px;}
 .section1 {width:1140px; height:258px; margin:0 auto;    vertical-align:top; border:0px solid #F00; z-index:3;}
 .section2 {width:1140px;  margin:0px auto 0px; vertical-align:top; overflow:hidden;}
 .section3 {width:1140px; margin:30px auto 0px;vertical-align:top;overflow:hidden;}
@@ -51,17 +51,17 @@ header .logo {float:left;margin:0px; padding:0px; width:200px;height:42px;  disp
 
 .topsearch_btn {float:right;vertical-align:top; }
 
-#input_search { float:left; width:178px; background:#15335f url(../images/kr/cm/input_search_bg.gif) no-repeat 0 0 ; border:0px ;padding:5px 0px 0px 3px; margin:3px 0px 0px 3px;  color:#fff; font-size:12px;}
+#input_search { float:left; width:170px; background:#f2f2f2 url(../images/kr/cm/input_search_bg.gif) no-repeat 0 0 ; border:0px ;padding:5px 0px 0px 3px; margin:3px 0px 0px 15px;  color:#555555; font-size:12px;}
 .input_text.focus,
 /*.input_text.focusnot { background:#333437 !important; }*/
-.input_text.focusnot { background:#15335f !important; }
+.input_text.focusnot { background:#f2f2f2 !important; }
 
 /*-- utmenu --*/
 .utmenu {font-family:Gulim, Dotum, Arial, Helvetica, sans-serif ; float:right; margin:9px 0px 0px; padding:0px; height:26px;}
 .utmenu ul {margin:0px; padding:0px;list-style:none; line-height:26px;}
-.utmenu ul li { float:left; display:inline-block; background:url(../images/kr/cm/utmenu_bar.gif) no-repeat right 7px; padding:0px 5px; font-size:12px; cursor:pointer; color:#fff;}
-.utmenu ul .btn_logout {display:inline-block;padding:0px 4px 0px 0px;background:url(../images/kr/cm/bg_btn_logout.gif) no-repeat top right; line-height:27px;text-decoration:none !important;white-space:nowrap;margin:0px 5px 0px 5px;}
-.utmenu ul .btn_logout span {display:block;padding:0px 4px 0 8px;background:url(../images/kr/cm/bg_btn_logout.gif) no-repeat top left;height:27px;}
+.utmenu ul li { float:left; display:inline-block; background:url(../images/kr/cm/utmenu_bar.gif) no-repeat right 7px; padding:0px 5px; font-size:12px; cursor:pointer; color:#555555;}
+.utmenu ul .btn_logout {display:inline-block;padding:0px 0px 0px 0px; background:none; line-height:27px;text-decoration:none !important;white-space:nowrap;margin:0px 15px 0px 5px; font-weight:bold;}
+.utmenu ul .btn_logout span {display:block;padding:0px 0px 0 0px;height:27px;}
 
 
 /*------------ nav ------------*/
@@ -71,11 +71,11 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 
 /*------------ topSubMenu 추가 ------------*/
-.topSubMenu {position:relative; clear:both; height:25px;}
-.topSubMenu ul{position:absolute; margin:0; padding:0; list-style:none; height:22px; background:url(../images/kr/cm/subMenubg_middle.gif) repeat-x;}
+.topSubMenu {position:relative; clear:both; height:25px; background:#003369;}
+.topSubMenu ul{position:absolute; margin:0; padding:0; list-style:none; height:22px; background:#003369;}
 .topSubMenu li {float:left; line-height:22px; padding:0px 5px 0px 9px; background:url(../images/kr/cm/dot_subMenu.gif) no-repeat left 7px;  font-size:12px; color:#ffffff; cursor:pointer;height:22px; margin:0px 6px}
-.topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:block; padding:0px; margin:0px;}
-.topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:block; padding:0px; margin:0px;}
+.topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:none; padding:0px; margin:0px;}
+.topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:none; padding:0px; margin:0px;}
 
 
 /*------------ quickmenu ------------*/
@@ -169,16 +169,16 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 .calendar_mini_title .btn_prev{width:21px;  padding:0px 1px;}
 .calendar_mini_title .calendar_mini_day{width:100%; text-align:center; font-size:13px; font-weight:bold;}
 .calendar_mini_title .btn_next{width:21px; padding:0px 1px;}
-.calendar_mini{table-layout:fixed; border-top:1px solid #cfcfcf;border-left:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; font-size:12px; font-family:Meiryo UI, Arial, Helvetica, sans-serif; font-weight: bold;}
-.calendar_mini th{color:#fff; width:14.2%; height:17px; background:#878a93; margin:0; padding:0; border-top:0 none; border-left:0 none; font-size:10px; font-weight:normal;border-bottom:1px solid #cfcfcf; }
-.calendar_mini th.sun{color:#fff; background:#f05f5a;}
-.calendar_mini th.sat{color:#fff;}
+.calendar_mini{table-layout:fixed; border-top:1px solid #cfcfcf;border-left:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; font-size:12px; font-family:Meiryo UI, Arial, Helvetica, sans-serif;}
+.calendar_mini th{color:#555555; width:14.2%; height:17px; background:#f5f6f6; margin:0; padding:0; border-top:0 none; border-left:0 none; font-size:11px; font-weight:normal;border-bottom:1px solid #d7d7d7; }
+.calendar_mini th.sun{color:#555555;}
+.calendar_mini th.sat{color:#555555; border-right:1px solid #d7d7d7;}
 .calendar_mini td {width:14.2%; height:21px; text-align:center; cursor:pointer; background:url(/images/kr/main/cal_td_bg.gif) right; color:#oaoaoa;}
 .calendar_mini td.sun{color:#fc4a4a;}
 .calendar_mini td.sat{color:#46abfc;}
 .calendar_mini td.gray{color:#8a8e9b;}
-.calendar_mini td.today{ color:#ffffff; background:url(/images/kr/main/cal_today_bg.gif) right;}
-.calendar_mini td div { height:20px;line-height:20px; margin-bottom:1px; border-right:1px solid #cfcfcf;}
+.calendar_mini td.today{ color:#ffffff; background:#0470e4;}
+.calendar_mini td div { height:20px;line-height:20px; margin-bottom:1px;}
 
 
 
@@ -204,8 +204,8 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 
 .notice_tab {height:27px; border-bottom:1px solid #c0bfbf; line-height:27px; font-size:12px; font-weight:bold; margin:0px 0px 13px 1px; padding:0px; white-space:nowrap;  }
 .notice_tab dt{float:left; height:26px; line-height:26px; border:1px solid #bdbcbc; margin:0px 0px 0px -1px; padding:0px 5px; width:82px; background:url(../images/kr/main/bg_tabpart.gif) repeat-x left; color:#59606f; cursor:pointer; z-index:1; }
-.notice_tab dt.on{float:left; height:26px; line-height:26px; border:1px solid #7b7c7c; margin:0px 1px 0px -1px; padding:0px 4px; background:url(../images/kr/main/bg_tabparto.gif) repeat-x left bottom; color:#000; font-weight:bold; cursor:pointer; z-index:5;}
-.notice_tab dt.on span {display:block; width:100%;height:31px; background:url(../images/kr/main/icon_tabpart.gif) no-repeat 50% bottom; z-index:10;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;text-align:center;}
+.notice_tab dt.on{float:left; height:26px; line-height:26px; border:1px solid #004896; margin:0px 1px 0px -1px; padding:0px 4px; background:#004896; color:#fff; font-weight:bold; cursor:pointer; z-index:5;}
+.notice_tab dt.on span {display:block; width:100%;height:31px; z-index:10;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;text-align:center;}
 .notice_tab dt span {display:block;width:100%;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;text-align:center;}
 .notice_tab dd{float:right; display:inline-block; font-size:11px; color:#9ea19f; padding:0px 11px 0px 0px; margin-right:11px; background:url../images/kr/main/icon_more.gif) no-repeat right 10px; cursor:pointer;}
 

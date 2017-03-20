@@ -3322,36 +3322,36 @@
 <!-- 		{CALL EZSP_GETTASKINSUBCATEGORY(#v_SUBCATECODE#, #v_DEPTCODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getTaskInSubCategory" parameterClass="Map" resultClass="ApprGTaskVO">
-			SELECT 
-				DISTINCT TASKCODE ,
-			             TASKNAME ,
-			    IFNULL(TASKNAME2, TASKNAME) TASKNAME2  ,
-			             KEEPINGPERIOD ,
-			             DISPLAYRECFLAG ,
-			             DISPLAYRECTRASTIME ,
-			             SPECIALCATALOGFLAG , 
-			             SC1 ,
-			             SC2 ,
-			             SC3 ,
-			             TEMPFLAG ,
-			             KEEPINGMETHOD ,
-			             KEEPINGPLACE 
-			 FROM 
-			 	VTASKCLASS  
-			 WHERE  
-			 	SUBCATEGORYCODE = #v_SUBCATECODE#
-			 AND (
-			 		 	TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
-			       OR 
-			       		TASKCODE LIKE 'ZZ%'
-			       OR 
-			       		TASKCODE = '99999999' )
-			 AND
-			 	TENANT_ID = #v_TENANTID#
-			 AND
-			 	COMPANYID = #companyID#
-			ORDER BY 
-				TASKNAME ASC 
+		SELECT 
+			DISTINCT TASKCODE ,
+		             TASKNAME ,
+		    IFNULL(TASKNAME2, TASKNAME) TASKNAME2  ,
+		             KEEPINGPERIOD ,
+		             DISPLAYRECFLAG ,
+		             DISPLAYRECTRASTIME ,
+		             SPECIALCATALOGFLAG , 
+		             SC1 ,
+		             SC2 ,
+		             SC3 ,
+		             TEMPFLAG ,
+		             KEEPINGMETHOD ,
+		             KEEPINGPLACE 
+		 FROM 
+		 	VTASKCLASS  
+		 WHERE  
+		 	SUBCATEGORYCODE = #v_SUBCATECODE#
+		 AND (
+		 		 	TRIM(PROCESSDEPTCODE) = #v_DEPTCODE#
+		       OR 
+		       		TASKCODE LIKE 'ZZ%'
+		       OR 
+		       		TASKCODE = '99999999' )
+		 AND
+		 	TENANT_ID = #v_TENANTID#
+		 AND
+		 	COMPANYID = #companyID#
+		ORDER BY 
+			TASKNAME ASC 
 	</select>
 		
 <!-- 	<procedure id="EzapprovalG.getSimpleCabinetList" parameterClass="Map" resultClass="ApprGCabinetVO"> -->
@@ -4276,71 +4276,132 @@
 <!-- 		{CALL EZSP_GETMYTASKCODE(#v_USERID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO">
-		SELECT 
-				DISTINCT TBL_CABINET.CabinetID , 
-	                     TBL_CABINETCLASS.TaskCode ,
-	                     TBL_CABINET.CabinetClassNo ,
-	                     TBL_CABINETCLASS.OwnerID ,
-	                     TBL_CABINETCLASS.Title ,
-	                     TBL_CABINETCLASS.Title2 ,
-	                     VTASKCLASS.KEEPINGPERIOD , 
-	                     VTASKCLASS.TEMPFLAG ,
-	                     VTASKCLASS.DISPLAYRECFLAG ,
-	                     VTASKCLASS.SPECIALCATALOGFLAG ,
-	                     VTASKCLASS.SC1 ,
-	                     VTASKCLASS.SC2 ,
-	                     VTASKCLASS.SC3 ,
-	                     VTASKCLASS.KEEPINGMETHOD ,
-	                     VTASKCLASS.KEEPINGPLACE ,
-	                     VTASKCLASS.TASKNAME ,
-	                     VTASKCLASS.TASKNAME2 ,
-	                     VTASKCLASS.SCName ,
-	                     VTASKCLASS.SubCategoryCode ,
-	                     TBL_CABINETCLASS.RecTypeCode ,
-	                     TBL_CABINETCLASS.RegSerialNo ,
-	                     TBL_CABINET.VolumeNo 
-        FROM 
-        		TBL_CABINETCLASS 
-        JOIN 
-        		TBL_CABINET    
-        ON 
-        		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
-        AND
-        		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
-        AND
-        		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
-        JOIN 
-        		TBL_MYTASKCODE   
-        ON 
-        		TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
-        AND
-        		TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
-        AND
-        		TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
-        JOIN 
-        		VTASKCLASS    
-        ON 
-        		VTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
-        AND
-        		VTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
-       	AND
-        		VTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
-<!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
-       WHERE  
-       			TBL_CABINET.DelFlag = '0'
-       AND 
-      			TBL_CABINETCLASS.DelFlag = '0'
-       AND 
-       			NOT ( TBL_CABINET.CabinetTransferFlag = '2'
-        				AND CONFIRMFLAG = '0' )
-       AND 
-       			TBL_MYTASKCODE.CN = #v_USERID#
-       AND
-       			TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
-       AND
-       			TBL_CABINETCLASS.COMPANYID = #companyID#
-       ORDER BY 
-       			TBL_CABINETCLASS.Title 
+		<isEmpty property="approvalFlag">
+			SELECT 
+					DISTINCT TBL_CABINET.CabinetID , 
+		                     TBL_CABINETCLASS.TaskCode ,
+		                     TBL_CABINET.CabinetClassNo ,
+		                     TBL_CABINETCLASS.OwnerID ,
+		                     TBL_CABINETCLASS.Title ,
+		                     TBL_CABINETCLASS.Title2 ,
+		                     VTASKCLASS.KEEPINGPERIOD , 
+		                     VTASKCLASS.TEMPFLAG ,
+		                     VTASKCLASS.DISPLAYRECFLAG ,
+		                     VTASKCLASS.SPECIALCATALOGFLAG ,
+		                     VTASKCLASS.SC1 ,
+		                     VTASKCLASS.SC2 ,
+		                     VTASKCLASS.SC3 ,
+		                     VTASKCLASS.KEEPINGMETHOD ,
+		                     VTASKCLASS.KEEPINGPLACE ,
+		                     VTASKCLASS.TASKNAME ,
+		                     VTASKCLASS.TASKNAME2 ,
+		                     VTASKCLASS.SCName ,
+		                     VTASKCLASS.SubCategoryCode ,
+		                     TBL_CABINETCLASS.RecTypeCode ,
+		                     TBL_CABINETCLASS.RegSerialNo ,
+		                     TBL_CABINET.VolumeNo 
+	        FROM 
+	        		TBL_CABINETCLASS 
+	        JOIN 
+	        		TBL_CABINET    
+	        ON 
+	        		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+	        AND
+	        		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+	        AND
+	        		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+	        JOIN 
+	        		TBL_MYTASKCODE   
+	        ON 
+	        		TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
+	        AND
+	        		TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
+	        AND
+	        		TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
+	        JOIN 
+	        		VTASKCLASS    
+	        ON 
+	        		VTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
+	        AND
+	        		VTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
+	       	AND
+	        		VTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
+	<!-- 		        AND VTASKCLASS.ProcessDeptCode = TBMYTASKCODE.DEPTID -->
+	       WHERE  
+	       			TBL_CABINET.DelFlag = '0'
+	       AND 
+	      			TBL_CABINETCLASS.DelFlag = '0'
+	       AND 
+	       			NOT ( TBL_CABINET.CabinetTransferFlag = '2'
+	        				AND CONFIRMFLAG = '0' )
+	       AND 
+	       			TBL_MYTASKCODE.CN = #v_USERID#
+	       AND
+	       			TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+	       AND
+	       			TBL_CABINETCLASS.COMPANYID = #companyID#
+	       ORDER BY 
+	       			TBL_CABINETCLASS.Title 
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+			SELECT 
+					DISTINCT TBL_CABINET.CabinetID , 
+                    SVTASKCLASS.TaskCode ,
+                    SVTASKCLASS.KEEPINGPERIOD , 
+                    SVTASKCLASS.TEMPFLAG ,
+                    SVTASKCLASS.KEEPINGMETHOD ,
+                    SVTASKCLASS.KEEPINGPLACE ,
+                    SVTASKCLASS.TASKNAME$lang$ ,
+                    SVTASKCLASS.SCName$lang$ SCName,
+                    SVTASKCLASS.SubCategoryCode ,
+                    SVTASKCLASS.MCName$lang$ MCName,
+                    SVTASKCLASS.mCategoryCode ,
+                    SVTASKCLASS.CName$lang$ CName,
+                    SVTASKCLASS.CategoryCode ,
+                    SVTASKCLASS.ISPUBLIC ,
+                    SVTASKCLASS.ITEMSECURITY
+	        FROM 
+	        		TBL_CABINETCLASS 
+	        JOIN 
+	        		TBL_CABINET    
+	        ON 
+	        		TBL_CABINETCLASS.CabinetClassNo = TBL_CABINET.CabinetClassNo
+	        AND
+	        		TBL_CABINETCLASS.TENANT_ID = TBL_CABINET.TENANT_ID
+	        AND
+	        		TBL_CABINETCLASS.COMPANYID = TBL_CABINET.COMPANYID
+	        JOIN 
+	        		TBL_MYTASKCODE   
+	        ON 
+	        		TBL_MYTASKCODE.CabinetID = TBL_CABINET.CabinetID
+	        AND
+	        		TBL_MYTASKCODE.TENANT_ID = TBL_CABINET.TENANT_ID
+	        AND
+	        		TBL_MYTASKCODE.COMPANYID = TBL_CABINET.COMPANYID
+	        JOIN 
+	        		SVTASKCLASS    
+	        ON 
+	        		SVTASKCLASS.TaskCode = TBL_MYTASKCODE.TaskCode 
+	        AND
+	        		SVTASKCLASS.TENANT_ID = TBL_MYTASKCODE.TENANT_ID
+	       	AND
+	        		SVTASKCLASS.COMPANYID = TBL_MYTASKCODE.COMPANYID
+	       WHERE  
+	       			TBL_CABINET.DelFlag = '0'
+	       AND 
+	      			TBL_CABINETCLASS.DelFlag = '0'
+	       AND 
+	       			NOT ( TBL_CABINET.CabinetTransferFlag = '2'
+	        				AND CONFIRMFLAG = '0' )
+	       AND 
+	       			TBL_MYTASKCODE.CN = #v_USERID#
+	       AND
+	       			TBL_CABINETCLASS.TENANT_ID = #v_TENANTID#
+	       AND
+	       			TBL_CABINETCLASS.COMPANYID = #companyID#
+	       ORDER BY 
+	       			TBL_CABINETCLASS.Title 
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getCabinetInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->

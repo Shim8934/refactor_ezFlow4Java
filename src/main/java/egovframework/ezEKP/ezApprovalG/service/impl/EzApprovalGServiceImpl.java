@@ -355,6 +355,110 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 	
 	@Override
+	public String getFrequencyClassList(LoginVO userInfo) throws Exception {
+		logger.debug("getFrequencyClassList started");
+
+		StringBuffer resultXML = new StringBuffer();
+		String listString = "";
+		String primaryData = commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId());
+		
+		listString = getListHeader("S200", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		resultXML.append("<HEADER>");
+		//임시로 해놓음 코드박자
+		resultXML.append("<NAME>문서분류</NAME>");
+		resultXML.append("<WIDTH>105</WIDTH>");
+		resultXML.append("<COLNAME>GROUPNAME</COLNAME>");
+		resultXML.append("</HEADER>");
+		
+		for (int k = 0; k < hlength; k++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", userInfo.getId());
+		map.put("v_DEPTID", userInfo.getDeptID());
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()));
+		
+		List<ApprGTaskVO> apprGTaskVOList = ezApprovalGDAO.getMyTaskCode(map);
+		
+		resultXML.append("<ROWS>");
+		
+		for (ApprGTaskVO k : apprGTaskVOList) {
+			resultXML.append("<ROW>");
+			resultXML.append("<CELL>");
+			
+			if (k.getCategoryCode().equals(k.getMcategoryCode())) {
+				resultXML.append("<VALUE><![CDATA[" + k.getcName() + "]]></VALUE>");
+			} else if (k.getMcategoryCode().equals(k.getSubCategoryCode())) {
+				resultXML.append("<VALUE><![CDATA[" + k.getMcName() + "]]></VALUE>");
+			} else {
+				resultXML.append("<VALUE><![CDATA[" + k.getScName() + "]]></VALUE>");
+			}
+			
+			resultXML.append("<DATA1><![CDATA[" + k.getTaskCode() + "]]></DATA1>");
+			resultXML.append("<DATA2><![CDATA[" + k.getTaskName() + "]]></DATA2>");
+			resultXML.append("<DATA3><![CDATA[" + k.getKeepingPeriod() + "]]></DATA3>");
+			resultXML.append("<DATA4><![CDATA[" + k.getItemSecurity() + "]]></DATA4>");
+			resultXML.append("<DATA5><![CDATA[" + k.getIsPublic() + "]]></DATA5>");
+			
+			if (k.getCategoryCode().equals(k.getMcategoryCode())) {
+				resultXML.append("<DATA6><![CDATA[" + k.getCategoryCode() + "]]></DATA6>");
+			} else if (k.getMcategoryCode().equals(k.getSubCategoryCode())) {
+				resultXML.append("<DATA6><![CDATA[" + k.getMcategoryCode() + "]]></DATA6>");
+			} else {
+				resultXML.append("<DATA6><![CDATA[" + k.getSubCategoryCode() + "]]></DATA6>");
+			}
+			resultXML.append("<DATA7><![CDATA[" + k.getCabinetID() + "]]></DATA7>");
+			
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + k.getTaskCode() + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + k.getTaskName() + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA52", k.getKeepingPeriod(), primaryData, userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + ezApprovalGAdminService.getEtcName("SA51", k.getItemSecurity(), primaryData, userInfo.getCompanyID(), userInfo.getTenantId()) + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("<CELL>");
+			resultXML.append("<VALUE><![CDATA[" + k.getIsPublic().equals("Y") + "]]></VALUE>");
+			resultXML.append("</CELL>");
+			
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+
+		logger.debug("getFrequencyClassList ended");
+		
+		return resultXML.toString();
+	}
+
+	
+	@Override
 	public String getCodeSubTreeInfo(String code, String level, LoginVO userInfo) throws Exception {
 		logger.debug("getCodeSubTreeInfo started");
 		
@@ -2174,23 +2278,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			for (int k = rowNode.getLength() - 1; k >= 0; k--) {
 				receiptPointID = rowNode.item(k).getChildNodes().item(3).getTextContent();
-				System.out.println(rowNode.item(k).getChildNodes().item(0).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(1).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(2).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(3).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(4).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(5).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(6).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(7).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(8).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(9).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(10).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(11).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(12).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(13).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(14).getTextContent());
-				System.out.println(rowNode.item(k).getChildNodes().item(15).getTextContent());
-
 				
 				if (!receiptPointID.substring(0, susinGroupIcon.length()).equals(susinGroupIcon) || !susinGroupUseFlag.equals("Y")) {
 					if(approvalFlag.equals("G")) {
@@ -14115,7 +14202,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()) + "</DATA5>");
 				}
 				
-				resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("SC1").item(k).getTextContent()) + "</DATA6>");
+				resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "</DATA6>");
 				resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("SC2").item(k).getTextContent()) + "</DATA7>");
 				resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "</DATA8>");
 				resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "</DATA9>");
