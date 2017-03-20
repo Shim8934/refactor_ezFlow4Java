@@ -37,6 +37,7 @@
 	                }
 	            } catch (e) { }
 	        }
+	        
 	        function GetEditorContent() {
 	            try {
 	            	if (type == "APPROVAL" || type == "APPROVALG") {
@@ -135,6 +136,7 @@
 	        {
 	            CKEDITOR.instances.editor1.resize(0, height);
 	        }
+	        
 	        function Set_CellLocked() {
 	            for (var i = 0; i < CKEDITOR.instances.editor1.document.$.getElementsByTagName("*").length; i++) {
 	                if (CKEDITOR.instances.editor1.document.$.getElementsByTagName("*")[i].tagName == "TD") {
@@ -155,6 +157,7 @@
 	                }
 	            }
 	        }
+	        
 	        function GetFieldsList() {
 	            var FieldsList = new Array();
 	            var FieldCount = 0;
@@ -174,6 +177,7 @@
 	            }
 	            return FieldsList;
 	        }
+	        
 	        function GetListItem(pList, str) {
 	            for (i = 0; i < pList.length; i++) {
 	                if (pList[i].id == str)
@@ -231,6 +235,20 @@
 	                }
 
 	            } catch (e) {
+	            }
+	        }
+	        
+	        function View_CellProperty() {
+	            var TotalTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("TD");
+	            try {
+	                for (var i = 0 ; i < TotalTag.length; i++) {
+	                    if (TotalTag[i].tagName == "TD" && TotalTag[i].id != "") {
+	                        TotalTag[i].style.backgroundColor = "#BEE7FC";
+// 	                        BlockArr.push(TotalTag[i]);
+	                    }
+	                }
+	            } catch (e) {
+	                alert(e.message);
 	            }
 	        }
 		</script>

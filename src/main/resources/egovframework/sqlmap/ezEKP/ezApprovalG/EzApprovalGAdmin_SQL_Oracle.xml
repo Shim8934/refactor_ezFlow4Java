@@ -130,34 +130,80 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
 		parameterClass="Map" resultClass="ApprGTaskVO">
-		<![CDATA[
-			SELECT
-				taskcode,
-				keepingperiod,
-				tempflag,
-				displayrecflag,
-				specialcatalogflag,
-				sc1,
-				sc2,
-				sc3,
-				keepingmethod,
-				keepingplace,
-				taskname,
-				taskname2,
-				subcategorycode
-			FROM
-				TBL_TASKCODE
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				subcategorycode = #v_SUBCATECODE#
-			AND
-				delflag = '0'
-			ORDER BY
-				taskcode
-		]]>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					subcategorycode,
+					itemSecurity,
+					isPublic
+				FROM
+					TBL_TASKCODE
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					subcategorycode,
+					itemSecurity,
+					isPublic,
+					(SELECT
+				    	CONCAT(CABINETCLASSNO, '001')
+				     FROM
+				     	TBL_CABINETCLASS A
+				     WHERE
+				     	TENANT_ID = #tenantID#
+				     AND
+				     	COMPANYID = #companyID#
+				     AND
+				     	A.TASKCODE = B.TASKCODE ) CABINETID 
+				FROM
+					TBL_TASKCODE B
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -829,25 +875,64 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormContent" parameterClass="Map"
 		resultClass="ApprGFormVO">
-		<![CDATA[
-			SELECT
-				formcontid,
-				formid,
-				formname,
-				formname2,
-				formdoctype,
-				formdescription,
-				formfilelocation,
-				formconnflag 
-			FROM
-				TBL_FORMINFO
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				formid = #v_PFORMID#
-		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					formcontid,
+					TBL_FORMINFO.formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag,
+					TBL_AUTODOCNUM_ITEM.keepPeriod,
+					TBL_AUTODOCNUM_ITEM.securityLevel,
+					TBL_AUTODOCNUM_ITEM.isPublic,
+					TBL_AUTODOCNUM_ITEM.itemCode,
+					TBL_AUTODOCNUM_ITEM.itemName,
+					TBL_AUTODOCNUM_ITEM.itemName2,
+					TBL_AUTODOCNUM_ITEM.useFlag,
+					TBL_AUTODOCNUM_ITEM.keepPeriodCode
+				FROM
+					TBL_FORMINFO
+				JOIN 
+	            	TBL_AUTODOCNUM_ITEM   
+	            ON 
+	            	TBL_FORMINFO.tenant_id = TBL_AUTODOCNUM_ITEM.tenant_id
+	            AND
+	            	TBL_FORMINFO.companyid = TBL_AUTODOCNUM_ITEM.companyid
+	            AND
+	            	TBL_FORMINFO.formid = TBL_AUTODOCNUM_ITEM.formid
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_PFORMID#
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					formcontid,
+					formid,
+					formname,
+					formname2,
+					formdoctype,
+					formdescription,
+					formfilelocation,
+					formconnflag 
+				FROM
+					TBL_FORMINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_PFORMID#
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getFormRecvAdmin" -->

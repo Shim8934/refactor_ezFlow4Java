@@ -909,14 +909,14 @@
 		
 		                if ("${userInfo.lang}" == "1")
 		              { 
-		                wWeight = 875;
+		                wWeight = 855;
 		                wHeight = 625;
 		                left = (width - wWeight) / 2;
 		                top = (heigth - wHeight) / 2;
 		                }
 		              else
 		              { 
-		                wWeight = 875;
+		                wWeight = 855;
 		                wHeight = 625;
 		                left = (width - wWeight) / 2;
 		                top = (heigth - wHeight) / 2;
