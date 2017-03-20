@@ -870,6 +870,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("aprTypeXML", aprTypeXML);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
+		model.addAttribute("hideCabinet", config.getProperty("config.hideCabinet"));
 		
 		return "ezApprovalG/apprGezApprovalInfo";
 	}
