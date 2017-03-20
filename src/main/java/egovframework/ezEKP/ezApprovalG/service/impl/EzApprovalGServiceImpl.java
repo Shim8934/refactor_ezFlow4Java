@@ -12347,7 +12347,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 								ezApprovalGDAO.insertDoSendAprDocInfo(map);
 								ezApprovalGDAO.insertDoSendExpAprDocInfo(map);
-								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
+ 								ezApprovalGDAO.insertDocSendAprAttachInfo(map);
 								ezApprovalGDAO.insertDocSendAprDocAttachInfo(map);
 								
 	                            int susinSN = ezApprovalGDAO.getReceiptProcessInfoRec(map3);
