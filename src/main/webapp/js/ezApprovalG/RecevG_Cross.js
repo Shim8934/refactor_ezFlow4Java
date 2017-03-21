@@ -2041,10 +2041,10 @@ function SendDraftMappingSign(ret) {
         if (field) {
             setNodeText(field , s);
             signWidth = 50;
-            signHeight = 28;
+            signHeight = 50;
         } else {
         	signWidth = 50;
-            signHeight = 50;
+            signHeight = 28;
         }
 
         var strimg;
