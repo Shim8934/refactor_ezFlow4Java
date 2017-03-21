@@ -273,6 +273,10 @@
 	            Addjob_Check(GetAttribute(p_ListOrderObject, "_data2"));
 	        }
 	        
+	        function event_listdblclick(obj) {
+	        	InsertReceiver();
+	        }
+	        
 	        function Addjob_Check(UserID) {
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
@@ -405,7 +409,8 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };                    
+	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -500,6 +505,7 @@
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this); };
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
