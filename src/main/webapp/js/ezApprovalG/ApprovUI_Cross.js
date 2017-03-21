@@ -121,12 +121,22 @@ function AprrovMappingSign(ret) {
 
         var habyui = phabyuisign + pAprMemberSN;
         var field = message.GetListItem(fields, habyui);
+        var isHabyuiDate = message.GetListItem(fields, phabyuidate + pAprMemberSN);
         if (field) {
             if (ret != "NAME" && ret != "") {
                 var signWidth = parseInt(field.offsetWidth) - 4 - 15;
                 var signHeight = parseInt(field.offsetHeight) - 4;
                 signWidth = 50;
-                signHeight = 28;
+                
+                if (isHabyuiDate) {
+                	signHeight = 50;
+                } else {
+                	signHeight = 28;
+                }
+                
+                if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase()) {
+                	signHeight = 28;
+                }
 
                 var strimg;
                 strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
@@ -140,6 +150,7 @@ function AprrovMappingSign(ret) {
                 var content = ret;
                 if (pOrgAprUserID.toLowerCase() != pingUserID.toLowerCase())
                     content = ret + "::" + strLang8;
+                
                 signInfo[signCnt] = habyui;
                 SignType[signCnt] = "IMAGE";
                 SignName[signCnt] = habyui;
@@ -373,7 +384,12 @@ function AprrovMappingSign(ret) {
                         sighHeight = signWidth;
                     }
                     signWidth = 50;
-                    signHeight = 28;
+                    
+                    if (!message.GetListItem(fields, seumyungdateID)) {
+                    	signHeight = 28;
+                    } else {
+                    	signHeight = 50;
+                    }
 
                     var strimg;
                     var FilePath = encodeURI(ret);
@@ -2173,6 +2189,9 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
 
+                if (!SignName.indexOf("habyui") > -1) {
+                	continue;
+                }
                 var field = message.GetListItem(fields, SignName);
                 
                 if (field) {
