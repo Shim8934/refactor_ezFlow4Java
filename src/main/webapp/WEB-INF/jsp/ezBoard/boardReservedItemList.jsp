@@ -29,10 +29,17 @@
 		    	if (useRunTime != "YES") {
 		    		$("#runtime").css("display", "none");
 		    	}
-		    	
+		    	var height = parseInt(document.documentElement.clientHeight - 180);
+	            document.getElementById("divList").style.height = height + "px";
 		    	makePageSelPageBrd();
 		    };
-		
+		    
+		    window.onresize = function () {
+	            var height = parseInt(document.documentElement.clientHeight - 180);
+	            document.getElementById("divList").style.height = height + "px";
+	            Window_resize();
+	        };
+	        
 		    function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID) {
 		        var feature = GetOpenWindowfeature(765, 820);
 	            window.open("/ezBoard/boardNewItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
@@ -253,6 +260,7 @@
 			</table>
 		</c:otherwise>
 	</c:choose>
+	 <div style="width:100%; overflow:AUTO;" id="divList">
 	<table class="mainlist" style ="width:100%">
 	  <form name="frmOutbox" action="/ezBoard/boardReservedItemList.do" method="post">
 	    <tr>
@@ -315,6 +323,14 @@
 	      	</c:otherwise>
 	      </c:choose>    
 	    </tr>
+	    <c:set var="count" value="${totalCount}" />
+	    <c:if test="${count eq 0 }" >
+	    <tr>
+	    <td align="center" colspan="6">
+	    <spring:message code='ezBoard.t281'/>
+	    </td>
+	    </tr>
+	    </c:if>
 	    <c:set var="ListInfo"/>
 	    <c:forEach var="reservedList" items="${reservedList}">
 	    	<tr>
@@ -343,6 +359,7 @@
 	    </c:forEach>
 	  </form>
 	</table>
+	</div>
 	<br />
 	<div id="tblPageRayer" style="text-align:center"></div>
 	<div id="ListInfo" style="DISPLAY:none">${ListInfo}</div>
