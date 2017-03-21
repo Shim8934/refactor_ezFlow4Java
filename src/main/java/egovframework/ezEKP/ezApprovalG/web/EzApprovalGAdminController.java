@@ -668,9 +668,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("getFormRecvAdmin started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String formID = request.getParameter("node1");
 		
-		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getFormRecvAdmin(formID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("getFormRecvAdmin ended.");
 		

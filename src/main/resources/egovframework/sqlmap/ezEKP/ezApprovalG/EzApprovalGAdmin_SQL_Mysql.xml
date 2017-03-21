@@ -935,20 +935,39 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
 		resultClass="ApprGFormVO">
-		<![CDATA[
-			SELECT
-				deptid
-			FROM
-				TBL_FORMRECV
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				formid = #v_FORMID#
-			ORDER BY
-				deptsn
-		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					deptid,
+					userid
+				FROM
+					TBL_FORMRECV
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_FORMID#
+				ORDER BY
+					deptsn
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					deptid
+				FROM
+					TBL_FORMRECV
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					formid = #v_FORMID#
+				ORDER BY
+					deptsn
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskCategotyTree" -->
@@ -1606,20 +1625,40 @@
 	</delete>
 
 	<insert id="EzApprovalGAdmin.setFormDataInsert2" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_FORMRECV
-				(formid,
-				deptid,
-				deptsn,
-				companyid,
-				tenant_id)
-			VALUES
-				(#v_PFORMID#,
-				#deptID#,
-				#deptSN#,
-				#companyID#,
-				#tenantID#)
-		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					userid,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#userID#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
 	</insert>
 	
 	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
