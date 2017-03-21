@@ -2037,8 +2037,15 @@ function SendDraftMappingSign(ret) {
             signWidth = signWidth - 15;
             sighHeight = signWidth
         }
-        signWidth = 50;
-        signHeight = 28;
+        var field = message.GetListItem(fields, pseumyungdatecell);
+        if (field) {
+            setNodeText(field , s);
+            signWidth = 50;
+            signHeight = 50;
+        } else {
+        	signWidth = 50;
+            signHeight = 28;
+        }
 
         var strimg;
         var SingFlag = true;

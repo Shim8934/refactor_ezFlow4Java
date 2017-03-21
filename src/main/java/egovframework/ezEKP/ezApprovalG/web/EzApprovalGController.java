@@ -1971,12 +1971,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String readRecXML = "<PARAMETER><DOCID>" + makeXMLString(docID) +
                     "</DOCID><USERID>" + makeXMLString(userInfo.getId()) +
                     "</USERID><USERNAME>" + makeXMLString(userInfo.getDisplayName1()) +
-                    "</USERNAME><USERTITLE>" + makeXMLString(userInfo.getTitle1()) +
+                    "</USERNAME><USERTITLE>" + makeXMLString((userInfo.getTitle1() == null ? "" : userInfo.getTitle1())) +
                     "</USERTITLE><DEPTCODE>" + makeXMLString(userInfo.getDeptID()) +
                     "</DEPTCODE><DEPTNAME>" + makeXMLString(userInfo.getDeptName1()) +
                     "</DEPTNAME><COMPANYID>" + makeXMLString(userInfo.getCompanyID()) +
                     "</COMPANYID><USERNAME2>" + makeXMLString(userInfo.getDisplayName2()) +
-                    "</USERNAME2><USERTITLE2>" + makeXMLString(userInfo.getTitle2()) +
+                    "</USERNAME2><USERTITLE2>" + makeXMLString((userInfo.getTitle2() == null ? "" : userInfo.getTitle2())) +
                     "</USERTITLE2><DEPTNAME2>" + makeXMLString(userInfo.getDeptName2()) +
                     "</DEPTNAME2></PARAMETER>";
 			ezApprovalGService.saveRecReadHist(readRecXML, userInfo.getTenantId());
