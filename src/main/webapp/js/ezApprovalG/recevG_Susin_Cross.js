@@ -2077,24 +2077,35 @@ function putSignXML(SignXML) {
                     if (SignType == "TEXT" || SignType == "HTML") {
                         field.innerHTML = SignCont;
                     } else {
+                    	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
                         var img = SignCont.split("::");
                         var signWidth = parseInt(field.offsetWidth) - 4 - 15;
                         var signHeight = parseInt(field.offsetHeight) - 4
                         signWidth = 50;
-                        signHeight = 28;
-
+                        
+                        if (seumyung) {
+                        	signHeight = 50;
+                        } else {
+                        	signHeight = 28;
+                        }
+ 
                         var strimg;
                         if (img.length >= 1) {
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
                             strimg = strimg + " width=" + signWidth;
                             strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                         }
-//부서수신함에서 날짜나오는거 
-//                        if (img.length >= 2 && img[1] != "") {
-//                            field.innerHTML = img[1] + "<br>" + strimg;
-//                        } else {
+                        
+                        if (seumyung) {
                             field.innerHTML = strimg;
-//                        }
+                        } else {
+                        	if (img.length >= 2 && img[1] != "") {
+                                field.innerHTML = img[1] + "<br>" + strimg;
+                            } else {
+                                field.innerHTML = strimg;
+                            }
+                        }
+                        
                     }
                 }
             }
