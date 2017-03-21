@@ -1085,6 +1085,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (int) select("EzApprovalG.userContListCount", map);
 	}
 	
+	public int getContDocListCountS(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getContDocListCountS", map);
+	}
+	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.getUserContMaxID", map);
 	}

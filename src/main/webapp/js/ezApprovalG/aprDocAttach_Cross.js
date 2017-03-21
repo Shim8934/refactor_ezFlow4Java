@@ -58,7 +58,7 @@ function getDocList() {
     createNodeAndInsertText(xmlpara, objNode, "BlockNum", nowblock + 1);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
 
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezAPRDOCATTACH/aspx/aprDocAttachList.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do", false);
     xmlhttp.send(xmlpara);
 
     Resultxml = loadXMLString(xmlhttp.responseText);

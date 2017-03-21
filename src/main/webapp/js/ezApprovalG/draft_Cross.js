@@ -713,18 +713,20 @@ function SendDraftMappingSign(ret) {
         var signWidth = parseInt(field.offsetWidth) - 4;
         var signHeight = parseInt(field.offsetHeight) - 4;
 
-        signWidth = 50;
-        signHeight = 28;
+        var field = message.GetListItem(fields, pseumyungcell);
+        if (field) {
+            setNodeText(field , getNodeText(field) + PositionText);
+            signWidth = 50;
+            signHeight = 28;
+        } else {
+        	signWidth = 50;
+            signHeight = 50;
+        }
 
         var strimg;
         var SingFlag = true;
 
         var DekyulFlag = false;
-
-        var field = message.GetListItem(fields, pseumyungcell);
-        if (field) {
-            setNodeText(field , getNodeText(field) + PositionText);
-        }
 
         var field = message.GetListItem(fields, pseumyungdatecell);
         if (field) {
