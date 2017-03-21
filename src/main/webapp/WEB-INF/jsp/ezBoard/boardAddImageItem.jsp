@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title></title>
+	    <title><spring:message code='ezBoard.t1001' /></title>
 	    <style type="text/css">
 	         .preView { width: 70px; height: 70px; text-align: center; border:1px solid silver; }
 	    </style>
