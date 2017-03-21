@@ -163,7 +163,11 @@
 		                            var signWidth = parseInt(field.offsetWidth) - 4 - 15;
 		                            var signHeight = parseInt(field.offsetHeight) - 4;
 		                            if (seumyung) {
-		                            	signHeight = 50;
+		                            	if (img[1].indexOf(strLang7) > -1) {
+		                            		signHeight = 28;
+		                            	} else {
+		                            		signHeight = 50;
+		                            	}
 		                            } else {
 		                            	signHeight = 28;
 		                            }
