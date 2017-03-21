@@ -6,6 +6,11 @@ input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, 
 	text-decoration: none;
 	ime-mode:active;
 }
+
+p, strong, h3 {
+	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
+}
+
 input {
     box-sizing:border-box;
     -moz-box-sizing:border-box;
