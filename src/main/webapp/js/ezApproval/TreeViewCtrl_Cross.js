@@ -11,6 +11,7 @@
 
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
+
         xmlTree = loadXMLString(xmlHTTP.responseText);
         document.getElementById('TreeView').innerHTML = "";
         var treeView = new TreeView();

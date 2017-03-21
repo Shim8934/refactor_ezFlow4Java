@@ -82,7 +82,7 @@
 		        getFormRecv();
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
 // 		        MakeListXML(pDocType);
-		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+// 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
@@ -626,6 +626,7 @@
 			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
 			                headerData.documentElement.appendChild(xmlRtn);
 			            }
+			            
 			            var pUserList = new ListView();
 			            pUserList.SetID("lvUserList");
 			            pUserList.SetRowOnClick("list_onSel_Click");
@@ -738,7 +739,8 @@
 		        var SampleXML = "\n<CHECK>\n	<CASES>\n		<CASE>\n			<FIELD></FIELD>\n			<VALUE></VALUE>\n			<TYPE></TYPE>\n		</CASE>\n	</CASES>\n		<APRLINES>\n	    <APRLINE>\n			<APRTYPE></APRTYPE>\n			<CLASS></CLASS>\n			<VALUE></VALUE>\n			<DESC></DESC>\n		</APRLINE>\n	</APRLINES>\n</CHECK>";
 		        txt_OpinionContent2.value = txt_OpinionContent2.value + SampleXML;
 		    }
-		
+		    
+		    //미사용
 		    function btn_FormConnSave_onclick() {
 		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
 		        var rtnVal = OpenInformationUI(pInformationContent, FormConnSave_Complete);
@@ -762,7 +764,8 @@
 		            }
 		        }
 		    }
-		
+		    
+			//미사용
 		    function FormConnSave_Complete(Ans) {
 		        if (Ans) {
 		            var xmlhttp = createXMLHttpRequest();
@@ -1124,14 +1127,14 @@
 	                      </table>
 	                    </td>
 	                </tr>
-	            </table>    
-        	</div>      
+	            </table>
+        	</div>
         </div>
            
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.7); display:none;" id="mailPanel">&nbsp;</div>	
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 		    <iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
-	    </div>     
+	    </div>
         <form id="bodyForm">
         	<input type="hidden" id="hidCompanyID" value="${companyID}">
         	<input type="hidden" id="hidFormID" value="${formID}">
