@@ -14,12 +14,21 @@
 		
 		<script type="text/javascript">
 			var pCompanyID = "<c:out value = '${companyID}' />";
-			var ret = "cancel";
-			var xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");	
+			var xmlhttp = createXMLHttpRequest();
+			
+			var ReturnFunction;
 	
 			$(document).ready(function(){
 				try {
-					window.returnValue = ret;
+					try {
+	                    ReturnFunction = opener.FormConnInfo_dialogarguments[1];
+	                } catch (e) {
+	                    try {
+	                        ReturnFunction = parent.FormConnInfo_dialogarguments[1];
+	                    } catch (e) {
+	                    }
+	                }
+	                
 					processidx_onchange();
 					processtime_onchange();
 					connstringflag_onchange();
@@ -32,54 +41,54 @@
 			});
 	
 			function btnOK_onclick() {
-				var rtnValue = "<conn processidx=\"" +  processidx.children.item(processidx.selectedIndex).innerText +  "\" processtime=\"" + 
-								processtime.children.item(processtime.selectedIndex).innerText +  "\">\n	<connstring flag=\"" + 
-								connstringflag.children.item(connstringflag.selectedIndex).innerText +  "\">" + connectionstring.value + "</connstring>\n	<query qtype=\"" +  
-								querytype.children.item(querytype.selectedIndex).innerText +  "\">" +  query.value + "</query>";
-					
-				if (keykind.children.item(keykind.selectedIndex).innerText != "<spring:message code = 'ezApprovalG.t1447' />") {
-					rtnValue = rtnValue + "\n	<keys>\n		<key kind=\"" + keykind.children.item(keykind.selectedIndex).innerText + "\"></key>\n	</keys>";
-				}
-				
-				rtnValue = rtnValue + "\n</conn>";
-					
-			/*	<conn processidx="" processtime="">
-					<connstring flag=""></connstring>
-					<query qtype=""></query>
-					<keys>
-						<key kind=""></key>
-					</keys>
-				</conn>
-			*/
+				var rtnValue = "<conn processidx=\"" +
+	                GetSelectText("processidx") +
+	                "\" processtime=\"" +
+	                GetSelectText("processtime") +
+	                "\">\n	<connstring flag=\"" +
+	                GetSelectText("connstringflag") +
+	                "\">" +
+	                connectionstring.value +
+	                "</connstring>\n	<query qtype=\"" +
+	                GetSelectText("querytype") +
+	                "\">" +
+	                query.value + "</query>";
+	
+	            if (GetSelectText("keykind") != "<spring:message code='ezApproval.t505'/>") {
+	                rtnValue = rtnValue + "\n	<keys>\n		<key kind=\"" + GetSelectText("keykind") + "\"></key>\n	</keys>";
+	            }
+	            rtnValue = rtnValue + "\n</conn>";
 	
 				window.returnValue = rtnValue;	
-				window.close();
+	            ReturnFunction(rtnValue)
+	            window.close();
 			}
 	
 			function btnCancel_onclick() {
-				window.returnValue = ret;
-				window.close();
-			}
+				window.returnValue = "cancel";
+	            ReturnFunction("cancel")
+	            window.close();
+	        }
 	
-			function processidx_onchange() {
-				processidxdesc.innerText = processidx.value;
-			}
+	        function processidx_onchange() {
+	            setNodeText(processidxdesc,processidx.value);
+	        }
 	
-			function processtime_onchange() {
-				processtimedesc.innerText = processtime.value;
-			}
+	        function processtime_onchange() {
+	            setNodeText(processtimedesc,processtime.value);
+	        }
 	
-			function connstringflag_onchange() {
-				connstringflagdesc.innerText = connstringflag.value;
-			}
+	        function connstringflag_onchange() {
+	            setNodeText(connstringflagdesc,connstringflag.value);
+	        }
 	
-			function querytype_onchange() {
-				querytypedesc.innerText = querytype.value;
-			}
+	        function querytype_onchange() {
+	            setNodeText(querytypedesc,querytype.value);
+	        }
 	
-			function keykind_onchange() {
-				keykinddesc.innerText = keykind.value;
-			}
+	        function keykind_onchange() {
+	            setNodeText(keykinddesc,keykind.value);
+	        }
 		</script>
 	</head>
 	<body class="popup">
