@@ -122,7 +122,7 @@
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        for (var i = 0; i < xmldomNodes.length; i++) {
 		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = filepath.substr(109, filepath.length - 108);
+		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
 		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 		            strAttach = strAttach + filename + "&nbsp;(" + filesize + ")<br>";
 		        }

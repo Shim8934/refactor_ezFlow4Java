@@ -2428,6 +2428,7 @@ function putSignXML(SignXML) {
                         field.innerHTML = SignCont;
                     }
                     else {
+                    	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
                         var img = SignCont.split("::");
                         var signWidth = field.offsetWidth
                         var signHeight = field.offsetHeight
@@ -2441,7 +2442,12 @@ function putSignXML(SignXML) {
                             sighHeight = signWidth
                         }
                         signWidth = 50;
-                        signHeight = 28;
+                        
+                        if (seumyung) {
+                        	signHeight = 50;
+                        } else {
+                        	signHeight = 28;
+                        }
 
                         var strimg;
                         if (img.length >= 1) {
@@ -2450,14 +2456,17 @@ function putSignXML(SignXML) {
                             strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                             message.DocumentBodySetAttribute(SignName, img[0]);
                         }
-
-                        if (img.length >= 2 && img[1] != "") {
-                            field.innerHTML = img[1] + "<br>" + strimg;
+                        
+                        if (seumyung) {
+                        	field.innerHTML = strimg;
+                        } else {
+                        	if (img.length >= 2 && img[1] != "") {
+                        		field.innerHTML = img[1] + "<br>" + strimg;
+                        	}
+                        	else {
+                        		field.innerHTML = strimg;
+                        	}
                         }
-                        else {
-                            field.innerHTML = strimg;
-                        }
-
                     }
 
                 }

@@ -886,7 +886,7 @@
 	  		</tr>
 	  		<tr id='divRecurPatterns'>
 	    		<td style="padding:10px;height:85px">
-	    			&nbsp;<spring:message code='ezSchedule.t79' />
+	    			<span style="margin-left:4px"><spring:message code='ezSchedule.t79' /></span>	    			
 	      			<label for="txt_We" accesskey="C">
 	      				<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1" />
 	      				<spring:message code='ezSchedule.t80' />

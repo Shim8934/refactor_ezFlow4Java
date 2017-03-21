@@ -427,6 +427,7 @@
 	
 	        function GetTagList(strTagName) {
 	            try {
+	            	//CONNINFO 오류발생지점
 	                var TagsList = new Array();
 	                var TagCount = 0;
 	                var count = 0;

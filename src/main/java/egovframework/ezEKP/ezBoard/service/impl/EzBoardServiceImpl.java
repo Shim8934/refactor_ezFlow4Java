@@ -2795,7 +2795,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
-			String orgBoardID = boardIDArray[i];
+			String orgBoardID = boardIDArray[0];
 			
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
