@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="/css/community.css" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezCommunity/common.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<c:if test="${mode == 'edit' && bIsMyContent == false}">
 			<script type="text/javascript">
@@ -20,23 +21,27 @@
 		
 		<script type="text/javascript">
 			function sendit() {
-				if (ReplaceText(document.forms[0].memo.value, " ", "") == "" ) {
-					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
- 					//OpenAlertUI("<spring:message code='ezCommunity.t568' /><br><spring:message code='ezCommunity.t569' />");
+				if (document.getElementById("memo").value == "") {
 					alert("<spring:message code='ezCommunity.t568' />\n<spring:message code='ezCommunity.t569' />");
-					document.forms[0].memo.value = "";
-					document.forms[0].memo.focus();
-			        
+					document.getElementById("memo").focus();
+					
 					return;
 				}
 				
-				document.forms[0].submit();
-			}
-			
-			function ReplaceText(orgStr, findStr, replaceStr) {
-				var re = new RegExp(findStr, "gi");
-				
-				return (orgStr.replace(re, replaceStr));
+// 				$.ajax({
+// 		        	type : "POST",
+// 		        	url : "/ezCommunity/guestEditOk.do",
+// 		        	async : false,
+// 		        	data : {c_no : $("#c_no").val(),
+// 		        			name : $("#name").val(),
+// 		        			code : $("#code").val(),
+// 		        			mode : $("#mode").val(),
+// 		        			memo : encodeURIComponent($("#memo").val())
+// 		        			},
+// 		        	success : function(result) {
+// 		        		goPage(1);
+// 	        		}
+// 		        });
 			}
 			
 			function goPage(idx) {
@@ -50,6 +55,18 @@
 				
 			    window.location.href = url;
 			}
+			
+			/* function checkIsZenkaku(value) { 
+				for (var i = 0; i < value.length; ++i) { 
+					var c = value.charCodeAt(i);
+					
+					if (c < 256 || (c >= 0xff61 && c <= 0xff9f)) { 
+						return false; 
+					} 
+				}
+				
+				return true; 
+			} */
 		</script>
 	</head>
 	<body class="cmhome_body">
@@ -69,10 +86,10 @@
 		
 		<table class="content" >
 			<form action="/ezCommunity/guestEditOk.do" method="POST" name="webpds">
-		        <input type="hidden" name="c_no" value="<c:out value = '${no}' />">
-		        <input type=hidden name="name" value="<c:out value = '${item.id}' />">
-		        <input type=hidden name="code" value="<c:out value = '${code}' />">
-		        <input type=hidden name="mode" value="<c:out value = '${mode}' />">
+		        <input type="hidden" id="c_no" value="<c:out value = '${no}' />">
+		        <input type=hidden id="name" value="<c:out value = '${item.id}' />">
+		        <input type=hidden id="code" value="<c:out value = '${code}' />">
+		        <input type=hidden id="mode" value="<c:out value = '${mode}' />">
 		        
 	        	<tr>
 					<th><spring:message code='ezCommunity.t138' /></th>
@@ -86,7 +103,7 @@
 					</c:choose>
 				</tr>
 				<tr>
-	          		<td colspan="2"><textarea name="memo" style="width:98%;height:300px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
+	          		<td colspan="2"><textarea id="memo" style="width:98%;height:300px" maxlength="3000"><c:out value='${item.content}' /></textarea></td>
 	        	</tr>
       		</form>
 		</table>
