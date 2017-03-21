@@ -162,7 +162,7 @@
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
-		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
 		
 		        }
@@ -188,7 +188,7 @@
 		            //mail_selectfolder_cross_dialogArguments[3].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
-		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' style='font-family:dotum' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
+		            _curCellObj.innerHTML = "<span onclick='getFoldercell(this);' value='" + url + "'><nobr>\"<u>" + name + "" + ((_RuleKind == "MOVE") ? strLang220 : strLang342) + "</u></nobr></span>";
 		        } catch (e) {
 		
 		        }
@@ -243,14 +243,14 @@
 		            }
 		            if (ischeck) {
 		                if (ConCellRow != null) {
-		                    ConCellRow.outerHTML = "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+		                    ConCellRow.outerHTML = "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                    inputBtn.textContent = strLang239;
 		                    ConCellRow = null;
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + inboxRuleCon1.value + "'><nobr>" + inboxRuleCon1.value + "</nobr><div>";
 		                    inboxRuleCon1.value = "";
 		                    inboxRuleCon1.focus();
 		                }
@@ -271,14 +271,14 @@
 		            if (rulekind == "SENDER" || rulekind == "RECEIVER" || rulekind == "FORWARD" || rulekind == "REDIRECTION") {
 		                if (value.split("<").length > 1) {
 		                    var mailaddress = value.split("<")[1].replace(">", "");
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + mailaddress + "'><nobr>" + MakeXMLString(value) + "</nobr><div>";
 		                }
 		                else {
-		                    Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                    Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
 		                }
 		            }
 		            else {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' ondblclick onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + value + "'><nobr>" + value + "</nobr><div>";
 		            }
 		        }
 		    }
@@ -381,7 +381,7 @@
 		            }
 		        }
 		        if (_curCellObj != null) {
-		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' style='font-family:dotum' value='" + _value + "'><nobr><u>" + _exp + "</u></nobr></span>";;
+		            _curCellObj.innerHTML = "<span onclick='Ruleselectcell(this);' value='" + _value + "'><nobr><u>" + _exp + "</u></nobr></span>";;
 		            _curCellObj.setAttribute("value", _value);
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		        }
@@ -554,7 +554,7 @@
 		                }
 		            }
 		            if (ischeck) {
-		                Conitems.innerHTML += "<div style='font-family:dotum;font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + Email + "</nobr><div>";
+		                Conitems.innerHTML += "<div style='font-size:small;height:18px;vertical-align:middle;border-bottom:1px solid #dbdbda;' ondblclick='pop_modify(this);' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_Mclick(this);' value='" + Email + "'><nobr>" + Email + "</nobr><div>";
 		            }
 		        }
 		    }
