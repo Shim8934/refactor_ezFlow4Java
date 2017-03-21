@@ -30,6 +30,7 @@
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
 		    var isfirst = true;
+		    var preObj = "";
 		    
 		    $(document).ready(function(){
 		    	try {
@@ -231,6 +232,7 @@
 	        var listEventCheckbox = false;
 	        var listSubEventCheckbox = false;
 	        function event_listclick(obj) {
+	        	if(preObj!=obj){
 	            if (!listEventCheckbox) {
 	                if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 	                    for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
@@ -271,6 +273,8 @@
 	                }
 	            }
 	            Addjob_Check(GetAttribute(p_ListOrderObject, "_data2"));
+	        	}
+	        	preObj = obj;
 	        }
 	        
 	        function event_listdblclick(obj) {
