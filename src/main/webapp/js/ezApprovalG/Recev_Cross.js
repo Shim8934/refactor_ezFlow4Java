@@ -652,7 +652,7 @@ function SendDraftMappingSign(ret)
 	{
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
-	    strimg = strimg + " height=" + signHeight + " >";
+	    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
 	  	field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
 	
 	  	//사인정보를 저장한다.(Undo용)
