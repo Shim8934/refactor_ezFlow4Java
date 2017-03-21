@@ -160,7 +160,6 @@
 			                }
 			            } else if (pDraftFlag == "HAPYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {
 			                var len;
-			
 			                len = pFormHref.lastIndexOf("/");
 			                ClearDocCellInfo();
 			                setClearSusinCellInfo();
@@ -339,7 +338,7 @@
 		            drafterDeptid = arr_userinfo[4];
 		            SetBtnStateTrue();
 		            getReceiveDocInfo();
-
+		            
 		            if (pSusinDocURL != "") {
 		                if (pSusinDocURL == "PC") {
 		                    document.getElementById('pFile').click();

@@ -3614,7 +3614,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String multiData = commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
 		switch (mode) {
 			case "write" :
-				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("/'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
+				guestEditOkInsert(code, userInfo, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getTenantId());
 				
 				break;
 			case "delete" :
@@ -3634,7 +3634,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 					
 					if (item != null) {
 						bIsMyContent = true;
-						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>").replaceAll("/'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
+						guestEditOkUpdate(no, code, memo.replaceAll("\r\n", "<br>").replaceAll("\'", "&quot;").replaceAll("\"", "&dquot;"), userInfo.getId(), userInfo.getTenantId());
 					}
 				}
 				

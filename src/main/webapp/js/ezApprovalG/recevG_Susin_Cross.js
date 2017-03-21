@@ -461,6 +461,7 @@ function SendDraftMappingSign(ret) {
         }
         
         var field = message.GetListItem(fields, pseumyungdatecell);
+
         if (field) {
             setNodeText(field , s);
             signWidth = 50;

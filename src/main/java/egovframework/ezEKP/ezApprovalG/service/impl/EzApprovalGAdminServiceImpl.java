@@ -2445,7 +2445,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			for (int j = 0; j < listHeader.size(); j++) {	
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + multiData, tenantID) + "</VALUE>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + multiData, tenantID)) + "</VALUE>");
 
 				if (j == 0) {
 					sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1></CELL></ROW>");
