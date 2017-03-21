@@ -19341,7 +19341,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
 		resultXML.append("<HEADER>");
-		resultXML.append("<NAME>" +  getCode2Name("L04", "001", companyID, lang, tenantId) + "</NAME>");
+		resultXML.append("<NAME>" +  getCode2Name("SL04", "001", companyID, lang, tenantId) + "</NAME>");
 		resultXML.append("<WIDTH>250</WIDTH>");
 		resultXML.append("</HEADER>");
 		resultXML.append("</HEADERS>");
@@ -19406,7 +19406,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getContainerInfoManage(String deptID, String mode, String companyID, int tenantID) throws Exception {
+	public String getContainerInfoManage(String deptID, String mode, String companyID, String lang, int tenantID) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -19429,9 +19429,79 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if(mode.equals("LIST")) {
 			resultXML.append("<LISTVIEWDATA>");
 			resultXML.append("<HEADERS>");
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" +  getCode2Name("SL02", "001", companyID, lang, tenantID) + "</NAME>");
+			resultXML.append("<WIDTH>250</WIDTH>");
+			resultXML.append("</HEADER>");
+			resultXML.append("</HEADERS>");
 			resultXML.append("<ROWS>");
+			
+			for(int j =0; j<docXML.getElementsByTagName("ROW").getLength(); j ++) {
+				resultXML.append("<ROW>");
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID)).item(j).getTextContent()) + "</VALUE>");
+				resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(j).getTextContent()) + "</DATA1>");
+				resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPEID").item(j).getTextContent()) +  "</DATA2>");
+				resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME").item(j).getTextContent()) +  "</DATA3>");
+				resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONTAINEROWNDEPID").item(j).getTextContent()) +  "</DATA4>");
+				resultXML.append("</CELL>");
+				resultXML.append("</ROW>");
+	        }
+			resultXML.append("</ROWS>");
+			resultXML.append("</LISTVIEWDATA>");
+		} else {
+			resultXML.append("<PARAMETER>");
+			for(int j =0; j<docXML.getElementsByTagName("ROW").getLength(); j ++) {
+				resultXML.append("<CONTID" + j + ">" ); 
+				resultXML.append(makeListField(docXML.getElementsByTagName("CONTAINERID").item(j).getTextContent()) ); 
+				resultXML.append("</CONTID" + j + ">");
+				resultXML.append("<NAME" + j + ">" );
+				resultXML.append(makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID)).item(j).getTextContent())); 
+				resultXML.append("</NAME" + j + ">");
+			}
+			resultXML.append("</PARAMETER>");
 		}
 		
+		return resultXML.toString();
+	}
+
+	@Override
+	public String getContDocListS(String contID, String id, String pSubQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception {
+		
+		StringBuffer resultXML = new StringBuffer();
+		String OrderOption1 = "";
+		String OrderOption2 = "";
+		boolean PublicFlag = false;	// 공개/비공개 사용 여부
+		boolean SecurityFlag = false;	// 보안등급 사용 여부
+		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
+		String UserSecurityCode = "";
+		
+		// 수정(2007.06.18) : multidata 기능추가 
+		String strMultiData = commonUtil.getMultiData(lang, tenantID);
+		
+		String listString = "";
+		
+		// 표준모듈 (2007.05.07) : 다국어
+		if (contID.equals("ADMIN")) {
+			listString = getListHeader("S082", companyID, lang, tenantID);
+		} else {
+			listString = getListHeader("S006", companyID, lang, tenantID);
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERID", id);
+		map.put("v_CONTID", contID);
+		map.put("v_PSUBQUERY", pSubQuery);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+
+		int totalCount = ezApprovalGDAO.getContDocListCountS(map);
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>"+ totalCount +"</TOTALCNT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+		resultXML.append("<ROWS>");
 		return null;
 	}
 	

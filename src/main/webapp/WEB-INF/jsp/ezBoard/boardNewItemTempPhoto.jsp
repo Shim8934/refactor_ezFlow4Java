@@ -961,7 +961,7 @@
 	        <tr>
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
 	          <td style="width:70%" id="tdBoardName">${boardInfo.boardName}</td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
+	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
 	          <td style="width:120px; text-align:center">${userInfo.displayName1}</td>
 	        </tr>
 	        <tr>
@@ -996,7 +996,7 @@
 	  </tr>
 	  <tr>
 	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:400px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
 	    </td>
 	  </tr>
 	  <tr>

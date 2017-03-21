@@ -1432,8 +1432,8 @@ public class EzApprovalGarchiveController {
 		return "ezApprovalG/apprGaprdocattach";
 	}
 	
-	/** 전자결재 G 개인함 등록*/
-	@RequestMapping(value = "ezApprovalG/mgetDeptUseDocType.do", produces = "text/xml;charset=utf-8")
+	/** 전자결재 일반 문서첨부*/
+	@RequestMapping(value = "/ezApprovalG/mgetDeptUseDocType.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String mgetDeptUseDocType(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -1441,9 +1441,26 @@ public class EzApprovalGarchiveController {
 		
 		String deptID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		
-		String result = ezApprovalGService.getContainerInfoManage(deptID, "XML", userInfo.getCompanyID(), userInfo.getTenantId());
+		String result = ezApprovalGService.getContainerInfoManage(deptID, "XML", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		return result;
 	}
+	
+	/** 전자결재 일반 문서첨부 리스트*/
+	@RequestMapping(value = "/ezApprovalG/aprDocAttachList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String aprDocAttachList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String contID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String pageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), "", pageSize, pageNum, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+
+		return result;
+	}
+	
 	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")

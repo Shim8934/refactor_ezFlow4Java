@@ -158,11 +158,15 @@
 		                            field.innerHTML = SignCont;
 		                        }
 		                        else {
+		                        	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
 		                            var img = SignCont.split("::");
 		                            var signWidth = parseInt(field.offsetWidth) - 4 - 15;
 		                            var signHeight = parseInt(field.offsetHeight) - 4;
-		                            signWidth = 50;
-		                            signHeight = 28;
+		                            if (seumyung) {
+		                            	signHeight = 50;
+		                            } else {
+		                            	signHeight = 28;
+		                            }
 		
 		                            var strimg;
 		                            if (img.length >= 1) {
@@ -171,11 +175,16 @@
 		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
 		                                message.BodySetAttribute(SignName, img[0]);
 		                            }
-		                            if (img.length >= 2 && img[1] != "") {
-		                                field.innerHTML = img[1] + "<br>" + strimg;
-		                            }
-		                            else {
-		                                field.innerHTML = strimg;
+		                            
+		                            if (seumyung) {
+		                            	field.innerHTML = strimg;
+		                            } else {
+		                            	if (img.length >= 2 && img[1] != "") {
+		                            		field.innerHTML = img[1] + "<br>" + strimg;
+		                            	}
+		                            	else {
+		                            		field.innerHTML = strimg;
+		                            	}
 		                            }
 		                        }
 		                    }

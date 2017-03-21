@@ -459,9 +459,17 @@ function SendDraftMappingSign(ret) {
             signWidth = signWidth - 15;
             sighHeight = signWidth;
         }
-        signWidth = 50;
-        signHeight = 28;
-
+        
+        var field = message.GetListItem(fields, pseumyungdatecell);
+        if (field) {
+            setNodeText(field , s);
+            signWidth = 50;
+            signHeight = 28;
+        } else {  
+	        signWidth = 50;
+	        signHeight = 50;
+        }
+       
         var strimg;
         var SingFlag = true;
         var DekyulFlag = false;
@@ -469,11 +477,6 @@ function SendDraftMappingSign(ret) {
         var field = message.GetListItem(fields, pseumyungcell);
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText);
-        }
-
-        var field = message.GetListItem(fields, pseumyungdatecell);
-        if (field) {
-            setNodeText(field , s);
         }
 
         if (CurAprType == strAprType16)  
@@ -2083,7 +2086,6 @@ function putSignXML(SignXML) {
                         var signWidth = parseInt(field.offsetWidth) - 4 - 15;
                         var signHeight = parseInt(field.offsetHeight) - 4
                         signWidth = 50;
-                        
                         if (seumyung) {
                         	if (img[1].indexOf(strLang7) > -1) {
                         		signHeight = 28;
@@ -2093,7 +2095,7 @@ function putSignXML(SignXML) {
                         } else {
                         	signHeight = 28;
                         }
- 
+
                         var strimg;
                         if (img.length >= 1) {
                             strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
@@ -2113,12 +2115,12 @@ function putSignXML(SignXML) {
                         	}
                         } else {
                         	if (img.length >= 2 && img[1] != "") {
-                                field.innerHTML = img[1] + "<br>" + strimg;
-                            } else {
-                                field.innerHTML = strimg;
-                            }
+                        		field.innerHTML = img[1] + "<br>" + strimg;
+                        	}
+                        	else {
+                        		field.innerHTML = strimg;
+                        	}
                         }
-                        
                     }
                 }
             }
