@@ -358,6 +358,7 @@
 		        result = loadXMLString(result);
 		        var NodeList;
 		        NodeList = SelectNodes(result, "SIGNINFOS/SIGNINFO");
+
 		        if (NodeList.length <= 0) {
 		            SaveSignCheck();
 		            return;

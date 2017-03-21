@@ -2049,7 +2049,8 @@ function SignCheck() {
         return;
 
     SignXML = result;
-
+    //필요없을것 같아서 추가
+    return;
     var rtnVal = putSignXML(SignXML);
 
     if (rtnVal) {
@@ -2084,7 +2085,11 @@ function putSignXML(SignXML) {
                         signWidth = 50;
                         
                         if (seumyung) {
-                        	signHeight = 50;
+                        	if (img[1].indexOf(strLang7) > -1) {
+                        		signHeight = 28;
+                        	} else {
+                        		signHeight = 50;
+                        	}
                         } else {
                         	signHeight = 28;
                         }
@@ -2097,7 +2102,15 @@ function putSignXML(SignXML) {
                         }
                         
                         if (seumyung) {
-                            field.innerHTML = strimg;
+                        	if (img[1].indexOf(strLang7) > -1) {
+                        		if (img.length >= 2 && img[1] != "") {
+                                    field.innerHTML = img[1] + strimg;
+                                } else {
+                                    field.innerHTML = strimg;
+                                }
+                        	} else {
+                        		field.innerHTML = strimg;
+                        	}
                         } else {
                         	if (img.length >= 2 && img[1] != "") {
                                 field.innerHTML = img[1] + "<br>" + strimg;

@@ -379,8 +379,9 @@ function AprrovMappingSign(ret) {
                     var FilePath = encodeURI(ret);
                     if (pOrgAprUserID.toLowerCase() == pingUserID.toLowerCase())
                         strimg = "<img src='" + FilePath + "' border=0 embedding='1' ";
-                    else
-                        strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                    else {
+                    	strimg = strLang17 + "<br><img src='" + FilePath + "' border=0 embedding='1' ";
+                    }
 
                     strimg = strimg + " width=" + signWidth;
                     strimg = strimg + " height=" + signHeight + " spath='" + FilePath + "'>";
@@ -2187,7 +2188,11 @@ function putSignXML(SignXML) {
                         signWidth = 50;
                         
                         if (seumyung) {
-                        	signHeight = 50;
+                        	if (img[1].indexOf(strLang7) > -1) {
+                        		signHeight = 28;
+                        	} else {
+                        		signHeight = 50;
+                        	}
                         } else {
                         	signHeight = 28;
                         }
