@@ -3838,6 +3838,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		if (guBun != null) {
 			guBun = guBun.replace(";", "");
+		} else {
+			guBun = "0";
 		}
 		
 		model.addAttribute("itemIDList", itemIDList);

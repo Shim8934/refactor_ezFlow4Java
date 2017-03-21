@@ -234,7 +234,7 @@
 		        SetReceiptNumber();
 		
 		        setMenuBar("btnEdit", false);
-		
+
 		        setAutoProperty();
 		        process_AfterOpen();
 		

@@ -2089,12 +2089,12 @@ function putSignXML(SignXML) {
                             strimg = strimg + " width=" + signWidth;
                             strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
                         }
-
-                        if (img.length >= 2 && img[1] != "") {
-                            field.innerHTML = img[1] + "<br>" + strimg;
-                        } else {
+//부서수신함에서 날짜나오는거 
+//                        if (img.length >= 2 && img[1] != "") {
+//                            field.innerHTML = img[1] + "<br>" + strimg;
+//                        } else {
                             field.innerHTML = strimg;
-                        }
+//                        }
                     }
                 }
             }

@@ -6,7 +6,6 @@
 	<head>
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common.js"></script> -->
 <!-- 		<script type="text/javascript" src="/js/ezApproval/Common_Function.js"></script> -->
-		
 		<title><c:out value = '${title}' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="/css/Tab.css" type="text/css">
@@ -539,16 +538,15 @@
 		    function btn_FormConnInfo_onclick() {
 		        FormConnInfo_dialogarguments[0] = "";
 		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
-		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + escape(companyID);
-		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");      
+		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
+		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");
 		    }
 		
 		    function FormConnInfo_onclick_Complete(retVal) {
 		        if (retVal != "cancel") {
 		            if (txt_OpinionContent.value == "") {
 		                txt_OpinionContent.value = retVal;
-		            }
-		            else {
+		            } else {
 		                txt_OpinionContent.value = txt_OpinionContent.value + "\n" + retVal;
 		            }
 		        }
