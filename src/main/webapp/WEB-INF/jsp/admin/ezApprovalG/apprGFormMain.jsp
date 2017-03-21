@@ -224,7 +224,7 @@
 		        	type : "POST",
 		        	url : "/admin/ezApprovalG/getFormRecvAdmin.do",
 		        	async : false,
-		        	data : {node1 : formID},
+		        	data : {formID : formID},
 		        	success : function(result) {
 						xmlpara = loadXMLString(result);
 	        		}
