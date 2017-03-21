@@ -59,7 +59,7 @@ header .logo {float:left;margin:0px; padding:0px; width:200px;height:42px;  disp
 /*-- utmenu --*/
 .utmenu {font-family:Meiryo UI, Gulim, Dotum, Arial, Helvetica, sans-serif ; float:right; margin:9px 0px 0px; padding:0px; height:26px;}
 .utmenu ul {margin:0px; padding:0px;list-style:none; line-height:26px;}
-.utmenu ul li { float:left; display:inline-block; background:url(../images/kr/cm/utmenu_bar.gif) no-repeat right 7px; padding:0px 5px; font-size:12px; cursor:pointer; color:#fff;}
+.utmenu ul li { float:left; display:inline-block; background:url(../images/kr/cm/utmenu_bar.gif) no-repeat right 7px; padding:0px 5px; font-size:12px; cursor:pointer; color:#555555;}
 .utmenu ul .btn_logout {display:inline-block;padding:0px 4px 0px 0px;background:url(../images/kr/cm/bg_btn_logout.gif) no-repeat top right; line-height:27px;text-decoration:none !important;white-space:nowrap;margin:0px 5px 0px 5px;}
 .utmenu ul .btn_logout span {display:block;padding:0px 4px 0 8px;background:url(../images/kr/cm/bg_btn_logout.gif) no-repeat top left;height:27px;}
 

@@ -589,14 +589,14 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", innserdeptid);
-	                createNodeAndInsertText(xmlpara, objNode, "PROP", "EXTENSIONATTRIBUTE2");
-	
-	                xmlHTTP.open("POST", "/myoffice/ezOrgan/OrganInfo/GetDeptSubTreeInfo.aspx", false);
+	                createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
+		
+	                xmlHTTP.open("POST", "/ezOrgan/getDeptSubTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
 	
 	                var xmlNodes = createXmlDom();
 	                xmlNodes = loadXMLString(xmlHTTP.responseText);
-	
+					
 	                var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
 	
 	                if (objNodes.length > 0) {
@@ -1258,16 +1258,15 @@
 	                if (chkDuplflag) {
 	                    continue;
 	                } else {
-	
 	                    strXML = "<LISTVIEWDATA><HEADERS>";
 	                    strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
 	                    strXML = strXML + "</HEADERS><ROWS><ROW><CELL>";
-	                    strXML = strXML + "<VALUE>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[6], "DATA6")) + "</VALUE>";
+	                    strXML = strXML + "<VALUE>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[0], "VALUE")) + "</VALUE>";
 	                    strXML = strXML + "<DATA1>" + getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[1], "DATA1") + "</DATA1>";
 	                    strXML = strXML + "<DATA2>" + "" + "</DATA2>";
 	                    strXML = strXML + "<DATA3>" + "" + "</DATA3>";
-	                    strXML = strXML + "<DATA4>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[6], "DATA6")) + "</DATA4>";
-	                    strXML = strXML + "<DATA5>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[6], "DATA6")) + "</DATA5>";
+	                    strXML = strXML + "<DATA4>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[0], "VALUE")) + "</DATA4>";
+	                    strXML = strXML + "<DATA5>" + MakeXMLString(getNodeText(GetChildNodes(GetChildNodes(listnodes[cnt])[0])[0], "VALUE")) + "</DATA5>";
 	                    strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
 	                    objXML = loadXMLString(strXML);
 	

@@ -43,7 +43,7 @@
 		    var AutoRule_Listview;
 		    var rtnVal = "";    
 		    var AprTypeXML = createXmlDom();
-		    var strResx436 = "<spring:message code='ezApproval.t436'/>";
+		    var strResx436 = "<spring:message code='ezApprovalG.t445'/>";
 		    var pDocType = "";
 		    var thisSelGUID = ""; 
 		    var FormProcSpelling = "${formProcSpelling}";
@@ -235,10 +235,10 @@
 		
 		            var result = getNodeText(SelectNodes(resultXML, "DATA")[0]);
 		            if (result == "OK") {
-		                alert("<spring:message code='ezApproval.t755'/>");
+		                alert("<spring:message code='ezApprovalG.t1663'/>");
 		            }
 		            else {
-		                alert("<spring:message code='ezApproval.t757'/>");
+		                alert("<spring:message code='ezApprovalG.t1669'/>");
 		            }
 		
 		            try {
@@ -370,7 +370,7 @@
 		    }
 		
 		    function insertAllCont_onclick() {
-		        var pAlertContent = "<spring:message code='ezApproval.t623'/><br><spring:message code='ezApproval.t624'/>";
+		        var pAlertContent = "<spring:message code='ezApprovalG.t1361'/><br><spring:message code='ezApprovalG.t1362'/>";
 		        var Ans = OpenInformationUI(pAlertContent);
 		
 		        if (!Ans)
@@ -740,7 +740,7 @@
 		    }
 		
 		    function btn_FormConnSave_onclick() {
-		        var pInformationContent = "<spring:message code='ezApproval.t515'/>";
+		        var pInformationContent = "<spring:message code='ezApprovalG.t1455'/>";
 		        var rtnVal = OpenInformationUI(pInformationContent, FormConnSave_Complete);
 		
 		        if (rtnVal) {
@@ -788,12 +788,12 @@
     <body class="popup">
         <div id="menu">
             <ul>
-                <li><span id="btnSave" onClick="return btnSave_onclick()"><spring:message code='ezApproval.t66'/></span></li>
+                <li><span id="btnSave" onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
             </ul>
         </div>
         <div id="close">
             <ul>
-                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code='ezApproval.t70'/></span></li>
+                <li><span id="btnClose" onClick="return btnClose_onclick()"><spring:message code='ezApprovalG.t64'/></span></li>
             </ul>
         </div>
         <div class="portlet_tabpart01">
@@ -806,9 +806,10 @@
                 <p id = "ApvForm_sub6" style="display:none"><span divname="ApvForm_div6" id="1tab6"><spring:message code='ezApproval.t990012'/></span></p>
 	        </div>
         </div>
+        
         <div id="ApvForm_content1" style="width:100%;height:90%; padding-top:10px; display:none">
 			<h2 id="form" class="receiver_tltype01" style="margin-bottom:5px;">
-				<span style="min-width: 45px;" id="formstr"><spring:message code='ezApproval.t00006'/></span>
+				<span style="min-width: 45px;" id="formstr"><spring:message code='ezApprovalG.t825'/></span>
 			</h2>
 			
 			<table class="content" style="width:100%;">                
@@ -824,7 +825,7 @@
                     </td>        
                 </tr>
                 <tr>
-                    <th style="width:100px; text-align:center"><spring:message code='ezApproval.t507'/></th>
+                    <th style="width:100px; text-align:center"><spring:message code='ezApprovalG.t598'/></th>
                     <td style="width:40%;">
                         <input type="text" id="tbDescript" name="tbDescript" style="WIDTH: 100%" maxlength="50">
                     </td>
@@ -838,15 +839,15 @@
             <div style="padding-bottom:5px; vertical-align:middle"><input type="checkbox" id="setAutoItemCode" name="setAutoItemCode" onclick="viewAutoItemCode()" /><span><spring:message code='ezApproval.t00004'/></span></div>
             <table class="content" style="width:100%;">               
 				<tr id="tr_setAutoItemCode">
-					<th style="width:10%; text-align:center"><spring:message code='ezApproval.t335'/></th>
+					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
                     <td style="width:400px;">
                         <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 50px" readonly>
                         <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 80px" readonly>
                         <input type="hidden" id="tbItemName2" name="tbItemName2">
                         <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
-                        <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApproval.t194'/></span></a>
+                        <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
                     </td>
-                    <th style="width:10%; text-align:center"><spring:message code='ezApproval.t81'/></th>
+                    <th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t118'/></th>
                     <td style="width:100px; text-align:center">
                         <select id="securitylevel" name="select">${securityNode}</select>
                     </td>
@@ -857,8 +858,8 @@
                     <th style="width:10%; text-align:center"><spring:message code='ezApproval.t82'/></th>
                     <td style="width:100px; text-align:center">
                         <select id="isPublic" name="select">
-                            <option value="Y" selected><spring:message code='ezApproval.t50'/></option>
-                            <option value="N"><spring:message code='ezApproval.t49'/></option>
+                            <option value="Y" selected><spring:message code='ezApprovalG.t47'/></option>
+                            <option value="N"><spring:message code='ezApprovalG.t46'/></option>
                         </select>
                     </td>
                 </tr>
@@ -911,7 +912,7 @@
                     </td>
                     <th>
                         <a class="imgbtn" id="btn_OpinionAdd"><span onclick="btn_FormConnInfo_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br>                              
-                        <a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApproval.t66'/></span></a><br>
+                        <a class="imgbtn" id="btn_OpinionSave" style="display:none"><span onclick="btn_FormConnSave_onclick()"><spring:message code='ezApprovalG.t1767'/></span></a><br>
                     </th>
                 </tr>
             </table>
