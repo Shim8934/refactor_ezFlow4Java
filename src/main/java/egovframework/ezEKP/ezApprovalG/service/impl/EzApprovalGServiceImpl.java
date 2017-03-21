@@ -3358,23 +3358,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 
 			for (int i = 0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(1).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(2).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(9).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(10).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent()));
-				System.out.println( makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent()));
-
-
 				if(approvalFlag.equals("G")) {
 					map.put("v_AprDeptMemberSN", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent()));
 					map.put("v_AprMemberDeptID", makeRightField(doc.getElementsByTagName("ROW").item(i).getChildNodes().item(3).getTextContent()));
@@ -8294,7 +8277,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_MAXAPRSN", maxAprSN);
 			map.put("v_SIGNTYPE", makeRightField(xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent()));
 			map.put("v_SIGNNAME", makeRightField(xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent()));
-			map.put("v_CONTENT", makeRightField(xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent()));
+			map.put("v_CONTENT", xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent());
 			
 			try {
 				ezApprovalGDAO.insertSignInfo(map);
