@@ -996,7 +996,7 @@
 	  </tr>
 	  <tr>
 	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+	        <div id="addimagecontent" style="overflow:auto;width:100%;height:400px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
 	    </td>
 	  </tr>
 	  <tr>

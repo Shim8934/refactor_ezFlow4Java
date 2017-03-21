@@ -408,6 +408,8 @@ public interface EzApprovalGService {
 
 	public String getFrequencyClassList(LoginVO userInfo) throws Exception;
 	
-	public String getContainerInfoManage(String deptID, String mode, String companyID, int tenantId) throws Exception;
+	public String getContainerInfoManage(String deptID, String mode, String companyID, String lang, int tenantId) throws Exception;
+
+	public String getContDocListS(String contID, String id, String string, String pageSize, String pageNum, String orderCell, String orderOption,	String companyID, String lang, int tenantId, String offset) throws Exception;
 
 }

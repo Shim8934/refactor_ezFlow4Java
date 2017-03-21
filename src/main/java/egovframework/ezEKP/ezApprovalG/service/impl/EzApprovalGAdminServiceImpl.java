@@ -2399,11 +2399,17 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID) throws Exception {
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception {
 		String multiData = commonUtil.getMultiData(lang, tenantID);
 		StringBuilder sb = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LISTTYPE", "105");
+		
+		if (approvalFlag.equals("S")) {
+			map.put("v_LISTTYPE", "S103");
+		} else {
+			map.put("v_LISTTYPE", "105");
+		}
+		
 		map.put("v_LANGTYPE", lang);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
@@ -2428,6 +2434,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_FORMID", formID);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
+		map1.put("approvalFlag", approvalFlag);
 		
 		logger.debug("getFormRecvAdmin started.");
 		List<ApprGFormVO> listBody = ezApprovalGAdminDAO.getFormRecvAdmin(map1);
@@ -2637,6 +2644,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("v_PFORMID", result);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
+				map.put("approvalFlag", approvalFlag);
 				
 				logger.debug("setFormDataDelete started.");
 				ezApprovalGAdminDAO.setFormDataDelete(map);
@@ -2647,6 +2655,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					
+					if (approvalFlag.equals("S")) {
+						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
+					}
 					
 					logger.debug("setFormDataInsert2 started.");
 					ezApprovalGAdminDAO.setFormDataInsert2(map);
@@ -2662,10 +2674,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("setFormDataUpdate ended.");
 			
 			if (!recevGroupXML.equals("")) {
+				logger.debug("recevGroupXML = " + recevGroupXML);
 				map = new HashMap<String, Object>();
 				map.put("v_PFORMID", formID);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
+				map.put("approvalFlag", approvalFlag);
 				
 				logger.debug("setFormDataDelete started.");
 				ezApprovalGAdminDAO.setFormDataDelete(map);
@@ -2676,6 +2690,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				for (int i=0; i < doc.getElementsByTagName("DATA").getLength(); i++) {
 					map.put("deptID", doc.getElementsByTagName("DEPTID").item(i).getTextContent());
 					map.put("deptSN", doc.getElementsByTagName("DEPTSN").item(i).getTextContent());
+					
+					if (approvalFlag.equals("S")) {
+						map.put("userID", doc.getElementsByTagName("USERID").item(i).getTextContent());						
+					}
 					
 					logger.debug("setFormDataInsert2 started.");
 					ezApprovalGAdminDAO.setFormDataInsert2(map);

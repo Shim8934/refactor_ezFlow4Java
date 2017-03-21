@@ -530,7 +530,7 @@ function ListView() {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
             oTbody.appendChild(objTr);
-            var oText = document.createTextNode(strLang535);
+            var oText = document.createTextNode(strLang944);
             var objTd = document.createElement("TD");
             objTd.align = "center";
             if (colCount != 0)

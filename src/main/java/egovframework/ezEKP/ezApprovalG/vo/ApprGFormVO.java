@@ -56,6 +56,7 @@ public class ApprGFormVO {
 	private String itemName2;
 	private String useFlag;
 	private String keepPeriodCode;
+	private String userID;
 	
 	public String getFormContID() {
 		return formContID;
@@ -236,6 +237,12 @@ public class ApprGFormVO {
 	}
 	public void setKeepPeriodCode(String keepPeriodCode) {
 		this.keepPeriodCode = keepPeriodCode;
+	}
+	public String getUserID() {
+		return userID;
+	}
+	public void setUserID(String userID) {
+		this.userID = userID;
 	}
 	
 }
