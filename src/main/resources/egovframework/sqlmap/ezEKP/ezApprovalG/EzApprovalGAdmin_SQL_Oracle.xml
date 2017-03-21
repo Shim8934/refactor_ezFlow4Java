@@ -1621,20 +1621,40 @@
 	</delete>
 
 	<insert id="EzApprovalGAdmin.setFormDataInsert2" parameterClass="Map">
-		<![CDATA[
-			INSERT INTO TBL_FORMRECV
-				(formid,
-				deptid,
-				deptsn,
-				companyid,
-				tenant_id)
-			VALUES
-				(#v_PFORMID#,
-				#deptID#,
-				#deptSN#,
-				#companyID#,
-				#tenantID#)
-		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					userid,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#userID#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				INSERT INTO TBL_FORMRECV
+					(formid,
+					deptid,
+					deptsn,
+					companyid,
+					tenant_id)
+				VALUES
+					(#v_PFORMID#,
+					#deptID#,
+					#deptSN#,
+					#companyID#,
+					#tenantID#)
+			]]>
+		</isEqual>
 	</insert>
 
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
