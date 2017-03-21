@@ -5302,7 +5302,7 @@ public class EzBoardController extends EgovFileMngUtil{
                 totalPage = 1;
             }
         } else {
-            totalPage = 1;
+            totalPage = 0;
         }
         
         model.addAttribute("useEditor", useEditor);

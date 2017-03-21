@@ -1442,7 +1442,6 @@
   				  AND 
   				  	ENDDATE > #nowDate# 
    				  ORDER BY 
-   				  	A.WriteDate DESC,
    				  	$iv_PORDERBYSUB$
    				  LIMIT
    				  	#limit#, #rowCount#
