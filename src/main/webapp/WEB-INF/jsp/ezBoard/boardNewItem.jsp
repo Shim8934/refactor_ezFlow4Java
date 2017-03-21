@@ -1458,7 +1458,7 @@
 		                document.getElementById("tab01").style.display = "none";
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
 		                    if ("${docID}" != "")
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                }

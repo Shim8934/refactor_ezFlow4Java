@@ -213,7 +213,7 @@
 		</script>
 	</head>
 	<body class="mainbody" onload = "makePageSelPage()">
-		<h1><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t31' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
+		<h1><spring:message code = 'ezCommunity.t1117' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
 		<form name="adm_search_key" method="post" ID="Form1">
 	    	<table class="content">
 				<tr>

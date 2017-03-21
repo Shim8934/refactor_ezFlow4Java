@@ -49,7 +49,6 @@
 	    		history.back();
 			}
     		function AddQuesList_DATA(vdata, vAttachYN, QstXML) {
-
         		var selCnt=frmCreate.selQues.length;
         		if (selCnt > 0) {
             		while(1) {
@@ -487,7 +486,7 @@
 		        for (var i = 0; i < loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").length; i++) {
 		            if (loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW")[i].getElementsByTagName("QUESTIONCONTENT").length > 0) {
 		                strSeq = strResult[j+1].split(';');
-						AddQuesList_DATA(strSeq[0], "", loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i).outerHTML);
+						AddQuesList_DATA(strSeq[0], "", getXmlString(loadXMLString(xmlHttp2.responseText).getElementsByTagName("ROW").item(i)));
 		                j++;
 		            }
 		        }

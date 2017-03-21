@@ -387,22 +387,27 @@
 		                    if (field) {
 		                        retVal = true;
 		                        if (SignType == "TEXT" || SignType == "HTML") {
-		                            field.textContent = SignCont;
-		                        }
-		                        else if (SignType == "HTML") {
 		                            field.innerHTML = SignCont;
 		                        }
 		                        else {
-		                        	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
+		                        	var seumyung = message.GetListItem(fields, "seumyungdate" + (SignName.slice(-1)));
+		                        	var habyuiDate = message.GetListItem(fields, "habyuidate" + (SignName.slice(-1)));
 		                            var img = SignCont.split("::");
 		                            var signWidth = parseInt(field.offsetWidth) - 4 - 15;
 		                            var signHeight = parseInt(field.offsetHeight) - 4;
-
+		                            signWidth = 50;
+		                            
 		                            if (seumyung) {
 		                            	if (img[1].indexOf(strLang7) > -1) {
 		                            		signHeight = 28;
 		                            	} else {
 		                            		signHeight = 50;
+		                            		
+		                            		if (SignName.indexOf("habyuisign") > -1) {
+		                            			if (!habyuiDate) {
+				                            		signHeight = 28;
+			                            		}
+		                            		}
 		                            	}
 		                            } else {
 		                            	signHeight = 28;
@@ -413,11 +418,21 @@
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
 		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-		                                message.BodySetAttribute(SignName, img[0]);
 		                            }
 		                            
 		                            if (seumyung) {
 		                            	field.innerHTML = strimg;
+		                            	
+		                            	if (SignName.indexOf("habyuisign") > -1) {
+	                            			if (!habyuiDate) {
+	                            				if (img.length >= 2 && img[1] != "") {
+	    		                            		field.innerHTML = img[1] + "<br>" + strimg;
+	    		                            	}
+	    		                            	else {
+	    		                            		field.innerHTML = strimg;
+	    		                            	}
+		                            		}
+	                            		}
 		                            } else {
 		                            	if (img.length >= 2 && img[1] != "") {
 		                            		field.innerHTML = img[1] + "<br>" + strimg;

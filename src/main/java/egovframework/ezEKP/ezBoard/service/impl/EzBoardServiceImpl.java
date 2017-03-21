@@ -849,7 +849,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
+			orderOption1 = " A.WRITEDATE DESC ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -877,7 +877,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
+			orderOption1 = " A.WRITEDATE DESC ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -904,7 +904,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			orderOption1 = " A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ";
+			orderOption1 = " A.WRITEDATE DESC ";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -932,7 +932,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
+			boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -964,7 +964,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		} else {
-			boardListVO.setOrderBySub(" A.PARENTWRITEDATE DESC, A.UPPERITEMIDTREE ");
+			boardListVO.setOrderBySub(" A.WRITEDATE DESC ");
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();

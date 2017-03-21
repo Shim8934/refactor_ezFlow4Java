@@ -598,8 +598,6 @@ function SendDraftMappingSign(ret)
 	var signCnt;
 	var signposition = "1";
 	signCnt = 0;
-	//var positiontext = "";
-	//positiontext = getopinioncount();
 
 	if ( LastSignSN == "1") 
 		signposition = 1;
@@ -641,6 +639,12 @@ function SendDraftMappingSign(ret)
 	var field = message.GetListItem(fields, psigncell);//CKEDITOR-원본 : field = fields.Item(psigncell);
 	var signWidth	= parseInt(field.offsetWidth) - 4 - 15;//CKEDITOR-원본 :var signWidth	= parseInt(field.TagObject.offsetWidth) - 4 - 15; 
 	var signHeight	= parseInt(field.offsetHeight) - 4;//CKEDITOR-원본 :var signHeight	= parseInt(field.TagObject.offsetHeight) - 4;
+	
+	if (message.GetListItem(fields, pseumyungdatecell)) {
+		signWidth = 50;
+    	signHeight = 50;
+    } 
+	
 	var strimg;
 	var SingFlag = true;
 	 
@@ -648,7 +652,7 @@ function SendDraftMappingSign(ret)
 	{
 	    strimg = "<img src='" + encodeURI(ret) + "' border=0 embedding='1' ";
 	    strimg = strimg + " width=" + signWidth;
-	    strimg = strimg + " height=" + signHeight + " spath='" + escape(ret) + "'>";
+	    strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(ret) + "'> ";
 	  	field.innerHTML = strimg;//CKEDITOR-원본 : field.TagObject.innerHTML = strimg;
 	
 	  	//사인정보를 저장한다.(Undo용)

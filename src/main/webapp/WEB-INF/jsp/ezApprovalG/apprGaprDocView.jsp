@@ -135,7 +135,7 @@
 		    function putSignXML(SignXML) {
 		        var retVal = false;
 		        /* 2017-03-18 장진혁 try 주석처리 : mht 파일은 save하는 이유를 알수없음, 스크립트오류만 안내게 수정함 */
-		        /* try { */
+		         try { 
 		            var NodeList;
 		            var fields = message.GetFieldsList();
 		            NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
@@ -145,28 +145,33 @@
 		                    var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
 		                    var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
 		                    var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
-		                    var field;
-	                    
-		                    field = message.GetListItem(fields, SignName);
+		                    
+		                    var field = message.GetListItem(fields, SignName);
 
 		                    if (field) {
 		                        retVal = true;
-		                        if (SignType == "TEXT" ) {
-		                            field.textContent = SignCont;
-		                        }
-		                        else if (SignType == "HTML") {
+		                        if (SignType == "TEXT" || SignType == "HTML") {
 		                            field.innerHTML = SignCont;
 		                        }
 		                        else {
-		                        	var seumyung = message.GetListItem(fields, "seumyungdate" + (i + 1));
+		                        	var seumyung = message.GetListItem(fields, "seumyungdate" + (SignName.slice(-1)));
+		                        	var habyuiDate = message.GetListItem(fields, "habyuidate" + (SignName.slice(-1)));
 		                            var img = SignCont.split("::");
 		                            var signWidth = parseInt(field.offsetWidth) - 4 - 15;
 		                            var signHeight = parseInt(field.offsetHeight) - 4;
+		                            signWidth = 50;
+		                            
 		                            if (seumyung) {
 		                            	if (img[1].indexOf(strLang7) > -1) {
 		                            		signHeight = 28;
 		                            	} else {
 		                            		signHeight = 50;
+		                            		
+		                            		if (SignName.indexOf("habyuisign") > -1) {
+		                            			if (!habyuiDate) {
+				                            		signHeight = 28;
+			                            		}
+		                            		}
 		                            	}
 		                            } else {
 		                            	signHeight = 28;
@@ -177,11 +182,21 @@
 		                                strimg = "<img src='" + encodeURI(img[0]) + "' border=0 embedding='1' ";
 		                                strimg = strimg + " width=" + signWidth;
 		                                strimg = strimg + " height=" + signHeight + " spath='" + encodeURI(img[0]) + "'>";
-		                                message.BodySetAttribute(SignName, img[0]);
 		                            }
 		                            
 		                            if (seumyung) {
 		                            	field.innerHTML = strimg;
+		                            	
+		                            	if (SignName.indexOf("habyuisign") > -1) {
+	                            			if (!habyuiDate) {
+	                            				if (img.length >= 2 && img[1] != "") {
+	    		                            		field.innerHTML = img[1] + "<br>" + strimg;
+	    		                            	}
+	    		                            	else {
+	    		                            		field.innerHTML = strimg;
+	    		                            	}
+		                            		}
+	                            		}
 		                            } else {
 		                            	if (img.length >= 2 && img[1] != "") {
 		                            		field.innerHTML = img[1] + "<br>" + strimg;
@@ -194,10 +209,11 @@
 		                    }
 		                }
 		            }
-		        /* } catch (e) {
+		        } catch (e) {
 		            alert("putSignXML : " + e.description);
 		            return false;
-		        } */
+		        }
+		        
 		        return retVal;
 		    }
 		    
