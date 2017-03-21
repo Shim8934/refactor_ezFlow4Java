@@ -961,7 +961,7 @@
 	        <tr>
 	          <th style="width:100px;"><spring:message code='ezBoard.t142'/></th>
 	          <td style="width:70%" id="tdBoardName">${boardInfo.boardName}</td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
+	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
 	          <td style="width:120px; text-align:center">${userInfo.displayName1}</td>
 	        </tr>
 	        <tr>
