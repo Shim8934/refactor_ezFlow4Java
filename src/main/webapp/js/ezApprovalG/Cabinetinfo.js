@@ -467,7 +467,7 @@ function CabinetSearch_onclick() {
         
         var rtnXml = loadXMLString(result);
         var iSeledtedIdx = 0;
-        if (SelectSingleNodeValue(rtnXml, "RESULT") == "FALSE") {
+        if (getNodeText(rtnXml) == "FALSE") {
             alert(linealt17);
         }
         else {

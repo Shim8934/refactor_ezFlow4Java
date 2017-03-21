@@ -519,7 +519,7 @@
 	        		data : {
 	        				userID 	 : pUserID,
 	        				formID   : pFormID,
-	        				aprLineSN: p_SelAprLineTempletSN
+	        				aprLineSN: p_SelAprDeptTempletSN
 	        				},
 	        		success: function(xml){
 	        			result = loadXMLString(xml);

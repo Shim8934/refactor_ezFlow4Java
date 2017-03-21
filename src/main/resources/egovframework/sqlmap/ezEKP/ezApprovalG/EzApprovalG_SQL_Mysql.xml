@@ -14972,7 +14972,7 @@
 				   		</isNotEmpty>
 				   		<isEmpty property="v_ORDEROPTION2">
 				   			ORDER BY 
-				   				RECEIPTDATE DESC, SN DESC
+				   				RECEIPTDATE, SN
 				   		</isEmpty>
 				   		<![CDATA[
 				   		LIMIT
@@ -20313,5 +20313,34 @@
          	COMPANYID = #companyID#
          AND
           	TENANT_ID = #v_TENANTID#
+   	</select>
+   	
+   	<select id="EzApprovalG.getContainerInfo" parameterClass="Map" resultClass="ApprGLeftVO">
+   		SELECT 
+   			 tbl_Container.ContainerID ,
+             tbl_Container.ContainerTypeID ,
+             tbl_Container.ContainerOwnDepID ,
+             tbl_ContainerType.ContainerTypeName ,
+             tbl_ContainerType.ContainerTypeName2 
+        FROM 
+        	 tbl_Container 
+        JOIN 
+        	 tbl_ContainerType    
+        ON 
+        	 tbl_Container.ContainerTypeID = tbl_ContainerType.ContainerTypeID
+        AND
+        	 tbl_Container.COMPANYID = tbl_ContainerType.COMPANYID
+        AND
+        	 tbl_Container.TENANT_ID = tbl_ContainerType.TENANT_ID
+        WHERE  
+       		 CONTAINEROWNDEPID = #v_DEPTID#
+       	AND
+       		 tbl_Container.TENANT_ID = #v_TENANTID#
+       	AND
+       		 tbl_Container.COMPANYID = #companyID#
+   	</select>
+   	
+   	<select id="EzApprovalG.getContDocListCountS" parameterClass="Map" resultClass="int">
+   	
    	</select>
 </sqlMap>

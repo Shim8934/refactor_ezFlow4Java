@@ -620,7 +620,7 @@
 			                document.getElementById("UserList").innerHTML = "";
 			
 			            var headerData = createXmlDom();
-			            headerData = loadXMLString(document.getElementById("userlist_h").innerHTML);
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
 			            
 			            if (result != "") {
 			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];
@@ -665,7 +665,7 @@
 			                document.getElementById("LineUserList").innerHTML = "";
 			
 			            var headerData = createXmlDom();
-			            headerData = loadXMLString(document.getElementById("userlist_h").innerHTML);
+			            headerData = loadXMLString(userlist_h.innerHTML.toUpperCase());
 			            
 			            if (result != "") {
 			                var xmlRtn = loadXMLString(result).documentElement.getElementsByTagName("ROWS")[0];

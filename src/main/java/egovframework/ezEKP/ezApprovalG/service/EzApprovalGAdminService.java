@@ -114,7 +114,7 @@ public interface EzApprovalGAdminService {
 	
 	public String delForm(String formID, String companyID, String realPath, int tenantID) throws Exception;
 	
-	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID) throws Exception;
+	public String getFormRecvAdmin(String formID, String lang, String companyID, int tenantID, String approvalFlag) throws Exception;
 
 	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception;
 
