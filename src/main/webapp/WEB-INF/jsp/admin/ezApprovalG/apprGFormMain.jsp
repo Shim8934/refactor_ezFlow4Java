@@ -413,17 +413,21 @@
 		        	$('property span').html("<spring:message code = 'ezApprovalG.t999935' />");
 		        }
 		    }
-	
+		    
+		    var FormConnInfo_dialogarguments = new Array();
 		    function btn_OpinionAdd_onclick() {
-		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURI(companyID);
-		        var feature = "status:no;dialogWidth:430px;dialogHeight:450px;help:no;scroll:no;edge:sunken";
-		        var ret = window.showModalDialog(url, companyID, feature);
-	
-		        if (ret != "cancel") {
-		            if (txt_OpinionContent.innerText == "") {
-		                txt_OpinionContent.innerText = ret;
+		    	FormConnInfo_dialogarguments[0] = "";
+		        FormConnInfo_dialogarguments[1] = FormConnInfo_onclick_Complete;
+		        var url = "/admin/ezApprovalG/formConnInfo.do?companyID=" + encodeURIComponent(companyID);
+		        GetOpenWindow(url, "FormConnInfo", 430, 450, "NO");
+		    }
+		    
+		    function FormConnInfo_onclick_Complete(retVal) {
+		        if (retVal != "cancel") {
+		            if (txt_OpinionContent.value == "") {
+		                txt_OpinionContent.value = retVal;
 		            } else {
-		                txt_OpinionContent.innerText = txt_OpinionContent.innerText + "\n" + ret;
+		                txt_OpinionContent.value = txt_OpinionContent.value + "\n" + retVal;
 		            }
 		        }
 		    }

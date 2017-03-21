@@ -21,19 +21,29 @@
 		    var xmlDom_treeview = createXmlDom();
 		    var ReturnFunction;
 		
-		    function Select() {
+		    function Select() {		    	
 		    	if (selectedBoard == "") {
 		            alert("<spring:message code='ezBoard.t179'/>");
 		            return;
 		        }
-		    	if (oldguBun != newguBun) {
-		        	alert("<spring:message code='ezBoard.jsh01'/>");
-		            return;
-		        }
-		    	if (oldguBun == "3" && newguBun == "3") {
-		        	alert("<spring:message code='ezBoard.t180'/>");
-		            return;
-		        }
+		    	if (oldguBun > 0) {
+			    	if (oldguBun != newguBun) {
+			        	alert("<spring:message code='ezBoard.jsh01'/>");
+			            return;
+			        }
+			    	if (oldguBun == "3" && newguBun == "3") {
+			        	alert("<spring:message code='ezBoard.t180'/>");
+			            return;
+			        }
+		    	} else {
+		    		if (newguBun == "2" || newguBun == "3" || newguBun == "4") {
+			        	alert("<spring:message code='ezBoard.t180'/>");
+			            return;
+			        } else if (newguBun == "1" || newguBun == "5") {
+			        	alert("<spring:message code='ezBoard.jsh01'/>");
+			            return;
+			        }
+		    	}
 		        if (CheckIfAnonyBoard(selectedBoard) == "2") {
 		            alert("<spring:message code='ezBoard.t999070'/>");
 		            return;

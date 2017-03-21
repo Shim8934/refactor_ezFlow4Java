@@ -130,34 +130,80 @@
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getTaskInSubCategoryForManage"
 		parameterClass="Map" resultClass="ApprGTaskVO">
-		<![CDATA[
-			SELECT
-				taskcode,
-				keepingperiod,
-				tempflag,
-				displayrecflag,
-				specialcatalogflag,
-				sc1,
-				sc2,
-				sc3,
-				keepingmethod,
-				keepingplace,
-				taskname,
-				taskname2,
-				subcategorycode
-			FROM
-				TBL_TASKCODE
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				subcategorycode = #v_SUBCATECODE#
-			AND
-				delflag = '0'
-			ORDER BY
-				taskcode
-		]]>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					subcategorycode,
+					itemSecurity,
+					isPublic
+				FROM
+					TBL_TASKCODE
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					taskcode,
+					keepingperiod,
+					tempflag,
+					displayrecflag,
+					specialcatalogflag,
+					sc1,
+					sc2,
+					sc3,
+					keepingmethod,
+					keepingplace,
+					taskname,
+					taskname2,
+					subcategorycode,
+					itemSecurity,
+					isPublic,
+					(SELECT
+				    	CONCAT(CABINETCLASSNO, '001')
+				     FROM
+				     	TBL_CABINETCLASS A
+				     WHERE
+				     	TENANT_ID = #tenantID#
+				     AND
+				     	COMPANYID = #companyID#
+				     AND
+				     	A.TASKCODE = B.TASKCODE ) CABINETID 
+				FROM
+					TBL_TASKCODE B
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					subcategorycode = #v_SUBCATECODE#
+				AND
+					delflag = '0'
+				ORDER BY
+					taskcode
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getTaskInfo" parameterClass="Map" resultClass="ApprGTaskVO"> -->

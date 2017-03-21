@@ -136,6 +136,7 @@
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
 		    var hideCabinet = "${hideCabinet}";
+		    var checkdocinfo = false;
 		    window.onload = function ()
 		    {
 		        try{
@@ -451,7 +452,7 @@
 				            }
 			            } else {
 				            if (cabinetID == "") {
-				                var pAlertContent = "분류코드 지정하라고 메세지 삽입";
+				                var pAlertContent = "<spring:message code='ezApprovalG.t137'/>";
 				                OpenAlertUI(pAlertContent, check_btnSendDraft);
 				                return;
 				            }

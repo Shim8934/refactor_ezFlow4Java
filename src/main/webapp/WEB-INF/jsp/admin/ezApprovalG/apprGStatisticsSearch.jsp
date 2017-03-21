@@ -610,11 +610,11 @@ alert(arr_userinfo[0])
 	    <h1><spring:message code='ezApproval.t428'/></h1>
 	    <table class="content">
 	        <tr style="display: none">
-	            <th><spring:message code='ezApproval.t335'/></th>
+	            <th><spring:message code='ezApprovalG.t1197'/></th>
 	            <td>
 	                <input type="text" id="tbItemCode" name="tbItemCode" style="width: 60px" readonly="true" />
 	                <input type="text" id="tbItemName" name="tbItemName" style="width: 140px" readonly="true" />
-	                <a class="imgbtn" style="vertical-align: middle"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t335'/></span></a>
+	                <a class="imgbtn" style="vertical-align: middle"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApprovalG.t1197'/></span></a>
 				</td>
 	        </tr>
 	        <tr id="FormN">
