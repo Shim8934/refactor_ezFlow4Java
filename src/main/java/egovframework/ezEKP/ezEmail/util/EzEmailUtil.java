@@ -585,7 +585,7 @@ public class EzEmailUtil {
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
-			if (contentType.contains("ks_c_5601-1987")) {
+			if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 				InputStream is = getContentInputStream(part);
 				
 				if (is.available() > 0) {
@@ -595,8 +595,39 @@ public class EzEmailUtil {
 					strContent = new String(buf, "ms949");
 				}				
 			} else {							
+				String[] headers = part.getHeader("Content-Type");
+				String rawContentType = "";
+				
+				if (headers != null) {
+					rawContentType = headers[0];
+				}
+				
+				boolean isCharSet = rawContentType.toLowerCase().contains("charset");
+				
 				try {
 					strContent = part.getContent().toString();
+					
+					// Content-Type 헤더에 charset 속성이 없는 경우엔 US-ASCII로만 구성되어야 한다.
+					// Content-Type: text/html 과 같이 charset이 없지만 본문이 euc-kr로 작성된 메일이 발견되어 추가함.
+					if (!isCharSet) {
+						logger.debug("rawContentType=" + rawContentType);
+						logger.debug("no charset attribute");
+						
+						// US-ASCII로만 되어 있지 않은 경우 직접 디코딩을 수행한다.
+						if (!isPureAscii(strContent)) {
+							logger.debug("content isn't ascii only");
+							
+							InputStream is = getContentInputStream(part); 
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								strContent = decodeNonAsciiBytes(buf);						
+							}							
+						}
+					}
+					
 				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 				} catch (Exception e) {
@@ -679,7 +710,7 @@ public class EzEmailUtil {
 			else {
 				String contentType = part.getContentType();
 				
-				if (contentType.contains("ks_c_5601-1987")) {
+				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 					InputStream is = getContentInputStream(part);
 					
 					if (is.available() > 0) {
