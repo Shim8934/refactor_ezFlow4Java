@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -30,6 +31,7 @@ import org.w3c.dom.Document;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
@@ -60,6 +62,9 @@ public class EzEmailMenuController {
 	@Autowired
 	private Properties config;
 
+	@Autowired
+	private EzAddressService ezAddressService;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;  
 	
@@ -164,15 +169,33 @@ public class EzEmailMenuController {
 			}
 		}
 		
+		Map<String, String> map = ezAddressService.getTopFolderSubCount(loginInfo.getTenantId(), loginInfo.getId(), loginInfo.getDeptID(), loginInfo.getCompanyID());
+		
+		String pHasSub = "";
+		String dHasSub = "";
+		String cHasSub = "";
+		
+		if (map != null) {
+			if (map.get("P") != null && !map.get("P").equals("0")) {
+				pHasSub = "1";
+			}
+			if (map.get("D") != null && !map.get("D").equals("0")) {
+				dHasSub = "1";
+			}
+			if (map.get("C") != null && !map.get("C").equals("0")) {
+				cHasSub = "1";
+			}
+		}
+		
 		rootAddressXML.append("<tree>");
 		rootAddressXML.append("<nodes>");
         String xmlFormat = "<node imgidx=\"%s\" caption=\"%s\" ownerid=\"%s\" type=\"%s\" folderid=\"%s\" changekey=\"%s\" hassub=\"%s\"></node>";
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000038", locale), user.getId(), "P", "0", "", "1"));
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000039", locale), user.getDeptID(), "D", "0", "", "1"));
-        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000040", locale), user.getCompanyID(), "C", "0", "", "1"));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000038", locale), user.getId(), "P", "0", "", pHasSub));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000039", locale), user.getDeptID(), "D", "0", "", dHasSub));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezEmail.t99000040", locale), user.getCompanyID(), "C", "0", "", cHasSub));
         rootAddressXML.append("</nodes>");
         rootAddressXML.append("</tree>");
-		
+        
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		
 		String funCode = "1";
