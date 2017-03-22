@@ -569,11 +569,11 @@
 		                        Docinfo_ini();
 		                    }
 	                    } else {
-		                    if (!bool4)
-		                    	CheckDraftinfo();
 		                    if (!bool3) {
 		                    	Draftinfo_ini();
 		                    }
+		                    if (!bool4)
+		                    	CheckDraftinfo();
 		                    
 		                    bool3 = true;
 	                    }

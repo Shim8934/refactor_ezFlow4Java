@@ -272,7 +272,7 @@ function CodeSearch_onclick() {
     var SearchOPtion = GetAttribute(document.getElementById("selSearchOption")[document.getElementById("selSearchOption").selectedIndex], "id");
     var SearchValue = document.getElementById("txtCodeSearch").value;
     if (SearchValue.trim() == "") {
-        alert(strLang554);
+        alert(strLangS554);
         return;
     }
 
@@ -507,7 +507,7 @@ function btnAddCode_onclick() {
     var pAprRow = FormList.GetSelectedRows();
 
     if (pAprRow.length == 0) {
-        var pAlertContent = strLang600;
+        var pAlertContent = strLangS600;
         OpenAlertUI(pAlertContent);
         return;
     }
@@ -522,7 +522,7 @@ function btnAddCode_onclick() {
     for(var i = 0 ; i < frequencyRow.length;i++)
     {
         if (curSelCode == GetAttribute(frequencyRow[i],"DATA1")) {
-            var pAlertContent = strLang601;
+            var pAlertContent = strLangS601;
             OpenAlertUI(pAlertContent);
 
             dup = true;
@@ -555,12 +555,12 @@ function InsMyGroupItem(curSelCode, curSelGroupCode) {
 	});
 
     if (result == "OK") {
-        var pAlertContent = strLang602;
+        var pAlertContent = strLangS602;
         OpenAlertUI(pAlertContent);
 
         getMyGroupItem();
     } else {
-        var pAlertContent = strLang604;
+        var pAlertContent = strLangS604;
         OpenAlertUI(pAlertContent);
     }
 }
@@ -573,7 +573,7 @@ function btnDelCode_onclick() {
     var pAprRow = frequencyList.GetSelectedRows();
 
     if (pAprRow.length == 0) {
-        var pAlertContent = strLang600;
+        var pAlertContent = strLangS600;
         OpenAlertUI(pAlertContent);
         return;
     }
@@ -600,13 +600,13 @@ function btnDelCode_onclick() {
 	});
 	
     if (result == "OK") {
-        var pAlertContent = strLang603;
+        var pAlertContent = strLangS603;
         OpenAlertUI(pAlertContent);
 
         getMyGroupItem();
     }
     else {
-        var pAlertContent = strLang605;
+        var pAlertContent = strLangS605;
         OpenAlertUI(pAlertContent);
     }
 }
@@ -654,7 +654,7 @@ function lvinfofrequencylist_onclick() {
     pCabinetID = GetAttribute(pSelectedRow[0], "DATA7");
     pTaskName = GetAttribute(pSelectedRow[0],"DATA2");
     pTaskP = GetAttribute(pSelectedRow[0],"DATA3");
-    pTaskS = GetAttribute(pSelectedRow[0],"DATA4");
+    pTaskS = pSelectedRow[0].cells[4].innerText;
     pTaskY = GetAttribute(pSelectedRow[0],"DATA5");
     var Cnt = 0;
     setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);

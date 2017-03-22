@@ -948,7 +948,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String result = ezApprovalGService.updateReceiptInfo(ret2, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
-		return result;
+ 		return result;
 	}
 	
 	/**

@@ -1455,3 +1455,13 @@ var strLangyjS16 = "기";
 var strLangyjS17 = "안";
 var strLangyjS18 = "합";
 var strLangyjS19 = "의";
+
+var strLangS600 = "분류 코드를 선택하세요.";
+var strLangS601 = "이미 등록된 분류 코드입니다.";
+var strLangS602 = "즐겨찾기에 등록되었습니다.";
+var strLangS603 = "즐겨찾기에서 제거되었습니다.";
+var strLangS604 = "분류코드 등록 오류입니다.";
+var strLangS605 = "분류코드 삭제 오류입니다.";
+var strLangS606 = "권한이 없습니다.";
+
+var strLangS554 = "검색어를 입력해주세요.";
