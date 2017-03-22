@@ -419,7 +419,14 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function address_foldermanage_Complete(ret) {
-	            if (ret != undefined) LoadAddressTree();
+	            if (ret != undefined) {
+	            	var xmlHTTP = createXMLHttpRequest();
+		            xmlHTTP.open("GET", "/ezAddress/getRootAddressXML.do", false);
+		            xmlHTTP.send();
+	            	
+		            document.getElementById("AddressFolderXML").innerHTML = xmlHTTP.responseText;
+	            	LoadAddressTree();
+	            }
 	        }
 	        function address_Search() {
 	            window.open("/ezAddress/addressMainSearch.do", "right");
