@@ -133,8 +133,8 @@ function lvtinfolist_onclick() {
     pTaskName = GetAttribute(pSelectedRow[0], "DATA11");
     pTaskName2 = GetAttribute(pSelectedRow[0], "DATA12");
     pTaskP = GetAttribute(pSelectedRow[0], "DATA2");
-    pTaskS = pSelectedRow[0].cells[3].innerText;
-    pTaskY = pSelectedRow[0].cells[4].innerText;
+    pTaskS = pSelectedRow[0].cells[4].innerText;
+    pTaskY = pSelectedRow[0].cells[5].innerText;
     var Cnt = 0;
     setNodeText(document.getElementById("tbitemCodeName"), "[" + pTaskCode + "]" + pTaskName);
     document.getElementById("cabinetID").value = pCabinetID;
