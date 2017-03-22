@@ -15,10 +15,8 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApproval/admin/AutoLineRuleMaker_AprLine.js"></script>
-		
+		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
@@ -29,6 +27,11 @@
 <!-- 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		 -->
 				
 		<script type="text/javascript">
+			var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
+			var linealt2 = "<spring:message code='ezApprovalG.t228'/>";
+			var linealt3 = "<spring:message code='ezApprovalG.t226'/>";
+			var linealt4 = "<spring:message code='ezApprovalG.t227'/>";
+        
 			var companyID = "${companyID}";
 		    var contID = "${contID}";
 		    var formID = "${formID}";
@@ -80,9 +83,10 @@
 		
 		        getDeptFullTree("${topID}");
 		        getFormRecv();
+		        AprTypeXML = loadXMLString(bodyForm.hidAprTypeXml.value);
 		        pDocType = document.getElementsByName("selDocType")[0].options[document.getElementsByName("selDocType")[0].selectedIndex].value;
-// 		        MakeListXML(pDocType);
-// 		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+		        MakeListXML(pDocType);
+		        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
 		        $("#tr_setAutoItemCode").hide();
 		        
 		        if (formID != "") {
@@ -1141,6 +1145,7 @@
         	<input type="hidden" id="hidListHeader" value="${listHeader}">
         	<input type="hidden" id="hidAprRule" value="${aprRule}">
         	<input type="hidden" id="hidAprRuleLine" value="${aprRuleLine}">
+        	<input type="hidden" id="hidAprTypeXml" value="${aprTypeXML}">
         </form>
         <script type="text/javascript">
             Tab1_NewTabIni("tab1");

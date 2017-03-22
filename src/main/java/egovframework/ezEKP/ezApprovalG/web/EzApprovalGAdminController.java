@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.stringtemplate.v4.debug.AddAttributeEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -407,11 +408,24 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
 		if (approvalFlag.equals("S")) {
+			String listHeader = ezApprovalGService.getListHeader("S110", companyID, userInfo.getLang(), userInfo.getTenantId());
 			String securityNode = ezApprovalGAdminService.getSecurityType("", userInfo, companyID, approvalFlag);
 			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
+			String aprRule = "";
+			String aprRuleLine = "";
+			String aprTypeXML = ezApprovalGService.getAprType(companyID, userInfo.getLang(), userInfo.getTenantId());
 			
+			if (formID != null && !formID.equals("")) {
+//				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+//				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
+			}
+			
+			model.addAttribute("listHeader", listHeader);
 			model.addAttribute("securityNode", securityNode);
 			model.addAttribute("periodNode", periodNode);
+			model.addAttribute("aprRule", aprRule);
+			model.addAttribute("aprRuleLine", aprRuleLine);
+			model.addAttribute("aprTypeXML", aprTypeXML);
 		}
 		
 		model.addAttribute("formProcSpelling", formProcSpelling);
