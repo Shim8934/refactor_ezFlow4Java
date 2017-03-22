@@ -2556,9 +2556,9 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			keepPeriodCode = doc.getElementsByTagName("KEEPPERIODCODE").item(0).getTextContent();
 			securityLevel = doc.getElementsByTagName("SECURITYLEVEL").item(0).getTextContent();
 			isPublic = doc.getElementsByTagName("ISPUBLIC").item(0).getTextContent();
-			tbItemCode = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
-			tbItemName = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
-			tbItemName2 = doc.getElementsByTagName("KEEPPERIOD").item(0).getTextContent();
+			tbItemCode = doc.getElementsByTagName("TBITEMCODE").item(0).getTextContent();
+			tbItemName = doc.getElementsByTagName("TBITEMNAME").item(0).getTextContent();
+			tbItemName2 = doc.getElementsByTagName("TBITEMNAME2").item(0).getTextContent();
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
@@ -2640,7 +2640,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
-			map.put("v_PID", result);
+			map.put("v_PFORMID", result);
 			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
@@ -2661,7 +2661,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
-				map.put("v_PFORMID", result);
 				map.put("companyID", companyID);
 				map.put("tenantID", userInfo.getTenantId());
 				map.put("approvalFlag", approvalFlag);
@@ -2688,6 +2687,19 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			map.put("v_PFORMID", formID);
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
+			
+			if (approvalFlag.equals("S")) {
+				map.put("keepPeriod", keepPeriod);
+				map.put("keepPeriodCode", keepPeriodCode);
+				map.put("securityLevel", securityLevel);
+				map.put("isPublic", isPublic);
+				map.put("tbItemCode", tbItemCode);
+				map.put("tbItemName", tbItemName);
+				map.put("tbItemName2", tbItemName2);
+				map.put("useFlag", useFlag);
+				
+				ezApprovalGAdminDAO.setAutoDocNum(map);
+			}
 			
 			logger.debug("setFormDataUpdate started.");
 			ezApprovalGAdminDAO.setFormDataUpdate(map);

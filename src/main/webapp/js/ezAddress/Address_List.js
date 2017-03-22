@@ -148,10 +148,13 @@ function MakeAddressList() {
                 document.getElementById("FolderType").style.display = "";
                 _TR.setAttribute("_FolderType", FolderType);
                 _TR.setAttribute("_FolderID", FolderID);
-            }
-            else
+                document.getElementById("width1").style.width = "15%";
+                document.getElementById("width2").style.width = "15%";
+            } else {
                 document.getElementById("FolderType").style.display = "none";
-
+                document.getElementById("width1").style.width = "20%";
+                document.getElementById("width2").style.width = "20%";
+            }
             _TR.onmouseover = function () { event_listMover(this); };
             _TR.onmouseout = function () { event_listMout(this); };
             _TR.onclick = function () { event_listclick(this); };
@@ -161,7 +164,7 @@ function MakeAddressList() {
                 _TR.ondblclick = function () { event_listDBClick(this); };
 
             var _TD1 = document.createElement("TD");
-            _TD1.style.width = "20px";
+            _TD1.style.width = "12px";
             //_TD1.style.margin = "0px";
             //_TD1.style.padding = "0px";
             var _TDCheckBox_Sub = document.createElement("INPUT");
@@ -181,7 +184,7 @@ function MakeAddressList() {
             _TR.appendChild(_TD1);
 
             var _TD2 = document.createElement("TD");
-            _TD2.style.width = "20px";
+            _TD2.style.width = "16px";            
             _TD2.style.margin = "0px";
             _TD2.style.padding = "0px";
             var _Img = document.createElement("IMG");
@@ -200,16 +203,12 @@ function MakeAddressList() {
             _TD3.style.textOverflow = "ellipsis";
             _TD3.style.overflow = "hidden";
             if (CrossYN())
-                _TD3.textContent = " "+Sname;
+                _TD3.innerHTML = "&nbsp;"+Sname;
             else
-                _TD3.innerText = " " + Sname;
+                _TD3.innerHTML = "&nbsp;"+Sname;
             _TR.appendChild(_TD3);
 
-            var _TD4 = document.createElement("TD");
-            //if (searchFlag) {
-            //    document.getElementById("CompanyName").style.width = "15%";
-            //    document.getElementById("PhoneNumber").style.width = "15%";
-            //}            
+            var _TD4 = document.createElement("TD");            
             _TD4.style.width = "20%";
             _TD4.style.margin = "0px";
             _TD4.style.padding = "0px";
@@ -234,7 +233,11 @@ function MakeAddressList() {
             _TR.appendChild(_TD5);
 
             var _TD6 = document.createElement("TD");
-            _TD6.style.width = "20%";
+            if (searchFlag) {
+            	_TD6.style.width = "15%";
+            }
+            else
+            	_TD6.style.width = "20%";
             _TD6.style.margin = "0px";
             _TD6.style.padding = "0px";
             if (CrossYN())
