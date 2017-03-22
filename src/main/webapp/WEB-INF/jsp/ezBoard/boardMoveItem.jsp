@@ -32,12 +32,12 @@
 			            return;
 			        }
 			    	if (oldguBun == "3" && newguBun == "3") {
-			        	alert("<spring:message code='ezBoard.t180'/>");
+			        	alert("<spring:message code='ezBoard.jsh01'/>");
 			            return;
 			        }
 		    	} else {
 		    		if (newguBun == "2" || newguBun == "3" || newguBun == "4") {
-			        	alert("<spring:message code='ezBoard.t180'/>");
+			        	alert("<spring:message code='ezBoard.jsh01'/>");
 			            return;
 			        } else if (newguBun == "1" || newguBun == "5") {
 			        	alert("<spring:message code='ezBoard.jsh01'/>");
