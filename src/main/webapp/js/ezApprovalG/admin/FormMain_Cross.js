@@ -265,11 +265,12 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "FormDescript", document.getElementById("tbDescript").value);
     createNodeAndInsertText(xmlpara, objNode, "FormKind", document.getElementById("selFormKind").value);
 
-    if (setAutoItemCode.checked)
+    if (document.getElementById("setAutoItemCode").checked) {
         createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "Y"); 
-    else
+    } else {
         createNodeAndInsertText(xmlpara, objNode, "USEFLAG", "N"); 
-
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", getNodeText(document.getElementById("keepperiod").options[document.getElementById("keepperiod").selectedIndex]));
     createNodeAndInsertText(xmlpara, objNode, "KEEPPERIODCODE", document.getElementById("keepperiod").value);
     createNodeAndInsertText(xmlpara, objNode, "SECURITYLEVEL", document.getElementById("securitylevel").value);
@@ -277,6 +278,7 @@ function MakeFormInfoXML_Detail() {
     createNodeAndInsertText(xmlpara, objNode, "TBITEMCODE", document.getElementById("tbItemCode").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME", document.getElementById("tbItemName").value);
     createNodeAndInsertText(xmlpara, objNode, "TBITEMNAME2", document.getElementById("tbItemName2").value);
+    
     return getXmlString(xmlpara.childNodes[0]);
 }
 

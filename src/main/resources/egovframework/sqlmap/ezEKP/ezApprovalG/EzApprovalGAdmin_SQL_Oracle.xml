@@ -1574,7 +1574,7 @@
 				tenant_id)
 			VALUES
 				(#v_PFORMCONTAINERID#,
-				#v_PID#,
+				#v_PFORMID#,
 				#v_PFORMNAME#,
 				#v_PFORMNAME2#,
 				#v_PFORMKIND#,
@@ -1657,6 +1657,73 @@
 		</isEqual>
 	</insert>
 
+	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
+		<selectKey keyProperty="id" resultClass="String">
+			SELECT 
+				'OK' 
+        	FROM 
+        		DUAL
+       		WHERE 
+       			EXISTS ( SELECT 
+       						formid 
+                      	 FROM 
+                      	 	TBL_AUTODOCNUM_ITEM 
+                       	 WHERE  
+                       	 	tenant_id = #tenantID#
+                       	 AND
+                       	 	companyid = #companyID#
+                       	 AND
+                       	 	formid = #v_PFORMID# )
+		</selectKey>
+		
+		<isEqual property="id" compareValue="OK">
+			UPDATE
+				TBL_AUTODOCNUM_ITEM
+         	SET 
+         		keepperiod = #keepPeriod#,
+             	keepperiodcode = #keepPeriodCode#,
+             	securitylevel = #securityLevel#,
+             	ispublic = #isPublic#,
+             	itemcode = #tbItemCode#,
+             	itemname = #tbItemName#,
+             	itemname2 = #tbItemName2#,
+             	useflag = #useFlag#
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			companyid = #companyID#
+       		AND
+       			formid = #v_PFORMID#
+		</isEqual>
+		
+		<isNotEqual property="id" compareValue="OK">
+			INSERT INTO TBL_AUTODOCNUM_ITEM
+				(formid,
+				keepperiod,
+				securitylevel,
+				ispublic,
+				itemcode,
+				itemname,
+				itemname2,
+				useflag,
+				keepperiodcode,
+				companyid,
+				tenant_id)
+        	VALUES
+        		(#v_PFORMID#,
+        		#keepPeriod#,
+        		#securityLevel#,
+        		#isPublic#,
+        		#tbItemCode#,
+        		#tbItemName#,
+        		#tbItemName2#,
+        		#useFlag#,
+        		#keepPeriodCode#,
+        		#companyID#,
+        		#tenantID#)
+		</isNotEqual>
+	</insert>
+	
 	<!-- <procedure id="EzApprovalGAdmin.setContainerIDForDoc1" -->
 	<!-- parameterClass="Map" resultClass="String"> -->
 	<!-- <![CDATA[ -->
