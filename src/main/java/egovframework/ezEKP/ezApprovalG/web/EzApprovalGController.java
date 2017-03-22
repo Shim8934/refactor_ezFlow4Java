@@ -1413,7 +1413,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String langType = request.getParameter("langType");
 		String pageSize = request.getParameter("pageSize");
 		String pageNO = request.getParameter("pageNO");
-		String result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId(), approvalFlag);
+		String result = "";
+		
+		if (approvalFlag.equals("S")) {
+			companyID = userInfo.getCompanyID();
+			langType = userInfo.getLang();
+
+			result = ezApprovalGService.findTaskS(deptCode, title, companyID, langType, userInfo.getTenantId(), approvalFlag);
+		} else {
+			result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId(), approvalFlag);
+		}
 		
 		logger.debug("findTaskList ended.");
 		

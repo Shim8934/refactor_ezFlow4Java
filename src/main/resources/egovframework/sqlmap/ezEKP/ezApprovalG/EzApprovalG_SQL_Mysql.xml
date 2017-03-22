@@ -3472,37 +3472,88 @@
 <!-- 		{CALL EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
-		SELECT 
-				DISTINCT TASKCODE, 
-						 TASKNAME,  
-						 TASKNAME2, 
-						 KEEPINGPERIOD, 
-						 DISPLAYRECFLAG, 
-						 DISPLAYRECTRASTIME,
-   						 SPECIALCATALOGFLAG, 
-   						 SC1, 
-   						 SC2, 
-   						 SC3, 
-   						 TEMPFLAG, 
-   						 KEEPINGMETHOD, 
-   						 KEEPINGPLACE, 
-   						 PROCESSDEPTCODE,
-   						 PROCESSDEPTNAME, 
-   						 IFNULL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
-   						 CATEGORYCODE, 
-   						 CNAME, 
-   						 CNAME2, 
-   						 MCATEGORYCODE, 
-   						 MCNAME, 
-   						 MCNAME2, 
-   						 SUBCATEGORYCODE, 
-   						 SCNAME, 
-   						 SCNAME2
-   		FROM 
-   				VTASKCLASS
-   		$v_subQuery$
-   		ORDER BY 
-   				TASKCODE
+		<isEmpty property="approvalFlag">
+			SELECT 
+		     	 DISTINCT TASKCODE, 
+				 TASKNAME,  
+				 TASKNAME2, 
+				 KEEPINGPERIOD, 
+				 DISPLAYRECFLAG, 
+				 DISPLAYRECTRASTIME,
+				 SPECIALCATALOGFLAG, 
+				 SC1, 
+				 SC2, 
+				 SC3, 
+				 TEMPFLAG, 
+				 KEEPINGMETHOD, 
+				 KEEPINGPLACE, 
+				 PROCESSDEPTCODE,
+				 PROCESSDEPTNAME, 
+				 IFNULL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
+				 CATEGORYCODE, 
+				 CNAME, 
+				 CNAME2, 
+				 MCATEGORYCODE, 
+				 MCNAME, 
+				 MCNAME2, 
+				 SUBCATEGORYCODE, 
+				 SCNAME, 
+				 SCNAME2
+	   		FROM
+	   			VTASKCLASS
+	   		$v_subQuery$
+	   		ORDER BY 
+	   			TASKCODE
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+			SELECT
+				TASKCODE,
+				KEEPINGPERIOD,
+				TEMPFLAG,
+				DISPLAYRECFLAG,
+				KEEPINGMETHOD,
+				KEEPINGPLACE,
+				TASKNAME,
+				TASKNAME2,
+				B.SUBCATEGORYCODE,
+				C.NAME$lang$,
+				ITEMSECURITY,
+				ISPUBLIC,
+				(SELECT
+			    	CONCAT(CABINETCLASSNO, '001')
+			     FROM
+			     	TBL_CABINETCLASS A
+			     WHERE
+			     	A.TENANT_ID = #tenantID#
+			     AND
+			     	A.COMPANYID = #companyID#
+			     AND
+			     	A.TASKCODE = B.TASKCODE ) CABINETID 
+			FROM
+				TBL_TASKCODE B
+			JOIN
+				TBL_TASKSUBCATEGORY C
+			ON
+				B.TENANT_ID = C.TENANT_ID
+			AND
+				B.COMPANYID = C.COMPANYID
+			AND
+				B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
+			WHERE
+				B.TENANT_ID = #tenantID#
+			AND
+				B.COMPANYID = #companyID#
+			AND
+				DELFLAG = '0'
+			<isEqual property="option" compareValue="GROUPNAME" prepend="AND">
+				C.NAME$lang$ LIKE CONCAT('%', CONCAT(#task#, '%'))
+			</isEqual>
+			<isEqual property="option" compareValue="ITEMNAME" prepend="AND">
+				TASKNAME$lang$ LIKE CONCAT('%', CONCAT(#task#, '%'))
+			</isEqual>
+			ORDER BY
+				TASKCODE
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAttachFileInfo" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->

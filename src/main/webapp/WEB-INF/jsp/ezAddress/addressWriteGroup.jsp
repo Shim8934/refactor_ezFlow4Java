@@ -1747,7 +1747,7 @@
 	            </tr>
 	            <tr>
 	                <td style="width: 670px; height: 375px; vertical-align: top;">
-	                    <div id="ManualView" style="DISPLAY: none; height: 478px; padding: 10px;" class="box">
+	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 645px; padding: 10px;" class="box">
 	                        <table class="content">
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
@@ -1814,17 +1814,17 @@
 	                        <table>
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 501px; BACKGROUND-COLOR: #ffffff;padding-top:5px" id="AddressTreeView"></div>
+	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 498px; BACKGROUND-COLOR: #ffffff;padding-top:5px" id="AddressTreeView"></div>
 	                                </td>
 	                                <td style="width: 5px;"></td>
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #bdbdbd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
-	                                    <img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer">
-	                                    <span id="addressFolderName" style="font-weight: bold;"></span>
-	                                    -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
-	                            </div>
-	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 440px; HEIGHT: 443px; BACKGROUND-COLOR: white" class="listview"></div>
-	                                    <div id="tblPageRayer"  style="width:440px;border:#b6b6b6 1px solid;"></div>
+	                                    	<img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"/>
+	                                    	<span id="addressFolderName" style="font-weight: bold;"></span>
+	                                    	-[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
+	                            		</div>
+	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 440px; HEIGHT: 441px; BACKGROUND-COLOR: white; border-bottom:0px" class="listview"></div>
+	                                    <div id="tblPageRayer"  style="width:440px;border:#b6b6b6 1px solid;height:35px"></div>
 	                                </td>
 	                            </tr>
 	                        </table>

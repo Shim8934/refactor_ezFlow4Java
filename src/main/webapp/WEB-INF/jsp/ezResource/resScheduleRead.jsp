@@ -25,7 +25,7 @@
 	        var org_companyID = ss_companyID;
 	        var pAdminFg = "${adminFg}";
 	        var s_userID = '${userInfo.id}';
-	        var org_brdName = "<c:out value='${brdName}' />";
+	        var org_brdName = "${brdName}";
 	        var iReFlag = "${reFlagVal}";
 	        var pUse_Editor = "${useEditor}";
 	        var pUse_IE11Browser = "${useIE11Browser}";
@@ -44,7 +44,7 @@
 	        var allDayFlag = "${allDay}";
 	        var ItemArray = new Array();
 	        var pNoneActiveX = "${pNoneActiveX}";
-	        var brdName = "<c:out value='${brdName}' />";
+	        var brdName = "${brdName}";
 	        var resID = "${resID}";
 	        
 	        window.onload = function () {
@@ -53,7 +53,7 @@
 	            if (brdName != "" && resID != "") {
 	                ItemArray[0] = Array(resID);
 	                ItemArray[1] = Array(brdName);
-	                document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' />";
+	                document.getElementById('itemList').innerHTML = "${brdName}";
 	            }
 	            var xmlHttp = createXMLHttpRequest();
 	            var xmlpara = createXmlDom();
