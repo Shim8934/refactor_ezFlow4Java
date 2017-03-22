@@ -10949,7 +10949,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (config.getProperty("hideCabinet") == "0") {
+			if (config.getProperty("config.hideCabinet").equals("0")) {
 				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
 					if (rtnVal) {
 						subSQL = setCabinetRec(docID, companyID, lang , userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
@@ -11015,7 +11015,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (config.getProperty("hideCabinet") == "0") {
+			if (config.getProperty("config.hideCabinet").equals("0")) {
 				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
 					if (rtnVal) {
 						subSQL = setCabinetRecv(docID, userID, userName, userName2, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
@@ -11072,7 +11072,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				} 
 			}
 			
-			if (config.getProperty("hideCabinet") == "0") {
+			if (config.getProperty("config.hideCabinet").equals("0")) {
 				if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
 					if (rtnVal) {
 						subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
@@ -11118,7 +11118,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					} 
 				}
 
-				if (config.getProperty("hideCabinet") == "0") {
+				if (config.getProperty("config.hideCabinet").equals("0")) {
 					if (ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId()).equals("G")) {
 						if (rtnVal) {
 							subSQL = setCabinetRec(docID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
@@ -11141,8 +11141,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						rtnVal = false;
 					} 
 				}
-				
-			
 			} else {
 				subSQL = doApproveEnd(docID, dirPath, deptID, false, companyID, userInfo.getTenantId());
 				
