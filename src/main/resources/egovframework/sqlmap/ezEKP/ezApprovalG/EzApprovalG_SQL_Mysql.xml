@@ -4326,7 +4326,7 @@
 <!-- 	<procedure id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO"> -->
 <!-- 		{CALL EZSP_GETMYTASKCODE(#v_USERID#, #v_DEPTID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO">
+	<select id="EzApprovalG.getMyTaskCode" parameterClass="Map" resultClass="ApprGTaskVO" remapResults="true">
 		<isEmpty property="approvalFlag">
 			SELECT 
 					DISTINCT TBL_CABINET.CabinetID , 

@@ -406,6 +406,10 @@
 	            if (pSuSinFlag == "N") {
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
+	            
+	            if (g_SelCabID != "") {
+	            	document.getElementById("cabinetID").value = g_SelCabID;
+	            }
 	
 	            try {
 	                //2015-06-30 표준모듈:추가(외부수신자요약) - KSK
