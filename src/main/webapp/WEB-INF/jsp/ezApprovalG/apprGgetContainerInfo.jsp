@@ -81,6 +81,10 @@
 			var approvalFlag = "${approvalFlag}"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
+	        var pItemCD = ""; 
+	        var pEndAprType = "${endAprType}";
+	        var pEndAprState = "${endAprState}";
+	        
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
@@ -213,19 +217,17 @@
 	                         }
 	                         condition[5] = (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01";
 	                         condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
-// 	                         if (pItemCD != "") {
-// 	                             condition[12] += "CAPR;";
-// 	                             condition[13] += "<ITEMCODE>" + pItemCD + "</ITEMCODE>";
-// 	                         }
+	                         if (pItemCD != "") {
+	                             condition[12] += "CAPR;";
+	                             condition[13] += "<ITEMCODE>" + pItemCD + "</ITEMCODE>";
+	                         }
 
-// 	                         if (pEndAprType != "" && pEndAprState != "") {
-// 	                             condition[14] = "EAPRTYPE;";
-// 	                             condition[15] = "<ENDAPRTYPE>" + pEndAprType + "</ENDAPRTYPE>";
-// 	                             condition[16] = "EAPRSTATE;";
-// 	                             condition[17] = "<ENDAPRSTATE>" + pEndAprState + "</ENDAPRSTATE>";
-// 	                             document.getElementById("menuapr").style.display = "";
-// 	                             document.getElementById("menuend").style.display = "none";
-// 	                         }
+	                         if (pEndAprType != "" && pEndAprState != "") {
+	                             condition[14] = "EAPRTYPE;";
+	                             condition[15] = "<ENDAPRTYPE>" + pEndAprType + "</ENDAPRTYPE>";
+	                             condition[16] = "EAPRSTATE;";
+	                             condition[17] = "<ENDAPRSTATE>" + pEndAprState + "</ENDAPRSTATE>";
+	                         }
 
 	                         ContainerID = LoadContID;
 	                         subCondition = LoadSquery;

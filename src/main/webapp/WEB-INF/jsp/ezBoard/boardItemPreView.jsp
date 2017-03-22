@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="/css/previewBoard.css" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
+		
 		var curFontSize = 1;
 		var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		var gubun = "${guBun}";
@@ -200,8 +201,8 @@
 		  </tr>
 		  <tr>
 		    <td class="pad1">
-		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:510px; width:720px;">
-		            <div id="txtContent" class="white" style="overflow-y:auto; height:100%; width: 100% word-break: break-all;"></div>
+		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:510px; width:auto; word-break: break-all;">
+		            <div id="txtContent" class="white" style="overflow-y:auto; height:100%; width: 100%"></div>
 		        </div>
 		    </td>
 		    <c:if test="${guBun != '3'}">

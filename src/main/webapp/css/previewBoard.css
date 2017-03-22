@@ -42,7 +42,7 @@ th {
 	height:100%;
 	background-color:#fff;
 	border-collapse:collapse;
-	font-size:13px;
+	font-size:12px;
 }
 .viewbox p {
 	margin: 0px;
@@ -50,5 +50,4 @@ th {
 
 .white {
 	width: 687px;
-	margin: 20px;
 }

@@ -217,6 +217,92 @@ function GetDocSearch() {
     //document.getElementById("listcount").innerHTML = "<b><font color='#e67802'>" + strLang796 + "</font></b>";
 }
 
+function GetUserContList() {
+    xmlDocListHttp = createXMLHttpRequest();
+    DocListType = "UserContDocList";
+    if (pChackYN == "FALSE") {
+        curpage = 1;
+        nowblock = 0;
+        totalPage = 0;
+        OrderOption = "";
+        OrderCell = "";
+    }
+    document.getElementById("tbtnRemoveDoc").style.display = "";
+
+    var xmlpara = createXmlDom();
+    var objNode;
+    createNodeInsert(xmlpara, objNode, "PARAMETER");
+    createNodeAndInsertText(xmlpara, objNode, "ID", ContainerID);
+    createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
+    createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+    createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
+    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
+    createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
+
+    xmlDocListHttp.open("POST", "/ezApprovalG/getUserContList.do", true);
+    xmlDocListHttp.onreadystatechange = getDocListS_after;
+    xmlDocListHttp.send(xmlpara);
+}
+
+function getDocListS_after() {
+
+    if (xmlDocListHttp == null || xmlDocListHttp.readyState != 4) return;
+    try {
+
+        hideProgress();
+        Resultxml = loadXMLString(xmlDocListHttp.responseText);
+
+        if (Resultxml.xml == "") return;
+
+
+        ListView2 = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
+        NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
+
+        NodeListLen = 0;
+
+        if (NodeList2 != null) {
+            var dataNode = getNodeText(NodeList2);
+
+            if (dataNode != "")
+                NodeListLen = dataNode;
+            else
+                NodeListLen = 0;
+        }
+
+        if (NodeListLen > 10) {
+            paging(curpage, nowblock);
+        }
+        else {
+
+            if (document.getElementById("lvtDoclist").innerHTML != "")
+                document.getElementById("lvtDoclist").innerHTML = "";
+
+            var DocList = new ListView();
+            DocList.SetID("DocList");
+            DocList.SetMulSelectable(true);
+            DocList.SetHeaderOnClick("lvDocList_HeaderClick");
+            DocList.SetRowOnClick("lvtDoclist_SelChange");
+            DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
+            DocList.SetUrgentFlag(false);
+            DocList.DataSource(ListView2);
+            DocList.DataBind("lvtDoclist");
+            DocList = null;
+
+            pagingCount(curpage, nowblock);
+            selFirstRow(Resultxml);
+        }
+        pChackYN = "FALSE";
+        if (USE_OCS == "YES")
+            check_presence_DocList();
+
+        makePageSelPage();
+        xmlDocListHttp = null;
+
+    } catch (e) { }
+
+}
+
 function getsearchDocList_after() {
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 
@@ -775,7 +861,6 @@ function check_presence2() {
     function MakeSubCondition() {
         var TYPE = "";
         var DATA = "";
-
         if (condition[0] != "") {
             TYPE += "DOCNO;"
             DATA += "<DOCNO>" + condition[0] + "</DOCNO>";
