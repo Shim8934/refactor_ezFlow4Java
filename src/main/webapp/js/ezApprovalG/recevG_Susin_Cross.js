@@ -1104,7 +1104,6 @@ function SaveDraftDocInfo() {
 
 function SaveDraftDocInfo_susin() {
     try {
-
         if (pDocNumCode == "")
             return "FLASE";
 

@@ -35,15 +35,15 @@
 		    		<c:when test="${userInfo.primary == '1'}">
 	                    <tr>
 	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = "${fn:split(result.extensionAttribute5, ':')[0]}"> <nobr>${result.pUserName}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${fn:split(result.extensionAttribute5, ':')[3]} ~ ${fn:split(result.extensionAttribute5, ':')[4]}</nobr></td>
+	                        <td style='width:200px;padding-left:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName}</nobr></td>
+	                        <td style='padding-left:10px;'><nobr>${temp[3].replace('/', ':')} ~ ${temp[4].replace('/', ':')}</nobr></td>
 	                    </tr>
 		    		</c:when>
 		    		<c:otherwise>
 	                    <tr>
 	                        <td style='width:200px;padding-left:10px;' userid = '${result.userID}'><nobr>${result.userName2}</nobr></td>
-	                        <td style='width:200px;padding-left:10px;' userid = "${fn:split(result.extensionAttribute5, ':')[0]}"> <nobr>${result.pUserName2}</nobr></td>
-	                        <td style='padding-left:10px;'><nobr>${fn:split(result.extensionAttribute5, ':')[3]} ~ ${fn:split(result.extensionAttribute5, ':')[4]}</nobr></td>
+	                        <td style='width:200px;padding-left:10px;' userid = "${temp[0]}"> <nobr>${result.pUserName2}</nobr></td>
+	                        <td style='padding-left:10px;'><nobr>${temp[3].replace('/', ':')} ~ ${temp[4].replace('/', ':')}</nobr></td>
 	                    </tr>
 		    		</c:otherwise>
 		    	</c:choose>

@@ -569,11 +569,11 @@
 		                        Docinfo_ini();
 		                    }
 	                    } else {
-		                    if (!bool4)
-		                    	CheckDraftinfo();
 		                    if (!bool3) {
 		                    	Draftinfo_ini();
 		                    }
+		                    if (!bool4)
+		                    	CheckDraftinfo();
 		                    
 		                    bool3 = true;
 	                    }
@@ -1345,9 +1345,9 @@
 		    
 	        function movedraftinfo() {
 	            if (CrossYN())
-	                document.getElementById("1tab1").onclick();
+	                document.getElementById("1tab3").onclick();
 	            else
-	                document.getElementById("1tab1").click();
+	                document.getElementById("1tab3").click();
 	        }
 	    </script>
 	</head>

@@ -66,7 +66,7 @@
 	    	var flag = false;
 	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
 	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
-	    	var brdName = "<c:out value='${brdName}' escapeXml='false'/>";
+	    	var brdName = "${brdName}";
 	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
 	    	var m_Arguments;
@@ -142,7 +142,7 @@
 	    	        ItemArray[1] = Array("${brdName}");
 
 	        	    document.getElementById('itemList').innerHTML = "";
-	            	document.getElementById('itemList').innerHTML = "<c:out value='${brdName}' escapeXml='false'/>";
+	            	document.getElementById('itemList').innerHTML = "${brdName}";
 	        	}
 		        
 	        	if (cmd == "add") {

@@ -22,7 +22,7 @@
 		<!-- time picker-->
 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script>
 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" />
-		<!-- <script src="//code.jquery.com/jquery-1.12.0.min.js"></script> -->
+		<!-- <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script> -->
 		<style>
 		</style>
 		<script language="JavaScript" type="text/javascript">

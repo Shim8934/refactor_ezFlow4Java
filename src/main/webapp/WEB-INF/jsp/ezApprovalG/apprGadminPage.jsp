@@ -914,7 +914,7 @@
 	            DocList_Flag = "RECORD";
 	            ListTypeFlag = "0";
 	            InitSubMenu();
-	            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID>" + selRow[0].getAttribute("DATA1") + "</CABINETID></CABINET></CABINETINFO>";
+	            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + selRow[0].getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
 	            GetRecordList();
 	        }
 	        else {

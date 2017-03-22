@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1055,11 +1057,22 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		if (imageFile.exists()) {
 			BufferedImage bi = ImageIO.read(imageFile);	
+			//화질 개선 코드			
+			Image imgTarget = bi.getScaledInstance(119, 128, Image.SCALE_SMOOTH);
+		    int pixels[] = new int[119 * 128]; 
+		    PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, 119, 128, pixels, 0, 119); 
+		    try {
+		        pg.grabPixels(); // JEPG 포맷의 경우 오랜 시간이 걸린다.
+		    } catch (InterruptedException e) {
+		        throw new IOException(e.getMessage());
+		    } 
+		    BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB); 
+		    destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
+		    //기존코드	
+//			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+//			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
 			
-			BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
-			
-			ImageIO.write(bufferedImage, "png", new File(realPath + filePath));
+			ImageIO.write(destImg, "png", new File(realPath + filePath));
 			
 			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
 			if (file1.exists()) {

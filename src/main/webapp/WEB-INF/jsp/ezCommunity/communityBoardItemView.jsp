@@ -81,6 +81,7 @@
 					doc.close();
 					
 					$("#message").contents().find("body").css("word-wrap", "break-word");
+					$("#message").contents().find("body").css("font-family", "Gulim");
                 	 
 	    	        AddLinkTarget();
 	    	        SetAttachmentInfo();

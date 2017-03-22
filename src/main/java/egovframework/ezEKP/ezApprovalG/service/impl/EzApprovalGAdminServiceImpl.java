@@ -840,7 +840,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID, String approvalFlag) throws Exception {
+	public String getTaskInSubCategoryForManage(String sCateCode, String langType, String companyID, int tenantID, String approvalFlag, String userFlag) throws Exception {
 		logger.debug("getTaskInSubCategoryForManage started.");
 		StringBuffer sb = new StringBuffer();
 		
@@ -849,6 +849,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("approvalFlag", approvalFlag);
+		map.put("lang", commonUtil.getMultiData(langType, tenantID));
 		
 		List<ApprGTaskVO> list = ezApprovalGAdminDAO.getTaskInSubCategoryForManage(map);
 		
@@ -860,7 +861,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag);
+		String result = ezApprovalGService.makeTaskListXml(docXML, companyID, langType, tenantID, approvalFlag, userFlag);
 		
 		logger.debug("getTaskInSubCategoryForManage ended. sb = " + sb.toString());
 		
@@ -911,7 +912,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				logger.debug("setTaskCategory started. mode=U");
 				
 				if (getTaskCategoryNodeExist("3", categoryCode, companyID, tenantID, approvalFlag).equals("TRUE")) {
-					for (int i = 3; i > Integer.parseInt(categoryType); i--) {
+					for (int i = 3; i >= Integer.parseInt(categoryType); i--) {
 						map.put("v_CATETYPE", i);
 						
 						ezApprovalGAdminDAO.setTaskCategoryUpdate(map);

@@ -458,7 +458,9 @@ public class EzApprovalGarchiveController {
 		maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		  
+		 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("serverName", serverName);
@@ -468,6 +470,7 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("hasattach", hasattach);
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		return "/ezApprovalG/apprGregRecordAttach";
 	}
@@ -1365,6 +1368,139 @@ public class EzApprovalGarchiveController {
 		return result;
 	}
 	
+	/** 전자결재 개인 문서함 리스트*/
+	@RequestMapping(value = "/ezApprovalG/getUserContList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getUserContList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		Document xmldomsub = null;
+		String pContID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String pPageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		String pPageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+		
+		String pSubQuery = "";
+		String p_UserLang = userInfo.getLang();
+		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
+        {
+
+            try
+            {
+            	String TempQuery = "";
+            	String ReturnQuery = "(1 = 1) ";
+            	
+            	xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent());
+                TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
+
+                if (TempQuery.indexOf("DOCNO;") != -1)
+                {
+                    ReturnQuery += " AND DOCNO LIKE '%'DOCNO'%' ";
+                }
+                if (TempQuery.indexOf("DOCTITLE;") != -1)
+                {
+                    ReturnQuery += " AND DocTitle LIKE '%'DOCTITLE'%' ";
+                }
+                if (p_UserLang == "2")
+                {
+                    if (TempQuery.indexOf("WRITERNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%'WRITERNAME'%' ";
+                    }
+                }
+                else
+                {
+                    if (TempQuery.indexOf("WRITERNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
+                    }
+                }
+                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
+                    ReturnQuery += " AND STARTDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s') ";
+                }
+                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
+                    ReturnQuery += " AND STARTDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
+                    ReturnQuery += " AND ENDDATE >= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("ENDDATEBF;") != -1) {
+                    ReturnQuery += " AND ENDDATE <= " + "STR_TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEBF").item(0).getTextContent() , userInfo.getOffset(), false) + "' ,'%Y-%m-%d %H:%i:%s')";
+                }
+                if (TempQuery.indexOf("FORMID;") != -1) {
+                    ReturnQuery += " AND TBENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+                }
+                if (p_UserLang.equals("2")) {
+                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
+                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%'WRITERDEPTNAME'%' ";
+                    }
+                }
+                else
+                {
+                    if (TempQuery.indexOf("WRITERDEPTNAME;") != -1)
+                    {
+                        ReturnQuery += " AND WriterDeptName LIKE '%'WRITERDEPTNAME'%' ";
+                    }
+                }
+                if (TempQuery.indexOf("KAPR;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                }
+                if (TempQuery.indexOf("KEND;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                }
+                if (TempQuery.indexOf("CAPR;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                }
+                if (TempQuery.indexOf("CEND;") != -1)
+                {
+                    ReturnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                }
+
+                pSubQuery = ReturnQuery;
+            }
+            catch (Exception Ex)
+            {
+                pSubQuery = "";
+            }
+        }
+
+        String oc = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String oo = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+
+        if (xmlDom.getDocumentElement().getChildNodes().getLength() > 6)
+        {
+            if (xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim() != "")
+                pSubQuery = pSubQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        }
+
+        String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
+
+        
+//        XmlNodeList docListNode;
+//
+//        docListNode = xmlResult.SelectNodes("DOCLIST/LISTVIEWDATA/ROWS/ROW");
+//
+//        if (docListNode != null)
+//        {
+//            for (int i = 0; i < docListNode.Count; i++)
+//            {
+//                if (docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText.Trim() != "")
+//                {
+//                    docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText = GetLocalTime(docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText.Trim());
+//                }
+//
+//                if (docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText.Trim() != "")
+//                {
+//                    docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText = GetLocalTime(docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText.Trim());
+//                }
+//            }
+//        }
+
+		return result;
+	}
+	
 	/** 전자결재 일반 결재문서 첨부*/
 	@RequestMapping(value = "ezApprovalG/aprDocAttach.do", produces = "text/xml;charset=utf-8")
 	public String aprDocAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
@@ -1460,7 +1596,6 @@ public class EzApprovalGarchiveController {
 
 		return result;
 	}
-	
 	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
