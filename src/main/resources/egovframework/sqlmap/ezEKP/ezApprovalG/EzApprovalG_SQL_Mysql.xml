@@ -3472,37 +3472,88 @@
 <!-- 		{CALL EZSP_FINDTASK(#v_DEPTCODE#, #v_TITLE#, #v_TASKCODE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzapprovalG.findTask" parameterClass="Map" resultClass="ApprGTaskVO">
-		SELECT 
-				DISTINCT TASKCODE, 
-						 TASKNAME,  
-						 TASKNAME2, 
-						 KEEPINGPERIOD, 
-						 DISPLAYRECFLAG, 
-						 DISPLAYRECTRASTIME,
-   						 SPECIALCATALOGFLAG, 
-   						 SC1, 
-   						 SC2, 
-   						 SC3, 
-   						 TEMPFLAG, 
-   						 KEEPINGMETHOD, 
-   						 KEEPINGPLACE, 
-   						 PROCESSDEPTCODE,
-   						 PROCESSDEPTNAME, 
-   						 IFNULL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
-   						 CATEGORYCODE, 
-   						 CNAME, 
-   						 CNAME2, 
-   						 MCATEGORYCODE, 
-   						 MCNAME, 
-   						 MCNAME2, 
-   						 SUBCATEGORYCODE, 
-   						 SCNAME, 
-   						 SCNAME2
-   		FROM 
-   				VTASKCLASS
-   		$v_subQuery$
-   		ORDER BY 
-   				TASKCODE
+		<isEmpty property="approvalFlag">
+			SELECT 
+		     	 DISTINCT TASKCODE, 
+				 TASKNAME,  
+				 TASKNAME2, 
+				 KEEPINGPERIOD, 
+				 DISPLAYRECFLAG, 
+				 DISPLAYRECTRASTIME,
+				 SPECIALCATALOGFLAG, 
+				 SC1, 
+				 SC2, 
+				 SC3, 
+				 TEMPFLAG, 
+				 KEEPINGMETHOD, 
+				 KEEPINGPLACE, 
+				 PROCESSDEPTCODE,
+				 PROCESSDEPTNAME, 
+				 IFNULL(PROCESSDEPTNAME2,PROCESSDEPTNAME) AS PROCESSDEPTNAME2, 
+				 CATEGORYCODE, 
+				 CNAME, 
+				 CNAME2, 
+				 MCATEGORYCODE, 
+				 MCNAME, 
+				 MCNAME2, 
+				 SUBCATEGORYCODE, 
+				 SCNAME, 
+				 SCNAME2
+	   		FROM
+	   			VTASKCLASS
+	   		$v_subQuery$
+	   		ORDER BY 
+	   			TASKCODE
+		</isEmpty>
+		<isNotEmpty property="approvalFlag">
+			SELECT
+				TASKCODE,
+				KEEPINGPERIOD,
+				TEMPFLAG,
+				DISPLAYRECFLAG,
+				KEEPINGMETHOD,
+				KEEPINGPLACE,
+				TASKNAME,
+				TASKNAME2,
+				B.SUBCATEGORYCODE,
+				C.NAME$lang$,
+				ITEMSECURITY,
+				ISPUBLIC,
+				(SELECT
+			    	CONCAT(CABINETCLASSNO, '001')
+			     FROM
+			     	TBL_CABINETCLASS A
+			     WHERE
+			     	A.TENANT_ID = #tenantID#
+			     AND
+			     	A.COMPANYID = #companyID#
+			     AND
+			     	A.TASKCODE = B.TASKCODE ) CABINETID 
+			FROM
+				TBL_TASKCODE B
+			JOIN
+				TBL_TASKSUBCATEGORY C
+			ON
+				B.TENANT_ID = C.TENANT_ID
+			AND
+				B.COMPANYID = C.COMPANYID
+			AND
+				B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
+			WHERE
+				B.TENANT_ID = #tenantID#
+			AND
+				B.COMPANYID = #companyID#
+			AND
+				DELFLAG = '0'
+			<isEqual property="option" compareValue="GROUPNAME" prepend="AND">
+				C.NAME$lang$ LIKE CONCAT('%', CONCAT(#task#, '%'))
+			</isEqual>
+			<isEqual property="option" compareValue="ITEMNAME" prepend="AND">
+				TASKNAME$lang$ LIKE CONCAT('%', CONCAT(#task#, '%'))
+			</isEqual>
+			ORDER BY
+				TASKCODE
+		</isNotEmpty>
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getAttachFileInfo" parameterClass="Map" resultClass="ApprGAttachInfoVO"> -->
@@ -20342,5 +20393,143 @@
    	
    	<select id="EzApprovalG.getContDocListCountS" parameterClass="Map" resultClass="int">
    	
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContDocListCount" parameterClass="Map" resultClass="int">
+   		SELECT 
+   			COUNT(TBL_ENDAPRDOCINFO.DOCID) 
+   		FROM 
+   			TBL_ENDAPRDOCINFO 
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID   
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID 
+   		INNER JOIN 
+   			TBL_USERCONTLIST  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID  
+   		WHERE 
+   			USERCONTID = #v_CONTID#  
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
+   		AND 
+   			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL 
+   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
+   		AND 
+   			$v_PSUBQUERY$
+   		</isGreaterThan>
+   	</select>
+   	
+   	<select id="EzApprovalG.getUserContList" parameterClass="Map" resultClass="ApprGDocListVO">
+   	<![CDATA[
+   	SELECT A.* FROM(
+   		SELECT 
+   			TBL_ENDAPRDOCINFO.DOCID, 
+   			TBL_ENDAPRDOCINFO.DOCTYPE, 
+   			TBL_ENDAPRDOCINFO.DOCSTATE, 
+   			TBL_ENDAPRDOCINFO.FUNCTIONTYPE, 
+   			TBL_ENDAPRDOCINFO.HREF, 
+   			TBL_ENDAPRDOCINFO.DOCTITLE,   
+   			TBL_ENDAPRDOCINFO.DOCNO, 
+   			TBL_ENDAPRDOCINFO.HASATTACHYN, 
+   			TBL_ENDAPRDOCINFO.HASOPINIONYN, 
+   			TBL_ENDAPRDOCINFO.STARTDATE,   
+   			TBL_ENDAPRDOCINFO.ENDDATE, 
+   			TBL_ENDAPRDOCINFO.WRITERID, 
+   			TBL_ENDAPRDOCINFO.WRITERNAME$v_PSTRMULTIDATA$ AS WRITERNAME, 
+   			TBL_ENDAPRDOCINFO.WRITERJOBTITLE$v_PSTRMULTIDATA$ AS WRITERJOBTITLE, 
+   			TBL_ENDAPRDOCINFO.WRITERDEPTID, 
+   			TBL_ENDAPRDOCINFO.WRITERDEPTNAME$v_PSTRMULTIDATA$ AS WRITERDEPTNAME, 
+   			TBL_ENDAPRDOCINFO.FORMID, 
+   			TBL_ENDAPRDOCINFO.CONTAINERID, 
+   			TBL_EXPENDAPRDOCINFO.FORMNAME$v_PSTRMULTIDATA$ AS FORMNAME, 
+   			TBL_EXPENDAPRDOCINFO.STATUS, 
+   			TBL_ENDAPRDOCINFO.ORGDOCID, 
+   			TBL_ENDAPRDOCINFO.ISPUBLIC, 
+   			TBL_EXPENDAPRDOCINFO.EDMSYN, 
+   			TBL_USERCONTLIST.LINKDATE, 
+   			TBL_USERCONTLIST.DESCRIPTION
+   		FROM 
+   			TBL_ENDAPRDOCINFO  
+   		INNER JOIN 
+   			TBL_EXPENDAPRDOCINFO  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_EXPENDAPRDOCINFO.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   		INNER JOIN 
+   			TBL_USERCONTLIST  
+   		ON 
+   			TBL_ENDAPRDOCINFO.DOCID = TBL_USERCONTLIST.DOCID 
+   		AND
+   			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_USERCONTLIST.TENANT_ID 
+   		AND
+   			TBL_ENDAPRDOCINFO.COMPANYID = TBL_USERCONTLIST.COMPANYID 
+   		WHERE 
+   			USERCONTID = #v_CONTID#  
+   		AND 
+   			TBL_EXPENDAPRDOCINFO.DelFlag IS NULL
+   		]]>
+   		<isGreaterThan property="v_PSUBQUERYLENGTH" compareValue="0">
+   		 AND 
+   		 	$v_PSUBQUERY$
+   		</isGreaterThan>
+   		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
+   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+   			ORDER BY 
+   				$v_ORDEROPTION$ 
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+   		ORDER BY 
+   			$v_ORDEROPTION$, LINKDATE DESC 
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
+   		ORDER BY  
+   			$v_ORDEROPTION$ , LINKDATE DESC
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
+   		ORDER BY LINKDATE DESC 
+   		</isLessEqual>
+   			LIMIT $v_PQUERYSIZESUB$
+   		) A 
+         
+      	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
+   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
+   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+   			ORDER BY $v_ORDEROPTION2$
+   		</isEqual>
+   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+   		ORDER BY $v_ORDEROPTION2$, LINKDATE
+   		</isNotEqual>
+   		</isGreaterEqual>
+   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
+   		ORDER BY $v_ORDEROPTION2$, LINKDATE
+   		</isLessThan>
+   		</isGreaterThan>
+   		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
+   		ORDER BY LINKDATE DESC
+   		</isLessEqual>
+   		LIMIT 
+   			<isGreaterEqual property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
+   			$v_PLISTCOUNT$
+   			</isGreaterEqual>
+   			<isLessThan property="v_PQUERYSIZEMAIN" compareProperty="v_PLISTCOUNT">
+   			$v_PQUERYSIZEMAIN$
+   			</isLessThan>
    	</select>
 </sqlMap>

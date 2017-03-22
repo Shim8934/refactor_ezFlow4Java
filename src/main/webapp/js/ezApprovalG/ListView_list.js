@@ -585,6 +585,12 @@ function ListView() {
             var oText = document.createTextNode(strLang944);
             var objTd = document.createElement("TD");
             objTd.align = "center";
+            
+            try {
+                if (colCount == 0)
+                    colCount = document.getElementById(_thisID).getElementsByTagName("th").length;
+            } catch (e) {}
+            
             objTd.setAttribute("colSpan", colCount);
             objTd.appendChild(oText);
             objTr.appendChild(objTd);

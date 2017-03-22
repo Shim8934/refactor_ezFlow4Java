@@ -1304,13 +1304,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String sCateCode = request.getParameter("sCateCode");
 		String companyID = request.getParameter("companyID");
+		String userFlag = request.getParameter("userFlag");
 		
 		//사용자에서 부를때 컴패니 추가
 		if (companyID == null || companyID.equals("")) {
 			companyID = userInfo.getCompanyID();
 		}
 		
-		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag);
+		String result = ezApprovalGAdminService.getTaskInSubCategoryForManage(sCateCode, userInfo.getLang(), companyID, userInfo.getTenantId(), approvalFlag, userFlag);
 		
 		logger.debug("getTaskInSubCategoryForManage ended.");
 		

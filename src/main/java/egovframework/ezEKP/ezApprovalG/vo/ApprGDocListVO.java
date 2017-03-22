@@ -129,6 +129,16 @@ public class ApprGDocListVO {
 	/** */
 	private String processYN;
 	
+	/** 일반결재 때문에 추가 */
+	private String linkDate;
+
+	
+	public String getLinkDate() {
+		return linkDate;
+	}
+	public void setLinkDate(String linkDate) {
+		this.linkDate = linkDate;
+	}
 	public String getDocID() {
 		return docID;
 	}

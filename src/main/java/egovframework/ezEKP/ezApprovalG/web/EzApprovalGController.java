@@ -171,6 +171,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if(approvalFlag.equals("S")) {
 			 List<ApprGTaskVO> itemList = ezApprovalGService.getCodeContainer(userInfo.getTenantId(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getPrimary());
 			 userCont = ezApprovalGService.getUserContTree(userInfo.getId(), "ROOT", userInfo.getDeptName(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+			 
 			 model.addAttribute("itemList", itemList);
 			 model.addAttribute("userCont", userCont);
 		}
@@ -1413,7 +1414,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String langType = request.getParameter("langType");
 		String pageSize = request.getParameter("pageSize");
 		String pageNO = request.getParameter("pageNO");
-		String result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId(), approvalFlag);
+		String result = "";
+		
+		if (approvalFlag.equals("S")) {
+			companyID = userInfo.getCompanyID();
+			langType = userInfo.getLang();
+
+			result = ezApprovalGService.findTaskS(deptCode, title, companyID, langType, userInfo.getTenantId(), approvalFlag);
+		} else {
+			result = ezApprovalGService.findTask(deptCode, title, code, flag, companyID, langType, pageSize, pageNO, userInfo.getTenantId(), approvalFlag);
+		}
 		
 		logger.debug("findTaskList ended.");
 		
@@ -4251,6 +4261,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String userEmail = userInfo.getEmail();
+		String itemID = request.getParameter("itemID");
+		String endAprType = request.getParameter("ENDAPRTYPE");
+		String endAprState = request.getParameter("ENDAPRSTATE");
 		String userInfoEnforce = ezCommonService.getTenantConfig("UserInfo_Enforce", userInfo.getTenantId()); 
 		String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
 		String susinAdmin = "";
@@ -4276,6 +4289,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String deptInfo = xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE4").item(0).getTextContent();
 		
+		model.addAttribute("endAprType", endAprType);
+		model.addAttribute("endAprState", endAprState);
+		model.addAttribute("itemID", itemID);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("contType", contType);

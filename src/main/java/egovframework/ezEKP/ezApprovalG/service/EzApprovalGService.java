@@ -236,7 +236,7 @@ public interface EzApprovalGService {
 	
 	public String setBebu(Document xmlDom, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
-	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag) throws Exception;
+	public String makeTaskListXml(Document docXML, String companyID, String strType, int tenantID, String approvalFlag, String userFlag) throws Exception;
 	
 	public String doSusinHesong(String docID, String receiveSN, String deptID, String docState, String userID, String userName, String userName2, String dirPath, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -411,5 +411,11 @@ public interface EzApprovalGService {
 	public String getContainerInfoManage(String deptID, String mode, String companyID, String lang, int tenantId) throws Exception;
 
 	public String getContDocListS(String contID, String id, String string, String pageSize, String pageNum, String orderCell, String orderOption,	String companyID, String lang, int tenantId, String offset) throws Exception;
+
+
+	public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
+
+	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+
 
 }
