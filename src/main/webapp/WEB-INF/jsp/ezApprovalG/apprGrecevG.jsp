@@ -547,7 +547,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
-		                alert(strLang625);
+		                alert(strLang1031);
 		            }
 		            else {
 		                window.open("/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&Mod=New&pbrdGbn=SiteNewBoard&pFromScreen=Mail&DocID=" + pDocID + "&Url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
