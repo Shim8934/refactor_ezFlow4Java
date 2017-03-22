@@ -53,6 +53,7 @@
 	
 			function birthYear_onchange() {
 				var e1 = event.srcElement;
+				var dd = new Date();
 				var num="0123456789";
 				
 				event.returnValue = true;
