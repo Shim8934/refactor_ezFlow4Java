@@ -22,7 +22,7 @@
 		 	$("#HPreUser").val("<c:out value="${boardListConfig.previewHContent}"/>").attr("selected", "selected");
 		 
 		 	var WPreUser = $('#WPreUser option:selected').val();
-		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	      
+		 	$("#WPreUser").val("<c:out value="${boardListConfig.previewWContent}"/>").attr("selected", "selected");	    
 		 		});
 	 		
          	document.onselectstart = function () { return false; };
@@ -66,7 +66,12 @@
             	}
         	}
         	function Cancel_Click() {
-            	window.location.reload(true);
+        		document.getElementById("listcount").value = "${boardListConfig.listCount}";
+        		document.getElementById("PreviewMode").value = "${boardListConfig.preview}";
+        		if("${boardListConfig.preview}"=="OFF"){
+        			document.getElementById("PreviewHSizeDiv").style.display = "none";
+                  	document.getElementById("PreviewWSizeDiv").style.display = "none";
+        		}
         	}
         	function Change_Click() {
         		var listCount = document.getElementById("listcount").value;
