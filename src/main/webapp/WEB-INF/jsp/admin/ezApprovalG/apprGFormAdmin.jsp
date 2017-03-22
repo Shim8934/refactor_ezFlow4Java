@@ -27,6 +27,16 @@
 		    var nodeIdx;
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
 		    var pEditor = "<c:out value = '${useEditor}' />";
+		    var ua = navigator.userAgent;
+		    var isIE = false;
+
+            if (/msie 10/i.test(ua)) {
+                isIE = true;	
+            } else if (/msie/i.test(ua)) {
+        		isIE = true;
+        	} else if (/trident/i.test(ua)) {
+        		isIE = true;
+        	}
 		    
 		    if(new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function() {
@@ -43,7 +53,6 @@
 		    };
 			
 		    $(document).ready(function(){
-		    	var ua = navigator.userAgent;
 		    	
 		    	if (!(/msie/i.test(ua)) && !(/rv:11.0/i.test(ua))) {
 		    		$('#btnInsForm1').hide();
@@ -443,6 +452,7 @@
 		    }
 	
 		    function lvtForm_Row_Dbclick() {
+		    	if(isIE)
 		        UpdateForm();
 		    }
 	
