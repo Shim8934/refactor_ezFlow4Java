@@ -470,10 +470,10 @@
 	                                window.dialogArguments["window"].opener.top.organview = loadXMLString(g_xmlHTTP.responseText);
 	                        } catch (e) { }
 	                    }
-	
-	                    var treeXML = loadXMLFile("/myoffice/common/organtree_config3.xml");
+	                    
+	                    var treeXML = loadXMLFile("/xml/organtree_config3.xml");
 	                    document.getElementById('TreeView').innerHTML = "";
-	
+	                    
 	                    var treeView = new TreeView();
 	                    treeView.SetConfig(treeXML);
 	                    treeView.SetID("FromTreeView");

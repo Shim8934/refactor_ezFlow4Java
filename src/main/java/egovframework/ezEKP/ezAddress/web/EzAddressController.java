@@ -1158,13 +1158,54 @@ public class EzAddressController{
 		model.addAttribute("title", title);
 		model.addAttribute("rootAddressXML", rootAddressXML.toString());
 		
-		System.out.println(rootAddressXML.toString());
-		
 		logger.debug("addressFolderManage ended.");
 		logger.debug("companyAdmin=" + companyAdmin + ",deptAdmin=" + deptAdmin + ",noneActiveX=" + noneActiveX + ",show=" + show
 				 + ",title=" + title);
 		
 		return "ezAddress/addressFolderManage";
+	}
+	
+	/**
+	 * 최상위 주소록 정보 호출 함수
+	 */
+	@RequestMapping(value = "/ezAddress/getRootAddressXML.do", produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String getRootAddressXML(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception {		
+		logger.debug("getRootAddressXML started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		StringBuilder rootAddressXML = new StringBuilder();
+        
+		Map<String, String> map = ezAddressService.getTopFolderSubCount(userInfo.getTenantId(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
+		
+		String pHasSub = "";
+		String dHasSub = "";
+		String cHasSub = "";
+		
+		if (map != null) {
+			if (map.get("P") != null && !map.get("P").equals("0")) {
+				pHasSub = "hassub=\"1\"";
+			}
+			if (map.get("D") != null && !map.get("D").equals("0")) {
+				dHasSub = "hassub=\"1\"";
+			}
+			if (map.get("C") != null && !map.get("C").equals("0")) {
+				cHasSub = "hassub=\"1\"";
+			}
+		}
+		
+        rootAddressXML.append("<tree>");
+		rootAddressXML.append("<nodes>");
+        String xmlFormat = "<node imgidx=\"%s\" caption=\"%s\" ownerid=\"%s\" type=\"%s\" folderid=\"%s\" changekey=\"%s\" %s nodelevel='Y'></node>";
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezAddress.t145", locale), userInfo.getId(), "P", "0", "", pHasSub));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezAddress.t146", locale), userInfo.getDeptID(), "D", "0", "", dHasSub));
+        rootAddressXML.append(String.format(xmlFormat, "1", egovMessageSource.getMessage("ezAddress.t147", locale), userInfo.getCompanyID(), "C", "0", "", cHasSub));
+        rootAddressXML.append("</nodes>");
+        rootAddressXML.append("</tree>");
+        
+        logger.debug("getRootAddressXML ended.");
+        return rootAddressXML.toString();
 	}
 	
 	/**
@@ -1486,9 +1527,9 @@ public class EzAddressController{
 			
 			Map<String, String> map = ezAddressService.getTopFolderSubCount(userInfo.getTenantId(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID());
 			
-			String pHasSub = "";
-			String dHasSub = "";
-			String cHasSub = "";
+			String pHasSub = "0";
+			String dHasSub = "0";
+			String cHasSub = "0";
 			
 			if (map != null) {
 				if (map.get("P") != null && !map.get("P").equals("0")) {

@@ -216,9 +216,9 @@
 				                    setAutoItemCode.checked = true;
 				                    $('#tr_setAutoItemCode').show();
 				                    document.getElementById("isPublic").value = result.vo.isPublic;
-				                    document.getElementById("tbItemCode").value = result.vo.taskCode;
-				                    document.getElementById("tbItemName").value = result.vo.taskName;
-				                    document.getElementById("tbItemName2").value = result.vo.taskName2;
+				                    document.getElementById("tbItemCode").value = result.vo.itemCode;
+				                    document.getElementById("tbItemName").value = result.vo.itemName;
+				                    document.getElementById("tbItemName2").value = result.vo.itemName2;
 				                    document.getElementById("keepperiod").value = result.vo.keepPeriod;
 				                    document.getElementById("securitylevel").value = result.vo.securityLevel;
 			                	}
@@ -844,8 +844,8 @@
 				<tr id="tr_setAutoItemCode">
 					<th style="width:10%; text-align:center"><spring:message code='ezApprovalG.t1197'/></th>
                     <td style="width:400px;">
-                        <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 50px" readonly>
-                        <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 80px" readonly>
+                        <input type="text" id="tbItemCode" name="tbItemCode" style="WIDTH: 80px" readonly>
+                        <input type="text" id="tbItemName" name="tbItemName" style="WIDTH: 100px" readonly>
                         <input type="hidden" id="tbItemName2" name="tbItemName2">
                         <a class="imgbtn"><span onclick="return btnItemCode_onclick()"><spring:message code='ezApproval.t321'/></span></a>
                         <a class="imgbtn"><span onclick="DeleteItemCode()"><spring:message code='ezApprovalG.t266'/></span></a>
