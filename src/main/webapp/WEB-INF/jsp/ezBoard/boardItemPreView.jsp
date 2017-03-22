@@ -200,8 +200,8 @@
 		  </tr>
 		  <tr>
 		    <td class="pad1">
-		        <div id="ItemOverflow" class="viewbox" style="overflow-y: auto; height:510px; width:730px;">
-		            <div id="txtContent" class="white" style="height:90%; word-break: break-all;"></div>
+		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:510px; width:720px;">
+		            <div id="txtContent" class="white" style="overflow-y:auto; height:100%; width: 100% word-break: break-all;"></div>
 		        </div>
 		    </td>
 		    <c:if test="${guBun != '3'}">
