@@ -177,7 +177,8 @@
 					keepingplace,
 					taskname,
 					taskname2,
-					subcategorycode,
+					C.subcategorycode,
+					C.NAME$lang$,
 					itemSecurity,
 					isPublic,
 					(SELECT
@@ -185,19 +186,27 @@
 				     FROM
 				     	TBL_CABINETCLASS A
 				     WHERE
-				     	TENANT_ID = #tenantID#
+				     	A.TENANT_ID = #tenantID#
 				     AND
-				     	COMPANYID = #companyID#
+				     	A.COMPANYID = #companyID#
 				     AND
 				     	A.TASKCODE = B.TASKCODE ) CABINETID 
 				FROM
 					TBL_TASKCODE B
+				JOIN
+					TBL_TASKSUBCATEGORY C
+				ON
+					B.TENANT_ID = C.TENANT_ID
+				AND
+					B.COMPANYID = C.COMPANYID
+				AND
+					B.SUBCATEGORYCODE = C.SUBCATEGORYCODE
 				WHERE
-					tenant_id = #tenantID#
+					B.tenant_id = #tenantID#
 				AND
-					companyid = #companyID#
+					B.companyid = #companyID#
 				AND
-					subcategorycode = #v_SUBCATECODE#
+					B.subcategorycode = #v_SUBCATECODE#
 				AND
 					delflag = '0'
 				ORDER BY

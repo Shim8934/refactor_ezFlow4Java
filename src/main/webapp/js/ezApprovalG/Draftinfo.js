@@ -20,7 +20,8 @@ function Draftinfo_ini() {
     		async : false,
         	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
         	data : {
-        			sCateCode : code
+        			sCateCode : code,
+        			userFlag  : "2"
         			},
         	success : function(text) {
         		result = text;
@@ -275,24 +276,24 @@ function CodeSearch_onclick() {
         return;
     }
 
-    var xmlpara = createXmlDom();
-    var xmlhttp = createXMLHttpRequest();
-
-    var objRoot, objNode;
-
-    objRoot = createNodeInsert(xmlpara, objRoot, "ROW");
-    createNodeAndInsertText(xmlpara, objNode, "OPTION", SearchOPtion);
-    createNodeAndInsertText(xmlpara, objNode, "VALUE", SearchValue);
-
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezLine/aspx/getCodeSearch.aspx", false);
-    xmlhttp.send(xmlpara);
-
+    var result = "";
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/findTaskList.do",
+		data : {
+			deptCode   : SearchOPtion,
+			title 	   : SearchValue
+		},
+		success: function(text){
+			result = text;
+		}        			
+	});
+    
 //    try {
-        var xmlDoc = loadXMLString(xmlhttp.responseText);
-
-        if (xmlDoc == null) {
-            xmlDoc = loadXMLString(xmlhttp.responseText);
-        }
+        var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
         var FormList = new ListView();
@@ -326,7 +327,6 @@ function CodeSearch_onclick() {
             }
             
         }
-        xmlhttp = null;
 //    }
 //    catch (ErrMsg) {
 //        alert(" CodeSearch_onclick : " + ErrMsg.description + ErrMsg);
@@ -450,7 +450,8 @@ function TreeViewCodeNodeClick()
 		async : false,
     	url : "/admin/ezApprovalG/getTaskInSubCategoryForManage.do",
     	data : {
-    			sCateCode : code
+    			sCateCode : code,
+    			userFlag  : "2"
     			},
     	success : function(text) {
     		result = text;
