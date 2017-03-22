@@ -169,7 +169,9 @@
 	            }
 	            else {
 	                alert("<spring:message code='ezAddress.t153' />");
-	                LoadAddressTree();
+	                
+	                window.location.reload();
+// 	                LoadAddressTree();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
@@ -246,7 +248,9 @@
 	                alert("<spring:message code='ezAddress.t157' />");
 	            else {
 	                alert("<spring:message code='ezAddress.t158' />");
-	                LoadAddressTree();
+	                
+	                window.location.reload();
+// 	                LoadAddressTree();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
@@ -297,7 +301,9 @@
 	
 	                else {
 	                    alert("<spring:message code='ezAddress.t165' />");
-	                    LoadAddressTree();
+	                    
+	                    window.location.reload();
+//	 	                LoadAddressTree();
 	                    if (ReturnFunction!=null)
 	                        ReturnValue = 1;
 	                    else
@@ -360,7 +366,9 @@
 	                    alert("<spring:message code='ezAddress.t171' />");
 	                else {
 	                    alert("<spring:message code='ezAddress.t172' />");
-	                    LoadAddressTree();
+	                    
+	                    window.location.reload();
+//	 	                LoadAddressTree();
 	                    if (CrossYN())
 	                        ReturnValue = 1;
 	                    else
@@ -393,7 +401,9 @@
 	                alert("<spring:message code='ezAddress.t171' />");
 	            else {
 	                alert("<spring:message code='ezAddress.t172' />");
-	                LoadAddressTree();
+	                
+	                window.location.reload();
+// 	                LoadAddressTree();
 	                if (ReturnFunction!=null)
 	                    ReturnValue = 1;
 	                else
