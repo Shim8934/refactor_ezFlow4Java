@@ -194,7 +194,7 @@
 			    draw_clock();
 			    yourClock();
 
-			    //CalendarMiniDataSource();
+			    CalendarMiniDataSource();
 
 		        try { top.onresize() } catch (e) { }
 
