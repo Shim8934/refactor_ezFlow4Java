@@ -934,7 +934,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT
@@ -1578,7 +1578,7 @@
 				tenant_id)
 			VALUES
 				(#v_PFORMCONTAINERID#,
-				#v_PID#,
+				#v_PFORMID#,
 				#v_PFORMNAME#,
 				#v_PFORMNAME2#,
 				#v_PFORMKIND#,
@@ -1677,7 +1677,7 @@
                        	 AND
                        	 	companyid = #companyID#
                        	 AND
-                       	 	formid = #v_PID# )
+                       	 	formid = #v_PFORMID# )
 		</selectKey>
 		
 		<isEqual property="id" compareValue="OK">
@@ -1697,7 +1697,7 @@
        		AND
        			companyid = #companyID#
        		AND
-       			formid = #v_PID#
+       			formid = #v_PFORMID#
 		</isEqual>
 		
 		<isNotEqual property="id" compareValue="OK">
@@ -1714,7 +1714,7 @@
 				companyid,
 				tenant_id)
         	VALUES
-        		(#v_PID#,
+        		(#v_PFORMID#,
         		#keepPeriod#,
         		#securityLevel#,
         		#isPublic#,
