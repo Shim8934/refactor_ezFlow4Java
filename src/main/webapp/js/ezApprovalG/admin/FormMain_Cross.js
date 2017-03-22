@@ -229,16 +229,16 @@ function MakeFormInfoXML() {
 
     if (document.getElementById("tbFormName").value.replace(/ /gi, "") == "") {
         pDataCheck = false;
-        pErrorMsg = strLang607;
+        pErrorMsg = strLang1010;
     }
 
     if (document.getElementById("setAutoItemCode").checked && (document.getElementById("tbItemCode").value == "" || document.getElementById("tbItemName").value == "")) {
         pDataCheck = false;
         if (pErrorMsg == "") {
-            pErrorMsg = strLang608;
+            pErrorMsg = strLang1011;
         }
         else {
-            pErrorMsg = pErrorMsg + "<br>" + strLang608;
+            pErrorMsg = pErrorMsg + "<br>" + strLang1011;
         }
     }
 
@@ -295,7 +295,7 @@ function MakeFormMHTXML() {
     {
         retValue[0] = "FALSE";
         retValue[1] = "";
-        retValue[2] = strLang621;
+        retValue[2] = strLang1024;
         return retValue;
     }
 
@@ -303,14 +303,14 @@ function MakeFormMHTXML() {
         if (message.FormInfoCheck("body") > 1) {
             retValue[0] = "FALSE";
             retValue[1] = "";
-            retValue[2] = strLang609;
+            retValue[2] = strLang1012;
             return retValue;
         }        
     }
     else {
         retValue[0] = "FALSE";
         retValue[1] = "";
-        retValue[2] = strLang610;
+        retValue[2] = strLang1013;
         return retValue;
     }
 
@@ -318,7 +318,7 @@ function MakeFormMHTXML() {
         if (message.FormInfoCheck("doctitle") > 1) {
             retValue[0] = "FALSE";
             retValue[1] = "";
-            retValue[2] = strLang611;
+            retValue[2] = strLang1014;
             return retValue;
         }
     }
@@ -326,7 +326,7 @@ function MakeFormMHTXML() {
         if (message.FormInfoCheck("doctitlefield") == null || message.FormInfoCheck("doctitlefield") == "") {
             retValue[0] = "FALSE";
             retValue[1] = "";
-            retValue[2] = strLang612;
+            retValue[2] = strLang1015;
             return retValue;
         }        
     }
@@ -395,7 +395,7 @@ function MakeFormConnXML() {
             if (xmldom.getElementsByTagName("conn").length == 0) {
 
                 pDataCheck = false;
-                pErrorMsg = strLang613;
+                pErrorMsg = strLang1016;
             }
             else {
                 var pConnArray = new Array();
@@ -416,7 +416,7 @@ function MakeFormConnXML() {
                     else {
 
                         pDataCheck = false;
-                        pErrorMsg = strLang614;
+                        pErrorMsg = strLang1017;
                         break;
                     }
                 }
@@ -437,7 +437,7 @@ function MakeFormConnXML() {
                         if (results[j] > 1) {
 
                             pDataCheck = false;
-                            pErrorMsg = strLang615;
+                            pErrorMsg = strLang1018;
                             break;
                         }
                     }
@@ -555,9 +555,9 @@ function MakeFormRecevGroupXML_Detail() {
 
 function btnClose_onclick() {
     if(formID == "")
-        var pAlertContent = strLang619;
+        var pAlertContent = strLang1022;
     else
-        var pAlertContent = strLang620;
+        var pAlertContent = strLang1023;
 
     var Rtnval = OpenInformationUI(pAlertContent);
     var para = new Array();

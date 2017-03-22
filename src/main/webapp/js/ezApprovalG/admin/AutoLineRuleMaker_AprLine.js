@@ -347,7 +347,7 @@ function AprTypeToName(tempCode) {
     return retVal;
 }
 
-function MakeAprLineListXML( pAutoRuleGuid) {
+function MakeAprLineListXML (pAutoRuleGuid) {
     var AprRuleLineXML = loadXMLString(bodyForm.hidAprRuleLine.value);
 
     if (thisSelGUID != "") {
@@ -940,6 +940,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
     try {
         var pAPRLINE = new ListView();
         pAPRLINE.LoadFromID("lvAPRAUTORULELINE");
+        
         if (CheckGPerson == "group") {
             var selDeptID = GetAttribute(pAPRLINE.GetSelectedRows()[0], "DATA12");
             var p_AprlineValue = new Array();
@@ -973,8 +974,7 @@ function ChangeAprlineType(CheckGPerson, CurrentAprType) {
 
                 ReturnValue = ReturnValue + p_Option.outerHTML;
             }
-        }
-        else if (CheckGPerson == "user") {
+        } else if (CheckGPerson == "user") {
             var p_AprlineValue = new Array();
             var p_AprlineCode = new Array();
             var i = 0;
