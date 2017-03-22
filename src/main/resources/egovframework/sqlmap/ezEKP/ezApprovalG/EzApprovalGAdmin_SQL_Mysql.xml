@@ -934,7 +934,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getFormRecvAdmin" parameterClass="Map"
-		resultClass="ApprGFormVO">
+		resultClass="ApprGFormVO" remapResults="true">
 		<isEqual property="approvalFlag" compareValue="S">
 			<![CDATA[
 				SELECT

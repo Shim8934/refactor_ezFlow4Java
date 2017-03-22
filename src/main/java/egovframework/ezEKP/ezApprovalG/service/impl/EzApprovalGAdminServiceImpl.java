@@ -2428,7 +2428,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
 			sb.append("</HEADER>");
 		}
-		sb.append("</HEADERS><ROWS>");
+		sb.append("</HEADERS>");
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_FORMID", formID);
@@ -2440,22 +2440,41 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		List<ApprGFormVO> listBody = ezApprovalGAdminDAO.getFormRecvAdmin(map1);
 		logger.debug("getFormRecvAdmin ended.");
 		
+		sb.append("<ROWS>");
+		
 		for (int i = 0; i < listBody.size(); i++) {
 			ApprGFormVO bodyVo = listBody.get(i);
 			
-			for (int j = 0; j < listHeader.size(); j++) {	
-				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + ezOrganService.getPropertyValue(bodyVo.getDeptID(), "DisplayName" + multiData, tenantID) + "</VALUE>");
-
-				if (j == 0) {
-					sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1></CELL></ROW>");
+			sb.append("<ROW>");
+			
+			for (int j = 0; j < listHeader.size(); j++) {
+				sb.append("<CELL>");
+				
+				if (approvalFlag.equals("S")) {
+					if (j == 0) {
+						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
+						sb.append("<DATA2>" + bodyVo.getUserID() + "</DATA2>");
+					} else {
+						sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getUserID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+					}
 				} else {
-					sb.append("</CELL></ROW>");
+					sb.append("<VALUE>" + commonUtil.cleanValue(ezOrganService.getPropertyValue(bodyVo.getDeptID(), "displayName" + multiData, tenantID)) + "</VALUE>");
+
+					if (j == 0) {
+						sb.append("<DATA1>" + bodyVo.getDeptID() + "</DATA1>");
+					} else {
+					}
 				}
+				sb.append("</CELL>");
+				
 			}
+			
+			sb.append("</ROW>");
 		}
 		
-		sb.append("</ROWS></LISTVIEWDATA>");
+		sb.append("</ROWS>");
+		sb.append("</LISTVIEWDATA>");
 
 		return sb.toString();
 	}

@@ -50,6 +50,34 @@ public class EzAddressServiceImpl implements EzAddressService {
 	private EzAddressDAO ezAddressDAO;
 	
 	@Override
+	public Map<String, String> getTopFolderSubCount(int tenantId, String userId, String deptId, String companyId) throws Exception {
+		Map<String, String> map = new HashMap<String, String>();
+		
+		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
+		String userIdParam = "userId=" + URLEncoder.encode(userId + "@" + domainName, "UTF-8");
+		String deptIdParam = "deptId=" + URLEncoder.encode(deptId + "@" + domainName, "UTF-8");
+		String companyIdParam = "companyId=" + URLEncoder.encode(companyId + "@" + domainName, "UTF-8");
+		
+		String inputParams = userIdParam + "&" + deptIdParam + "&" + companyIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/getTopFolderSubCount", inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(strJson);
+        
+        if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0 && object.get("result") != null) {
+        	map = (JSONObject)object.get("result");
+        } else {
+        	throw new Exception("Error from JGwServer.");
+        }
+        
+        return map;
+	}
+	
+	@Override
 	public String getListType(int tenantId, String userId) throws Exception {
 		String listType = null;
 		
@@ -101,11 +129,11 @@ public class EzAddressServiceImpl implements EzAddressService {
 	public void setAddressConfig(int tenantId, String pUserID, String pListCnt, String pListType) throws Exception {
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		
-		String userIdIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + domainName, "UTF-8");
+		String userIdParam = "userId=" + URLEncoder.encode(pUserID + "@" + domainName, "UTF-8");
 		String listCntParam = "listCnt=" + URLEncoder.encode(pListCnt, "UTF-8");
 		String listTypeParam = "listType=" + URLEncoder.encode(pListType, "UTF-8");
 		
-		String inputParams = userIdIdParam + "&" + listCntParam + "&" + listTypeParam;
+		String inputParams = userIdParam + "&" + listCntParam + "&" + listTypeParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzAddress/setAddressGeneral", inputParams);

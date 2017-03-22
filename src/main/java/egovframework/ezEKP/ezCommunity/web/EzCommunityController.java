@@ -7,8 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -1930,7 +1932,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String mode = request.getParameter("mode");
-		String memo = request.getParameter("memo");
+		String memo = URLDecoder.decode(request.getParameter("memo"), "utf-8");
 		
 		logger.debug("code : " + code + ", mode : " + mode + ", memo : " + memo);
 		

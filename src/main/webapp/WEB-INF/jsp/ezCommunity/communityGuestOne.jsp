@@ -30,6 +30,7 @@
 		    var totalCount = '<c:out value="${keywordCount}" />';
 		    var code = '<c:out value="${code}" />';
 		    var lang = '<c:out value="${lang}" />';
+			
 		    var xmlDoc = loadXMLString('${strXML}');
 
 		    window.onload = function () {
