@@ -198,12 +198,12 @@
 		            setPresentValue(treeNode.GetNodeData("VALUE"));
 		            if (PresentOpen != "CONTAINER") {
 		                PresentOpen = "CONTAINER";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do??contID=" + escape(treeNode.GetNodeData("DATA1")) + "&SQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		            }
 		            else {
 		                try {
 
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do??contID=" + escape(treeNode.GetNodeData("DATA1")) + "&SQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		                    window.parent.frames("right").document.Script.SelCont_onclick4(treeNode.GetNodeData("DATA1"));
 		                } catch (e) { }
 		            }
@@ -247,7 +247,7 @@
 		                    convMain('1', '');
 		                    break;
 		                case "MYCONT":
-		                    cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>");
+		                    cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>",'');
 		                    break;
 		                case "MYDRAFTCONT":
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:EXACT");
@@ -401,24 +401,22 @@
 		        parent.frames["right"].btnDraft_onclick();
 		    }
 		
-		    function cmdOK_onclick(ContainerID, ContName) {
+		    function cmdOK_onclick(ContainerID, ContName, SubQuery) {
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-		            if (ContName == "<spring:message code='ezApprovalG.t1517'/>"){
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery=&type=1";
-		            }
-		            else {
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery=";
-		            }
+		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + escape(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2;
+		               
 		        }
 		        else {
 		            try {
-		                parent.frames["right"].SelCont_onclick2(ContainerID, ContName);
+		            	 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + escape(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2;
+// 		                parent.frames["right"].SelCont_onclick2(ContainerID, ContName);
 		            } catch (e) { }
 		        }
 		    }
 		
 		    function cmdOK_onclick2(ContainerID, ContainerName, ContName) {
+		    	alert(400);
 		        if (primaryStr == "1") {
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
@@ -845,10 +843,10 @@
 						<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
 							<c:choose>
 								<c:when test="${strLang == ''}">
-									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}')" >${apprGLeftVOList.containerTypeName}</span></li>
+									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')" >${apprGLeftVOList.containerTypeName}</span></li>
 								</c:when>
 								<c:otherwise>
-									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}')" >${apprGLeftVOList.containerTypeName2}</span></li>
+									<li><span style="width:100%;display:inline-block;" id="myDeptCont${status.count - 1}" onClick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')" >${apprGLeftVOList.containerTypeName2}</span></li>
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
