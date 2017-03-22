@@ -385,7 +385,7 @@
 		            var pLeft = (pwidth - 765) / 2;
 		
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
-		                alert(strLang625);
+		                alert(strLang1031);
 		            }
 		            else {
 		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,scrollbars=no');
