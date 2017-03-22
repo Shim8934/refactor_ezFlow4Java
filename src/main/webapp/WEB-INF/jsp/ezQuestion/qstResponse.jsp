@@ -9,7 +9,7 @@
 		<link rel="stylesheet" href="<spring:message code='ezQuestion.i1' />" type="text/css">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var receve= "<c:out value='${receve}'/>";
 			var brdID = "<c:out value='${qstUserPermissionVO.brdID}'/>";

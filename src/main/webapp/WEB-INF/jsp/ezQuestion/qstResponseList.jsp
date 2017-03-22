@@ -17,7 +17,7 @@
 		<script type="text/javascript" src="<spring:message code='ezQuestion.e1' />"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		
 		<script type="text/javascript">
 			var szBrdID = "<c:out value='${brdID}'/>";
