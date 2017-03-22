@@ -21,6 +21,7 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -3086,4 +3087,56 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return result;
 	}
+
+	@Override
+	public String getFormAprRule(String formID, String companyID, int tenantID) throws Exception {
+		logger.debug("getFormAprRule started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("formID", formID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRule(map);
+
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprAutoRuleVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprAutoRuleVOs.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		logger.debug("getFormAprRule ended");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception {
+		logger.debug("getFormAprRuleLine started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("formID", formID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprAutoRuleVO> apprAutoRuleVOs = ezApprovalGAdminDAO.getFormAprRuleLine(map);
+
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprAutoRuleVOs.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprAutoRuleVOs.get(i)));
+		}
+		sb.append("</DATA>");
+
+		logger.debug("getFormAprRuleLine ended");
+		
+		return sb.toString();
+	}
+	
+	
 }
