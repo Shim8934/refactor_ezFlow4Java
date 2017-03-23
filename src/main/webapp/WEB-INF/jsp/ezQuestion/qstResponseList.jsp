@@ -43,7 +43,7 @@
 				for(i=0;nodes.length>i; i++){
 					if("${pTotalCnt}" != 0){
 						tableXml += "<tr>";
-						tableXml += "<td style='width:50px;text-align:center'>";
+						tableXml += "<td style='width:50px;'>";
 						tableXml += SelectSingleNodeValue(nodes[i], 'NO');
 						tableXml += "</td>";
 						if("${publicFlg}"==0){

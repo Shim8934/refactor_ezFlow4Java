@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.stringtemplate.v4.debug.AddAttributeEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -416,8 +415,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			String aprTypeXML = ezApprovalGService.getAprType(companyID, userInfo.getLang(), userInfo.getTenantId());
 			
 			if (formID != null && !formID.equals("")) {
-//				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
-//				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
+				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
 			}
 			
 			model.addAttribute("listHeader", listHeader);
@@ -591,9 +590,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formMHT = request.getParameter("formMHT");
 		String formConnInfo = request.getParameter("formConn");
 		String formWorkFlow = request.getParameter("formWorkFlow");
+		String formAutoRule = request.getParameter("formAutoRule");
+		String formAutoRuleLine = request.getParameter("formAutoRuleLine");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
+		logger.debug("formAutoRule = " + formAutoRule);
+		logger.debug("formAutoRuleLine = " + formAutoRuleLine);
+		
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
 		
 		logger.debug("formSave started. result = " + result);
 		
@@ -628,7 +632,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
 		String path = config.getProperty("upload_approvalG.ROOT");
@@ -815,6 +818,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
 	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("apprGMCont started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
@@ -822,7 +827,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String serverName = userInfo.getServerName();
-				
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -838,6 +843,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
+		
+		logger.debug("apprGMCont ended.");
 		
 		return "/admin/ezApprovalG/apprGMCont";
 	}
@@ -1084,40 +1091,91 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재일반관리 문서함관리 특수문서함 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do")
+	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageSpecialCont started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String deptName = request.getParameter("deptName");
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("deptName", deptName);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("manageSpecialCont ended");
+		
+		return "admin/ezApprovalG/apprGManageSpecialCont";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do")
+	@ResponseBody
+	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("specialContListInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGAdminService.getSpecialContList(deptID, companyID, userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("specialContListInfo ended");
+	
+		return result;
+	}
+	
+	/**
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출 함수
+	 * 전자결재관리 수신처 그룹지정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
-	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
-		LoginVO user = commonUtil.aprUserInfo(loginCookie);
-		String serverName = user.getServerName();
+	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("apprGReceiveGroup started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String serverName = userInfo.getServerName();
 		String topID = "";
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
 		} else {
 			topID = "Top";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
 		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO vo = list.get(i);			
 			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(j, vo);
 			}
 		}
-		model.addAttribute("companyID", user.getCompanyID());
+		
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("topID", topID);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("apprGReceiveGroup ended.");
 		
 		return "admin/ezApprovalG/apprGReceiveGroup";
 	}
@@ -1128,18 +1186,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getAdminReceivGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LoginVO user = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("getAdminReceivGroup started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String pid = doc.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String pmode = doc.getDocumentElement().getChildNodes().item(1).getTextContent();
-		String pcompanyID = user.getCompanyID();
+		String pcompanyID = userInfo.getCompanyID();
 				
 		if (doc.getDocumentElement().getChildNodes().getLength() > 2) {
 			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
 		}
 		
-		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, user.getPrimary(), user.getTenantId(), user.getOffset());
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getAdminReceivGroup ended.");
 		
 		return result;
 	}
@@ -2617,23 +2680,26 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGMoveContainer started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		StringBuilder companySel = new StringBuilder();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "main/warning";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
 		
 		logger.debug("apprGMoveContainer ended");
 		
@@ -2785,25 +2851,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("docDelete started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		StringBuilder companySel = new StringBuilder();
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "main/warning";
 		}
 				
-		String periodNode = ezApprovalGAdminService.getCodeType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
+		String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, userInfo.getCompanyID(), approvalFlag);
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
 		model.addAttribute("periodNode", periodNode);
 		
 		logger.debug("docDelete ended");

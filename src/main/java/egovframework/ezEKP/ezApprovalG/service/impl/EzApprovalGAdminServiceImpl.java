@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -546,17 +547,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet) throws Exception {
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
 		if (companyID.toUpperCase().equals("TOP")) {
 			sb.append("</HEADERS><ROWS></ROWS></LISTVIEWDATA>");
 		} else {
-			String code = "091";
-			
-			if (mode.equals("ITEM")) {
-				code = "092";
+			String code = "";
+			if (approvalFlag.equals("S")) {
+				code = "S091";
+				
+				if (mode.equals("ITEM")) {
+					code = "S092";
+				}
+			} else {
+				code = "091";
+				
+				if (mode.equals("ITEM")) {
+					code = "092";
+				}
 			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1115,7 +1125,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					if (!docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim().equals(objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim())) {
                         String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), NAMEDESC[i], NAMEDESC2[i], docXML.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), objParam.getElementsByTagName(NAMETYPE[i]).item(0).getTextContent().trim(), companyID, tenantID);
                         
-                        if (subSQL == "FALSE") {
+                        if (subSQL.equals("FALSE")) {
 							return "FALSE";
                         }
 					}
@@ -1150,7 +1160,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			if (approvalFlag.equals("G")) {
 				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID, userInfo.getTenantId());
 				
-				if (subSQL == "FALSE") {
+				if (subSQL.equals("FALSE")) {
 					return "FALSE";
                 }
 			} else {
@@ -2532,7 +2542,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	
 	//TODO 2017-01-05 이효진 연동정보 및 workflow 등록 및 수정 부분 미구현(EZSP_SETFORMDATA)
 	@Override
-	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
+	public String saveFormInfo(String contID, String formID, String formInfo, String formConnInfo, String formWorkFlow, String formRecevGroup, String formMhtInfo, String formAutoRule, String formAutoRuleLine, String companyID, String realPath, LoginVO userInfo, String approvalFlag) throws Exception {
 		logger.debug("saveFormInfo started.");
 		String strBeforeMHT = "";
 		String path = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
@@ -2563,25 +2573,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
-		}
-		
-		//TODO 연동정보
-		String connXML = "";
-		logger.debug("formConnInfo" + formConnInfo);
-		if (!formConnInfo.equals("")) {
-			doc = commonUtil.convertStringToDocument(formConnInfo);
-			connXML = doc.getElementsByTagName("CONNXML").item(0).getTextContent();
-			logger.debug("connXML" + connXML);
-		}
-
-		//TODO workflow
-		String validationsXML = "";
-		String statusXML = "";
-		logger.debug("formWorkFlow" + formWorkFlow);
-		if (formWorkFlow != null && !formWorkFlow.equals("")) {
-			doc = commonUtil.convertStringToDocument(formWorkFlow);
-//			validationsXML = doc.getElementsByTagName("VALIDATIONS").item(0).getTextContent();
-//			statusXML = doc.getElementsByTagName("STATUS").item(0).getTextContent();
 		}
 
 		String recevGroupXML = "";
@@ -2643,6 +2634,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".mht");
 			map.put("v_PFORMID", result);
 			
+			logger.debug("setFormDataInsert1 started.");
+			ezApprovalGAdminDAO.setFormDataInsert1(map);
+			logger.debug("setFormDataInsert1 ended.");
+			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
 				map.put("keepPeriodCode", keepPeriodCode);
@@ -2653,12 +2648,69 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("tbItemName2", tbItemName2);
 				map.put("useFlag", useFlag);
 				
+				logger.debug("setAutoDocNum started.");
 				ezApprovalGAdminDAO.setAutoDocNum(map);
+				logger.debug("setAutoDocNum ended.");
+				
+				if (!formAutoRule.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRule);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleSN", doc.getElementsByTagName("AUTORULESN").item(i).getTextContent());
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("checkFieldType", doc.getElementsByTagName("CHECKFIELDTYPE").item(i).getTextContent());
+						map.put("checkField", doc.getElementsByTagName("CHECKFIELD").item(i).getTextContent());
+						map.put("operatorType", doc.getElementsByTagName("OPERATORTYPE").item(i).getTextContent());
+						map.put("operator", doc.getElementsByTagName("OPERATOR").item(i).getTextContent());
+						map.put("condType", doc.getElementsByTagName("CONDTYPE").item(i).getTextContent());
+						map.put("condValue", doc.getElementsByTagName("CONDVALUE").item(i).getTextContent());
+						map.put("condValueDeptID", doc.getElementsByTagName("CONDVALUEDEPTID").item(i).getTextContent());
+						map.put("docType", doc.getElementsByTagName("DOCTYPE").item(i).getTextContent());
+						
+						logger.debug("insertAutoRule started.");
+						ezApprovalGAdminDAO.insertAutoRule(map);
+						logger.debug("insertAutoRule ended.");
+					}
+				}
+				
+				if (!formAutoRuleLine.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("aprMemberSN", doc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+						map.put("aprType", doc.getElementsByTagName("APRTYPE").item(i).getTextContent());
+						map.put("aprState", doc.getElementsByTagName("APRSTATE").item(i).getTextContent());
+						map.put("aprMemberID", doc.getElementsByTagName("APRMEMBERID").item(i).getTextContent());
+						map.put("aprMemberIsDeptYN", doc.getElementsByTagName("APRMEMBERISDEPTYN").item(i).getTextContent());
+						map.put("aprMemberName", doc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent());
+						map.put("aprMemberName2", doc.getElementsByTagName("APRMEMBERNAME2").item(i).getTextContent());
+						map.put("aprMemberJobTitle", doc.getElementsByTagName("APRMEMBERJOBTITLE").item(i).getTextContent());
+						map.put("aprMemberJobTitle2", doc.getElementsByTagName("APRMEMBERJOBTITLE2").item(i).getTextContent());
+						map.put("aprMemberDeptID", doc.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent());
+						map.put("aprMemberDeptName", doc.getElementsByTagName("APRMEMBERDEPTNAME").item(i).getTextContent());
+						map.put("aprMemberDeptName2", doc.getElementsByTagName("APRMEMBERDEPTNAME2").item(i).getTextContent());
+						map.put("aprMemberLdapPath", doc.getElementsByTagName("APRMEMBERLDAPPATH").item(i).getTextContent());
+						map.put("reasonDoNotApprov", doc.getElementsByTagName("REASONDONOTAPPROV").item(i).getTextContent());
+						map.put("isProposerYN", doc.getElementsByTagName("ISPROPOSERYN").item(i).getTextContent());
+						map.put("isBriefUserYN", doc.getElementsByTagName("ISBRIEFUSERYN").item(i).getTextContent());
+						
+						logger.debug("insertAutoRuleLine started.");
+						ezApprovalGAdminDAO.insertAutoRuleLine(map);
+						logger.debug("insertAutoRuleLine ended.");
+					}
+				}
 			}
-			
-			logger.debug("setFormDataInsert1 started.");
-			ezApprovalGAdminDAO.setFormDataInsert1(map);
-			logger.debug("setFormDataInsert1 ended.");
 			
 			if (!recevGroupXML.equals("")) {
 				map = new HashMap<String, Object>();
@@ -2689,6 +2741,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			map.put("v_PFORMID", formID);
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			
+			logger.debug("setFormDataUpdate started.");
+			ezApprovalGAdminDAO.setFormDataUpdate(map);
+			logger.debug("setFormDataUpdate ended.");
+			
 			if (approvalFlag.equals("S")) {
 				map.put("keepPeriod", keepPeriod);
 				map.put("keepPeriodCode", keepPeriodCode);
@@ -2699,12 +2755,77 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("tbItemName2", tbItemName2);
 				map.put("useFlag", useFlag);
 				
+				logger.debug("setAutoDocNum started.");
 				ezApprovalGAdminDAO.setAutoDocNum(map);
+				logger.debug("setAutoDocNum ended.");
+				
+				if (!formAutoRule.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRule);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					logger.debug("deleteAutoRule started.");
+					ezApprovalGAdminDAO.deleteAutoRule(map);
+					logger.debug("deleteAutoRule ended.");
+					
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleSN", doc.getElementsByTagName("AUTORULESN").item(i).getTextContent());
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("checkFieldType", doc.getElementsByTagName("CHECKFIELDTYPE").item(i).getTextContent());
+						map.put("checkField", doc.getElementsByTagName("CHECKFIELD").item(i).getTextContent());
+						map.put("operatorType", doc.getElementsByTagName("OPERATORTYPE").item(i).getTextContent());
+						map.put("operator", doc.getElementsByTagName("OPERATOR").item(i).getTextContent());
+						map.put("condType", doc.getElementsByTagName("CONDTYPE").item(i).getTextContent());
+						map.put("condValue", doc.getElementsByTagName("CONDVALUE").item(i).getTextContent());
+						map.put("condValueDeptID", doc.getElementsByTagName("CONDVALUEDEPTID").item(i).getTextContent());
+						map.put("docType", doc.getElementsByTagName("DOCTYPE").item(i).getTextContent());
+						
+						logger.debug("insertAutoRule started.");
+						ezApprovalGAdminDAO.insertAutoRule(map);
+						logger.debug("insertAutoRule ended.");
+					}
+				}
+				
+				if (!formAutoRuleLine.equals("")) {
+					doc = commonUtil.convertStringToDocument(formAutoRuleLine);
+					
+					map = new HashMap<String, Object>();
+					map.put("formID", formID);
+					map.put("companyID", companyID);
+					map.put("tenantID", userInfo.getTenantId());
+
+					logger.debug("deleteAutoRuleLine started.");
+					ezApprovalGAdminDAO.deleteAutoRuleLine(map);
+					logger.debug("deleteAutoRuleLine ended.");
+					
+					for (int i=0; i < doc.getElementsByTagName("ROW").getLength(); i++) {
+						map.put("autoRuleGUID", doc.getElementsByTagName("AUTORULEGUID").item(i).getTextContent());
+						map.put("aprMemberSN", doc.getElementsByTagName("APRMEMBERSN").item(i).getTextContent());
+						map.put("aprType", doc.getElementsByTagName("APRTYPE").item(i).getTextContent());
+						map.put("aprState", doc.getElementsByTagName("APRSTATE").item(i).getTextContent());
+						map.put("aprMemberID", doc.getElementsByTagName("APRMEMBERID").item(i).getTextContent());
+						map.put("aprMemberIsDeptYN", doc.getElementsByTagName("APRMEMBERISDEPTYN").item(i).getTextContent());
+						map.put("aprMemberName", doc.getElementsByTagName("APRMEMBERNAME").item(i).getTextContent());
+						map.put("aprMemberName2", doc.getElementsByTagName("APRMEMBERNAME2").item(i).getTextContent());
+						map.put("aprMemberJobTitle", doc.getElementsByTagName("APRMEMBERJOBTITLE").item(i).getTextContent());
+						map.put("aprMemberJobTitle2", doc.getElementsByTagName("APRMEMBERJOBTITLE2").item(i).getTextContent());
+						map.put("aprMemberDeptID", doc.getElementsByTagName("APRMEMBERDEPTID").item(i).getTextContent());
+						map.put("aprMemberDeptName", doc.getElementsByTagName("APRMEMBERDEPTNAME").item(i).getTextContent());
+						map.put("aprMemberDeptName2", doc.getElementsByTagName("APRMEMBERDEPTNAME2").item(i).getTextContent());
+						map.put("aprMemberLdapPath", doc.getElementsByTagName("APRMEMBERLDAPPATH").item(i).getTextContent());
+						map.put("reasonDoNotApprov", doc.getElementsByTagName("REASONDONOTAPPROV").item(i).getTextContent());
+						map.put("isProposerYN", doc.getElementsByTagName("ISPROPOSERYN").item(i).getTextContent());
+						map.put("isBriefUserYN", doc.getElementsByTagName("ISBRIEFUSERYN").item(i).getTextContent());
+						
+						logger.debug("insertAutoRuleLine started.");
+						ezApprovalGAdminDAO.insertAutoRuleLine(map);
+						logger.debug("insertAutoRuleLine ended.");
+					}
+				}
 			}
-			
-			logger.debug("setFormDataUpdate started.");
-			ezApprovalGAdminDAO.setFormDataUpdate(map);
-			logger.debug("setFormDataUpdate ended.");
 			
 			if (!recevGroupXML.equals("")) {
 				logger.debug("recevGroupXML = " + recevGroupXML);
@@ -2810,7 +2931,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		resultXML.append("<GROUP>");
 		
 		for (ApprGFormVO vo1 : propList) {
-			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApproval." + vo1.getName(), locale) + "\">");
+			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApprovalG." + vo1.getName(), locale) + "\">");
 			
 			map.put("upperCode", vo1.getCode());
 			
@@ -2823,7 +2944,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");
 				resultXML.append("<ID>" + vo2.getId() + "</ID>");
-				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApproval." + vo2.getName(), locale) + "</NAME>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApprovalG." + vo2.getName(), locale) + "</NAME>");
 				resultXML.append("</ROW>");
 			}
 			
@@ -3134,6 +3255,83 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 
 		logger.debug("getFormAprRuleLine ended");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+		logger.debug("getSpecialContList started");
+		
+		String multiData = commonUtil.getMultiData(lang, tenantID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuilder sb= new StringBuilder();
+		
+		map.put("v_LISTTYPE", "S109");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}
+		sb.append("</HEADERS>");
+		
+		map = new HashMap<String, Object>();
+		
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getSpecialContList(map);
+		
+		sb.append("<ROWS>");
+		
+		for (ApprGContInfoVO vo : list) {
+			sb.append("<ROW>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>");
+			
+			String contType = vo.getContType();
+			
+			if (Integer.parseInt(contType) >= 100) {
+				map.put("lang", multiData);
+				map.put("contType", contType);
+				
+				String contTypeName = ezApprovalGAdminDAO.getSpecialContInfoContTypeName(map);
+				
+				sb.append(contTypeName);
+			} else {
+				sb.append(ezApprovalGService.getCode2Name("SA60", contType, companyID, lang, tenantID));
+			}
+			sb.append("</VALUE>");
+			sb.append("<DATA1>" + vo.getDeptID() + "</DATA1>");
+			sb.append("<DATA2>" + contType + "</DATA2>");
+			sb.append("<DATA3>" + vo.getSn() + "</DATA3>");
+			sb.append("</CELL>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>" + vo.getContName() + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>" + vo.getSubQuery() + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS>");
+		sb.append("</LISTVIEWDATA>");
+		
+		logger.debug("getSpecialContList ended");
 		
 		return sb.toString();
 	}

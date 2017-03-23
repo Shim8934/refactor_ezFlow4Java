@@ -9,6 +9,7 @@ import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -414,5 +415,30 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception{
 		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRuleLine", map);
+	}
+
+	public void insertAutoRule(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.insertAutoRule", map);
+	}
+
+	public void insertAutoRuleLine(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.insertAutoRuleLine", map);
+	}
+
+	public void deleteAutoRule(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteAutoRule", map);
+	}
+	
+	public void deleteAutoRuleLine(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteAutoRuleLine", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGContInfoVO> getSpecialContList(Map<String, Object> map) throws Exception {
+		return (List<ApprGContInfoVO>) list("EzApprovalGAdminDAO.getSpecialContList", map);
+	}
+
+	public String getSpecialContInfoContTypeName(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalGAdminDAO.getSpecialContInfoContTypeName", map);
 	}
 }

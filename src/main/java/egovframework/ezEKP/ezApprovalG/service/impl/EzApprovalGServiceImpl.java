@@ -2983,7 +2983,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						 // 수정(2007.06.18) : multidata 기능 추가
 						 FieldName = FieldName + commonUtil.getMultiData(lang, tenantID);
 
-	                     if (docXML.getElementsByTagName("APRMEMBERNAME" + commonUtil.getMultiData(lang, tenantID)).item(k).getTextContent().trim() != "")
+	                     if (!docXML.getElementsByTagName("APRMEMBERNAME" + commonUtil.getMultiData(lang, tenantID)).item(k).getTextContent().trim().equals(""))
 	                         FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent() + " (" + docXML.getElementsByTagName("APRMEMBERNAME" + commonUtil.getMultiData(lang, tenantID)).item(k).getTextContent() + ")";
 	                     else
 	                         FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
@@ -5075,7 +5075,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				Document docXML = commonUtil.convertStringToDocument(ret);
 				cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
 				
-				if (ret != "" && doc.getElementById("docnumber") != null) {
+				if (!ret.equals("") && doc.getElementById("docnumber") != null) {
 					docNO = doc.getElementById("docnumber").text() + cabinetSN;
 					doc.getElementById("docnumber").text(docNO);
 					
@@ -8404,15 +8404,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     String aprstate = docXML.getElementsByTagName("APRSTATE").item(i).getTextContent();
                     String aprmenberid = docXML.getElementsByTagName("APRMEMBERID").item(i).getTextContent();
 
-                    if (NextLineCheck == false && tempUserID.trim() == aprmenberid.trim())
+                    if (NextLineCheck == false && tempUserID.trim().equals(aprmenberid.trim()))
                     {
                         NextLineCheck = true;
-                        if (!(aprtype == "001" || aprtype == "002" || aprtype == "008" || aprtype == "018"))
+                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("018")))
                         {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
                         }
-                        if (i == 0 && docXML.getElementsByTagName("APRSTATE").item(0).getTextContent() == "002")
+                        if (i == 0 && docXML.getElementsByTagName("APRSTATE").item(0).getTextContent().equals("002"))
                         {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
@@ -8421,13 +8421,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     }
                     if (NextLineCheck)
                     {
-                        if (!(aprtype == "001" || aprtype == "002" || aprtype == "004" || aprtype == "008" || aprtype == "013" || aprtype == "016" || aprtype == "019"))
+                        if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("004") || aprtype.equals("008") || aprtype.equals("013") || aprtype.equals("016") || aprtype.equals("019")))
                         {
                             result = "<RESULT>FALSE</RESULT>";
                             break;
                         }
 
-                        if (aprstate == "002")
+                        if (aprstate.equals("002"))
                         {
                             break;
                         }
@@ -9491,7 +9491,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String rtnVal="";
 			for(int i = 0; i < pCodes.length; i++){
 				if(pCodes[i].trim().length() >= 1){
-					if(rtnVal.trim() != ""){
+					if(!rtnVal.trim().equals("")){
 						rtnVal += ",";
 					}
 					if(pCodes[i].substring(0,1).toUpperCase().equals("C")){
@@ -10520,7 +10520,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						docXML2.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent(), 
 					dirPath, staDSChamJo, companyID, userInfo.getTenantId());
 
-				if (subSQL.toUpperCase() == "FALSE") {
+				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
 					whileFlag = false;							
 				} else {
@@ -15650,7 +15650,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				rtn = getCode2Name("A50", "3", companyID, lang, tenantID);
 			}
 			
-			if(pCode.substring(0,1) == "2") {
+			if(pCode.substring(0,1).equals("2")) {
 				rtn = rtn + "(";
 				
 				if(pCode.substring(1,2).equals("Y")) {
@@ -16900,7 +16900,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if(SCFlag.equals("2")){
 				String result = ChangeSpecialInfo_Rec(RecID,xmlDom, tenantID, companyID);
 			
-				if (result == "FALSE"){
+				if (result.equals("FALSE")){
 					 return "<RESULT>FALSE</RESULT>";
 			    }
 			}
@@ -17137,7 +17137,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         // 2010.08.03 다국어
         String receiptMember2 = xmlDom.getElementsByTagName("RECEIPTMEMBER2").item(0).getTextContent().trim();	// 11
         String deliveryNo = xmlDom.getElementsByTagName("DELIVERYNO").item(0).getTextContent().trim();	// 12
-		if (deliveryNo.trim() != "")
+		if (!deliveryNo.trim().equals(""))
 			deliveryNo = formatSerialNum(deliveryNo);
 
 		String electronicRecFlag = xmlDom.getElementsByTagName("ELECTRONICRECFLAG").item(0).getTextContent().trim();	// 13
@@ -17218,7 +17218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         // 수기기록물이면서 첨부파일이 있다면 APR->END 로 복사한다.
         if (manualFlag.equals("1")) {
-            if (docID != "") {
+            if (!docID.equals("")) {
             	map.put("v_DOCID", docID);
             	try {
 	            	ezApprovalGDAO.insertRegEndAttachInfo(map);
@@ -17247,7 +17247,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		// '특수목록 정보 저장
 		if (specialCatalogFlag.equals("1") && nodeSL != null) {
 			subSQL = saveSpecialInfoRec(recordID, cabID, xmlDom, tenantID, companyID);
-			if (subSQL == "FALSE") {
+			if (subSQL.equals("FALSE")) {
 				return "<RESULT>FALSE</RESULT>";
 			}
 		}
@@ -18648,7 +18648,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>FALSE</RESULT>";
 		}
 
-		if( strSQL == "FALSE" ) {
+		if( strSQL.equals("FALSE") ) {
 			return "<RESULT>FALSE</RESULT>";
 		} else {
 			return "<RESULT>TRUE</RESULT>";
@@ -19154,7 +19154,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			// 표준모듈 (2007.05.07) : 다국어 - 쿼리 N' 처리
 			String strLangDeptDocFolder = getCode2Name("L03", "001", companyID, lang, tenantID);
 
-			if (tempOwnUserName.trim() == "") {
+			if (tempOwnUserName.trim().equals("")) {
 				tempOwnUserName = strLangDeptDocFolder;
 			}
 			
@@ -19218,7 +19218,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					// 표준모듈 (2007.05.07) : 다국어
 					String NewContID = createUserCont(tempOwnUserName, ParentContID, strLangDeptDocFolder, OwnUserID, companyID, lang, tenantID);
 
-					if (NewContID.trim() != "")
+					if (!NewContID.trim().equals(""))
 					{
                         rtnXML.append("<NODE>");
 						rtnXML.append("<VALUE>" + tempOwnUserName + "</VALUE>");
@@ -19300,7 +19300,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		try {
 		String ContID = createUserCont(UserContName, parentContID, description, ownUserID, companyID, lang, tenantID);
 		
-		if (ContID.trim() == "")
+		if (ContID.trim().equals(""))
 			return "<RESULT>FALSE</RESULT>";
 		else
 			return "<RESULT>TRUE</RESULT>";

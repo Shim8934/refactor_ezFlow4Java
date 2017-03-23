@@ -495,7 +495,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean adminYN = false;
 		
 		if(userIDAdmin != null){
-			if(userID == userIDAdmin)
+			if(userID.equals(userIDAdmin))
 				adminYN = true;
 		}
 		
@@ -647,7 +647,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		vPermission = qstUserPermissionVO.getPublicFlg();
 		vResponseRange = qstUserPermissionVO.getResponseRange();
 		
-		if (vPermission != "1"){
+		if (!vPermission.equals("1")){
 			userID = loginVO.getId();
 			userName = loginVO.getDisplayName1();
 			email = loginVO.getEmail();
@@ -1034,7 +1034,8 @@ public class EzQuestionController extends EgovFileMngUtil {
 	 * 전자설문 설문생성 보기추가 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezQuestion/qstStep2QuestionAdd.do")
-	public String qstStep2QuestionAdd(HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
+	public String qstStep2QuestionAdd(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,HttpServletRequest req,Model model, QstAddVO questionAddVO) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
 		//String brdId = "";
 		//String itemId = "";
 		String pMode = "";
@@ -1124,6 +1125,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		model.addAttribute("pEditIndex",pEditIndex);
 		model.addAttribute("pMode",pMode);
 		model.addAttribute("pDataXML",pDataXML);
+		model.addAttribute("userInfo",userInfo);
 		
 		return "/ezQuestion/qstStep2QuestionAdd";
 	}
@@ -1326,7 +1328,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					}
 					userAge = userJumin.substring(0, 2);
 					
-					if(userAge == "11") {
+					if(userAge.equals("11")) {
 						userAge = "NULL";
 					}*/
 					
@@ -3205,7 +3207,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
         String USER_POS2 = "", USER_DEPT_NM2 = "";
         
             
-       /* if(pItemNo == "")  {
+       /* if(pItemNo.equals(""))  {
         	ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
          
         Get_ItemNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
@@ -3418,7 +3420,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 		responseRange = qstUserPermissionVO.getResponseRange();
 		
 		/*boolean bPublic;
-        if (publicFlg == "1"){
+        if (publicFlg.equals("1")){
             bPublic = true;
         }else{
             bPublic = false;
@@ -3669,7 +3671,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 				logger.debug("strQstNo="+strQstNo);
 				logger.debug("lastItemNo="+lastItemNo);
 				
-				if(strQstNo.trim() != lastItemNo.trim()) {
+				if(!strQstNo.trim().equals(lastItemNo.trim())) {
 					strResult = strResult.replace("| "+arrLine[1], "");
 					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
 					
@@ -4072,7 +4074,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 	
 	            switch (attachVO.getAttachType()){
 	            case "1":
-	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(1," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID=" + brdID + "&itemID=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attID=" + strAttachNo + "\" width=\"47\" height=\"31\" align=\"absmiddle\"></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px;cursor:pointer\" onclick=\"javascript:file_open(1," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img style=\"cursor:pointer\" src=\"/ezQuestion/getPollAttachInfo.do?type=QUESTION&boardID=" + brdID + "&itemID=" + itemNo + "&qstNo=" + strQuestionNo + "&ansNo=" + strAnswer + "&attID=" + strAttachNo + "\" width=\"177\" height=\"131\" align=\"absmiddle\"></td>");
 	            	break;
 	            	
 	            case "2":

@@ -481,11 +481,11 @@ public class EzCommonController extends EgovFileMngUtil{
 //      int nImgHeight = inputImage.getHeight();
         int nWidth = 100, nHeight = 100;
         
-        if (width != "") {
+        if (!width.equals("")) {
             nWidth = Integer.parseInt(width);
         }
         
-        if (height != "") {
+        if (!height.equals("")) {
             nHeight = Integer.parseInt(height);
         }
         

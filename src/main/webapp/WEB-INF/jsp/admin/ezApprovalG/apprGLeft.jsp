@@ -86,10 +86,14 @@
 			<div class="left_admin" title="<spring:message code='main.t10'/>"><spring:message code='main.t10'/></div>
 			
 	        	<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t10'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>				
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span><ul></ul></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span><ul></ul></h2>				
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span><ul></ul></h2>	
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t36'/></span><ul></ul></h2>
+				
+				<c:if test="${approvalFlag == 'S' }">
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='main.t37'/></span><ul></ul></h2>
+					<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='main.t38'/></span><ul></ul></h2>
+				</c:if>
+				
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='main.t39'/></span><ul></ul></h2>
 				
 				<c:choose>
 					<c:when test="${approvalFlag == 'S' }">

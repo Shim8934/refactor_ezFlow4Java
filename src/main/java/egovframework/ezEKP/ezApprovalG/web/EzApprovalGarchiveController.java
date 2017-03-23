@@ -406,7 +406,7 @@ public class EzApprovalGarchiveController {
             sregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(3).getTextContent();
             eregdate = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(4).getTextContent();
             debenturer = xmlDom.getDocumentElement().getChildNodes().item(8).getChildNodes().item(5).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
-            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), false), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), false), debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
+            result = ezApprovalGService.getDeliveryList(p_DeptID, pPageSize, pPageNum, pOrderCell, pOrderOption, pQuery, userInfo.getCompanyID(), userInfo.getLang(), deptcode, deptcode2, title, commonUtil.getDateStringInUTC(sregdate, userInfo.getOffset(), true), commonUtil.getDateStringInUTC(eregdate, userInfo.getOffset(), true), debenturer, isdocprint, userInfo.getTenantId(), userInfo.getOffset());
         }
         
 		return result;
@@ -1158,7 +1158,7 @@ public class EzApprovalGarchiveController {
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 		String id = xmlDom.getElementsByTagName("id").item(0).getTextContent();
 		
-		if (id != "") {
+		if (!id.equals("")) {
 			String infoXML = ezOrganService.getPropertyList(id, proplist, userInfo.getPrimary(), userInfo.getTenantId());
 			Document doc = commonUtil.convertStringToDocument(infoXML);
 			
@@ -1400,7 +1400,7 @@ public class EzApprovalGarchiveController {
                 {
                     ReturnQuery += " AND DocTitle LIKE '%'DOCTITLE'%' ";
                 }
-                if (p_UserLang == "2")
+                if (p_UserLang.equals("2"))
                 {
                     if (TempQuery.indexOf("WRITERNAME;") != -1)
                     {
@@ -1471,7 +1471,7 @@ public class EzApprovalGarchiveController {
 
         if (xmlDom.getDocumentElement().getChildNodes().getLength() > 6)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim() != "")
+            if (!xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent().trim().equals(""))
                 pSubQuery = pSubQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
         }
 
@@ -1522,7 +1522,7 @@ public class EzApprovalGarchiveController {
 			susinAdmin = "NO";
 		}
         
-		if( docID != null && docID != "") {
+		if( docID != null && !docID.equals("")) {
 			String result = ezApprovalGService.docAttachLineInfo(docID, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 			Document xmldoc = commonUtil.convertStringToDocument(result);
                 if (xmldoc.getElementsByTagName("APRMEMBERDEPTID").getLength() > 0) {
