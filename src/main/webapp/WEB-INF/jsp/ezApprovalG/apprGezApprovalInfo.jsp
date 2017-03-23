@@ -862,6 +862,8 @@
 			                ret[13] = txtPageNum.value;
 		                } else {
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
+		                	ret[12] = "";
+		                	ret[13] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)

@@ -19355,6 +19355,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return "<RESULT>FALSE</RESULT>";
 		}
 		return "<RESULT>TRUE</RESULT>";
@@ -19491,7 +19492,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getContDocListS(String contID, String id, String pSubQuery, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getContDocListS(String contID, String id, String pSubQuery, String pageSize, String pageNum, String SortHeader, String orderOption, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
 		
 		StringBuffer resultXML = new StringBuffer();
 		String OrderOption1 = "";
@@ -19500,7 +19501,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean SecurityFlag = false;	// 보안등급 사용 여부
 		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
 		String UserSecurityCode = "";
-		
 		// 수정(2007.06.18) : multidata 기능추가 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
@@ -19513,21 +19513,195 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			listString = getListHeader("S006", companyID, lang, tenantID);
 		}
 		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", id);
 		map.put("v_CONTID", contID);
 		map.put("v_PSUBQUERY", pSubQuery);
+		map.put("v_PSUBQUERYLENGTH", pSubQuery.length());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 
+		
+		//보안등급 사용 여부 가져오기
+		
+		String isUsed = getIsUse("SA22", "001", companyID, lang, tenantID);
+		String userSecurityCode ="";
+		if( isUsed.equals("1")) {
+			map.put("v_SECURITYFLAG", "Y");
+			isUsed = getIsUse("SA22", "005", companyID, lang, tenantID);
+			
+			if (isUsed.equals("1")) {
+				map.put("v_SECURITYLINEFLAG", "Y");
+			} else {
+				map.put("v_SECURITYLINEFLAG", "N");
+			}
+		} else {
+			map.put("v_SECURITYFLAG", "N");
+		}
+		
+		//조직도 사용자 보안등급 가져오기
+		
+		if(!id.equals("") && id != null) {
+			userSecurityCode = ezApprovalGDAO.selectUserSecurityCode(map);
+		}
+				
+		if (userSecurityCode.equals("") || userSecurityCode == null) {
+			map.put("v_PUSERSECURITYCODE", "0");
+		} else {
+			map.put("v_PUSERSECURITYCODE", userSecurityCode);
+		}
+		
+		isUsed = getIsUse("SA22", "004", companyID, lang, tenantID);
+		
+		if (isUsed.equals("1")) {
+			map.put("v_PUBLICFLAG", "Y");
+		} else {
+			map.put("v_PUBLICFLAG", "N");
+		}
+		
 		int totalCount = ezApprovalGDAO.getContDocListCountS(map);
 		
 		resultXML.append("<DOCLIST>");
 		resultXML.append("<TOTALCNT>"+ totalCount +"</TOTALCNT>");
 		resultXML.append("<LISTVIEWDATA>");
 		resultXML.append("<HEADERS>");
+		
+		int i = 0;
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		for (i = 0; i<hlength; i++) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
+			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "</COLNAME>");
+			
+			if (!SortHeader.equals("") && SortHeader.equals(listXML.getElementsByTagName("NAME").item(i).getTextContent())) {
+				if(SortHeader.equals("")) {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+				} else {
+					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + " desc     ";
+					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(i).getTextContent() + "      ";
+				}
+			}
+			resultXML.append("</HEADER>");
+		}
+		resultXML.append("</HEADERS>");
+		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+			OrderOption1 = "";
+		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+			OrderOption2 = "";
+		}
+		
+		if (OrderOption1.indexOf("DOCSTATENAME") > -1) {
+			OrderOption1.replace("DOCSTATENAME", "DOCSTATE");
+		} else if (OrderOption2.indexOf("DOCSTATENAME") > -1) {
+			OrderOption2.replace("DOCSTATENAME", "DOCSTATE");
+		}
+		
+		if (OrderOption1.indexOf("SENDFLAG") > -1) {
+			OrderOption1 = "";
+		} else if (OrderOption2.indexOf("SENDFLAG") > -1) {
+			OrderOption2 = "";
+		}
+		
+		map.put("v_ORDEROPTION", OrderOption1);
+		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
+		
+		if (OrderOption1.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,7).toLowerCase());
+		}
+		map.put("v_ORDEROPTION2", OrderOption2);
+		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
+		
+		if (OrderOption2.length() > 0 ) {
+			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
+		}
+		
+		if (contID.equals("") || contID == null) {
+			map.put("v_CONTFLAG", "0");
+		} else {
+			map.put("v_CONTFLAG", "1");
+		}
+		map.put("v_LANGTYPE", lang);
+		map.put("v_CONTID", contID);
+		map.put("v_USERID", id);
+		map.put("v_LISTCOUNT", pageSize);
+		map.put("v_PAGECOUNT", pageNum);
+		map.put("v_TOTALCOUNT", totalCount);
+		map.put("v_CONTID", contID);
+		map.put("v_PLISTCOUNT", pageSize);
+		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
+		map.put("v_PQUERYSIZESUB", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
+		
+		List <ApprGDocListVO> conDocList = ezApprovalGDAO.getContDocListS(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int j = 0; j < conDocList.size(); j++) {
+			sb.append(commonUtil.getQueryResult(conDocList.get(j)));
+		}
+		sb.append("</DATA>");
+		
+		Document docXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		String FieldName = "";
+		String FieldValue = "";
 		resultXML.append("<ROWS>");
-		return null;
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		for(int k = dlength-1; k >=0; k-- ) {
+			resultXML.append("<ROW>");
+			for(i=0; i<hlength; i++) {
+				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+				
+				if (FieldName.toUpperCase().equals("FORMNAME") || FieldName.toUpperCase().equals("WRITERNAME") || FieldName.toUpperCase().equals("WRITERJOBTITLE") || FieldName.toUpperCase().equals("WRITERDEPTNAME")) {
+					FieldName = FieldName.toUpperCase() + strMultiData;
+				}
+				
+				 // 품의함 품의 / 시행 구분 처리
+                if (FieldName.toUpperCase().equals("DOCSTATENAME") && docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent().equals(staDTExcuteDoc)) {
+                    FieldValue = messageSource.getMessage("ezApproval.t885", locale);
+                } else {
+                	if (FieldName.equals("DOCSTATENAME")) {
+                		FieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
+                	} else {
+				    FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
+                	}
+                }
+				resultXML.append("<CELL>");
+				resultXML.append("<VALUE>" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
+			
+				if ( i == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "</DATA2>");
+					resultXML.append("<DATA3>" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
+					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
+					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+				}
+				
+				if (FieldName.equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				
+				if (FieldName.equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+		return resultXML.toString();
 	}
 
 	@Override
@@ -19597,7 +19771,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_KEYWORD", QueryData.getElementsByTagName("KEYWORD").item(0) == null ? "" : QueryData.getElementsByTagName("KEYWORD").item(0).getTextContent());
 		map.put("v_PSTRLANG", lang);
 		map.put("v_PSTRMULTIDATA", strMultiData);
-		map.put("v_PLISTCOUNT", pPageNum);
+		map.put("v_PLISTCOUNT", pPageSize);
 		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pPageSize)*(Integer.parseInt(pPageNum)-1)));
 		map.put("v_PQUERYSIZESUB", Integer.parseInt(pPageSize)*Integer.parseInt(pPageNum));
 		map.put("v_ORDEROPTION", OrderOption1);
@@ -19647,11 +19821,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				resultXML.append("</CELL>");
 			}
 			resultXML.append("</ROW>");
-			resultXML.append("</ROWS>");
-			resultXML.append("</LISTVIEWDATA>");
-			resultXML.append("</DOCLIST>");
 		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
 		return resultXML.toString();
+	}
+
+	@Override
+	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CONTID", contID);
+		map.put("v_DOCID", docID);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		try {
+			ezApprovalGDAO.deleteUserContDoc(map);
+			return "<RESULT>TRUE</RESULT>";
+		} catch (Exception e ) {
+			e.printStackTrace();
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return "<RESULT>FALSE</RESULT>";
+		}
 	}
 	
 }
