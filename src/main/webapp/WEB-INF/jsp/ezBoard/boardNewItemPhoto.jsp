@@ -761,7 +761,7 @@
 	      <td>
 	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
 	        <tr>
-	          <th style="width:100px;">
+	          <th style="width:100px; text-align:center"">
 	          	<c:choose>
 	          		<c:when test="${boardType != 'SELECT'}">
 		                <spring:message code='ezBoard.t142'/>
