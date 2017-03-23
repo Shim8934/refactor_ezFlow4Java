@@ -762,6 +762,8 @@
     
 		    var vertical_no, horizon_no;
     		function createTable(pXmlString) {
+    			var horizon_val=document.getElementById("horizon").value;
+    			var vertical_val=document.getElementById("vertical").value;
         		var pDataXml = createXmlDom();
         		if (pXmlString != undefined)
             		pDataXml = loadXMLString(pXmlString);
@@ -771,8 +773,8 @@
 		        var vertical = document.getElementById("vertical");
 
         		if (pXmlString != undefined) {
-            		horizon.value = pDataXml.getElementsByTagName("ANSWER").length;
-            		vertical.value = pDataXml.getElementsByTagName("ANSWER_ANSWER").length;
+        			horizon_val = pDataXml.getElementsByTagName("ANSWER").length;
+        			vertical_val = pDataXml.getElementsByTagName("ANSWER_ANSWER").length;
         		}
 
 		        div.innerHTML = "";
@@ -787,8 +789,8 @@
 		        vertical_no = vertical.value;
 		        horizon_no = horizon.value;
 
-		        for (var j = 0; j <= horizon.value; j++) {
-            		for (var i = 0; i <= vertical.value; i++) {
+		        for (var j = 0; j <= horizon_val; j++) {
+            		for (var i = 0; i <= vertical_val; i++) {
                 		if (j == 0) {
                     		oTh = document.createElement("TH");
                     		if (i != 0) {
