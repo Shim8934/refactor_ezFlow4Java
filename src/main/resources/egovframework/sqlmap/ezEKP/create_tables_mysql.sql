@@ -6924,6 +6924,68 @@ CREATE TABLE `tbl_userstartpage_item` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_form_autorule`
+--
+
+DROP TABLE IF EXISTS `tbl_form_autorule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_form_autorule` (
+  `FORMID` varchar(40) NOT NULL,
+  `AUTORULESN` bigint(10) NOT NULL,
+  `AUTORULEGUID` varchar(50) NOT NULL,
+  `CHECKFIELDTYPE` varchar(50),
+  `CHECKFIELD` varchar(100),
+  `OPERATORTYPE` varchar(10),
+  `OPERATOR` varchar(10),
+  `CONDTYPE` varchar(10),
+  `CONDVALUE` varchar(100),
+  `CONDVALUEDEPTID` varchar(100),
+  `RESULTAPRTYPE` varchar(6),
+  `RESULTAPRMEMEBERID` varchar(50),
+  `FIXFLAG` varchar(4),
+  `DOCTYPE` varchar(10),
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULESN`,`AUTORULEGUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_form_autoruleline`
+--
+
+DROP TABLE IF EXISTS `tbl_form_autoruleline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_form_autoruleline` (
+  `FORMID` varchar(40) NOT NULL,
+  `AUTORULEGUID` varchar(50) NOT NULL,
+  `APRMEMBERSN` bigint(10) NOT NULL,
+  `APRTYPE` varchar(24),
+  `APRSTATE` varchar(24),
+  `APRMEMBERID` varchar(100),
+  `APRMEMBERISDEPTYN` varchar(4),
+  `APRMEMBERNAME` varchar(100),
+  `APRMEMBERNAME2` varchar(100),
+  `APRMEMBERJOBTITLE` varchar(100),
+  `APRMEMBERJOBTITLE2` varchar(100),
+  `APRMEMBERDEPTID` varchar(100),
+  `APRMEMBERDEPTNAME` varchar(200),
+  `APRMEMBERDEPTNAME2` varchar(200),
+  `APRMEMBERLDAPPATH` varchar(100),
+  `RECEIVEDDATE` DATETIME,
+  `PROCESSDATE` DATETIME,
+  `REASONDONOTAPPROV` varchar(255),
+  `ISPROPOSERYN` varchar(4),
+  `ISBRIEFUSERYN` varchar(4),
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULEGUID`,`APRMEMBERSN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Temporary view structure for view `vaprdoingdoclist`
 --
 

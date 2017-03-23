@@ -416,8 +416,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			String aprTypeXML = ezApprovalGService.getAprType(companyID, userInfo.getLang(), userInfo.getTenantId());
 			
 			if (formID != null && !formID.equals("")) {
-//				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
-//				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
+				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());
+				aprRuleLine = ezApprovalGAdminService.getFormAprRuleLine(formID, companyID, userInfo.getTenantId());
 			}
 			
 			model.addAttribute("listHeader", listHeader);
@@ -591,9 +591,14 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String formMHT = request.getParameter("formMHT");
 		String formConnInfo = request.getParameter("formConn");
 		String formWorkFlow = request.getParameter("formWorkFlow");
+		String formAutoRule = request.getParameter("formAutoRule");
+		String formAutoRuleLine = request.getParameter("formAutoRuleLine");
 		String formRecevGroup = request.getParameter("formRecevGroup");
 		
-		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, companyID, realPath, userInfo, approvalFlag);
+		logger.debug("formAutoRule = " + formAutoRule);
+		logger.debug("formAutoRuleLine = " + formAutoRuleLine);
+		
+		String result = ezApprovalGAdminService.saveFormInfo(contID, formID, formInfo, formConnInfo, formWorkFlow, formRecevGroup, formMHT, formAutoRule, formAutoRuleLine, companyID, realPath, userInfo, approvalFlag);
 		
 		logger.debug("formSave started. result = " + result);
 		
