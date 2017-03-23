@@ -15,7 +15,7 @@
 		<c:if test="${fn:indexOf(User-Agent, 'rv:11') > 0}">
 			<style>
 		        p {
-		            LINE-HEIGHT: 20px; MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; FONT-SIZE: 10pt;
+		            LINE-HEIGHT: 20px; MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; FONT-SIZE: 10pt; 
 		        }
 		        div {
 		            LINE-HEIGHT: 20px; MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm; FONT-SIZE: 10pt;
@@ -23,12 +23,20 @@
 		    </style>
 			
 		</c:if>
+		
 		<style title="ezform_style_1">
-			P {
-				MARGIN-TOP : 0mm;
-				MARGIN-BOTTOM: 0mm;
+		P { MARGIN-TOP: 0mm;
+			MARGIN-BOTTOM: 0mm;
+			line-height:20px;
+			font-size:10pt;
+			padding-right: 0.02px; 
+			padding-left: 0.03px;
 			}
-		</style>
+		DIV { MARGIN-TOP: 0mm;
+	   		MARGIN-BOTTOM: 0mm;
+			line-height:20px;
+			font-size:10pt;} 
+		   </style>
 		
 		<script type="text/javascript">
 			var curFontSize = 1;
@@ -36,7 +44,8 @@
 		    var gubun = "<c:out value='${gubun}' />";
 		    var pUse_Editor = "<c:out value='${Use_Editor}' />";
 		    var pUse_IE11Browser = "<c:out value='${Use_IE11Browser}' />";
-	
+		    var ua = window.navigator.userAgent;
+		    
 		    window.onload = function () {
 		        var WriterName ="<c:out value='${displayName}' />";
 		        var WriteDate = window.opener.GetStartDate();
@@ -45,7 +54,7 @@
 		        var WriterTitle = "<c:out value='${title}' />";
 		        var WriterPhone = "<c:out value='${phone}' />";
 		        var Title = window.opener.document.getElementById('txtTitle').value;
-	
+
 		        if (CrossYN()) {
 		            if (pUse_Editor == "TAGFREE") {
 		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
@@ -63,7 +72,7 @@
 		                Content = window.opener.document.getElementById('message').contentWindow.GetEditorContent();
 		            }
 		        }
-	
+			
 		        if (gubun != 3) {
 		            var AttachHTML = window.opener.document.getElementById('lstAttachLink').innerHTML;
 		            AttachHTML = ReplaceText(AttachHTML, "%3b", ";");
@@ -103,8 +112,11 @@
 	
 		        document.getElementById('txtTitle').innerHTML = MakeXMLString(Title);
 		        document.getElementById('txtContent').innerHTML = ExtractBetweenPattern(Content, "kaoni>", "</body>");
-		        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:dotum, arial, verdana'>" + txtContent.innerHTML + "</div>";
-		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onmouseover", "");
+		        if(ua.indexOf('Chrome') > 0){
+			        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:dotum, arial, verdana; margin:auto'>" + txtContent.innerHTML + "</div>";
+		        }else{
+			        document.getElementById('txtContent').innerHTML = "<div id='ezFormProc_div' class='margin' style='font-family:dotum, arial, verdana; width:99.7%; margin:auto'>" + txtContent.innerHTML + "</div>";
+		        }document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onmouseover", "");
 		        document.getElementById('txtContent').innerHTML = ReplaceText(document.getElementById('txtContent').innerHTML, "onfocus", "");
 	
 		        var Anchors = document.getElementById('txtContent').getElementsByTagName("A");
@@ -119,6 +131,14 @@
 		            if (TDs.item(i).innerHTML == "") {
 		            	TDs.item(i).innerHTML = "&nbsp;";
 		            }
+		        }
+		        
+		        if(ua.indexOf('Chrome') > 0){
+		      	  window.resizeTo(742+ (window.outerWidth - window.innerWidth) ,
+        						  785+ (window.outerHeight - window.innerHeight));
+		        }else{
+		        	window.resizeTo(748+ (window.outerWidth - window.innerWidth) ,
+	        						785+ (window.outerHeight - window.innerHeight));
 		        }
 		    }
 	
@@ -178,7 +198,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="background-image: none" onresize="ResizeDiv()">
+	<body class="popup" style="background-image: none; word-wrap: break-word; font-family: Gulim;" onresize="ResizeDiv()">
 		<table class="layout">
 	        <tr>
 	        	<td style="height:20px">

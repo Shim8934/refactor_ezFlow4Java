@@ -633,7 +633,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			int intSubResCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBRESCNT").item(0).getTextContent());
 			int intSubClsCnt = Integer.parseInt(xmlRet.getElementsByTagName("SUBCLSCNT").item(0).getTextContent());
 			
-			if (strErrChk == "True") {
+			if (strErrChk.equals("True")) {
 				pWrnMsg = egovMessageSource.getMessage("ezResource.t89", locale) + " '" + brdNm + egovMessageSource.getMessage("ezResource.t90", locale) + " <BR>";
 				if (intSubResCnt > 0) {
 					pWrnMsg = pWrnMsg + intSubClsCnt + egovMessageSource.getMessage("ezResource.t91", locale) + " <BR>";

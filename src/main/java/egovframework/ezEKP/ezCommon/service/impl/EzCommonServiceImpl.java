@@ -127,28 +127,28 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         }
         
         FileInputStream is = null;
-        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent")=="") ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
+        String usebrowser = (request.getHeader("User-Agent")==null||request.getHeader("User-Agent").equals("")) ? "NONE" : request.getHeader("User-Agent").indexOf("MSIE") > -1 ?
                             "IE" : request.getHeader("User-Agent").indexOf("Trident") > -1 ? "IE" : "NONE";
 
         if (bAttachment) {
-            if (isUTF8 == "0" && usebrowser == "IE") {
+            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
                 response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"),"UTF-8") + "\"");
-            } else if (isUTF8 == "0" && usebrowser != "IE") {
+            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
                 response.addHeader("Content-Disposition", "attachment;filename=\"" + (fileName) + "\"");
             } else {
                 response.addHeader("Content-Disposition", "attachment;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             }
         } else {
-            if (isUTF8 == "0" && usebrowser == "IE") {
+            if (isUTF8.equals("0") && usebrowser.equals("IE")) {
                 response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
-            } else if (isUTF8 == "0" && usebrowser != "IE") {
+            } else if (isUTF8.equals("0") && !usebrowser.equals("IE")) {
                 response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             } else {
                 response.addHeader("Content-Disposition", "inline;filename=\"" + URLEncoder.encode((fileName).replace("+", "%20"), "UTF-8") + "\"");
             }
         }
 
-        if (fileExt == ".pdf") {
+        if (fileExt.equals(".pdf")) {
             response.setContentType("application/pdf");
         } else {
             response.setContentType("application/octet-stream");
@@ -175,11 +175,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         int lengthLimit = 10000;
         String newFileName = "";
 
-        if (pOrgFileExt != "")
+        if (!pOrgFileExt.equals(""))
         	pOrgFileName = pOrgFileName.substring(0, pOrgFileName.lastIndexOf("."));
-        if (pOrgFileExt == ".doc" || pOrgFileExt == ".xls" || pOrgFileExt == ".ppt")
+        if (pOrgFileExt.equals(".doc") || pOrgFileExt.equals(".xls") || pOrgFileExt.equals(".ppt"))
         	lengthLimit = 110;
-        if (pIsUTF8 == "0")
+        if (pIsUTF8.equals("0"))
         	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
         else
         	length = URLEncoder.encode(pOrgFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
@@ -188,7 +188,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             newFileName = pOrgFileName;
             while (length > lengthLimit){
                 newFileName = newFileName.substring(0, newFileName.length() - 1);
-                if (pIsUTF8 == "0") 
+                if (pIsUTF8.equals("0")) 
                 	length = URLEncoder.encode(newFileName + pOrgFileExt,"UTF-8").replace("+", "%20").length();
                 else 
                 	length = URLEncoder.encode(newFileName + pOrgFileExt, "UTF-8").replace("+", "%20").length();

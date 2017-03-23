@@ -380,7 +380,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         	retransType = request.getParameter("retransType") == null ? "" : request.getParameter("retransType");
         }
         // in case of approvalG
-        else if (_url == "" && _cmd.equals("docsend")) {
+        else if (_url.equals("") && _cmd.equals("docsend")) {
     		docID = request.getParameter("docID") == null ? "" : request.getParameter("docID").trim();
     		docHref = request.getParameter("docHref") == null ? "" : request.getParameter("docHref").trim();
     		docImagCnt = request.getParameter("imagCnt") == null ? "" : request.getParameter("imagCnt").trim();
@@ -1113,7 +1113,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
                 strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
                 strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                if (pBigFileUpload == "Y") {
+                if (pBigFileUpload.equals("Y")) {
                 	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
                 } else {
                 	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";

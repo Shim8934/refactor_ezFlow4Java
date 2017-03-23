@@ -248,9 +248,9 @@
 		
 		</script>
 	</head>  
-    <body style ="width:100%;height:100%;overflow:hidden">   
-        <div style="width:100%;white-space:nowrap;display:inline-block; height: 22px;">
-            <div style="float:left;">
+	<body style ="width:100%;height:100%;overflow:hidden">   
+        <div style="width:100%;white-space:nowrap;display:inline-block; height: 20px;">
+            <div style="float:left">
                 <a class="imgbtn" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
                 <a class="imgbtn" onclick="btnfiledel()"><span><spring:message code='ezBoard.t441' /></span></a>   
             </div>
@@ -262,5 +262,5 @@
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple style="width:1px;height:1px"/>
         <input type="hidden" value="upload" onclick ="fileupload()" />
-  </body>
+    </body>
 </html>
