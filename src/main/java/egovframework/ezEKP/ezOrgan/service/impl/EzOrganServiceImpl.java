@@ -577,7 +577,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             }
         }
         
-        if (pSearchList != ""){
+        if (!pSearchList.equals("")){
             pSearchList = pSearchList.replace(";;", "##");
             pSearchList = pSearchList.replace("::", "@@");
             searchList = pSearchList.split("##");
@@ -725,7 +725,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         }
         */
         
-        if (pSearchList != ""){
+        if (!pSearchList.equals("")){
                pSearchList = pSearchList.replace(";;", "##");
                pSearchList = pSearchList.replace("::", "@@");
                SearchList  = pSearchList.split("##");
@@ -1154,7 +1154,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         	if (checkDBColum(propname.toUpperCase()) == false) {
                 propValue = getPropertyValue(id, propname, tenantID);
                 propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(propValue) + "</" + propname.toUpperCase() + ">");
-            } else if (propname.toUpperCase() != "") {            	
+            } else if (!propname.toUpperCase().equals("")) {            	
                 if (xmldom != null && xmldom.getElementsByTagName(propname.toUpperCase()).getLength() > 0) {
                     propInfo.append("<" + propname.toUpperCase() + ">" + commonUtil.cleanValue(xmldom.getElementsByTagName(propname.toUpperCase()).item(0).getTextContent()) + "</" + propname.toUpperCase() + ">");
                 } else {

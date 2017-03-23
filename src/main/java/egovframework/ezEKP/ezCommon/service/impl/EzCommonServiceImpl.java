@@ -210,7 +210,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		String[] m_ImageList = null;
 		String[] m_BackImageList = null;
 		
-        if (strHtml[0] != "") {
+        if (!strHtml[0].equals("")) {
             //MHT 헤더 생성.
         	m_strBoundary = makeHeader(m_strMHT);
         	//이미지 경로 추출 및 가상경로 매칭.
