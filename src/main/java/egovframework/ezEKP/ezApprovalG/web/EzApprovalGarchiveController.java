@@ -1477,27 +1477,6 @@ public class EzApprovalGarchiveController {
 
         String result = ezApprovalGService.getUserContList(pContID, pSubQuery, pPageSize, pPageNum, oc, oo, userInfo.getCompanyID(), userInfo.getLang(), xmldomsub, userInfo.getTenantId(), userInfo.getOffset());
 
-        
-//        XmlNodeList docListNode;
-//
-//        docListNode = xmlResult.SelectNodes("DOCLIST/LISTVIEWDATA/ROWS/ROW");
-//
-//        if (docListNode != null)
-//        {
-//            for (int i = 0; i < docListNode.Count; i++)
-//            {
-//                if (docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText.Trim() != "")
-//                {
-//                    docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText = GetLocalTime(docListNode.Item(i).ChildNodes.Item(3).ChildNodes.Item(0).InnerText.Trim());
-//                }
-//
-//                if (docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText.Trim() != "")
-//                {
-//                    docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText = GetLocalTime(docListNode.Item(i).ChildNodes.Item(5).ChildNodes.Item(0).InnerText.Trim());
-//                }
-//            }
-//        }
-
 		return result;
 	}
 	
@@ -1592,10 +1571,26 @@ public class EzApprovalGarchiveController {
 		String pageNum = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
 		String pageSize = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
 		
-		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), "", pageSize, pageNum, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+		String result = ezApprovalGService.getContDocListS(contID, userInfo.getId(), "", pageSize, pageNum, "", "", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 
 		return result;
 	}
+	
+	/** 전자결재 개인 문서함 문서 삭제*/
+	@RequestMapping(value = "/ezApprovalG/delUserContDoc.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String delUserContDoc(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+		String contID = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+		
+		String result = ezApprovalGService.deleteUserContDoc(docID, contID, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+
+		return result;
+	}
+	
 	
 	/** 전자결재 G 한글 양식 기안*/
 	@RequestMapping(value = "ezApprovalG/ezDraftUI_HWP.do", produces = "text/xml;charset=utf-8")
