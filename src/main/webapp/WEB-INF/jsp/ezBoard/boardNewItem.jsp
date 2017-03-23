@@ -2278,7 +2278,7 @@
 				<c:choose>
 					<c:when test="${boardInfo.guBun != '3'}">
 				        <tr>
-				            <td style="height: 143px">
+				            <td style="height: 145px">
 				                <br />
 				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
 				                <input type="hidden" name="mode" id="mode" />

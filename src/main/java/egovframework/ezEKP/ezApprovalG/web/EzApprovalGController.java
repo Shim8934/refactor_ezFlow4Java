@@ -5409,7 +5409,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		String data = request.getParameter("imgUrl");
 		
-	     if(data == null || data=="") {
+	     if(data == null || data.equals("")) {
 	         throw new Exception();    
 	     }
 	     data = data.replaceAll("data:image/png;base64,", "");
@@ -5577,7 +5577,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userID = doc.getElementsByTagName("userID").item(0).getTextContent();
 		String result = ezApprovalGService.doCancelForce(docID, userID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
-		if(result == "OK") {
+		if(result.equals("OK")) {
 			result = "<RESULT>TRUE</RESULT>";
 		} else {
 			result = "<RESULT>FALSE</RESULT>";

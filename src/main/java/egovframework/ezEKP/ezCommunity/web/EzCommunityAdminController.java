@@ -299,7 +299,7 @@ public class EzCommunityAdminController {
                 case "1":
                     sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
                     
-                    if (v == "1") {
+                    if (v.equals("1")) {
                         sc1 = 2;
                     }
                     
@@ -468,7 +468,7 @@ public class EzCommunityAdminController {
                 case "1":
                     sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), tenantID);
                     
-                    if (v == "1") {
+                    if (v.equals("1")) {
                         sc1 = 2;
                     }
                     

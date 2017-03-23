@@ -938,7 +938,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					sb.append("<div id= 'top'>\n");
 					sb.append("<header>\n");
 					sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
-					if(theme != "BASIC") {
+					if(!theme.equals("BASIC")) {
                 	  sb.append("</header>\n");
 					}
 				}
@@ -1154,7 +1154,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 				}
 				sb.append("<table border=" + boarderValue + " cellpadding=0 cellspacing=0 width=100% valign=top>\n");
                 sb.append("<TBODY>\n");
-                if (pMode == "edit") {
+                if (pMode.equals("edit")) {
                 	sb.append("<TR style='WIDTH: 100%; HEIGHT: 10px' onclick='selectcellTitle(event)'><td align=center>" + columnWidth + "</td></TR>\n");
                 }
                 sb.append(getRenderedTopMenuColumnInsert(pCallingMenuID, pTopMenuID, pAccessIDList, i + 1, pMode, userInfo));
@@ -2063,7 +2063,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
             				sb.append(">\n");
             			}
             		}
-            		if (pMode == "edit") sb.append(columnWidth);
+            		if (pMode.equals("edit")) sb.append(columnWidth);
             		sb.append(getRenderedPortalPageColumnInsert(pPortalPageID, pCallingPageID, pAccessIDList, i + 1, pMode, userInfo));
                     sb.append("</td>\n");
         		}
