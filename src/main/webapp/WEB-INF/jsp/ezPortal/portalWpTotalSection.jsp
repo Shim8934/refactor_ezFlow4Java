@@ -324,6 +324,8 @@
 			            var pulldown = {};
 			            pulldown.choose = new Pulldown();
 			            document.onselectstart = function () { return false; };
+			          	//scroll 초기화
+			            document.getElementById("ScheduleList").style.top = "0px";
 
 			            scrollbox.content1.touch("content1-scrbox", {
 			                overflowY: "auto" // auto, scroll 
@@ -347,6 +349,8 @@
 			        var pulldown = {};
 			        pulldown.choose = new Pulldown();
 			        document.onselectstart = function () { return false; };
+			        //scroll 초기화
+			        document.getElementById("ScheduleList").style.top = "0px";
 
 			        scrollbox.content1.touch("content1-scrbox", {
 			            overflowY: "auto" // auto, scroll 

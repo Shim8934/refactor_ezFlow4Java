@@ -24,6 +24,7 @@
 			
 		</c:if>
 		
+		<!–[if IE]>
 		<style title="ezform_style_1">
 		P { MARGIN-TOP: 0mm;
 			MARGIN-BOTTOM: 0mm;
@@ -37,6 +38,7 @@
 			line-height:20px;
 			font-size:10pt;} 
 		   </style>
+		<![endif]–>
 		
 		<script type="text/javascript">
 			var curFontSize = 1;
