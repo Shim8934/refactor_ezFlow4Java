@@ -415,4 +415,20 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<ApprAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception{
 		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRuleLine", map);
 	}
+
+	public void insertAutoRule(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.insertAutoRule", map);
+	}
+
+	public void insertAutoRuleLine(Map<String, Object> map) throws Exception {
+		insert("EzApprovalGAdminDAO.insertAutoRuleLine", map);
+	}
+
+	public void deleteAutoRule(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteAutoRule", map);
+	}
+	
+	public void deleteAutoRuleLine(Map<String, Object> map) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteAutoRuleLine", map);
+	}
 }

@@ -883,7 +883,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				String pAccessName2 = doc.getElementsByTagName("TARGETNAME2").item(i).getTextContent();
 				String pAccess_FG = "";
 				
-				if (pAccessName2.equals("") || pAccessName2 == null) {
+				if (pAccessName2 == null || pAccessName2.equals("")) {
 					pAccessName2 = doc.getElementsByTagName("TARGETNAME").item(i).getTextContent();
 				}
 				if (doc.getElementsByTagName("ACCESS").item(i).getTextContent().toUpperCase().equals("TRUE")) {

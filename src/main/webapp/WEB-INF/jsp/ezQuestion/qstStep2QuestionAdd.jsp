@@ -989,9 +989,9 @@
                             	</td>
                             	<td style="text-align:right; white-space:nowrap"><spring:message code='ezQuestion.t525' /></td>
                             	<!------------ 위로 -------------->
-                            	<td><a onclick="javascript:AnsOrder_Up();"><img src="/images/arr_up.gif" width="16" height="16" border="0"></a></td>
+                            	<td><a onclick="javascript:AnsOrder_Up();"><img style="cursor:pointer;" src="/images/arr_up.gif" width="16" height="16" border="0"></a></td>
                             	<!------------ 아래로 -------------->
-                            	<td><a onclick="javascript:AnsOrder_Down();"><img src="/images/arr_down.gif" width="16" height="16" border="0"></a></td>
+                            	<td><a onclick="javascript:AnsOrder_Down();"><img style="cursor:pointer;" src="/images/arr_down.gif" width="16" height="16" border="0"></a></td>
                         	</tr>
                     	</table>
                 	</td>

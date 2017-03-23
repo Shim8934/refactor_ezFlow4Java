@@ -495,7 +495,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean adminYN = false;
 		
 		if(userIDAdmin != null){
-			if(userID == userIDAdmin)
+			if(userID.equals(userIDAdmin))
 				adminYN = true;
 		}
 		
@@ -647,7 +647,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		vPermission = qstUserPermissionVO.getPublicFlg();
 		vResponseRange = qstUserPermissionVO.getResponseRange();
 		
-		if (vPermission != "1"){
+		if (!vPermission.equals("1")){
 			userID = loginVO.getId();
 			userName = loginVO.getDisplayName1();
 			email = loginVO.getEmail();
@@ -1326,7 +1326,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 					}
 					userAge = userJumin.substring(0, 2);
 					
-					if(userAge == "11") {
+					if(userAge.equals("11")) {
 						userAge = "NULL";
 					}*/
 					
@@ -3205,7 +3205,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
         String USER_POS2 = "", USER_DEPT_NM2 = "";
         
             
-       /* if(pItemNo == "")  {
+       /* if(pItemNo.equals(""))  {
         	ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
          
         Get_ItemNo = ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
@@ -3418,7 +3418,7 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 		responseRange = qstUserPermissionVO.getResponseRange();
 		
 		/*boolean bPublic;
-        if (publicFlg == "1"){
+        if (publicFlg.equals("1")){
             bPublic = true;
         }else{
             bPublic = false;

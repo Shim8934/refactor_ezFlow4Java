@@ -661,9 +661,9 @@
                 		<th style="text-align: center; width: 100px"><spring:message code="ezQuestion.t481" /></th>
                 		<td style="width: 250px; white-space: nowrap">
                     		<a onclick="fun_Ques_UP();">
-                        		<img src="/images/arr_up.gif" width="16" height="16" border="0"></a>
+                        		<img style="cursor:pointer;" src="/images/arr_up.gif" width="16" height="16" border="0"></a>
                     		<a onclick="fun_Ques_Down();">
-                        		<img src="/images/arr_down.gif" width="16" height="16" border="0"></a>
+                        		<img style="cursor:pointer;" src="/images/arr_down.gif" width="16" height="16" border="0"></a>
                 		</td>
             		</tr>
             		<!------------------ 질문리스트 ------------------------>

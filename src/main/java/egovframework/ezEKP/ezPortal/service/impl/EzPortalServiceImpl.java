@@ -938,7 +938,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 					sb.append("<div id= 'top'>\n");
 					sb.append("<header>\n");
 					sb.append(getRenderedTopMenuColumn(topMenuID, accessIDList, i + 1, mode, userInfo));   // 각 컬럼의 메뉴를 랜더링
-					if(theme != "BASIC") {
+					if(!theme.equals("BASIC")) {
                 	  sb.append("</header>\n");
 					}
 				}
