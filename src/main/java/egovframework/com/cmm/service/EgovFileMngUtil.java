@@ -75,13 +75,13 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		String storePathString = "";
 		String atchFileIdString = "";
 	
-		if ("".equals(storePath) || storePath == null) {
+		if (storePath == null || "".equals(storePath)) {
 		    storePathString = propertyService.getString("Globals.fileStorePath");
 		} else {
 		    storePathString = propertyService.getString(storePath);
 		}
 	
-		if ("".equals(atchFileId) || atchFileId == null) {
+		if (atchFileId == null || "".equals(atchFileId)) {
 		    atchFileIdString = idgenService.getNextStringId();
 		} else {
 		    atchFileIdString = atchFileId;
