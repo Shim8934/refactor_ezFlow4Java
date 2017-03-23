@@ -3259,6 +3259,90 @@
 				#tenantID#)
 	    ]]>
 	</insert>
+	
+	<insert id="EzApprovalGAdminDAO.insertAutoRule" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORM_AUTORULE
+				(formid,
+				autorulesn,
+				autoruleguid,
+				checkfieldtype,
+				checkfield,
+				operatortype,
+				operator,
+				condtype,
+				condvalue,
+				condvaluedeptid,
+				doctype,
+				companyid,
+				tenant_id)
+			VALUES
+				(#formID#,
+				#autoRuleSN#,
+				#autoRuleGUID#,
+				#checkFieldType#,
+				#checkField#,
+				#operatorType#,
+				#operator#,
+				#condType#,
+				#condValue#,
+				#condValueDeptID#,
+				#docType#,
+				#companyID#,
+				#tenantID#)
+		]]>
+	</insert>
+	
+	<insert id="EzApprovalGAdminDAO.insertAutoRuleLine" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_FORM_AUTORULELINE
+				(formid,
+				autoruleguid,
+				aprmembersn,
+				aprtype,
+				aprstate,
+				aprmemberid,
+				aprmemberisdeptyn,
+				aprmembername,
+				aprmembername2,
+				aprmemberjobtitle,
+				aprmemberjobtitle2,
+				aprmemberdeptid,
+				aprmemberdeptname,
+				aprmemberdeptname2,
+				aprmemberldappath,
+				receiveddate,
+				processdate,
+				reasondonotapprov,
+				isproposeryn,
+				isbriefuseryn,
+				companyid,
+				tenant_id)
+			VALUES
+				(#formID#,
+				#autoRuleGUID#,
+				#aprMemberSN#,
+				#aprType#,
+				#aprState#,
+				#aprMemberID#,
+				#aprMemberIsDeptYN#,
+				#aprMemberName#,
+				#aprMemberName2#,
+				#aprMemberJobTitle#,
+				#aprMemberJobTitle2#,
+				#aprMemberDeptID#,
+				#aprMemberDeptName#,
+				#aprMemberDeptName2#,
+				#aprMemberLdapPath#,
+				#receiveDate#,
+				#processDate#,
+				#reasonDoNotApprov#,
+				#isProposerYN#,
+				#isBriefUserYN#,
+				#companyID#,
+				#tenantID#)				
+		]]>
+	</insert>
 
 	<update id="EzApprovalGAdmin.updateContainer" parameterClass="Map">
 		<![CDATA[
@@ -3438,6 +3522,32 @@
         		companyid = #companyID#
         		
 	    ]]>
+	</delete>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAutoRule" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_AUTORULE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #formID#
+		]]>
+	</delete>
+	
+	<delete id="EzApprovalGAdminDAO.deleteAutoRuleLine" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_FORM_AUTORULELINE
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				formid = #formID#
+		]]>
 	</delete>
 
 	<select id="EzApprovalGAdmin.getFormProperty" parameterClass="Map"

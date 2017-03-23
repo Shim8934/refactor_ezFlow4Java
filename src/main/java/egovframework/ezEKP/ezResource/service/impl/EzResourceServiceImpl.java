@@ -755,7 +755,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String jobTitle = "";
 			String jobTitle2 = "";
 				
-			if (pType.equals("") || pType == null) {
+			if (pType == null || pType.equals("")) {
 				 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
 				 jobTitle2 = scheRSDom.getElementsByTagName("jobtitle2").item(i).getTextContent();
 			}
@@ -842,7 +842,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
 					
-				if (pType.equals("") || pType == null) {
+				if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
 					returnStr.append("<dept_name2><![CDATA[" + scheRSDom.getElementsByTagName("dept_name2").item(i).getTextContent() + "]]></dept_name2>");
 					returnStr.append("<jobtitle><![CDATA[" +jobTitle + "]]></jobtitle>");

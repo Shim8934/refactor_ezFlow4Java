@@ -475,7 +475,9 @@ function MakeListXML(pDocType) {
 
     pListXml = pListXml + "</HEADERS>";
     pListXml = pListXml + "<ROWS>";
+    
     AprRuleXML = loadXMLString(bodyForm.hidAprRule.value);
+    
     for (var i = 0; i < GetElementsByTagName(AprRuleXML, "ROW").length; i++) {
         if (getNodeText(GetElementsByTagName(AprRuleXML, "DOCTYPE")[i]) == pDocType) {
             pListXml = pListXml + "<ROW>";
@@ -546,7 +548,7 @@ function MakeListXML(pDocType) {
 
     if (document.getElementById("div_List_AutoRule").innerHTML != "")
         document.getElementById('div_List_AutoRule').innerHTML = "";
-
+    
     AprRuleViewXML = loadXMLString(pListXml);
 
     var AutoRule_Listview = new ListView();

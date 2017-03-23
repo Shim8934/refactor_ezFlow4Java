@@ -1488,7 +1488,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    
 	    String defaultPath = "";
 	    
-	    if (contentPath.trim().equals("") || contentPath == null) {	    
+	    if (contentPath == null || contentPath.trim().equals("")) {	    
 	    	defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 	    } else {
 	    	defaultPath = commonUtil.getRealPath(request) + contentPath;

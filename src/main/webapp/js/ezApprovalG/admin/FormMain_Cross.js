@@ -414,7 +414,6 @@ function MakeFormConnXML() {
                         pConnArray[i] = GetAttribute(xmldom.getElementsByTagName("conn")[i], "processidx") + GetAttribute(xmldom.getElementsByTagName("conn")[i], "processtime");
                     }
                     else {
-
                         pDataCheck = false;
                         pErrorMsg = strLang1017;
                         break;
