@@ -8404,7 +8404,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                     String aprstate = docXML.getElementsByTagName("APRSTATE").item(i).getTextContent();
                     String aprmenberid = docXML.getElementsByTagName("APRMEMBERID").item(i).getTextContent();
 
-                    if (NextLineCheck == false && tempUserID.trim() == aprmenberid.trim())
+                    if (NextLineCheck == false && tempUserID.trim().equals(aprmenberid.trim()))
                     {
                         NextLineCheck = true;
                         if (!(aprtype.equals("001") || aprtype.equals("002") || aprtype.equals("008") || aprtype.equals("018")))

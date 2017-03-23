@@ -956,9 +956,9 @@
                 	<td colspan="2">
                     	<input onclick="javascript:TypeDetermination(1)" type="radio" value="1" name="selView" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t487' />
                     	<input type="checkbox" value="0" name="MultiResponse" disabled="disabled" style="vertical-align:-2px;"/>
-                    	<%-- <%if(userinfo.lang != "3"){ %> --%>
-                    	<spring:message code='ezQuestion.t518' />
-                    	<%-- <%}%> --%>
+                    	<c:if test="${userInfo.lang == '3'}">
+                    		<spring:message code='ezQuestion.t518' />
+                    	</c:if>
                     	<spring:message code='ezQuestion.t519' />
 	                </td>
     	        </tr>
@@ -989,9 +989,9 @@
                             	</td>
                             	<td style="text-align:right; white-space:nowrap"><spring:message code='ezQuestion.t525' /></td>
                             	<!------------ 위로 -------------->
-                            	<td><a onclick="javascript:AnsOrder_Up();"><img src="/images/arr_up.gif" width="16" height="16" border="0"></a></td>
+                            	<td><a onclick="javascript:AnsOrder_Up();"><img style="cursor:pointer;" src="/images/arr_up.gif" width="16" height="16" border="0"></a></td>
                             	<!------------ 아래로 -------------->
-                            	<td><a onclick="javascript:AnsOrder_Down();"><img src="/images/arr_down.gif" width="16" height="16" border="0"></a></td>
+                            	<td><a onclick="javascript:AnsOrder_Down();"><img style="cursor:pointer;" src="/images/arr_down.gif" width="16" height="16" border="0"></a></td>
                         	</tr>
                     	</table>
                 	</td>
