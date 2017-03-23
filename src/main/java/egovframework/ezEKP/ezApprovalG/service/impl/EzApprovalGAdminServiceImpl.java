@@ -2921,7 +2921,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		resultXML.append("<GROUP>");
 		
 		for (ApprGFormVO vo1 : propList) {
-			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApproval." + vo1.getName(), locale) + "\">");
+			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApprovalG." + vo1.getName(), locale) + "\">");
 			
 			map.put("upperCode", vo1.getCode());
 			
@@ -2934,7 +2934,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");
 				resultXML.append("<ID>" + vo2.getId() + "</ID>");
-				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApproval." + vo2.getName(), locale) + "</NAME>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApprovalG." + vo2.getName(), locale) + "</NAME>");
 				resultXML.append("</ROW>");
 			}
 			

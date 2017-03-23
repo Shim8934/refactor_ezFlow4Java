@@ -1088,6 +1088,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	
 	/**
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출 함수
+	 * 전자결재관리 수신처 그룹지정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
 	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
