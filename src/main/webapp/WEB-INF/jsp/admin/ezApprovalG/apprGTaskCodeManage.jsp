@@ -85,7 +85,9 @@
 		        var nodedata = treeview.GetSelectNode();
 		        var pLevel = nodedata.GetNodeData("DATA1");
 		        var pGroupID = nodedata.GetNodeData("DATA2");
-		        document.getElementById("descript").innerText = pGroupID;
+		        var groupName = nodedata.GetNodeData("DATA3");
+
+		        document.getElementById("descript").innerText = groupName;
 		        
 		        if (approvalFlag == 'S') {
 		            getGroupItem(pGroupID);

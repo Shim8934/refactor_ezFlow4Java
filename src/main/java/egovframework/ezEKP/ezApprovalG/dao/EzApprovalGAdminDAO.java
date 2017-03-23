@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -403,5 +404,15 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public void setAutoDocNum(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdminDAO.setAutoDocNum", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprAutoRuleVO> getFormAprRule(Map<String, Object> map) throws Exception {
+		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRule", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprAutoRuleVO> getFormAprRuleLine(Map<String, Object> map) throws Exception{
+		return (List<ApprAutoRuleVO>) list("EzApprovalGAdminDAO.getFormAprRuleLine", map);
 	}
 }

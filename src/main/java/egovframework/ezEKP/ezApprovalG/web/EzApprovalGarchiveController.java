@@ -458,7 +458,9 @@ public class EzApprovalGarchiveController {
 		maxSize = ezApprovalGService.getOptionInfo("A39", "002", userInfo, "CODE");
 		
 		String dirPath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		  
+		 
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
 	    model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("serverName", serverName);
@@ -468,6 +470,7 @@ public class EzApprovalGarchiveController {
 		model.addAttribute("hasattach", hasattach);
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirPath", dirPath);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		return "/ezApprovalG/apprGregRecordAttach";
 	}

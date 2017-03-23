@@ -2,14 +2,11 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="ezApprovalGAdmin">
-	<typeAlias alias="ApprGDocStateVO"
-		type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO" />
-	<typeAlias alias="ApprGTaskDeptInfoVO"
-		type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO" />
-	<typeAlias alias="ApprGTaskCodeHistoryVO"
-		type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO" />
-	<typeAlias alias="ApprGSealInfoVO"
-		type="egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO" />
+	<typeAlias alias="ApprGDocStateVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO" />
+	<typeAlias alias="ApprGTaskDeptInfoVO"			type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskDeptInfoVO" />
+	<typeAlias alias="ApprGTaskCodeHistoryVO"		type="egovframework.ezEKP.ezApprovalG.vo.ApprGTaskCodeHistoryVO" />
+	<typeAlias alias="ApprGSealInfoVO"				type="egovframework.ezEKP.ezApprovalG.vo.ApprGSealInfoVO" />
+	<typeAlias alias="ApprGAutoRuleVO" 				type="egovframework.ezEKP.ezApprovalG.vo.ApprGAutoRuleVO"/>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerInfoManage" parameterClass="Map" 
 		resultClass="ApprGLeftVO"> -->
@@ -2168,6 +2165,69 @@
 			code2
 	</select>
 	
+	<select id="EzApprovalGAdminDAO.getFormAprRule" parameterClass="Map" resultClass="ApprGAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				formid,
+             	autorulesn,
+             	autoruleguid,
+             	checkfieldtype,
+             	checkfield,
+             	operatortype,
+             	operator,
+             	condtype,
+             	condvalue,
+             	condvaluedeptid,
+             	doctype 
+        	FROM 
+        		TBL_FORM_AUTORULE 
+       		WHERE  
+       			tenant_id = #tenantID#
+       		AND
+       			companyid = #companyID#
+       		AND
+       			formid = #formID#
+        	ORDER BY 
+        		autorulesn
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getFormAprRuleLine" parameterClass="Map" resultClass="ApprGAutoRuleVO">
+		<![CDATA[
+			SELECT 
+				formid,
+             	autoruleguid,
+             	aprmembersn,
+             	aprtype,
+             	aprstate,
+             	aprmemberid,
+             	aprmemberisdeptyn,
+             	aprmembername,
+             	aprmembername2,
+             	aprmemberjobtitle,
+	            aprmemberjobtitle2,
+             	aprmemberdeptid,
+    	        aprmemberdeptname,
+        	    aprmemberdeptname2,
+            	aprmemberldappath,
+             	receiveddate,
+             	processdate,
+             	reasondonotapprov,
+             	isproposeryn,
+             	isbriefuseryn
+            FROM 
+            	TBL_FORM_AUTORULELINE 
+	        WHERE  
+	        	tenant_id = #tenantID#
+	        AND
+	        	companyid = #companyID#
+	        AND
+	        	formid = #formID#
+        	ORDER BY 
+        		autoruleguid,
+                aprmembersn DESC
+		]]>
+	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->

@@ -4,7 +4,7 @@ var g_ctlSelect;
 function btnApply_click() {
     switch (g_ctlSelect.selectedIndex) {
         case 0:
-            if (pEditorType == "HWP")
+            if (useEditor == "HWP")
                 message.SetAttribute(getNodeText(BottonTDValue[1]));
             else
                 if (isFree)

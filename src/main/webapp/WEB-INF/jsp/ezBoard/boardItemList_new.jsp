@@ -68,10 +68,14 @@
 		    var pAdminType = "y";
 		    var pButtonHidden = "${boardInfo.buttonHidden}";
 		    var pNoneActiveX = "YES";
-	
+		    var useRunTime = "${useRunTime}"
+		    
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {
+		    	if (useRunTime != "YES") {
+		    		$("#runtime").css("display", "none");
+		    	}
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';
 		            document.body.style.WebkitUserSelect = 'none';

@@ -57,6 +57,7 @@
     var AttachDelFlag = false;
     var pServerName = "${serverName}";
     var _hasattach = "${hasattach}";
+    var approvalFlag = "${approvalFlag}";
     var NonActiveX = "YES";
     function getDocInfo() {
         try {
@@ -290,11 +291,11 @@
         var pCurSelRow = window.event.result;
         var pAttachUserID = pCurSelRow.cells(0).DATA4;
         if (pAttachUserID.toLowerCase() == pUserID.toLowerCase()) {
-            btn_AttachDel.Enable = "true";
+//             btn_AttachDel.Enable = "true";
             btn_AttachDel.disabled = false;
         }
         else {
-            btn_AttachDel.Enable = "false";
+//             btn_AttachDel.Enable = "false";
             btn_AttachDel.disabled = true;
         }
     }

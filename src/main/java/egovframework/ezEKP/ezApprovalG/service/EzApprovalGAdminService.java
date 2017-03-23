@@ -139,4 +139,8 @@ public interface EzApprovalGAdminService {
 	public String getKeepType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
 	
 	public String getEtcName(String code1, String selected, String langType, String companyID, int tenantID) throws Exception;
+
+	public String getFormAprRule(String formID, String companyID, int tenantId) throws Exception;
+
+	public String getFormAprRuleLine(String formID, String companyID, int tenantId) throws Exception;
 }
