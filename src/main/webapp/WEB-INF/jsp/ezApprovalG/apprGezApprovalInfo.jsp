@@ -407,8 +407,10 @@
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
 	            
-	            if (g_SelCabID != "") {
-	            	document.getElementById("cabinetID").value = g_SelCabID;
+	            if (approvalFlag == "S") {
+		            if (g_SelCabID != "") {
+		            	document.getElementById("cabinetID").value = g_SelCabID;
+		            }
 	            }
 	
 	            try {
