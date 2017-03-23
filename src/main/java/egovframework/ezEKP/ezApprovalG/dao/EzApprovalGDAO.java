@@ -824,6 +824,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.maxTmpDocSn", map);
 	}
 	
+	public String selectUserSecurityCode(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.selectUserSecurityCode", map);
+	}
+	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectDoCallBack", map);
 	}
@@ -2373,6 +2377,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.delUserCont", map);
 	}
 	
+	public void deleteUserContDoc(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteUserContDoc", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
@@ -2431,6 +2439,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGDocListVO> getUserContList(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getUserContList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getContDocListS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getContDocListS", map);
 	}
 	
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {

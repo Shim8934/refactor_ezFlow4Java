@@ -22,6 +22,7 @@
         var NodeList2, PageSize, ListView, ScontID;
         var pUserName, pUserJobTitle, pDeptID, pDeptName, pCompanyID, pDocID;
         var arr_userinfo = new Array();
+        var OrderCell = "";
         arr_userinfo[0] = "user";
 	    arr_userinfo[1]  = "${userInfo.id}";
 	    arr_userinfo[2]  = "${userInfo.displayName}";
