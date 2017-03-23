@@ -186,7 +186,7 @@ public class EzPortalController extends EgovFileMngUtil {
 							}					
 							commentHtml += "<dd>";
 							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-								commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
+								commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"_parent\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
 							} else {
 								commentHtml += egovMessageSource.getMessage("ezPortal.t286", locale);
 							}
@@ -903,7 +903,7 @@ public class EzPortalController extends EgovFileMngUtil {
 					}					
 					commentHtml += "<dd>";
 					if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-						commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
+						commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"_parent\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
 					} else {
 						commentHtml += egovMessageSource.getMessage("ezPortal.t286", locale);
 					}
