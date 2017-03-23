@@ -546,17 +546,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet) throws Exception {
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
 		if (companyID.toUpperCase().equals("TOP")) {
 			sb.append("</HEADERS><ROWS></ROWS></LISTVIEWDATA>");
 		} else {
-			String code = "091";
-			
-			if (mode.equals("ITEM")) {
-				code = "092";
+			String code = "";
+			if (approvalFlag.equals("S")) {
+				code = "S091";
+				
+				if (mode.equals("ITEM")) {
+					code = "S092";
+				}
+			} else {
+				code = "091";
+				
+				if (mode.equals("ITEM")) {
+					code = "092";
+				}
 			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();

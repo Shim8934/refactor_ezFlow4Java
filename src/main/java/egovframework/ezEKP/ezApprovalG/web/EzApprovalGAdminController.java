@@ -1091,37 +1091,44 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재관리 수신처 그룹지정 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
-	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {		
-		LoginVO user = commonUtil.aprUserInfo(loginCookie);
-		String serverName = user.getServerName();
+	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("apprGReceiveGroup started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		String serverName = userInfo.getServerName();
 		String topID = "";
 		
 		//관리자 권한 체크
-		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
 		}
 		
-		if (user.getRollInfo().indexOf("c=1") == -1) {
-			topID = user.getCompanyID();
+		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
+			topID = userInfo.getCompanyID();
 		} else {
 			topID = "Top";
 		}
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(user.getPrimary(), user.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
 		
 		for (int i = 0; i < list.size(); i++) {
 			OrganDeptVO vo = list.get(i);			
 			
-			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 				resultList.add(j, vo);
 			}
 		}
-		model.addAttribute("companyID", user.getCompanyID());
+		
+		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("topID", topID);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("apprGReceiveGroup ended.");
 		
 		return "admin/ezApprovalG/apprGReceiveGroup";
 	}
@@ -1132,18 +1139,23 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getAdminReceivGroup.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getAdminReceivGroup(@CookieValue("loginCookie") String loginCookie, @RequestBody String data, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		LoginVO user = commonUtil.aprUserInfo(loginCookie);
+		logger.debug("getAdminReceivGroup started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String pid = doc.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String pmode = doc.getDocumentElement().getChildNodes().item(1).getTextContent();
-		String pcompanyID = user.getCompanyID();
+		String pcompanyID = userInfo.getCompanyID();
 				
 		if (doc.getDocumentElement().getChildNodes().getLength() > 2) {
 			pcompanyID = doc.getDocumentElement().getChildNodes().item(2).getTextContent();
 		}
 		
-		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, user.getPrimary(), user.getTenantId(), user.getOffset());
+		String result = ezApprovalGAdminService.getReceiveGroupInfo(pid, pmode, pcompanyID, userInfo.getPrimary(), userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
+		
+		logger.debug("getAdminReceivGroup ended.");
 		
 		return result;
 	}
