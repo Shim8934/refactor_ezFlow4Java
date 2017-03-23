@@ -642,8 +642,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				boardListHeaderVO.setSn(i + "");
 				boardListHeaderVO.setName1(doc.getElementsByTagName("NAME1").item(i).getTextContent());
 				boardListHeaderVO.setName2(doc.getElementsByTagName("NAME2").item(i).getTextContent());
-				boardListHeaderVO.setName3(doc.getElementsByTagName("NAME1").item(i).getTextContent());
-				boardListHeaderVO.setName4(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				
+				if (userInfo.getLang().equals("3")) {
+					boardListHeaderVO.setName3(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+				} else {
+					boardListHeaderVO.setName3(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				}
+				
+				if (userInfo.getLang().equals("4")) {
+					boardListHeaderVO.setName4(doc.getElementsByTagName("NAME1").item(i).getTextContent());
+				} else {
+					boardListHeaderVO.setName4(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				}
 				boardListHeaderVO.setColName(doc.getElementsByTagName("COLNAME").item(i).getTextContent());
 				boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
 				boardListHeaderVO.setName("Y");
