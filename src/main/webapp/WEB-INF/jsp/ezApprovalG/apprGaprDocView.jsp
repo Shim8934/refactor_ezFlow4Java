@@ -412,19 +412,19 @@
                     OpenAlertUI(pAlertContent, OpenAlertUI_Close);
 	            }
 	            else if (RtnVal == "ERR01") {
-	                var pAlertContent = strLang483;
+	                var pAlertContent = strLang895;
 	                OpenAlertUI(pAlertContent);
 	            }
 	            else if (RtnVal == "ERR02") {
-	                var pAlertContent = strLang484;
+	                var pAlertContent = strLang896;
 	                OpenAlertUI(pAlertContent);
 	            }
 	            else if (RtnVal == "ERR03") {
-	                var pAlertContent = strLang485;
+	                var pAlertContent = strLang897;
 	                OpenAlertUI(pAlertContent);
 	            }
 	            else {
-	                var pAlertContent = strLang486;
+	                var pAlertContent = strLang898;
 	                OpenAlertUI(pAlertContent);
 	            }
 	        }
