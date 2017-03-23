@@ -203,7 +203,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 
-		if (lang == "2" && !boardPropertyVO.getBoardName2().equals("")) {
+		if (lang.equals("2") && !boardPropertyVO.getBoardName2().equals("")) {
 			parentBoardName = boardPropertyVO.getBoardName2();
 		} else {
 			parentBoardName = boardPropertyVO.getBoardName();

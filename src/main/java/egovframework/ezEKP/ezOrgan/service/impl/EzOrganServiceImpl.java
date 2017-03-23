@@ -503,7 +503,7 @@ public class EzOrganServiceImpl implements EzOrganService {
             
             logger.debug("cellList["+i+"]=" + celllist[i]);
             
-            if (cellvalue == "" || cellvalue == null) {
+            if (cellvalue == null || cellvalue.equals("")) {
                 if (celllist[i] != null && !celllist[i].equals("")) {
                     if (doc.getElementsByTagName(celllist[i].toUpperCase()) != null) {
                         cellvalue = doc.getElementsByTagName(celllist[i].toUpperCase()).item(0).getTextContent();
