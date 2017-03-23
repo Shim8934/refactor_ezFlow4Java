@@ -15,16 +15,14 @@
 		<script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
-		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/ezForm_Cross.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/control_Cross/ListView_list.js" ></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/control_Cross/TreeView.js" ></script>
-	    <script type="text/javascript" src="/js/ezApproval/TreeViewCtrl_Cross.js"></script>
-	    
+	    <script type="text/javascript" src="/js/ezApprovalG/TreeViewCtrlS_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/admin/FormMain_Cross.js"></script>
-<!-- 		<script type="text/javascript" src="/js/ezApprovalG/FormMain.js"></script>		 -->
+	    <script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker.js"></script>
+		<script type="text/javascript" src="/js/ezApprovalG/admin/AutoLineRuleMaker_AprLine.js"></script>
 				
 		<script type="text/javascript">
 			var linealt1 = "<spring:message code='ezApprovalG.t1742'/>";
