@@ -1583,15 +1583,27 @@ console.log("selectedSubCell="+selectedSubCell);
 		    if (!OpenFlag) {
 		        document.getElementById("btn_quick_Up").style.display = "none";
 		        document.getElementById("QuickUl").style.display = "none";
-		        document.getElementById("btn_quick_Down").style.display = "none";
-		        document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
+		        document.getElementById("btn_quick_Down").style.display = "none";		        
+		        if ("${userInfo.lang}" == "3") {
+		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title_hidden.gif";	
+		        } else if ("${userInfo.lang}" == "2") {
+		        	document.getElementById("btn_hidden").src = "/images/us/main/quickmenu_title_hidden.gif";
+		        } else {
+		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
+		        }
 		        OpenFlag = true;
 		    }
 		    else {
 		        document.getElementById("btn_quick_Up").style.display = "block";
 		        document.getElementById("QuickUl").style.display = "block";
-		        document.getElementById("btn_quick_Down").style.display = "block";
-		        document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title.gif";
+		        document.getElementById("btn_quick_Down").style.display = "block";		        
+		        if ("${userInfo.lang}" == "3") {
+		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title.gif";	
+		        } else if ("${userInfo.lang}" == "2") {
+		        	document.getElementById("btn_hidden").src = "/images/us/main/quickmenu_title.gif";
+		        } else {
+		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title.gif";
+		        }
 		        OpenFlag = false;
 		    }
 		}

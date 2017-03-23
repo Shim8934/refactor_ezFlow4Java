@@ -546,17 +546,26 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet) throws Exception {
+	public String getReceiveGroupInfo(String pid, String mode, String companyID, String lang, int tenantID, String offSet, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
 		if (companyID.toUpperCase().equals("TOP")) {
 			sb.append("</HEADERS><ROWS></ROWS></LISTVIEWDATA>");
 		} else {
-			String code = "091";
-			
-			if (mode.equals("ITEM")) {
-				code = "092";
+			String code = "";
+			if (approvalFlag.equals("S")) {
+				code = "S091";
+				
+				if (mode.equals("ITEM")) {
+					code = "S092";
+				}
+			} else {
+				code = "091";
+				
+				if (mode.equals("ITEM")) {
+					code = "092";
+				}
 			}
 			
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -2921,7 +2930,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		resultXML.append("<GROUP>");
 		
 		for (ApprGFormVO vo1 : propList) {
-			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApproval." + vo1.getName(), locale) + "\">");
+			resultXML.append("<PROPERTY ID = \"" + vo1.getId() + "\" NAME = \"" + egovMessageSource.getMessage("ezApprovalG." + vo1.getName(), locale) + "\">");
 			
 			map.put("upperCode", vo1.getCode());
 			
@@ -2934,7 +2943,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			for (ApprGFormVO vo2 : propList2) {
 				resultXML.append("<ROW>");
 				resultXML.append("<ID>" + vo2.getId() + "</ID>");
-				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApproval." + vo2.getName(), locale) + "</NAME>");
+				resultXML.append("<NAME>" + egovMessageSource.getMessage("ezApprovalG." + vo2.getName(), locale) + "</NAME>");
 				resultXML.append("</ROW>");
 			}
 			

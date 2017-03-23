@@ -446,7 +446,15 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezApprovalG.t718'/></h1>
+		<c:choose>
+			<c:when test="${approvalFlag == 'S' }">
+				<h1><spring:message code='main.t39'/></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code='ezApprovalG.t718'/></h1>
+			</c:otherwise>
+		</c:choose>
+		
 	    <table>
         	<tr>
             	<td style="vertical-align: top;">
@@ -462,7 +470,14 @@
                         	</td>
                     	</tr>
                     	<tr>
-                        	<th id="pGroupID" style="width:25%">수신자그룹명</th>
+                    		<c:choose>
+                    			<c:when test="${approvalFlag == 'S' }">
+		                        	<th id="pGroupID" style="width:25%"><spring:message code = 'ezApproval.t227' /></th>
+                    			</c:when>
+                    			<c:otherwise>
+		                        	<th id="pGroupID" style="width:25%"><spring:message code = 'ezApprovalG.t1568' /></th>
+                    			</c:otherwise>
+                    		</c:choose>
                         	<td id="pGroupName2" style="word-break: break-all;width:75%;padding-left:5px"></td>
                     	</tr>
                     	<tr>
@@ -479,7 +494,15 @@
             	</td>
             	<td>&nbsp;</td>
             	<td style="vertical-align: top;">
-                	<h2><spring:message code='ezApprovalG.t1568'/></h2>
+	            	<c:choose>
+						<c:when test="${approvalFlag == 'S' }">
+							<h2><spring:message code='ezApproval.t227'/></h2>
+						</c:when>
+						<c:otherwise>
+							<h2><spring:message code='ezApprovalG.t1568'/></h2>
+						</c:otherwise>
+					</c:choose>
+                	
                 	<div class="listview">
                     	<div id="lvtDept" style="border: 0px solid #B6B6B6; OVERFLOW-Y: auto; OVERFLOW-X: hidden; Width: 360px; Height: 110px;" onselchanged="return lvtDept_SelChange()"></div>
                 	</div>
@@ -498,7 +521,15 @@
                 	<img src="/images/arr_lleft.gif" width="16" height="16" onclick="return deleteAllCont_onclick()" style="cursor: pointer">
             	</td>
             	<td style="vertical-align: top;">
-                	<h2><spring:message code='ezApprovalG.t53'/></h2>
+            		<c:choose>
+						<c:when test="${approvalFlag == 'S' }">
+							<h2><spring:message code='ezApprovalG.t999932'/></h2>
+						</c:when>
+						<c:otherwise>
+							<h2><spring:message code='ezApprovalG.t53'/></h2>
+						</c:otherwise>
+					</c:choose>
+                	
                 	<div class="listview">
                     	<div id="lvtDeptSelect" style="border: 0px solid #B6B6B6; OVERFLOW-Y: auto; OVERFLOW-X: hidden; BACKGROUND-COLOR: #ffffff; Width: 360px; Height: 320px; font-size: 9pt" onselchanged="return lvtDeptSelect_SelChange()" onrowdblclick="return lvtDeptSelect_rowdblclick()"></div>
                 	</div>
