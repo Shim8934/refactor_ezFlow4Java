@@ -5626,7 +5626,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			        field.setAccessible(true);
 					String data = String.valueOf(field.get(boardLineReplyVOList.get(i)));
 		
-					if(data == null || data.equals(null) || data.equals("null")){
+					if(data == null || data.equals("null")){
 						data = "";
 					}				
 			        stb.append("<" + field.getName().toUpperCase() + ">");

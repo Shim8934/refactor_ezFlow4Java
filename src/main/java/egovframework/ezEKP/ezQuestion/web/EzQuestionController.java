@@ -495,7 +495,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		boolean adminYN = false;
 		
 		if(userIDAdmin != null){
-			if(userID == userIDAdmin)
+			if(userID.equals(userIDAdmin))
 				adminYN = true;
 		}
 		
