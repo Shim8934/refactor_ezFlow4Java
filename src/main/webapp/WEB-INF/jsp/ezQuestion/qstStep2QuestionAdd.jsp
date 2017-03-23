@@ -170,6 +170,9 @@
                     		document.Ques_Answer.MultiResponse.checked=false;
                     		document.Ques_Answer.MultiResponse.disabled =true;					
                     		var TmpOption= new Option("", "",true);
+                    		if (document.Ques_Answer.input_Ans.length == 0) {
+                        		document.Ques_Answer.input_Ans.options[0] = TmpOption;
+                    		}
                     		document.Ques_Answer.txtAnswer.value = "";
                 		}
             		} else {
