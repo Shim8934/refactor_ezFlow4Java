@@ -1298,10 +1298,10 @@ public class EzScheduleController extends EgovFileMngUtil {
 					strOwnerID.append("<option value='1;;" + userId + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t372", locale) + " " + loginVO.getDisplayName2() + "</option>");
 					count++;
 					//부서일정
-					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + "</option>");
+					strOwnerID.append("<option value='2;;" + loginVO.getDeptID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t373", locale) + " " + loginVO.getDeptName2() + "</option>");
 					count++;
 					//회사일정
-					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + "</option>");
+					strOwnerID.append("<option value='3;;" + loginVO.getCompanyID() + "'" + (count == defaultIndex ? " selected" : "")  + ">" + msg.getMessage("ezSchedule.t374", locale) + " " + loginVO.getCompanyName2() + "</option>");
 					count++;
 				}
             	

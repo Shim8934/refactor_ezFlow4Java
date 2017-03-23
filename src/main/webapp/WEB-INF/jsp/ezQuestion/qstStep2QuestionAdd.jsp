@@ -170,6 +170,9 @@
                     		document.Ques_Answer.MultiResponse.checked=false;
                     		document.Ques_Answer.MultiResponse.disabled =true;					
                     		var TmpOption= new Option("", "",true);
+                    		if (document.Ques_Answer.input_Ans.length == 0) {
+                        		document.Ques_Answer.input_Ans.options[0] = TmpOption;
+                    		}
                     		document.Ques_Answer.txtAnswer.value = "";
                 		}
             		} else {
@@ -762,6 +765,8 @@
     
 		    var vertical_no, horizon_no;
     		function createTable(pXmlString) {
+    			var horizon_val=document.getElementById("horizon").value;
+    			var vertical_val=document.getElementById("vertical").value;
         		var pDataXml = createXmlDom();
         		if (pXmlString != undefined)
             		pDataXml = loadXMLString(pXmlString);
@@ -771,8 +776,8 @@
 		        var vertical = document.getElementById("vertical");
 
         		if (pXmlString != undefined) {
-            		horizon.value = pDataXml.getElementsByTagName("ANSWER").length;
-            		vertical.value = pDataXml.getElementsByTagName("ANSWER_ANSWER").length;
+        			horizon_val = pDataXml.getElementsByTagName("ANSWER").length;
+        			vertical_val = pDataXml.getElementsByTagName("ANSWER_ANSWER").length;
         		}
 
 		        div.innerHTML = "";
@@ -787,8 +792,8 @@
 		        vertical_no = vertical.value;
 		        horizon_no = horizon.value;
 
-		        for (var j = 0; j <= horizon.value; j++) {
-            		for (var i = 0; i <= vertical.value; i++) {
+		        for (var j = 0; j <= horizon_val; j++) {
+            		for (var i = 0; i <= vertical_val; i++) {
                 		if (j == 0) {
                     		oTh = document.createElement("TH");
                     		if (i != 0) {
@@ -956,7 +961,7 @@
                 	<td colspan="2">
                     	<input onclick="javascript:TypeDetermination(1)" type="radio" value="1" name="selView" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t487' />
                     	<input type="checkbox" value="0" name="MultiResponse" disabled="disabled" style="vertical-align:-2px;"/>
-                    	<c:if test="${userInfo.lang == '3'}">
+                    	<c:if test="${userInfo.lang != '3'}">
                     		<spring:message code='ezQuestion.t518' />
                     	</c:if>
                     	<spring:message code='ezQuestion.t519' />
