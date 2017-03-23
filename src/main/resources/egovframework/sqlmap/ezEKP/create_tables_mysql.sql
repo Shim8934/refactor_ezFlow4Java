@@ -5887,7 +5887,9 @@ CREATE TABLE `tbl_serialnumgen` (
   `TIMESEP` bigint(10) DEFAULT NULL,
   `REGSERIALNO` decimal(19,0) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  `COMPANYID` varchar(20) DEFAULT NULL
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `IDX` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`IDX`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
