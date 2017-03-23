@@ -262,22 +262,29 @@ function DayOnMouseClick(event) {
 }
 
 var MiniHttp;
+var delFlag = false;
 function CalendarMiniDataSource() {
     if (!document.getElementById("MiniCalendar"))
         return;
-    MiniHttp = createXMLHttpRequest();
-    var xmlpara = createXmlDom();
-    var objNode;
-    createNodeInsert(xmlpara, objNode, "DATA");
-    createNodeAndInsertText(xmlpara, objNode, "STARTDATE", sStartDate);
-    createNodeAndInsertText(xmlpara, objNode, "ENDDATE", sEndDate);
-    createNodeAndInsertText(xmlpara, objNode, "APP", "0");
-    createNodeAndInsertText(xmlpara, objNode, "GROUPID", groupid);
-    createNodeAndInsertText(xmlpara, objNode, "IDLIST", (idlist == "") ? idtype : idlist);
-    MiniHttp.open("POST", "/myoffice/ezSchedule/remote/schedule_get_list.aspx", true);
-    MiniHttp.onreadystatechange = getCalendarMiniDataSource_after;
-    MiniHttp.send(xmlpara);
-    //getCalendarMiniDataSource_after(xmlhttp);
+    
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : (!delFlag ? true : false),
+		url : "/ezSchedule/scheduleGetList.do",
+		data : {
+			STARTDATE : sStartDate,
+			ENDDATE : sEndDate,
+			APP : "0",
+			GROUPID : groupid,
+			IDLIST : (idlist == "") ? idtype : idlist
+		},
+		success: function(text){
+			getCalendarMiniDataSource_after(text)
+			delFlag = false;
+		}
+    }); 
+    
 }
 
 function sTempData() {
@@ -285,14 +292,13 @@ function sTempData() {
 
 
 //function getCalendarMiniDataSource_after(xmlhttp) {
-function getCalendarMiniDataSource_after(){
+function getCalendarMiniDataSource_after(text){
     var tempData = new Array();
-    if (MiniHttp == null || MiniHttp.readyState != 4) return;
-
+    
     try {
 
         if (MiniHttp.responseText == "") return;
-        var listNode = loadXMLString(MiniHttp.responseText);
+        var listNode = loadXMLString(text);
         var nlength = SelectNodes(listNode, "DATA/ROW").length;
         var k = 0;
         for (var i = 0; i < nlength; i++) {
@@ -330,8 +336,7 @@ function getCalendarMiniDataSource_after(){
             DataSDT = null;
             DataEDT = null;
         }
-
-        xmlhttp = null;
+        
         tempData = null;
     }
     catch (e) {

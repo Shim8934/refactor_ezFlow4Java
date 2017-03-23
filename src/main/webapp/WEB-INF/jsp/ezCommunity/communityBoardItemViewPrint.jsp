@@ -259,7 +259,7 @@
 		  	</tr>
 		    <tr>
 		    	<td class="pad1" style="height: 100%;">
-		        	<div id ="contenttable" class ="viewbox" style="height:100%; line-height:20px;"></div>
+		        	<div id ="contenttable" class ="viewbox" style="height:100%; line-height:20px; letter-spacing: 0.5px"></div>
 		    	</td> 
 		  	</tr>
 		    <tr  id ="onelinereply">

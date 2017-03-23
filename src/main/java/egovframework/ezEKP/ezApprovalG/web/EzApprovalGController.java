@@ -5409,7 +5409,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		String data = request.getParameter("imgUrl");
 		
-	     if(data == null || data=="") {
+	     if(data == null || data.equals("")) {
 	         throw new Exception();    
 	     }
 	     data = data.replaceAll("data:image/png;base64,", "");
