@@ -233,12 +233,12 @@ function DocMove() {
     var length2 = listview2.GetRowCount();
 
     if (select.length <= 0)
-        alert(strLang398);
+        alert(strLang801);
     else {
         lvTDocResize();
         
         if (length2 > 0)
-            if (getNodeText(listview2.GetDataRows()[0].cells[0]) == strLang535)
+            if (getNodeText(listview2.GetDataRows()[0].cells[0]) == strLang944)
                 listview2.DeleteRow(GetAttribute(listview2.GetDataRows()[0], "id"));
 
         for (count1 = 0; count1 < length; count1++) {
@@ -307,12 +307,12 @@ function DocDel() {
     Flag = xmlhttp.responseText;
 
     if (Flag == "<PARAMETER><RESULT>TRUE</RESULT></PARAMETER>") {
-        alert(strLang388);
+        alert(strLang802);
         for (count1 = length - 1 ; count1 > -1 ; count1--) {
             listview2.DeleteRow(GetAttribute(listview2.GetDataRows()[count1], "id"));
         }
     } else {
-        alert(strLang399);
+        alert(strLang803);
     }
     Check = false;
 }
@@ -331,7 +331,7 @@ function DocTotalMove() {
     var rows = listview.GetDataRows();
     
     if (length <= 0) {
-        alert(strLang400);
+        alert(strLang804);
     }
     else {        
         if (length2 > 0) {            

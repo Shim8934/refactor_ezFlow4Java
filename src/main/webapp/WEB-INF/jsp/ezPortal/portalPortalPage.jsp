@@ -1654,13 +1654,14 @@ console.log("selectedSubCell="+selectedSubCell);
 		    if (!OpenFlag) {
 		        document.getElementById("btn_quick_Up").style.display = "none";
 		        document.getElementById("QuickUl").style.display = "none";
-		        document.getElementById("btn_quick_Down").style.display = "none";
+		        document.getElementById("btn_quick_Down").style.display = "none";		        
 		        if ("${userInfo.lang}" == "3") {
 		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title_hidden.gif";	
+		        } else if ("${userInfo.lang}" == "2") {
+		        	document.getElementById("btn_hidden").src = "/images/us/main/quickmenu_title_hidden.gif";
 		        } else {
 		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title_hidden.gif";
-		        }
-		        
+		        }		        
 		        OpenFlag = true;
 		    }
 		    else {
@@ -1669,6 +1670,8 @@ console.log("selectedSubCell="+selectedSubCell);
 		        document.getElementById("btn_quick_Down").style.display = "block";
 		        if ("${userInfo.lang}" == "3") {
 		        	document.getElementById("btn_hidden").src = "/images/jp/main/quickmenu_title.gif";	
+		        } else if ("${userInfo.lang}" == "2") {
+		        	document.getElementById("btn_hidden").src = "/images/us/main/quickmenu_title.gif";
 		        } else {
 		        	document.getElementById("btn_hidden").src = "/images/kr/main/quickmenu_title.gif";
 		        }
@@ -1785,6 +1788,9 @@ console.log("selectedSubCell="+selectedSubCell);
     <c:choose>
     	<c:when test="${userInfo.lang == 3}">
     		<p class="quickmenu_title"><img src="/images/jp/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
+    	</c:when>
+    	<c:when test="${userInfo.lang == 2}">
+    		<p class="quickmenu_title"><img src="/images/us/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
     	</c:when>
     	<c:otherwise>
     		<p class="quickmenu_title"><img src="/images/kr/main/quickmenu_title.gif" width="70" height="31" onclick="hiddenQuick()" id="btn_hidden"></p>
