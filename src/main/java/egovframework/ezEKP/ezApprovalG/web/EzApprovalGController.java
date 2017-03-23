@@ -5300,8 +5300,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 		
 		if(result.indexOf("FALSE") > -1) {
-			if (!result.split(",")[1].trim().equals("")) {
-        		ezApprovalGService.rollbackCabinetNum(deptID, "", result.split(",")[1], userInfo.getCompanyID(), "", userInfo.getLang(), userInfo.getTenantId());
+			String[] resultArr = result.split(",");
+			if (resultArr.length > 1 && resultArr[1] != null && !resultArr[1].trim().equals("")) {
+        		ezApprovalGService.rollbackCabinetNum(deptID, "", resultArr[1], userInfo.getCompanyID(), "", userInfo.getLang(), userInfo.getTenantId());
         	}
 		}
 		logger.debug("removeDocCabinetInfo ended");
