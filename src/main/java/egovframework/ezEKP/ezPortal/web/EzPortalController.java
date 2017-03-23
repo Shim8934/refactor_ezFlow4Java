@@ -163,8 +163,8 @@ public class EzPortalController extends EgovFileMngUtil {
                             "<style type='text/css'>" +
                             "<!--" +
                             ".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
-                            ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
-                            ".warnintxt01 { position:relative ;padding-bottom:10px;}" +
+                            ".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
+                            ".warnintxt01 { position:relative }" +
                             ".warningimg { position:absolute; top:0px; left:0px;}" +
                             ".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
                             ".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
@@ -176,17 +176,21 @@ public class EzPortalController extends EgovFileMngUtil {
                             "<BODY>" +
                             "<div class='warningbox01' style='margin-top:100px;'>" +
                             "  <div class='warningbox02'>" +
-                            "    <div class='warnintxt01' >" +
-                            "    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
-                            "    <dl class='warningdl'>" +
-                            "    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
-                            "    <dd>" +
-                            "        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-					
+                            "    <div class='warnintxt01' >";
 							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-								commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
+								commentHtml += "<span class='warningimg'><img src='/images/notify/admin_img.png' width='112' height='112'></span><dl class='warningdl'>";
+								commentHtml += "<dt><img src='/images/admin/top_admin.gif' width='183' height='27'></dt>";
+							} else {
+								commentHtml += "<span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span><dl class='warningdl'>";
+								commentHtml += "<dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>";
+							}					
+							commentHtml += "<dd>";
+							if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+								commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
+							} else {
+								commentHtml += egovMessageSource.getMessage("ezPortal.t286", locale);
 							}
-							commentHtml += "    </dd>" +
+							commentHtml += "</dd>" +
 							"    </dl>" +
 							"    </div>" +
 							"    </div>" +
@@ -876,8 +880,8 @@ public class EzPortalController extends EgovFileMngUtil {
 					"<style type='text/css'>" +
 					"<!--" +
 					".warningbox01 { width:540px; margin:0 auto; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}" +
-					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}" +
-					".warnintxt01 { position:relative ;padding-bottom:10px;}" +
+					".warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 15px 25px;}" +
+					".warnintxt01 { position:relative }" +
 					".warningimg { position:absolute; top:0px; left:0px;}" +
 					".warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}" +
 					".warningdl dt { height:40px; margin-top:10px;text-align:left;}" +
@@ -889,18 +893,21 @@ public class EzPortalController extends EgovFileMngUtil {
 					"<BODY>" +
 					"<div class='warningbox01' style='margin-top:100px;'>" +
 					"  <div class='warningbox02'>" +
-					"    <div class='warnintxt01' >" +
-					"    <span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span>" +
-					"    <dl class='warningdl'>" +
-					"    <dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>" +
-					"    <dd>" +
-					"        " + egovMessageSource.getMessage("ezPortal.t286", locale) + "<br>";
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1) {
-				commentHtml += "        <a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>" + egovMessageSource.getMessage("ezPortal.t410", locale) + "</span></a> ";
-			}
-			
-			commentHtml += "    </dd>" +
+					"    <div class='warnintxt01' >";
+					if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+						commentHtml += "<span class='warningimg'><img src='/images/notify/admin_img.png' width='112' height='112'></span><dl class='warningdl'>";
+						commentHtml += "<dt><img src='/images/notify/admin.png' width='183' height='27'></dt>";
+					} else {
+						commentHtml += "<span class='warningimg'><img src='/images/notify/warning02.gif' width='136' height='112'></span><dl class='warningdl'>";
+						commentHtml += "<dt><img src='/images/notify/warning01.gif' width='183' height='27'></dt>";
+					}					
+					commentHtml += "<dd>";
+					if (userInfo.getRollInfo().indexOf("c=1") > -1) {
+						commentHtml += "<a class=\"imgbtn\"><span style='cursor:pointer' onclick='javascript:window.open(\"/admin/main.do\", \"\", \"\")'>▒ " + egovMessageSource.getMessage("ezPortal.t410", locale) + " " + egovMessageSource.getMessage("main.t00043", locale) +"</span></a> ";
+					} else {
+						commentHtml += egovMessageSource.getMessage("ezPortal.t286", locale);
+					}
+					commentHtml += "</dd>" +
 					"    </dl>" +
 					"    </div>" +
 					"    </div>" +

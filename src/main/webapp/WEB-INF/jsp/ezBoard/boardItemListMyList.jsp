@@ -326,7 +326,6 @@
 	                strListInfo = "";
 	            }
 	            catch (e) {
-	            	alert(200);
 	                alert("getBoardList_after : " + e.description);
 	            }
 	        }
