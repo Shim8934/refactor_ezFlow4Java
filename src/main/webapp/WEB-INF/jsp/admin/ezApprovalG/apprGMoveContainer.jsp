@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -320,12 +321,14 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <h1><spring:message code='ezApproval.t771'/></h1>
-	   	<span>
-	   		<b><spring:message code='ezApproval.t378'/></b>
-            <select id="ListCompany" name="ListCompany" onchange="return changeCompID()">
-      			${companySel}
-  			</select>
-	    </span>
+	   	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
+		    <select id="ListCompany" onChange="return changeCompID">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select><br /><br />
+		</span>
+		
 	    <table class="table_manage">
 	        <tr>
 	            <td>

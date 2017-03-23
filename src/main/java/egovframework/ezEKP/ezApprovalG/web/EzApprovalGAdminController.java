@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.stringtemplate.v4.debug.AddAttributeEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -633,7 +632,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/formConnInfo.do")
 	public String formConnInfo (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		String realPath = commonUtil.getRealPath(request);
 		String path = config.getProperty("upload_approvalG.ROOT");
@@ -2622,23 +2620,26 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGMoveContainer started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		StringBuilder companySel = new StringBuilder();
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "main/warning";
 		}
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
 		
 		logger.debug("apprGMoveContainer ended");
 		
@@ -2790,25 +2791,29 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("docDelete started");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		StringBuilder companySel = new StringBuilder();
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "main/warning";
 		}
 				
-		String periodNode = ezApprovalGAdminService.getCodeType(userInfo.getLang(),userInfo.getTenantId(), userInfo.getCompanyID());
+		String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, userInfo.getCompanyID(), approvalFlag);
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getLang(), userInfo.getTenantId());
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'>" + deptVOs.get(k).getDisplayName() + "</option>");
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);			
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
+				resultList.add(vo);
 			}
 		}
 		
+		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
-		model.addAttribute("companySel", companySel);
+		model.addAttribute("list", resultList);
 		model.addAttribute("periodNode", periodNode);
 		
 		logger.debug("docDelete ended");
