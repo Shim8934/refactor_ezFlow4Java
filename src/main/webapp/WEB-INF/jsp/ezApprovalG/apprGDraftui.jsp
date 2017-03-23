@@ -1234,9 +1234,9 @@
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
 		                	SetDocOption(ret[20]);
-		                	pPageNum = "";
-		                	pLimitRange = "";
-		                	pSpecialRecordCode = "";
+		                	pPageNum = "1";
+		                	pLimitRange = "1";
+		                	pSpecialRecordCode = "1";
 		                }
 		                
 		                if (ret[11].substring(0,1) == 3) {

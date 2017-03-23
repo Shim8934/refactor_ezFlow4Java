@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
+import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -41,6 +42,8 @@ import org.springframework.web.servlet.HandlerMapping;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import com.sun.org.apache.xml.internal.security.utils.JavaUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -5598,26 +5601,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ ".mht";
-		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
-		String dirPath2 = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
+		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+		String realPath = commonUtil.getRealPath(request);
 		
 		InputStream stream = null;
 		OutputStream bos = null;
 		
 		try {
-			File file = new File (dirPath2);
+			File file = new File (realPath + dirPath2);
 			if(!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File file2 = new File (dirPath);
+			File file2 = new File (realPath + dirPath);
 			if(!file2.exists()) {
 				file2.mkdirs();
 			}
 		
 			stream = new ByteArrayInputStream(pHTML.getBytes("UTF-8"));
 			
-			bos = new FileOutputStream(dirPath + commonUtil.separator  + fileName);
+			bos = new FileOutputStream(realPath + dirPath + commonUtil.separator  + fileName);
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -5642,8 +5646,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 		    }
 		}
-		return dirPath+ commonUtil.separator  + fileName;
-		}
+		
+		return dirPath + commonUtil.separator + fileName;
+	}
 	/**
 	 * 전자결재G 문서 내용 변경 이력
 	 */	
@@ -5720,5 +5725,82 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 
+	@RequestMapping(value = "/ezApprovalG/docViewerCK.do")
+	public String docViewerCK(HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docViewerCK started");
+
+		String docID = request.getParameter("docHref");
+		
+		model.addAttribute("docID", commonUtil.cleanValue(docID));
+		
+		logger.debug("docViewerCK ended");
+		
+		return "ezApprovalG/apprGdocViewerCK";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/savePCTmpFile.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String savePCTmpFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("savePCTmpFile started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docTitle = request.getParameter("docTitle");
+		String formText = request.getParameter("html");
+		String result = "";
+		String realPath = commonUtil.getRealPath(request);
+		
+		String path = commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId());
+		String subFolder = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyyMMdd"), userInfo.getOffset(), false);
+		
+		path = path + commonUtil.separator + subFolder + commonUtil.separator;
+		
+		File file = new File(realPath + path);
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		String saveFilePath = path + docTitle + ".mht";
+		
+		InputStream stream = null;
+		OutputStream bos = null;
+		
+		try {
+			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
+			
+			bos = new FileOutputStream(realPath + saveFilePath);
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[BUFF_SIZE];
+			
+			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+			
+			result = saveFilePath;
+		} catch (Exception e) {
+			result = "FAIL";
+		} finally {
+		   if (bos != null) {
+				try {
+				    bos.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		   if (stream != null) {
+				try {
+					stream.close();
+				} catch (Exception ignore) {
+					logger.debug("IGNORED: {}", ignore.getMessage());
+				}
+		    }
+		}
+
+		logger.debug("savePCTmpFile ended");
+		
+		return result;
+	}
 	
 }

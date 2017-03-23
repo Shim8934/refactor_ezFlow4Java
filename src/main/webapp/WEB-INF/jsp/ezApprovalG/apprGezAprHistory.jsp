@@ -50,7 +50,7 @@
 		        }
 		        else {
 		            if (CrossYN()) {
-		                pUrl = "DocViewer_CK.aspx?DocHref=" + escapenew(Arguments[0]);
+		                pUrl = "/ezApprovalG/docViewerCK.do?docHref=" + encodeURI(Arguments[0]);
 		            }
 		            else {
 		                pUrl = "DocViewer.aspx?DocHref=" + escapenew(Arguments[0]);

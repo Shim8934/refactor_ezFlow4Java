@@ -445,12 +445,16 @@ public class EzCommonController extends EgovFileMngUtil{
 	public void downloadAttach(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		String filePath = request.getParameter("filePath");
 		String fileName = "";
+		String realPath = commonUtil.getRealPath(request);
 		
 		if (request.getParameter("fileName") != null) {
 			fileName = request.getParameter("fileName");
+		} else {
+			fileName = filePath.substring(filePath.lastIndexOf(commonUtil.separator) + 1); 
 		}
 
-		ezCommonService.responseAttach(filePath, fileName, true, request, response);
+		downFile(request, response, realPath + filePath, fileName);
+//		ezCommonService.responseAttach(filePath, fileName, true, request, response);
 	}
 	
 	/**
