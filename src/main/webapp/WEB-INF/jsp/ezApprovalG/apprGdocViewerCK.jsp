@@ -73,7 +73,7 @@
 		    		data : {
 		    			docID     : DocID,
 		    			docTitle  : pDocTitle,
-		    			html      : ConvertHTMLtoMHT(message.Get_EditorBodyHTML())
+		    			html      : ConvertHTMLtoMHT("<HTML>" + message.Get_EditorBodyHTML() + "</HTML>")
 		    		},
 		    		success: function(xml){
 		    			result = xml;
