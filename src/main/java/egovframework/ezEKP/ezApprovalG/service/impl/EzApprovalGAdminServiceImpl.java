@@ -29,6 +29,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocStateVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
@@ -3254,6 +3255,83 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		sb.append("</DATA>");
 
 		logger.debug("getFormAprRuleLine ended");
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+		logger.debug("getSpecialContList started");
+		
+		String multiData = commonUtil.getMultiData(lang, tenantID);
+		Map<String, Object> map = new HashMap<String, Object>();
+		StringBuilder sb= new StringBuilder();
+		
+		map.put("v_LISTTYPE", "S109");
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		
+		sb.append("<LISTVIEWDATA><HEADERS>");
+
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("</HEADER>");
+		}
+		sb.append("</HEADERS>");
+		
+		map = new HashMap<String, Object>();
+		
+		map.put("deptID", deptID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getSpecialContList(map);
+		
+		sb.append("<ROWS>");
+		
+		for (ApprGContInfoVO vo : list) {
+			sb.append("<ROW>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>");
+			
+			String contType = vo.getContType();
+			
+			if (Integer.parseInt(contType) >= 100) {
+				map.put("lang", multiData);
+				map.put("contType", contType);
+				
+				String contTypeName = ezApprovalGAdminDAO.getSpecialContInfoContTypeName(map);
+				
+				sb.append(contTypeName);
+			} else {
+				sb.append(ezApprovalGService.getCode2Name("SA60", contType, companyID, lang, tenantID));
+			}
+			sb.append("</VALUE>");
+			sb.append("<DATA1>" + vo.getDeptID() + "</DATA1>");
+			sb.append("<DATA2>" + contType + "</DATA2>");
+			sb.append("<DATA3>" + vo.getSn() + "</DATA3>");
+			sb.append("</CELL>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>" + vo.getContName() + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("<CELL>");
+			sb.append("<VALUE>" + vo.getSubQuery() + "</VALUE>");
+			sb.append("</CELL>");
+			sb.append("</ROW>");
+		}
+		
+		sb.append("</ROWS>");
+		sb.append("</LISTVIEWDATA>");
+		
+		logger.debug("getSpecialContList ended");
 		
 		return sb.toString();
 	}

@@ -818,6 +818,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGMCont.do")
 	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("apprGMCont started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
@@ -825,7 +827,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		String serverName = userInfo.getServerName();
-				
+		
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		int j = 0;
@@ -841,6 +843,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
+		
+		logger.debug("apprGMCont ended.");
 		
 		return "/admin/ezApprovalG/apprGMCont";
 	}
@@ -1083,6 +1087,49 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("apprGMdelCont ended.");
 		
+		return result;
+	}
+	
+	/**
+	 * 전자결재일반관리 문서함관리 특수문서함 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do")
+	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageSpecialCont started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String deptName = request.getParameter("deptName");
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("deptName", deptName);
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("manageSpecialCont ended");
+		
+		return "admin/ezApprovalG/apprGManageSpecialCont";
+	}
+	
+	/**
+	 * 전자결재 일반 관리자 문서함관리 특수문서함 표출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do")
+	@ResponseBody
+	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("specialContListInfo started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
+		String deptID = request.getParameter("deptID");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGAdminService.getSpecialContList(deptID, companyID, userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("specialContListInfo ended");
+	
 		return result;
 	}
 	
