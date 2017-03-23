@@ -20,8 +20,8 @@
 	        var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, DocListType;
 	        var NodeList2, PageSize, ListView, ScontID;
 	        var P_CompanyID = "";
-	        var text1 = "<spring:message code='ezApproval.t434'/>";
-	        var text2 = "<spring:message code='ezApproval.t911'/>";
+	        var text1 = "<spring:message code='ezApprovalG.t440'/>";
+	        var text2 = "<spring:message code='ezApprovalG.t1092'/>";
 	        var SearchCond = new Array();
 	        
 	        window.onload = function () {
@@ -207,7 +207,7 @@
 	                        i++;
 	                    }
 	                } else {
-	                    alert("<spring:message code='ezApproval.t232'/>");
+	                    alert("<spring:message code='ezApprovalG.t360'/>");
 	                }
 				}
 			}
@@ -225,23 +225,23 @@
 			    if (MoveALL.checked != true) {
 			        if (noItems < 0 && length > 0 && Check == false) {
 			            if (document.getElementsByName("selTContName")[0].value == "")
-			                alert("<spring:message code='ezApproval.t769'/>")
+			                alert("<spring:message code='ezApprovalG.t1676'/>")
 						else {
-						    var Ans = confirm("<spring:message code='ezApproval.t770'/>");
+						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
 						    if (Ans) {
 						        ContMove();
 						        getDocList();
 						    }
 						}
 			        } else {
-			            alert("<spring:message code='ezApproval.t634'/>");
+			            alert("<spring:message code='ezApprovalG.t1570'/>");
 			        }
 			    } else {
 			        if (Check == false) {
 			            if (document.getElementsByName("selTContName")[0].value == "")
-			                alert("<spring:message code='ezApproval.t769'/>")
+			                alert("<spring:message code='ezApprovalG.t1676'/>")
 						else {
-						    var Ans = confirm("<spring:message code='ezApproval.t770'/>");
+						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
 						    if (Ans) {
 						        ContMove();
 						        getDocList();
@@ -284,7 +284,7 @@
 			var ezStatisticsSearch_dialogArguments = new Array();
 			function SearchCondi_onclick() {
 			    if (document.getElementsByName('SDeptName')[0].value == "") {
-			        alert("<spring:message code='ezApproval.t345'/>");
+			        alert("<spring:message code='ezApprovalG.t1219'/>");
 			        return;
 			    }
 			
@@ -310,17 +310,17 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezApproval.t434'/></NAME>
+						<NAME><spring:message code='ezApprovalG.t440'/></NAME>
 						<WIDTH>135</WIDTH>
 					</HEADER>
 					<HEADER>
-						<NAME><spring:message code='ezApproval.t911'/></NAME>
+						<NAME><spring:message code='ezApprovalG.t1092'/></NAME>
 						<WIDTH>205</WIDTH>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-	    <h1><spring:message code='ezApproval.t771'/></h1>
+	    <h1><spring:message code='ezApprovalG.t1678'/></h1>
 	   	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
 		    <select id="ListCompany" onChange="return changeCompID">
 	        	<c:forEach var="item" items="${list}">
@@ -334,21 +334,21 @@
 	            <td>
 	                <table class="content" style="width: 368px">	                	
 	                    <tr>
-	                        <th><spring:message code='ezApproval.t344'/></th>
+	                        <th><spring:message code='ezApprovalG.t1011'/></th>
 	                        <td>
 	                            <input type="text" id="SDeptName" name="SDeptName" style="WIDTH: 130px" readonly="true" />
-	                            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
+	                            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>
 							</td>   
 	                    </tr>
 	                    <tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t611'/></th>
+	                        <th style="white-space: nowrap"><spring:message code='ezApprovalG.t1549'/></th>
 	                        <td>
 	                            <select name="selSContName" style="WIDTH: 150px" onchange="return bt_selSContName_onclick()"></select>
-	                            <a class="imgbtn" name="Search"><span onclick="SearchCondi_onclick()"><spring:message code='ezApproval.t236'/></span></a>
+	                            <a class="imgbtn" name="Search"><span onclick="SearchCondi_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
 							</td>
 	                    </tr>
 	                    <tr>
-	                        <th style="white-space: nowrap"><spring:message code='ezApproval.t772'/></th>
+	                        <th style="white-space: nowrap"><spring:message code='ezApprovalG.t1679'/></th>
 	                        <td>
 	                            <input type="checkbox" id="MoveALL" name="MoveALL" />
 							</td>
@@ -359,14 +359,14 @@
 	            <td style="vertical-align: bottom">
 	                <table class="content" style="width: 368px">
 	                    <tr>
-	                        <th><spring:message code='ezApproval.t344'/></th>
+	                        <th><spring:message code='ezApprovalG.t1011'/></th>
 	                        <td>
 	                            <input type="text" name="TDeptName" style="WIDTH: 130px;" readonly="true" />
-	                            <a class="imgbtn" name="TDeptSelect"><span onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApproval.t344'/></span></a>
+	                            <a class="imgbtn" name="TDeptSelect"><span onclick="bt_TDeptSelect_onclick()"><spring:message code='ezApprovalG.t1011'/></span></a>
 	                        </td>    
 	                    </tr>
 	                    <tr>
-	                        <th><spring:message code='ezApproval.t611'/></th>
+	                        <th><spring:message code='ezApprovalG.t1549'/></th>
 	                        <td>
 	                            <select name="selTContName" style="WIDTH: 150px" onclick="bt_selTContName_onclick()"></select>
 							</td>
@@ -407,7 +407,7 @@
 	        </tr>
 	    </table>	        
 	    <div class="btnposition" style="width: 768px; text-align: center;">
-	        <a class="imgbtn" onclick="bt_OK_onclick()"><span><spring:message code='ezApproval.t272'/></span></a>
+	        <a class="imgbtn" onclick="bt_OK_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
 	    </div>
 	</body>
 </html>
