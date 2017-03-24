@@ -507,7 +507,9 @@
 // 		                    			"utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
 		                    }
                     		oTd.appendChild(oImg);
-                    		oTd.innerHTML += trName;
+                    		if(attachType!=1){
+                    			oTd.innerHTML += trName;	
+                    		}
 // 		                    oTd = document.createElement("td");
 //         		            oTd.setAttribute("style", "cursor:pointer; font-weight:bold;");
 //                     		oTr.appendChild(oTd);
