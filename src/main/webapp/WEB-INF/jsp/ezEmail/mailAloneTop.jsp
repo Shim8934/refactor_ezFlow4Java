@@ -9,13 +9,13 @@
         <link rel="stylesheet" href="<spring:message code='main.e6' />" type="text/css" />
         <style type="text/css">
             <c:if test="${lang == '2'}">
-                #input_search { background:#333437 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
+                #input_search { background:#f2f2f2 url(/../images/us/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
             <c:if test="${lang == '3'}">
-                #input_search { background:#333437 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
+                #input_search { background:#f2f2f2 url(/../images/jp/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
             <c:if test="${lang == '4'}">
-                #input_search { background:#333437 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
+                #input_search { background:#f2f2f2 url(/../images/cn/cm/input_search_bg.gif) no-repeat 0 0 }
             </c:if>
         </style>    
         <script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
@@ -1499,7 +1499,7 @@
         <div id= 'top'>
             <header>
                 <div class='logo'>
-                    <img src='/files/upload_portal/S907000/Logo/logo.gif' style='cursor:pointer' onclick='OpenWindow(event, " ", " ", " ")' width='106' height='45'>
+                    <img src='/files/upload_portal/S907000/Logo/logo.gif' width='106' height='45'>
                 </div>
                 <article class='utmenu'>
                     <ul>
