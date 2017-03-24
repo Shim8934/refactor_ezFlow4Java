@@ -2662,10 +2662,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String orderOption = request.getParameter("orderOption");
         String approvUser = request.getParameter("approvUser");
         String companyID = request.getParameter("companyID");
-
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        
         String result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset());
+				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
         
         logger.debug("result = " + result);
         logger.debug("getStatSearchDocList ended.");
