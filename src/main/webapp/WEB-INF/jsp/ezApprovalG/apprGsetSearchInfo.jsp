@@ -47,6 +47,7 @@
 		    var ReturnFunction;
 		    var Type = "${type}";
 		    var NonActiveX = "YES";
+		    var ReturnFunction;
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
@@ -204,7 +205,6 @@
 		        apprto = apprto.split("-");
 		        myapprfrom = myapprfrom.split("-");
 		        myapprto = myapprto.split("-");
-		        
 		        RtnVal[0] = DocNumber.value;
 		        RtnVal[1] = DocTitle.value;
 		        RtnVal[2] = drafter.value;
@@ -233,7 +233,6 @@
 		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
 		        RtnVal[22] = EndAprYear.value;
 		        RtnVal[23] = drafterdept.value;
-		
 		        RtnVal[24] = "";
 		        for (i = 0; i < 25; i++) {
 		            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
@@ -241,7 +240,6 @@
 		                break;
 		            }
 		        }
-		
 		        if (!chkVal) {
 		            RtnVal = "";
 		            OpenAlertUI("<spring:message code='ezApprovalG.t1329'/>");

@@ -375,7 +375,7 @@
                         strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
                         PagingHTML += strtext;
                     } else {
-                        strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
+                    	strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' width='16' height='16'></span><span class='ptxt' onclick= 'return selbeforeBlock_one()'>" + strLang80 + "</span>";
                         PagingHTML += strtext;
                     }
                 } else {
@@ -393,14 +393,16 @@
                     MaxNum = totalPage;
                 }
                 
-                for (i = startNum; i <= MaxNum; i++) {
-                    if (i == pageNum) {
-                        strtext = "<span class='on'>" + i + "</span>";
-                        PagingHTML += strtext;
-                    } else {
-                        strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-                        PagingHTML += strtext;
-                    }
+                if (totalCount != 0) {
+	                for (i = startNum; i <= MaxNum; i++) {
+	                    if (i == pageNum) {
+	                        strtext = "<span class='on'>" + i + "</span>";
+	                        PagingHTML += strtext;
+	                    } else {
+	                        strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+	                        PagingHTML += strtext;
+	                    }
+	                }
                 }
                 
                 if (totalPage > BlockSize) {
@@ -796,6 +798,12 @@
 					</c:choose>
 				</tr>
 			</form>
+			<c:set var="count" value="${totalCount}" />
+			    <c:if test="${count eq 0 }" >
+				    <tr>
+					    <td align="center" colspan="8"><spring:message code='ezBoard.t281'/></td>
+				    </tr>
+			    </c:if>
 		</table>
 		<div id="tblPageRayer"></div>
 		<div id="ListInfo" style="DISPLAY:none">${ListInfo }</div>

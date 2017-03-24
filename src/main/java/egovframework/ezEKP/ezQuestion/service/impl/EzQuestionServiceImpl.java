@@ -763,6 +763,19 @@ public class EzQuestionServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
+	public List<QstResponseVO> resultSubjectiveListAll(String brdID, String itemNo, String questionNo, int pTotalCnt, int pPageSize, String lang, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_pstrBrdID", brdID);
+		map.put("v_pItemNo", itemNo);
+		map.put("v_pQuesNo", questionNo);
+		map.put("v_pTotalCnt", pTotalCnt);
+		map.put("v_pPageSize", pPageSize);
+		map.put("v_pLang", lang);
+		map.put("tenantID", tenantID);
+		return ezQuestionDAO.resultSubjectiveListAll(map);
+	}
+	
+	@Override
 	public QstVO getQuestionForSubjective(String brdID, String itemNo, String questionNo, int tenantID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);

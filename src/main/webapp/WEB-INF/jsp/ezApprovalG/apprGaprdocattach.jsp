@@ -171,14 +171,14 @@
         }
 
         var condition = new Array();
-        var SearchCondi_dialogArgument = new Array();
+        var setsearchinfo_cross_dialogArguments = new Array();
         function SearchCondi_onclick() {
             var para;
-            var url = "/myoffice/ezApproval/formContainer/setsearchInfo.aspx";
+            var url = "/ezApprovalG/setSearchInfo.do";
 
             if (CrossYN() || pNoneActiveX == "YES") {
-                SearchCondi_dialogArgument[0] = "";
-                SearchCondi_dialogArgument[1] = SearchCondi_Complete;
+            	setsearchinfo_cross_dialogArguments[0] = "";
+            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
                 DivPopUpShow(820, 610, url);
             }
             else {

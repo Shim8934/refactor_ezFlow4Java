@@ -347,7 +347,7 @@
 	            <tr>
 	                <th><spring:message code='ezQuestion.t164' /></th>
 	                <td>
-	                    <select id="sel_Type" onChange="TypeDetermination()">
+	                    <select id="sel_Type" onChange="TypeDetermination()" style="height: 23px">
 	                        <option value="1" selected="selected"><spring:message code='ezQuestion.t165' /></option>
 	                        <option value="6"><spring:message code='ezQuestion.t166' /></option>
 	                        <option value="2"><spring:message code='ezQuestion.t167' /></option>

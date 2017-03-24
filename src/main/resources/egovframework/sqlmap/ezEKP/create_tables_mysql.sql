@@ -3667,6 +3667,68 @@ CREATE TABLE `tbl_expendaprline` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_form_autorule`
+--
+
+DROP TABLE IF EXISTS `tbl_form_autorule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_form_autorule` (
+  `FORMID` varchar(40) NOT NULL,
+  `AUTORULESN` bigint(10) NOT NULL,
+  `AUTORULEGUID` varchar(50) NOT NULL,
+  `CHECKFIELDTYPE` varchar(50) DEFAULT NULL,
+  `CHECKFIELD` varchar(100) DEFAULT NULL,
+  `OPERATORTYPE` varchar(10) DEFAULT NULL,
+  `OPERATOR` varchar(10) DEFAULT NULL,
+  `CONDTYPE` varchar(10) DEFAULT NULL,
+  `CONDVALUE` varchar(100) DEFAULT NULL,
+  `CONDVALUEDEPTID` varchar(100) DEFAULT NULL,
+  `RESULTAPRTYPE` varchar(6) DEFAULT NULL,
+  `RESULTAPRMEMEBERID` varchar(50) DEFAULT NULL,
+  `FIXFLAG` varchar(4) DEFAULT NULL,
+  `DOCTYPE` varchar(10) DEFAULT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULESN`,`AUTORULEGUID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_form_autoruleline`
+--
+
+DROP TABLE IF EXISTS `tbl_form_autoruleline`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_form_autoruleline` (
+  `FORMID` varchar(40) NOT NULL,
+  `AUTORULEGUID` varchar(50) NOT NULL,
+  `APRMEMBERSN` bigint(10) NOT NULL,
+  `APRTYPE` varchar(24) DEFAULT NULL,
+  `APRSTATE` varchar(24) DEFAULT NULL,
+  `APRMEMBERID` varchar(100) DEFAULT NULL,
+  `APRMEMBERISDEPTYN` varchar(4) DEFAULT NULL,
+  `APRMEMBERNAME` varchar(100) DEFAULT NULL,
+  `APRMEMBERNAME2` varchar(100) DEFAULT NULL,
+  `APRMEMBERJOBTITLE` varchar(100) DEFAULT NULL,
+  `APRMEMBERJOBTITLE2` varchar(100) DEFAULT NULL,
+  `APRMEMBERDEPTID` varchar(100) DEFAULT NULL,
+  `APRMEMBERDEPTNAME` varchar(200) DEFAULT NULL,
+  `APRMEMBERDEPTNAME2` varchar(200) DEFAULT NULL,
+  `APRMEMBERLDAPPATH` varchar(100) DEFAULT NULL,
+  `RECEIVEDDATE` datetime DEFAULT NULL,
+  `PROCESSDATE` datetime DEFAULT NULL,
+  `REASONDONOTAPPROV` varchar(255) DEFAULT NULL,
+  `ISPROPOSERYN` varchar(4) DEFAULT NULL,
+  `ISBRIEFUSERYN` varchar(4) DEFAULT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULEGUID`,`APRMEMBERSN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_formcontainer`
 --
 
@@ -5997,6 +6059,25 @@ CREATE TABLE `tbl_specialcataloginfo_rec` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_specialcontainerinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_specialcontainerinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_specialcontainerinfo` (
+  `DEPTID` varchar(100) NOT NULL,
+  `CONTTYPE` varchar(12) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `CONTNAME` varchar(510) DEFAULT NULL,
+  `SUBQUERY` varchar(1000) DEFAULT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DEPTID`,`CONTTYPE`,`SN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `tbl_task`
 --
 
@@ -6922,87 +7003,6 @@ CREATE TABLE `tbl_userstartpage_item` (
   `LANG` varchar(20) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`UID_`,`ACCESSID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_form_autorule`
---
-
-DROP TABLE IF EXISTS `tbl_form_autorule`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_form_autorule` (
-  `FORMID` varchar(40) NOT NULL,
-  `AUTORULESN` bigint(10) NOT NULL,
-  `AUTORULEGUID` varchar(50) NOT NULL,
-  `CHECKFIELDTYPE` varchar(50),
-  `CHECKFIELD` varchar(100),
-  `OPERATORTYPE` varchar(10),
-  `OPERATOR` varchar(10),
-  `CONDTYPE` varchar(10),
-  `CONDVALUE` varchar(100),
-  `CONDVALUEDEPTID` varchar(100),
-  `RESULTAPRTYPE` varchar(6),
-  `RESULTAPRMEMEBERID` varchar(50),
-  `FIXFLAG` varchar(4),
-  `DOCTYPE` varchar(10),
-  `COMPANYID` varchar(20) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULESN`,`AUTORULEGUID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_form_autoruleline`
---
-
-DROP TABLE IF EXISTS `tbl_form_autoruleline`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_form_autoruleline` (
-  `FORMID` varchar(40) NOT NULL,
-  `AUTORULEGUID` varchar(50) NOT NULL,
-  `APRMEMBERSN` bigint(10) NOT NULL,
-  `APRTYPE` varchar(24),
-  `APRSTATE` varchar(24),
-  `APRMEMBERID` varchar(100),
-  `APRMEMBERISDEPTYN` varchar(4),
-  `APRMEMBERNAME` varchar(100),
-  `APRMEMBERNAME2` varchar(100),
-  `APRMEMBERJOBTITLE` varchar(100),
-  `APRMEMBERJOBTITLE2` varchar(100),
-  `APRMEMBERDEPTID` varchar(100),
-  `APRMEMBERDEPTNAME` varchar(200),
-  `APRMEMBERDEPTNAME2` varchar(200),
-  `APRMEMBERLDAPPATH` varchar(100),
-  `RECEIVEDDATE` DATETIME,
-  `PROCESSDATE` DATETIME,
-  `REASONDONOTAPPROV` varchar(255),
-  `ISPROPOSERYN` varchar(4),
-  `ISBRIEFUSERYN` varchar(4),
-  `COMPANYID` varchar(20) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULEGUID`,`APRMEMBERSN`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_specialcontainerinfo`
---
-
-DROP TABLE IF EXISTS `tbl_specialcontainerinfo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_specialcontainerinfo` (
-  `DEPTID` varchar(100) NOT NULL,
-  `CONTTYPE` varchar(12) NOT NULL,
-  `SN` bigint(10) NOT NULL,
-  `CONTNAME` varchar(510),
-  `SUBQUERY` varchar(1000),
-  `COMPANYID` varchar(20) NOT NULL,
-  `TENANT_ID` mediumint(5) NOT NULL,
-  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DEPTID`,`CONTTYPE`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
