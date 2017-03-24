@@ -2392,7 +2392,7 @@
 	<select id="EzQuestionDAO.tempSave" parameterClass="Map"  resultMap="qstTempSaveVO">
 		<![CDATA[
 			SELECT
-				* 
+				a.BRD_ID, a.ITEM_NO, a.QUESTION_NO, a.QUESCONTENT, a.ANSWERTYPE, a.ANSWERVIEWTYPE, MULTISELECT, QUES_SN, ANSWERNO, ANSWERCONTENT
         	FROM
         		TBL_POLL_QUESTION a
 			JOIN
