@@ -450,4 +450,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public List<String> getSpecialContInfoFormName(Map<String, Object> map) {
 		return (List<String>) list("EzApprovalGAdminDAO.getSpecialContInfoFormName", map);
 	}
+
+	public void deleteSpecialContInfo(ApprGContInfoVO vo) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteSpecialContInfo", vo);
+	}
+
+	public void insertSpecialContInfo(ApprGContInfoVO vo) throws Exception {
+		insert("EzApprovalGAdminDAO.insertSpecialContInfo", vo);
+	}
 }

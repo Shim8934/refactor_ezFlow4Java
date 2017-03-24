@@ -106,7 +106,7 @@
 	                            _html += "<td style='width:15%;color:gray;'>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ZIPCODE")[0]) + "</td>";
 	                            _html += "<td style='width:75%;color:gray;text-align: left'>" + "<spring:message code='ezPersonal.t910' />" + " : <span>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "DORO")[0]) + "</span><br />";
 	                            _html += "<span>" + "<spring:message code='ezPersonal.t5002' />" + " : " + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "JIBUN")[0]) + "</span></td>";
-	                            _html += "<td style='width:10%;color:gray;'><a class='imgbtn' onClick='choice_address(this)'><span>" + "<spring:message code='ezPersonal.t00006' />" + "</span></a></td>";
+	                            _html += "<td style='width:10%;color:gray;text-align:center'><a class='imgbtn' onClick='choice_address(this)'><span>" + "<spring:message code='ezPersonal.t00006' />" + "</span></a></td>";
 	                            _html += "</tr>";
 	                        }
 	                        _html += "</table>";
@@ -351,8 +351,8 @@
 	            <table class="mainlist" style="width: 100%;">
 	                <tr>
 	                    <th style="width: 15%;text-align:center"><span><spring:message code='ezPersonal.t181' /></span></th>
-	                    <th style="width: 70%;text-align:center"><span><spring:message code='ezPersonal.t76' /></span></th>
-	                    <th style="width: 15%;text-align:center"><span><spring:message code='ezPersonal.t00006' /></span></th>
+	                    <th style="width: 75%;text-align:center"><span><spring:message code='ezPersonal.t76' /></span></th>
+	                    <th style="width: 10%;text-align:center"><span><spring:message code='ezPersonal.t00006' /></span></th>
 	                </tr>
 	            </table>
 	            <div id="contentlist" style="height: 413px; overflow-y: auto;">

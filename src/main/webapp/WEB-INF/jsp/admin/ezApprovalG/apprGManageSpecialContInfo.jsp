@@ -280,21 +280,24 @@
 	            }
 	
 	            var rtnVal = SaveSpecialContInfo();
+	            
 	            if (rtnVal == "TRUE") {
-	                if(ReturnFunction != null)
+	                if(ReturnFunction != null) {
 	                    ReturnFunction("OK");
+	                }
+	                
 	                window.close();
 	            }
 	            else {
 	                OpenAlertUI("<spring:message code='ezApprovalG.t1296'/>");
 	            }
 	        }
-	
-	        var ezapralert_cross_dialogArgument = new Array();
+	        
+	        var ezapralert_cross_dialogArguments = new Array();
 	        function OpenAlertUI(pAlertContent) {
 	            var parameter = pAlertContent;
 	            var url = "/ezApprovalG/ezAprAlert.do";
-	            ezapralert_cross_dialogArgument[0] = parameter;
+	            ezapralert_cross_dialogArguments[0] = parameter;
 	            var result = GetOpenWindow(url, "ezAPRALERT_Cross", 330, 205, "NO");
 	        }
 	
@@ -317,11 +320,11 @@
 	            	}
 	            }
 	            
-	            var result = "";
+	            var resultVal = "";
 	            
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "text",
+		    		dataType : "json",
 		    		async : false,
 		    		url : "/admin/ezApprovalG/specialContAdd.do",
 		    		data : {
@@ -333,12 +336,15 @@
 		    			formIDs  : formIDs,
 		    			companyID  : pCompanyID
 		    		},
-		    		success: function(text){
-			            result = text;
+		    		success : function(result){
+						resultVal = result.result;
+		    		},
+		    		error : function(jqXHR, textStatus, errorThrown) {
+		    			resultVal = "FALSE";
 		    		}
 		    	});
 		    	
-	            return getNodeText(GetChildNodes(loadXMLString(result))[0]);
+	            return resultVal;
 	        }
 	
 	        function btnClose_onclick() {
