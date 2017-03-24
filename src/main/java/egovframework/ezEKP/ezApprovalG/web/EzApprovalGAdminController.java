@@ -2343,7 +2343,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping("/admin/ezApprovalG/statistics.do")
 	public String ezStatistics(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("statistics started.");
+		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -2353,7 +2356,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
+			OrganDeptVO vo = list.get(i);
 			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || (userInfo.getRollInfo().indexOf("k=1") > -1 && vo.getCn().equals(userInfo.getCompanyID()))) {
 				resultList.add(vo);
@@ -2377,6 +2380,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("tempPMonth", tempPMonth);
 		model.addAttribute("tempYear", tempYear);
 		model.addAttribute("tempMonth", tempMonth);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("statistics ended.");
 		
 		return "admin/ezApprovalG/apprGStatistics";
 	}
@@ -2387,7 +2393,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getDeptTranSendDocCount.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getDeptTranSendDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getDeptTranSendDocCount started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		String sYear = request.getParameter("sYear");
 		String sMonth = request.getParameter("sMonth");
 		String eYear = request.getParameter("eYear");
@@ -2395,7 +2405,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String pMode = request.getParameter("pMode");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, pMode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId(), approvalFlag);
+		
+		logger.debug("getDeptTranSendDocCount ended.");
 		
 		return result;
 	}
@@ -2406,7 +2418,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@RequestMapping(value = "/admin/ezApprovalG/getUserDocCount.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String getUserDocCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getUserDocCount started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		String sYear = request.getParameter("sYear");
 		String sMonth = request.getParameter("sMonth");
 		String eYear = request.getParameter("eYear");
@@ -2414,7 +2430,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String userFlag = request.getParameter("userFlag");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, userFlag, companyID, userInfo);
+		String result = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, userFlag, companyID, userInfo, approvalFlag);
+		
+		logger.debug("getUserDocCount ended.");
 		
 		return result;
 	}
@@ -2424,7 +2442,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/ezStatistics/excelExportOut.do")
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("excelExportOut started.");
+		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
+		
 		StringBuilder resultExcel = new StringBuilder();
 		String excelValue = "";
 		String flag = request.getParameter("flag");
@@ -2436,9 +2458,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("p5");
 		
 		if (flag.equals("USER")) {
-			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo);
+			excelValue = ezApprovalGAdminService.getUserDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo, approvalFlag);
 		} else {
-			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId());
+			excelValue = ezApprovalGAdminService.getDeptTranSendDocCount(sYear, sMonth, eYear, eMonth, mode, companyID, userInfo.getLang(), userInfo.getOffset(), userInfo.getTenantId(), approvalFlag);
 		}
 		
 		Document objXML = commonUtil.convertStringToDocument(excelValue);
@@ -2480,6 +2502,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		response.setContentType("application/ms-excel");
 		response.setCharacterEncoding("utf-8");
 		response.setHeader("Content-Disposition", "attachment; filename=\"" + EgovDateUtil.getTodayTime().substring(0, 10) + "_excelExportOutUser" + ".xls\"");
+		
+		logger.debug("excelExportOut ended.");
 		
 		response.getWriter().write(resultExcel.toString());
 	}

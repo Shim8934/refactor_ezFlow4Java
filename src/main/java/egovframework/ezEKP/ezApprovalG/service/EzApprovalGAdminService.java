@@ -88,9 +88,9 @@ public interface EzApprovalGAdminService {
 
 	public String deleteDeptSealInfo(String pSealNum, String deptID, String companyID, int tenantID) throws Exception;
 	
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID) throws Exception;
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID, String approvalFlag) throws Exception;
 	
-	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception;
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo, String approvalFlag) throws Exception;
 
 	public String searchManageAprDocList(String docNumber, String docTitle,
 			String drafter, String drafter2, String draftFromYear,

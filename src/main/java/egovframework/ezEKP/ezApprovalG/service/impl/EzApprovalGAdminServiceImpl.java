@@ -22,7 +22,6 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
-import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -1804,7 +1803,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID) throws Exception {
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1889,11 +1888,16 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception {
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LISTTYPE", "107");
+		if (approvalFlag.equals("S")) {
+			map.put("v_LISTTYPE", "S104");
+		} else {
+			map.put("v_LISTTYPE", "107");
+		}
+		
 		map.put("v_LANGTYPE", userInfo.getLang());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", userInfo.getTenantId());
@@ -1909,7 +1913,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			sb.append("<HEADER>");
 			
-			if (vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
+			if (approvalFlag.equals("G") && vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
 				switch (userFlag) {
 				case "1":
 					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
@@ -1951,15 +1955,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			break;
 		}
 		
-		Calendar cal = Calendar.getInstance();
-		  
-		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
-		cal.set(Calendar.MONTH, Integer.parseInt(eMonth)-1);
-		
-		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
-		
 		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", userInfo.getOffset(), true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 00:00:00", userInfo.getOffset(), true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-01 00:00:00", userInfo.getOffset(), true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
