@@ -3817,9 +3817,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "";
 		
 		orgItemIDList = request.getParameter("orgItemIDList");
-		orgBoardID = request.getParameter("orgBoardID");
+		orgBoardID = request.getParameter("orgBoardID").replace(";", "");
 		destBoardID = request.getParameter("destBoardID");
-		
 		result = ezBoardService.copyItem(orgItemIDList, orgBoardID, destBoardID, uploadFilePath, realPath, userInfo);
 		
 		return "<RESULT>" + result + "</RESULT>";

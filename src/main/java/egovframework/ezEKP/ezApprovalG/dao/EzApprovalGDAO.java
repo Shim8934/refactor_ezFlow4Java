@@ -14,6 +14,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGCabCodeVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetRecVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGCabinetVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeptTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocAttachInfoVO;
@@ -39,6 +40,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzApprovalGDAO")
@@ -605,6 +607,81 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<ApprGRecordVO> selectUserName(Map<String, Object> map) throws Exception{
 		return (List<ApprGRecordVO>) list("EzApprovalG.selectUserName", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGReceiptVO> doResendEndDoc3(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc3", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGRecordVO> doSendDoc_ReceiptGroupSub(Map<String, Object> map) throws Exception{
+		return (List<ApprGRecordVO>) list("EzApprovalG.doSendDoc_ReceiptGroupSub", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> selectCabinetTransfer(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.selectCabinetTransfer", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
+		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getKeepType(Map<String, Object> map) throws Exception{
+		return (List<ApprGLeftVO>) list("EzApprovalG.getKeepType", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGTaskVO> getCodeContainer(Map<String, Object> map) throws Exception{
+		return (List<ApprGTaskVO>) list("EzApprovalG.getCodeContainer", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprUserContInfoVO> getUserContTree(Map<String, Object> map) throws Exception{
+		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGAprLineVO> docAttachLineInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGAprLineVO>) list("EzApprovalG.docAttachLineInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
+		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
+	}
+			
+	@SuppressWarnings("unchecked")
+	public List<ApprGLeftVO> getContainerInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGLeftVO>) list("EzApprovalG.getContainerInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getUserContList(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getUserContList", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getContDocListS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getContDocListS", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSearchDocListS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getSearchDocListS", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception {
+		return (List<ApprGContInfoVO>) list("EzApprovalG.getSpecialContTree", userInfo);
 	}
 	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
@@ -2384,77 +2461,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteUserContDoc", map);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
-		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGReceiptVO> doResendEndDoc3(Map<String, Object> map) throws Exception{
-		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc3", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGRecordVO> doSendDoc_ReceiptGroupSub(Map<String, Object> map) throws Exception{
-		return (List<ApprGRecordVO>) list("EzApprovalG.doSendDoc_ReceiptGroupSub", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGCabinetVO> selectCabinetTransfer(Map<String, Object> map) throws Exception{
-		return (List<ApprGCabinetVO>) list("EzApprovalG.selectCabinetTransfer", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGCabinetVO> selectTbSeperateAttach(Map<String, Object> map) throws Exception{
-		return (List<ApprGCabinetVO>) list("EzApprovalG.selectTbSeperateAttach", map);
-	}
 	
-	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getKeepType(Map<String, Object> map) throws Exception{
-		return (List<ApprGLeftVO>) list("EzApprovalG.getKeepType", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprGTaskVO> getCodeContainer(Map<String, Object> map) throws Exception{
-		return (List<ApprGTaskVO>) list("EzApprovalG.getCodeContainer", map);
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<ApprUserContInfoVO> getUserContTree(Map<String, Object> map) throws Exception{
-		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTree", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ApprGAprLineVO> docAttachLineInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGAprLineVO>) list("EzApprovalG.docAttachLineInfo", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ApprUserContInfoVO> getUserContTreeLeaf(Map<String, Object> map) throws Exception{
-		return (List<ApprUserContInfoVO>) list("EzApprovalG.getUserContTreeLeaf", map);
-	}
-			
-	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContainerInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGLeftVO>) list("EzApprovalG.getContainerInfo", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getUserContList(Map<String, Object> map) throws Exception {
-		return (List<ApprGDocListVO>) list("EzApprovalG.getUserContList", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getContDocListS(Map<String, Object> map) throws Exception {
-		return (List<ApprGDocListVO>) list("EzApprovalG.getContDocListS", map);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getSearchDocListS(Map<String, Object> map) throws Exception {
-		return (List<ApprGDocListVO>) list("EzApprovalG.getSearchDocListS", map);
-	}
 	
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
+
+
 }
