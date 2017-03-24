@@ -216,9 +216,11 @@
 				</td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns">
-    			<td  style="padding:10px;height:85px">&nbsp;<spring:message code="ezResource.t288"/>
+    			<td  style="padding:10px;height:85px">
+    				<span style="margin-left:4px"><spring:message code="ezResource.t288"/></span>
       				<label for="txt_We">
-      					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1"> <spring:message code="ezResource.t289"/>
+      					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px" value="1">
+      					<spring:message code="ezResource.t289"/>
       				</label>
       				<div>
       					<input type="checkbox" name="day" id="day0" value="0"> <spring:message code="ezResource.t290"/>

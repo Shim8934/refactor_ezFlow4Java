@@ -139,6 +139,8 @@
 				    //document.getElementById("Title4").value = QuickLinkName4;
 				
 				    checkValue = LinkType;
+				    LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
+				    
 				    var cnt = document.getElementsByName("linktypeOption").length;
 				    
 				    for (var i = 0; i < cnt; i++) {
