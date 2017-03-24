@@ -1188,6 +1188,47 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
+	 * 전자결재관리 문서함관리 특수문서함 삭제 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContDelete.do")
+	public String specialContDelete(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO vo, Model model) throws Exception {
+		logger.debug("specialContDelete started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.delSpecialCont(vo, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContDelete ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재관리 문서함관리 특수문서함 순서변경 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContChangeSN.do")
+	public String specialContChangeSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("specialContChangeSN started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String sContType = request.getParameter("contType");
+		String sSn = request.getParameter("sn");
+		String tContType = request.getParameter("contType2");
+		String tSn = request.getParameter("sn2");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGAdminService.changeSpecialContSN(deptID, sContType, sSn, tContType, tSn, companyID, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContChangeSN ended");
+		
+		return "json";
+	}
+	/**
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출함수
 	 * 전자결재관리 수신처 그룹지정 메뉴 호출함수
 	 */

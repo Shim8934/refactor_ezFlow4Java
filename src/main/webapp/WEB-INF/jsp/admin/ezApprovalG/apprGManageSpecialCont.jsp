@@ -38,11 +38,11 @@
 	            }
 	        }
 	
-	        var ezapralert_cross_dialogArgument = new Array();
+	        var ezapralert_cross_dialogArguments = new Array();
 	        function OpenAlertUI(pAlertContent) {
 	            var parameter = pAlertContent;
 	            var url = "/ezApprovalG/ezAprAlert.do";
-	            ezapralert_cross_dialogArgument[0] = parameter;
+	            ezapralert_cross_dialogArguments[0] = parameter;
 	            var result = GetOpenWindow(url, "ezAPRALERT_Cross", 330, 205, "NO");
 	        }
 	
@@ -132,29 +132,30 @@
 	            listview.LoadFromID("lvAprLineForm");
 	
 	            var selnode = listview.GetSelectedRows();
-	            var result = "";
+	            var resultVal = "";
 	            
 	            if (selnode) {
 			    	$.ajax({
 			    		type : "POST",
-			    		dataType : "text",
+			    		dataType : "json",
 			    		async : false,
-			    		url : "/admin/ezApproval/specialContDelete.do",
+			    		url : "/admin/ezApprovalG/specialContDelete.do",
 			    		data : {
 			    			deptID     : pDeptID,
 			    			sn         : GetAttribute(selnode[0], "DATA3"),
 			    			contType   : GetAttribute(selnode[0], "DATA2"),
 			    			companyID  : pCompanyID
 			    		},
-			    		success: function(text){
-			    			result = text;
+			    		success: function(result){
+			    			resultVal = result.result;
 			    		}
 			    	});
 	
-	                if (result.indexOf("TRUE") > -1)
+	                if (resultVal.indexOf("TRUE") > -1) {
 	                    getSpecialContList();
-	                else
+	                } else {
 	                    OpenAlertUI("<spring:message code='ezApprovalG.t280'/>");
+	                }
 	            }
 	            else {
 	                OpenAlertUI("<spring:message code='ezApproval.t653'/>");
@@ -238,13 +239,13 @@
 	        }
 	
 	        function ChangeSN(SContType, SSN, TContType, TSN) {
-	        	var result = "";
+	        	var resultVal = "";
 	        	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "text",
+		    		dataType : "json",
 		    		async : false,
-		    		url : "/admin/ezApproval/specialContChangeSN.do",
+		    		url : "/admin/ezApprovalG/specialContChangeSN.do",
 		    		data : {
 		    			deptID     : pDeptID,
 		    			sn         : SSN,
@@ -253,12 +254,12 @@
 		    			contType2  : TContType,
 		    			companyID  : pCompanyID
 		    		},
-		    		success: function(text){
-		    			result = text;
+		    		success: function(result){
+		    			resultVal = result.result;
 		    		}
 		    	});
 		    	
-	            return result;
+	            return resultVal;
 	        }
 	
 	    </script>
