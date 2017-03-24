@@ -176,10 +176,11 @@
                 document.getElementById("nodata").style.display = "";
                 document.getElementById("viewdata").style.display = "none";
                 return;
-            }
+            }else{
             document.getElementById("nodata").style.display = "none";
             document.getElementById("viewdata").style.display = "";
-
+            }
+            
             var _Table = document.createElement("TABLE");
             _Table.style.textAlign = "center";
             _Table.style.width = "100%";

@@ -33,6 +33,8 @@
 			var pTotalPage = "<c:out value='${pTotalPage}'/>";
 			var pCurrPage = "<c:out value='${pCurrPage}'/>";
 			var totalCount = "<c:out value='${pTotalCnt}'/>";
+			var loadAllFlag = false;
+			
 			window.onload = function () {
 			    makePageSelPage();
 			    tableXML();
@@ -82,6 +84,52 @@
 				
 				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
 				$('#xmlTable').html($('#xmlTable').html() + tableXml);
+			}
+			
+			function tableXMLAll(xmlString){
+				var xmlDoc = loadXMLString(xmlString);
+				var DataNode = SelectSingleNode(xmlDoc, "DATA");
+				var RowNode = SelectSingleNode(DataNode,"ROW");
+				var nodes = GetChildNodes(DataNode);
+				var tableXml="";
+				
+				for(i=0;nodes.length>i; i++){
+					tableXml += "<tr>";
+					tableXml += "<td style='width:40px;text-align:center'>";
+					tableXml += SelectSingleNodeValue(nodes[i], 'NO');
+					tableXml += "</td>";
+					if("${publicFlg}"==0){
+						tableXml += "<td style='width:140px'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERDEPTNAME');
+						tableXml += "</td>";
+						tableXml += "<td style='width:80px'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERPOSITION');
+						tableXml += "</td>";
+						tableXml += "<td style='width:90px'>";
+						tableXml += "<a style='cursor: pointer' onclick='Detail_UserInfo(\"";
+						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERID');
+						tableXml += "\")'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'RESPONSEUSERNAME');
+						tableXml += "</td>";
+						tableXml += "<td style='text-align:left'>";
+						tableXml += SelectSingleNodeValue(nodes[i], 'ANSWERSUBJECTIVITY');
+						tableXml += "</td>";
+						
+						
+					}
+					SelectSingleNodeValue(nodes[i], 'OPTION').replace("\r\n","<br>");
+					tableXml += "</tr>";
+					if("${pTotalCnt}" ==0){
+						tableXml += "<tr>";
+						tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
+						tableXml += "<spring:message code='ezQuestion.t413' />";
+						tableXml += "</td>";
+						tableXml += "</tr>";
+					}
+				}
+				
+				//document.getElementById("xmlTable").innerHTML = document.getElementById("xmlTable").innerHTML + tableXml;
+				$('#xmlTableAll').html($('#xmlTableAll').html() + tableXml);
 			}
 			
 			function fun_UserView(responseno) {
@@ -255,9 +303,42 @@
 			    document.location.href = "/ezQuestion/qstPollOpen.do?" + pReceve;
 			} */
 			
+			function menuQst_Total_load() {
+				if(loadAllFlag==false){
+				$.ajax({
+					type : "POST",
+					url : "/ezQuestion/qstResultSubjectiveAll.do",
+					data : {
+						"brdID" : szBrdID,
+						"itemNo" : szItemNo,
+						"questionNo" : szQuestionNo,
+					},
+					async: false,
+					success : function(result) {
+						tableXMLAll(result);
+					},
+					error : function(error) {
+						alert("<spring:message code='main.kms2'/>" + error);
+					}
+				});
+				}
+				loadAllFlag=true;
+				SaveCSVAll();
+			}
+			
 			function SaveCSV() {
 				if ($('#AnaylsisTable').html()) {
 					document.getElementById("AnalysisData").value = $('#AnaylsisTable').html();
+					form_analysissave.submit();
+				} else {
+					alert("<spring:message code='ezQuestion.t124' />");
+				}
+				
+		    }
+			
+			function SaveCSVAll() {
+				if ($('#AnaylsisTableAll').html()) {
+					document.getElementById("AnalysisData").value = $('#AnaylsisTableAll').html();
 					form_analysissave.submit();
 				} else {
 					alert("<spring:message code='ezQuestion.t124' />");
@@ -278,7 +359,7 @@
 	    <div id="mainmenu">
 	        <ul>
 	            <li><span onclick="menuQst_ResultView()"><spring:message code='ezQuestion.t303' /></span></li>
-	            <li><span onclick="menuQst_Total_view()"><spring:message code='ezQuestion.t405' /></span></li>
+	            <li><span onclick="menuQst_Total_load()"><spring:message code='ezQuestion.t405' /></span></li>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -298,6 +379,19 @@
 			</table>
 	    </div>
 	    <div id="tblPageRayer"></div>
+	    <div id="AnaylsisTableAll" style="display :none">
+			<table id="xmlTableAll" class="mainlist" style="width: 100%">
+				<tr>
+					<th style="width:40px"><spring:message code='ezQuestion.t344' /></th>
+					<c:if test="${publicFlg == 0 }">
+						<th style="width:140px"><spring:message code='ezQuestion.t408' /></th>
+						<th style="width:80px"><spring:message code='ezQuestion.t4' /></th>
+						<th style="width:130px"><spring:message code='ezQuestion.t8' /></th>
+					</c:if>
+					<th style="text-align:center"><spring:message code='ezQuestion.t410' /></th>
+				</tr>
+			</table>
+	    </div>
 		<form method="post" id="form_analysissave" name="form_analysissave" enctype="multipart/form-data" action="/ezQuestion/qstResultAnalysisSave.do" target="_self">
 		    <input type="hidden" name="AnalysisData" id="AnalysisData" />
 		    <input type="hidden" name="hidQst2" id="hidQst2" value="ALL" /><!-- 전체/문항 구분 -->
