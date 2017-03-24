@@ -2163,7 +2163,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 인쇄 호출 Method
 	 */
-	@RequestMapping(value = "ezApprovalG/ezApprovalPrint")
+	@RequestMapping(value = "/ezApprovalG/ezApprovalPrint.do")
 	public String ezApprovalPrint() throws Exception{
 		return "ezApprovalG/apprGezApprovalPrint";
 	}

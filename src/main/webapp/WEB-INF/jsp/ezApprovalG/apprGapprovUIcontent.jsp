@@ -50,6 +50,11 @@
 	            }
 	            catch (e)
 	            {}
+	            
+	            try {
+		        	$('#div_Content #body').css('overflow', 'auto');
+		        } catch (e)
+		        { }
 	        };
 	        
 	        function onKeyDownEvent(e, obj, Maxlength) {
