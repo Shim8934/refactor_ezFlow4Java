@@ -79,7 +79,7 @@
 			
 			<table class="content">
 				<tr>
-					<th><spring:message code='ezCommunity.t598' /></th>
+					<th><spring:message code='ezCommunity.t599' /></th>
 					<td><textarea id="pollSubject" name="pollSubject" style="width: 98.5%;height:130px">${subject }</textarea></td>
 				</tr>
 				<tr>

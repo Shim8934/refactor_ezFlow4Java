@@ -413,11 +413,11 @@
 	                        <option value="3"><spring:message code='ezCommunity.t603' />
 	                    </select>
 	                    <select id="selRes1" name="selRes1" onchange="return selRes1_onchange()" style="font-size: 13px;vertical-align: middle;text-align: center;height: 18px;cursor: pointer;">
-	                    	<option value="0">[<spring:message code='ezCommunity.t604' />
-	                        <option value="1">[<spring:message code='ezCommunity.t605' />
-	                        <option value="2">[<spring:message code='ezCommunity.t606' />
-	                        <option value="3">[<spring:message code='ezCommunity.t607' />
-							<option value="11">Yes/No
+	                    	<option value="0"><spring:message code='ezCommunity.t604' />
+	                        <option value="1"><spring:message code='ezCommunity.t605' />
+	                        <option value="2"><spring:message code='ezCommunity.t606' />
+	                        <option value="3"><spring:message code='ezCommunity.t607' />
+							<option value="11">Yes / No
 	          				<option value="12"><spring:message code='ezCommunity.t608' />
 	              			<option value="13"><spring:message code='ezCommunity.t609' />
 	                  		<option value="14"><spring:message code='ezCommunity.t610' />
