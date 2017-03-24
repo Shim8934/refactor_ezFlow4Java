@@ -34,6 +34,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -820,7 +821,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String apprMCont(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("apprGMCont started.");
 		
-		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		//관리자 권한 체크
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -843,6 +845,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("companyID", userInfo.getCompanyID());
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("apprGMCont ended.");
 		
@@ -1091,7 +1094,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재일반관리 문서함관리 특수문서함 호출
+	 * 전자결재관리 문서함관리 특수문서함 호출
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do")
 	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -1114,28 +1117,79 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재 일반 관리자 문서함관리 특수문서함 표출
+	 * 전자결재관리 문서함관리 특수문서함 목록 호출
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do")
-	@ResponseBody
-	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		logger.debug("specialContListInfo started");
+	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("specialContListInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		String deptID = request.getParameter("deptID");
 		String companyID = request.getParameter("companyID");
-		String result = ezApprovalGAdminService.getSpecialContList(deptID, companyID, userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
+		String resultXML = ezApprovalGAdminService.getSpecialContList(deptID, companyID, userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
-		logger.debug("specialContListInfo ended");
+		model.addAttribute("resultXML", resultXML);
+		
+		logger.debug("specialContListInfo ended. resultXML = " + resultXML);
 	
-		return result;
+		return "json";
 	}
 	
 	/**
-	 * 전자결재G관리 수신처 그룹지정 메뉴 호출 함수
-	 * 전자결재관리 수신처 그룹지정 메뉴 호출 함수
+	 * 전자결재관리 문서함관리 특수문서함 추가,수정화면 호출
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialContInfo.do")
+	public String manageSpecialContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("manageSpecialContInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String contType = request.getParameter("contType");
+		String sn = request.getParameter("sn");
+		String companyID = request.getParameter("companyID");
+		
+		String codeXML = ezApprovalGAdminService.getSpecialContCode(contType, companyID, userInfo.getPrimary(), userInfo.getTenantId());
+		String infoXML = ezApprovalGAdminService.getSpecialContInfo(deptID, contType, sn, companyID, userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("codeXML = " + codeXML);
+		logger.debug("infoXML = " + infoXML);
+		
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("contType", contType);
+		model.addAttribute("sn", sn);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("codeXML", codeXML);
+		model.addAttribute("infoXML", infoXML);
+		
+		logger.debug("manageSpecialContInfo ended.");
+		
+		return "admin/ezApprovalG/apprGManageSpecialContInfo";
+	}
+	
+	/**
+	 * 전자결재관리 문서함관리 특수문서함 추가/수정 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContAdd.do")
+	public String specialContAdd(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO apprGContInfoVO, Model model) throws Exception {
+		logger.debug("specialContAdd started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.addSpecialCont(apprGContInfoVO, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContAdd ended. result = " + result);
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재G관리 수신처 그룹지정 메뉴 호출함수
+	 * 전자결재관리 수신처 그룹지정 메뉴 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/apprGReceiveGroup.do")	
 	public String apprGReceiveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -2608,10 +2662,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String orderOption = request.getParameter("orderOption");
         String approvUser = request.getParameter("approvUser");
         String companyID = request.getParameter("companyID");
-
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        
         String result = ezApprovalGService.getSearchDocList("ADMIN", "", subQuery, docNumber, docTitle, drafter, formID, draftFromYear, draftFromMonth, draftFromDay, 
 				draftToYear, draftToMonth, draftToDay, apprFromYear, apprFromMonth, apprFromDay, apprToYear, apprToMonth, apprToDay, "", "", "", "", "", "",
-				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset());
+				draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, companyID, userInfo.getLang(), approvUser, userInfo.getTenantId(), userInfo.getOffset(), approvalFlag);
         
         logger.debug("result = " + result);
         logger.debug("getStatSearchDocList ended.");

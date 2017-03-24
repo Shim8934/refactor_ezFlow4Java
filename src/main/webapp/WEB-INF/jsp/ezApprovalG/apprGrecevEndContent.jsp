@@ -20,6 +20,7 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                $('#div_Content #body').css('overflow', 'auto');
 	            } catch (e)
 	            { }
 	        };

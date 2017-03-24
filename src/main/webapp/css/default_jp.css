@@ -1,14 +1,14 @@
 ﻿
 input, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .popuplist td, .txt, .imgbtn{
 	font-size:12px;
-	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
 }
 
 p, strong, h3 {
-	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 }
 
 input {
@@ -16,14 +16,14 @@ input {
     -moz-box-sizing:border-box;
 }
 a{	
-	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	color: #393939;
 	text-decoration: none;
 	ime-mode:active;
 }
 span {
 	font-size:12px;
-	font-family:Meiryo UI , Dotum, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	text-decoration: none;}
 	
 ul, li, h1, h2, h3, h4, h5, h6, body {margin:0}
@@ -44,7 +44,7 @@ table, th, td {
 	empty-cells: show;
 	padding:0;margin:0;
 	font-size:12px;
-	font-family:Meiryo UI , Dotum, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 }
 th{
 	white-space: nowrap;
@@ -84,7 +84,7 @@ form{display:inline;margin:0}
 	height:20px;
 	padding-right:12px;	
 	font-size:12px ;
-	font-family:Meiryo UI, 'ＭＳ Ｐゴシック', Arial, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	letter-spacing:-1;
 	vertical-align:top;
 	line-height:20px;
@@ -703,7 +703,7 @@ form{display:inline;margin:0}
 .left_admin{
     font-size:16px;
 	font-weight:bold;
-	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;
+	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;
 	color:#4e5973;
 	text-align:left;
 	padding-top:12px;
@@ -899,7 +899,7 @@ form{display:inline;margin:0}
 .pl10{padding-left:10px;}
 
 
-.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;} 
+.tstyle1 {border:1px  solid #b6b6b6; width:100%; font-size:12px; font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;} 
 .tstyle1 th {
 	padding:5px;
 	border-left: 0px;
@@ -963,7 +963,7 @@ form{display:inline;margin:0}
 .tstyle2 td table td {border-bottom:0px solid #ffffff; border-right:0px solid #ffffff;padding:1px;}
 
 
-.tstyle3 {table-layout:fixed;border:1px solid #b6b6b6;font-size:12px; 	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;} 
+.tstyle3 {table-layout:fixed;border:1px solid #b6b6b6;font-size:12px; 	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;} 
 .tstyle3 th {
 	padding: 5px;
 	border-left: 0px;
@@ -1050,21 +1050,21 @@ form{display:inline;margin:0}
 	border:1px solid #dddddd;
 }
 
-.mainlist{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif; font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist tr th.title{width:100%; text-align:left;}
 .mainlist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #ebebed; border-spacing:0; word-wrap:break-word;}
 .mainlist tr td img{vertical-align:middle;}
 .mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
-.mainlist_free{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist_free{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 .mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-.mainlist_depth{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI ,Gulim, Arial, Helvetica, sans-serif; font-size:12px;}
+.mainlist_depth{table-layout:fixed; border:0 none !important;	font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif; font-size:12px;}
 .mainlist_depth tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist_depth tr th.title{width:100%; text-align:left;}
 .mainlist_depth tr th.left {border-left:1px solid #b6b6b6;}
@@ -1374,7 +1374,7 @@ form{display:inline;margin:0}
 .organwrap_list  td {border:0px !important; padding:0px; }
 .organwrap_list  .organinfo .name { height:18px; padding-top:5px!important;}
 
-.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Meiryo UI , Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; line-height:19px; padding:4px 4px 0px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
@@ -1396,9 +1396,9 @@ form{display:inline;margin:0}
 .popup_notice .popup_noticeLayout .popup_noticeList{padding:27px;}
 .popup_notice .popup_noticeLayout .noticeListBox{margin:0; padding:0; overflow:auto;}
 .popup_notice .popup_noticeLayout .noticeListBox dt{float:left;}
-.popup_notice .popup_noticeLayout .noticeListBox dd{float:none; margin:0; padding:0; font-size:12px; line-height:180%;font-family:Meiryo UI;}
+.popup_notice .popup_noticeLayout .noticeListBox dd{float:none; margin:0; padding:0; font-size:12px; line-height:180%;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;}
 .popup_notice .popup_noticeLayout .notice_btn{position:relative; height:49px;}
-.popup_notice .popup_noticeLayout .notice_btn p{padding:0; margin:0; color:#555; font-size:12px;font-family:Meiryo UI;}
+.popup_notice .popup_noticeLayout .notice_btn p{padding:0; margin:0; color:#555; font-size:12px;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{display:inline-block; padding:18px 0px 0px 19px;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; padding:0; margin:0; vertical-align:middle; overflow:hidden;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_style01{
@@ -1536,7 +1536,7 @@ form{display:inline;margin:0}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBL{position:absolute; left:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BL.gif) no-repeat;}
 .contents_todayCommunity .bg_todayCommunity .bg_todayCommunityBR{position:absolute; right:0px; bottom:0px; width:5px; height:5px; background:url(../images/kr/community/bg_todayCommunity_BR.gif) no-repeat; z-index:1;}
 .contents_todayCommunity .todayCommunity_img{float:left; width:198px; height:140px; border:1px solid #b2aeaf; margin:0px 19px 0px 0px; padding:0; overflow:hidden;}
-.contents_todayCommunity .todayCommunity_list{float:none; font-family:Meiryo UI , Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.contents_todayCommunity .todayCommunity_list{float:none; font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dt{font-size:13px; font-weight:bold; color:#333; margin:0; padding:0; line-height:2; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_todayCommunity .todayCommunity_list dd{font-size:12px; color:#555; margin:0; padding:0; line-height:2;}
 .contents_todayCommunity .todayCommunity_list dd span{font-size:11px;}
@@ -1614,7 +1614,7 @@ form{display:inline;margin:0}
 .right_tabpartList dd{float:none; line-height:20px; color:#666; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .right_tabpartList dd strong{color:#333;}
 
-.right_tabpartList01{font-family:Meiryo UI , Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
+.right_tabpartList01{font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif; margin:0; padding:0; overflow:hidden;}
 .right_tabpartList01 dt{float:right; font-size:12px; color:#555; margin:0; padding:0; line-height:2;}
 .right_tabpartList01 dt .icon_community01{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community01.png) no-repeat left 3px; font-weight:bold;}
 .right_tabpartList01 dt .icon_community02{display:inline-block; padding:0px 0px 0px 24px; background:url(../images/kr/community/icon_Community02.png) no-repeat left 3px; font-weight:bold;}
@@ -1631,7 +1631,7 @@ form{display:inline;margin:0}
 .receiver_tltype02 span {background:url(../images/kr/cm/tltype02_bgr.gif) no-repeat right; font-size:12px; font-weight:bold; color:#fff; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border-left:1px solid #bdbdbd; border-right:1px solid #bdbdbd; border-bottom:1px solid #bdbdbd; }
 
-.receiver_list{border:0 none !important;font-family:Meiryo UI , Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.receiver_list{border:0 none !important;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:8px 4px; border-top:1px solid #b6b6b6;border-bottom:1px solid #b6b6b6; background:url(../images/sub/th_bg1.gif) #fff repeat-x bottom;}
 .receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #ebebed; border-spacing:0;}
 
@@ -1666,7 +1666,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939;}
 .address_onboxlist .point_txt { color:#0168c7;}
-.sublist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI , Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.sublist{table-layout:fixed; border:0 none !important;font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#666666; font-size:11px; padding:3px 4px 4px; border-bottom:1px solid #b6b6b6; background:url(../images/kr/progress/th_bg3.gif) #fff repeat-x bottom;}
 .sublist tr th.title{width:100%; text-align:left;}
@@ -1692,7 +1692,7 @@ height:24px; margin:0px 0px 8px 0px; padding:0px 5px; color:#ffffff; line-height
 .select_themebox .on dt { border:1px solid #ffffff;}
 .onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_jp.png) no-repeat; }
 
-.themelist_box { table-layout:fixed; font-family:Meiryo UI , Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
+.themelist_box { table-layout:fixed; font-family:Meiryo UI, Gulim, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
 .themelist_box th { text-align:left; border:1px solid #dddada; background:#fafafa;padding:15px 10px; margin:0px ; font-size:12px;}
 .themelist_box td {border:0px solid #dddada !important; border-bottom:1px solid #dddada !important; padding:10px; vertical-align:middle; text-align:center;}
 

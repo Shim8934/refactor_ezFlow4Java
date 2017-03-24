@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -130,8 +131,6 @@ public interface EzApprovalGAdminService {
 	
 	public String moveDocList(String xmlPara, String companyID, int tenantID) throws Exception;
 
-	public String getCodeType(String lang, int tenantId, String companyID) throws Exception;
-
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception;
 	
 	public String getSecurityType(String selected, LoginVO userInfo, String companyID, String approvalFlag) throws Exception;
@@ -145,4 +144,10 @@ public interface EzApprovalGAdminService {
 	public String getFormAprRuleLine(String formID, String companyID, int tenantID) throws Exception;
 
 	public String getSpecialContList(String deptID, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+
+	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception;
+	
+	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception;
+
+	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
 }

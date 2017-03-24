@@ -46,9 +46,15 @@
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
+	                $('#div_Content #body').css('overflow', 'visible');
 	            }
 	            catch (e)
 	            { }
+	            
+	            try {
+		        	$('#div_Content #body').css('overflow', 'auto');
+		        } catch (e)
+		        { }
 	        };
 	
 	        function onKeyDownEvent(e, obj, Maxlength) {
