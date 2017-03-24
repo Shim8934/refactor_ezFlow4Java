@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezQuestion.web;
 
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
@@ -51,6 +52,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -527,7 +529,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 		List<QstVO> questionList = ezQuestionService.getQuestionForResponse(qstVO, userInfo.getTenantId());
 
 		String strResult = "<SUBDATA>";
-		Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder =	factory.newDocumentBuilder();
+		Document doc = builder.newDocument();
+		
 		Node data = doc.createElement("DATA");
 		doc.appendChild(data);
 
@@ -1352,7 +1357,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-System.out.println("qstCnt="+qstCnt);
+
 		for(int i=0; i<qstCnt; i++) {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			
@@ -1381,10 +1386,9 @@ System.out.println("qstCnt="+qstCnt);
 			qstCompleteVO.setMultiSelect(multiSelect);
 			
 			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-			
-System.out.println("여기1");
+
 			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
-System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());			
+			
 			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
 				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
 					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
@@ -3641,23 +3645,22 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 		
 		strQuestion = objXML.getChildNodes().item(0).getTextContent().trim();
 		arrQuestion = strQuestion.trim().split("\\;\\;");
-		logger.debug("strQuestion="+strQuestion);
-		logger.debug("arrQuestion="+arrQuestion);
+		
 		String[] arrLine;
 		String strResult = "";
 		
 		List<QstTempSaveVO> qstTempSaveVO = ezQuestionService.tempSave(5, itemNo, loginVO.getTenantId());
 		
-		StringBuilder sb = new StringBuilder();
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder =	factory.newDocumentBuilder();
+		Document resultXML = builder.newDocument();
 		
-		//Document resultXML = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-		//Node rNodes = resultXML.createElement("DATA");
-		sb.append("<DATA>");
-		//Node node = resultXML.createElement("QUESTION");
-		sb.append("<QUESTION>");
-		sb.append("</QUESTION>");
-		//Node nodeData;
-		//rNodes.appendChild(node);
+		Node rNodes = resultXML.createElement("DATA");
+		resultXML.appendChild(rNodes);
+		
+		Node node = resultXML.createElement("QUESTION");
+		Node nodeData;
+		rNodes.appendChild(node);
 		
 		logger.debug("arrQuestionLength="+arrQuestion.length);
 		if(arrQuestion.length > 0) {
@@ -3668,46 +3671,33 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 					break;
 				}
 				strQstNo = arrLine[0];
-				logger.debug("strQstNo="+strQstNo);
-				logger.debug("lastItemNo="+lastItemNo);
 				
 				if(!strQstNo.trim().equals(lastItemNo.trim())) {
 					strResult = strResult.replace("| "+arrLine[1], "");
 					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
 					
-					//node = resultXML.createElement("ROW");
-					sb.append("<ROW>");
-					//rNodes.appendChild(node);
+					node = resultXML.createElement("ROW");
+					rNodes.appendChild(node);
 					
-					//nodeData = resultXML.createElement("CONTENT");
-					sb.append("<QUESTIONCONTENT>");
-					sb.append(arrLine[1]);
-					//node.appendChild(resultXML.createTextNode(arrLine[1]));
-					sb.append("</QUESTIONCONTENT>");
+					nodeData = resultXML.createElement("QUESTIONCONTENT");
+					nodeData.setTextContent(arrLine[1]);
+					node.appendChild(nodeData);
 					
-					//nodeData = resultXML.createElement("ANSWERTYPE");
-					sb.append("<ANSWERTYPE>");
-					sb.append(arrLine[2]);
-					sb.append("</ANSWERTYPE>");
-					//node.appendChild(resultXML.createTextNode(arrLine[2]));
+					nodeData = resultXML.createElement("ANSWERTYPE");
+					nodeData.setTextContent(arrLine[2]);
+					node.appendChild(nodeData);
 					
-					//nodeData = resultXML.createElement("MULTISELECT");
-					sb.append("<MULTISELECT>");
-					sb.append(arrLine[4]);
-					sb.append("</MULTISELECT>");
-					//node.appendChild(resultXML.createTextNode(arrLine[4]));
+					nodeData = resultXML.createElement("MULTISELECT");
+					nodeData.setTextContent(arrLine[4]);
+					node.appendChild(nodeData);
 					
-					//nodeData = resultXML.createElement("SELVIEWSTART");
-					sb.append("<SELVIEWSTART>");
-					sb.append(0);
-					sb.append("</SELVIEWSTART>");
-					//node.appendChild(resultXML.createTextNode("0"));
+					nodeData = resultXML.createElement("SELVIEWSTART");
+					nodeData.setTextContent("0");
+					node.appendChild(nodeData);
 					
-					//nodeData = resultXML.createElement("SELVIEWEND");
-					sb.append("<SELVIEWEND>");
-					sb.append(0);
-					sb.append("</SELVIEWEND>");
-					//node.appendChild(resultXML.createTextNode("0"));
+					nodeData = resultXML.createElement("SELVIEWEND");
+					nodeData.setTextContent("0");
+					node.appendChild(nodeData);
 					
 					QstAttachVO qstAttachVO = new QstAttachVO();
 					qstAttachVO.setBrdID(5);
@@ -3726,37 +3716,24 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 					}
 					
 					if(xmlTemp.getElementsByTagName("ATTACHNO").getLength() > 0) {
-						//nodeData = resultXML.createElement("ATTACH");
-						sb.append("<ATTACH>");
-						//node.appendChild(nodeData);
+						nodeData = resultXML.createElement("ATTACH");
+						node.appendChild(nodeData);
 						for(int j = 0; j < xmlTemp.getElementsByTagName("ATTACHNO").getLength(); j++) {
-							//Node nodeData2 = resultXML.createElement("ROW");
-							sb.append("<ROW>");
-							//nodeData.appendChild(nodeData2);
-							//Node nodeData3 = resultXML.createElement("TYPE");
-							sb.append("<TYPE>");
-							sb.append(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent());
-							sb.append("</TYPE>");
-							//nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent())));
-							//nodeData2.appendChild(nodeData3);
+							Node nodeData2 = resultXML.createElement("ROW");
+							nodeData.appendChild(nodeData2);
+							Node nodeData3 = resultXML.createElement("TYPE");
 							
-							//nodeData3 = resultXML.createElement("TITLE");
-							//nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent())));
-							//nodeData2.appendChild(nodeData3);
-							sb.append("<ATTACHTITLE>");
-							sb.append(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent());
-							sb.append("</ATTACHTITLE>");
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent());
+							nodeData2.appendChild(nodeData3);
 							
-							//nodeData3 = resultXML.createElement("HREF");
-							//nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent())));
-							//nodeData2.appendChild(nodeData3);
-							sb.append("<HREF>");
-							sb.append(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent());
-							sb.append("</HREF>");
+							nodeData3 = resultXML.createElement("ATTACHTITLE");
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent());
+							nodeData2.appendChild(nodeData3);
 							
-							sb.append("</ROW>");
+							nodeData3 = resultXML.createElement("HREF");
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent());
+							nodeData2.appendChild(nodeData3);
 						}
-						sb.append("</ATTACH>");
 					}
 					
 					if(arrLine[2].equals("5")) {
@@ -3765,17 +3742,12 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 						xmlTemp = commonUtil.convertStringToDocument(tableAnswerValue);
 						
 						for(int j = 0; j < xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").getLength(); j++) {
-							//Node nodeData2 = resultXML.createElement("ANSWER_ANSWER");
-							sb.append("<ANSWER_ANSWER>");
-							sb.append("</ANSWER_ANSWER");
-							//node.appendChild(nodeData2);
+							Node nodeData2 = resultXML.createElement("ANSWER_ANSWER");
+							node.appendChild(nodeData2);
 							
-							//Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
-							//nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
-							//nodeData2.appendChild(nodeTitle2);
-							sb.append("<ANSWER_TITLE>");
-							sb.append(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent());
-							sb.append("</ANSWER_TITLE");
+							Node nodeTitle2 = resultXML.createElement("ANSWER_TITLE");
+							nodeTitle2.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ANSWER_ANSWERCONTENT").item(j).getTextContent())));
+							nodeData2.appendChild(nodeTitle2);
 						}
 					}
 					
@@ -3792,13 +3764,6 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
 					
 					ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-					
-					sb.append("<ANSWER>");
-					sb.append("<ANSWERTITLE>");
-					sb.append(arrLine[8]);
-					sb.append("</ANSWERTITLE>");
-					sb.append("</ANSWER>");
-					sb.append("</ROW>");
 				}
 				
 				QstCompleteVO qstCompleteVO = new QstCompleteVO();
@@ -3813,26 +3778,19 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 				
 				ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 				
-				//nodeData = resultXML.createElement("ANSWER");
-				//node.appendChild(nodeData);
+				nodeData = resultXML.createElement("ANSWER");
+				node.appendChild(nodeData);
 				
-				//Node nodeTitle = resultXML.createElement("TITLE");
-				//nodeTitle.setTextContent(arrLine[8]);
-				//nodeData.appendChild(nodeTitle);
+				Node nodeTitle = resultXML.createElement("ANSWERTITLE");
+				nodeTitle.setTextContent(arrLine[8]);
+				nodeData.appendChild(nodeTitle);
 				
 				lastItemNo = strQstNo;
 			}
 		}
+		rNodes.getFirstChild().setTextContent(strResult);
 		
-		sb.append("</DATA>");
-		logger.debug("sb="+sb.toString());
-		logger.debug("strResult="+strResult);
-		//rNodes.getFirstChild().setTextContent(strResult);
-		
-		Document temp = commonUtil.convertStringToDocument(sb.toString());
-		temp.getElementsByTagName("QUESTION").item(0).setTextContent(strResult);
-		//String returnXML = commonUtil.convertDocumentToString(resultXML);
-		String returnXML = commonUtil.convertDocumentToString(temp);
+		String returnXML = commonUtil.convertDocumentToString(resultXML);
 		logger.debug("returnXML="+returnXML);
 		
 		logger.debug("callTempLoad ended");
