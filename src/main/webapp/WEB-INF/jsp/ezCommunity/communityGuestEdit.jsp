@@ -28,20 +28,20 @@
 					return;
 				}
 				
-// 				$.ajax({
-// 		        	type : "POST",
-// 		        	url : "/ezCommunity/guestEditOk.do",
-// 		        	async : false,
-// 		        	data : {c_no : $("#c_no").val(),
-// 		        			name : $("#name").val(),
-// 		        			code : $("#code").val(),
-// 		        			mode : $("#mode").val(),
-// 		        			memo : encodeURIComponent($("#memo").val())
-// 		        			},
-// 		        	success : function(result) {
-// 		        		goPage(1);
-// 	        		}
-// 		        });
+				$.ajax({
+		        	type : "POST",
+		        	url : "/ezCommunity/guestEditOk.do",
+		        	async : false,
+		        	data : {c_no : $("#c_no").val(),
+		        			name : $("#name").val(),
+		        			code : $("#code").val(),
+		        			mode : $("#mode").val(),
+		        			memo : encodeURIComponent($("#memo").val())
+		        			},
+		        	success : function(result) {
+		        		goPage(1);
+	        		}
+		        });
 			}
 			
 			function goPage(idx) {
