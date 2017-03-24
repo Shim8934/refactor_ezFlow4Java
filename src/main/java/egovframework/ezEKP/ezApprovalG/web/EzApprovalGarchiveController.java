@@ -141,7 +141,8 @@ public class EzApprovalGarchiveController {
 		String g_RecID = request.getParameter("g_RecID");
 		String g_SepAttNo = request.getParameter("g_SepAttNo");
 		String nonActiveX = "YES";
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -149,7 +150,7 @@ public class EzApprovalGarchiveController {
 		}
 		
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
-		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		
 		if (pass.equals("<RESULT>TRUE</RESULT>")) {
 			String readRecXML = "<PARAMETER><DOCID>" + commonUtil.cleanValue(docID) +
