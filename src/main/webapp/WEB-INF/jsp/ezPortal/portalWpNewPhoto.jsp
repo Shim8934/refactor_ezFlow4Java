@@ -141,9 +141,8 @@
 	        		var nodata = "";
 	            	nodata += "<li class='btn_area'><img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\"></li>"
 	            	nodata += "<div class='nodata_portlet '>";
-	            	nodata += "<ul id='photoul'>"
 	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
-	            	nodata += "<p>" + strLang1_NewPhoto + "</p></ul></div>";
+	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
 	            	nodata += "<li class='btn_next'><img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\"></li>"
 
 	            	$('#photoul').html(nodata);
