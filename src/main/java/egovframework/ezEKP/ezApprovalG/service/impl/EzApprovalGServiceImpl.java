@@ -2006,11 +2006,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getAprType(String companyID, String lang, int tenantID) throws Exception {
+	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception {
 		StringBuilder rtnXML = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LANGTYPE", lang);
+		map.put("lang", lang);
 		map.put("companyID", companyID);
+		map.put("approvalFlag", approvalFlag);
 		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGLeftVO> apprGLeftVOlist = ezApprovalGDAO.getAprType(map); 
@@ -2432,6 +2433,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String getLineTempletDetailInfo(String formID, String userID, String aprSN, String companyID, String lang, int tenantID) throws Exception {
 		StringBuffer resultXML = new StringBuffer();
 		String listString = "";
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		
 		listString = getListHeader("100", companyID, lang, tenantID);
 		
@@ -2495,7 +2497,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("MEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA11>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, lang, tenantID)) + "</VALUE>");
+			
+			if (approvalFlag.equals("G")) {
+				resultXML.append("<VALUE>" + makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, lang, tenantID)) + "</VALUE>");
+			} else {
+				resultXML.append("<VALUE>" + makeListField(getCode2Name("SA03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, lang, tenantID)) + "</VALUE>");
+			}
 			
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
@@ -2716,6 +2723,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 	@Override
 	public String updateLineTempletDetailInfo(Document xmlDom, String companyID, String lang, int tenantID) throws Exception {
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
 		String rtnVal = "<RESULT>TRUE</RESULT>";
 		
 		NodeList docNode = xmlDom.getElementsByTagName("APRTEMP");
@@ -2752,7 +2760,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			for (i = 0; i < rowNode.getLength(); i++) {
 				map.put("v_AprMemberSN", rowNode.item(i).getChildNodes().item(0).getTextContent());
-				map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+				
+				if (approvalFlag.equals("G")) {
+					map.put("v_AprType", getName2Code("A03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+				} else {
+					map.put("v_AprType", getName2Code("SA03", rowNode.item(i).getChildNodes().item(4).getTextContent(), companyID, lang, tenantID).trim());
+				}
 				map.put("v_AprState", getName2Code("A04", rowNode.item(i).getChildNodes().item(5).getTextContent(), companyID, lang, tenantID).trim());
 				map.put("v_AprMemberID", rowNode.item(i).getChildNodes().item(9).getTextContent().trim());
 				map.put("v_AprMemberIsDeptYN", rowNode.item(i).getChildNodes().item(10).getTextContent().trim());
@@ -12410,7 +12423,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                            map.put("v_ReceivedDeptName", receiptPointName);
 	                            map.put("v_ReceivedDeptName2", receiptPointName2);
 	                            map.put("v_DocState", docState);
-	                            map.put("v_AprState", staASDoJak);
+	                            //S 버젼 수신처 변경
+	                            if (ezCommonService.getTenantConfig("ApprovalFlag", tenantID).equals("S")) {
+	                            	if (receiptMemberID != null && !receiptMemberID.equals("")) {
+	                            		map.put("v_AprState", staASJiJung);
+	                            	} else {
+	                            		map.put("v_AprState", staASDoJak);
+	                            	}
+	                            } else {
+	                            	map.put("v_AprState", staASDoJak);
+	                            }
 	                            map.put("v_ProcessorID", receiptMemberID);
 	                            map.put("v_ProcessorName", receiptMemberName);
 	                            map.put("v_ProcessorName2", receiptMemberName2);
@@ -15597,7 +15619,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				break;
 
 			case "APRTYPE" :
-                rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
+				String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+				
+				if (approvalFlag.equals("G")) {
+					rtnVal = getCode2Name("A03", fieldValue, companyID, userLang, tenantID);
+				} else {
+					rtnVal = getCode2Name("SA03", fieldValue, companyID, userLang, tenantID);
+				}
                 
 				break;
 
@@ -18845,6 +18873,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             	map.put("v_ReceivedDeptID", strReceiptPointID);
                             	map.put("v_strReceiptPointName", strReceiptPointName);
                             	map.put("v_DocState", docState);
+                            	//여기
                             	map.put("v_AprState", staASDoJak);
                             	map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
                             	map.put("v_ProcessorID", strReceiptMemberID);

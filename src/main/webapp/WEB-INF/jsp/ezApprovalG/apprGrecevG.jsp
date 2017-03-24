@@ -100,7 +100,6 @@
 		    var SignName = new Array();
 		    var SignContent = new Array();
 		    var arrDelFiles = new Array();
-		    var NonActiveX = "YES";
 		
 		    function process_AfterOpen() {
 		        try {

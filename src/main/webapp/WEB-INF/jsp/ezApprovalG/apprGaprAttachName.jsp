@@ -14,7 +14,6 @@
 		    var ConnectFlag = true;
 		    var Resultxml = createXmlDom();
 		    var ret = new Array();
-		    var NonActiveX = "YES";
 		    function btn_SaveAprDeptTempletName_onclick() {
 		        var p_AprDeptTempletName = txtPageNum.value;
 		        var p_DisplayName = txtDisplayName.value;

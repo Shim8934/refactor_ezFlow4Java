@@ -82,7 +82,6 @@ public class EzApprovalGarchiveController {
 	    String userEmail = userInfo.getEmail();
 	    String use_Editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String openYear = ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId());
-	    String nonActiveX = "YES";
 	    
     	if (userInfo.getRollInfo().indexOf("a=1") > -1) {
     		susinAdmin = "YES";
@@ -98,7 +97,6 @@ public class EzApprovalGarchiveController {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
-		model.addAttribute("nonActiveX", nonActiveX);
 		model.addAttribute("dirpath", dirpath);
 		model.addAttribute("deptInfo", deptInfo);
 		model.addAttribute("buJaeInfo", buJaeInfo);
@@ -140,7 +138,6 @@ public class EzApprovalGarchiveController {
 		String susinAdmin = request.getParameter("susinAdmin");
 		String g_RecID = request.getParameter("g_RecID");
 		String g_SepAttNo = request.getParameter("g_SepAttNo");
-		String nonActiveX = "YES";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -169,7 +166,6 @@ public class EzApprovalGarchiveController {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
-		model.addAttribute("nonActiveX", nonActiveX);
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("docType", docType);
 		model.addAttribute("orgDocID", orgDocID);

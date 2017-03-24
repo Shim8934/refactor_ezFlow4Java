@@ -50,7 +50,6 @@
 	        var UserLang = "${userInfo.lang}";
 	        var RetValue;
 	        var ReturnFunction;
-	        var NonActiveX = "YES";
 	        window.onload = function () {
 	            var ua = navigator.userAgent;
 	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {

@@ -1565,8 +1565,13 @@ function getDocInfo() {
         pLimitRange = getNodeText(objNodes[28]);
         pPageNum = getNodeText(objNodes[29]);
 
-        cabinetID = "";
-        TaskCode = "";
+        if (approvalFlag == "G") {
+        	cabinetID = "";
+        	TaskCode = "";
+        } else {
+        	cabinetID = getNodeText(objNodes[30]);
+        	TaskCode = getNodeText(objNodes[31]);
+        }
 
         tempSecurityDate = getNodeText(objNodes[36]);
 

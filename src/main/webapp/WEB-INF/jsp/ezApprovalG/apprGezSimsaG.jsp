@@ -83,7 +83,6 @@
 		    var flag = false;
 		    var pUse_Editor = "${useEditor}";
 		    var PrtBodyContent;
-		    var NonActiveX = "YES";
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
 		    }

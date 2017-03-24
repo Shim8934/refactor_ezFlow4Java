@@ -22,7 +22,6 @@
 	            };
 	        }
 	        var ReturnFunction;
-	        var NonActiveX = "YES";
 	        window.onload = function () {
 	            try {
 	                dialogArguments = parent.aprendopinion_dialogArgument[0];

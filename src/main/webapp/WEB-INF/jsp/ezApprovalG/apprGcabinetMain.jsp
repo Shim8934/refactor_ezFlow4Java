@@ -89,7 +89,6 @@
 		        var UserLang = "${userInfo.lang}";
 		        var g_DeliveryXmlhttp = createXMLHttpRequest();
 			    var pOpenYaer = "${openYear}";
-		        var NonActiveX = "YES";
 		        var vWriterID;
 		        document.onselectstart = function () { return false; };
 		

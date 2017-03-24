@@ -22,7 +22,6 @@
 		    var rtnVal = new Array();
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    
 		    window.onload = function () {
 		        if (CrossYN()) {

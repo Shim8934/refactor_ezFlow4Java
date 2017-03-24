@@ -70,7 +70,6 @@
 	        var g_uFlag = "";
 	        var UserLang = "${userInfo.lang}";
 	        var isPeriodYear = true;
-	        var NonActiveX = "YES";   
 	        var OpenWin;
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {

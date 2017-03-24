@@ -52,7 +52,6 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";			
 		    var UserLang = "${userInfo.lang}";
 		    document.onselectstart = function () { return false; };
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
 		            document.body.style.MozUserSelect = 'none';

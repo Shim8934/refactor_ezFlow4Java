@@ -44,7 +44,6 @@
 	        var pUserID = arr_userinfo[1];
 	        var RetValue;
 	        var ReturnFunction;
-	        var NonActiveX = "YES";
 	        window.onload = function () {
 	            try {
 	                var ua = navigator.userAgent;

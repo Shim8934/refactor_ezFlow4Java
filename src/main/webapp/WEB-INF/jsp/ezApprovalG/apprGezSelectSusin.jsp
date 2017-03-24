@@ -47,7 +47,6 @@ var p_CompanyID = "${userInfo.companyID}";
 // pUserID = arr_userinfo[1];
 var RetValue;
 var ReturnFunction;
-var NonActiveX = "YES";
 window.onload = function()
 {
     try {

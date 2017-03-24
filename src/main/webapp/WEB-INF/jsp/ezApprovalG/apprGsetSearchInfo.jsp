@@ -46,7 +46,6 @@
 		    arr_userinfo[16]  = "${userInfo.deptName2}";		
 		    var ReturnFunction;
 		    var Type = "${type}";
-		    var NonActiveX = "YES";
 		    var ReturnFunction;
 		    window.onload = function () {
 		        try {

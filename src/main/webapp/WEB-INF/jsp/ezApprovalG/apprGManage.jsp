@@ -634,7 +634,7 @@
 		                    }
 		                }
 		                else {
-		                    if (CrossYN() || NonActiveX == "YES") {
+		                    if (CrossYN()) {
 		                        openLocation = "/myoffice/ezApprovalG/enforce/ezConvOut_Cross.aspx?DocID=" + encodeURI(pDocID) + "&DocHref=" + encodeURI(pURL);
 		                    }
 		                    else {
@@ -991,7 +991,7 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        if (pHref.substr(pHref.length - 3, pHref.length).toLowerCase() == "hwp") {
-		            if (CrossYN() || NonActiveX == "YES") {
+		            if (CrossYN()) {
 		                alert(strLang1103);
 		                return;
 		            }

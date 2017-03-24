@@ -15,7 +15,6 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var pDocID = "${docID}";
 		    var OrderCell = "";
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        var rtnVal = new Array();
 		        getDocHistory();

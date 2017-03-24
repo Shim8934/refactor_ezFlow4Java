@@ -2537,30 +2537,30 @@
 <!-- 		{CALL EZSP_GETAPRTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getAprType" parameterClass="Map" resultClass="ApprGLeftVO">
-		<isEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				CODE2, 
-				NAME
-      		FROM 
-      			TBL_CODELIST 
-      		WHERE 
-      			CODE1 = 'A03' 
-      		AND 
-      			ISUSE = 1
-      		ORDER BY CODE2
+		SELECT 
+			CODE2, 
+		<isEqual property="lang" compareValue="1">
+			NAME
 		</isEqual>
-		<isNotEqual property="v_LANGTYPE" compareValue="1">
-			SELECT 
-				CODE2, 
-				NAME$v_LANGTYPE$ AS NAME
-      		FROM 
-      			TBL_CODELIST 
-      		WHERE 
-      			CODE1 = 'A03' 
-      		AND 
-      			ISUSE = 1
-      		ORDER BY CODE2
+		<isNotEqual property="lang" compareValue="1">
+			NAME$lang$ as NAME
 		</isNotEqual>
+   		FROM 
+   			TBL_CODELIST 
+   		WHERE 
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   		AND 
+   			ISUSE = 1
+		<isEqual property="approvalFlag" compareValue="G" prepend="AND">
+   			CODE1 = 'A03' 
+		</isEqual>
+		<isNotEqual property="approvalFlag" compareValue="S" prepend="AND">
+   			CODE1 = 'SA03' 
+		</isNotEqual>
+   		ORDER BY 
+   			CODE2
 	</select>
 <!-- 	<procedure id="EzApprovalG.getTempList" parameterClass="Map" resultClass="ApprGLineTempletVO"> -->
 <!-- 		{CALL EZSP_GETLINETEMPLETINFO(#v_FORMID#, #v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

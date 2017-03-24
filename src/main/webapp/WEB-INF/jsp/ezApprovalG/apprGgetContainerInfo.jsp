@@ -78,7 +78,6 @@
 	        var USE_OCS = "${useOcs}";
 	        var Udomain = "${userEmail}";
 	        var pOpenYaer = "${openYear}";
-	        var NonActiveX = "YES";
 			var approvalFlag = "${approvalFlag}"
 	        var CurrentHeight = 0;
 	        var CurrentWidth = 0;
@@ -614,7 +613,7 @@
 	            }
 	            else {
 	                if ("${userInfoEnforce}" == "1") {                    
-	                    if (CrossYN() || NonActiveX == "YES")
+	                    if (CrossYN())
 	                        openLocation = "../enforce/convEnforce_CK.aspx";
 	                    else
 	                    {
@@ -623,13 +622,13 @@
 	                }
 	                else if ("${userInfoEnforce}" == "2") {
 	                    openLocation = "../enforce/ezConv.aspx";
-	                    if (CrossYN() || NonActiveX == "YES") {
+	                    if (CrossYN()) {
 	                        openLocation = "../enforce/ezConv_CK.aspx";
 	                    }
 	                }
 	                else {
 	                    openLocation = "../enforce/ezConvSend.aspx";
-	                    if (CrossYN() || NonActiveX == "YES") {
+	                    if (CrossYN()) {
 	                        openLocation = "../enforce/ezConvSend_Cross.aspx";
 	                    }
 	                }

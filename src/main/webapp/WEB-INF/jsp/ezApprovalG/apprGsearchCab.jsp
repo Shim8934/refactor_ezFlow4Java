@@ -25,7 +25,6 @@
     window.onbeforeunload = window_onunload;
     var RetValue;
     var ReturnFunction;
-    var NonActiveX = "YES";
     function window_onload() {
         var ua = navigator.userAgent;
         if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {

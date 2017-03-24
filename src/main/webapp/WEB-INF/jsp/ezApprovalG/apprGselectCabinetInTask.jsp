@@ -47,7 +47,6 @@
 		    var UserLang = "${userInfo.lang}";
 		    var ReturnFunction;
 		    var CancelFunction;
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        var objWinDlgArgs;
 		

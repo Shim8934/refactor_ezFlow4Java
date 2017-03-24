@@ -18,7 +18,6 @@
 		    var Resultxml = createXmlDom();
 		    var g_TemplateSN = "";
 		    var g_TemplateName = "";
-		    var NonActiveX = "YES";
 		
 		    function btn_SaveAprLineTempletName_onclick() {
 		        var p_AprLineTempletName = document.getElementById("TxtAprLineTempletName").value;

@@ -109,7 +109,7 @@
 		    var pGubun;
 		    var pMailEditor = "${crossEditor}";
 		    var pPageType = "SUSIN";
-		    var NonActiveX = "YES";
+		    var approvalFlag = "${approvalFlag}";
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -1006,6 +1006,7 @@
 		    var tempKeyword = "";
 		    var tempItemCode = "";
 		    var tempItemName = "";
+		    var tempItemName2 = "";
 		    var tempdocnumcode = "<spring:message code='ezApprovalG.t45'/>";
 		    var tempSecurityDate = "";
 		    function btnDocInfo_onclick() {
@@ -1034,25 +1035,29 @@
 		        tempSecurityDate = RtnVal[7];
 		        SummaryFlag = true;
 		    }
-		    function SetDocOption(tempSecurityValue) {
-		        var fields = message.GetFieldsList();
-		
-		        field = message.GetListItem(fields, "keepperiod");
-		        if (field)
-		            field.textContent = tempKeep;
-		
-		        field = message.GetListItem(fields, "securitylevel");
-		        if (field)
-		            field.textContent = tempSecurityValue;
-		
-		        field = message.GetListItem(fields, "publication");
-		        if (field) {
-		            if (tempPublic == "N")
-		                field.textContent = "<spring:message code='ezApprovalG.t46'/>";
-		            else
-		                field.textContent = "<spring:message code='ezApprovalG.t47'/>";
-		        }
-		    }
+
+		    //S전용
+		    function SetDocOption(pkeeperiodvaltemp) {
+	            var fields = message.GetFieldsList();
+
+	            field = message.GetListItem(fields, "keepperiod");
+	            if (field)
+	                setNodeText(field , pkeeperiodvaltemp);
+
+	            field = message.GetListItem(fields, "securitylevel");
+	            if (field)
+	                setNodeText(field , tempSecurityValue);
+
+	            field = message.GetListItem(fields, "publication");
+	            
+	            if (field) {
+	                if (tempPublic == "N")
+	                    setNodeText(field , "<spring:message code='ezApproval.t49'/>");
+	                else
+	                    setNodeText(field , "<spring:message code='ezApproval.t50'/>");
+	            }
+	        }
+		    
 		    function btnSendAround_onclick() {
 		        var para = new Array();
 		        para[0] = pDocID;
@@ -1170,7 +1175,18 @@
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
-		
+		        
+		        if (approvalFlag == "S") {
+		            parameter[19] = "ING";
+		            parameter[20] = tempKeep;
+		            parameter[23] = tempPublic;
+		            parameter[25] = tempItemCode;
+			        parameter[29] = TaskCode;
+			        parameter[33] = pSummery;
+			        parameter[41] = tempItemName;
+			        parameter[42] = tempItemName2;
+		        }
+		        
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
@@ -1223,11 +1239,26 @@
 		                tempSecurity = ret[7];
 		                tempUrgent = ret[8];
 		                pSummery = ret[9];
-		                pSpecialRecordCode = ret[10];
 		                pPublicityCode = ret[11];
-		                pLimitRange = ret[12];
-		                pPageNum = ret[13];
 		                tempSecurityDate = ret[14];
+		                
+		                if (approvalFlag == "G") {
+			                pSpecialRecordCode = ret[10];
+			                pLimitRange = ret[12];
+			                pPageNum = ret[13];
+			                
+			                setPublicFlag();
+		                } else {
+		                	tempKeep = ret[16];
+		                	tempItemName = ret[17];
+		                	tempItemName2 = ret[18];
+		                	pPageNum = "1";
+		                	pLimitRange = "1";
+		                	pSpecialRecordCode = "1";
+		                	tempPublic = ret[11];
+		                	SetDocOption(ret[20]);
+		                }
+		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;

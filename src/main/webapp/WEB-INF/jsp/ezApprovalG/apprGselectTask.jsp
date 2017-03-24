@@ -23,7 +23,6 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    window.onload = window_onload;
 		    function window_onload() {
 		        try {

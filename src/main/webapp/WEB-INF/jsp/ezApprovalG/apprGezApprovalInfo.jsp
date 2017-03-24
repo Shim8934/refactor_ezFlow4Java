@@ -167,7 +167,6 @@
 	        var chkReporter = false;
 	        var chkSuggester = false;
 	        var SummaryFlag;
-	        var NonActiveX = "YES";
 	        var pDocSn = "${docSN}";
 	        var SusinGroupUseFlag = "${susinGroupUseFlag}";
 	        /* 2015-06-23 추가 - KSK */

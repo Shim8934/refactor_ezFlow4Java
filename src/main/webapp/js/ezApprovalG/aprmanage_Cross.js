@@ -760,7 +760,7 @@ function openApprovUI(allFlag) {
         }
         else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         	//hwp 사용안함
-            if (CrossYN() || NonActiveX == "YES") {
+            if (CrossYN()) {
                 var openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezAproveUI_HWP_Cross.aspx?docID=" + encodeURI(pArgument[0]);
                 openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
                 openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
@@ -932,7 +932,7 @@ function openViewDocInfo(type) {
     if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         	//hwp 사용안함
-            if (CrossYN() || NonActiveX == "YES") {
+            if (CrossYN()) {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewEnd_HWP_Cross.aspx";
             }
             else {
@@ -947,7 +947,7 @@ function openViewDocInfo(type) {
     else {
         if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
         	//hwp 사용안함
-            if (CrossYN() || NonActiveX == "YES") {
+            if (CrossYN()) {
                 openLocation = "/myoffice/ezApprovalG/ezViewHWP/ezViewApr_HWP_Cross.aspx";
             }
             else {

@@ -15,7 +15,6 @@
 		    var pDocID = "${docID}";
 		    var listview = new ListView();
 		    var OrderCell = "";
-		    var NonActiveX = "YES";
 		    var RtnVal = "";
 		    window.onload = function () {
 		        try {

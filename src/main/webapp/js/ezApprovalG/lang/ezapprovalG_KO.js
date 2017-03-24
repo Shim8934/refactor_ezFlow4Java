@@ -1466,5 +1466,11 @@ var strLangS606 = "권한이 없습니다.";
 
 var strLangS554 = "검색어를 입력해주세요.";
 
-var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?"
-var strLangS385 = "문서를 선택하여 주십시오"
+var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?";
+var strLangS385 = "문서를 선택하여 주십시오";
+	
+var strLangS250 = "결재참가자를 추가할수 ";
+var strLangS251 = "없습니다.";
+var strLangS252 = "기안시 , 결재선 변경시 적용";
+var strLangS253 = "재기안시 ";
+var strLangS254 = "최종결재자는 결재선을 변경할 수 없습니다.";

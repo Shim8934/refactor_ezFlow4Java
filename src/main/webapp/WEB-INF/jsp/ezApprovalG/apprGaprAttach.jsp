@@ -54,7 +54,6 @@
 			var isBody = "${isBody}";
 			var BodyAttach = "N";
 			var AttachDelFlag = false;
-			var NonActiveX = "YES";
 			var pDraftFlag = "${draftFlag}";
 			var approvalFlag = "${approvalFlag}";
 			

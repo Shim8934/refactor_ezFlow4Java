@@ -64,7 +64,6 @@
 		    var pHasOpinion = "${hasOpinionYN}";
 		    var pOpinionType = "Show";
 		    var pMailEditor = "${crossEditor}";
-		    var NonActiveX = "YES";
 		
 		    $(function () {
 		      	if(approvalFlag == "G") {

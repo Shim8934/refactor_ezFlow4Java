@@ -104,7 +104,6 @@
 			var StartMode = "0";
 			var StartMode2 = "0";
 			var SummaryFlag = true;
-			var NonActiveX = "YES";
 			window.onload = function () {
 			};
 			

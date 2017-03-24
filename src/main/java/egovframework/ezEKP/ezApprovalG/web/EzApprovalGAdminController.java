@@ -412,7 +412,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			String periodNode = ezApprovalGAdminService.getKeepType("", userInfo, companyID, approvalFlag);
 			String aprRule = "";
 			String aprRuleLine = "";
-			String aprTypeXML = ezApprovalGService.getAprType(companyID, userInfo.getLang(), userInfo.getTenantId());
+			String aprTypeXML = ezApprovalGService.getAprType(approvalFlag, companyID, userInfo.getLang(), userInfo.getTenantId());
 			
 			if (formID != null && !formID.equals("")) {
 				aprRule = ezApprovalGAdminService.getFormAprRule(formID, companyID, userInfo.getTenantId());

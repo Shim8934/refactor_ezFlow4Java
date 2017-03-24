@@ -47,7 +47,6 @@
 	        var UserLang = "${userInfo.lang}";
 	        var RetValue;
 	        var ReturnFunction;
-	        var NonActiveX = "YES";
 	        var pDraftFlag = "${draftFlag}";
 	        
 	        window.onload = function () {

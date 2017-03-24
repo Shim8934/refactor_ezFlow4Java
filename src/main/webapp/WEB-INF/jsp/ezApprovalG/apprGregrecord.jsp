@@ -55,7 +55,6 @@
     var pDeptName		= arr_userinfo[5];
     var pDocID =""; 
     var pDocSN = "0";
-    var NonActiveX = "YES";
     window.onload = function () {
         var ua = navigator.userAgent;
         if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {

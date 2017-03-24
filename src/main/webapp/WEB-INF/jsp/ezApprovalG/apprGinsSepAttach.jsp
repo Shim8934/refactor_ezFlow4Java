@@ -30,7 +30,6 @@
 		    var UserLang = "${userInfo.lang}";
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        try {
 		            RetValue = parent.inssepattach_cross_dialogArguments[0];

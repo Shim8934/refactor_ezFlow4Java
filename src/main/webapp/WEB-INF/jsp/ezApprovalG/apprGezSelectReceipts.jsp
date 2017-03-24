@@ -25,7 +25,6 @@
     var OrderCell = "";
     var TreeIdx;
     var ReturnFunction;
-    var NonActiveX = "YES";
     var RtnVal = "";
     window.onload = function () {
         try {

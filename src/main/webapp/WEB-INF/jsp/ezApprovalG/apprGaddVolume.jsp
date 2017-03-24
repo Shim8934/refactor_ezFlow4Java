@@ -19,7 +19,6 @@
 		    var rtnVal = new Array();
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        try {
 		            RetValue = opener.addvolume_cross_dialogArguments[0];

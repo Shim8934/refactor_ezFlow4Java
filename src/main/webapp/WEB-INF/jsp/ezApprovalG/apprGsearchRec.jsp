@@ -32,7 +32,6 @@
 		    var opnOption = "0";
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    
 		    window.onload = function () {
 		        var ua = navigator.userAgent;

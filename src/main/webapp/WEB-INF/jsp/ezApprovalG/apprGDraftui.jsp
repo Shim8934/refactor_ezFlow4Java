@@ -131,7 +131,6 @@
 		    var Saveflag = false;//임시저장Flag
 		    var pPageType = "DRAFTUI";
 		    var pUse_Editor = "${useEditor}";
-		    var NonActiveX = "YES";
 		    var hideCabinet = "${hideCabinet}";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
@@ -459,7 +458,7 @@
 			            }
 		            } else {
 			            if (cabinetID == "") {
-			            	//하드코딩
+			            	//하드코딩 방산끝나면 삭제 ㄱㄱ
 			            	cabinetID = "devteamZZ3782312017000002001";
 			            	TaskCode = "ZZ378231";
 			            }
@@ -886,37 +885,37 @@
 		    var tempdocnumcode = "<spring:message code='ezApprovalG.t45'/>";
 		    var tempItemName2 = "";
 		    var tempSecurityDate = "";
-		    function btnDocInfo_onclick() {
-		        var parameter = new Array();
-		        parameter[0] = tempSecurity;
-		        parameter[1] = tempUrgent;
-		        parameter[2] = pSummery;
-		        parameter[3] = pSpecialRecordCode;
-		        parameter[4] = pPublicityCode;
-		        parameter[5] = pLimitRange;
-		        parameter[6] = pPageNum;
-		        parameter[7] = tempSecurityDate;
-		        var url = "../ezDocInfo/ezDocInfoG_Cross.aspx";
-		        if ("${userInfo.lang}".equals("3")) {
-			        var feature = "status:no;dialogWidth:520px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
-			        feature = feature + GetShowModalPosition(490, 605);
-		        } else {
-			        var feature = "status:no;dialogWidth:450px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
-			        feature = feature + GetShowModalPosition(420, 605);
-		        }
-		        var RtnVal = window.showModalDialog(url, parameter, feature);
-		        tempSecurity = RtnVal[0];
-		        tempUrgent = RtnVal[1];
-		        pSummery = RtnVal[2];
-		        pSpecialRecordCode = RtnVal[3];
-		        pPublicityCode = RtnVal[4];
-		        pLimitRange = RtnVal[5];
-		        pPageNum = RtnVal[6];
-		        tempSecurityDate = RtnVal[7];
-		        setPublicFlag();
-		        SummaryFlag = true;
-		        return;
-		    }
+// 		    function btnDocInfo_onclick() {
+// 		        var parameter = new Array();
+// 		        parameter[0] = tempSecurity;
+// 		        parameter[1] = tempUrgent;
+// 		        parameter[2] = pSummery;
+// 		        parameter[3] = pSpecialRecordCode;
+// 		        parameter[4] = pPublicityCode;
+// 		        parameter[5] = pLimitRange;
+// 		        parameter[6] = pPageNum;
+// 		        parameter[7] = tempSecurityDate;
+// 		        var url = "../ezDocInfo/ezDocInfoG_Cross.aspx";
+// 		        if ("${userInfo.lang}".equals("3")) {
+// 			        var feature = "status:no;dialogWidth:520px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
+// 			        feature = feature + GetShowModalPosition(490, 605);
+// 		        } else {
+// 			        var feature = "status:no;dialogWidth:450px;dialogHeight:605px;help:no;scroll:no;edge:sunken;";
+// 			        feature = feature + GetShowModalPosition(420, 605);
+// 		        }
+// 		        var RtnVal = window.showModalDialog(url, parameter, feature);
+// 		        tempSecurity = RtnVal[0];
+// 		        tempUrgent = RtnVal[1];
+// 		        pSummery = RtnVal[2];
+// 		        pSpecialRecordCode = RtnVal[3];
+// 		        pPublicityCode = RtnVal[4];
+// 		        pLimitRange = RtnVal[5];
+// 		        pPageNum = RtnVal[6];
+// 		        tempSecurityDate = RtnVal[7];
+// 		        setPublicFlag();
+// 		        SummaryFlag = true;
+// 		        return;
+// 		    }
 		    function setPublicFlag() {
 		        var fields = message.GetFieldsList();
 		        var field = message.GetListItem(fields, "publication");
@@ -955,29 +954,7 @@
 		        return strRtn;
 		    }
 		    
-// 		    function SetDocOption(tempSecurityValue) {
-// 		        var fields = message.GetFieldsList();
-// 		        field = fields.item("keepperiod");
-// 		        if (field)
-// 		            field.textContent = tempKeep;
-// 		        field = fields.item("securitylevel");
-// 		        if (field)
-// 		            field.textContent = tempSecurityValue;
-// 		        field = fields.item("publication");
-// 		        if (field) {
-// 		            if (tempPublic == "N")
-// 		                field.textContent = "<spring:message code='ezApprovalG.t46'/>";
-// 		            else
-// 		                field.textContent = "<spring:message code='ezApprovalG.t47'/>";
-// 		        }
-// 		        field = fields.item("docnumber");
-// 		        if (field && tempItemCode != "") {
-// 		            var tempdocnumber = field.textContent;
-// 		            tempdocnumber = tempdocnumber.replace(tempdocnumcode, tempItemCode);
-// 		            field.textContent = tempdocnumber;
-// 		        }
-// 		    }
-		    
+		    //S전용
 	        function SetDocOption(pkeeperiodvaltemp) {
 	            var fields = message.GetFieldsList();
 
@@ -1174,7 +1151,7 @@
 		
 		    function btnApprovalInfo_Complete(ret) {
 		        if (ret != undefined && ret[0] == "OK") {
-// 		            try {
+		            try {
 		                var savexmlhttp = createXMLHttpRequest();
 		
 		                if (ret[1] != false) {
@@ -1228,29 +1205,31 @@
 			                pLimitRange = ret[12];
 			                pPageNum = ret[13];
 			                
+			                if (ret[11].substring(0,1) == 3) {
+			                	tempPublic = "N";
+			                }
+			                
 			                setPublicFlag();
+			                
 		                } else {
 		                	tempKeep = ret[16];
 		                	tempItemName = ret[17];
 		                	tempItemName2 = ret[18];
-		                	SetDocOption(ret[20]);
 		                	pPageNum = "1";
 		                	pLimitRange = "1";
 		                	pSpecialRecordCode = "1";
-		                }
-		                
-		                if (ret[11].substring(0,1) == 3) {
-		                	tempPublic = "N";
+		                	tempPublic = ret[11];
+		                	SetDocOption(ret[20]);
 		                }
 		                
 		                SummaryFlag = true;
 		
 		                savexmlhttp = null;
 		
-// 		            }
-// 		            catch (e) {
-// 		                alert("<spring:message code='ezApprovalG.pjj02'/>");
-// 		            }
+		            }
+		            catch (e) {
+		                alert("<spring:message code='ezApprovalG.pjj02'/>");
+		            }
 		        }
 		    }
 		
@@ -1362,8 +1341,8 @@
 		  </tr>
 		</table>
 		<script type="text/javascript">
-		selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		selToggleList(document.getElementById("close"), "ul", "li", "0");
+			selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			selToggleList(document.getElementById("close"), "ul", "li", "0");
 		</script>
 		<XML id="SA_coredata"></XML>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>

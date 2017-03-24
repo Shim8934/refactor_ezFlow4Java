@@ -52,7 +52,6 @@
 		    var pUserID = arr_userinfo[1];
 		    var SignCheckFlag = "${signCheck}";
 		    var pUse_Editor = "${editor}";
-		    var NonActiveX = "YES";
 		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {

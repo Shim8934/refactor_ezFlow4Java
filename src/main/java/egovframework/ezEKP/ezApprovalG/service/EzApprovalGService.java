@@ -59,7 +59,7 @@ public interface EzApprovalGService {
 	
 	public String getSecurityType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 	
-	public String getAprType(String companyID, String lang, int tenantID) throws Exception;
+	public String getAprType(String approvalFlag, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getAprLineInfo(String docID, String userID, String formID, String companyID, String lang, int tenantID, String offset) throws Exception;
 	

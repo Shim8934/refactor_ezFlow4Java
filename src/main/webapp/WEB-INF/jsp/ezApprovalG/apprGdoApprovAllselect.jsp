@@ -24,7 +24,6 @@
 		    arr_userinfo[9] = "";
 		    arr_userinfo[10] = "";
 		    var pCompanyID = "${userInfo.companyID}";
-		    var NonActiveX = "YES";
 		    var ezchkpasswd_all_cross_dialogArguments = new Array();
 		    function chk_Passwd(pPwd) {
 		        var parameter = pPwd;

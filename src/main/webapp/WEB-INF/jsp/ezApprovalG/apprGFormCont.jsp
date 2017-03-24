@@ -26,7 +26,6 @@
 		    var ListIdx;
 		    var RetValue;
 		    var ReturnFunction;
-		    var NonActiveX = "YES";
 		    window.onload = function () {
 		        Get_Favoritelist();
 		

@@ -19,7 +19,12 @@ function list2_onSel_DBclick() {
     if (RtnVal) {
         if (selnode.length != 0) {
             aprlinecount = 0;
-            APRLINEATTENDADDFunction(selnode, "PERSON");
+            
+            if (approvalFlag == undefined || approvalFlag == "G") {
+            	APRLINEATTENDADDFunction(selnode, "PERSON");
+            } else {
+            	SAPRLINEATTENDADDFunction(selnode, "PERSON");
+            }
         }
     }
 }
@@ -202,6 +207,68 @@ function APRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
 		}
 	}
 }
+
+//S버젼
+function SAPRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
+    var pAPRLINE = new ListView();
+    pAPRLINE.LoadFromID("lvAPRLINE");
+    var pCurSelRow = pAPRLINE.GetSelectedRows();
+
+    var treeView = new TreeView();
+    treeView.LoadFromID("FromTreeView");
+    var selnode = treeView.GetSelectNode();
+    if (pCurSelectedRow == null) {
+        if (Mode == "PERSON") {
+            var pCurSelectedRow = pCurSelRow[0];
+            if (companyID != selnode.GetNodeData("EXTENSIONATTRIBUTE2")) {
+                var pAlertContent = strLangS250 + "<br> " + strLangS251;
+                OpenAlertUI(pAlertContent);
+            }
+        }
+        else if (Mode == "DEPT") {
+            var pCurSelectedRow = selnode;
+            var pAlertContent = strLangS250 + "<br> " + strLangS251;
+            OpenAlertUI(pAlertContent);
+        }
+    }
+    var p_PrevAprStat = "";
+    var pCurSelRowRows;
+    if (pAPRLINE.GetDataRows().length != 0) {
+        pCurSelRowRows = pAPRLINE.GetDataRows();
+        if (pCurSelRowRows != null) {
+            p_PrevAprStat = GetAttribute(pCurSelRowRows[0], "DATA12");
+        }
+    }
+    if (p_PrevAprStat == "003" && pReDraftFlag == "DRAFT") {
+        var pAlertContent = strLangS250 + "<br> " + strLangS251;
+        OpenAlertUI(pAlertContent);
+    }
+    else if (pReDraftFlag == "REDRAFT") {
+        if (p_PrevAprStat == "003" || p_PrevAprStat == "004" || p_PrevAprStat == "002") {
+            AprLineChangeType();
+            AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+            pReDraftAprLineChangeFlag = true;
+        } else {
+            AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+        }
+    } else {
+        if (pReDraftAprLineFlag) {
+            if (pCurSelRowRows[0] != null) {
+			    if (p_PrevAprStat == "002" && GetAttribute(pCurSelRowRows[0], "DATA4") == pUserID) {
+                    var pAlertContent = strLangS254;
+                    OpenAlertUI(pAlertContent);
+                } else {
+                    AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+                }
+            } else {
+                AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+            }
+        } else {
+            AprLineAddUser(Mode, pCurSelRow, pCurSelectedRow);
+        }
+    }
+}
+
 //#############################################################################################################################################결재선 삭제 더블클릭 이벤트 APRLINEDEPTADD()
 function APRDEPTADD() {
     if (getNodeText(SelectSingleNodeNew(AprTypeXML, "APRTYPES/DEPTTYPES")) == "") {

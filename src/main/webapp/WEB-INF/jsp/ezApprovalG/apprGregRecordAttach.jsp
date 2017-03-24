@@ -58,7 +58,6 @@
     var pServerName = "${serverName}";
     var _hasattach = "${hasattach}";
     var approvalFlag = "${approvalFlag}";
-    var NonActiveX = "YES";
     function getDocInfo() {
         try {
             if (isBody == "YES") {
