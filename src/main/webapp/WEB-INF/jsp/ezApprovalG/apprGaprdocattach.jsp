@@ -22,6 +22,7 @@
         var NodeList2, PageSize, ListView, ScontID;
         var pUserName, pUserJobTitle, pDeptID, pDeptName, pCompanyID, pDocID;
         var arr_userinfo = new Array();
+        var OrderCell = "";
         arr_userinfo[0] = "user";
 	    arr_userinfo[1]  = "${userInfo.id}";
 	    arr_userinfo[2]  = "${userInfo.displayName}";
@@ -170,14 +171,14 @@
         }
 
         var condition = new Array();
-        var SearchCondi_dialogArgument = new Array();
+        var setsearchinfo_cross_dialogArguments = new Array();
         function SearchCondi_onclick() {
             var para;
-            var url = "/myoffice/ezApproval/formContainer/setsearchInfo.aspx";
+            var url = "/ezApprovalG/setSearchInfo.do";
 
             if (CrossYN() || pNoneActiveX == "YES") {
-                SearchCondi_dialogArgument[0] = "";
-                SearchCondi_dialogArgument[1] = SearchCondi_Complete;
+            	setsearchinfo_cross_dialogArguments[0] = "";
+            	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
                 DivPopUpShow(820, 610, url);
             }
             else {

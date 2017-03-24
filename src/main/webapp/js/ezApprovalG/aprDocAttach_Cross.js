@@ -156,7 +156,7 @@ function AttachList() {
 
     createNodeAndInsertText(xmlpara, objNode, "NODE", pDocID);
 
-    xmlhttp.open("POST", "/myoffice/ezApproval/ezAPRDOCATTACH/aspx/getAttachInfo.aspx", false);
+    xmlhttp.open("POST", "/ezApprovalG/getAttachInfo.do", false);
     xmlhttp.send(xmlpara);
 
     document.getElementById("lvTDoc").innerHTML = "";
@@ -219,7 +219,7 @@ function DocMoveParser() {
         createNodeAndAppandNodeText(xmlpara, objNode, objChildNode, "DATA13", GetAttribute(listview.GetDataRows()[i], "DATA13"));
     }
 
-    xmlhttp.open("Post", "/myoffice/ezApproval/ezAPRDOCATTACH/aspx/updateDocattach.aspx", false);
+    xmlhttp.open("Post", "/ezApprovalG/updateDocAttach.do", false);
     xmlhttp.send(xmlpara);
 
     var rtnval = getNodeText(SelectSingleNode(loadXMLString(xmlhttp.responseText), "RESULT"));
@@ -267,7 +267,7 @@ function GetDocSearch() {
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
 
-    xmlhttp.open("POST", "/myoffice/ezApproval/formContainer/aspx/getFormsearchDocList.aspx", true);
+    xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
     xmlhttp.onreadystatechange = getsearchDocList_after;
     xmlhttp.send(xmlpara);
 }

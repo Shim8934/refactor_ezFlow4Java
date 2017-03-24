@@ -1465,3 +1465,5 @@ var strLangS605 = "분류코드 삭제 오류입니다.";
 var strLangS606 = "권한이 없습니다.";
 
 var strLangS554 = "검색어를 입력해주세요.";
+var strLangS387 = "문서를 문서함에서 삭제하시겠습니까?"
+var strLangS385 = "문서를 선택하여 주십시오"

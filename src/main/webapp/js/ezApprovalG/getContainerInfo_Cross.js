@@ -18,6 +18,10 @@ function GetDocList(p_FormCd) {
         OrderCell = "";
     }
 
+    if (approvalFlag == 'S') {
+    	document.getElementById("tbtnRemoveDoc").style.display = "none";
+	}
+    
     var objNode, i, nodeName
     var xmlpara = createXmlDom();
     createNodeInsert(xmlpara, objNode, "PARAMETER");
@@ -170,8 +174,11 @@ function GetDocSearch() {
     var objNode, i, nodeName
     var xmlpara = createXmlDom();
     createNodeInsert(xmlpara, objNode, "PARAMETER");
-
-
+    
+    if (approvalFlag == 'S') {
+    	document.getElementById("tbtnRemoveDoc").style.display = "none";
+	}
+    
     for (i = 0; i < condition.length - 1 ; i++) {
         if (typeof(condition[i]) == "undefined")
             createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
@@ -301,6 +308,63 @@ function getDocListS_after() {
 
     } catch (e) { }
 
+}
+
+function btnRemoveDoc_onclick() {
+    if (DocListType != "UserContDocList" && DocListType != "DeptContDocList")
+        return;
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows();
+
+    if (selRow.length <= 0) {
+        var InformationString = strLangS385;
+        OpenAlertUI(InformationString);
+        return;
+    }
+
+    var OpinionContent = strLangS387;
+    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+    
+    if (!CrossYN()) {
+        RemoveDoc_Complete(rtn);
+    }
+}
+
+function RemoveDoc_Complete(RtnVal)
+{
+    if (!RtnVal)
+        return;
+
+    var DocList = new ListView();
+    DocList.LoadFromID("DocList");
+    var selRow = DocList.GetSelectedRows();
+
+    for (i = 0; i < selRow.length; i++) {
+        var xmlhttp = createXMLHttpRequest();
+        var xmlpara = createXmlDom();
+        var objNode;
+        var tr = selRow[i];
+
+        createNodeInsert(xmlpara, objNode, "DATA");
+        createNodeAndInsertText(xmlpara, objNode, "DocID", GetAttribute(tr, "DATA1"));
+        createNodeAndInsertText(xmlpara, objNode, "ContID", ContainerID);
+
+        if (DocListType == "UserContDocList")
+            xmlhttp.open("POST", "/ezApprovalG/delUserContDoc.do", false);
+        else
+            xmlhttp.open("POST", "/ezApprovalG/delDeptContDoc.do", false);
+        xmlhttp.send(xmlpara);
+    }
+
+    var InformationString = strLang388;
+    OpenAlertUI(InformationString);
+
+    if (DocListType == "UserContDocList")
+        GetUserContList();
+    else if (DocListType == "DeptContDocList")
+        GetDeptContList();
 }
 
 function getsearchDocList_after() {

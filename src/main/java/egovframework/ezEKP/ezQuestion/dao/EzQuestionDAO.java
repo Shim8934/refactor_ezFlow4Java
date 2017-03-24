@@ -60,6 +60,11 @@ public class EzQuestionDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<QstResponseVO> resultSubjectiveListAll(Map<String, Object> map) {
+		return (List<QstResponseVO>) list("EzQuestionDAO.resultSubjectiveListAll", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<String> getTableAnswer(Map<String, Object> map) {
 		return (List<String>) list("EzQuestionDAO.getTableAnswer", map);
 	}

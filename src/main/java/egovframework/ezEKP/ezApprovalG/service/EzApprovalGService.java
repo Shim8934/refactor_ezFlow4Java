@@ -33,7 +33,7 @@ public interface EzApprovalGService {
 	
 	public String getListField(String fieldName, String fieldValue, String companyID, String userLang, int tenantID, String offSet) throws Exception;
 
-	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID) throws Exception;
+	public String getAccessYNG(String docID, String userID, String mode, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 
 	public String getLineInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
@@ -140,11 +140,11 @@ public interface EzApprovalGService {
 	
 	public String getCodeInfo(String companyID, String lang, int tenantID) throws Exception;
 	
-	public String getAttachDocInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
+	public String getAttachDocInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception;
 	
 	public String isCabCharger(String companyID, String cabClassNo, String userID, int tenantID) throws Exception;
 	
-	public String updateAttachDocInfo(Document doc, String companyID, String lang, int tenantID) throws Exception;
+	public String updateAttachDocInfo(Document doc, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 	
 	public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
 	
@@ -410,12 +410,16 @@ public interface EzApprovalGService {
 	
 	public String getContainerInfoManage(String deptID, String mode, String companyID, String lang, int tenantId) throws Exception;
 
-	public String getContDocListS(String contID, String id, String string, String pageSize, String pageNum, String orderCell, String orderOption,	String companyID, String lang, int tenantId, String offset) throws Exception;
-
+	public String getContDocListS(String contID, String id, String string, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String lang, int tenantId, String offset, Locale locale) throws Exception;
 
 	public String findTaskS(String deptCode, String title, String code, String companyID, int tenantId, String approvalFlag) throws Exception;
 
 	public String getUserContList(String pContID, String pSubQuery,	String pPageSize, String pPageNum, String oc, String oo, String companyID, String lang, Document tempDueryDATA, int tenantID, String offSet) throws Exception;
+
+	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
+
+	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
+			String draftDeptName, String docState, String string,	String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet) throws Exception;
 
 
 }

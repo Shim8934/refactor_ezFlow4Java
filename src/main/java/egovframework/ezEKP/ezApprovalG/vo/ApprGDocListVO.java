@@ -131,8 +131,15 @@ public class ApprGDocListVO {
 	
 	/** 일반결재 때문에 추가 */
 	private String linkDate;
+	private String sendFlag;
 
 	
+	public String getSendFlag() {
+		return sendFlag;
+	}
+	public void setSendFlag(String sendFlag) {
+		this.sendFlag = sendFlag;
+	}
 	public String getLinkDate() {
 		return linkDate;
 	}
