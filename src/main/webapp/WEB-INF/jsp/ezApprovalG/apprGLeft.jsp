@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ page import="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO" %>
+<%@ page import="egovframework.ezEKP.ezApproval.vo.ApprDocInfoVO" %>
+<%@ page import="java.util.List" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
@@ -797,6 +800,17 @@
 	        	});
 		    }
 		</script>
+		<%
+		String flag = (String)request.getAttribute("approvalFlag");
+		int SubContCount =0;
+		List<ApprGContInfoVO> specialContTreeList = null;
+		int specialContTreeCount =0;
+		if(flag.equals("S")) {
+		 	SubContCount = (Integer)request.getAttribute("subContCount");
+		 	specialContTreeList = (List<ApprGContInfoVO>)request.getAttribute("specialContTreeList");
+		 	specialContTreeCount = (Integer)request.getAttribute("specialContTreeCount");
+		}
+	    %>
 	</head>
 	<body class="leftbody" style="overflow-y:auto; ">
 		<span  id="presentcell" style="display:none"></span>
@@ -810,9 +824,53 @@
 			<h2><span style="width:100%; display:inline-block;" id="APPROVAL" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t102'/></span></h2>
 			<ul id="iconul">
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL1" onClick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1')"><img src="/images/ImgIcon/icon_approval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1747'/><span id=count1></span></span></li>
+			 	<% if(flag.equals("S")) {
+			 		for (int k = 0; k < specialContTreeCount; k++) { %> 
+	            	<% if (specialContTreeList.get(k).getContType().equals("001")) { %>
+		            	<li><span style="margin-left: 15px; width: 90%; display: inline-block;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName().replace("'", "\\'")%>');convMain('1', '<%= specialContTreeList.get(k).getSubQuery().replace("'", "\\'").trim()%>')">-&nbsp;<%= specialContTreeList.get(k).getContName()%><span id="countsub<%= SubContCount++%>" type='1' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } 
+			 		} %>
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL2" onClick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3')"><img src="/images/ImgIcon/icon_ingapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1706'/><span id=count2></span></span></li>
+				 <% if(flag.equals("S")) {
+				 	for (int k = 0; k < specialContTreeCount; k++) { %>
+					<% if (specialContTreeList.get(k).getContType().equals("003")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName().replace("'", "\\'")%>');convMain('3', '<%=specialContTreeList.get(k).getSubQuery().replace("'", "\\'").trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span1" type='3' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } 
+				 	} %>
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL3" onClick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2')"><img src="/images/ImgIcon/icon_writeapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1748'/><span id=count3></span></span></li>
+				<%  if(flag.equals("S")) {
+					for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("002")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName().replace("'", "\\'")%>');convMain('2', '<%=specialContTreeList.get(k).getSubQuery().replace("'", "\\'").trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span2" type='2' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } 
+	            	}%>
 				<li><span style="width:100%;display:inline-block;" id="APPROVAL4" onClick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4')"><img src="/images/ImgIcon/icon_partapproval.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t1749'/><span id=count4></span></span></li>
+				 <% 
+				 	if(flag.equals("S")) {
+				 	for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("004")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName().replace("'", "\\'")%>');convMain('4', '<%=specialContTreeList.get(k).getSubQuery().replace("'", "\\'").trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span3" type='4' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% }
+				 	}%>
+	            <c:if test="${approvalFlag == 'S'}"> 
+	            <c:if test="${userInfoEnforce == '2'}">
+	            	<li>
+	            		<span style="width: 100%; display: inline-block;" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')">
+	                	<img src="../../images/ImgIcon/icon_inspection.gif" width="16" height="16" class="icon"><spring:message code='ezApproval.t839'/><span id="count6"></span></span>
+	               	</li>
+	            <% if(flag.equals("S")) {
+	            	for (int k = 0; k < specialContTreeCount; k++) { %>
+	                <% if (specialContTreeList.get(k).getContType().equals("005")) { %>
+			            <li><span style="width: 90%; display: inline-block; margin-left: 15px;" onclick="setPresentValue('<%=specialContTreeList.get(k).getContName().replace("'", "\\'")%>');convMain('6', '<%=specialContTreeList.get(k).getSubQuery().replace("'", "\\'").trim()%>')">-&nbsp;<%=specialContTreeList.get(k).getContName()%><span id="Span4" type='6' subquery="<%=specialContTreeList.get(k).getSubQuery().trim()%>"></span></span></li>
+	            	<% } %>
+	            <% } 
+	            	}%>
+	            </c:if>
+	            </c:if>
 				<c:if test="${hideCabinet == '0'}">
 				<li class = "approvalG"><span style="width:100%;display:inline-block;" id="APPROVAL5" onClick="setPresentValue('<spring:message code='ezApprovalG.t257'/>');convMain('6')"><img src="/images/ImgIcon/icon_senddoc.gif" width="16" height="16" class="icon"><spring:message code='ezApprovalG.t257'/><span id=count6></span></span></li>
 				</c:if>

@@ -138,9 +138,12 @@
 	            	end_li.innerHTML = "<img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\">";
 	            	document.getElementById("photoul").appendChild(end_li);
 	        	} else {
-	            	var nodata = "<div class='nodata_portlet '>";
+	        		var nodata = "";
+	            	nodata += "<li class='btn_area'><img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\"></li>"
+	            	nodata += "<div class='nodata_portlet '>";
 	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
 	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
+	            	nodata += "<li class='btn_next'><img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\"></li>"
 
 	            	$('#photoul').html(nodata);
 	        	}
@@ -164,10 +167,11 @@
 		        var ShowAdjacent = "";
 		        var pheight = window.screen.availHeight;
 	    	    var pwidth = window.screen.availWidth;
-	        	var pTop = (pheight - 780) / 3;
+	        	//var pTop = (pheight - 780) / 3;
+	        	var pTop = (pheight - 970) / 3;
 	        	var pLeft = (pwidth - 765) / 2;
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=780,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {

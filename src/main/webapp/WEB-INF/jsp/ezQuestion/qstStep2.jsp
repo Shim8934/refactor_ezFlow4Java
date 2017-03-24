@@ -464,17 +464,55 @@
                 		for (var j = 0; j < QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW").length; j++) {
                     		pFileName = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("HREF")[0])
                     		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
+                    		var attachType = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("TYPE")[0]);
+		                    var trName = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("ATTACHTITLE")[0]);
+        
 		                    oTd = document.createElement("td");
-        		            oTd.setAttribute("style", "padding:5px;");
+        		            oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
                     		oTr.appendChild(oTd);
-		                    oImg = document.createElement("img");
-        		            oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
-                		    oImg.setAttribute("style", "width:177px;height:131px");
+                    		if(attachType==1){
+                    			oImg = document.createElement("img");
+            		            oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
+                    		    oImg.setAttribute("style", "width:177px;height:131px");
+		                    }else if(attachType==2){
+		                    	oImg = document.createElement("img");
+            		            oImg.setAttribute("src", "/images/poll/sound.gif");
+                    		    oImg.setAttribute("style", "width:19px;height:17px");
+                    		    oImg.setAttribute("onclick", "javascript:file_open("+pFileName+")");
+// 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
+// 		                    	onclick=\"javascript:file_open(2," + brdID + "," + itemNo + "," 
+// 		                    			+ strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\">
+// 		                    	<img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" 
+// 		                    	+ URLDecoder.decode(strAttachName, "utf-8") + "</td>
+		                    }else if(attachType==4){
+		                    	oImg = document.createElement("img");
+            		            oImg.setAttribute("src", "/images/poll/link.gif");
+                    		    oImg.setAttribute("style", "width:26px;height:17px");
+// 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" 
+// 		                    	align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\">" 
+// 		                    	+ URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
+		                    }else if(attachType==5){
+		                    	oImg = document.createElement("img");
+            		            oImg.setAttribute("src", "/images/poll/video.gif");
+                    		    oImg.setAttribute("style", "width:21px;height:17px");
+// 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
+// 		                    	onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" 
+// 		                    	width=\"21\" height=\"17\" align=\"absmiddle\">" + URLDecoder.decode(strAttachName, "utf-8") + "</td>
+		                    }else{
+		                    	oImg = document.createElement("img");
+            		            oImg.setAttribute("src", "/images/poll/link.gif");
+                    		    oImg.setAttribute("style", "width:26px;height:17px");
+// 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" 
+// 		                    	width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, 
+// 		                    			"utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
+		                    }
                     		oTd.appendChild(oImg);
-		                    oTd = document.createElement("td");
-        		            oTd.setAttribute("style", "padding:5px");
-                		    oTd.innerHTML = "&nbsp;";
-                    		oTr.appendChild(oTd);
+                    		if(attachType!=1){
+                    			oTd.innerHTML += trName;	
+                    		}
+// 		                    oTd = document.createElement("td");
+//         		            oTd.setAttribute("style", "cursor:pointer; font-weight:bold;");
+//                     		oTr.appendChild(oTd);
                 		}
                 		oFileTable.appendChild(oTr);
                 		oTable.appendChild(oFileTable);
@@ -528,6 +566,40 @@
                 		oTd.appendChild(oTextarea);
                 		oTr.appendChild(oTd);
                 		oTable.appendChild(oTr);
+                		for (var j = 0; j < QuestionNode.childNodes[i].getElementsByTagName("ANSWER").length; j++) {
+                    		oTr = document.createElement("tr");
+                    		oTd = document.createElement("td");
+                    		oTd.setAttribute("style", "padding:3px 10px")
+                    		oInput = document.createElement("input");
+                    		oInput.setAttribute("type", "checkbox");
+                    		oInput.disabled = "true";
+                    		oInput.readOnly = "true";
+                    		oTd.appendChild(oInput);
+                    		oTd.innerHTML = oTd.innerHTML + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ANSWERTITLE")[0]);
+                    		oTr.appendChild(oTd);
+                    		oTable.appendChild(oTr);
+		                    if (QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length > 0) {
+        		                oFileTable = document.createElement("table");
+                		        oTr = document.createElement("tr");
+                        		for (var k = 0; k < QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length; k++) {
+                            		pFileName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("HREF")[0]);
+                            		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
+		                            oTd = document.createElement("td");
+                            		oTd.setAttribute("style", "padding:5px;");
+                            		oTr.appendChild(oTd);
+		                            oImg = document.createElement("img");
+        		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
+                		            oImg.setAttribute("style", "width:47px;height:31px");
+                        		    oTd.appendChild(oImg);
+		                            oTd = document.createElement("td");
+        		                    oTd.setAttribute("style", "padding:5px");
+                		            oTd.innerHTML = "&nbsp;";
+                        		    oTr.appendChild(oTd);
+                        		}
+                        		oFileTable.appendChild(oTr);
+                        		oTable.appendChild(oFileTable);
+                    		}
+                		}
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "4") {
                 		oTr = document.createElement("tr");
@@ -648,7 +720,7 @@
            			<tr>
                			<th style="text-align: center; width: 70px"><spring:message code="ezQuestion.t255" /></th>
                			<td colspan="3">
-                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 98%;" readonly="readonly" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
+                   			<input name="text" type="text" style="FONT-SIZE: 9pt; WIDTH: 100%;" readonly="readonly" value="<c:out value='${qstStep1VO.txtSubject}'/>"/></td>
                    			
            			</tr>
            			<tr>

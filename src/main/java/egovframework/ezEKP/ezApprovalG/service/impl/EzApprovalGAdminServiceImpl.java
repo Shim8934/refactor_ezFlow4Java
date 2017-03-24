@@ -85,7 +85,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map1.put("companyID", companyID);
 				map1.put("tenantID", tenantID);
 				
-				List<ApprGLeftVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
+				List<ApprGContInfoVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
 				
 				String strMultiData = commonUtil.getMultiData(primary, tenantID);
 				
@@ -110,9 +110,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					}				
 					sb.append("</HEADERS><ROWS>");
 					
-					for (int i = 0; i < listBody.size(); i++) {
-						ApprGLeftVO vo = listBody.get(i);
-						
+					for (ApprGContInfoVO vo : listBody) {
 						sb.append("<ROW><CELL>");
 											
 						if(strMultiData.equals("")){
@@ -131,8 +129,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				}else{
 					sb.append("<PARAMETER>");
 					
-					for (int i = 0; i < listBody.size(); i++) {
-						ApprGLeftVO vo = listBody.get(i);
+					for (ApprGContInfoVO vo : listBody) {
+						int i = listBody.indexOf(vo);
 						
 						sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
 											
@@ -182,15 +180,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContTypeInfo(map);
+		List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getContTypeInfo(map);
 		
 		if (type.equals("LIST")) {
 			sb.append("<LISTVIEWDATA><HEADERS><HEADER>");
 			sb.append("<NAME>" + ezApprovalGService.getCode2Name("L02", "001", companyID, primary, tenantID) + "</NAME><WIDTH>250</WIDTH></HEADER></HEADERS><ROWS>");
 			
-			for (int i = 0; i < list.size(); i++) {
-				ApprGLeftVO vo = list.get(i);
-				
+			for (ApprGContInfoVO vo : list) {
 				if(strMultiData.equals("")){
 					sb.append("<ROW><CELL><VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
 				}else{
@@ -202,8 +198,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		} else {
 			sb.append("<PARAMETER>");
 			
-			for (int i = 0; i < list.size(); i++) {
-				ApprGLeftVO vo = list.get(i);
+			for (ApprGContInfoVO vo : list) {
+				int i = list.indexOf(vo);
 				
 				sb.append("<ID" + i + ">" + vo.getContainerTypeID().trim() + "</ID" + i + ">");
 				
@@ -387,15 +383,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		try {
 			logger.debug("getContainerUseDeptInfo started.");
-			List<ApprGLeftVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
+			List<ApprGContInfoVO> list = ezApprovalGAdminDAO.getContainerUseDeptInfo(map);
 			
 			sb.append("<PARAMETER>");
 			
 			if(list.size() > 0){
-				for (int i = 0; i < list.size(); i++) {
-					ApprGLeftVO vo = list.get(i);
+				for (ApprGContInfoVO vo : list) {
+					int i = list.indexOf(vo);
 					
-					sb.append("<ID" + i + ">" + vo.getUseDepID().trim() + "</ID" + i + ">");
+					sb.append("<ID" + i + ">" + vo.getUseDeptID().trim() + "</ID" + i + ">");
 					
 					if (strMultiData.equals("")) {
 						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
@@ -1807,7 +1803,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID) throws Exception {
+	public String getDeptTranSendDocCount(String sYear, String sMonth, String eYear, String eMonth, String pMode, String companyID, String lang, String offset, int tenantID, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1892,11 +1888,16 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo) throws Exception {
+	public String getUserDocCount(String sYear, String sMonth, String eYear, String eMonth, String userFlag, String companyID, LoginVO userInfo, String approvalFlag) throws Exception {
 		StringBuilder sb = new StringBuilder();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_LISTTYPE", "107");
+		if (approvalFlag.equals("S")) {
+			map.put("v_LISTTYPE", "S104");
+		} else {
+			map.put("v_LISTTYPE", "107");
+		}
+		
 		map.put("v_LANGTYPE", userInfo.getLang());
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", userInfo.getTenantId());
@@ -1912,7 +1913,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			
 			sb.append("<HEADER>");
 			
-			if (vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
+			if (approvalFlag.equals("G") && vo.getName().equals(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()))) {
 				switch (userFlag) {
 				case "1":
 					vo.setName(egovMessageSource.getMessage("ezApprovalG.t445", userInfo.getLocale()));
@@ -1954,15 +1955,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			break;
 		}
 		
-		Calendar cal = Calendar.getInstance();
-		  
-		cal.set(Calendar.YEAR, Integer.parseInt(eYear));
-		cal.set(Calendar.MONTH, Integer.parseInt(eMonth)-1);
-		
-		String eDate = Integer.toString(cal.getActualMaximum(Calendar.DATE));
-		
 		String szFrom = commonUtil.getDateStringInUTC(sYear + "-" + sMonth + "-01 00:00:00", userInfo.getOffset(), true);
-		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-" + eDate + " 00:00:00", userInfo.getOffset(), true);
+		String szTo = commonUtil.getDateStringInUTC(eYear + "-" + eMonth + "-01 00:00:00", userInfo.getOffset(), true);
 		
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("v_APRTYPE", aprType);
@@ -3032,33 +3026,6 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		
 		return rtnValue;
 	}
-
-	@Override
-	public String getCodeType(String lang, int tenantId, String companyID) throws Exception {
-		logger.debug("getCodeType started");
-		
-		StringBuilder rtnXML = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
-				
-		map.put("v_LANGTYPE", lang);
-		map.put("v_TENANTID", tenantId);
-		map.put("companyID", companyID);
-		
-		List<ApprGLeftVO> apprCodeVOs = ezApprovalGDAO.getKeepType(map);
-		
-		for (int k = 0; k < apprCodeVOs.size(); k++) {
-			String[] colOption = apprCodeVOs.get(k).getName().split(";");
-			
-			if (colOption[1].equals("")) {
-				rtnXML.append("<OPTION value=" + colOption[2] + " selected>" + colOption[1] + "</OPTION>");
-			} else {
-				rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
-			}
-		}
-		logger.debug("getCodeType ended");
-		
-		return rtnXML.toString();
-	}
 	
 	@Override
 	public String deleteDocList(String xmlPara, String offset, String companyID, int tenantID) throws Exception {
@@ -3334,6 +3301,191 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("getSpecialContList ended");
 		
 		return sb.toString();
+	}
+
+	@Override
+	public String getSpecialContCode(String contType, String companyID, String primary, int tenantID) throws Exception {
+		logger.debug("getSpecialContCode started.");
+		
+		StringBuilder sb = new StringBuilder();
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("code1", "SA60");
+		map.put("companyID", companyID);
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGLeftVO> list = ezApprovalGAdminDAO.getCodeType(map);
+		
+		for (ApprGLeftVO vo : list) {
+			String code = vo.getCode2();
+			
+			if (code.equals(contType)) {
+				sb.append("<OPTION value=" + code + " selected>" + vo.getName() + "</OPTION>");
+			} else {
+				sb.append("<OPTION value=" + code + ">" + vo.getName() + "</OPTION>");
+			}
+		}
+		
+		map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		List<ApprGContInfoVO> apprContInfoList = ezApprovalGAdminDAO.getContTypeInfo(map);
+		
+		for (ApprGContInfoVO vo : apprContInfoList) {
+			String typeID = vo.getContainerTypeID();
+			
+			if (typeID.equals(contType)) {
+				sb.append("<OPTION value =" + typeID + " selected>" + vo.getContainerTypeName() + "</OPTION>");
+			} else {
+				sb.append("<OPTION value =" + typeID + ">" + vo.getContainerTypeName() + "</OPTION>");
+			}
+		}
+		
+		logger.debug("getSpecialContCode ended");
+		
+		return sb.toString();
+	}
+	
+	@Override
+	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("getSpecialContInfo started.");
+		
+		StringBuilder sb;
+		
+		try {
+			sb = new StringBuilder();
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("deptID", deptID);
+			map.put("contType", contType);
+			map.put("sn", sn);
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			
+			logger.debug("deptID = " + deptID);
+			logger.debug("contType = " + contType);
+			logger.debug("sn = " + sn);
+			logger.debug("companyID = " + companyID);
+			logger.debug("tenantID = " + tenantID);
+			
+			ApprGContInfoVO vo = ezApprovalGAdminDAO.getSpecialContInfo(map);
+			
+			sb.append("<CONTINFO>");
+			sb.append("<DEPTID>" + vo.getDeptID() + "</DEPTID>");
+			sb.append("<CONTTYPE>" + vo.getContType() + "</CONTTYPE>");
+			sb.append("<SN>" + vo.getSn() + "</SN>");
+			sb.append("<CONTNAME>" + vo.getContName() + "</CONTNAME>");
+			
+			String subQuery = vo.getSubQuery();
+			
+			if (subQuery != null && subQuery.indexOf("NOT") > 0) {
+				sb.append("<CONTYN>N</CONTYN>");
+			} else {
+				sb.append("<CONTYN>Y</CONTYN>");
+			}
+			
+			sb.append("<FORMIDS>");
+			
+			if (subQuery != null && subQuery.length() > 0) {
+				map = new HashMap<String, Object>();
+				
+				map.put("lang", commonUtil.getMultiData(lang, tenantID));
+				map.put("subQuery", subQuery);
+				map.put("companyID", companyID);
+				map.put("tenantID", tenantID);
+				
+logger.debug("subQuerty = " + subQuery);
+				List<String> list = ezApprovalGAdminDAO.getSpecialContInfoFormName(map);
+				
+				for (String formIDName : list) {
+					sb.append("<FORMID>" + formIDName + "</FORMID>");
+				}
+			}
+			
+			sb.append("</FORMIDS>");
+			sb.append("</CONTINFO>");
+			
+			logger.debug("getSpecialContInfo ended.");
+		} catch (Exception e){
+			e.printStackTrace();
+			sb = new StringBuilder();
+			sb.append("");
+		}
+
+		return sb.toString();
+	}
+
+	@Override
+	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
+		logger.debug("addSpecialCont started");
+
+		String rtnValue = "";
+		
+		vo.setTenantID(tenantID);
+		
+		if (vo.getSn() == null || vo.getSn().equals("") || vo.getSn().equals("0")) {
+			vo.setSn("new");
+		} else {
+			ezApprovalGAdminDAO.deleteSpecialContInfo(vo);
+		}
+		
+		String subQuery = "";
+		
+		if (vo.getFormIDs() != null && !vo.getFormIDs().equals("")) {
+			if (vo.getContYN().equals("Y")) {
+				subQuery = " formID IN (" + vo.getFormIDs() + ")"; 
+			} else {
+				subQuery = " formID NOT IN (" + vo.getFormIDs() + ")"; 
+			}
+		}
+		
+		vo.setSubQuery(subQuery);
+		
+		ezApprovalGAdminDAO.insertSpecialContInfo(vo);
+		
+		rtnValue = "TRUE";
+		
+		logger.debug("addSpecialCont ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
+		logger.debug("delSpecialCont started");
+		
+		vo.setTenantID(tenantID);
+		
+		ezApprovalGAdminDAO.deleteSpecialContInfo(vo);
+		
+		logger.debug("delSpecialCont ended");
+		
+		return "TRUE";
+	}
+
+	@Override
+	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception {
+		logger.debug("changeSpecialContSN started");
+		
+		ApprGContInfoVO vo = new ApprGContInfoVO();
+			
+		vo.setDeptID(deptID);
+		vo.setContType(sContType);
+		vo.setContType2(tContType);
+		vo.setSn(sSn);
+		vo.setSn2(tSn);
+		vo.setCompanyID(companyID);
+		vo.setTenantID(tenantID);
+			
+		ezApprovalGAdminDAO.changeSpecialContSN1(vo);
+		ezApprovalGAdminDAO.changeSpecialContSN2(vo);
+		ezApprovalGAdminDAO.changeSpecialContSN3(vo);
+		
+		logger.debug("changeSpecialContSN ended");
+		
+		return "TRUE";
 	}
 	
 	

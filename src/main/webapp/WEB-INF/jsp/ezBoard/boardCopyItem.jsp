@@ -35,7 +35,7 @@
 		    }
 		    function CopyItem(pDestBoardID) {
 		        if (CheckIfAnonyBoard(pDestBoardID) == "1") {
-		            alert("<spring:message code='ezBoard.t353'/>");
+		            alert("<spring:message code='ezBoard.jsh02'/>");
 		            return;
 		        }
 		

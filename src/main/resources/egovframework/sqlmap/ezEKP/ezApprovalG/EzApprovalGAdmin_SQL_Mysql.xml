@@ -17,7 +17,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getContainerInfoManage"
-		parameterClass="Map" resultClass="ApprGLeftVO">
+		parameterClass="Map" resultClass="ApprGContInfoVO">
 		<![CDATA[
 			SELECT
 				TBL_CONTAINER.containerid,
@@ -101,7 +101,7 @@
 	<!-- ]]> -->
 	<!-- </procedure> -->
 	<select id="EzApprovalGAdmin.getContainerUseDeptInfo"
-		parameterClass="Map" resultClass="ApprGLeftVO">
+		parameterClass="Map" resultClass="ApprGContInfoVO">
 		<![CDATA[
 			SELECT 
 				containerid,
@@ -2266,6 +2266,160 @@
 				containertypeid = #contType#
 		]]>
 	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContInfo" parameterClass="Map" resultClass="ApprGContInfoVO">
+		<![CDATA[
+			SELECT 
+				deptid,
+        		conttype,
+        		sn,
+        		contname,
+        		subquery 
+   			FROM 
+   				TBL_SPECIALCONTAINERINFO 
+  			WHERE
+  				tenant_id = #tenantID#
+  			AND
+  				companyid = #companyID#
+  			AND  
+  				deptid = #deptID#
+           	AND 
+           		conttype = #contType#
+           	AND 
+           		sn = #sn#
+		]]>
+	</select>
+	
+	<select id="EzApprovalGAdminDAO.getSpecialContInfoFormName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CONCAT(CONCAT(formid,';'), IFNULL(formname$lang$, formname)) AS FORMIDNAME 
+			FROM 
+				TBL_FORMINFO
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+			  	$subQuery$
+		]]>
+	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<selectKey keyProperty="sn" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(sn) IS NULL
+						THEN 1
+						ELSE MAX(sn) + 1
+					END SN
+        		FROM 
+        			TBL_SPECIALCONTAINERINFO 
+       			WHERE
+       				tenant_id = #tenantID#
+       			AND
+       				companyid = #companyID#
+       			AND  
+       				deptid = #deptID#
+                AND 
+                	conttype = #contType#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBL_SPECIALCONTAINERINFO
+				(deptid,
+				conttype,
+				sn,
+				contname,
+				subquery,
+				companyid,
+				tenant_id)
+			VALUES
+				(#deptID#,
+				#contType#,
+				#sn#,
+				#contName#,
+				#subQuery#,
+				#companyID#,
+				#tenantID#) 
+		]]>
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_SPECIALCONTAINERINFO 
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				deptid = #deptID#
+			AND
+				conttype = #contType#
+			AND
+				sn = #sn#
+		]]>
+	</delete>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN1" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+      		SET 
+      			sn = '0'
+    		WHERE  
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND
+    			deptid = #deptID#
+     		AND 
+     			conttype = #contType#
+     		AND 
+     			sn = #sn#
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN2" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+      		SET 
+      			sn = #sn#
+    		WHERE
+    			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+    			deptid = #deptID#
+     		AND 
+     			conttype = #contType2#
+     		AND 
+     			sn = #sn2#
+		]]>
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.changeSpecialContSN3" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			UPDATE
+				TBL_SPECIALCONTAINERINFO
+         	SET 
+         		sn = #sn2#
+       		WHERE
+       			tenant_id = #tenantID#
+    		AND
+    			companyid = #companyID#
+    		AND  
+       			deptid = #deptID#
+        	AND 
+        		conttype = #contType#
+        	AND 
+        		sn = '0'
+		]]>
+	</update>
 
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->
@@ -3053,7 +3207,7 @@
 	</select>
 
 	<select id="EzApprovalGAdmin.getContTypeInfo" parameterClass="Map"
-		resultClass="ApprGLeftVO">
+		resultClass="ApprGContInfoVO">
 		<![CDATA[
 			SELECT 
 				containertypeid,

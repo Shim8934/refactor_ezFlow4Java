@@ -35,7 +35,7 @@
 	<typeAlias  alias="ApprGgetDeptStacticsVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO"/>
 	<typeAlias  alias="ApprGDeliveryListVO" 			type="egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO"/>
 	<typeAlias  alias="ApprUserContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO"/>
-	
+	<typeAlias  alias="ApprGContInfoVO" 			    type="egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO"/>
 
 <!-- 	<procedure id="EzApprovalG.getListHeader" parameterClass="Map" resultClass="ApprGListHeaderVO"> -->
 <!-- 		{CALL EZSP_GETLISTHEADER(#v_LISTTYPE#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
@@ -6271,7 +6271,8 @@
 			* 
 		FROM(
 				SELECT 
-					A.* FROM (
+					A.* 
+			  FROM (
 							SELECT 
 								DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
 										 TBL_ENDAPRDOCINFO.DOCTYPE,
@@ -21210,4 +21211,24 @@
    			$v_PQUERYSIZEMAIN$
    			</isLessThan>
    	</select>
+   	
+   	<select id="EzApprovalG.getSpecialContTree" parameterClass="UserInfo" resultClass="ApprGContInfoVO">
+   		SELECT 
+   			 DEPTID ,
+             CONTTYPE ,
+             SN ,
+             CONTNAME ,
+             SUBQUERY 
+        FROM 
+        	 TBL_SPECIALCONTAINERINFO 
+        WHERE  
+       		 DEPTID = #deptID#
+       	AND
+       		 TENANT_ID = #tenantId#
+        AND
+        	 COMPANYID = #companyID#
+        ORDER BY 
+        	 CONTTYPE, SN
+   	</select>
+   	
 </sqlMap>

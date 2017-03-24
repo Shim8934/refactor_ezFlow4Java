@@ -18,6 +18,11 @@
 	                parent.DocumentComplete2();
 	            } catch (e)
 	            { }
+	            
+	            try {
+		        	$('#div_Content #body').css('overflow', 'auto');
+		        } catch (e)
+		        { }
 	        };
 	
 	        function Set_EditorContentURL(url) {

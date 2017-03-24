@@ -19,6 +19,7 @@
 			var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, DocList_Flag, DocTitle, pUserFlag;
 	        var StatistList = createXmlDom();
 	        var pCompanyID = "<c:out value = '${userInfo.companyID}' />";
+	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        var OrderCell = "";
 	        var listview = new ListView();
 	        var pMode = "";
@@ -33,11 +34,17 @@
 	            document.getElementsByName("condition")[1].checked = false;
 	            document.getElementsByName("Dept")[0].checked = false;
 	            document.getElementsByName("Dept")[1].checked = false;
+	            document.getElementsByName("Dept")[2].checked = false;
 	            document.getElementsByName("UserFlag")[0].checked = false;
 	            document.getElementsByName("UserFlag")[1].checked = false;
 	            document.getElementsByName("UserFlag")[2].checked = false;
 	            document.getElementsByName("UserFlag")[3].checked = false;
-
+	            
+	            if (approvalFlag == 'S') {
+	            	$(".approvalG").hide();
+	            } else {
+	            	$(".approvalS").hide();
+	            }
 	            Initlvtlist();
 	        });
 	        
@@ -153,6 +160,9 @@
 	            	document.getElementsByName("Dept")[0].disabled = true;
 	                document.getElementsByName("Dept")[1].disabled = true;
 	                document.getElementsByName("Dept")[2].disabled = true;
+	                document.getElementsByName("Dept")[0].checked = false;
+		            document.getElementsByName("Dept")[1].checked = false;
+		            document.getElementsByName("Dept")[2].checked = false;
 	                document.getElementsByName("UserFlag")[0].disabled = false;
 	                document.getElementsByName("UserFlag")[1].disabled = false;
 	                document.getElementsByName("UserFlag")[2].disabled = false;
@@ -165,6 +175,10 @@
 	                document.getElementsByName("UserFlag")[1].disabled = true;
 	                document.getElementsByName("UserFlag")[2].disabled = true;
 	                document.getElementsByName("UserFlag")[3].disabled = true;
+	                document.getElementsByName("UserFlag")[0].checked = false;
+		            document.getElementsByName("UserFlag")[1].checked = false;
+		            document.getElementsByName("UserFlag")[2].checked = false;
+		            document.getElementsByName("UserFlag")[3].checked = false;
 	            }
 	        }
 	        
@@ -188,7 +202,7 @@
                         	pMode = 4;
                         }
 	                	
-	                	url += "&p4=" + encodeURI(pMode);
+	                	url += "&p4=" + encodeURIComponent(pMode);
 	                }
 	            } else if (document.getElementsByName("condition")[1].checked){
 	                url += "?flag=DEPT";
@@ -204,19 +218,19 @@
 		                } else if (document.getElementsByName("Dept")[2].checked) {
 		                    pMode = "BOTH";
 		                }
-	                	url += "&p4=" + encodeURI(pMode);
+	                	url += "&p4=" + encodeURIComponent(pMode);
 	                }
 	            } else {
 	            	alert("<spring:message code = 'ezApprovalG.t1294' />");
 	            	return ;
 	            }
 	            
-	            url += "&p0=" + encodeURI(document.getElementById("SYear").value);
-	            url += "&p1=" + encodeURI(document.getElementById("SMonth").value);
-	            url += "&p2=" + encodeURI(document.getElementById("EYear").value);
-	            url += "&p3=" + encodeURI(document.getElementById("EMonth").value);
+	            url += "&p0=" + encodeURIComponent(document.getElementById("SYear").value);
+	            url += "&p1=" + encodeURIComponent(document.getElementById("SMonth").value);
+	            url += "&p2=" + encodeURIComponent(document.getElementById("EYear").value);
+	            url += "&p3=" + encodeURIComponent(document.getElementById("EMonth").value);
 	            
-	            url += "&p5=" + encodeURI(pCompanyID);
+	            url += "&p5=" + encodeURIComponent(pCompanyID);
 
 	            window.frames["saveExcel"].location.href = url;
 	        }
@@ -260,24 +274,46 @@
 	            <th><input type="radio" id="condition" name="condition" value="1" onclick="return condition_Init('1')"><spring:message code = 'ezApprovalG.t1303' /></th>
 	            <td>
 	                <input type="radio" id="UserFlag" name="UserFlag" value="1" onclick="return DeptRadio_Init()">
-	                <spring:message code = 'ezApprovalG.t445' />
+		                <c:choose>
+		                	<c:when test="${approvalFlag == 'S' }">
+		                		<spring:message code = 'ezApproval.t400' />
+		                	</c:when>
+		                	<c:otherwise>
+		                		<spring:message code = 'ezApprovalG.t445' />
+		                	</c:otherwise>
+		                </c:choose>
+	                
 	                <input type="radio" id="UserFlag" name="UserFlag" value="2" onclick="return DeptRadio_Init()">
-	                <spring:message code = 'ezApprovalG.t1304' />
+	                	<c:choose>
+		                	<c:when test="${approvalFlag == 'S' }">
+		                		<spring:message code = 'ezApproval.t401' />
+		                	</c:when>
+		                	<c:otherwise>
+		                		<spring:message code = 'ezApprovalG.t1304' />
+		                	</c:otherwise>
+		                </c:choose>
+	                
 	                <input type="radio" id="UserFlag" name="UserFlag" value="3" onclick="return DeptRadio_Init()">
-	                <spring:message code = 'ezApprovalG.t1305' />
-	                <input type="radio" id="UserFlag" name="UserFlag" value="4" onclick="return DeptRadio_Init()">
-	                <spring:message code = 'ezApprovalG.t1306' />
+	                	<c:choose>
+		                	<c:when test="${approvalFlag == 'S' }">
+		                		<spring:message code = 'ezApproval.t402' />
+		                	</c:when>
+		                	<c:otherwise>
+		                		<spring:message code = 'ezApprovalG.t1305' />
+		                	</c:otherwise>
+		                </c:choose>
+	                <input type="radio" id="UserFlag" name="UserFlag" class = "approvalG" value="4" onclick="return DeptRadio_Init()">
+	                <c:if test="${approvalFlag = 'S' }">
+		                <spring:message code = 'ezApprovalG.t1306' />
+	                </c:if>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th><input type="radio" id="condition" name="condition" value="2" onclick="return condition_Init('2')"><spring:message code = 'ezApprovalG.t1307' /></th>
 	            <td>
-	                <input type="radio" id="Dept" name="Dept" value="1" onclick="return UserFlag_Init()">
-	                <spring:message code = 'ezApprovalG.t214' />
-	                <input type="radio" id="Dept" name="Dept" value="2" onclick="return UserFlag_Init()">
-	                <spring:message code = 'ezApprovalG.t1308' />
-	                <input type="radio" id="Dept" name="Dept" value="3" onclick="return UserFlag_Init()">
-	                <spring:message code = 'ezApprovalG.t1309' />
+	                <input type="radio" id="Dept" name="Dept" value="1" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t214' />
+	                <input type="radio" id="Dept" name="Dept" value="2" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t1308' />
+	                <input type="radio" id="Dept" name="Dept" value="3" onclick="return UserFlag_Init()"><spring:message code = 'ezApprovalG.t1309' />
 	            </td>
 	        </tr>
 	    </table>

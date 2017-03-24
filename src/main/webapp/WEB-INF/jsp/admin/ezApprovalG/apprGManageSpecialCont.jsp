@@ -38,17 +38,17 @@
 	            }
 	        }
 	
-	        var ezapralert_cross_dialogArgument = new Array();
+	        var ezapralert_cross_dialogArguments = new Array();
 	        function OpenAlertUI(pAlertContent) {
 	            var parameter = pAlertContent;
-	            var url = "/admin/ezApprovalG/ezAprAlert.do";
-	            ezapralert_cross_dialogArgument[0] = parameter;
+	            var url = "/ezApprovalG/ezAprAlert.do";
+	            ezapralert_cross_dialogArguments[0] = parameter;
 	            var result = GetOpenWindow(url, "ezAPRALERT_Cross", 330, 205, "NO");
 	        }
 	
 	        function OpenInformationUI(pInformationContent) {
 	            var parameter = pInformationContent;
-	            var url = "/admin/ezApprovalG/ezAprOpinion.do";
+	            var url = "/ezApprovalG/ezAprOpinion.do";
 	            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
 	
 	            feature = feature + GetShowModalPosition(330, 205);
@@ -61,37 +61,33 @@
 	            
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "text",
+		    		dataType : "json",
 		    		async : true,
 		    		url : "/admin/ezApprovalG/specialContListInfo.do",
 		    		data : {
 		    			deptID : pDeptID,
 		    			companyID  : pCompanyID
 		    		},
-		    		success: function(text){
-		    			getSpecialContList_after(text);
+		    		success: function(result){
+		    			getSpecialContList_after(result.resultXML);
 		    		}
 		    	});
 	        }
 	
-	        function getSpecialContList_after(text) {
+	        function getSpecialContList_after(result) {
 	            listview.LoadFromID("lvAprLineForm");
-	            try {
-	                var xmlRtn = loadXMLString(text);
-	
-	                if (xmlRtn.getElementsByTagName("ROW").length == 0) return;
-	                listview.DataSource(loadXMLString(text));
-	                listview.DataBind("lvAprLine");
-	
-	                if (status == "up")
-	                    listview.SetSelectedIndex(pSelectedIndex - 1);
-	
-	                if (status == "down")
-	                    listview.SetSelectedIndex(Number(pSelectedIndex) + 1);
-	            }
-	            catch (e) {
-	                alert(e.description);
-	            }
+
+                var xmlRtn = loadXMLString(result);
+
+                if (xmlRtn.getElementsByTagName("ROW").length == 0) return;
+                listview.DataSource(xmlRtn);
+                listview.DataBind("lvAprLine");
+
+                if (status == "up")
+                    listview.SetSelectedIndex(pSelectedIndex - 1);
+
+                if (status == "down")
+                    listview.SetSelectedIndex(Number(pSelectedIndex) + 1);
 	        }
 	
 	        function lvAprLine_DBSelChange() {
@@ -104,7 +100,7 @@
 	        var managespecialcontinfo_dialogArguments = new Array();
 	        function btnAdd_onclick() {
 	            managespecialcontinfo_dialogArguments[1] = btnAdd_onclick_complete;
-	            var url = "manageSpecialContInfo.do?deptID=" + encodeURIComponent(pDeptID) + "&companyID=" + encodeURIComponent(pCompanyID) + "&contType=&sn=";
+	            var url = "/admin/ezApprovalG/manageSpecialContInfo.do?deptID=" + encodeURIComponent(pDeptID) + "&companyID=" + encodeURIComponent(pCompanyID) + "&contType=&sn=";
 	            var result = GetOpenWindow(url, "ManageSpecialContInfo", 610, 545, "NO");
 	        }
 	        function btnAdd_onclick_complete(retVal) {
@@ -119,7 +115,7 @@
 	            if (selnode) {
 	                var CONTTYPE = trim_Cross(GetAttribute(selnode[0], "DATA2"));
 	                var SN = trim_Cross(GetAttribute(selnode[0], "DATA3"));
-	                var url = "manageSpecialContInfo.do?deptID=" + encodeURIComponent(pDeptID) + "&companyID=" + encodeURIComponent(pCompanyID) + "&contType=" + encodeURIComponent(CONTTYPE) + "&sn=" + encodeURIComponent(SN);
+	                var url = "/admin/ezApprovalG/manageSpecialContInfo.do?deptID=" + encodeURIComponent(pDeptID) + "&companyID=" + encodeURIComponent(pCompanyID) + "&contType=" + encodeURIComponent(CONTTYPE) + "&sn=" + encodeURIComponent(SN);
 	                managespecialcontinfo_dialogArguments[1] = btnEdit_onclick_Complete;
 	                var result = GetOpenWindow(url, "ManageSpecialContInfo", 610, 545, "NO");
 	            }
@@ -136,29 +132,30 @@
 	            listview.LoadFromID("lvAprLineForm");
 	
 	            var selnode = listview.GetSelectedRows();
-	            var result = "";
+	            var resultVal = "";
 	            
 	            if (selnode) {
 			    	$.ajax({
 			    		type : "POST",
-			    		dataType : "text",
+			    		dataType : "json",
 			    		async : false,
-			    		url : "/admin/ezApproval/specialContDelete.do",
+			    		url : "/admin/ezApprovalG/specialContDelete.do",
 			    		data : {
 			    			deptID     : pDeptID,
 			    			sn         : GetAttribute(selnode[0], "DATA3"),
 			    			contType   : GetAttribute(selnode[0], "DATA2"),
 			    			companyID  : pCompanyID
 			    		},
-			    		success: function(text){
-			    			result = text;
+			    		success: function(result){
+			    			resultVal = result.result;
 			    		}
 			    	});
 	
-	                if (result.indexOf("TRUE") > -1)
+	                if (resultVal.indexOf("TRUE") > -1) {
 	                    getSpecialContList();
-	                else
+	                } else {
 	                    OpenAlertUI("<spring:message code='ezApprovalG.t280'/>");
+	                }
 	            }
 	            else {
 	                OpenAlertUI("<spring:message code='ezApproval.t653'/>");
@@ -242,13 +239,13 @@
 	        }
 	
 	        function ChangeSN(SContType, SSN, TContType, TSN) {
-	        	var result = "";
+	        	var resultVal = "";
 	        	
 		    	$.ajax({
 		    		type : "POST",
-		    		dataType : "text",
+		    		dataType : "json",
 		    		async : false,
-		    		url : "/admin/ezApproval/specialContChangeSN.do",
+		    		url : "/admin/ezApprovalG/specialContChangeSN.do",
 		    		data : {
 		    			deptID     : pDeptID,
 		    			sn         : SSN,
@@ -257,12 +254,12 @@
 		    			contType2  : TContType,
 		    			companyID  : pCompanyID
 		    		},
-		    		success: function(text){
-		    			result = text;
+		    		success: function(result){
+		    			resultVal = result.result;
 		    		}
 		    	});
 		    	
-	            return result;
+	            return resultVal;
 	        }
 	
 	    </script>
