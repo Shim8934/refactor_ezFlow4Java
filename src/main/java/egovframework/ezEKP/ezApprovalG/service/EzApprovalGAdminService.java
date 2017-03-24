@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
+import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -147,4 +149,10 @@ public interface EzApprovalGAdminService {
 	public String getSpecialContCode(String contType, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String getSpecialContInfo(String deptID, String contType, String sn, String companyID, String lang, int tenantID) throws Exception;
+
+	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
+
+	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception;
+	
+	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception;
 }

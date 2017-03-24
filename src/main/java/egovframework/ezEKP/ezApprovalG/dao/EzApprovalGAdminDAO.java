@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
+import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -449,5 +450,29 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	@SuppressWarnings("unchecked")
 	public List<String> getSpecialContInfoFormName(Map<String, Object> map) {
 		return (List<String>) list("EzApprovalGAdminDAO.getSpecialContInfoFormName", map);
+	}
+
+	public void deleteSpecialContInfo(ApprGContInfoVO vo) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteSpecialContInfo", vo);
+	}
+
+	public void insertSpecialContInfo(ApprGContInfoVO vo) throws Exception {
+		insert("EzApprovalGAdminDAO.insertSpecialContInfo", vo);
+	}
+
+	public void deleteSpecialContInfo(ApprContInfoVO vo) throws Exception {
+		delete("EzApprovalGAdminDAO.deleteSpecialContInfo", vo);
+	}
+
+	public void changeSpecialContSN1(ApprGContInfoVO vo) throws Exception {
+		update("EzApprovalGAdminDAO.changeSpecialContSN1", vo);
+	}
+
+	public void changeSpecialContSN2(ApprGContInfoVO vo) throws Exception {
+		update("EzApprovalGAdminDAO.changeSpecialContSN2", vo);
+	}
+
+	public void changeSpecialContSN3(ApprGContInfoVO vo) throws Exception {
+		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
 }

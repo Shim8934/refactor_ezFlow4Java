@@ -34,6 +34,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -1137,11 +1138,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재관리 문서함관리 특수문서함 추가,수정화면 호출함수
+	 * 전자결재관리 문서함관리 특수문서함 추가,수정화면 호출
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialContInfo.do")
 	public String manageSpecialContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("manageSpecialContInfo started");
+		logger.debug("manageSpecialContInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
@@ -1153,8 +1154,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String codeXML = ezApprovalGAdminService.getSpecialContCode(contType, companyID, userInfo.getPrimary(), userInfo.getTenantId());
 		String infoXML = ezApprovalGAdminService.getSpecialContInfo(deptID, contType, sn, companyID, userInfo.getLang(), userInfo.getTenantId());
 		
-logger.debug("codeXML = " + codeXML);
-logger.debug("infoXML = " + infoXML);
+		logger.debug("codeXML = " + codeXML);
+		logger.debug("infoXML = " + infoXML);
 		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("contType", contType);
@@ -1163,11 +1164,70 @@ logger.debug("infoXML = " + infoXML);
 		model.addAttribute("codeXML", codeXML);
 		model.addAttribute("infoXML", infoXML);
 		
-		logger.debug("manageSpecialContInfo ended");
+		logger.debug("manageSpecialContInfo ended.");
 		
 		return "admin/ezApprovalG/apprGManageSpecialContInfo";
 	}
 	
+	/**
+	 * 전자결재관리 문서함관리 특수문서함 추가/수정 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContAdd.do")
+	public String specialContAdd(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO apprGContInfoVO, Model model) throws Exception {
+		logger.debug("specialContAdd started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.addSpecialCont(apprGContInfoVO, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContAdd ended. result = " + result);
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재관리 문서함관리 특수문서함 삭제 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContDelete.do")
+	public String specialContDelete(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO vo, Model model) throws Exception {
+		logger.debug("specialContDelete started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String result = ezApprovalGAdminService.delSpecialCont(vo, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContDelete ended");
+		
+		return "json";
+	}
+	
+	/**
+	 * 전자결재관리 문서함관리 특수문서함 순서변경 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezApprovalG/specialContChangeSN.do")
+	public String specialContChangeSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("specialContChangeSN started");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String deptID = request.getParameter("deptID");
+		String sContType = request.getParameter("contType");
+		String sSn = request.getParameter("sn");
+		String tContType = request.getParameter("contType2");
+		String tSn = request.getParameter("sn2");
+		String companyID = request.getParameter("companyID");
+		String result = ezApprovalGAdminService.changeSpecialContSN(deptID, sContType, sSn, tContType, tSn, companyID, userInfo.getTenantId());
+		
+		model.addAttribute("result", result);
+		
+		logger.debug("specialContChangeSN ended");
+		
+		return "json";
+	}
 	/**
 	 * 전자결재G관리 수신처 그룹지정 메뉴 호출함수
 	 * 전자결재관리 수신처 그룹지정 메뉴 호출함수

@@ -113,7 +113,9 @@
 
                 	    var pfirstItemID = "";
                     
-                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));
+                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                        
+                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+                        
                         listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>";
 
                         var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
@@ -130,6 +132,7 @@
                         }
                         listHTML += "</ul>";
                         document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
+                        document.getElementById("content").innerHTML = FboardMainContent;
 
                         //getContent(pfirstItemID);                  
 	                } else {

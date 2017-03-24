@@ -812,7 +812,7 @@
 	            <tr>
 	                <td>&lt;xml id=conn&gt;<br>
 	                    &lt;connroot&gt;<br>
-	                    <textarea class="textarea" id="txt_OpinionContent" style="FONT-SIZE: 9pt; WIDTH: 100%; HEIGHT: 760px"></textarea>
+	                    <textarea class="textarea" id="txt_OpinionContent" style="FONT-SIZE: 9pt; WIDTH: 98%; HEIGHT: 734px"></textarea>
 	                    <br>
 	                    &lt;/connroot&gt;<br>
 	                    &lt;/xml&gt; </td>

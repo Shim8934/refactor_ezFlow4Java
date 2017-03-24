@@ -22,6 +22,7 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApproval.vo.ApprAutoRuleVO;
+import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -3398,6 +3399,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("companyID", companyID);
 				map.put("tenantID", tenantID);
 				
+logger.debug("subQuerty = " + subQuery);
 				List<String> list = ezApprovalGAdminDAO.getSpecialContInfoFormName(map);
 				
 				for (String formIDName : list) {
@@ -3417,4 +3419,77 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		return sb.toString();
 	}
+
+	@Override
+	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
+		logger.debug("addSpecialCont started");
+
+		String rtnValue = "";
+		
+		vo.setTenantID(tenantID);
+		
+		if (vo.getSn() == null || vo.getSn().equals("") || vo.getSn().equals("0")) {
+			vo.setSn("new");
+		} else {
+			ezApprovalGAdminDAO.deleteSpecialContInfo(vo);
+		}
+		
+		String subQuery = "";
+		
+		if (vo.getFormIDs() != null && !vo.getFormIDs().equals("")) {
+			if (vo.getContYN().equals("Y")) {
+				subQuery = " formID IN (" + vo.getFormIDs() + ")"; 
+			} else {
+				subQuery = " formID NOT IN (" + vo.getFormIDs() + ")"; 
+			}
+		}
+		
+		vo.setSubQuery(subQuery);
+		
+		ezApprovalGAdminDAO.insertSpecialContInfo(vo);
+		
+		rtnValue = "TRUE";
+		
+		logger.debug("addSpecialCont ended");
+		
+		return rtnValue;
+	}
+
+	@Override
+	public String delSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
+		logger.debug("delSpecialCont started");
+		
+		vo.setTenantID(tenantID);
+		
+		ezApprovalGAdminDAO.deleteSpecialContInfo(vo);
+		
+		logger.debug("delSpecialCont ended");
+		
+		return "TRUE";
+	}
+
+	@Override
+	public String changeSpecialContSN(String deptID, String sContType, String sSn, String tContType, String tSn, String companyID, int tenantID) throws Exception {
+		logger.debug("changeSpecialContSN started");
+		
+		ApprGContInfoVO vo = new ApprGContInfoVO();
+			
+		vo.setDeptID(deptID);
+		vo.setContType(sContType);
+		vo.setContType2(tContType);
+		vo.setSn(sSn);
+		vo.setSn2(tSn);
+		vo.setCompanyID(companyID);
+		vo.setTenantID(tenantID);
+			
+		ezApprovalGAdminDAO.changeSpecialContSN1(vo);
+		ezApprovalGAdminDAO.changeSpecialContSN2(vo);
+		ezApprovalGAdminDAO.changeSpecialContSN3(vo);
+		
+		logger.debug("changeSpecialContSN ended");
+		
+		return "TRUE";
+	}
+	
+	
 }

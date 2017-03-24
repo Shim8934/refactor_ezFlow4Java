@@ -407,7 +407,7 @@
 		                    <spring:message code="ezEmail.t657" />
 		                    </c:if>
 		                    </th>
-		                    <td style="border-right-color:#ffffff;">
+		                    <td style="border-right:0px;">
 		                        <div id="ReceiveDate" style="OVERFLOW-Y: auto;padding-top:2px;padding-left:5px;padding-right:5px; width:150px;"> 
 		                        <span id="LabelReceiveDate">${dateStr}</span> 
 		                        </div>
