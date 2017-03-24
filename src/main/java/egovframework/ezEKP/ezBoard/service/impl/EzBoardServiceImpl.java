@@ -1789,8 +1789,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("PREPLYID", replyID);
 		map.put("PBOARDID", boardID);
 		map.put("USERID", userInfo.getId());
-		map.put("USERNAME", userInfo.getDeptName1());
-		map.put("USERNAME2", userInfo.getDeptName2());
+		map.put("USERNAME", userInfo.getDisplayName1());
+		map.put("USERNAME2", userInfo.getDisplayName2());
 		map.put("PCONTENT", content);
 		map.put("PPASSWORD", password);
 		map.put("TENANTID", userInfo.getTenantId());
