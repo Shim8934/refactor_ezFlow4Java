@@ -730,6 +730,55 @@
 		]]>
 	</select>
 	
+	
+	<select id="EzQuestionDAO.resultSubjectiveListAll" parameterClass="Map" resultMap="qstResponseVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				(SELECT
+					*
+				FROM
+					(SELECT
+						brd_id,
+						item_no,
+						question_no,
+						responseno,
+						answer_objectivity,
+						answer_subjectivity,
+						answer_viewselect,
+						responseuser_id,
+						responseuser_name$v_pLang$ AS responseuser_name,
+						responseuser_email,
+						responseuser_dept_id,
+						responseuser_dept_name$v_pLang$ AS responseuser_dept_name,
+						responseuser_position$v_pLang$ AS responseuser_position,
+						responseuser_jikgub$v_pLang$ AS responseuser_jikgub,
+						responseuser_gender,
+						responseuser_age,
+						response_date,
+						responseuser_ip 
+					FROM
+						TBL_POLL_RESPONSE  
+					WHERE
+						brd_id = #v_pstrBrdID#
+					AND
+						item_no = #v_pItemNo#
+					AND
+						question_no = #v_pQuesNo#
+					AND
+						answer_subjectivity IS NOT NULL
+					AND
+						tenant_id = #tenantID# 
+					) P 
+				ORDER BY
+					P.responseno DESC
+				) K
+   			ORDER BY
+   				K.responseno ASC
+		]]>
+	</select>
+	
 	<!-- <procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
 		<![CDATA[
 			{CALL EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

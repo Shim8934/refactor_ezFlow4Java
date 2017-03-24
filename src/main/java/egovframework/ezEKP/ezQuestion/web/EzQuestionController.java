@@ -1937,6 +1937,169 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 		return "/ezQuestion/qstResultSubjective";
 	}
 	
+	@SuppressWarnings("unused")
+	@RequestMapping(value="/ezQuestion/qstResultSubjectiveAll.do",produces = "application/text; charset=utf8")
+	@ResponseBody
+	public String qstResultSubjectiveAll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, ModelMap model, QstUserPermissionVO qstUserPermissionVO) throws Exception{
+		logger.debug("qstResultSubjectivAll Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String brdID = "", itemNo = "", questionNo = "";
+        int pTotalCnt = 0, pTotalPage = 0, pCurrPage = 0;
+        int pPageSize = 0, pageCount = 0, pBlockSize = 0;
+        String publicResultFlg = "", publicFlg = "", multiResponseFlg = "";
+        String pAnsType = "";
+        
+        if (request.getParameter("brdID") != null)
+            brdID = request.getParameter("brdID");
+        if (request.getParameter("itemNo") != null)
+            itemNo = request.getParameter("itemNo");
+        if (request.getParameter("questionNo") != null)
+            questionNo = request.getParameter("questionNo");
+        if (request.getParameter("pageCount") != null)
+            pageCount = Integer.parseInt(request.getParameter("pageCount"));        
+        if (request.getParameter("page") != null){
+            pCurrPage = Integer.parseInt(request.getParameter("page"));
+        }else{
+            pCurrPage = 1;
+        }
+        
+        pPageSize = 15;
+        pBlockSize = 10;
+
+        qstUserPermissionVO.setBrdID(Integer.parseInt(brdID));
+        qstUserPermissionVO.setItemNo(Integer.parseInt(itemNo));
+        qstUserPermissionVO = ezQuestionService.getUserPermission(qstUserPermissionVO, userInfo.getTenantId());
+        publicResultFlg = qstUserPermissionVO.getPublicResultFlg();
+        publicFlg = qstUserPermissionVO.getPublicFlg();
+        multiResponseFlg = qstUserPermissionVO.getMultiResponseFlg();
+
+        /** EZSP_RESULTSUBJECTIVELISTCNT*/
+        logger.debug(brdID);
+        logger.debug(itemNo);
+        logger.debug(questionNo);
+        pTotalCnt = ezQuestionService.resultSubjectiveListCnt(Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo), commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+        pTotalPage = (pTotalCnt + pPageSize - 1) / pPageSize;
+        
+        if (pageCount == 0){
+            pageCount = -1;
+        }else{
+            pageCount = pageCount - 1;
+        }
+        
+        int iStart = (pCurrPage - 1) * pPageSize;
+        /** EZSP_RESULTSUBJECTIVELIST*/
+        List<QstResponseVO> qstResponseVOList = ezQuestionService.resultSubjectiveListAll(brdID, itemNo, questionNo, pTotalCnt-iStart, pPageSize, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
+        
+        String data = "<DATA></DATA>";
+        Document xmlMainDom = commonUtil.convertStringToDocument(data);
+        Document xmlRtnDom = commonUtil.convertStringToDocument(data);
+        
+        int iDataCount = 0;
+        String pAnsSubjectivity = "";
+        
+        for(QstResponseVO qstResponseVO : qstResponseVOList){
+        	Node targetNode = xmlMainDom.getFirstChild();
+            Node newRow = xmlMainDom.createElement("ROW");
+            Node No = xmlMainDom.createElement("NO");
+            
+            iDataCount++;
+            int iCurrNumber = 0;
+            iCurrNumber = iDataCount + (pCurrPage - 1) * pPageSize;
+            
+            Node ivalue = xmlMainDom.createTextNode(Integer.toString(iCurrNumber));
+            No.appendChild(ivalue);
+            newRow.appendChild(No);
+            targetNode.appendChild(newRow);
+            
+            for(Field field : qstResponseVO.getClass().getDeclaredFields()){
+            	field.setAccessible(true);
+            	
+            	if(field.getName().equals("ANSWER_SUBJECTIVITY")){
+            		pAnsSubjectivity = (String) field.get(qstResponseVO);
+            		//////////////////////////
+            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
+            		pAnsType = Integer.toString(qstVO.getAnswerType());
+            		
+            		if(pAnsType.equals("4")){
+            			List<QstAnswerVO> rtnList = dataProcessAns(userInfo ,Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
+            			StringBuilder rtnXML = new StringBuilder();
+            			rtnXML.append("<DATA>");
+            			
+            			for(QstAnswerVO qstAnswerVO : rtnList){
+            				rtnXML.append(commonUtil.getQueryResult(qstAnswerVO));
+            			}
+            			
+            			rtnXML.append("</DATA>");
+            			
+            			logger.debug("rtnXML="+rtnXML.toString());
+            			xmlRtnDom = commonUtil.convertStringToDocument(rtnXML.toString());
+            			String[] arrayContent = pAnsSubjectivity.split(";");
+            			pAnsSubjectivity = "";
+            			
+            			for(int j=0; j < arrayContent.length-1; j++){
+            				int k = 0;
+            				k = Integer.parseInt(arrayContent[j]);
+            				
+            				if(xmlRtnDom.getElementsByTagName("DATA/ROW/ANSWERCONTENT").getLength() > 0){
+            					pAnsSubjectivity = pAnsSubjectivity + xmlRtnDom.getElementsByTagName("DATA/ROW/ANSWERCONTENT").item(k-1).getTextContent() + " ; ";
+            				}else{
+            					pAnsSubjectivity = pAnsSubjectivity + " ; ";
+            				}
+            			}
+            		}
+            		
+            		if(pAnsSubjectivity.length() > 70){
+            			String strTag = "<td style='width:100%;height:100%;word-break:break-all;white-space:normal;'><div style='height:40px;overflow-y:auto;'>" + pAnsSubjectivity + "</div></td>";
+            			Node option = xmlMainDom.createElement("OPTIOIN");
+            			option.appendChild(xmlMainDom.createTextNode(strTag));
+            			newRow.appendChild(option);
+            			targetNode.appendChild(newRow);
+            		}else{
+            			String strTag = "<td style=\"word-wrap:break-word;\">" + pAnsSubjectivity + "</td>";
+            			Node option = xmlMainDom.createElement("OPTIOIN");
+            			option.appendChild(xmlMainDom.createTextNode(strTag));
+            			newRow.appendChild(option);
+            			targetNode.appendChild(newRow);
+            		}
+            	}
+            	
+            	Node newDataName = xmlMainDom.createElement(field.getName().toUpperCase());
+            	Node newDataValue = null;
+            	//""이라 Exception
+            	if(field.get(qstResponseVO) != null) {
+            		if(field.get(qstResponseVO).getClass() != String.class){
+            			newDataValue = xmlMainDom.createTextNode(Integer.toString((int)field.get(qstResponseVO)).trim());
+            		}
+            		else{
+            			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
+            		}
+            	}
+            	
+            	newDataName.appendChild(newDataValue);
+                newRow.appendChild(newDataName);
+                newDataName = null;
+                newDataValue = null;
+                targetNode.appendChild(newRow);
+            }
+        }    
+
+        model.addAttribute("brdID", brdID);
+        model.addAttribute("itemNo", itemNo);
+        model.addAttribute("questionNo", questionNo);
+        model.addAttribute("pTotalPage", pTotalPage);
+        model.addAttribute("pCurrPage", pCurrPage);
+        model.addAttribute("pTotalCnt", pTotalCnt);
+        model.addAttribute("pAnsType", pAnsType);
+        model.addAttribute("publicFlg", publicFlg);
+        model.addAttribute("pageCount", pageCount);
+        model.addAttribute("xmlMainDom", commonUtil.convertDocumentToString(xmlMainDom));
+        
+        logger.debug("qstResultSubjectiv End");
+        
+		return commonUtil.convertDocumentToString(xmlMainDom);
+	}
+	
 	/**
 	 * 전자설문 설문생성 삭제 화면 호출 함수
 	 */

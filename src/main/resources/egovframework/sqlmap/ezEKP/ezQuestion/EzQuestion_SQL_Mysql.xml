@@ -726,6 +726,54 @@
 		]]>
 	</select>
 	
+	<select id="EzQuestionDAO.resultSubjectiveListAll" parameterClass="Map" resultMap="qstResponseVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM 
+				(SELECT
+					*
+				FROM
+					(SELECT
+						BRD_ID,
+						ITEM_NO,
+						QUESTION_NO,
+						RESPONSENO,
+						ANSWER_OBJECTIVITY,
+						ANSWER_SUBJECTIVITY,
+						ANSWER_VIEWSELECT,
+						RESPONSEUSER_ID,
+						RESPONSEUSER_NAME$v_pLang$ AS RESPONSEUSER_NAME,
+						RESPONSEUSER_EMAIL,
+						RESPONSEUSER_DEPT_ID,
+						RESPONSEUSER_DEPT_NAME$v_pLang$ AS RESPONSEUSER_DEPT_NAME,
+						RESPONSEUSER_POSITION$v_pLang$ AS RESPONSEUSER_POSITION,
+						RESPONSEUSER_JIKGUB$v_pLang$ AS RESPONSEUSER_JIKGUB,
+						RESPONSEUSER_GENDER,
+						RESPONSEUSER_AGE,
+						RESPONSE_DATE,
+						RESPONSEUSER_IP
+              		FROM
+              			TBL_POLL_RESPONSE  
+              		WHERE
+              			BRD_ID = #v_pstrBrdID#
+              		AND
+              			ITEM_NO = #v_pItemNo#
+              		AND
+              			QUESTION_NO = #v_pQuesNo#
+              		AND
+              			ANSWER_SUBJECTIVITY IS NOT NULL
+              		AND
+              			TENANT_ID = #tenantID# 
+					) P 
+	          	ORDER BY
+	          		P.RESPONSENO DESC
+				) K
+			ORDER BY
+   				K.RESPONSENO ASC
+		]]>
+	</select>
+	
 	<!-- <procedure id="EzQuestionDAO.responseList" parameterClass="Map" resultMap="qstResponseList">
 		<![CDATA[
 			{CALL EZSP_RESPONSELIST(#v_pstrBrdID#, #v_pItemNo#, #v_pResYN#, #v_pTotalCnt#, #v_pPageSize#, #v_pLang#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
