@@ -90,7 +90,7 @@
 			        var pTitle = "";
 			        var pPath = "";
 			        selType = pType;
-			        
+			        alert(selType);
 			        if (pType == "3" || pType == "4" || pType == "6" || pType == "7") {
 			            if (document.all("txt_TitleM").value == "") {
 			                alert("<spring:message code='ezQuestion.t155' />");
