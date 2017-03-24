@@ -824,6 +824,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.maxTmpDocSn", map);
 	}
 	
+	public String selectUserSecurityCode(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.selectUserSecurityCode", map);
+	}
+	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectDoCallBack", map);
 	}
@@ -1091,6 +1095,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public int getUserContDocListCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getUserContDocListCount", map);
+	}
+	
+	public int getSearchDocListCountS(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getSearchDocListCountS", map);
 	}
 	
 	public String getUserContMaxID(Map<String, Object> map) throws Exception{
@@ -2373,6 +2381,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.delUserCont", map);
 	}
 	
+	public void deleteUserContDoc(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteUserContDoc", map);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public List<ApprGReceiptVO> doResendEndDoc1(Map<String, Object> map) throws Exception{
 		return (List<ApprGReceiptVO>) list("EzApprovalG.doResendEndDoc1", map);
@@ -2433,9 +2445,17 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getUserContList", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getContDocListS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getContDocListS", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getSearchDocListS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getSearchDocListS", map);
+	}
+	
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
-
-
 }

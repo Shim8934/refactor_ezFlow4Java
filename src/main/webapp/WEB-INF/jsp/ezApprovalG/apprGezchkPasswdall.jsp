@@ -29,7 +29,7 @@
 		
 		        if (trim(document.getElementById("inpPassword").value).length == 0) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t1746'/>";
-		            OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
 		            document.getElementById("inpPassword").focus();
 		            return;
 		        }

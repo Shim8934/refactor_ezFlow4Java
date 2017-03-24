@@ -407,8 +407,10 @@
 	                document.getElementById("showReceptinfo").style.display = "none";//.innerHTML = "";
 	            }
 	            
-	            if (g_SelCabID != "") {
-	            	document.getElementById("cabinetID").value = g_SelCabID;
+	            if (approvalFlag == "S") {
+		            if (g_SelCabID != "") {
+		            	document.getElementById("cabinetID").value = g_SelCabID;
+		            }
 	            }
 	
 	            try {
@@ -862,6 +864,8 @@
 			                ret[13] = txtPageNum.value;
 		                } else {
 		                	ret[11] = SelectSingleNodeValueNew(docinfo, "PARAMETER/pPublicFlag");
+		                	ret[12] = "";
+		                	ret[13] = "";
 		                }
 	
 		                if (document.getElementById("AprSecurity").checked)

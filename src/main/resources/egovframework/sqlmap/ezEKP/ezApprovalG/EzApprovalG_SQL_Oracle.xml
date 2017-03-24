@@ -10281,8 +10281,8 @@
 	     			TBL_SERIALNUMGEN 
 	    		WHERE  
 	    			Type1 = ( 
-	    						SELECT CASE WHEN ISUsed = 0 THEN 0
-	    							   ELSE 001
+	    						SELECT CASE WHEN ISUsed = 0 THEN '0'
+	    							   ELSE '001'
 	    							   END 
 	    						FROM (
 			    						SELECT 
@@ -10352,8 +10352,8 @@
 			TBL_SERIALNUMGEN
           		( Type1, 	  Type2, 	 Type3, 	TimeSep,  RegSerialNo, RollbackFlag, TENANT_ID )
         VALUES  ( (SELECT 
-        			CASE WHEN ISUsed = 0 THEN 0
-    				ELSE 001
+        			CASE WHEN ISUsed = 0 THEN '0'
+    				ELSE '001'
     				END 
     			  FROM (
    						SELECT 
@@ -10420,8 +10420,8 @@
 			WHERE  
 				Type1 = (
 						  SELECT 
-        					CASE WHEN ISUsed = 0 THEN 0
-    					    ELSE 001
+        					CASE WHEN ISUsed = 0 THEN '0'
+    					    ELSE '001'
     						END 
 		    			  FROM (
 		   						SELECT 

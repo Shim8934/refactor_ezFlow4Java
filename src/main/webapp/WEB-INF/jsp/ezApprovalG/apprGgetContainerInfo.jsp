@@ -36,6 +36,7 @@
 	    <script type="text/javascript" src="/js/jquery/jquery-ui.js"></script>
 	    <link rel="stylesheet" href="/js/jquery/jquery-ui.css">
 	    <link rel="stylesheet" href="/js/jquery/jquery-ui.min.css"> 
+	    <script type="text/javascript" src="/js/ezApprovalG/Common_Function.js"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var labelcolor = "gray";
 	        var xmlhttp = createXMLHttpRequest();
@@ -179,18 +180,18 @@
 	                     condition[6] = nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59";
 
 	                     SQLPARADATA = "<ROOT><TYPE>STARTDATEAF;STARTDATEBF;</TYPE><DATA><STARTDATEAF>" + (nowyear - 1) + "-" + settingmonth + "-" + settingday + " 00:00:01</STARTDATEAF><STARTDATEBF>" + nowyear + "-" + nowmonth + "-" + nowday + " 23:59:59</STARTDATEBF></DATA></ROOT>";
-	                
+
 	                if (LoadSquery == "usercontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetUserContList();
 	                }
-	                if (LoadSquery == "deptcontlist") {
+	                else if (LoadSquery == "deptcontlist") {
 	                    ContainerID = LoadContID;
 	                    subCondition = "";
 	                    GetDeptContList();
 	                }
-	                if (LoadSquery == "aprlist") {
+	                else if (LoadSquery == "aprlist") {
 	                    ContainerID = "";
 	                    subCondition = LoadContID;
 	                    GetDocList();
@@ -211,7 +212,7 @@
 		                    pChackYN = "FALSE";
 		                    Init_Flag = "False";
 		                    GetDocSearch();
-	                	} else {
+	                	} else if (LoadSquery != ""){
 	                		 for (i = 0; i <= 13; i++) {
 	                             condition[i] = "";
 	                         }
@@ -1108,6 +1109,7 @@
 	        $('#sel_year').val("ALL");
 	        $('#sel_year').selectmenu('refresh');
 	    }
+	    
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1139,7 +1141,7 @@
 	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
 	            <li id=tbtnRemoveDoc><span id=btnRemoveDoc onClick ="return btnRemoveDoc_onclick()"><spring:message code='ezApprovalG.t266'/></span></li>
 			    <li id="tSearchCondi"><span id="SearchCondi" onClick="return SearchCondi_onclick()" ><spring:message code='ezApprovalG.t111'/></span></li>
-		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t237'/></span></li>      
+		        <li id="tViewDoc"><span id="ViewDoc" onClick="return ViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>      
 		        <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="Li2" style="background: none; padding-right: 2px;">
 		        <img src="/images/i_bar.gif"></li>

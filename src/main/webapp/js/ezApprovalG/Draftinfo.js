@@ -28,7 +28,7 @@ function Draftinfo_ini() {
         	}
     	});
     	
-//        try {
+        try {
             var xmlDoc = loadXMLString(result);
 
             if (document.getElementById("infolist").innerHTML != "") document.getElementById("infolist").innerHTML = "";
@@ -65,16 +65,16 @@ function Draftinfo_ini() {
 
                 getdocinfolist(i);
             }
-//        }
-//        catch (ErrMsg) {
-//            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//        }
+        }
+        catch (ErrMsg) {
+            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+        }
         getMyGroupItem();
     }
 }
 function event_Draftinfo_ini() {
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
-//    try {
+    try {
         var xmlDoc = loadXMLString(xmlhttp.responseText);
 
         if (xmlDoc == null) {
@@ -115,10 +115,10 @@ function event_Draftinfo_ini() {
             getdocinfolist(i);
         }
         xmlhttp = null;
-//    }
-//    catch (ErrMsg) {
-//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//    }
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
 }
 
 function lvtinfolist_onclick() {
@@ -579,7 +579,7 @@ function btnDelCode_onclick() {
     }
 
     var curSelCode = GetAttribute(pAprRow[0],"DATA1");
-    var curSelGroupCode = GetAttribute(pAprRow[0],"DATA6");
+    var curSelGroupCode = GetAttribute(pAprRow[0],"DATA7");
 
 
 	var result = "";
@@ -623,7 +623,7 @@ function getMyGroupItem()
 			result = xml;
 		}
 	});
-//    try {
+    try {
         var xmlDoc = loadXMLString(result);
 
         if (document.getElementById("infofrequencylist").innerHTML != "") document.getElementById("infofrequencylist").innerHTML = "";
@@ -638,10 +638,10 @@ function getMyGroupItem()
         FormList = null;
         Draftinfoini = true;
        
-//    }
-//    catch (ErrMsg) {
-//        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
-//    }
+    }
+    catch (ErrMsg) {
+        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    }
 }
 function lvinfofrequencylist_onclick() {
     allUnSelect();

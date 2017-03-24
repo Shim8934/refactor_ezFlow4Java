@@ -224,6 +224,25 @@
 			        }
 		    	}
 		    }
+		    
+		    function btnSpecial_onclick() {
+		    	
+	            var treeView = new TreeView();
+	            treeView.LoadFromID("FromTreeView");
+	            var nodeIdx = treeView.GetSelectNode();
+	            var treeNode = new TreeNode();
+	            treeNode.LoadFromID(nodeIdx.NodeID);
+	
+	            if (CompanyID == "") {
+	                alert("<spring:message code='ezApproval.t683'/>");
+	                return;
+	            }
+	
+	            if (nodeIdx != "") {
+	                var url = "manageSpecialCont.do?deptID=" + encodeURIComponent(treeNode.GetNodeData("CN")) + "&companyID=" + encodeURIComponent(treeNode.GetNodeData("EXTENSIONATTRIBUTE2")) + "&deptName=" + encodeURIComponent(treeNode.GetNodeData("VALUE"));
+	                var result = GetOpenWindow(url, "ManageSpecialCont", 540, 296, "NO");
+	            }
+	        }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -273,6 +292,7 @@
 	                <a class="imgbtn"><span onclick="return btnIns_onclick()"><spring:message code='ezApprovalG.t268'/></span></a><br/>
 	                <a class="imgbtn"><span onclick="return btnUpdate_onclick()"><spring:message code='ezApprovalG.t269'/></span></a><br/>
 	                <a class="imgbtn"><span onclick="return btnDel_onclick()"><spring:message code='ezApprovalG.t266'/></span></a><br/>
+	                <a class="imgbtn"><span onclick="return btnSpecial_onclick()"><spring:message code='ezApproval.t689'/></span></a> </th>
 	            </th>
 	        </tr>
 	    </table>

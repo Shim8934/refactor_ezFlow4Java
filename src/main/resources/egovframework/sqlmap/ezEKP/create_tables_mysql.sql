@@ -5887,7 +5887,9 @@ CREATE TABLE `tbl_serialnumgen` (
   `TIMESEP` bigint(10) DEFAULT NULL,
   `REGSERIALNO` decimal(19,0) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  `COMPANYID` varchar(20) DEFAULT NULL
+  `COMPANYID` varchar(20) DEFAULT NULL,
+  `IDX` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`IDX`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -6982,6 +6984,25 @@ CREATE TABLE `tbl_form_autoruleline` (
   `COMPANYID` varchar(20) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMID`,`AUTORULEGUID`,`APRMEMBERSN`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `tbl_specialcontainerinfo`
+--
+
+DROP TABLE IF EXISTS `tbl_specialcontainerinfo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_specialcontainerinfo` (
+  `DEPTID` varchar(100) NOT NULL,
+  `CONTTYPE` varchar(12) NOT NULL,
+  `SN` bigint(10) NOT NULL,
+  `CONTNAME` varchar(510),
+  `SUBQUERY` varchar(1000),
+  `COMPANYID` varchar(20) NOT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DEPTID`,`CONTTYPE`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

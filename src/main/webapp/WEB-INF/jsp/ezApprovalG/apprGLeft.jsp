@@ -416,7 +416,6 @@
 		    }
 		
 		    function cmdOK_onclick2(ContainerID, ContainerName, ContName) {
-		    	alert(400);
 		        if (primaryStr == "1") {
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
