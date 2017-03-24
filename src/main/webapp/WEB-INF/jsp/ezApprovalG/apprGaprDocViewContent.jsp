@@ -14,6 +14,11 @@
 	                parent.DocumentComplete();
 	            } catch (e)
 	            { }
+	            
+	            try {
+		        	$('#div_Content #body').css('overflow', 'auto');
+		        } catch (e)
+		        { }
 	        };
 	        function BodyTagsEnabled(HtmlObject) {
 	            var SelectRows = HtmlObject.getElementsByTagName("SELECT");

@@ -6,7 +6,7 @@
 	    <title><spring:message code='ezApprovalG.pjj03'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	    <script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
-	    
+	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 	    <script type="text/javascript">
 	
 	        var myVar;
@@ -19,6 +19,8 @@
 	        }
 	        window.onload = function () {
 	            document.getElementById("printDocument").innerHTML = opener.PrtBodyContent;
+	            $('#printDocument #body').css('overflow', 'visible');
+	            
 	            myVar = setInterval(function () { DocumentComplate() }, 2000);
 	        }
 	        function DocumentComplate() {
@@ -33,6 +35,7 @@
 	
 	        function FieldsAvailable() {
 	            document.getElementById("printDocument").innerHTML = message.div_Content.innerHTML;
+	            $('#printDocument #body').css('overflow', 'visible');
 	            myVar = setInterval(function () { DocumentComplate() }, 2000);
 	        }
 	
