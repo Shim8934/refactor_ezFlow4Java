@@ -1357,7 +1357,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		}
 		
 		int qstCnt = doc.getElementsByTagName("QUESTION").item(0).getChildNodes().getLength();
-System.out.println("qstCnt="+qstCnt);
+
 		for(int i=0; i<qstCnt; i++) {
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			
@@ -1386,10 +1386,9 @@ System.out.println("qstCnt="+qstCnt);
 			qstCompleteVO.setMultiSelect(multiSelect);
 			
 			ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
-			
-System.out.println("여기1");
+
 			NodeList qstAttachNodes = (NodeList)xpath.evaluate("//QUESTION/ROW["+(i+1)+"]/ATTACH//ROW", doc, XPathConstants.NODESET);
-System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());			
+			
 			if (qstAttachNodes!= null && qstAttachNodes.getLength() > 0) {
 				for (int k=0; k < qstAttachNodes.getLength() ; k++) {
 					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
@@ -3724,15 +3723,15 @@ System.out.println("qstAttachNodesLength="+qstAttachNodes.getLength());
 							nodeData.appendChild(nodeData2);
 							Node nodeData3 = resultXML.createElement("TYPE");
 							
-							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent())));
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHTYPE").item(j).getTextContent());
 							nodeData2.appendChild(nodeData3);
 							
 							nodeData3 = resultXML.createElement("ATTACHTITLE");
-							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent())));
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHNAME").item(j).getTextContent());
 							nodeData2.appendChild(nodeData3);
 							
 							nodeData3 = resultXML.createElement("HREF");
-							nodeData3.setTextContent(String.valueOf(xmlTemp.createTextNode(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent())));
+							nodeData3.setTextContent(xmlTemp.getElementsByTagName("ATTACHURL").item(j).getTextContent());
 							nodeData2.appendChild(nodeData3);
 						}
 					}
