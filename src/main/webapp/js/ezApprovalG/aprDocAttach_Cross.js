@@ -267,7 +267,7 @@ function GetDocSearch() {
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
 
-    xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
+    xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
     xmlhttp.onreadystatechange = getsearchDocList_after;
     xmlhttp.send(xmlpara);
 }
