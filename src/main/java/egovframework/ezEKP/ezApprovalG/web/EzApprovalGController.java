@@ -136,6 +136,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String hideCabinet = config.getProperty("config.hideCabinet");
 		String userCont = "";
+		String contInfo = "";
 		StringBuffer containers = new StringBuffer();
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -4321,9 +4322,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGgetContainerInfo";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getFormSearchDocListS.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
-	public String getFormSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+	public String getFormSearchDocListS(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
@@ -4364,46 +4365,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = "";
 		
 		String result = "";
-		if (approvalFlag.equals("G")) {
-			 docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-	         docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
-	         drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
-	         draftFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
-	         draftFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
-	         draftFromDAY = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
-	         draftToYEAR = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
-	         draftToMONTH = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
-	         draftToDAY = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
-	         apprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
-	         apprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
-	         apprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent();
-	         apprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
-	         apprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
-	         apprToDAY = xmlDom.getDocumentElement().getChildNodes().item(14).getTextContent();
-
-	         myApprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(15).getTextContent();
-	         myApprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
-	         myApprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
-	         myApprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
-	         myApprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
-	         myApprToDAY = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
-	         formID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
-	         draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent();
-
-	         containerID = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
-	         userID = xmlDom.getDocumentElement().getChildNodes().item(25).getTextContent();
-	         pageNum = xmlDom.getDocumentElement().getChildNodes().item(28).getTextContent();
-	         pageSize = xmlDom.getDocumentElement().getChildNodes().item(29).getTextContent();
-	         docState = xmlDom.getDocumentElement().getChildNodes().item(30).getTextContent();
-
-	         subQuery = xmlDom.getDocumentElement().getChildNodes().item(31).getTextContent();
-	         orderCell = xmlDom.getDocumentElement().getChildNodes().item(32).getTextContent();
-	         orderOption = xmlDom.getDocumentElement().getChildNodes().item(33).getTextContent();
-	        
-	         result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
-	        		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
-	        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset());
-		} else {
+	
 			docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
 			docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
             drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]");
@@ -4426,7 +4388,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
             orderCell = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
             orderOption = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
             String ReturnQuery = "(1 = 1) ";
-            
             Document xmldomsub = commonUtil.convertStringToDocument(xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent());
             String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
             
@@ -4463,10 +4424,56 @@ public class EzApprovalGController extends EgovFileMngUtil{
             }
             result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
                     papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset());
-		}
 		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getFormSearchDocList.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getFormSearchDocList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception{
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
+		
+		String docNumber = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+        String docTitle = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
+        String drafter = xmlDom.getDocumentElement().getChildNodes().item(2).getTextContent();
+        String draftFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent();
+        String draftFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(4).getTextContent();
+        String draftFromDAY = xmlDom.getDocumentElement().getChildNodes().item(5).getTextContent();
+        String draftToYEAR = xmlDom.getDocumentElement().getChildNodes().item(6).getTextContent();
+        String draftToMONTH = xmlDom.getDocumentElement().getChildNodes().item(7).getTextContent();
+        String draftToDAY = xmlDom.getDocumentElement().getChildNodes().item(8).getTextContent();
+        String apprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(9).getTextContent();
+        String apprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(10).getTextContent();
+        String apprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(11).getTextContent();
+        String apprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(12).getTextContent();
+        String apprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(13).getTextContent();
+        String apprToDAY = xmlDom.getDocumentElement().getChildNodes().item(14).getTextContent();
+
+        String myApprFromYEAR = xmlDom.getDocumentElement().getChildNodes().item(15).getTextContent();
+        String myApprFromMONTH = xmlDom.getDocumentElement().getChildNodes().item(16).getTextContent();
+        String myApprFromDAY = xmlDom.getDocumentElement().getChildNodes().item(17).getTextContent();
+        String myApprToYEAR = xmlDom.getDocumentElement().getChildNodes().item(18).getTextContent();
+        String myApprToMONTH = xmlDom.getDocumentElement().getChildNodes().item(19).getTextContent();
+        String myApprToDAY = xmlDom.getDocumentElement().getChildNodes().item(20).getTextContent();
+        String formID = xmlDom.getDocumentElement().getChildNodes().item(21).getTextContent();
+        String draftDeptName = xmlDom.getDocumentElement().getChildNodes().item(23).getTextContent();
+
+        String containerID = xmlDom.getDocumentElement().getChildNodes().item(24).getTextContent();
+        String userID = xmlDom.getDocumentElement().getChildNodes().item(25).getTextContent();
+        String pageNum = xmlDom.getDocumentElement().getChildNodes().item(28).getTextContent();
+        String pageSize = xmlDom.getDocumentElement().getChildNodes().item(29).getTextContent();
+        String docState = xmlDom.getDocumentElement().getChildNodes().item(30).getTextContent();
+
+        String subQuery = xmlDom.getDocumentElement().getChildNodes().item(31).getTextContent();
+        String orderCell = xmlDom.getDocumentElement().getChildNodes().item(32).getTextContent();
+        String orderOption = xmlDom.getDocumentElement().getChildNodes().item(33).getTextContent();
         
-   
+        String result = ezApprovalGService.getSearchDocList(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftFromYEAR, draftFromMONTH, draftFromDAY, draftToYEAR,
+        		draftToMONTH, draftToDAY, apprFromYEAR, apprFromMONTH, apprFromDAY, apprToYEAR, apprToMONTH, apprToDAY, myApprFromYEAR, myApprFromMONTH, myApprFromDAY, myApprToYEAR, myApprToMONTH,
+        		myApprToDAY, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset());
+        
 		return result;
 	}
 	
