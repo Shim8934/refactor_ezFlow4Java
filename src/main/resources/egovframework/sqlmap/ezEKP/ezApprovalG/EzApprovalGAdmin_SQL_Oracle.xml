@@ -2285,9 +2285,72 @@
 			FROM 
 				TBL_FORMINFO  
 			WHERE 
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
 			  	$subQuery$
 		]]>
 	</select>
+	
+	<insert id="EzApprovalGAdminDAO.insertSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<selectKey keyProperty="sn" resultClass="String">
+			<![CDATA[
+				SELECT 
+					CASE
+						WHEN MAX(sn) IS NULL
+						THEN 1
+						ELSE MAX(sn) + 1
+					END SN
+        		FROM 
+        			TBL_SPECIALCONTAINERINFO 
+       			WHERE
+       				tenant_id = #tenantID#
+       			AND
+       				companyid = #companyID#
+       			AND  
+       				deptid = #deptID#
+                AND 
+                	conttype = #contType#
+			]]>
+		</selectKey>
+		
+		<![CDATA[
+			INSERT INTO TBL_SPECIALCONTAINERINFO
+				(deptid,
+				conttype,
+				sn,
+				contname,
+				subquery,
+				companyid,
+				tenant_id)
+			VALUES
+				(#deptID#,
+				#contType#,
+				#sn#,
+				#contName#,
+				#subQuery#,
+				#companyID#,
+				#tenantID#) 
+		]]>
+	</insert>
+	
+	<delete id="EzApprovalGAdminDAO.deleteSpecialContInfo" parameterClass="ApprGContInfoVO">
+		<![CDATA[
+			DELETE FROM
+				TBL_SPECIALCONTAINERINFO 
+			WHERE
+				tenant_id = #tenantID#
+			AND
+				companyid = #companyID#
+			AND
+				deptid = #deptID#
+			AND
+				conttype = #contType#
+			AND
+				sn = #sn#
+		]]>
+	</delete>
 	
 	<!-- <procedure id="EzApprovalGAdmin.insertContainerType" -->
 	<!-- parameterClass="Map"> -->

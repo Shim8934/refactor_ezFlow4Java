@@ -3398,6 +3398,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				map.put("companyID", companyID);
 				map.put("tenantID", tenantID);
 				
+logger.debug("subQuerty = " + subQuery);
 				List<String> list = ezApprovalGAdminDAO.getSpecialContInfoFormName(map);
 				
 				for (String formIDName : list) {
@@ -3417,4 +3418,41 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 		return sb.toString();
 	}
+
+	@Override
+	public String addSpecialCont(ApprGContInfoVO vo, int tenantID) throws Exception {
+		logger.debug("addSpecialCont started");
+
+		String rtnValue = "";
+		
+		vo.setTenantID(tenantID);
+		
+		if (vo.getSn() == null || vo.getSn().equals("") || vo.getSn().equals("0")) {
+			vo.setSn("new");
+		} else {
+			ezApprovalGAdminDAO.deleteSpecialContInfo(vo);
+		}
+		
+		String subQuery = "";
+		
+		if (vo.getFormIDs() != null && !vo.getFormIDs().equals("")) {
+			if (vo.getContYN().equals("Y")) {
+				subQuery = " formID IN (" + vo.getFormIDs() + ")"; 
+			} else {
+				subQuery = " formID NOT IN (" + vo.getFormIDs() + ")"; 
+			}
+		}
+		
+		vo.setSubQuery(subQuery);
+		
+		ezApprovalGAdminDAO.insertSpecialContInfo(vo);
+		
+		rtnValue = "TRUE";
+		
+		logger.debug("addSpecialCont ended");
+		
+		return rtnValue;
+	}
+	
+	
 }
