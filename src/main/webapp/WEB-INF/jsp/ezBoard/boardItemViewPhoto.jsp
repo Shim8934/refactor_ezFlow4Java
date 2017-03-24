@@ -74,7 +74,7 @@
 		            if (OneLineReplyFlag == "1") {
 		                getOneLineReply();
 		                if (CrossYN()) {
-		                	window.resizeTo(770, screen.availHeight);
+		                	window.resizeTo(770, 990);
 		                } else {
 		                    window.resizeTo(770, 1010);
 		                }

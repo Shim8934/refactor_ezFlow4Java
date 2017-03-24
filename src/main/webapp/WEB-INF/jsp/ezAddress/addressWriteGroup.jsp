@@ -67,6 +67,11 @@
 	            AddressTreeView.attachEvent('nodedblclick', function () { AddressTreeView.toggle(AddressTreeView.selectedIndex()) });
 	            orgTabButton_onClick();
 	            ListTypeChangeIcon();
+	            
+	            if (document.getElementById("MsgToList")) {
+	            	document.getElementById("MsgToList").className = "receiver_list";
+	            }
+	            
 	        }
 	        function address_requestdata(event) {
 	            if (!event) {

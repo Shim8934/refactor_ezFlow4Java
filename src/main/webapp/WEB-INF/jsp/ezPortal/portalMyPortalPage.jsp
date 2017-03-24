@@ -224,7 +224,7 @@
 		                    _li.appendChild(_span1);
 		                    _li.appendChild(_span2);
 		                    document.getElementById("QuickUl").appendChild(_li);
-
+alert(_li.innerHTML);
 
 		                    if (i < QuickBlockNum) {
 		                        document.getElementById('QuickUl').getElementsByTagName('li')[i].style.display = 'block';
