@@ -25,18 +25,18 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContainerInfoManage(Map<String, Object> map) throws Exception {
-		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContainerInfoManage", map);
+	public List<ApprGContInfoVO> getContainerInfoManage(Map<String, Object> map) throws Exception {
+		return (List<ApprGContInfoVO>) list("EzApprovalGAdmin.getContainerInfoManage", map);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContTypeInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContTypeInfo", map);
+	public List<ApprGContInfoVO> getContTypeInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGContInfoVO>) list("EzApprovalGAdmin.getContTypeInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGLeftVO> getContainerUseDeptInfo(Map<String, Object> map) throws Exception {
-		return (List<ApprGLeftVO>) list("EzApprovalGAdmin.getContainerUseDeptInfo", map);
+	public List<ApprGContInfoVO> getContainerUseDeptInfo(Map<String, Object> map) throws Exception {
+		return (List<ApprGContInfoVO>) list("EzApprovalGAdmin.getContainerUseDeptInfo", map);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -440,5 +440,14 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 
 	public String getSpecialContInfoContTypeName(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalGAdminDAO.getSpecialContInfoContTypeName", map);
+	}
+
+	public ApprGContInfoVO getSpecialContInfo(Map<String, Object> map) throws Exception {
+		return (ApprGContInfoVO) select("EzApprovalGAdminDAO.getSpecialContInfo", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getSpecialContInfoFormName(Map<String, Object> map) {
+		return (List<String>) list("EzApprovalGAdminDAO.getSpecialContInfoFormName", map);
 	}
 }
