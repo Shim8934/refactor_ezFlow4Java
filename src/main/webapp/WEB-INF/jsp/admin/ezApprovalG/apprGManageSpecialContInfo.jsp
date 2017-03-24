@@ -275,7 +275,7 @@
 	            }
 	
 	            if (document.getElementById("lvtSelected").length <= 0) {
-	                OpenAlertUI("<spring:message code='ezApproval.t665'/>");
+	                OpenAlertUI("<spring:message code='ezApprovalG.t1621'/>");
 	                return;
 	            }
 	
@@ -286,7 +286,7 @@
 	                window.close();
 	            }
 	            else {
-	                OpenAlertUI("<spring:message code='ezApproval.t666'/>");
+	                OpenAlertUI("<spring:message code='ezApprovalG.t1296'/>");
 	            }
 	        }
 	
@@ -375,7 +375,7 @@
 	                    }
 	                }
 	                else {
-	                    OpenAlertUI("<spring:message code='ezApproval.t667'/>");
+	                    OpenAlertUI("<spring:message code='ezApprovalG.t20001'/>");
 	                }
 	            }
 	        }
@@ -395,7 +395,7 @@
 			<LISTVIEWDATA>
 				<HEADERS>
 					<HEADER>
-						<NAME><spring:message code='ezApproval.t601'/></NAME>
+						<NAME><spring:message code='ezApprovalG.t1537'/></NAME>
 						<WIDTH>170</WIDTH>
 					</HEADER>
 				</HEADERS>
@@ -406,7 +406,7 @@
 				<NODE>
 					<EXPANDED>TRUE</EXPANDED>
 					<ISLEAF>FALSE</ISLEAF>
-					<VALUE><spring:message code='ezApproval.t602'/></VALUE>
+					<VALUE><spring:message code='ezApprovalG.t1539'/></VALUE>
 					<DATA1>ROOT</DATA1>
 				</NODE>
 			</TREEVIEWDATA>
@@ -443,7 +443,7 @@
 	    <table style="margin-top: 10px">
 	        <tr>
 	            <td style="vertical-align: top">
-	                <h2><spring:message code='ezApproval.t602'/></h2>
+	                <h2><spring:message code='ezApprovalG.t1539'/></h2>
 	                <div id="TreeView" style="height: 270px; width: 187px; overflow-x: auto; overflow-y: auto; BORDER: #b6b6b6 1px solid; BACKGROUND-COLOR: #ffffff; vertical-align: top"></div>
 	            </td>
 	            <td style="padding-left: 5px; vertical-align: top">
@@ -453,8 +453,8 @@
 	                </div>
 	            </td>
 	            <td style="width: 50px; text-align: center">
-	                <a id="btnUseDept" class="imgbtn" onclick="btnUseDept_onclick()"><span><spring:message code='ezApproval.t678'/></span></a>
-	                <a id="btnDelDept" class="imgbtn" onclick="btnDelDept_onclick()"><span><spring:message code='ezApproval.t679'/></span></a>
+	                <a id="btnUseDept" class="imgbtn" onclick="btnUseDept_onclick()"><span><spring:message code='ezApprovalG.t1649'/></span></a>
+	                <a id="btnDelDept" class="imgbtn" onclick="btnDelDept_onclick()"><span><spring:message code='ezApprovalG.t1650'/></span></a>
 	            </td>
 	            <td style="vertical-align: top">
 	                <h2><spring:message code='ezApproval.t680'/></h2>
@@ -465,8 +465,8 @@
 	    </table>
 	
 	    <div class="btnposition">
-	        <a class="imgbtn" onclick="btnOK_onclick()"><span><spring:message code='ezApproval.t272'/></span></a>
-	        <a class="imgbtn" onclick="btnClose_onclick()"><span><spring:message code='ezApproval.t273'/></span></a>
+	        <a class="imgbtn" onclick="btnOK_onclick()"><span><spring:message code='ezApprovalG.t413'/></span></a>
+	        <a class="imgbtn" onclick="btnClose_onclick()"><span><spring:message code='ezApprovalG.t414'/></span></a>
 	    </div>
 	</body>
 </html>
