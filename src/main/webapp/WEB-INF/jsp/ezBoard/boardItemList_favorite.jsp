@@ -37,6 +37,12 @@
 	                        _span.id = "1tab" + i;
 	                        _span.setAttribute("divname", "FBoard_div" + i);
 	                        _span.setAttribute("DATA1", BoardId);
+	                        
+	                        if (BoardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+	                        	BoardName = "<spring:message code='ezBoard.t480'/>";
+	                        	BoardName2 = "<spring:message code='ezBoard.hyj09'/>";
+	                        }
+
 	                        if (userLang == "1")
 	                            _span.setAttribute("DATA2", BoardName);
 	                        else
