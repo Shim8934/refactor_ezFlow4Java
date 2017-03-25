@@ -1051,7 +1051,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			listString = getListHeader("021", companyID, lang, tenantID);
 		}
 
-logger.debug("listString = " + listString);
+		logger.debug("listString = " + listString);
+		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
@@ -1078,7 +1079,7 @@ logger.debug("listString = " + listString);
 		
 		String docList = getReceiptInfo(docID, mode, orderOption1, companyID, tenantID);
 		
-logger.debug("docList = " + docList);
+		logger.debug("docList = " + docList);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -14771,6 +14772,8 @@ logger.debug("docList = " + docList);
 			} 
 		}
 		
+		logger.debug("listString = " + listString);
+		
 		Document listXML = commonUtil.convertStringToDocument(listString);
 
 		String tmpStartDate1 = "";
@@ -14833,6 +14836,7 @@ logger.debug("docList = " + docList);
 		String docList = getSearchDocList(containerID, userID, userSecurityCode, publicFlag, subQuery, docNumber, docTitle, drafter, draftDeptName, formID, tmpStartDate1, tmpStartDate2, tmpEndDate1, tmpEndDate2,
 				tmpProcessDate1, tmpProcessDate2, aprFlag, docState, querySize, querySize2, querySize3, orderOption1, orderOption2, commonUtil.getMultiData(lang, tenantID), approvUser, companyID, tenantID, offset, approvalFlag);
 		
+		logger.debug("docList = " + docList);
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -14848,14 +14852,18 @@ logger.debug("docList = " + docList);
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
+				logger.debug("fieldName = " + fieldName);
+				
 				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME")) {
 					fieldName = fieldName + langData;
 				}
+				
 				if (fieldName.equals("DOCSTATENAME")) {
 					fieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
             	} else {
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+            		fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
             	}
+				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
