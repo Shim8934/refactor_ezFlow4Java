@@ -900,6 +900,7 @@ DROP TABLE IF EXISTS `jmocha_tenant`;
 CREATE TABLE `jmocha_tenant` (
   `TENANT_ID` int(11) NOT NULL,
   `TENANT_NAME` varchar(100) NOT NULL,
+  `TENANT_NAME2` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6406,6 +6407,7 @@ DROP TABLE IF EXISTS `tbl_tenant`;
 CREATE TABLE `tbl_tenant` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `TENANT_NAME` varchar(200) NOT NULL,
+  `TENANT_NAME2` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
