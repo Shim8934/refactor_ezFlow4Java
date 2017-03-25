@@ -1018,10 +1018,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		if (mode.equals("APR")) {
 			//결재할문서
-			listString = getListHeader("021", companyID, lang, tenantID);
+			if (approvalFlag.equals("S")) {
+				listString = getListHeader("S021", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("021", companyID, lang, tenantID);
+			}
 		} else if (mode.equals("END")) {
 			//기안할문서
-			listString = getListHeader("022", companyID, lang, tenantID);
+			if (approvalFlag.equals("S")) {
+				listString = getListHeader("S022", companyID, lang, tenantID);
+			} else {
+				listString = getListHeader("022", companyID, lang, tenantID);
+			}
 		} else if (mode.equals("COD")) {
 			//결재진행문서
 			if (approvalFlag.equals("G")) {
@@ -1042,7 +1050,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else {
 			listString = getListHeader("021", companyID, lang, tenantID);
 		}
-		
+
+logger.debug("listString = " + listString);
 		Document listXML = commonUtil.convertStringToDocument(listString);
 		
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
@@ -1069,6 +1078,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String docList = getReceiptInfo(docID, mode, orderOption1, companyID, tenantID);
 		
+logger.debug("docList = " + docList);
+		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
@@ -1086,6 +1097,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (fieldName.equals("RECEIPTPOINTNAME") || fieldName.equals("RECEIPTMEMBERNAME") || fieldName.equals("PROCESSDEPTNAME") || fieldName.equals("APRMEMBERTITLE") || fieldName.equals("DRAFTERNAME") || fieldName.equals("CREATEORGANNAME")) {
 					fieldName = fieldName + langData;
 				}
+				
+				logger.debug("fieldName = " + fieldName);
+				
 				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				

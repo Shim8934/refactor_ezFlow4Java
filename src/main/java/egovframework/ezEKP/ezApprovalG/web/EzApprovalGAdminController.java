@@ -2513,7 +2513,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/forAprDoc.do")
 	public String forAprDoc(@CookieValue ("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("forAprDoc started.");
+		
 		LoginVO userInfo  = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";
@@ -2532,6 +2535,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
+		model.addAttribute("approvalFlag", approvalFlag);
+		
+		logger.debug("forAprDoc ended.");
 		
 		return "admin/ezApprovalG/apprGForAprDoc";
 	}
