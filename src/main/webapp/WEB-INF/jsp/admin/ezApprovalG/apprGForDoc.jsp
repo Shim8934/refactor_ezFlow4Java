@@ -749,7 +749,18 @@
 		<div id="tabnav" style="width:100%">
 	  		<ul>
 			    <li id="tagsub1"><span onClick="pDocInfoValue='1';MM_swapImagesub('1', event);Approval_onclick()" ><spring:message code = 'ezApprovalG.t1769' /></span></li>
-			    <li id="tagsub2"><span onClick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()" ><spring:message code = 'ezApprovalG.t950' /></span></li>
+			    <li id="tagsub2">
+			    	<span onClick="pDocInfoValue='2';MM_swapImagesub('2', event);Recipent_onclick()" >
+			    		<c:choose>
+			    			<c:when test="${approvalFlag == 'S' }">
+				    			<spring:message code = 'ezApprovalG.t999932' />
+			    			</c:when>
+			    			<c:otherwise>
+					    		<spring:message code = 'ezApprovalG.t950' />
+			    			</c:otherwise>
+			    		</c:choose>
+			    	</span>
+			    </li>
 			    <li id="tagsub3"><span onClick="pDocInfoValue='4'; MM_swapImagesub('3', event);Attach_onclick()" ><spring:message code = 'ezApprovalG.t56' /></span></li>
 			    <li id="tagsub4"><span onClick="pDocInfoValue='3'; MM_swapImagesub('4', event);Opinion_onclick()" ><spring:message code = 'ezApprovalG.t55' /></span></li>
 	  		</ul>
