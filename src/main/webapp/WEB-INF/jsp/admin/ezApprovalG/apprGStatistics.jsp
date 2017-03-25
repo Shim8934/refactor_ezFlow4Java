@@ -42,8 +42,10 @@
 	            
 	            if (approvalFlag == 'S') {
 	            	$(".approvalG").hide();
+// 	            	$(".approvalS").show();
 	            } else {
 	            	$(".approvalS").hide();
+// 	            	$(".approvalG").show();
 	            }
 	            Initlvtlist();
 	        });
@@ -303,7 +305,7 @@
 		                	</c:otherwise>
 		                </c:choose>
 	                <input type="radio" id="UserFlag" name="UserFlag" class = "approvalG" value="4" onclick="return DeptRadio_Init()">
-	                <c:if test="${approvalFlag = 'S' }">
+	                <c:if test="${approvalFlag == 'G' }">
 		                <spring:message code = 'ezApprovalG.t1306' />
 	                </c:if>
 	            </td>

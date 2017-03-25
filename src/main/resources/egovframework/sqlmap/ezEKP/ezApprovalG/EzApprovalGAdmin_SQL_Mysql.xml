@@ -1454,38 +1454,99 @@
 		#v_TO#, #v_STRLANG#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getUserDocCount" remapResults="true"
-		parameterClass="Map" resultClass="ApprGAprLineVO">
-		<![CDATA[
-			SELECT
-				aprmemberdeptid,
-				aprmemberid,
-				aprmembername$v_STRLANG$,
-				aprmemberdeptname$v_STRLANG$,
-				aprmemberjobtitle$v_STRLANG$,
-				IFNULL(COUNT(aprmemberid), 0) AS APRCOUNT
-			FROM
-				TBL_ENDAPRLINEINFO
-			WHERE
-				tenant_id = #tenantID#
-			AND
-				companyid = #companyID#
-			AND
-				aprtype = #v_APRTYPE#
-			AND
-				processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
-			AND
-				processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
-			GROUP BY
-				aprmemberdeptid,
-				aprmemberid,
-				aprmembername$v_STRLANG$,
-				aprmemberdeptname$v_STRLANG$,
-				aprmemberjobtitle$v_STRLANG$
-			ORDER BY
-				aprmemberdeptname$v_STRLANG$,
-				aprmembername$v_STRLANG$
-		]]>
+	<select id="EzApprovalGAdmin.getUserDocCount" parameterClass="Map" resultClass="ApprGAprLineVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					APRMEMBERDEPTID,
+					APRMEMBERID,
+					APRMEMBERNAME$v_STRLANG$ AS APRMEMBERNAME,
+					APRMEMBERDEPTNAME$v_STRLANG$ AS APRMEMBERDEPTNAME,
+	   				APRMEMBERJOBTITLE$v_STRLANG$ AS APRMEMBERJOBTITLE,
+	   				APRTYPE, 
+	   				C.NAME$v_STRLANG$ AS APRTYPENAME,
+	   				COUNT(APRMEMBERID) AS APRCOUNT
+	   			FROM 
+	   				TBL_ENDAPRLINEINFO E
+	   			INNER JOIN
+	   				TBL_CODELIST C
+	   			ON 
+	   				E.TENANT_ID = C.TENANT_ID
+	   			AND
+	   				E.COMPANYID = C.COMPANYID
+	   			AND
+	   				E.APRTYPE = C.CODE2
+	   			WHERE
+	   				E.TENANT_ID = #tenantID#
+	   			AND
+	   				E.COMPANYID = #companyID#
+	   			AND
+	   				C.CODE1 = 'SA03' 
+	   			AND 
+	   				processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
+				AND
+					processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
+	   			GROUP BY
+	   				APRMEMBERDEPTID,
+	   				APRMEMBERID,
+	   				APRMEMBERNAME$v_STRLANG$,
+	   				APRMEMBERDEPTNAME$v_STRLANG$,
+	   				APRMEMBERJOBTITLE$v_STRLANG$,
+	   				APRTYPE,
+	   				C.NAME$v_STRLANG$
+			]]>
+			<isEqual property="userFlag" compareValue="0">
+				ORDER BY
+					APRTYPE,
+					APRMEMBERDEPTNAME,
+					APRMEMBERNAME
+			</isEqual>
+			<isEqual property="userFlag" compareValue="1">
+				ORDER BY
+					APRMEMBERDEPTNAME,
+					APRMEMBERNAME,
+					APRTYPE
+			</isEqual>
+			<isEqual property="userFlag" compareValue="2">
+				ORDER BY
+					APRMEMBERNAME,
+					APRMEMBERDEPTNAME,
+					APRTYPE
+			</isEqual>
+		</isEqual>
+		
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					aprmemberdeptid,
+					aprmemberid,
+					aprmembername$v_STRLANG$,
+					aprmemberdeptname$v_STRLANG$,
+					aprmemberjobtitle$v_STRLANG$,
+					IFNULL(COUNT(aprmemberid), 0) AS APRCOUNT
+				FROM
+					TBL_ENDAPRLINEINFO
+				WHERE
+					tenant_id = #tenantID#
+				AND
+					companyid = #companyID#
+				AND
+					aprtype = #v_APRTYPE#
+				AND
+					processdate >= DATE_FORMAT(#v_FROM#, '%Y-%m-%d %H:%i:%s')
+				AND
+					processdate < DATE_FORMAT(#v_TO#, '%Y-%m-%d %H:%i:%s')
+				GROUP BY
+					aprmemberdeptid,
+					aprmemberid,
+					aprmembername$v_STRLANG$,
+					aprmemberdeptname$v_STRLANG$,
+					aprmemberjobtitle$v_STRLANG$
+				ORDER BY
+					aprmemberdeptname$v_STRLANG$,
+					aprmembername$v_STRLANG$
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.deleteContainerType" -->

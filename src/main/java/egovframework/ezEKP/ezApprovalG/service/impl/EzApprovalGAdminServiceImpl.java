@@ -1937,8 +1937,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
 			sb.append("</HEADER>");
 		}
+		
 		sb.append("</HEADERS><ROWS>");
 		
+		//G에서만 쓰는거
 		String aprType = "";
 		switch (userFlag) {
 		case "1":
@@ -1963,31 +1965,31 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_FROM", szFrom);
 		map1.put("v_TO", szTo);
 		map1.put("v_STRLANG", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		map1.put("userFlag", userFlag);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", userInfo.getTenantId());
+		map1.put("approvalFlag", approvalFlag);
 		
 		logger.debug("aprType=" + aprType);
 		logger.debug("getUserDocCount started.");
 		List<ApprGAprLineVO> list = ezApprovalGAdminDAO.getUserDocCount(map1);
-		logger.debug("getUserDocCount ended.");
+		logger.debug("getUserDocCount ended. listsize = " + list.size());
 		
 		for (ApprGAprLineVO vo : list) {
 			sb.append("<ROW>");
-			if (userInfo.getLang().equals("1")) {
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName()) + "</VALUE>");
-				sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
-				sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberJobTitle()) + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberName()) + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL>");
-			} else {
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName2()) + "</VALUE>");
-				sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
-				sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberJobTitle2()) + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberName2()) + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL>");
+			
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberDeptName()) + "</VALUE>");
+			sb.append("<DATA1>" + commonUtil.cleanValue(vo.getAprMemberDeptID()) + "</DATA1>");
+			sb.append("<DATA2>" + commonUtil.cleanValue(vo.getAprMemberID()) + "</DATA2></CELL>");
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberJobTitle()) + "</VALUE></CELL>");
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprMemberName()) + "</VALUE></CELL>");
+			
+			if (approvalFlag.equals("S")) {
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprTypeName()) + "</VALUE></CELL>");
 			}
+			
+			sb.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getAprCount()) + "</VALUE></CELL>");
+			
 			sb.append("</ROW>");
 		}
 		

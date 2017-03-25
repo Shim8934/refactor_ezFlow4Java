@@ -29,6 +29,8 @@ public class ApprGAprLineVO {
 	private String aprMemberSN;
 	/** 결재방법*/
 	private String aprType;
+	/** 결재방법이름*/
+	private String aprTypeName;
 	/** 결재상태*/
 	private String aprState;
 	/** 결재자아이디*/
@@ -103,6 +105,12 @@ public class ApprGAprLineVO {
 	}
 	public void setAprType(String aprType) {
 		this.aprType = aprType;
+	}
+	public String getAprTypeName() {
+		return aprTypeName;
+	}
+	public void setAprTypeName(String aprTypeName) {
+		this.aprTypeName = aprTypeName;
 	}
 	public String getAprState() {
 		return aprState;
