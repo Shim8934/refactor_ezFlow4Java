@@ -9,8 +9,8 @@
 		
 		<section  class="body_bg1">
       		<article class="portletbox boardbox ">
-      		  <div id="BoardTab" class="title" runat="server"></div>
-        		<div id="BoardList" class="boardcont" runat="server">
+      		  <div id="BoardTab" class="title"></div>
+        		<div id="BoardList" class="boardcont">
         		<%
 		 			String pExist = (String)request.getAttribute("pExist");
 		 		%>
@@ -234,7 +234,8 @@
 		                            if (FboardMainContent != "") {
 		                                document.getElementById("content").innerHTML = FboardMainContent;
 		                            } else {
-		                                getContent(pfirstItemID);
+		                            	//2017-03-26 없어도 되는 코드 같음.
+		                                //getContent(pfirstItemID);
 		                            }
 		                        } else {
 		                            document.getElementById("content").innerHTML = FboardMainContent;
@@ -305,6 +306,8 @@
 		            xmlhttp_getContent_NewBoardSTD.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID_NewBoardSTD + "&itemID=" + pItemID ,false);
 		            xmlhttp_getContent_NewBoardSTD.onreadystatechange = getContent_after;
 		            xmlhttp_getContent_NewBoardSTD.send(xmlpara);
+		        
+		            
 		        }
 
 		        function getContent_after() {

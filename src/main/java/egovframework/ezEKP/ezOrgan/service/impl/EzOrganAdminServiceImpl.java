@@ -459,11 +459,26 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map1.put("userID", userInfo.getId());
 		map1.put("userName", userInfo.getName());
 		map1.put("nowDate", nowDate);
+		
 		ezOrganAdminDao.insertCompanyInfo_I1(map1);
 		ezOrganAdminDao.insertCompanyInfo_I2(map1);
 		ezOrganAdminDao.insertCompanyInfo_I3(map1);
 		ezOrganAdminDao.insertCompanyInfo_I4(map1);
 		ezOrganAdminDao.insertCompanyInfo_I5(map1);
+		ezOrganAdminDao.insertCompanyInfo_I6(map1);
+		ezOrganAdminDao.insertCompanyInfo_I7(map1);
+		ezOrganAdminDao.insertCompanyInfo_I8(map1);
+		ezOrganAdminDao.insertCompanyInfo_I9(map1);
+		ezOrganAdminDao.insertCompanyInfo_I10(map1);
+		ezOrganAdminDao.insertCompanyInfo_I11(map1);
+		ezOrganAdminDao.insertCompanyInfo_I12(map1);
+		ezOrganAdminDao.insertCompanyInfo_I13(map1);
+		ezOrganAdminDao.insertCompanyInfo_I14(map1);
+		ezOrganAdminDao.insertCompanyInfo_I15(map1);
+		ezOrganAdminDao.insertCompanyInfo_I16(map1);
+		ezOrganAdminDao.insertCompanyInfo_I17(map1);
+		ezOrganAdminDao.insertCompanyInfo_I18(map1);
+		ezOrganAdminDao.insertCompanyInfo_I19(map1);
 		
 		logger.debug("insertDBData_company ended");
 	}
@@ -810,5 +825,4 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public int userCountCheck(String cn, int tenantID) throws Exception {
 		return  ezOrganAdminDao.userCountCheck(cn, tenantID);
 	}
-	
 }

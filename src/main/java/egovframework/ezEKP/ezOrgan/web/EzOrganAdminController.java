@@ -2077,5 +2077,4 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         return returnValue;
     }
-    
 }
