@@ -1969,4 +1969,61 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I5(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I5", map);
     }
+    
+    public void insertCompanyInfo_I6(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I6", map);
+    }
+    
+    public void insertCompanyInfo_I7(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I7", map);
+    }
+    
+    public void insertCompanyInfo_I8(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I8", map);
+    }
+    
+    public void insertCompanyInfo_I9(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I9", map);
+    }
+    
+    public void insertCompanyInfo_I10(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I10", map);
+    }
+    
+    public void insertCompanyInfo_I11(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I11", map);
+    }
+    
+    public void insertCompanyInfo_I12(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I12", map);
+    }
+    
+    public void insertCompanyInfo_I13(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I13", map);
+    }
+    
+    public void insertCompanyInfo_I14(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I14", map);
+    }
+    
+    public void insertCompanyInfo_I15(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I15", map);
+    }
+    
+    public void insertCompanyInfo_I16(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I16", map);
+    }
+    
+    public void insertCompanyInfo_I17(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I17", map);
+    }
+    
+    public void insertCompanyInfo_I18(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I18", map);
+    }
+    
+    public void insertCompanyInfo_I19(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I19", map);
+    }
+    
 }

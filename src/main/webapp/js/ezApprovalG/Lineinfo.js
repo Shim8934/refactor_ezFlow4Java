@@ -239,6 +239,7 @@ function SAPRLINEATTENDADDFunction(pCurSelectedRow, Mode) {
             p_PrevAprStat = GetAttribute(pCurSelRowRows[0], "DATA12");
         }
     }
+    
     if (p_PrevAprStat == "003" && pReDraftFlag == "DRAFT") {
         var pAlertContent = strLangS250 + "<br> " + strLangS251;
         OpenAlertUI(pAlertContent);
@@ -793,7 +794,6 @@ function AprLineDupulicationChecking(Mode, selnode, pSelectedRow) {
 var temppSelectedRow;
 var tempMode;
 function AprLineAddUser(Mode, tr, pSelectedRow) {
-
     if( pSelectedRow != null)
 	{
 		var pparsingXML;
