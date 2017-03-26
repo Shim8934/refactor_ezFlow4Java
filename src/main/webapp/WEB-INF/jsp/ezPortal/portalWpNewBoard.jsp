@@ -15,30 +15,6 @@
           			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)"><span>${pNewsBDNM}</span></dt>
         		</dl>
           		<div id="BoardList_NewBoard" >
-          		<%
-		 			String pExist = (String)request.getAttribute("pExist");
-		 		%>
-        			<%if(pExist == "true") { %>
-            			<dl onclick="openDoc('${pItemID}')" class='nt_pic' style='cursor:pointer'>
-            				<dt class='tit'><strong>${pDocTitle}</strong></dt>
-            				<dd class='photo'><img src='/images/<spring:message code='main.t00025' />/main/notice_pic.gif' width='83' height='54' alt=''></dd>
-            				<dd id='content_NewBoard' class='txt'>${pDocContent}</dd>
-            			</dl>
-			            <ul class="mainlist">
-			    	        <asp:Repeater ID="BoardListRepeater" runat="server">  
-                				<ItemTemplate>
-                    				<%-- <li  style='cursor:pointer' onclick="openDoc('<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[0].InnerText %>')" >
-                        				<%# ((System.Xml.XmlElement)Container.DataItem).GetElementsByTagName("VALUE")[2].InnerText %>
-                    				</li> --%>
-                				</ItemTemplate>
-        	    			</asp:Repeater>
-    	        		</ul>
-	        	    <%} else {%>
-               			<div class='nodata_portlet '>
-                			<p><img src='/images/<spring:message code='main.t00025' />/main/nodata_gray.gif' width='107' height='70'></p>
-                			<p><spring:message code='main.t00026' /></p>
-                		</div>
-            		<%} %>
         		</div>
       		</article>
 		</section>

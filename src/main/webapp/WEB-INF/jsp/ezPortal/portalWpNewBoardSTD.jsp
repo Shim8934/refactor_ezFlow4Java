@@ -11,27 +11,6 @@
       		<article class="portletbox boardbox ">
       		  <div id="BoardTab" class="title"></div>
         		<div id="BoardList" class="boardcont">
-        		<%
-		 			String pExist = (String)request.getAttribute("pExist");
-		 		%>
-            		 <%if (pExist == "true") { %>
-            			<dl onclick="openDoc_section4_Type(''${pItemID}','${pBoardType}', '${pData1}')" class='listtype_photo' style='cursor: pointer'>
-                			<dt class='tit'><strong><${pDocTitle}</strong></dt>
-                			<dd class='photo'>
-	                    		<img src='/images/kr/main/board_pic.gif' width='86' height='61' alt=''>
-                    		</dd>
-    			            <dd id='content' class='txt'>${pDocContent}></dd>
-            			</dl>
-            			<ul class="listtype_txt">
-            			</ul>
-            		<%} else {%>
-            			<div class='nodata_portlet '>
-                			<p>
-                    			<img src='/images/<spring:message code='main.t00025' />/main/nodata_gray.gif' width='107' height='70'>
-                    		</p>
-                			<p><spring:message code='main.t00026' /></p>
-            			</div>
-            		<%} %> 
         		</div>
         		<div class="guide"><span class="lb"></span><span class="rb"></span></div>
    		 	</article>
@@ -119,20 +98,6 @@
 
 		        var xmlhttp_getBoardList_NewBoardSTD = createXMLHttpRequest();
 		        function getBoardList_NewBoardSTD() {
-		           /*  var xmlpara = createXmlDom();
-		            var objNode;
-		            createNodeInsert(xmlpara, objNode, "PARAMETER");
-		            createNodeAndInsertText(xmlpara, objNode, "pBoardType", "1");
-		            createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoardSTD);
-		            createNodeAndInsertText(xmlpara, objNode, "pPageNum", "1");
-		            createNodeAndInsertText(xmlpara, objNode, "orderCell", "");
-		            createNodeAndInsertText(xmlpara, objNode, "orderOption", "");
-
-		            xmlhttp_getBoardList_NewBoardSTD = null;
-		            xmlhttp_getBoardList_NewBoardSTD = createXMLHttpRequest();
-		            xmlhttp_getBoardList_NewBoardSTD.open("POST", "/myoffice/ezBoardSTD/aspx/Get_BoardList.aspx", true);
-		            xmlhttp_getBoardList_NewBoardSTD.onreadystatechange = getBoardList_after;
-		            xmlhttp_getBoardList_NewBoardSTD.send(xmlpara); */
 		            $.ajax({
 	    	        	type : "POST",
 	    	        	dataType : "text",
@@ -182,10 +147,7 @@
 		                        //var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA10").item(0));
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
 		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
-/* alert(gubun);		                        
-		                        if (FboardMainContent != "") {
-		                        	FboardType = "3";
-		                        } */
+
 		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer'>";
 		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
 		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(3));
