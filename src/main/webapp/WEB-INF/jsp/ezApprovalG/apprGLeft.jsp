@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="/js/jquery/jquery.selectbox-0.2.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 		<script type="text/javascript" src="/js/ezApprovalG/CabRoleInfo_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/TreeView.js"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">

@@ -162,6 +162,16 @@
 		                condition[13] = nowmonth;
 		                condition[14] = nowday;
 		                condition[24] = "";
+					} else {
+						  if (nowmonth < 10)
+				                nowmonth = "0" + nowmonth;
+
+				            if (nowday < 10)
+				                nowday = "0" + nowday;
+
+				            for (var i = 0; i < 25; i++) {
+				                condition[i] = "";
+				            }
 					}
 						DocListType == "GetDocSearch";
 	                	 var settingDate = new Date();
