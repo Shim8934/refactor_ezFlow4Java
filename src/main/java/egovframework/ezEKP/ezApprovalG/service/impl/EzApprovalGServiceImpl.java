@@ -18876,7 +18876,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             oldyear = arry[4];
                         }
 
-						String pUrl = "/files/upload_approvalG/" + strReceiptCompanyID + "/doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
+						String pUrl = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + strReceiptCompanyID + "/doc/" + oldyear + "/1000/" + getDocDir(newID) + "/" + newID + "." + extFileName;
 				
                         //2011.04.04  수신부서가 많을 경우 속도 개선을 위해 접수기에서 문서 copy되도록 수정
                         //rtnVal = copyFile(pDirPath + companyID + "\\Doc\\" + oldyear + "\\" + getDocDir(pDocID) + "\\" + pDocID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID) + "\\" + newID + "." + pExtFileName, pDirPath + strReceiptCompanyID + "\\Doc\\" + DateTime.Now.Year.ToString() + "\\1000\\" + getDocDir(newID));
