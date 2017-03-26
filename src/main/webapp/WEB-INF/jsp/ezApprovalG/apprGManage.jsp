@@ -87,7 +87,8 @@
 		    var CurrentHeight = 0;
 		    var CurrentWidth = 0;
 		    var approvalFlag = "${approvalFlag}";
-
+		    var SubQuery = "${SubQuery}";
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
