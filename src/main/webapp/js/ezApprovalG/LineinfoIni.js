@@ -91,8 +91,9 @@ function LineAprTyepSetAll() {
         var p_isDept = pTotalRows[i].getAttribute("DATA5");
         var CurrentSn = CrossYN() ? pTotalRows[i].childNodes.item(0).textContent : pTotalRows[i].childNodes.item(0).innerText;
         
-        if (pTotalRows[i].getAttribute("DATA12") == "002")
-            ProSn = CurrentSn;
+        if (pTotalRows[i].getAttribute("DATA12") == "002") {
+        	ProSn = CurrentSn;
+        }
 
         if (pTotalRows[i].getAttribute("DATA12") == "004")
             p_RejectFlag = true;
@@ -101,7 +102,12 @@ function LineAprTyepSetAll() {
         var p_StatusDis = (CurrentSn != 1 && (pTotalRows[i].getAttribute("DATA12") == "001" || p_RejectFlag)) ? "" : pTotalRows.length == 1 ? "" : "disabled";
         if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
             p_StatusDis = "disabled";
-
+        
+        if (approvalFlag == "S") {
+        	if (pTotalRows[i].getAttribute("DATA12") == "002" && parseInt(CurrentSn) == parseInt(ProSn)) {
+        		p_StatusDis = "disabled";
+        	}
+        }
         if (p_isDept == "Y") {
             var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
             AprTyepID = pTotalRows[i].getAttribute("id") + "select";
@@ -119,11 +125,19 @@ function LineAprTyepSetAll() {
             else if (pTotalRows[i].childNodes[0].innerHTML.replace("★","").replace("⊙","") == "1" && pTotalRows[i].getAttribute("DATA11") == "001") {
                 pTotalRows[i].setAttribute("DATA11", "018");
             }
+            
             var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
-            pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+        	pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
+        	
+        	if (approvalFlag == "S") {
+        		if (pTotalRows.length == "1" && pTotalRows[i].getAttribute("DATA12") == "002") {
+        			pTotalRows[i].setAttribute("DATA11", "001");
+        		}
+        	}
         }
     }
 }
+
 //############################################################################################################################################# 결재방법 지정 함수
 var onclickLine = true;
 function AprlineType_onchangeLine(obj) {
@@ -246,7 +260,8 @@ function InitListView() {
                 pAPRLINE.DataBind("APRLINE");
             }
         }
-        LineAprTyepSetAll();
+        
+    	LineAprTyepSetAll();
 
         if (pReDraftFlag != "HAPYUI" && pReDraftFlag != "HABYUI") {
             for (var i = 0; i < pAPRLINE.GetRowCount() ; i++) {

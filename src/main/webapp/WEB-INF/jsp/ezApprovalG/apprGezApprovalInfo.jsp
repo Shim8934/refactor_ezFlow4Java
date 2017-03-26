@@ -175,6 +175,7 @@
 	        var approvalFlag = "${approvalFlag}";
 	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
+			var checkdocinfo = false;
 	        
 // 	        $(function () {
 // 	        	$("#idDatepicker").val('${startDateTime}'.substring(0, 10));
