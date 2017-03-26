@@ -467,7 +467,7 @@
 							type : "POST",
 							dataType : "text",
 							async : true,
-							url : "/ezApproval/getListCount.do",
+							url : "/ezApprovalG/getListCount.do",
 							data : { 
 									mode : "LEFT",
 									listType : GetAttribute(document.getElementById("countsub" + presentValue), "type"),

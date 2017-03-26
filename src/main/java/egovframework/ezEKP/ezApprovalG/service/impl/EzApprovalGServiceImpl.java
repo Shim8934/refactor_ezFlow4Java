@@ -38,8 +38,6 @@ import org.w3c.dom.html.HTMLTableRowElement;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
-import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
