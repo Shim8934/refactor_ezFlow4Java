@@ -39,6 +39,13 @@
 			};
 			
 			$(document).ready(function(){
+				if (approvalFlag == 'S') {
+					$(".approvalS").show();
+					$(".approvalG").hide();
+				} else {
+					$(".approvalG").show();
+					$(".approvalS").hide();
+				}
 				var height = parseInt(divList.style.height.replace('px', '')) + 200;
 				var reheight = document.documentElement.clientHeight - parseInt(height);
 				document.getElementById('div_AprLine').style.height = reheight + "px";
@@ -734,7 +741,7 @@
 	            	</c:forEach>
 		        </select><br /><br />
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
-	            <li id="SearchCondi"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
+	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>
 	            <img src="/images/i_bar.gif" align="absmiddle">
 	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
 	        </ul>

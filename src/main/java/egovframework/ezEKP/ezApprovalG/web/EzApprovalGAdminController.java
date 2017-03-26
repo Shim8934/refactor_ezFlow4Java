@@ -1315,10 +1315,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String deptID = request.getParameter("node2");
 		String deptName = request.getParameter("node3");
 		String companyID = request.getParameter("node4");
-		String pCompanyID = request.getParameter("node5");
+//		부서의회사아이디가 아닌 상위셀렉트박스의 회사아이디를 사용
+//		String pCompanyID = request.getParameter("node5");
 		String deptName2 = request.getParameter("node6");
 		
-		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, pCompanyID, companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
 		
 		logger.debug("setGroupSubItemInfo ended.");
 		
@@ -2855,7 +2856,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDocList started");
-		
+logger.debug("period = " + request.getParameter("period"));
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String contID = request.getParameter("contID");
@@ -2915,7 +2916,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			if (!subQuery.toString().equals("")) {
 				subQuery.append(" AND ");
 			}			
-			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod LIKE '%" + request.getParameter("period") + "%' ");
+			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod ='" + request.getParameter("period") + "' ");
 		}
 							
 		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
