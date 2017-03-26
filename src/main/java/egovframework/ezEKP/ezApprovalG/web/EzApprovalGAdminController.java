@@ -1311,7 +1311,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("setGroupSubItemInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
-		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String groupID = request.getParameter("node1");
 		String deptID = request.getParameter("node2");
 		String deptName = request.getParameter("node3");
@@ -2857,7 +2856,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@ResponseBody
 	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDocList started");
-		
+logger.debug("period = " + request.getParameter("period"));
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String contID = request.getParameter("contID");
@@ -2917,7 +2916,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			if (!subQuery.toString().equals("")) {
 				subQuery.append(" AND ");
 			}			
-			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod LIKE '%" + request.getParameter("period") + "%' ");
+			subQuery.append(" TBL_EXPENDAPRDOCINFO.StoragePeriod ='" + request.getParameter("period") + "' ");
 		}
 							
 		String result = ezApprovalGService.getContDocList(contID, "", subQuery.toString(), pageSize, pageNum, "", "", companyID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
