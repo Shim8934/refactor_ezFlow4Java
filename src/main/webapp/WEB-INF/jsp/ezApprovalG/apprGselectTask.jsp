@@ -176,11 +176,11 @@
 		        ListViewData = createNodeInsert(oList, ListViewData, "LISTVIEWDATA");
 		        Headers = createNodeAndAppandNode(oList, ListViewData, Headers, "HEADERS");
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t379'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t828'/>");
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "65");
 		
 		        Header = createNodeAndAppandNode(oList, Headers, Header, "HEADER");
-		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t572'/>");
+		        createNodeAndAppandNodeText(oList, Header, node, "NAME", "<spring:message code='ezApprovalG.t577'/>");
 		        createNodeAndAppandNodeText(oList, Header, node, "WIDTH", "120");
 		
 		        createNodeAndAppandNode(oList, ListViewData, Rows, "ROWS");
