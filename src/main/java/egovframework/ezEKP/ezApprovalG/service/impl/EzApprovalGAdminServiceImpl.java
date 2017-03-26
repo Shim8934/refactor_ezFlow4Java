@@ -640,13 +640,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			}
 			sb.append("</ROWS></LISTVIEWDATA>");
 		}
+		
 		logger.debug("result = " + sb.toString());
+		
 		return sb.toString();
 	}
 
 	@Override
 	public String insertReceiveGroupItemInfo(String groupID, String deptID,	String deptName, String deptName2, String pCompanyID, String companyID, int tenantID) throws Exception {
-		String result = "FALSE";
+		logger.debug("insertReceiveGroupItemInfo started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MAINID", groupID);
@@ -657,20 +659,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		try {
-			logger.debug("insertReceiveGroupItemInfo started.");
-			ezApprovalGAdminDAO.insertReceiveGroupItemInfo(map);
+		ezApprovalGAdminDAO.insertReceiveGroupItemInfo(map);
 			
-			result = "TRUE";
-		} catch (Exception e) {
-			logger.debug("insertReceiveGroupItemInfo catch.");
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			result = "FALSE";			
-		}
+		logger.debug("insertReceiveGroupItemInfo ended.");
 		
-		logger.debug("insertReceiveGroupItemInfo ended. result=" + result);
-		
-		return result;
+		return "TRUE";
 	}
 
 	@Override

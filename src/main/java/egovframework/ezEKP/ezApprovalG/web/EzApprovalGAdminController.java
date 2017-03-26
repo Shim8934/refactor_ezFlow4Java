@@ -1311,14 +1311,16 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("setGroupSubItemInfo started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String groupID = request.getParameter("node1");
 		String deptID = request.getParameter("node2");
 		String deptName = request.getParameter("node3");
 		String companyID = request.getParameter("node4");
-		String pCompanyID = request.getParameter("node5");
+//		부서의회사아이디가 아닌 상위셀렉트박스의 회사아이디를 사용
+//		String pCompanyID = request.getParameter("node5");
 		String deptName2 = request.getParameter("node6");
 		
-		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, pCompanyID, companyID, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.insertReceiveGroupItemInfo(groupID, deptID, deptName, deptName2, companyID, companyID, userInfo.getTenantId());
 		
 		logger.debug("setGroupSubItemInfo ended.");
 		

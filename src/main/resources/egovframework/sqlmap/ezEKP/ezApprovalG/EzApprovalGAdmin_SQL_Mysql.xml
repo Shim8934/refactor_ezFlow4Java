@@ -1106,8 +1106,7 @@
 		#v_MODE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true"
-		parameterClass="Map" resultClass="ApprGAdminReceiveVO">
+	<select id="EzApprovalGAdmin.getReceiveGroupInfo" remapResults="true" parameterClass="Map" resultClass="ApprGAdminReceiveVO">
 		<isEqual property="v_MODE" compareValue="ITEM">
 			<![CDATA[
 				SELECT

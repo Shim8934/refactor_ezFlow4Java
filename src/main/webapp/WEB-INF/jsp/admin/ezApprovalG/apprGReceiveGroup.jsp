@@ -151,11 +151,18 @@
 		        	url : "/admin/ezApprovalG/setGroupSubItemInfo.do",
 		        	async : false,
 		        	data : {
-		        		node1 : p_groupid, node2 : treeNode.GetNodeData("CN"), node3 : treeNode.GetNodeData("DISPLAYNAME1"), node4 : document.getElementById("SCompID").value,
-		        		node5 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2"), node6 : treeNode.GetNodeData("DISPLAYNAME2")
+		        		node1 : p_groupid,
+		        		node2 : treeNode.GetNodeData("CN"),
+		        		node3 : treeNode.GetNodeData("DISPLAYNAME1"),
+		        		node4 : document.getElementById("SCompID").value,
+// 		        		node5 : treeNode.GetNodeData("EXTENSIONATTRIBUTE2"),
+		        		node6 : treeNode.GetNodeData("DISPLAYNAME2")
 		        	},
 		        	success : function() {
 		        		getAdminReceivItem(p_groupid);
+		        	},
+		        	error : function(jqXHR, textStatus, errorThrown) {
+		        		
 		        	}
 		        });
 
