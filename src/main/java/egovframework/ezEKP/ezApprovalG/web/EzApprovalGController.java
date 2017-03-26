@@ -840,7 +840,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (approvalFlag.equals("S")) {
-			code1 = "SA03";
+			if (code1.equals("A03")) {
+				code1 = "SA03";
+			}
 		}
 		
 		String result = ezApprovalGService.getOptionInfo(code1, code2, userInfo, flag);
@@ -1109,7 +1111,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
-		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
 		return result;
 	}

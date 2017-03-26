@@ -82,7 +82,7 @@ public interface EzApprovalGService {
 	
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception;
 	
-	public String updateLineTempletDetailInfo(Document xmlDom, String companyID, String lang, int tenantID) throws Exception;
+	public String updateLineTempletDetailInfo(Document xmlDom, Locale locale, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String deleteLineTempletDetailInfo(String formID, String userID, String aprLineSN, String companyID, int tenantID) throws Exception;
 	

@@ -103,11 +103,11 @@ function LineAprTyepSetAll() {
         if ((pTotalRows[i].getAttribute("DATA11") == "009" || pTotalRows[i].getAttribute("DATA11") == "012") && parseInt(CurrentSn) < parseInt(ProSn))
             p_StatusDis = "disabled";
         
-        if (approvalFlag == "S") {
-        	if (pTotalRows[i].getAttribute("DATA12") == "002" && parseInt(CurrentSn) == parseInt(ProSn)) {
-        		p_StatusDis = "disabled";
-        	}
-        }
+//        if (approvalFlag == "S") {
+//        	if (pTotalRows[i].getAttribute("DATA12") == "002" && parseInt(CurrentSn) == parseInt(ProSn)) {
+//        		p_StatusDis = "disabled";
+//        	}
+//        }
         if (p_isDept == "Y") {
             var AprTypeObj = ChangeAprlineType("group", pTotalRows[i].getAttribute("DATA11"));
             AprTyepID = pTotalRows[i].getAttribute("id") + "select";
@@ -129,11 +129,11 @@ function LineAprTyepSetAll() {
             var selectedindex = pTotalRows[i].childNodes[4].childNodes[0].selectedIndex;
         	pTotalRows[i].setAttribute("DATA11", pTotalRows[i].childNodes[4].childNodes[0].childNodes[selectedindex].value);
         	
-        	if (approvalFlag == "S") {
-        		if (pTotalRows.length == "1" && pTotalRows[i].getAttribute("DATA12") == "002") {
-        			pTotalRows[i].setAttribute("DATA11", "001");
-        		}
-        	}
+//        	if (approvalFlag == "S") {
+//        		if (pTotalRows.length == "1" && pTotalRows[i].getAttribute("DATA12") == "002") {
+//        			pTotalRows[i].setAttribute("DATA11", "001");
+//        		}
+//        	}
         }
     }
 }
