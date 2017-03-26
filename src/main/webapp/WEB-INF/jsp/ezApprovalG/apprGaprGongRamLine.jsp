@@ -503,8 +503,10 @@
 	        }
 	    }
 	
-	    function btn_AprDeptTempletDel_onclick_Complete() {
-	        DivPopUpHidden();
+	    function btn_AprDeptTempletDel_onclick_Complete(rtn) {
+	    	DivPopUpHidden();
+	        if (rtn == "" || rtn == undefined)
+	            return;
 	        DelAprDeptTempletList(pUserID, pFormID, temp_CheckAprDeptTempletSN);
 	    }
 	    function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
@@ -1020,21 +1022,22 @@
 	                <!-- 조직도 -->
 	                <div id="Organ">
 	                    <div class="listview" style="">
-	                        <div class="box" style="overflow: auto; height: 350px; width: 388px;" id="TreeView"></div>
-	                </div>
-	                <div class="listview" style="margin-top: 5px">
-	                        <div id="UserList" style="overflow: auto; Width: 388px; Height: 190px; border: 0; margin: 1px 0px 1px 1px;"></div>
-	                </div>
-	                <table style="width: 100%;">
-	                    <tr>
+	                        <div class="box" style="overflow: auto; height: 350px; width: 387px;" id="TreeView"></div>
+	                	</div>
+	                	<div class="listview" style="margin-top: 5px">
+	                        <div id="UserList" style="overflow: auto; Width: 388px; Height: 189px; border: 0; margin: 1px 0px 1px 1px;"></div>
+	                	</div>
+	                	<table style="width: 100%;">
+	                    	<tr>
 	                            <td style="text-align: left; height: 30px;">
-	                                <input id="textUser" style="width: 188px;" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="imgbtn" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a></td>
+	                                <input id="textUser" style="width: 188px;" name="textUser" onkeypress="return textUser_onkeypress()" tabindex="1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="imgbtn" style="vertical-align: middle;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
+	                            </td>
 	                        </tr>
 	                    </table>
 	                </div>
 	                <!-- 즐겨찾기 -->
-	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
-	                    <table>
+	                <div id="ReceptTemp" style="display: none">
+	                    <table style="padding-left: 5px">
 	                        <tr>
 	                            <td style="background-color: #f3f3f3; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
@@ -1049,8 +1052,8 @@
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
 	                                        <td style="text-align: center;">
-	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.t252'/></span></a>
-	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0006'/></span></a>
+	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
 	                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>
@@ -1063,14 +1066,14 @@
 	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 240px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
 	                                </div>
-	                        </td>
-	                    </tr>
-	                </table>
-	                    <table style="width: 100%;">
-	                        <tr>
-	                            <td style="text-align: left; height: 30px;">
-	                        </tr>
-	                    </table>
+	                        	</td>
+	                    	</tr>
+	                	</table>
+                    	<table style="width: 100%;">
+                        	<tr>
+                            	<td style="text-align: left; height: 30px;">
+                        	</tr>
+                    	</table>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center;">
@@ -1086,13 +1089,13 @@
 	                            <img src="/images/ImgIcon/prev.gif" height="16" alt="<spring:message code='ezApprovalG.pjj28'/>" style="vertical-align: middle" /></span></a>
 	                        <a class="imgbtn" onclick="return AprlineDown_onclick();"><span>
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
-	                </div>
+	                	</div>
 	                </h2>
 	                <div class="listview" style="margin-top: 5px">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #B6B6B6; width: 550px; height: 550px; background-color: #ffffff; margin: 1px 1px 1px 1px;"></div>
 	                </div>
 	                <div style="text-align: right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
+	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t1689'/> <spring:message code='ezApprovalG.t1767'/></span></a>
 	                </div>
 	            </td>
 	        </tr>

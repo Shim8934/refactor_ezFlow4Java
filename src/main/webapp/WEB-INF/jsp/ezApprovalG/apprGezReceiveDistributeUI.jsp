@@ -1149,8 +1149,10 @@
 	        }
 	    }
 	
-	    function btn_AprDeptTempletDel_onclick_Complete() {
-	        DivPopUpHidden();
+	    function btn_AprDeptTempletDel_onclick_Complete(rtn) {
+	    	DivPopUpHidden();
+	        if (rtn == "" || rtn == undefined)
+	            return;
 	        DelAprDeptTempletList(pUserID, pFormID, temp_CheckAprDeptTempletSN);
 	    }
 	    function DelAprDeptTempletList(pUserID, pFormID, p_SelAprDeptTempletSN) {
@@ -1345,8 +1347,8 @@
 	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
 	                                    <tr>
 	                                        <td style="text-align: center;">
-	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.t252'/></span></a>
-	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0006'/></span></a>
+	                                            <a class="imgbtn"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
+	                                            <a class="imgbtn"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
 	                                            <a class="imgbtn"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
 	                                        </td>
 	                                    </tr>
@@ -1356,7 +1358,7 @@
 	                        <tr>
 	                            <td style="vertical-align: top;">
 	                                <div class="border_gray">
-	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 240px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 238px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
 	                                </div>
 	                            </td>
@@ -1383,7 +1385,7 @@
 	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto; margin: 1px 1px 1px 1px;"></div>
 	                </div>
 	                <div style="text-align: right;">
-	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
+	                    <a class="imgbtn" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.t432'/> <spring:message code='ezApprovalG.t1767'/></span></a>
 	                </div>
 	            </td>
 	        </tr>

@@ -60,7 +60,7 @@
 		    }
 		    function btn_OpinionCANCEL_onclick() {
 		        if (ReturnFunction != null) {
-		            ReturnFunction("");
+		            ReturnFunction(false);
 		            window.close();
 		        }
 		        else {
