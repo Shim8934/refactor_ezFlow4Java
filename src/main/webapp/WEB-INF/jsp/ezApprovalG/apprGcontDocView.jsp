@@ -151,7 +151,11 @@
 		                field.style.display = 'none';
 		            }
 		        }
-		        setAttachInfo(pDocID, "END", lstAttachLink);
+		        
+		        if ("${uFlag}" == "m03")
+		            setAttachInfo(pDocID, "APR", lstAttachLink);
+		        else
+		            setAttachInfo(pDocID, "END", lstAttachLink);
 		
 		        var Rtnval = CheckOpinionInfo();
 		        if (Rtnval) {
