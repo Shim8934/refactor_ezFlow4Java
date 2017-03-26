@@ -447,8 +447,10 @@ function btn_AprDeptTempletDel_onclick() {
     }
 }
 
-function btn_AprDeptTempletDel_onclick_Complete() {
+function btn_AprDeptTempletDel_onclick_Complete(rtn) {
     DivPopUpHidden();
+    if (rtn == "" || rtn == undefined)
+        return;
     DelAprDeptTempletList(pUserID, pFormID, temp_CheckAprDeptTempletSN);
 }
 
