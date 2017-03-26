@@ -97,8 +97,12 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck) {
     else {
         Content += strLang1109 + " : " + Drafter + "<br>";
     }
-    if (pDraftDate != "")
-        Content += strLang1110 + " : " + pDraftDate + "<br>";
+    if (pDraftDate != "") {
+    	if (pDraftDate.slice(-2) == ".0") {
+    		pDraftDate = pDraftDate.substring(0, pDraftDate.length - 2);
+    	}
+    	Content += strLang1110 + " : " + pDraftDate + "<br>";
+    }
 
 
 

@@ -177,48 +177,73 @@ function GetDocSearch() {
     
     if (approvalFlag == 'S') {
     	document.getElementById("tbtnRemoveDoc").style.display = "none";
-	}
-    
-    for (i = 0; i < condition.length - 1 ; i++) {
-        if (typeof(condition[i]) == "undefined")
-            createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+    	for (i = 0; i < 12 ; i++) {
+            if (typeof (condition[i]) == "undefined")
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+            else
+                createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+        }
+        
+        if (typeof (ContainerID) == "undefined")
+            createNodeAndInsertText(xmlpara, objNode, "Param12", "");
         else
-            createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
-    }
-    if (typeof(ContainerID) == "undefined") {
-    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
-    } else {
-    	createNodeAndInsertText(xmlpara, objNode, "Param24", ContainerID);
-    }
+            createNodeAndInsertText(xmlpara, objNode, "Param12", ContainerID);
 
-
-    createNodeAndInsertText(xmlpara, objNode, "Param25", UserID);   	        
-    createNodeAndInsertText(xmlpara, objNode, "Param26", arr_userinfo[4]);  	
-    createNodeAndInsertText(xmlpara, objNode, "Param27", "DETAIL");             
-    createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);              
-    createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);            
-    createNodeAndInsertText(xmlpara, objNode, "DocState", "");
-
-    if (subCondition == "")
-        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", condition[condition.length - 1]);
-    else if (condition[condition.length - 1] == "")
+        createNodeAndInsertText(xmlpara, objNode, "Param13", UserID);
+        createNodeAndInsertText(xmlpara, objNode, "Param14", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "Param15", "DETAIL");
+        createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
+        createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
+        createNodeAndInsertText(xmlpara, objNode, "DocState", "");
+        createNodeAndInsertText(xmlpara, objNode, "SearchQuery", SQLPARADATA);
+        createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
+        createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
         createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
-    else
-        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition + " AND " + condition[condition.length - 1]);
+        
+	    if (GamSaFlag){
+	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
+	    } else {
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocListS.do", true);
+	    }
+	    xmlhttp.onreadystatechange = getsearchDocListS_after;		
+	    xmlhttp.send(xmlpara);
+	} else {
+	        for (i = 0; i < condition.length - 1 ; i++) {
+	        if (typeof(condition[i]) == "undefined")
+	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, "");
+	        else
+	            createNodeAndInsertText(xmlpara, objNode, "Param" + i, condition[i]);
+	    }
+	    if (typeof(ContainerID) == "undefined") {
+	    	createNodeAndInsertText(xmlpara, objNode, "Param24", "");
+	    } else {
+	    	createNodeAndInsertText(xmlpara, objNode, "Param24", ContainerID);
+	    }
+	    createNodeAndInsertText(xmlpara, objNode, "Param25", UserID);   	        
+	    createNodeAndInsertText(xmlpara, objNode, "Param26", arr_userinfo[4]);  	
+	    createNodeAndInsertText(xmlpara, objNode, "Param27", "DETAIL");             
+	    createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);              
+	    createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);            
+	    createNodeAndInsertText(xmlpara, objNode, "DocState", "");
 
-    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
-    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
+	    if (subCondition == "")
+	        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", condition[condition.length - 1]);
+	    else if (condition[condition.length - 1] == "")
+	        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition);
+	    else
+	        createNodeAndInsertText(xmlpara, objNode, "pSubQuery", subCondition + " AND " + condition[condition.length - 1]);
 
-
-    
-    if (GamSaFlag){
-    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
-    } else {
-    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
-    }
-
-    xmlhttp.onreadystatechange = getsearchDocList_after;		
-    xmlhttp.send(xmlpara);
+	    createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
+	    createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
+	    
+	    if (GamSaFlag){
+	    	xmlhttp.open("POST", "/ezApprovalG/getGamSaSearchDocList.do", true);
+	    } else {
+	    	xmlhttp.open("POST", "/ezApprovalG/getFormSearchDocList.do", true);
+	    }
+	    xmlhttp.onreadystatechange = getsearchDocList_after;		
+	    xmlhttp.send(xmlpara);
+	}
 
     //ShowMailProgress();
     //document.getElementById("listcount").innerHTML = "<b><font color='#e67802'>" + strLang796 + "</font></b>";
@@ -263,7 +288,7 @@ function getDocListS_after() {
         if (Resultxml.xml == "") return;
 
 
-        ListView2 = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
+        ListViewNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
         NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
 
         NodeListLen = 0;
@@ -292,7 +317,7 @@ function getDocListS_after() {
             DocList.SetRowOnClick("lvtDoclist_SelChange");
             DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
             DocList.SetUrgentFlag(false);
-            DocList.DataSource(ListView2);
+            DocList.DataSource(ListViewNode);
             DocList.DataBind("lvtDoclist");
             DocList = null;
 
@@ -300,8 +325,8 @@ function getDocListS_after() {
             selFirstRow(Resultxml);
         }
         pChackYN = "FALSE";
-        if (USE_OCS == "YES")
-            check_presence_DocList();
+//        if (USE_OCS == "YES")
+//            check_presence_DocList();
 
         makePageSelPage();
         xmlDocListHttp = null;
@@ -371,7 +396,7 @@ function getsearchDocList_after() {
     if (xmlhttp == null || xmlhttp.readyState != 4) return;
 
     try {
-        Resultxml = xmlhttp.responseXML;
+    	Resultxml = xmlhttp.responseXML;
 
         if (Resultxml.xml != "") {
             SelYearFlag = false;
@@ -437,6 +462,63 @@ function getsearchDocList_after() {
             prompt(xmlhttp.responseText, xmlhttp.responseText);
         }
         HiddenMailProgress();
+    }
+    catch (e) { }
+}
+
+function getsearchDocListS_after() {
+    if (xmlhttp == null || xmlhttp.readyState != 4) return;
+
+    try {
+        hideProgress();
+
+        var XmlNode = loadXMLString(xmlhttp.responseText);
+        Resultxml = XmlNode;
+
+        if (XmlNode.xml != "") {
+
+            SelYearFlag = false;
+            ListViewNode = SelectSingleNodeNew(XmlNode, "DOCLIST/LISTVIEWDATA");
+            NodeList2 = SelectSingleNodeNew(XmlNode, "DOCLIST/TOTALCNT");
+            NodeListLen = 0;
+            if (NodeList2 != null) {
+                var dataNode = getNodeText(NodeList2);
+
+                if (dataNode != "")
+                    NodeListLen = dataNode;
+                else
+                    NodeListLen = 0;
+            }
+
+            if (NodeListLen > 10) {
+                paging(curpage, nowblock);
+            }
+            else {
+                if (document.getElementById("lvtDoclist").innerHTML != "")
+                    document.getElementById("lvtDoclist").innerHTML = "";
+
+                var DocList = new ListView();
+                DocList.SetID("DocList");
+                DocList.SetMulSelectable(true);
+                DocList.SetHeaderOnClick("lvDocList_HeaderClick");
+                DocList.SetRowOnClick("lvtDoclist_SelChange");
+                DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");
+                DocList.SetTitleIdx(0);
+                DocList.SetUrgentFlag(false);
+                DocList.DataSource(ListViewNode);
+                DocList.DataBind("lvtDoclist");
+                DocList = null;
+
+                pagingCount(curpage, nowblock);
+                selFirstRow(Resultxml);
+            }
+            if (USE_OCS == "YES")
+                check_presence_DocList();
+
+            pChackYN = "FALSE"
+
+            makePageSelPage();
+        }        
     }
     catch (e) { }
 }

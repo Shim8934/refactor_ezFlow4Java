@@ -324,6 +324,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String useOcs = ezCommonService.getTenantConfig("USE_OCS", userInfo.getTenantId());
 		String selMenu = "all";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String subQuery = request.getParameter("SubQuery");
 		nowDate = nowDate.substring(0, 16);
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1) {
@@ -336,7 +337,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(result);
 		
 		buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
-		
+		model.addAttribute("SubQuery", subQuery);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -367,10 +368,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
-		
+		String subQuery = request.getParameter("subQuery");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
-		String userLang = userInfo.getLang();
+ 		String userLang = userInfo.getLang();
 		Document domSub = null;
 		
 		if (searchQuery != null && searchQuery.length() > 10) {
@@ -465,6 +466,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             
+//            if (subQuery.trim() != "")
+//            {
+//                if (subQuery.equals("") || subQuery == null){
+//                	returnQuery += subQuery;
+//                } else {
+//                	returnQuery += " AND " +subQuery;
+//                }
+//            }
             searchQuery = returnQuery;
 		}
 		
@@ -482,13 +491,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String mode = request.getParameter("mode");
 		String requestURL = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-
-		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         int tenantID = userInfo.getTenantId();        
         logger.debug("tenantID=" + tenantID);       
-        
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("c=1") == -1) {
 			if (mode.toUpperCase().equals("APR") || mode.toUpperCase().equals("TMP")) {
@@ -577,6 +584,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		return result;
 	}
+	
 	
 	/**
 	 * 전자결재G 기안양식 호출 Method
@@ -840,7 +848,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		if (approvalFlag.equals("S")) {
-			code1 = "SA03";
+			if (code1.equals("A03")) {
+				code1 = "SA03";
+			}
 		}
 		
 		String result = ezApprovalGService.getOptionInfo(code1, code2, userInfo, flag);
@@ -1109,7 +1119,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(aprLineXml);
-		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.updateLineTempletDetailInfo(xmlDom, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 
 		return result;
 	}
@@ -1990,6 +2000,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgDocID = request.getParameter("orgDocID");
 		String formID = request.getParameter("formID");
 		String title = request.getParameter("title");
+		String uFlag = request.getParameter("uFlag");
 		
 		if(orgDocID == null){
 			orgDocID ="";
@@ -2043,6 +2054,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("title", title);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("pass", pass);
+		model.addAttribute("uFlag", uFlag);
 		
 		return "ezApprovalG/apprGcontDocView";
 	}
@@ -4419,11 +4431,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
             
             if(TempQuery.indexOf("KAPR;") > -1) {
-            	ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'+@KEYWORD+'%' ";
+            	ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
             }
             if (TempQuery.indexOf("KEND;") != -1)
             {
-                ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'+@KEYWORD+'%' ";
+                ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
             }
             if (TempQuery.indexOf("CAPR;") != -1)
             {
@@ -4450,7 +4462,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                     subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
             }
             result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
-                    papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset());
+                    papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
 		return result;
 	}

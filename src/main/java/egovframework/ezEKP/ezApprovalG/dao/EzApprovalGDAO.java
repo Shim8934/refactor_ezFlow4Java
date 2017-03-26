@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezApproval.vo.ApprDocViewVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAdminReceiveVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprDocInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
@@ -675,11 +676,6 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getSearchDocListS(Map<String, Object> map) throws Exception {
-		return (List<ApprGDocListVO>) list("EzApprovalG.getSearchDocListS", map);
-	}
-	
-	@SuppressWarnings("unchecked")
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception {
 		return (List<ApprGContInfoVO>) list("EzApprovalG.getSpecialContTree", userInfo);
 	}
@@ -902,6 +898,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public String selectUserSecurityCode(Map<String, Object> map) throws Exception{
 		return (String) select("EzApprovalG.selectUserSecurityCode", map);
+	}
+
+	public String getSendFlag(Map<String, Object> map)throws Exception {
+		return (String) select("EzApprovalG.getSendFlag", map);
 	}
 	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
@@ -2461,11 +2461,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		delete("EzApprovalG.deleteUserContDoc", map);
 	}
 	
-	
-	
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
-
-
 }

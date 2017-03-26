@@ -132,8 +132,15 @@ public class ApprGDocListVO {
 	/** 일반결재 때문에 추가 */
 	private String linkDate;
 	private String sendFlag;
+	private String docstateName;
 
 	
+	public String getDocstateName() {
+		return docstateName;
+	}
+	public void setDocstateName(String docstateName) {
+		this.docstateName = docstateName;
+	}
 	public String getSendFlag() {
 		return sendFlag;
 	}

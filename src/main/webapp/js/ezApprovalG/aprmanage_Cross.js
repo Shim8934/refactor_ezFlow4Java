@@ -48,7 +48,8 @@ function getDocList() {
 				companyID    : companyID,
 				orderCell    : OrderCell,
 				orderOption  : OrderOption,
-				searchQuery  : SQLPARADATA
+				searchQuery  : SQLPARADATA,
+				subQuery     : SubQuery
 				},
 		success: function(xml){
 			getDocList_after(loadXMLString(xml));

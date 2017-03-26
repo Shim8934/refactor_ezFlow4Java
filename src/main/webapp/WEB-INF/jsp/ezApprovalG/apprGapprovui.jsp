@@ -224,7 +224,7 @@
 		            OrgAprUserName = NextDocUserName;
 		            OrgAprUserName2 = NextDocUserName2;
 		            OrgAprUserDeptID = NextDocDeptID;
-		            pEndDocHref = "/files/upload_approvalG/" + pCompanyID + "/doc/"+CurrYear+"/" + (pDocID % 1000) + "/" + pDocID + ".mht";
+		            pEndDocHref = "/fileroot/" + "${userInfo.tenantId}" + "/files/upload_approvalG/" + pCompanyID + "/doc/"+CurrYear+"/" + (pDocID % 1000) + "/" + pDocID + ".mht";
 		            getApprovInfo();
 		            pUserID = pOrgAprUserID;
 		            getDocInfo();  

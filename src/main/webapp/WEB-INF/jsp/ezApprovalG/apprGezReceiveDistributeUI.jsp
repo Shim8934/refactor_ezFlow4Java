@@ -1358,7 +1358,7 @@
 	                        <tr>
 	                            <td style="vertical-align: top;">
 	                                <div class="border_gray">
-	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 238px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
+	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 237px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
 	                                    </div>
 	                                </div>
 	                            </td>

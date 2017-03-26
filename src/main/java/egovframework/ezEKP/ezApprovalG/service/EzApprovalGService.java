@@ -82,7 +82,7 @@ public interface EzApprovalGService {
 	
 	public String deleteDocInfo(String docID, String mode, String companyID, int tenantID) throws Exception;
 	
-	public String updateLineTempletDetailInfo(Document xmlDom, String companyID, String lang, int tenantID) throws Exception;
+	public String updateLineTempletDetailInfo(Document xmlDom, Locale locale, String companyID, String lang, int tenantID) throws Exception;
 	
 	public String deleteLineTempletDetailInfo(String formID, String userID, String aprLineSN, String companyID, int tenantID) throws Exception;
 	
@@ -420,9 +420,8 @@ public interface EzApprovalGService {
 	public String deleteUserContDoc(String docID, String contID, String companyID, String lang, int tenantId) throws Exception;
 
 	public String getSearchDocListS(String containerID, String userID, 	String subQuery, String docNumber, String docTitle, String drafter,	String formID, String draftfrom, String draftto, String apprfrom, String papprto, String mypapprfrom, String mypapprto,
-			String draftDeptName, String docState, String string,	String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet) throws Exception;
+			String draftDeptName, String docState, String string,	String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
-
 
 }
