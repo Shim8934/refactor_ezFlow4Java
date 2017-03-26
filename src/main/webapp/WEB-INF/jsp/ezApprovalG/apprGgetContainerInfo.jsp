@@ -144,29 +144,28 @@
 	                var nowyear = new Date().getFullYear();
 	                var nowmonth = new Date().getMonth() + 1;
 	                var nowday = new Date().getDate();
-	
-	                if (nowmonth < 10)
-	                    nowmonth = "0" + nowmonth;
-	
-	                if (nowday < 10)
-	                    nowday = "0" + nowday;
-	
-	                for (var i = 0; i < 25; i++) {
-	                    condition[i] = "";
-	                }
-	
-	                condition[9] = nowyear - 1;
-	                condition[10] = nowmonth;
-	                condition[11] = nowday;
-	                condition[12] = nowyear;
-	                condition[13] = nowmonth;
-	                condition[14] = nowday;
-	                condition[24] = "";
-	                DocListType == "GetDocSearch";
-	                
-	                
+					if(approvalFlag == "G") {
+		                if (nowmonth < 10)
+		                    nowmonth = "0" + nowmonth;
+		
+		                if (nowday < 10)
+		                    nowday = "0" + nowday;
+		
+		                for (var i = 0; i < 25; i++) {
+		                    condition[i] = "";
+		                }
+		
+		                condition[9] = nowyear - 1;
+		                condition[10] = nowmonth;
+		                condition[11] = nowday;
+		                condition[12] = nowyear;
+		                condition[13] = nowmonth;
+		                condition[14] = nowday;
+		                condition[24] = "";
+					}
+						DocListType == "GetDocSearch";
 	                	 var settingDate = new Date();
-	                     settingDate.setYear(settingDate.getYear() - 1);
+	                	     settingDate.setYear(settingDate.getYear() - 1);
 
 	                     var settingmonth = settingDate.getMonth() + 1;
 	                     var settingday = settingDate.getDate();
@@ -1127,8 +1126,9 @@
 	        <ul>
 	        	<c:if test ="${approvalFlag == 'S'}">
 	            <li><span onclick="return SelCont_onclick()"><spring:message code='ezApprovalG.t1516'/></span></li>
-	            <li id="tresend"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
-	            <li id="tenforce"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
+<!-- 	            재발송       , 시행문 변환 추후 개발 -->
+	            <li id="tresend" style="display: none"><span id="resend" onClick="return resend_onclick()" ><spring:message code='ezApprovalG.t940'/></span></li>
+	            <li id="tenforce" style="display: none"><span id="enforce" onclick="return enforce_onclick()"><spring:message code='ezApprovalG.t1524'/></span></li>
 	            <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif"></li>
 	            <li id=tbtnRegUserCont><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 	            </c:if>
