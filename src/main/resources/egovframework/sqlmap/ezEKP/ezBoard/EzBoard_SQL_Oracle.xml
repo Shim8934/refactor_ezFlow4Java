@@ -1006,7 +1006,15 @@
 	   				A.EXTENSIONATTRIBUTE7,
 	   				A.EXTENSIONATTRIBUTE8,
 	   				A.EXTENSIONATTRIBUTE9,
-	   				A.EXTENSIONATTRIBUTE10 
+	   				A.EXTENSIONATTRIBUTE10,
+                    ( SELECT 
+                          GUBUN 
+                      FROM 
+                          TBL_BOARD_BOARDINFO B 
+                      WHERE
+                          B.TENANT_ID = #v_TENANTID#
+                      AND 
+                          B.BOARDID = A.BOARDID ) as GUBUN
    				  FROM 
    				  	TBL_BOARD_ITEM A 
    				  LEFT OUTER JOIN 
@@ -1217,7 +1225,15 @@
 	                A.extensionAttribute7 ,
 	                A.extensionAttribute8 ,
 	                A.extensionAttribute9 ,
-	                A.extensionAttribute10 
+	                A.extensionAttribute10,
+                    ( SELECT 
+                          GUBUN 
+                      FROM 
+                          TBL_BOARD_BOARDINFO B 
+                      WHERE
+                          B.TENANT_ID = #v_TENANTID#
+                      AND 
+                          B.BOARDID = A.BOARDID ) as GUBUN
 	              FROM 
 	              	TBL_Board_Item A
 	              WHERE  

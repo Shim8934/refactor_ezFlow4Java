@@ -179,11 +179,13 @@
 		                    var pfirstItemID = "";
 		                    if (RowCnt > 0) {
 		                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));
-		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA10").item(0));
+		                        //var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA10").item(0));
 		                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-		                        if (FboardType == "" && FboardMainContent != "") {
-		                            FboardType = "3";
-		                        }
+		                        var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
+/* alert(gubun);		                        
+		                        if (FboardMainContent != "") {
+		                        	FboardType = "3";
+		                        } */
 		                        listHTML = "<dl onclick=\"openDoc_section4_Type('" + pfirstItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" class='listtype_photo' style='cursor:pointer'>";
 		                        if (pBoardID_NewBoardSTD == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")
 		                            var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(3));
@@ -200,9 +202,7 @@
 		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(3));
 		                            else
 		                                var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
-
-		                            //var WRITERNAME = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(5));
-		                            //var STARTDATE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(6));
+		                            
 		                            var STARTDATE = "";
                             		var WRITERNAME = "";
 
@@ -219,27 +219,36 @@
                             		}
 		                            
 		                            var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
-		                            var boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA10").item(0));
+		                            //var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA10").item(0));
+		                            var FboardType = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("GUBUN").item(0));
 		                          //2016-10-31
 		                          //boardType이 아무 값도 들어가지 않아서, 보드타입이0일때, 메인컨텐츠에 내용이 있을때 보트타입3을넣어줌.
-		                            var boardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-			                        if (boardType == "" && boardMainContent != "") {
+		                             /* var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+			                        if (FboardType == "" && FboardMainContent != "") {
 			                            boardType = "3";
+			                        } */ 
+			                        
+			                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+			                        if (FboardType == "" && FboardMainContent != "") {
+			                            FboardType = "3";
 			                        }
-		                            listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + boardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
+			                        
+		                            listHTML += "<li onclick=\"openDoc_section4_Type('" + pItemID + "','" + FboardType + "', '" + getNodeText(xmldom.getElementsByTagName("DATA1").item(i)) + "')\" ><span class='txt'>" + DOCTITLE + "</span> <span class='date'>" + STARTDATE + "</span> <span class='name'>" + WRITERNAME + "</span></li>";
 		                        }
 		                        listHTML += "</ul>";
 		                        document.getElementById("BoardList").innerHTML = listHTML;
-		                        if (FboardType != "4" && FboardType != "3") {
+		                        
+
+		                         if (FboardType != "4" && FboardType != "3") {
+		                        	 
 		                            if (FboardMainContent != "") {
 		                                document.getElementById("content").innerHTML = FboardMainContent;
 		                            } else {
-		                            	//2017-03-26 없어도 되는 코드 같음.
-		                                //getContent(pfirstItemID);
+		                                getContent(pfirstItemID);
 		                            }
 		                        } else {
 		                            document.getElementById("content").innerHTML = FboardMainContent;
-		                        }
+		                        } 
 		                    } else {
 
 		                        var nodata = "<div class='nodata_portlet '>";
@@ -283,13 +292,14 @@
 		            var pTop = (pheight - 720) / 2;
 		            var pLeft = (pwidth - 765) / 2;
 
-		            if (pBoardType_NewBoardSTD == "3" || pBoardType_NewBoardSTD == "4")
+		            if (pBoardType_NewBoardSTD == "3" || pBoardType_NewBoardSTD == "4") {
 		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
-		            else {
-		                if (CrossYN())
+		            } else {
+		                if (CrossYN()) {
 		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-		                else
+		                } else {
 		                    window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoardSTD, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+		                }
 		            }
 		        }
 
@@ -318,6 +328,7 @@
 		                xmlhttp_getContent_NewBoardSTD = null;
 		                var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
 		                var tempStr = ConvertMHTtoHTML(strContentHref);
+		                
 		                var DocContentObject = document.createElement("DIV");
 		                DocContentObject.innerHTML = tempStr;
 		                var DocContentObject_Div = document.createElement("DIV");

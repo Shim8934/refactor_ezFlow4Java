@@ -114,8 +114,9 @@
                 	    var pfirstItemID = "";
                     
                         pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                        
-                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-                        
+                       	var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+                        boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
+                       	
                         listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>";
 
                         var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(2));
@@ -128,13 +129,19 @@
                         for (var i = 1; i < RowCnt; i++) {
                             var DOCTITLE = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(2));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
+                            
                             listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
                         }
                         listHTML += "</ul>";
+                        
                         document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
-                        document.getElementById("content").innerHTML = FboardMainContent;
-
-                        //getContent(pfirstItemID);                  
+						
+                        if (boardType == "3" || boardType == "4") {
+                        	document.getElementById("content").innerHTML = FboardMainContent;	
+                        } else {
+                        	getContent(pfirstItemID);	
+                        }
+                        
 	                } else {
                     	var nodata = "<div class='nodata_portlet '>";
                     	nodata += "<p><img src='/images/" + strLang1_NewBoard + "/main/nodata_gray.gif' width='107' height='70'></p>";
@@ -152,7 +159,7 @@
             	var pTop = (pheight - 720) / 2;
             	var pLeft = (pwidth - 765) / 2;
 
-            	if (pBoardType_NewBoard == "3" || pBoardType_NewBoard == "4")
+            	if (boardType == "3" || boardType == "4")
 	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=770,width=765,top=" + pTop + ",left=" + pLeft, "");
             	else {
 	                if (CrossYN())
@@ -171,7 +178,7 @@
             	createNodeInsert(xmlpara, objNode, "PARAMETER");
             	createNodeAndInsertText(xmlpara, objNode, "pBoardID", pBoardID_NewBoard);
             	createNodeAndInsertText(xmlpara, objNode, "pItemID", pItemID);
-            	xmlhttp_getContent_Newboard.open("POST", "/myoffice/ezBoardSTD/aspx/Get_ItemInfo.aspx", true);
+            	xmlhttp_getContent_Newboard.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID_NewBoard + "&itemID=" + pItemID , false);
             	xmlhttp_getContent_Newboard.onreadystatechange = getContent_NewBoard_after;
             	xmlhttp_getContent_Newboard.send(xmlpara);
         	}
@@ -181,14 +188,18 @@
     	        try {
         	        var xmldom = xmlhttp_getContent_Newboard.responseXML;
             	    xmlhttp_getContent_Newboard = null;
-	                var tempStr;
+	                /* var tempStr;
                 	if (getNodeText(xmldom.getElementsByTagName("MainContent").item(0)) == "") {
 	                    var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
     	                var ConverContentUrl = location.protocol + "//" + location.host + "/ezCommon/downloadAttach.do?filePath=" + strContentHref;
         	            tempStr = ConvertMHTtoHTML(ConverContentUrl);
             	    } else {
                     	tempStr = getNodeText(xmldom.getElementsByTagName("MainContent").item(0));
-                	}
+                	} */
+                	
+                	var strContentHref = getNodeText(xmldom.getElementsByTagName("ContentLocation").item(0));
+                	var tempStr = ConvertMHTtoHTML(strContentHref);
+                	
                 	var DocContentObject = document.createElement("DIV");
                 	DocContentObject.innerHTML = tempStr;
                 	var DocContentObject_Div = document.createElement("DIV");
@@ -197,13 +208,13 @@
 	                if (DocContentObject_Div.getElementsByTagName("style").length > 0) {
     	                DocContentObject_Div.removeChild(DocContentObject_Div.getElementsByTagName("style")[0]);
         	        }
-
+	                
             	    if (CrossYN())
                 	    DocContentObject.innerHTML = DocContentObject_Div.textContent.replace(/(\r\n)/g, "");
                 	else
                     	DocContentObject.innerHTML = DocContentObject_Div.innerText.replace(/(\r\n)/g, "");
                 
-                	document.getElementById("content_NewBoard").appendChild(DocContentObject);
+                	document.getElementById("content").appendChild(DocContentObject);
 	            }
     	        catch (e) {
         	    }

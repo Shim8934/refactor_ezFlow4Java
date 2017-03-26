@@ -2454,6 +2454,7 @@ public class EzBoardController extends EgovFileMngUtil{
     					}
     					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
     					resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
+    					resultXML.append("<GUBUN>" + noticeList.get(k).get("GUBUN") + "</GUBUN>");
                     }
                     resultXML.append("</CELL>");
                 }
@@ -2550,6 +2551,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITERDEPTNAME2>" + boardListItem.get(j).get("WRITERDEPTNAME2") + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
+					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
                 }
                 resultXML.append("</CELL>");
             }
