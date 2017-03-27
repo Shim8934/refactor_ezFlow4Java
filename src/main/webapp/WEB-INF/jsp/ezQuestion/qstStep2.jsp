@@ -521,6 +521,7 @@
                 		oFileTable.appendChild(oTr);
                 		oTable.appendChild(oFileTable);
             		}
+		          
 		            if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "1") {
         		        for (var j = 0; j < QuestionNode.childNodes[i].getElementsByTagName("ANSWER").length; j++) {
                 		    oTr = document.createElement("tr");
@@ -543,13 +544,42 @@
                         		for(var k = 0; k < QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length; k++) {
                             		pFileName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("HREF")[0]);
                             		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
-		                            oTd = document.createElement("td");
+                            		var attachType = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("TYPE")[0]);
+                            		var trName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("ATTACHTITLE")[0]);
+                            		trName = decodeURI(trName);
+                            		oTd = document.createElement("td");
         		                    oTd.setAttribute("style", "padding:5px; word-wrap:break-word;");
                 		            oTr.appendChild(oTd);
+                		            if(attachType==1){
 		                            oImg = document.createElement("img");
         		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
                 		            oImg.setAttribute("style", "width:177px;height:131px");
                         		    oTd.appendChild(oImg);
+                		            }else if(attachType==2){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/sound.gif");
+                            		    oImg.setAttribute("style", "width:19px;height:17px");
+                            		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+        		                    }else if(attachType==4){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/link.gif");
+                            		    oImg.setAttribute("style", "width:26px;height:17px");
+                            		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+        		                    }else if(attachType==5){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/video.gif");
+                            		    oImg.setAttribute("style", "width:21px;height:17px");
+                            		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+        		                    }else{
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/link.gif");
+                            		    oImg.setAttribute("style", "width:26px;height:17px");
+                            		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+        		                    }
+                            		oTd.appendChild(oImg);
+                            		if(attachType!=1){
+                            			oTd.innerHTML += trName;	
+                            		}
 		                            oTd = document.createElement("td");
         		                    oTd.setAttribute("style", "padding:5px");
                 		            oTd.innerHTML = "&nbsp;";
@@ -634,13 +664,42 @@
                         		for (var k = 0; k < QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW").length; k++) {
                             		pFileName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("HREF")[0]);
                             		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
-		                            oTd = document.createElement("td");
-                            		oTd.setAttribute("style", "padding:5px;");
-                            		oTr.appendChild(oTd);
+                            		var attachType = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("TYPE")[0]);
+                            		var trName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("ATTACHTITLE")[0]);
+                            		trName = decodeURI(trName);
+                            		oTd = document.createElement("td");
+        		                    oTd.setAttribute("style", "padding:5px; word-wrap:break-word;");
+                		            oTr.appendChild(oTd);
+                		            if(attachType==1){
 		                            oImg = document.createElement("img");
         		                    oImg.setAttribute("src", "/ezQuestion/getPollAttachInfo.do?type=QUESTION&fileName=" + pFileName);
-                		            oImg.setAttribute("style", "width:47px;height:31px");
+                		            oImg.setAttribute("style", "width:177px;height:131px");
                         		    oTd.appendChild(oImg);
+                		            }else if(attachType==2){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/sound.gif");
+                            		    oImg.setAttribute("style", "width:19px;height:17px");
+                            		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+        		                    }else if(attachType==4){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/link.gif");
+                            		    oImg.setAttribute("style", "width:26px;height:17px");
+                            		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+        		                    }else if(attachType==5){
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/video.gif");
+                            		    oImg.setAttribute("style", "width:21px;height:17px");
+                            		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
+        		                    }else{
+        		                    	oImg = document.createElement("img");
+                    		            oImg.setAttribute("src", "/images/poll/link.gif");
+                            		    oImg.setAttribute("style", "width:26px;height:17px");
+                            		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
+        		                    }
+                            		oTd.appendChild(oImg);
+                            		if(attachType!=1){
+                            			oTd.innerHTML += trName;	
+                            		}
 		                            oTd = document.createElement("td");
         		                    oTd.setAttribute("style", "padding:5px");
                 		            oTd.innerHTML = "&nbsp;";
