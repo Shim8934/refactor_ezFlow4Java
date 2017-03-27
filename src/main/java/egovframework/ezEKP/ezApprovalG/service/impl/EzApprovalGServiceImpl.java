@@ -11767,9 +11767,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String setCabinetRec(String docID, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception{
 		String strSQL = "";
 		
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("v_DOCID", docID);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        
+        String writerDeptID = ezApprovalGDAO.setCabinetRecvAprMemberDeptId(map);
+        
+        String writerDeptName = ezOrganService.getPropertyValue(writerDeptID, "displayname", tenantID);
+        String writerDeptName2 = ezOrganService.getPropertyValue(writerDeptID, "displayname2", tenantID);
+		
+        map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
 		List<ApprGCabinetRecVO> apprGCabinetRecVOList = ezApprovalGDAO.setCabinetRecList(map);
@@ -11785,6 +11791,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
 		if (docXML.getElementsByTagName("DOCNO").getLength() > 0) {
+			
+			if (writerDeptID.trim().equals(""))
+				writerDeptID = docXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent().trim();
+
+            if (writerDeptName.trim().equals(""))
+                writerDeptName = docXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent().trim();
+
+            if (writerDeptName2.trim().equals(""))
+                writerDeptName2 = docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent().trim();
+			
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
 			
 			if (docSN != null && !docSN.equals("")) {
@@ -11813,9 +11829,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			strSQL = regDocToCabinet("0", docID, docSN, 
 					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(), 
-					docXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent().trim(),
-                    docXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent().trim(),
-                    docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent().trim(),
+					writerDeptID,
+					writerDeptName,
+					writerDeptName2,
                     "1", docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(0).getTextContent().trim(),
                     docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),

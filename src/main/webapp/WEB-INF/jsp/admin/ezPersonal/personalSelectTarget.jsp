@@ -485,7 +485,7 @@
 		    		url : '/ezOrgan/getDeptMemberList.do',
 		    		dataType : "text",
 		    		data : {deptID : DeptID,
-		    				cell : 'displayName;description;title;telephoneNumber',
+		    				cell : 'displayName;description;title',
 		    				prop : 'mail;displayName;description;title',
 		    				type : 'user'},
 		    		success : function (result) {
@@ -729,7 +729,7 @@
 		    	<HEADERS>
 		    		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t68' /></NAME>
-		        		<WIDTH>100</WIDTH>
+		        		<WIDTH>80</WIDTH>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t7' /></NAME>
@@ -738,11 +738,7 @@
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezPersonal.t69' />/<spring:message code = 'ezPersonal.t175' /></NAME>
 		        		<WIDTH>80</WIDTH>
-		      		</HEADER>
-		      		<HEADER>
-		        		<NAME><spring:message code = 'ezPersonal.t70' /></NAME>
-		        		<WIDTH>100</WIDTH>
-		      		</HEADER>
+		      		</HEADER>		      		
 		    	</HEADERS>
 		  	</LISTVIEWDATA>
 		</xml>
@@ -762,7 +758,7 @@
 	                                    <td width="5"></td>
 	                                    <td>
 	                                        <div class="listview">
-	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 310px; HEIGHT: 370px; border: 0"></div>
+	                                            <div id="OrganListView" style="OVERFLOW: auto; WIDTH: 358px; HEIGHT: 370px; border: 0"></div>
 	                                        </div>
 	                                    </td>
 	                                </tr>
@@ -783,7 +779,7 @@
 	                    <tr>
 	                        <td colspan="2">
 	                            <div class="listview">
-	                                <div id="ListViewMsgTo" style="BORDER: 0; HEIGHT: 340px; WIDTH: 200px; overflow: auto"></div>
+	                                <div id="ListViewMsgTo" style="BORDER: 0; HEIGHT: 338px; WIDTH: 200px; overflow: auto"></div>
 	                            </div>
 	                        </td>
 	                    </tr>
