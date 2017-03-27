@@ -376,6 +376,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (int) select("EzBoardDAO.boardListPortal", map);
 	}
 	
+	public int getPhotoCount(BoardMyFavoriteVO myFavoriteVO) throws Exception{
+		return (int) select("EzBoardDAO.getPhotoCount", myFavoriteVO);
+	}
+	
 	public void photoSaveDB(Map<String, Object> map) throws Exception{
 		insert("EzBoardDAO.photoSaveDB", map);
 	}
