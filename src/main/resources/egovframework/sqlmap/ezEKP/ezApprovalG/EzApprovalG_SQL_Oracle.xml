@@ -4397,6 +4397,23 @@
         AND
         	 TBL_APRDOCINFO.TENANT_ID = #v_TENANTID#
 	</select>
+	
+	<select id="EzApprovalG.setCabinetRecvAprMemberDeptId" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT * 
+		    FROM (  SELECT 
+						APRMEMBERDEPTID
+					FROM 
+						TBL_APRLINEINFO 
+					WHERE 
+						DOCID = #v_DOCID#
+					ORDER BY 
+						APRMEMBERSN  )
+			WHERE
+			ROWNUM <= 1
+        ]]>
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.setCabinetRecList" parameterClass="Map" resultClass="ApprGCabinetRecVO"> -->
 <!-- 		{CALL EZSP_SETCABINETREC_LIST(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->

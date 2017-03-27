@@ -1220,7 +1220,7 @@
 		    function SearchCondi_onclick_Complete(returnvalue) {
 		        condition = returnvalue;
 		        if (condition) {
-		            for (var i = 0; i < condition.length; i++) {
+		        	for (var i = 0; i < condition.length; i++) {
 		                if (condition[i] == null)
 		                    condition[i] = "";
 		                SearchCond[i] = condition[i];
@@ -1272,49 +1272,110 @@
 		        SearchFlag = true;
 		        var TYPE = "";
 		        var DATA = "";
-		
-		        if (SearchCond[0] != "")		// DocNumber
-		        {
-		            TYPE += "DOCNO;";
-		            DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
-		        }
-		
-		        if (SearchCond[1] != "")		// DocTitle
-		        {
-		            TYPE += "DOCTITLE;";
-		            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
-		        }
-		
-		        if (SearchCond[2] != "")		// DrafterName
-		        {
-		            TYPE += "WRITERNAME;";
-		            DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
-		        }
-		
-		        if (SearchCond[3] != "" && SearchCond[4] != "" && SearchCond[5] != "")		// APRSTARTDATE
-		        {
-		            TYPE += "APRSTARTDATE;";
-		            DATA += "<APRSTARTDATE>" + SearchCond[3] + "-" + SearchCond[4] + "-" + SearchCond[5] + "</APRSTARTDATE>";
-		        }
-		
-		        if (SearchCond[6] != "" && SearchCond[7] != "" && SearchCond[8] != "")		// APRENDDATE
-		        {
-		            TYPE += "APRENDDATE;";
-		            DATA += "<APRENDDATE>" + SearchCond[6] + "-" + SearchCond[7] + "-" + SearchCond[8] + "</APRENDDATE>";
-		        }
-		        
-		        if (SearchCond[21] != "")		// FormID
-		        {
-		            TYPE += "FORMID;";
-		            DATA += "<FORMID>" + SearchCond[21] + "</FORMID>";
-		        }
-		
-		        if (SearchCond[23] != "")		// draftDeptName
-		        {
-		            TYPE += "WRITERDEPTNAME;";
-		            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
-		        }
-		
+				if (approvlaFlag =='G') {
+			        if (SearchCond[0] != "")		// DocNumber
+			        {
+			            TYPE += "DOCNO;";
+			            DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
+			        }
+			
+			        if (SearchCond[1] != "")		// DocTitle
+			        {
+			            TYPE += "DOCTITLE;";
+			            DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
+			        }
+			
+			        if (SearchCond[2] != "")		// DrafterName
+			        {
+			            TYPE += "WRITERNAME;";
+			            DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
+			        }
+			
+			        if (SearchCond[3] != "" && SearchCond[4] != "" && SearchCond[5] != "")		// APRSTARTDATE
+			        {
+			            TYPE += "APRSTARTDATE;";
+			            DATA += "<APRSTARTDATE>" + SearchCond[3] + "-" + SearchCond[4] + "-" + SearchCond[5] + "</APRSTARTDATE>";
+			        }
+			
+			        if (SearchCond[6] != "" && SearchCond[7] != "" && SearchCond[8] != "")		// APRENDDATE
+			        {
+			            TYPE += "APRENDDATE;";
+			            DATA += "<APRENDDATE>" + SearchCond[6] + "-" + SearchCond[7] + "-" + SearchCond[8] + "</APRENDDATE>";
+			        }
+			        
+			        if (SearchCond[21] != "")		// FormID
+			        {
+			            TYPE += "FORMID;";
+			            DATA += "<FORMID>" + SearchCond[21] + "</FORMID>";
+			        }
+			
+			        if (SearchCond[23] != "")		// draftDeptName
+			        {
+			            TYPE += "WRITERDEPTNAME;";
+			            DATA += "<WRITERDEPTNAME>" + SearchCond[23] + "</WRITERDEPTNAME>";
+			        }
+				} else {
+
+					    if (SearchCond[0] != "")
+					    {
+					        TYPE += "DOCNO;"
+					        DATA += "<DOCNO>" + SearchCond[0] + "</DOCNO>";
+					    }
+
+					    if (SearchCond[1] != "")
+					    {
+					        TYPE += "DOCTITLE;"
+					        DATA += "<DOCTITLE>" + SearchCond[1] + "</DOCTITLE>";
+					    }
+
+					    if (SearchCond[2] != "")
+					    {
+					        TYPE += "WRITERNAME;"
+					        DATA += "<WRITERNAME>" + SearchCond[2] + "</WRITERNAME>";
+					    }
+					   
+					    if (SearchCond[3] != "")
+					    {
+					        TYPE += "STARTDATEAF;"
+					        DATA += "<STARTDATEAF>" + SearchCond[3] + "</STARTDATEAF>";
+					    }
+
+					    if (SearchCond[4] != "")
+					    {
+					        TYPE += "STARTDATEBF;"
+					        DATA += "<STARTDATEBF>" + SearchCond[4] + "</STARTDATEBF>";
+					    }
+
+					    if (SearchCond[5] != "")
+					    {
+					        TYPE += "ENDDATEAF;"
+					        DATA += "<ENDDATEAF>" + SearchCond[5] + "</ENDDATEAF>";
+					    }
+
+					    if (SearchCond[6] != "")
+					    {
+					        TYPE += "ENDDATEBF;"
+					        DATA += "<ENDDATEBF>" + SearchCond[6] + "</ENDDATEBF>";
+					    }
+
+					    if (SearchCond[7] != "")
+					    {
+					        TYPE += "FORMID;"
+					        DATA += "<FORMID>" + SearchCond[7] + "</FORMID>";
+					    }
+
+					    if (SearchCond[9] != "")
+					    {
+					        TYPE += "WRITERDEPTNAME;"
+					        DATA += "<WRITERDEPTNAME>" + SearchCond[9] + "</WRITERDEPTNAME>";
+					    }
+
+					    if (SearchCond[10] != "")
+					    {
+					        TYPE += "KAPR;"
+					        DATA += "<KEYWORD>" + SearchCond[10] + "</KEYWORD>";
+					    }
+				}
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
 		

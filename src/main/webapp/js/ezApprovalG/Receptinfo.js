@@ -701,7 +701,11 @@ function textUser_onkeypress2() {
 }
 //############################################################################################################################################# 조직도 사용자 검색 
 function btn_searchUser_onclick2() {
-    searchUserList2();
+	if (approvalFlag == 'G') {
+		searchUserList2();
+	} else {
+		searchUserList3();
+	}
 }
 
 //############################################################################################################################################# 조직도 사용자 검색
@@ -740,6 +744,40 @@ function searchUserList2(search) {
         alert(ErrMsg.description);
     }
 }
+
+function searchUserList3(search) {
+
+    var searchdoc = document.getElementById("textUser2");
+    var strSearch = searchdoc.value + "";
+    if (searchdoc.value == "") {
+        var pAlertContent = linealt3;
+        OpenAlertUI(pAlertContent);
+        searchdoc.focus();
+    }
+    else if (strSearch.length < 2) {
+        var pAlertContent = linealt4;
+        OpenAlertUI(pAlertContent);
+        searchdoc.focus();
+    }
+    else {
+    	$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezOrgan/getSearchList.do",
+			data : {
+				search : "displayname::" + strSearch + ";;PhysicalDeliveryOfficeName::" + companyID,
+				cell   : "displayname;description;title;telephonenumber",
+				prop   : "department;displayName;description;title;physicalDeliveryOfficeName",
+				type   : "user"
+			},
+			success: function(xml){
+				event_displayUserList2(loadXMLString(xml));
+			}
+		});
+    }
+}
+
 function event_displayUserList2(xml) {
     var retXml = createXmlDom();
 

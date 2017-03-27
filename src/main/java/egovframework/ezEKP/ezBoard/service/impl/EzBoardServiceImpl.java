@@ -1810,6 +1810,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		myFavoriteVO.setUserId(userInfo.getId());
         myFavoriteVO.setType(pBoardType);
         myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+        myFavoriteVO.setTenantID(userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		String orderOption1 = "";
@@ -1822,10 +1823,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int i = 0;
 		int hLength = list.size();
 		
-		int boardCount = getThumbNailCount(myFavoriteVO);
-		BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
-        int personalCount = boardConfigVO.getListCount();
-		
+		//int boardCount = getThumbNailCount(myFavoriteVO);
+		int boardCount = ezBoardDAO.getPhotoCount(myFavoriteVO);
+		//BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
+        //int personalCount = boardConfigVO.getListCount();
+        int personalCount = 5;
+        
 		sb.append("<DOCLIST>");
 		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
 		sb.append("<PAGECNT>" + boardCount + "</PAGECNT>");
