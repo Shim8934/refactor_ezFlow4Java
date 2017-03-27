@@ -466,7 +466,6 @@
                   var OpenWin = window.open(url, strTitle, GetOpenWindowfeature(820, 700));
                   try { OpenWin.focus(); } catch (e) { }
                   ReturnFunction("close");
-                  window.close();
               } else {
                   var feature = "status:no;dialogWidth:820px;dialogHeight:700px;help:no;scroll:no;edge:sunken";
                   feature = feature + GetShowModalPosition(700, 700);
