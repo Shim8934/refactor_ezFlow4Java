@@ -5005,6 +5005,19 @@
          AND
         	 TBL_APRDOCINFO.COMPANYID = #companyID#
 	</select>
+	
+	<select id="EzApprovalG.setCabinetRecvAprMemberDeptId" parameterClass="Map" resultClass="String">
+		SELECT 
+			APRMEMBERDEPTID
+		FROM 
+			TBL_APRLINEINFO 
+		WHERE 
+			DOCID = #v_DOCID#
+		ORDER BY 
+			APRMEMBERSN
+		LIMIT 1
+	</select>
+	
 <!-- 	<procedure id="EzApprovalG.setCabinetRecList" parameterClass="Map" resultClass="ApprGCabinetRecVO"> -->
 <!-- 		{CALL EZSP_SETCABINETREC_LIST(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
