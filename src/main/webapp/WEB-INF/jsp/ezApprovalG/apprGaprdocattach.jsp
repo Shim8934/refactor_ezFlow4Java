@@ -179,7 +179,7 @@
             if (CrossYN() || pNoneActiveX == "YES") {
             	setsearchinfo_cross_dialogArguments[0] = "";
             	setsearchinfo_cross_dialogArguments[1] = SearchCondi_Complete;
-                DivPopUpShow(820, 610, url);
+                DivPopUpShow(510, 350, url);
             }
             else {
                 var feature = "dialogWidth:510px;dialogHeight:440px;status:no;scroll:no;edge:sunken"

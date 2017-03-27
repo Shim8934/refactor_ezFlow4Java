@@ -344,8 +344,14 @@
 		    }
 		
 		    function btncancel_onclick() {
-		        window.close();
+		    	 if (ReturnFunction != null)
+		             ReturnFunction(false);
+		         else
+		             window.returnValue = false;
+
+		         window.close();
 		    }
+		    
 		    var getformcont_cross_dialogArguments = new Array();
 		    function btn_FormSelect_onclick() {
 		        var parameter = new Array();
