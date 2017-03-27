@@ -638,6 +638,25 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		} else {
 		    if (pClass.toLowerCase().equals("group")) {
 		        ezOrganAdminDao.deleteDBData(map);
+		        
+		        //회사 삭제시 넣었던 초기데이터 테이블 삭제
+		        ezOrganAdminDao.deleteCompany_D1(map);
+		        ezOrganAdminDao.deleteCompany_D2(map);
+		        ezOrganAdminDao.deleteCompany_D3(map);
+		        ezOrganAdminDao.deleteCompany_D4(map);
+		        ezOrganAdminDao.deleteCompany_D5(map);
+		        ezOrganAdminDao.deleteCompany_D6(map);
+		        ezOrganAdminDao.deleteCompany_D7(map);
+		        ezOrganAdminDao.deleteCompany_D8(map);
+		        ezOrganAdminDao.deleteCompany_D9(map);
+		        ezOrganAdminDao.deleteCompany_D10(map);
+		        ezOrganAdminDao.deleteCompany_D11(map);
+		        ezOrganAdminDao.deleteCompany_D12(map);
+		        ezOrganAdminDao.deleteCompany_D13(map);
+		        ezOrganAdminDao.deleteCompany_D14(map);
+		        ezOrganAdminDao.deleteCompany_D15(map);
+		        ezOrganAdminDao.deleteCompany_D16(map);
+		        
 		    } else {
 		        ezOrganAdminDao.deleteDBDataForJMocha(map);
 	     
