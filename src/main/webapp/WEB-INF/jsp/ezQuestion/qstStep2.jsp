@@ -480,43 +480,26 @@
             		            oImg.setAttribute("src", "/images/poll/sound.gif");
                     		    oImg.setAttribute("style", "width:19px;height:17px");
                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
-// 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
-// 		                    	onclick=\"javascript:file_open(2," + brdID + "," + itemNo + "," 
-// 		                    			+ strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\">
-// 		                    	<img src=\"/images/poll/sound.gif\" width=\"19\" height=\"17\" align=\"absmiddle\">" 
-// 		                    	+ URLDecoder.decode(strAttachName, "utf-8") + "</td>
 		                    }else if(attachType==4){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
-// 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" 
-// 		                    	align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\">" 
-// 		                    	+ URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
 		                    }else if(attachType==5){
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/video.gif");
                     		    oImg.setAttribute("style", "width:21px;height:17px");
                     		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
-// 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
-// 		                    	onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" 
-// 		                    	width=\"21\" height=\"17\" align=\"absmiddle\">" + URLDecoder.decode(strAttachName, "utf-8") + "</td>
 		                    }else{
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
                     		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
-// 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" 
-// 		                    	width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, 
-// 		                    			"utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
 		                    }
                     		oTd.appendChild(oImg);
                     		if(attachType!=1){
                     			oTd.innerHTML += trName;	
                     		}
-// 		                    oTd = document.createElement("td");
-//         		            oTd.setAttribute("style", "cursor:pointer; font-weight:bold;");
-//                     		oTr.appendChild(oTd);
                 		}
                 		oFileTable.appendChild(oTr);
                 		oTable.appendChild(oFileTable);
@@ -548,7 +531,7 @@
                             		var trName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("ATTACHTITLE")[0]);
                             		trName = decodeURI(trName);
                             		oTd = document.createElement("td");
-        		                    oTd.setAttribute("style", "padding:5px; word-wrap:break-word;");
+        		                    oTd.setAttribute("style", "padding:5px; cursor:pointer; word-wrap:break-word;");
                 		            oTr.appendChild(oTd);
                 		            if(attachType==1){
 		                            oImg = document.createElement("img");
@@ -649,7 +632,7 @@
 		                for (var j = 0; j < QuestionNode.childNodes[i].getElementsByTagName("ANSWER").length; j++) {
                     		oTr = document.createElement("tr");
                     		oTd = document.createElement("td");
-                    		oTd.setAttribute("style", "padding:3px 10px")
+                    		oTd.setAttribute("style", "padding:3px 10px;")
                     		oInput = document.createElement("input");
                     		oInput.setAttribute("type", "checkbox");
                     		oInput.disabled = "true";
@@ -668,7 +651,7 @@
                             		var trName = getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWER")[j].getElementsByTagName("ROW")[k].getElementsByTagName("ATTACHTITLE")[0]);
                             		trName = decodeURI(trName);
                             		oTd = document.createElement("td");
-        		                    oTd.setAttribute("style", "padding:5px; word-wrap:break-word;");
+        		                    oTd.setAttribute("style", "padding:5px; cursor:pointer; word-wrap:break-word;");
                 		            oTr.appendChild(oTd);
                 		            if(attachType==1){
 		                            oImg = document.createElement("img");
