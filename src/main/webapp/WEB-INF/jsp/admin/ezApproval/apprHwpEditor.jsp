@@ -2,9 +2,9 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 	<head>
-		<title><spring:message code='ezApproval.t518'/></title>
+		<title><spring:message code='ezApprovalG.t1456'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
+		<link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
