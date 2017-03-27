@@ -710,14 +710,17 @@
 	            var strItemList = "";
 	            var strBoardItemList = "";
 	            var i = 0;
+	            var guBun = "";
 	
 	            arrList = strListInfo.split(";");
 	            for (i = 0; i < arrList.length - 1; i++) {
 	                strItemList += arrList[i].split(",")[0] + ";";
 	                try {
 		                strBoardItemList += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
 					} catch (e) {
 		                strBoardItemList += document.getElementById(arrList[i] + "," + SSUserID + ";").parentNode.parentNode.getAttribute("DATA1") + ";";
+		                guBun += document.getElementById(arrList[i] + ";").parentNode.parentNode.getAttribute("DATA10") + ";";
 					}
 	            }
 	            arrList = null;
@@ -732,7 +735,7 @@
 	            pwidth = pwidth - 127;
 	            var feature = "height=656,width=340px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 	            feature = feature += GetOpenPosition(340, 656);
-	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&mode=COPY", "", feature, "");
+	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&mode=COPY" + "&guBun=" + guBun, "", feature, "");
 	        }
 	        var moveboarditem_cross_dialogArguments = new Array();
 	        function MoveItem_onclick() {
@@ -774,7 +777,7 @@
 	                pwidth = parseInt(pwidth) / 2;
 	                pheigth = pheigth - 200;
 	                pwidth = pwidth - 127;
-	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + strBoardItemList + "&guBun=" + guBun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
 	
 	                if (typeof (ret) != "undefined") {
 	                    if (ret == "OK") {

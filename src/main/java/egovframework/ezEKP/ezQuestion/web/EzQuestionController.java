@@ -1770,12 +1770,67 @@ public class EzQuestionController extends EgovFileMngUtil {
             pFileName = URLDecoder.decode(pFileName, "utf-8");
             
             if (pFilePath != null && !pFilePath.equals("")){
+            	logger.debug("#####################"+pFilePath);
+            	logger.debug("@@@@@@@@@@@@@@@@@@@@@"+pFileName);
                 ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
             }
         }
         logger.debug("getPollAttachInfo ended.");
 	}
 
+	/**
+	 * 전자설문 설문리스트 미리보기 첨부파일 호출 실행함수
+	 */
+	@RequestMapping(value="/ezQuestion/getPollAttachInfo2.do")
+	public void getPollAttachInfo2(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request, HttpServletResponse response, ModelMap model, QstAttachVO qstAttachVO) throws Exception{
+		logger.debug("getPollAttachInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String pType = "";
+		String pBoardID = "";
+		String pItemID = "";
+		String pQstNo = "";
+        String pAnsNo = "";
+        String pAttID = "";
+        String pFileName = "";
+        String pFilePath = "";
+		 
+        pType = request.getParameter("type");
+        pBoardID = request.getParameter("boardID");
+        pItemID = request.getParameter("itemID");
+        pQstNo = request.getParameter("qstNo");
+        pAnsNo = request.getParameter("ansNo");
+        pAttID = request.getParameter("attID");
+        
+        if(request.getParameter("fileName") != null && !request.getParameter("fileName").equals("")){
+        	pFileName = request.getParameter("fileName");
+        }
+        
+        if(pType.equals("QUESTION")){
+            if (pFileName != null && !pFileName.equals("")) {
+            	pFilePath = commonUtil.getUploadPath("upload_board.UPLOADQUESTION", userInfo.getTenantId())+commonUtil.separator+pFileName;
+            } else {
+            	qstAttachVO = ezQuestionService.getAttachInfo2(pBoardID, pItemID, pQstNo, pAnsNo, pAttID, userInfo.getTenantId());
+                pFilePath = qstAttachVO.getAttachUrl();
+                pFileName = qstAttachVO.getAttachName() + pFilePath.substring(pFilePath.lastIndexOf('.'));
+            }
+            
+            pFileName = URLDecoder.decode(pFileName, "utf-8");
+            
+            if (pFilePath != null && !pFilePath.equals("")){
+            	pFilePath = pFilePath.split(",")[0];
+            	if(request.getParameter("trName")!=null && !request.getParameter("trName").equals("")){
+            	pFileName = request.getParameter("trName")+"."+pFilePath.split("\\.")[1];
+            	}
+            	logger.debug("#####################"+pFilePath);
+            	logger.debug("@@@@@@@@@@@@@@@@@@@@@"+pFileName);
+                ezCommonService.responseAttach(pFilePath, pFileName, true, request, response);
+            }
+        }
+        logger.debug("getPollAttachInfo ended.");
+	}
+	
 	/**
 	 * 전자설문 설문리스트 결과보기 주관식일 경우 답변보기 화면 호출 함수
 	 */

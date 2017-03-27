@@ -28,6 +28,7 @@ INSERT INTO `jmocha_default_quota` (`DOMAIN_NAME`,`MAX_STORAGE`,`WARN_STORAGE`) 
 INSERT INTO `tbl_tenant` (`TENANT_ID`,`TENANT_NAME`,`TENANT_NAME2`) VALUES (0,'조직도','OrganizationChart');
 INSERT INTO `tbl_tenant_servername` (`SERVER_NAME`,`TENANT_ID`) VALUES ('jtest.kaoni.com',0);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ADJACENT_ITEMS_ENABLE','1',NULL);
+INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'ApprovalFlag','S','전자결재 공공/일반 여부');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'APPROVLEFTCOUNT','YES','결재 왼쪽 메뉴 리스트 카운트 보기 설정 YES, NO');
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'BigSizeMailAttachDelDay','14',NULL);
 INSERT INTO `tbl_tenant_config` (`TENANT_ID`,`PROPERTY_NAME`,`PROPERTY_VALUE`,`DESCRIPTION`) VALUES (0,'BigSizeMailAttachLimit','10',NULL);
