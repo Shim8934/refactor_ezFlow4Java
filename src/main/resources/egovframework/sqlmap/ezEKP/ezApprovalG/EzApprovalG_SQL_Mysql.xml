@@ -6576,10 +6576,6 @@
 <!-- 		{CALL EZSP_GETCONTDOCLIST(#v_CONTID#, #v_USERID#, #v_USERSECCODE#, #v_PUBFLAG#, #v_SUBQUERY#, #v_PAGESIZE#, #v_PAGESIZE2#, #v_ORDEROPTION#, #v_ORDEROPTION2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getContDocList" parameterClass="Map" resultClass="ApprGDocListVO">
-		SELECT 
-			* 
-		FROM 
-			(
 				SELECT 
 					* 
 				FROM (
@@ -6701,8 +6697,10 @@
 											ENDDATE DESC
 									</isEmpty>
 									 <![CDATA[
-									 LIMIT  #v_PAGESIZE#
-									  ) B ) A
+									 LIMIT #v_PAGESIZE#
+							   	 ) B 
+							   	 LIMIT #v_PAGESIZE3#, #v_PAGESIZE2#
+							   	 	) A
 									  ]]>
 						<isNotEmpty property="v_ORDEROPTION2">
 							<isGreaterEqual property="v_ORDEROPTION2LENGTH" compareValue="7">
@@ -6710,14 +6708,12 @@
 								<![CDATA[
 									ORDER BY 
 										$v_ORDEROPTION2$  
-									LIMIT  #v_PAGESIZE2# ) C
 								]]>
 								</isEqual>
 								<isNotEqual  property="v_ORDEROPTION2VALUE" compareValue="enddate">
 								<![CDATA[
 									ORDER BY 
 										$v_ORDEROPTION2$, ENDDATE  
-									LIMIT #v_PAGESIZE2# ) C
 								]]>
 								</isNotEqual>
 							</isGreaterEqual>
@@ -6725,7 +6721,6 @@
 								<![CDATA[	
 									ORDER BY 
 										$v_ORDEROPTION2$, ENDDATE 
-									LIMIT #v_PAGESIZE2# ) C	
 								]]>
 							</isLessThan>
 						</isNotEmpty>
@@ -6733,7 +6728,6 @@
 							<![CDATA[	
 								ORDER BY 
 									ENDDATE 
-								LIMIT #v_PAGESIZE2#) C
 							]]>
 						</isEmpty>
 		   			
