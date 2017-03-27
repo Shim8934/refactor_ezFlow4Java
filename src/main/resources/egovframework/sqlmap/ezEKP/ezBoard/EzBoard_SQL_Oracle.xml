@@ -1298,6 +1298,7 @@
 	                    A.DocNo ,
 	                    A.extensionAttribute2 NOTICE  ,
 	                    CASE WHEN B.BOARDNAME$lang$ IS NULL THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	                    B.GUBUN AS GUBUN,
 	                    A.APPRFLAG APPRFLAG  
 	            	 FROM 
 	            	 	TBL_Board_Item A

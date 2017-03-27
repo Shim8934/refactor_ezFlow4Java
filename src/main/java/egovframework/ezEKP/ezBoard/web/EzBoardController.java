@@ -1105,7 +1105,7 @@ public class EzBoardController extends EgovFileMngUtil{
         StringBuffer resultXML = new StringBuffer();
         
         resultXML.append("<DOCLIST>");
-        
+
         if (mode == null || !mode.equals("temp")) {
 	        noticeCount = ezBoardService.getMyNoticePostItemCount(userInfo);
 	        
@@ -1176,7 +1176,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	    					}
 	    					resultXML.append("<DATA8>" + noticeList.get(k).get("ITEMLEVEL") + "</DATA8>");
 	    					resultXML.append("<DATA9>" + noticeList.get(k).get("NOTICE") + "</DATA9>");
-	    					resultXML.append("<DATA10></DATA10>");
+	    					resultXML.append("<DATA10>" + noticeList.get(k).get("GUBUN") + "</DATA10>");
 	    					resultXML.append("<DATA11>" + noticeList.get(k).get("ONELINECNT") + "</DATA11>");
 	                    }
 	                    resultXML.append("</CELL>");
@@ -3705,6 +3705,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		itemIDList = request.getParameter("itemIDList");
 		boardIDs = request.getParameter("boardID");
+		String guBun = request.getParameter("guBun");
+		
+		if (guBun != null) {
+			guBun = guBun.replace(";", "");
+		} else {
+			guBun = "0";
+		}
 		
 		String[] boardID = boardIDs.split(";");
 		
@@ -3724,6 +3731,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		model.addAttribute("itemIDList", itemIDList);
 		model.addAttribute("boardID", boardIDs);
+		model.addAttribute("guBun", guBun);
 		
 		return "ezBoard/boardCopyItem";
 	}
@@ -3819,7 +3827,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String result = "";
 		
 		orgItemIDList = request.getParameter("orgItemIDList");
-		orgBoardID = request.getParameter("orgBoardID").replace(";", "");
+		orgBoardID = request.getParameter("orgBoardID");
 		destBoardID = request.getParameter("destBoardID");
 		result = ezBoardService.copyItem(orgItemIDList, orgBoardID, destBoardID, uploadFilePath, realPath, userInfo);
 		

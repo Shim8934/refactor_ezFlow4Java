@@ -2788,14 +2788,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		String result = "";
 		String destItemID = "";
+		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
-		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
-			String orgBoardID = boardIDArray[0];
+			
+			if (boardIDArray.length > 1) {
+				orgBoardID = boardIDArray[i];
+			} else {
+				orgBoardID = boardIDArray[0];				
+			}
 			
 			destItemID = "{" + UUID.randomUUID() + "}";
 			
@@ -3089,19 +3095,27 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String copyItem(String orgItemIDList, String orgBoardID, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception {
+	public String copyItem(String orgItemIDList, String orgBoardIDList, String destBoardID, String uploadFilePath, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("copyItem started");
 
 		String result = "";
 		String destItemID = "";
+		String orgBoardID = "";
 		String[] itemIDArray = orgItemIDList.split(";");
+		String[] boardIDArray = orgBoardIDList.split(";");
 		
-		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
-			destItemID = "{" + UUID.randomUUID() + "}";
+			if (boardIDArray.length > 1) {
+				orgBoardID = boardIDArray[i];
+			} else {
+				orgBoardID = boardIDArray[0];				
+			}
+			
+			destItemID = "{" + UUID.randomUUID() + "}";		
 			
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
 			//MHT 파일위치 변경
