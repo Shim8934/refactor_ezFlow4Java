@@ -2464,4 +2464,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public ApprGTaskVO getAllCategory(Map<String, Object> map) throws Exception {
 		return (ApprGTaskVO) select("EzApprovalG.getAllCategory", map);
 	}
+
+	public ApprGFormVO getAutoDocNumItem(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getAutoDocNumItem", map);
+	}
 }

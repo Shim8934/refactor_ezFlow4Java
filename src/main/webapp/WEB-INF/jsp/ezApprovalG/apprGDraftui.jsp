@@ -191,8 +191,45 @@
 		
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter();
+		            
+		            if (approvalFlag == "S") {
+			            SetAutoDocnumItem();
+		            }
 		        }
 		    }
+		    
+	        function SetAutoDocnumItem() {
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getAutoDocNumItemCode.do",
+		    		data : {
+		    			formID : pFormID
+		    		},
+		    		success: function(result){
+		                if (result.indexOf(';') == -1)
+		                    return;
+	
+		                var arrayVal = result.split(';');
+	
+		                if (arrayVal[4] == "Y") {
+		                    tempKeep = arrayVal[7];
+		                    tempSecurity = arrayVal[6];
+		                    tempPublic = arrayVal[0];
+		                    tempItemCode = arrayVal[1];
+		                    TaskCode = arrayVal[1];
+		                    cabinetID = arrayVal[8];
+		                    tempItemName = arrayVal[2];
+		                    tempItemName2 = arrayVal[3];
+		                    tempSecurityValue = arrayVal[6];
+			                pPublicityCode = arrayVal[0];
+		                    
+		                    SetDocOption(arrayVal[5]);
+		                }
+		    		}        			
+		    	});
+	        }
 		
 		    function Conn_Initial() {
 		        if (ConnExist("INIT", "")) {

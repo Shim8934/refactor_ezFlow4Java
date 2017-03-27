@@ -21071,4 +21071,34 @@
         ORDER BY 
         	 CONTTYPE, SN
    	</select>
+   	
+   	<select id="EzApprovalG.getAutoDocNumItem" parameterClass="Map" resultClass="ApprGFormVO">
+   		SELECT
+   			B.KEEPPERIOD,
+   			B.SECURITYLEVEL,
+   			B.ISPUBLIC,
+   			B.ITEMCODE,
+   			B.ITEMNAME,
+   			B.ITEMNAME2,
+   			B.USEFLAG,
+   			B.KEEPPERIODCODE,
+   			(SELECT
+		    	CONCAT(CABINETCLASSNO, '001')
+		     FROM
+		     	TBL_CABINETCLASS A
+		     WHERE
+		     	A.TENANT_ID = #tenantID#
+		     AND
+		     	A.COMPANYID = #companyID#
+		     AND
+		     	A.TASKCODE = B.ITEMCODE ) CABINETID 
+   		FROM
+   			TBL_AUTODOCNUM_ITEM B
+   		WHERE
+   			B.TENANT_ID = #tenantID#
+   		AND
+   			B.COMPANYID = #companyID#
+   		AND
+   			B.FORMID = #formID#
+   	</select>
 </sqlMap>
