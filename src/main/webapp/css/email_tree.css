@@ -1,8 +1,7 @@
 .node_normal
 {
     height:15px;
-    color:#555;
-    padding-top: 1px;
+    color:#555;    
     padding-left: 3px;
     font-size:9pt;
     vertical-align:top;
@@ -18,8 +17,7 @@
 .node_selected
 {    
     height: 15px;
-    color: #333;
-    padding-top: 1px;
+    color: #333;    
     padding-left: 3px;    
     font-size: 9pt;
     font-weight: bold;
@@ -36,8 +34,7 @@
 .node_hover
 {
     height: 15px;
-    color: #333;
-    padding-top: 1px;
+    color: #333;    
     padding-left: 3px;
     font-size: 9pt;
     font-weight: bold;

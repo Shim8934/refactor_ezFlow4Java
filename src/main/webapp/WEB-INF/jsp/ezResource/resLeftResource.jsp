@@ -105,12 +105,12 @@
     		}
 	</script>
 	</head>
-	<body class="leftbody" style="background-color:#e6e6e6;">
+	<body class="leftbody" style="background-color:#ffffff;">
 		<div id="left">
         <div class="left_resource" title="RESOURCE"></div>
         <h2 style="background-color:#FFFFFF;"><span id="menu01" ><spring:message code="ezResource.t342" /></span></h2>
         <ul style="overflow-x:auto;overflow-y:auto;">
-            <div class="tree" id="TreeView" style="HEIGHT:auto;width:179px;BORDER:#b6b6b6 0px solid; BACKGROUND-COLOR:#ffffff; vertical-align:top;margin-left:20px;background-color:#e6e6e6;" ></div>
+            <div class="tree" id="TreeView" style="height:auto;border:#b6b6b6 0px solid; background-color:#ffffff; vertical-align:top;padding-left:20px;background-color:#ffffff;" ></div>
         </ul>
     </div>
 	</body>
