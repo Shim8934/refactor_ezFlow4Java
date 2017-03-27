@@ -80,7 +80,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "' value2='" + vo.getDisplayName() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -146,7 +146,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -210,7 +210,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -243,7 +243,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -299,7 +299,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -332,7 +332,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -365,7 +365,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -398,7 +398,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -446,7 +446,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");
@@ -479,7 +479,7 @@ public class EzStatisticsApprController {
 			StringBuilder companySel = new StringBuilder();
 			
 			for (OrganDeptVO vo : deptVOs) {
-				if ((userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) && !vo.getCn().equals("Top")) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
 					companySel.append("<option value='" + vo.getCn() + "'>");
 					companySel.append(vo.getDisplayName());
 					companySel.append("</option>");

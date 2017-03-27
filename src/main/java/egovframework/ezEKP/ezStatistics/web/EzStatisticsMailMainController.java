@@ -71,8 +71,8 @@ public class EzStatisticsMailMainController {
 		
 		StringBuilder listCompany = new StringBuilder();
 		for (OrganDeptVO vo : list) {
-			if ((user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID()))
-					&& !vo.getCn().equals("Top")) {
+			// 전체 관리자이면 모든 회사를 추가하고, 그렇지 않은 경우엔 관리자가 속한 회사만을 추가한다.
+			if (user.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(user.getCompanyID())) {
 				listCompany.append("<option value='" + vo.getCn() + "'>");
 				listCompany.append(vo.getDisplayName());
 				listCompany.append("</option>");
