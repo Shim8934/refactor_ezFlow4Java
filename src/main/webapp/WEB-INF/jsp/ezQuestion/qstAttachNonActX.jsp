@@ -190,6 +190,7 @@
 			            for (var count = 0; count < lastindex; count++) {
 			                var selType = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "TYPE");
 			                var pTitle = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "ATTACHTITLE");
+			                pTitle = decodeURI(pTitle);
 			                var pPath = SelectSingleNodeValue(SelectNodes(xmlDom, "ATTACH/ROW")[count], "HREF");
 			                var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
 			                document.all("input_Value").options[count] = newoption;
@@ -200,6 +201,7 @@
 			            for (var count = 0; count < lastindex; count++) {
 			                var selType = pAttachInfo["type"][count];
 			                var pTitle = pAttachInfo["attachTitle"][count];
+			                pTitle = decodeURI(pTitle);
 			                var pPath = pAttachInfo["href"][count];
 			                var newoption = new Option(pTitle, selType + ";" + pTitle + ";" + pPath, true);
 			                
