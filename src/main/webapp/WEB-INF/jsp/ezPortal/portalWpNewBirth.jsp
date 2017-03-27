@@ -62,8 +62,7 @@
 	            	document.body.style.UserSelect = 'none';
 	        	}
 		        
-		        getbirthUserList();
-
+		        
 		        if (CrossYN())
 		            document.getElementById("curMon").textContent = month;
 	    	    else
@@ -100,6 +99,7 @@
 	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
 	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
 	            	totalPage = Math.ceil(totalCnt / EndCnt);
+
 	            	document.getElementById("birthcont").style.display = "";
 	            	document.getElementById("nodata_NewBirth").style.display = "none";
 	            	for (var i = 0; i < totalCnt; i++) {
@@ -139,7 +139,7 @@
 	        	        curPage = 0;
 	            	}
 	            	if (totalCnt > EndCnt) {
-		                timer = window.setInterval("intervalList()", 5000);
+		                timer = window.setInterval("intervalList()", 10000);
 		            }
 	    	    } else {
 	            	document.getElementById("birthcont").style.display = "none";
@@ -196,7 +196,7 @@
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
 
-	    	window_onload_NewBirth();
+	    	//window_onload_NewBirth();
 		</script>
 	</head>
 </html>

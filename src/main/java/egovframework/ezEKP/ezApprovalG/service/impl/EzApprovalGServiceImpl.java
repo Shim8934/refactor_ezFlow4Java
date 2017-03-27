@@ -19997,6 +19997,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PAPPROVUSER", pApprovUser);
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 
 	//보안등급 사용 여부 가져오기
 		
@@ -20163,7 +20164,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,7).toLowerCase());
 		}
 		
-		map.put("approvalFlag", approvalFlag);
 		map.put("v_PSTRLANG", lang);
 		map.put("v_PSTRMULTIDATA", strMultiData);
 //		map.put("v_PAGESIZE", pageSize);

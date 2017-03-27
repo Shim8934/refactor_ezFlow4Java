@@ -6369,7 +6369,8 @@
 							   	
 							   	<isEqual property="approvalFlag" compareValue="S">
 							   	   AND  C.CODE1 ='A02'
-   AND  D.CODE1 ='A04'
+   									AND  D.CODE1 ='A04'
+								$v_WHERESTR$
 							   	</isEqual>
 							   	<isNotEmpty property="v_DOCNUMBER">
 							   	 	AND 
@@ -10252,13 +10253,40 @@
    			TBL_ENDAPRDOCINFO.TENANT_ID = TBL_EXPENDAPRDOCINFO.TENANT_ID
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = TBL_EXPENDAPRDOCINFO.COMPANYID
+   			]]>
+   			<isEqual property="approvalFlag" compareValue="S">
+							   	  INNER JOIN 
+				 						TBL_CODELIST  C
+							 	  ON 
+									 	TBL_ENDAPRDOCINFO.DOCSTATE = C.CODE2 
+								  AND 
+									 	TBL_ENDAPRDOCINFO.TENANT_ID = C.TENANT_ID
+					              AND 
+					                 	TBL_ENDAPRDOCINFO.COMPANYID = C.COMPANYID
+					    	      INNER JOIN 
+					    			 	TBL_CODELIST D 
+					    		  ON 
+					    			 	TBL_ENDAPRDOCINFO.FUNCTIONTYPE = D.CODE2 
+								  AND 
+									 	TBL_ENDAPRDOCINFO.TENANT_ID = D.TENANT_ID
+					              AND 
+					                 	TBL_ENDAPRDOCINFO.COMPANYID = D.COMPANYID 
+					              INNER JOIN 
+					              		TBL_ENDRECEIPTPOINTINFO E ON TBL_ENDAPRDOCINFO.DOCID = E.DocID 
+								  AND 
+								  		TBL_ENDAPRDOCINFO.TENANT_ID = E.TENANT_ID
+                                  AND 
+                                  		TBL_ENDAPRDOCINFO.COMPANYID = E.COMPANYID              
+							   	</isEqual>		 	
    		WHERE 
    			TBL_EXPENDAPRDOCINFO.DELFLAG IS NULL
    		AND 
    			TBL_ENDAPRDOCINFO.TENANT_ID = #v_TENANTID#
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
-   		]]>
+		<isEqual property="approvalFlag" compareValue="S">
+		$v_WHERESTR$
+		</isEqual>
    		<isNotEmpty property="v_DOCNUMBER"> 
    		 AND 
    		 	DOCNO LIKE '%$v_DOCNUMBER$%'

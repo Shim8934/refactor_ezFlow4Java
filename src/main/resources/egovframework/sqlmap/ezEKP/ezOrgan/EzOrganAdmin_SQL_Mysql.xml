@@ -2028,7 +2028,7 @@
             TBL_RS_BRD
                 (BRD_ID,BRD_COMPANY,BRD_NM,BRD_NM2,BRD_GROUP,BRD_GB,BRD_REF,BRD_LEVEL,BRD_STEP,BRD_POSTTERM,BRD_EXPLAIN,BRD_ACCESS,BRD_UPPER,BRD_COUNT,BRD_URL,ATTACH_SIZE,REPLY_MAIL_FG,OWNDEPTID,OWNDEPTNM,OWNDEPTNM2,OWNERID,OWNERNM,OWNERNM2,OWNERPOSITION,OWNERPOSITION2,OWNERCALL,MAKEDATE,RESLOCATION,BRD_UPPER2,APPROVEFLAG,TENANT_ID) 
           VALUES
-                (1,#companyID#,'조직도','OrganizationChart','A00','1',0,0,1,365,'',null,0,0,' ',20,null,null,null,null,null,null,null,null,null,null,null,null,null,'0',#tenantID#)
+                (1,#companyID#,#companyName#,#companyName2#,'A00','1',0,0,1,365,'',null,0,0,' ',20,null,null,null,null,null,null,null,null,null,null,null,null,null,'0',#tenantID#)
       ]]>
     </insert>
   
@@ -2084,8 +2084,8 @@
                	  	TENANT_ID = #tenantID#
                	  AND  
                	  	(DEPTLEVEL = 1
-               	  AND 
-               	  	CN <> 'Top') ) A
+               	  OR 
+               	  	CN = 'Top') ) A
            	ORDER BY 
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>

@@ -456,6 +456,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map1.put("tenantID", tenantID);
 		map1.put("companyID", cn);
 		map1.put("companyName", displayName);
+		map1.put("companyName2", displayName2);
 		map1.put("userID", userInfo.getId());
 		map1.put("userName", userInfo.getName());
 		map1.put("nowDate", nowDate);
