@@ -3871,7 +3871,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String type = request.getParameter("type");
 		String susinAdmin = "";
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
 		} else {
@@ -3880,7 +3881,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String monthEndDay = EgovDateUtil.getTodayTime().substring(9, 10);;
 		String initDate = EgovDateUtil.getTodayTime().substring(0, 10);
-		
+		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("type", type);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -4427,28 +4428,28 @@ public class EzApprovalGController extends EgovFileMngUtil{
             String TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
             
             if(TempQuery.indexOf("KAPR;") > -1) {
-            	ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+            	ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
             }
             if (TempQuery.indexOf("KEND;") != -1)
             {
-                ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
             }
             if (TempQuery.indexOf("CAPR;") != -1)
             {
-                ReturnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+                ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
             }
             if (TempQuery.indexOf("CEND;") != -1)
             {
-                ReturnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+                ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getChildNodes().item(0).getTextContent() + "' ";
             }
             
             if (TempQuery.indexOf("EAPRTYPE;") != -1)
             {
-                ReturnQuery += " AND TBENDAPRLINEINFO.AprType = '" + xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent()  + "' ";
+                ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprType = '" + xmldomsub.getElementsByTagName("ENDAPRTYPE").item(0).getChildNodes().item(0).getTextContent()  + "' ";
             }
             if (TempQuery.indexOf("EAPRSTATE;") != -1)
             {
-                ReturnQuery += " AND TBENDAPRLINEINFO.AprState = '" + xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent() + "' ";
+                ReturnQuery += " AND TBL_ENDAPRLINEINFO.AprState = '" + xmldomsub.getElementsByTagName("ENDAPRSTATE").item(0).getChildNodes().item(0).getTextContent() + "' ";
             }
             subQuery = ReturnQuery;
             
@@ -4457,7 +4458,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
                     subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
             }
-            result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
+             result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
                     papprto, mypapprfrom, mypapprto, draftDeptName, docState, "", pageSize, pageNum, orderCell, orderOption, userInfo.getCompanyID(), userInfo.getLang(), "", userInfo.getTenantId(), userInfo.getOffset(), approvalFlag, userInfo.getLocale());
 		
 		return result;

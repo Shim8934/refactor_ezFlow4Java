@@ -1064,7 +1064,7 @@
 		        }
 		
 		    	//mouseWheel Event 
-		        document.onmousewheel = ScrollControl;
+// 		        document.onmousewheel = ScrollControl;
 		
 		        function ScrollControl()
 		        {
