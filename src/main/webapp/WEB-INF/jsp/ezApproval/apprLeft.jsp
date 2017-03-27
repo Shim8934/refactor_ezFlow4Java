@@ -764,12 +764,12 @@
 	
 	        <h2><span id="USERCONT" onclick="Open_Func(this)" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t848'/></span></h2>
 	        <ul>
-	            <div class="tree" id="divUserContTree" style="margin-left: 4px; height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #e6e6e6;"></div>
+	            <div class="tree" id="divUserContTree" style="margin-left: 4px; height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #ffffff;"></div>
 	            <h3><span id="MNGUSERCONT" onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
 	        </ul>
 	        <h2><span id="DEPTCONT" onclick="Open_Func(this)"><spring:message code='ezApproval.t849'/></span></h2>
 	        <ul>
-	            <div class="tree" id="divDeptContTree" style="height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #e6e6e6;"></div>
+	            <div class="tree" id="divDeptContTree" style="height: 160px; width: 169px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding: 4px 6px 6px 4px; vertical-align: top; margin-left: 20px; background-color: #ffffff;"></div>
 	            <c:if test="${holdAdmin == 'YES'}">
 		            <h3><span id="MNGDEPTCONT" onclick="MngDeptOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t298'/></span></h3>
 	            </c:if>
