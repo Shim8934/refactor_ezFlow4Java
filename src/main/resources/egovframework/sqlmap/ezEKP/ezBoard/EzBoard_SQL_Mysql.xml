@@ -4423,6 +4423,19 @@
 		]]>
   </select>
   
+  <select id="EzBoardDAO.getPhotoCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
+      <![CDATA[
+        SELECT 
+          COUNT(ITEMID)  TOTALCOUNT
+                FROM 
+                  TBL_Board_Item 
+              WHERE  
+                TENANT_ID = #tenantID#
+              AND
+                BOARDID = #boardId#
+      ]]>
+  </select>
+  
   <delete id="EzBoardDAO.deleteReservedBoardItem" parameterClass="BoardDeleteItemVO">
   		<![CDATA[
   			DELETE FROM TBL_BOARD_DELETERESERVEDITEM
