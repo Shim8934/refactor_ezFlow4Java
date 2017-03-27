@@ -849,7 +849,7 @@
 		
 		        if (CrossYN()) {
 		            moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-		            OpenWin = GetOpenWindow("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID, "MoveBoardItem", 340, 600);
+		            OpenWin = GetOpenWindow("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "MoveBoardItem", 340, 600);
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
 		            var pheigth = window.screen.availHeight;
@@ -858,7 +858,7 @@
 		            pwidth = parseInt(pwidth) / 2;
 		            pheigth = pheigth - 200;
 		            pwidth = pwidth - 127;
-		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
+		            var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", "DialogHeight:656px;DialogWidth:340px;status:no;help:no;edge:sunken;scroll:no");
 		
 		            if (typeof (ret) != "undefined") {
 		                if (ret == "OK") {

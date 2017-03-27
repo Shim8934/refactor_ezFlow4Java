@@ -15,6 +15,8 @@
 		    var selectedBoard = "";
 		    var ItemIDList = "${itemIDList}";
 		    var BoardID = "${boardID}";
+		    var oldguBun = "${guBun}";
+		    var newguBun = "";
 		    var xmlDom_treeview = createXmlDom();
 		    var rtnVal = "";
 		    var ReturnFunction = "";
@@ -28,6 +30,24 @@
 		            alert("<spring:message code='ezBoard.t351'/>");
 		            return;
 		        }
+		        if (oldguBun > 0) {
+			    	if (oldguBun != newguBun) {
+			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			            return;
+			        }
+			    	if (oldguBun == "3" && newguBun == "3") {
+			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			            return;
+			        }
+		    	} else {
+		    		if (newguBun == "2" || newguBun == "3" || newguBun == "4") {
+			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			            return;
+			        } else if (newguBun == "1" || newguBun == "5") {
+			        	alert("<spring:message code='ezBoard.jsh02'/>");
+			            return;
+			        }
+		    	}
 		        CopyItem(selectedBoard);
 		    }
 		    function cancel() {
@@ -130,6 +150,7 @@
 		        var treeNode = new TreeNode();
 		        treeNode.LoadFromID(pNodeID);
 		        selectedBoard = treeNode.GetNodeData("DATA1");
+		        newguBun = treeNode.GetNodeData("DATA5");
 		    }
 		    function DisplayTopBoard() {
 		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=top&subFlag=0", false);
