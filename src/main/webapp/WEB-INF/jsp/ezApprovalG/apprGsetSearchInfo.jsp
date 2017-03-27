@@ -47,6 +47,7 @@
 		    var ReturnFunction;
 		    var Type = "${type}";
 		    var ReturnFunction;
+		    var approvalFlag = "${approvalFlag}";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
@@ -165,6 +166,7 @@
 		    }
 		    
 		    function btnSearch_onclick() {
+		    	
 		        var RtnVal = new Array();
 		        var chkVal = false;
 		        var i;
@@ -177,67 +179,133 @@
 		        myapprfrom = $("#Sdatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        myapprto = $("#Edatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
-		        if (draftfrom != "" && draftto != "") {
-		            if (draftfrom > draftto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1326'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
-		                return;
+		       
+			        if (draftfrom != "" && draftto != "") {
+			            if (draftfrom > draftto) {
+			                OpenAlertUI("<spring:message code='ezApprovalG.t1326'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+			                return;
+			            }
+			        }
+			
+			        if (apprfrom != "" && apprto != "") {
+			            if (apprfrom > apprto) {
+			                OpenAlertUI("<spring:message code='ezApprovalG.t1328'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+			                return;
+			            }
+			        }
+			
+			        if (myapprfrom != "" && myapprto != "") {
+			            if (myapprfrom > myapprto) {
+			                OpenAlertUI("<spring:message code='ezApprovalG.t1552'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+			                return;
+			            }
+			        }
+			     if(approvalFlag == 'G') {
+			        draftfrom = draftfrom.split("-");
+			        draftto = draftto.split("-");
+			        apprfrom = apprfrom.split("-");
+			        apprto = apprto.split("-");
+			        myapprfrom = myapprfrom.split("-");
+			        myapprto = myapprto.split("-");
+			        RtnVal[0] = DocNumber.value;
+			        RtnVal[1] = DocTitle.value;
+			        RtnVal[2] = drafter.value;
+			        RtnVal[3] = draftfrom[0];
+			        RtnVal[4] = draftfrom[1];
+			        RtnVal[5] = draftfrom[2];
+			        RtnVal[6] = draftto[0];
+			        RtnVal[7] = draftto[1];
+			        RtnVal[8] = draftto[2];
+			        RtnVal[9] = apprfrom[0];
+			        RtnVal[10] = apprfrom[1];
+			        RtnVal[11] = apprfrom[2];
+			        RtnVal[12] = apprto[0];
+			        RtnVal[13] = apprto[1];
+			        RtnVal[14] = apprto[2];
+			        RtnVal[15] = myapprfrom[0];
+			        RtnVal[16] = myapprfrom[1];
+			        RtnVal[17] = myapprfrom[2];
+			        RtnVal[18] = myapprto[0];
+			        RtnVal[19] = myapprto[1];
+			        RtnVal[20] = myapprto[2];
+			
+			        if (document.getElementsByName("FormName")[0].id == "FormName") {
+			            document.getElementsByName("FormName")[0].id = "";
+			        }
+			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[22] = EndAprYear.value;
+			        RtnVal[23] = drafterdept.value;
+			        RtnVal[24] = "";
+			        for (i = 0; i < 25; i++) {
+			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+			                chkVal = true;
+			                break;
+			            }
+			        }
+		        } else {
+		        	if (draftfrom != "")
+		                draftfrom = draftfrom + " 00:00:01";
+		            else draftfrom = "";
+
+		            if (draftto != "")
+		                draftto = draftto + " 23:59:59";
+		            else draftto = "";
+
+		            if (apprfrom != "")
+		                apprfrom = apprfrom + " 00:00:01";
+		            else apprfrom = "";
+
+		            if (apprto != "")
+		                apprto = apprto + " 23:59:59";
+		            else apprto = "";
+
+		            if (myapprfrom != "")
+		                myapprfrom = myapprfrom + " 00:00:01";
+		            else myapprfrom = "";
+
+		            if (myapprto != "")
+		                myapprto = myapprto + " 23:59:59";
+		            else myapprto = "";
+
+		            RtnVal[0] = document.getElementById("DocNumber").value;
+		            RtnVal[1] = document.getElementById("DocTitle").value;
+		            RtnVal[2] = document.getElementById("drafter").value;
+		            RtnVal[3] = draftfrom;
+		            RtnVal[4] = draftto;
+		            RtnVal[5] = apprfrom;
+		            RtnVal[6] = apprto;
+		            RtnVal[7] = myapprfrom;
+		            RtnVal[8] = myapprto;
+
+		            RtnVal[9] = document.getElementById("formid").value;
+		            RtnVal[10] = document.getElementById("EndAprYear").value;
+		            RtnVal[11] = document.getElementById("drafterdept").value;
+
+		            RtnVal[12] = "";
+		            RtnVal[13] = "";
+
+// 		            if (document.getElementById("tbItemCode").value != "") {
+// 		                if (SearchType != "APR") {
+// 		                    RtnVal[12] += "CAPR;";
+
+// 		                }
+// 		                else {
+// 		                    RtnVal[12] += "CEND;";
+// 		                }
+
+// 		                RtnVal[13] += "<ITEMCODE>" + document.getElementById("tbItemCode").value + "</ITEMCODE>";
+
+// 		            }
+
+		            for (i = 0; i < 14; i++) {
+		                if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
+		                    chkVal = true;
+		                    break;
+		                }
 		            }
-		        }
-		
-		        if (apprfrom != "" && apprto != "") {
-		            if (apprfrom > apprto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1328'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
-		                return;
-		            }
-		        }
-		
-		        if (myapprfrom != "" && myapprto != "") {
-		            if (myapprfrom > myapprto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1552'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
-		                return;
-		            }
-		        }
-		
-		        draftfrom = draftfrom.split("-");
-		        draftto = draftto.split("-");
-		        apprfrom = apprfrom.split("-");
-		        apprto = apprto.split("-");
-		        myapprfrom = myapprfrom.split("-");
-		        myapprto = myapprto.split("-");
-		        RtnVal[0] = DocNumber.value;
-		        RtnVal[1] = DocTitle.value;
-		        RtnVal[2] = drafter.value;
-		        RtnVal[3] = draftfrom[0];
-		        RtnVal[4] = draftfrom[1];
-		        RtnVal[5] = draftfrom[2];
-		        RtnVal[6] = draftto[0];
-		        RtnVal[7] = draftto[1];
-		        RtnVal[8] = draftto[2];
-		        RtnVal[9] = apprfrom[0];
-		        RtnVal[10] = apprfrom[1];
-		        RtnVal[11] = apprfrom[2];
-		        RtnVal[12] = apprto[0];
-		        RtnVal[13] = apprto[1];
-		        RtnVal[14] = apprto[2];
-		        RtnVal[15] = myapprfrom[0];
-		        RtnVal[16] = myapprfrom[1];
-		        RtnVal[17] = myapprfrom[2];
-		        RtnVal[18] = myapprto[0];
-		        RtnVal[19] = myapprto[1];
-		        RtnVal[20] = myapprto[2];
-		
-		        if (document.getElementsByName("FormName")[0].id == "FormName") {
-		            document.getElementsByName("FormName")[0].id = "";
-		        }
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = EndAprYear.value;
-		        RtnVal[23] = drafterdept.value;
-		        RtnVal[24] = "";
-		        for (i = 0; i < 25; i++) {
-		            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
-		                chkVal = true;
-		                break;
-		            }
+
+// 		            RtnVal = SearchDateXML(RtnVal);
+
 		        }
 		        if (!chkVal) {
 		            RtnVal = "";
@@ -328,62 +396,118 @@
 		    }
 		    function btnToDaySearch_onclick() {
 		        var RtnVal = new Array();
-		        var d = new Date();
-		        
-		        RtnVal[0] = DocNumber.value;
-		        RtnVal[1] = DocTitle.value;
-		        RtnVal[2] = drafter.value;
-		
-		        if (Type == "APR") {
-		            RtnVal[3] = d.getFullYear();
-		            RtnVal[4] = (d.getMonth() + 1);
-		            RtnVal[5] = d.getDate();
-		            RtnVal[6] = d.getFullYear();
-		            RtnVal[7] = (d.getMonth() + 1);
-		            RtnVal[8] = d.getDate();
-		            RtnVal[9] = "";
-		            RtnVal[10] = "";
-		            RtnVal[11] = "";
-		            RtnVal[12] = "";
-		            RtnVal[13] = "";
-		            RtnVal[14] = "";
-		        }
-		        else {
-		            RtnVal[3] = "";
-		            RtnVal[4] = "";
-		            RtnVal[5] = "";
-		            RtnVal[6] = "";
-		            RtnVal[7] = "";
-		            RtnVal[8] = "";
-		            RtnVal[9] = d.getFullYear();
-		            RtnVal[10] = (d.getMonth() + 1);
-		            RtnVal[11] = d.getDate();
-		            RtnVal[12] = d.getFullYear();
-		            RtnVal[13] = (d.getMonth() + 1);
-		            RtnVal[14] = d.getDate();
-		        }
-		
-		        RtnVal[15] = "";
-		        RtnVal[16] = "";
-		        RtnVal[17] = "";
-		        RtnVal[18] = "";
-		        RtnVal[19] = "";
-		        RtnVal[20] = "";
-		        if (document.getElementsByName("FormName")[0].id == "FormName") {
-		            document.getElementsByName("FormName")[0].id = "";
-		        }
-		
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = EndAprYear.value;
-		        RtnVal[23] = drafterdept.value;
-		
-		        RtnVal[24] = "";
-		        if (ReturnFunction != null)
-		            ReturnFunction(RtnVal);
-		        else
-		            window.returnValue = RtnVal;
-		        window.close();
-		    }
+		        if (approvalFlag =='G') {
+			        var d = new Date();
+			        
+			        RtnVal[0] = DocNumber.value;
+			        RtnVal[1] = DocTitle.value;
+			        RtnVal[2] = drafter.value;
+			
+			        if (Type == "APR") {
+			            RtnVal[3] = d.getFullYear();
+			            RtnVal[4] = (d.getMonth() + 1);
+			            RtnVal[5] = d.getDate();
+			            RtnVal[6] = d.getFullYear();
+			            RtnVal[7] = (d.getMonth() + 1);
+			            RtnVal[8] = d.getDate();
+			            RtnVal[9] = "";
+			            RtnVal[10] = "";
+			            RtnVal[11] = "";
+			            RtnVal[12] = "";
+			            RtnVal[13] = "";
+			            RtnVal[14] = "";
+			        }
+			        else {
+			            RtnVal[3] = "";
+			            RtnVal[4] = "";
+			            RtnVal[5] = "";
+			            RtnVal[6] = "";
+			            RtnVal[7] = "";
+			            RtnVal[8] = "";
+			            RtnVal[9] = d.getFullYear();
+			            RtnVal[10] = (d.getMonth() + 1);
+			            RtnVal[11] = d.getDate();
+			            RtnVal[12] = d.getFullYear();
+			            RtnVal[13] = (d.getMonth() + 1);
+			            RtnVal[14] = d.getDate();
+			        }
+			
+			        RtnVal[15] = "";
+			        RtnVal[16] = "";
+			        RtnVal[17] = "";
+			        RtnVal[18] = "";
+			        RtnVal[19] = "";
+			        RtnVal[20] = "";
+			        if (document.getElementsByName("FormName")[0].id == "FormName") {
+			            document.getElementsByName("FormName")[0].id = "";
+			        }
+			
+			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[22] = EndAprYear.value;
+			        RtnVal[23] = drafterdept.value;
+			
+			        RtnVal[24] = "";
+			        if (ReturnFunction != null)
+			            ReturnFunction(RtnVal);
+			        else
+			            window.returnValue = RtnVal;
+			        window.close();
+			    } else {
+		    	  RtnVal[0] = document.getElementById("DocNumber").value;
+		          RtnVal[1] = document.getElementById("DocTitle").value;
+		          RtnVal[2] = document.getElementById("drafter").value;
+		          RtnVal[3] = "";
+		          RtnVal[4] = "";
+		          RtnVal[5] = initdate.substring(0, 10) + " 00:00:01";
+		          RtnVal[6] = initdate.substring(0, 10) + " 23:59:59";
+		          RtnVal[7] = "";
+		          RtnVal[8] = "";
+		          RtnVal[9] = document.getElementById("formid").value;
+		          RtnVal[10] = document.getElementById("EndAprYear").value;
+		          RtnVal[11] = document.getElementById("drafterdept").value;
+		          RtnVal[12] = "";
+		          RtnVal[13] = "";
+
+// 		          if (document.getElementById("keyword").value != "") {
+// 		              if (SearchType != "APR") {
+// 		                  RtnVal[12] += "KAPR;";
+// 		              }
+// 		              else {
+// 		                  RtnVal[12] += "KEND;";
+// 		              }
+// 		              RtnVal[13] += "<KEYWORD>" + document.getElementById("keyword").value + "</KEYWORD>";
+// 		          }
+// 		          else {
+// 		              RtnVal[12] = "";
+// 		          }
+
+// 		          if (document.getElementById("tbItemCode").value != "") {
+
+
+// 		              if (SearchType != "APR") {
+// 		                  RtnVal[12] += "CAPR;";
+
+// 		              }
+// 		              else {
+// 		                  RtnVal[12] += "CEND;";
+// 		              }
+
+// 		              RtnVal[13] += "<ITEMCODE>" + document.getElementById("tbItemCode").value + "</ITEMCODE>";
+// 		          }
+
+// 		          RtnVal = SearchDateXML(RtnVal);
+
+		          if (ReturnFunction != null) {
+		              ReturnFunction(RtnVal);
+		          }
+		          else {
+		              window.returnValue = RtnVal;
+		          }
+		          window.close();
+		      }
+		      }
+		    
+		    
 		    function btnWeekSearch_onclick() {
 		        var RtnVal = new Array();
 		        var CurrentWeek = new Array();
@@ -401,58 +525,113 @@
 		            sYear2 = String(Number(sYear2 - 1));
 		        }
 		
-		        RtnVal[0] = DocNumber.value;
-		        RtnVal[1] = DocTitle.value;
-		        RtnVal[2] = drafter.value;
-		        if (Type == "APR") {
-		            
-		            RtnVal[3] = sYear;
-		            RtnVal[4] = sMonth;
-		            RtnVal[5] = sDay;
-		            RtnVal[6] = sYear2;
-		            RtnVal[7] = sMonth2;
-		            RtnVal[8] = sDay2;
-		            RtnVal[9] = "";
-		            RtnVal[10] = "";
-		            RtnVal[11] = "";
-		            RtnVal[12] = "";
-		            RtnVal[13] = "";
-		            RtnVal[14] = "";
+		        if (approvalFlag == 'G') {
+			        RtnVal[0] = DocNumber.value;
+			        RtnVal[1] = DocTitle.value;
+			        RtnVal[2] = drafter.value;
+			        if (Type == "APR") {
+			            
+			            RtnVal[3] = sYear;
+			            RtnVal[4] = sMonth;
+			            RtnVal[5] = sDay;
+			            RtnVal[6] = sYear2;
+			            RtnVal[7] = sMonth2;
+			            RtnVal[8] = sDay2;
+			            RtnVal[9] = "";
+			            RtnVal[10] = "";
+			            RtnVal[11] = "";
+			            RtnVal[12] = "";
+			            RtnVal[13] = "";
+			            RtnVal[14] = "";
+			        }
+			        else {
+			            RtnVal[3] = "";
+			            RtnVal[4] = "";
+			            RtnVal[5] = "";
+			            RtnVal[6] = "";
+			            RtnVal[7] = "";
+			            RtnVal[8] = "";
+			            RtnVal[9] = sYear;
+			            RtnVal[10] = sMonth;
+			            RtnVal[11] = sDay;
+			            RtnVal[12] = sYear2;
+			            RtnVal[13] = sMonth2;
+			            RtnVal[14] = sDay2;
+			        }
+			        RtnVal[15] = "";
+			        RtnVal[16] = "";
+			        RtnVal[17] = "";
+			        RtnVal[18] = "";
+			        RtnVal[19] = "";
+			        RtnVal[20] = "";
+			        if (document.getElementsByName("FormName")[0].id == "FormName") {
+			            document.getElementsByName("FormName")[0].id = "";
+			        }
+			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[22] = EndAprYear.value;
+			        RtnVal[23] = drafterdept.value;
+			
+			        RtnVal[24] = "";
+			        
+			        if (ReturnFunction != null)
+			            ReturnFunction(RtnVal);
+			        else
+			            window.returnValue = RtnVal;
+			        window.close();
+		        } else {
+		        	 RtnVal[0] = document.getElementById("DocNumber").value;
+		             RtnVal[1] = document.getElementById("DocTitle").value;
+		             RtnVal[2] = document.getElementById("drafter").value;
+
+		             RtnVal[3] = "";
+		             RtnVal[4] = "";
+		             RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		             RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		             RtnVal[7] = "";
+		             RtnVal[8] = "";
+
+		             RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[10] = document.getElementById("EndAprYear").value;
+		             RtnVal[11] = document.getElementById("drafterdept").value;
+		             RtnVal[12] = "";
+		             RtnVal[12] = "";
+		             RtnVal[13] = "";
+// 		             if (document.getElementById("keyword").value != "") {
+// 		                 if (SearchType != "APR") {
+// 		                     RtnVal[12] += "KAPR;";
+// 		                 }
+// 		                 else {
+// 		                     RtnVal[12] += "KEND;";
+// 		                 }
+// 		                 RtnVal[13] += "<KEYWORD>" + document.getElementById("keyword").value + "</KEYWORD>";
+// 		             }
+// 		             else {
+// 		                 RtnVal[12] = "";
+// 		             }
+
+// 		             if (document.getElementById("tbItemCode").value != "") {
+
+// 		                 if (SearchType != "APR") {
+// 		                     RtnVal[12] += "CAPR;";
+
+// 		                 }
+// 		                 else {
+// 		                     RtnVal[12] += "CEND;";
+// 		                 }
+
+// 		                 RtnVal[13] += "<ITEMCODE>" + document.getElementById("tbItemCode").value + "</ITEMCODE>";
+// 		             }
+
+// 		             RtnVal = SearchDateXML(RtnVal);
+
+		             if (ReturnFunction != null) {
+		                 ReturnFunction(RtnVal);
+		             }
+		             else {
+		                 window.returnValue = RtnVal;
+		             }
+		             window.close();
 		        }
-		        else {
-		            RtnVal[3] = "";
-		            RtnVal[4] = "";
-		            RtnVal[5] = "";
-		            RtnVal[6] = "";
-		            RtnVal[7] = "";
-		            RtnVal[8] = "";
-		            RtnVal[9] = sYear;
-		            RtnVal[10] = sMonth;
-		            RtnVal[11] = sDay;
-		            RtnVal[12] = sYear2;
-		            RtnVal[13] = sMonth2;
-		            RtnVal[14] = sDay2;
-		        }
-		        RtnVal[15] = "";
-		        RtnVal[16] = "";
-		        RtnVal[17] = "";
-		        RtnVal[18] = "";
-		        RtnVal[19] = "";
-		        RtnVal[20] = "";
-		        if (document.getElementsByName("FormName")[0].id == "FormName") {
-		            document.getElementsByName("FormName")[0].id = "";
-		        }
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = EndAprYear.value;
-		        RtnVal[23] = drafterdept.value;
-		
-		        RtnVal[24] = "";
-		        
-		        if (ReturnFunction != null)
-		            ReturnFunction(RtnVal);
-		        else
-		            window.returnValue = RtnVal;
-		        window.close();
 		    }
 		    function makeString(strLen, empCh, custStr) {
 		        var index;
@@ -482,59 +661,115 @@
 		            sYear2 = String(Number(sYear2 - 1));
 		        }
 		
-		        RtnVal[0] = DocNumber.value;
-		        RtnVal[1] = DocTitle.value;
-		        RtnVal[2] = drafter.value;
-		        if (Type == "APR") {
-		            RtnVal[3] = sYear;
-		            RtnVal[4] = sMonth;
-		            RtnVal[5] = "01";
-		            RtnVal[6] = sYear2;
-		            RtnVal[7] = sMonth2;
-		            RtnVal[8] = sDay2;
-		            RtnVal[9] = "";
-		            RtnVal[10] = "";
-		            RtnVal[11] = "";
-		            RtnVal[12] = "";
-		            RtnVal[13] = "";
-		            RtnVal[14] = "";
+		        if (approvalFlag == 'G') {
+		        	RtnVal[0] = DocNumber.value;
+			        RtnVal[1] = DocTitle.value;
+			        RtnVal[2] = drafter.value;
+			        if (Type == "APR") {
+			            RtnVal[3] = sYear;
+			            RtnVal[4] = sMonth;
+			            RtnVal[5] = "01";
+			            RtnVal[6] = sYear2;
+			            RtnVal[7] = sMonth2;
+			            RtnVal[8] = sDay2;
+			            RtnVal[9] = "";
+			            RtnVal[10] = "";
+			            RtnVal[11] = "";
+			            RtnVal[12] = "";
+			            RtnVal[13] = "";
+			            RtnVal[14] = "";
+			        }
+			        else {
+			            RtnVal[3] = "";
+			            RtnVal[4] = "";
+			            RtnVal[5] = "";
+			            RtnVal[6] = "";
+			            RtnVal[7] = "";
+			            RtnVal[8] = "";
+			            RtnVal[9] = sYear;
+			            RtnVal[10] = sMonth;
+			            RtnVal[11] = "01";
+			            RtnVal[12] = sYear2;
+			            RtnVal[13] = sMonth2;
+			            RtnVal[14] = sDay2;
+			        }
+			       
+			        RtnVal[15] = "";
+			        RtnVal[16] = "";
+			        RtnVal[17] = "";
+			        RtnVal[18] = "";
+			        RtnVal[19] = "";
+			        RtnVal[20] = "";
+			
+			        if (document.getElementsByName("FormName")[0].id == "FormName") {
+			            document.getElementsByName("FormName")[0].id = "";
+			        }
+			        RtnVal[21] = document.getElementsByName("FormName")[0].id;
+			        RtnVal[22] = EndAprYear.value;
+			        RtnVal[23] = drafterdept.value;
+			
+			        RtnVal[24] = "";
+			
+			        if (ReturnFunction != null)
+			            ReturnFunction(RtnVal);
+			        else
+			            window.returnValue = RtnVal;
+			        window.close();
+		        } else {
+		        	 RtnVal[0] = document.getElementById("DocNumber").value;
+		             RtnVal[1] = document.getElementById("DocTitle").value;
+		             RtnVal[2] = document.getElementById("drafter").value;
+
+		             RtnVal[3] = "";
+		             RtnVal[4] = "";
+		             RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
+		             RtnVal[6] = sYear2 + "-" + sMonth2 + "-" + sDay2 + " 23:59:59";
+		             RtnVal[7] = "";
+		             RtnVal[8] = "";
+
+		             RtnVal[9] = document.getElementById("formid").value;
+		             RtnVal[10] = document.getElementById("EndAprYear").value;
+		             RtnVal[11] = document.getElementById("drafterdept").value;
+		             RtnVal[12] = "";
+		             RtnVal[13] = "";
+// 		             if (document.getElementById("keyword").value != "") {
+// 		                 if (SearchType != "APR") {
+// 		                     RtnVal[12] += "KAPR;";
+// 		                 }
+// 		                 else {
+// 		                     RtnVal[12] += "KEND;";
+// 		                 }
+// 		                 RtnVal[13] += "<KEYWORD>" + document.getElementById("keyword").value + "</KEYWORD>";
+// 		             }
+// 		             else {
+// 		                 RtnVal[12] = "";
+// 		             }
+
+// 		             if (document.getElementById("tbItemCode").value != "") {
+
+
+// 		                 if (SearchType != "APR") {
+// 		                     RtnVal[12] += "CAPR;";
+
+// 		                 }
+// 		                 else {
+// 		                     RtnVal[12] += "CEND;";
+// 		                 }
+
+// 		                 RtnVal[13] += "<ITEMCODE>" + document.getElementById("tbItemCode").value + "</ITEMCODE>";
+// 		             }
+
+// 		             RtnVal = SearchDateXML(RtnVal);
+
+		             if (ReturnFunction != null) {
+		                 ReturnFunction(RtnVal);
+		             }
+		             else {
+		                 window.returnValue = RtnVal;            
+		             }
+		             window.close();
 		        }
-		        else {
-		            RtnVal[3] = "";
-		            RtnVal[4] = "";
-		            RtnVal[5] = "";
-		            RtnVal[6] = "";
-		            RtnVal[7] = "";
-		            RtnVal[8] = "";
-		            RtnVal[9] = sYear;
-		            RtnVal[10] = sMonth;
-		            RtnVal[11] = "01";
-		            RtnVal[12] = sYear2;
-		            RtnVal[13] = sMonth2;
-		            RtnVal[14] = sDay2;
-		        }
-		       
-		        RtnVal[15] = "";
-		        RtnVal[16] = "";
-		        RtnVal[17] = "";
-		        RtnVal[18] = "";
-		        RtnVal[19] = "";
-		        RtnVal[20] = "";
-		
-		        if (document.getElementsByName("FormName")[0].id == "FormName") {
-		            document.getElementsByName("FormName")[0].id = "";
-		        }
-		        RtnVal[21] = document.getElementsByName("FormName")[0].id;
-		        RtnVal[22] = EndAprYear.value;
-		        RtnVal[23] = drafterdept.value;
-		
-		        RtnVal[24] = "";
-		
-		        if (ReturnFunction != null)
-		            ReturnFunction(RtnVal);
-		        else
-		            window.returnValue = RtnVal;
-		        window.close();
+		        
 		    }
 		    function btnItemCode_onclick() {
 		        var url = "../DocNum/docnumui_Cross.aspx";
@@ -668,6 +903,9 @@
 		<a class="imgbtn"><span onClick="return btnMonthSearch_onclick()" style="width:70px;" id="Submit2"><spring:message code='ezApprovalG.t1557'/></span></a>
 		<a class="imgbtn"><span onClick="return btncancel_onclick()" style="width:40px;" id="Submit4"><spring:message code='ezApprovalG.t119'/></span></a>
 		</div>
+		<c:if test ="${approvalFlag =='S'}">
+		<input type="text" id="formid" name="formid" style="width:1px;display:none" disabled="disabled" /> 
+		</c:if>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.7); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
