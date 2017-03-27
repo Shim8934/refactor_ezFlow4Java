@@ -9,6 +9,8 @@
 	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
 	    <link rel="stylesheet" href="/css/organ_tree.css" type="text/css">
 	    <link rel="stylesheet" href="/css/Tab.css" type="text/css">
+	    <link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"/>
+		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"/>
 	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>"></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
@@ -33,17 +35,10 @@
 	    <script src="/js/ezApprovalG/CabRoleInfo_Cross.js" type="text/javascript"></script>
 	    <script src="/js/ezApprovalG/Docinfo.js" type="text/javascript"></script>
 	    <script src="/js/ezApprovalG/Draftinfo.js" type="text/javascript"></script>
-	    <script src="/js/ezApprovalG/composeappt.js" type="text/javascript" ></script>
-	    <script src="/js/ezApprovalG/datepicker.htc.js" type="text/javascript" ></script>
-<!-- 		<link rel="stylesheet" type="text/css" href="/js/jquery/timeControls/jquery.timepicker.css" /> -->
-<!-- 		<script type="text/javascript" src="/js/jquery/timeControls/jquery.timepicker.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery-1.9.1.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script> -->
-<!-- 		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script> -->
-<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css"> -->
-<!-- 		<link rel="stylesheet" href="/js/jquery/dateControls/demos.css"> -->
-
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.core.js"></script>
+		<script type="text/javascript" src="/js/jquery/dateControls/jquery.ui.datepicker.js"></script>
 	    <script src="/js/Common.js" type="text/javascript"></script>
+	    
 	    <script type="text/javascript">
 	        var OrderCell = "";
 	        var arr_userinfo = new Array();
@@ -176,70 +171,26 @@
 	        var hideCabinet = "${hideCabinet}";
 			var useAddressOpenAPI = "${useAddressOpenAPI}";
 			var checkdocinfo = false;
+			var startDateTime = '${startDateTime}';
 	        
-// 	        $(function () {
-// 	        	$("#idDatepicker").val('${startDateTime}'.substring(0, 10));
-// 	        	if (document.getElementById("AprSecurity").checked){
-// 	        		$("#idDatepicker").attr('disabled',false);
-// 	        	} else {
-// 	        		$("#idDatepicker").attr('disabled',true);
-// 	        	}
-// 		        $("#idDatepicker").datepicker({
-// 		            changeMonth: true,
-// 		            changeYear: true,
-// 		            autoSize: true,
-// 		            showOn: "both",
-// 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-// 		            buttonImageOnly: true
-// 		        });
-// 			    if ("${userInfo.lang}" == "1") {
-// 				    $(function () {
-// 				        $.datepicker.regional['ko'] = {
-// 				        		closeText: "<spring:message code='main.t3' />",
-// 					            prevText: "<spring:message code='main.t0604' />",
-// 					            nextText: "<spring:message code='main.t0605' />",
-// 					            currentText: "<spring:message code='main.t0606' />",
-// 					            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-// 					                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-// 					                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-// 					                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-// 					            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-// 					                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-// 					                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-// 					                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-// 					            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-// 					                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-// 					                       "<spring:message code='main.t0627' />"],
-// 					            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-// 							                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-// 							                       "<spring:message code='main.t0627' />"],
-// 					            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-// 						                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-// 						                       "<spring:message code='main.t0627' />"],
-// 				            weekHeader: 'Wk',
-// 				            dateFormat: 'yy-mm-dd (DD)',
-// 				            firstDay: 0,
-// 				            isRTL: false,
-// 				            duration: 200,
-// 				            showAnim: 'show',
-// 				            showMonthAfterYear: true
-// 				        };
-// 				        $.datepicker.setDefaults($.datepicker.regional['ko']);
-// 				    });
-// 			    } else {
-// 				    $(function () {
-// 				        $.datepicker.regional['en'] = {
-// 				            dateFormat: 'yy-mm-dd (DD)',
-// 				            firstDay: 0,
-// 				            isRTL: false,
-// 				            duration: 200,
-// 				            showAnim: 'show',
-// 				            showMonthAfterYear: true
-// 				        };
-// 				        $.datepicker.setDefaults($.datepicker.regional['en']);
-// 				    });
-// 			    }
-// 	        });
+	        $(function () {
+	        	if (document.getElementById("AprSecurity").checked){
+	        		$("#idDatepicker").attr('disabled',false);
+	        	} else {
+	        		$("#idDatepicker").attr('disabled',true);
+	        	}
+	        	
+	        	$("#idDatepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+				
+	        	initdatepicker();
+	        });
 	        
 	        window.onload = function () {
 	        	if(approvalFlag == "G") {
@@ -1136,30 +1087,9 @@
 		            rdoSecType_onclick("1");
 		        if (vAprSecurity.trim() != "") {
 		            document.getElementById("AprSecurity").checked = true;
-		            var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-		            idDatepicker.attachEvent('datechange', onStartDateChanged);
-		            idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-		            idDatepicker.elemDateButtons = "img_Post_D1;img_Post_D2";
-		            idDatepicker.elemDateInputs = "idDatepicker;Post_D2";
-		            idDatepicker.popupType = "both";
-		            idDatepicker.pickerDateFormat = "[yyyy]" + "<spring:message code='ezApprovalG.t1108'/>";
-		            idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-		            idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-		            idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-		            idDatepicker.firstDayOfWeek = "0";
-		            idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
-		            idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
-		            idDatepicker.textDecimal = ".";
-		            idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
-		            idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
-		            idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
-		            idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
-		            idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
-		            idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-		            idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
-		            idDatepicker.isoDateUTF = vAprSecurity + "T00:00:00.000Z";
-		            idDatepicker.isoEndDateUTF = vAprSecurity + "T00:00:00.000Z";
-		            idDatepicker.ready();
+		            
+		            $("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#idDatepicker").datepicker('setDate', new Date(vAprSecurity));
 		        }
 		        else {
 		            document.getElementById("AprSecurity").checked = false;
@@ -1192,30 +1122,9 @@
 				
 				if (vAprSecurity.trim() != "") {
 				    document.getElementById("AprSecurity").checked = true;
-				    var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-				    idDatepicker.attachEvent('datechange', onStartDateChanged);
-				    idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-				    idDatepicker.elemDateButtons = "img_Post_D1;img_Post_D2";
-				    idDatepicker.elemDateInputs = "idDatepicker;Post_D2";
-				    idDatepicker.popupType = "both";
-				    idDatepicker.pickerDateFormat = "[yyyy]" + "<spring:message code='ezApprovalG.t1108'/>";
-				    idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-				    idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-				    idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-				    idDatepicker.firstDayOfWeek = "0";
-				    idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
-				    idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
-				    idDatepicker.textDecimal = ".";
-				    idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
-				    idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
-				    idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
-				    idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
-				    idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
-				    idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-				    idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
-				    idDatepicker.isoDateUTF = vAprSecurity + "T00:00:00.000Z";
-				    idDatepicker.isoEndDateUTF = vAprSecurity + "T00:00:00.000Z";
-				    idDatepicker.ready();
+				    
+				    $("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#idDatepicker").datepicker('setDate', new Date(vAprSecurity));
 				}
 				else {
 				    document.getElementById("AprSecurity").checked = false;
@@ -1264,30 +1173,41 @@
 	        }
 	        
 		    function initdatepicker() {
-		        var idDatepicker = new datepicker('idDatepicker', 'idDatepicker');
-		        idDatepicker.attachEvent('datechange', onStartDateChanged);
-		        idDatepicker.attachEvent('enddatechange', onEndDateChanged);
-		        idDatepicker.elemDateButtons = "img_Post_D1;img_Post_D2";
-		        idDatepicker.elemDateInputs = "idDatepicker;Post_D2";
-		        idDatepicker.popupType = "both";
-		        idDatepicker.pickerDateFormat = "[yyyy]" + "<spring:message code='ezApprovalG.t1108'/>";
-		        idDatepicker.pickerTimeFormat = "[tt] [h]:[mm]";
-		        idDatepicker.inputDateFormat = "[yyyy]-[MM]-[dd] ([ddd])";
-		        idDatepicker.inputTimeFormat = "[tt] [h]:[mm]";
-		        idDatepicker.firstDayOfWeek = "0";
-		        idDatepicker.textAM = "<spring:message code='ezApprovalG.t971'/>";
-		        idDatepicker.textPM = "<spring:message code='ezApprovalG.t972'/>";
-		        idDatepicker.textDecimal = ".";
-		        idDatepicker.textHoursAbbrev = "<spring:message code='ezApprovalG.t1109'/>";
-		        idDatepicker.textMustSpecifyValidTime = "<spring:message code='ezApprovalG.t1110'/>";
-		        idDatepicker.daynameLetters = "<spring:message code='ezApprovalG.t1111'/>";
-		        idDatepicker.daynamesShort = "<spring:message code='ezApprovalG.t1111'/>";
-		        idDatepicker.daynamesLong = "<spring:message code='ezApprovalG.t1112'/>";
-		        idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
-		        idDatepicker.monthnamesLong = "1" + "<spring:message code='ezApprovalG.t1113'/>";
-		        idDatepicker.isoDateUTF = "${startDateTime}";
-		        idDatepicker.isoEndDateUTF = "${endDateTime}";
-		        idDatepicker.ready();
+		    	$("#idDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#idDatepicker").datepicker('setDate', new Date(startDateTime.substring(0, 10)));
+
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+					                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+					                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+					                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+					           "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					                "<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+					              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+					              "<spring:message code='main.t0627' />"],
+					weekHeader: "Wk",
+					dateFormat: "yy-mm-dd",
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: "show",
+					showMonthAfterYear: true
+				};
+				
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    }
 		    var aprdeptname_cross_dialogArguments = new Array();
 		    function btnaddressChange() {
@@ -1968,11 +1888,7 @@
 		                <th><spring:message code='ezApprovalG.t1210'/></th>
 		                <td>
 		                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
-		                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
-		                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
-	<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
-		                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
-		                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
+		                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 		                </td>
 		            </tr>
 		        </table>
@@ -2051,11 +1967,7 @@
 			                <th><spring:message code='ezApprovalG.t1210'/></th>
 			                <td>
 			                    <input type="checkbox" name="AprSecurity" id="AprSecurity" value="checkbox" onclick="AprSecurity_onClick()">
-			                    <input readonly="true" type="text"  id="idDatepicker"  style="width:100px;text-align:center"/>
-			                    <img id="img_Post_D1" src="/images/i_scheduler.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'>
-		<!-- 	                    <img id="img_Post_D1" src="/images/ImgIcon/calendar-month.gif" width="19" height="15" style="CURSOR: pointer; POSITION: relative; vertical-align: middle;" popuplocation='topleft'> -->
-			                    <input id='Post_D2' class='datepicker_date'   readonly="true"   type="text"      style="width: 95px; display: none" name="Post_D2">
-			                    <img src="/images/i_scheduler.gif" id="img_Post_D2" border="0" width="19" height="15" popuplocation='topleft' style="display: none; CURSOR: pointer; POSITION: relative" >
+			                    <input readonly="readonly" id='idDatepicker' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
 			                </td>
 			            </tr>
 		                <tr>
