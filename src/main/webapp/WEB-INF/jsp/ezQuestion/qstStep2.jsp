@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -466,7 +467,7 @@
                     		pFileName = pFileName.substring(pFileName.lastIndexOf('/') + 1, pFileName.length);
                     		var attachType = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("TYPE")[0]);
 		                    var trName = getNodeText(QuestionNode.childNodes[i].childNodes[1].getElementsByTagName("ROW")[j].getElementsByTagName("ATTACHTITLE")[0]);
-        
+    						trName = decodeURI(trName);
 		                    oTd = document.createElement("td");
         		            oTd.setAttribute("style", "padding:5px; cursor:pointer; font-weight:bold;");
                     		oTr.appendChild(oTd);
@@ -478,7 +479,7 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/sound.gif");
                     		    oImg.setAttribute("style", "width:19px;height:17px");
-                    		    oImg.setAttribute("onclick", "javascript:file_open("+pFileName+")");
+                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 // 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
 // 		                    	onclick=\"javascript:file_open(2," + brdID + "," + itemNo + "," 
 // 		                    			+ strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\">
@@ -488,6 +489,7 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
+                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 // 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" 
 // 		                    	align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\">" 
 // 		                    	+ URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
@@ -495,6 +497,7 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/video.gif");
                     		    oImg.setAttribute("style", "width:21px;height:17px");
+                    		    oTd.setAttribute("onclick", "file_down('"+pFileName+"',"+attachType+",'"+encodeURI(trName)+"')");
 // 		                    	<td nowrap style=\"padding:5px;cursor:pointer\" 
 // 		                    	onclick=\"javascript:file_open(3," + brdID + "," + itemNo + "," + strQuestionNo + "," + strAnswer + "," + strAttachNo + ")\"><img src=\"/images/poll/video.gif\" 
 // 		                    	width=\"21\" height=\"17\" align=\"absmiddle\">" + URLDecoder.decode(strAttachName, "utf-8") + "</td>
@@ -502,6 +505,7 @@
 		                    	oImg = document.createElement("img");
             		            oImg.setAttribute("src", "/images/poll/link.gif");
                     		    oImg.setAttribute("style", "width:26px;height:17px");
+                    		    oTd.setAttribute("onclick","window.open('http://"+pFileName+"'),'',''");
 // 		                    	<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" 
 // 		                    	width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, 
 // 		                    			"utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>
@@ -692,6 +696,30 @@
 		        
 		        document.getElementById("Preview_Content").appendChild(oTable);
     		}
+    		
+    		function file_down(fileName,pType,trName){
+			    var pUrl = "/ezQuestion/getPollAttachInfo2.do?type=QUESTION&fileName="+fileName+"&trName="+encodeURI(trName);
+	
+			    if(pType == "1") {
+			    	openwindow(pUrl, "", "800px", "600px", "1", "1", "800");
+			    } else if(pType == "3") {
+			    	openwindow(pUrl, "", "420px", "410px", "0", "0", "500");
+			    } else {
+			        openwindow(pUrl, "", "415px", "120px", "0", "0", "500");
+			    }
+			}
+			
+			function openwindow(wfileLocation, wName, wWeigth, wHeigth, wScrollbars, wResizable, wVal) {
+			    try{
+			        var heigth = window.screen.availHeight;
+			        var width = window.screen.availWidth;
+			        var top = (heigth - parseInt(wVal)) / 2;
+			        var left = (width - parseInt(wVal)) / 2;
+	
+			        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=" + wScrollbars + ",resizable=" + wResizable + ",height=" + wHeigth + ",width=" + wWeigth + ",top=" + top + ",left = " + left);
+			    }catch (e){
+			    }
+			}
     		
     		function Back_List() {
         		document.getElementById("Main_List").style.display = "block";

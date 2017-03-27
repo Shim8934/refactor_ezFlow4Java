@@ -73,7 +73,7 @@ nav .topmenu li  span { margin:0px; padding:0px;}
 /*------------ topSubMenu �߰� ------------*/
 .topSubMenu {position:relative; clear:both; height:25px; background:#003369;}
 .topSubMenu ul{position:absolute; margin:0; padding:0; list-style:none; height:22px; background:#003369;}
-.topSubMenu li {float:left; line-height:22px; padding:0px 5px 0px 9px; background:url(../images/kr/cm/dot_subMenu.gif) no-repeat left 7px;  font-size:12px; color:#ffffff; cursor:pointer;height:22px; margin:0px 6px}
+.topSubMenu li {float:left; line-height:22px; padding:0px 5px 0px 9px; background:url(../images/kr/cm/dot_subMenu.gif) no-repeat left 7px;  font-size:12px; color:#ffffff; cursor:pointer;height:22px; margin:1px 6px}
 .topSubMenu ul .left {background:url(../images/kr/cm/subMenubg_left.gif) no-repeat ; width:10px; cursor:none; display:none; padding:0px; margin:0px;}
 .topSubMenu ul .right {background:url(../images/kr/cm/subMenubg_right.gif) no-repeat ; width:10px; cursor:none;display:none; padding:0px; margin:0px;}
 
