@@ -4287,7 +4287,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	        for(QstAttachVO attachVO : qstAttachVOList){
 	        	if (bFirst){
 	        		if (strAnswer.equals("0")){
-	        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
+	        			strResult.append("</th></tr><tr><td colspan=\"2\" bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
 	        			strResult.append("<table><tr>");
 	        		}else{
 	        			strResult.append("<br><table><tr>");
