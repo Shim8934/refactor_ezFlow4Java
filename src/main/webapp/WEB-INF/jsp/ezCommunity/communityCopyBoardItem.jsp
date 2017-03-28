@@ -6,7 +6,7 @@
 	<head>
 		<title><spring:message code='ezCommunity.t1047' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<link rel="stylesheet" type="text/css" href="/css/email_tree.css">
+		<link rel="stylesheet" type="text/css" href="/css/organ_tree.css">
 		<link rel="stylesheet" type="text/css" href="<spring:message code='ezCommunity.i1'/>">
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>

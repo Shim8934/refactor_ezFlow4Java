@@ -1752,7 +1752,7 @@
 	            </tr>
 	            <tr>
 	                <td style="width: 670px; height: 375px; vertical-align: top;">
-	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 645px; padding: 10px;" class="box">
+	                    <div id="ManualView" style="DISPLAY: none; height: 484px; width: 644px; padding: 10px; border-right: 1px solid #b6b6b6" class="box">
 	                        <table class="content">
 	                            <tr>
 	                                <th><spring:message code='ezAddress.t124' /></th>
@@ -1772,14 +1772,13 @@
 	                        <div style="text-align: center"><a href="#" class="imgbtn"><span onclick="inputAddress()"><spring:message code='ezAddress.t173' /></span></a></div>
 	                    </div>
 	                    <div id="TreeViewPane" style="DISPLAY: none;">
-	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px;">
+	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="height: 501px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
-	                                </td>
-	                                <td style="width: 5px;"></td>
-	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto">
-	                                    <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+	                                    <div class="box" style="height: 497px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                </td>	                                
+	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto; border-top:0px">
+	                                    <table style="width: 100%; margin-top: -3px;" class="popup_mainlist">
 	                                        <tr>
 	                                            <th style="white-space:normal">
 	                                                <span id="SelectDeptNM" style="font-weight: bold; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;"></span>
@@ -1810,26 +1809,25 @@
 	                                        </table>
 	                                    </div>
                                         <div style="vertical-align: top; text-align: center; height: 433px; overflow: auto; display: none; width: 440px;" id="DeptUserImgList"></div>                                     
-	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6"></div>	                                    
+	                                    <div id="tblPageRayer2" style="text-align:center;border-top:1px solid #B6B6B6;"></div>	                                    
 	                                </td>
 	                            </tr>
 	                        </table>
 	                    </div>
-	                    <div id="IDListView" style="OVERFLOW: hidden;">
+	                    <div id="IDListView" style="OVERFLOW: hidden;margin-top:3px">
 	                        <table>
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 498px; BACKGROUND-COLOR: #ffffff;padding-top:5px" id="AddressTreeView"></div>
-	                                </td>
-	                                <td style="width: 5px;"></td>
+	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 495px; BACKGROUND-COLOR: #ffffff;padding-top:5px" id="AddressTreeView"></div>
+	                                </td>	                                
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #bdbdbd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
 	                                    	<img src="/images/ImgIcon/fldr.gif" width="15" height="15" align="absmiddle" hspace="2" style="cursor: pointer"/>
 	                                    	<span id="addressFolderName" style="font-weight: bold;"></span>
 	                                    	-[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            		</div>
-	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 440px; HEIGHT: 441px; BACKGROUND-COLOR: white; border-bottom:0px" class="listview"></div>
-	                                    <div id="tblPageRayer"  style="width:440px;border:#b6b6b6 1px solid;height:35px"></div>
+	                                    <div id="AddressListView" style="BORDER: #b6b6b6 1px solid; OVERFLOW: auto; WIDTH: 442px; HEIGHT: 440px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
+	                                    <div id="tblPageRayer"  style="width:442px;border:#b6b6b6 1px solid;height:35px"></div>
 	                                </td>
 	                            </tr>
 	                        </table>

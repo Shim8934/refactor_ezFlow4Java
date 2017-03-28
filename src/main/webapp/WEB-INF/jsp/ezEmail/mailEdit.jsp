@@ -787,7 +787,7 @@
 									<iframe id="message" frameborder="0" class="viewbox" src="DEXT_Editor.aspx" name="message" style="border:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 								</c:when>
 								<c:otherwise>
-									<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+									<iframe id="message" frameborder="0" class="viewbox" src="/ezEmail/mailCKEditor.do" name="message" style="padding:0; height:100%; width:99.8%; overflow:auto;"></iframe>
 								</c:otherwise>
 							</c:choose>
 			            </td> 

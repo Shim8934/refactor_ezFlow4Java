@@ -581,7 +581,7 @@ form{display:inline;margin:0}
 	height:50px;
 }
 
-.box{border:1px solid #b6b6b6; padding:1px 0px 1px 1px; background-color:#fff;}
+.box{border:1px solid #b6b6b6; padding:1px 0px 1px 1px; background-color:#fff; border-right: 0px}
 .box1{border:1px solid #b6b6b6; padding:2px 2px;background-color:#fff; width:60px;}
 .box2{border:1px solid #b6b6b6;  background-color:#fff; font-size:12px;}
 .nobox{border:none}

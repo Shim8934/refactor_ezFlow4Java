@@ -254,7 +254,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception {
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getContainerToDocStateInfo started.");
 		String strMultiData = commonUtil.getMultiData(primary, tenantID);
 		
@@ -286,6 +286,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_LANGTYPE", primary);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
+		map1.put("approvalFlag", approvalFlag);
 		
 		List<ApprGDocStateVO> listBody = ezApprovalGAdminDAO.getContainerToDocStateInfo(map1);
 		

@@ -4,7 +4,6 @@ import java.util.Locale;
 
 import org.w3c.dom.Document;
 
-import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -18,7 +17,7 @@ public interface EzApprovalGAdminService {
 	
 	public String deleteContainerType(String docTypeID, String companyID, int tenantID) throws Exception;
 	
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception;
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception;
 	
 	public String updateContainerToDocStateInfo(Document xmlData, String companyID, int tenantID) throws Exception;
 	
