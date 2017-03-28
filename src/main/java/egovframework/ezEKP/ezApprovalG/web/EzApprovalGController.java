@@ -364,12 +364,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
-		String subQuery = request.getParameter("subQuery");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
  		String userLang = userInfo.getLang();
 		Document domSub = null;
 		
+		if (pageNum.equals("0")) {
+			pageNum = "1";
+		}
 		if (searchQuery != null && searchQuery.length() > 10) {
 			String tempQuery = "";
 			String returnQuery = "(1 = 1) ";
@@ -462,14 +464,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             
-//            if (subQuery.trim() != "")
-//            {
-//                if (subQuery.equals("") || subQuery == null){
-//                	returnQuery += subQuery;
-//                } else {
-//                	returnQuery += " AND " +subQuery;
-//                }
-//            }
             searchQuery = returnQuery;
 		}
 		
