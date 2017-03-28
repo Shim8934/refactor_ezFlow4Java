@@ -3109,7 +3109,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
 		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
-logger.debug("### " + orgItemIDList + " / " + orgBoardIDList);
+
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
@@ -3120,7 +3120,7 @@ logger.debug("### " + orgItemIDList + " / " + orgBoardIDList);
 			}
 			
 			destItemID = "{" + UUID.randomUUID() + "}";		
-logger.debug(orgItemID + " / " + orgBoardID);			
+
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));
