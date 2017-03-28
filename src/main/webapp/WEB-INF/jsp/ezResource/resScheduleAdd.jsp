@@ -543,13 +543,13 @@
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
 					<c:choose>
 						<c:when test="${editor eq 'TAGFREE'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/tagFreeTFXEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
 						</c:when>
 						<c:when test="${editor eq 'DEXT'}">
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/dextEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;"></iframe>
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/dextEditor.do" style="padding: 0; height: 100%; width: 100%; overflow: auto;border-top:0px"></iframe>
 						</c:when>
 						<c:otherwise>
-							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;"></iframe>
+							<iframe id="Iframe1" class="viewbox" name="message" src="/ezResource/ckEditor.do" style="padding: 0; height: 97%; width: 99.7%; overflow: auto;border-top:0px"></iframe>
 						</c:otherwise>
 					</c:choose>
 	      			

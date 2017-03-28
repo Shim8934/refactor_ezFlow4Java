@@ -1,8 +1,8 @@
 @CHARSET "UTF-8";
 .sbHolder{
-	background-color: #757b88;
-	border-top: solid 1px #545861;
-    border-bottom: solid 1px #545861;
+	background-color: rgb(0, 72, 149);
+	border-top: solid 1px rgb(0, 72, 149);
+    border-bottom: solid 1px rgb(0, 72, 149);
 	font-family: Arial, sans-serif;
 	font-size: 12px;
 	font-weight: normal;
@@ -26,7 +26,7 @@
 	width: 197px;
 }
 .sbSelector:link, .sbSelector:visited, .sbSelector:hover{
-	color: #EBB52D;
+	color: white;
 	outline: none;
 	text-decoration: none;
 }
@@ -60,8 +60,8 @@
 	
 }
 .sbOptions{
-	background-color: #757b88;
-	border: solid 1px #515151;
+	background-color: rgb(247, 247, 247);
+	border: solid 1px rgb(247, 247, 247);
 	list-style: none;
 	left: -1px;
 	margin: 0;
@@ -82,13 +82,13 @@
 	padding: 7px 0 7px 10px;
 }
 .sbOptions a:link, .sbOptions a:visited{
-	color: #ddd;
-	text-decoration: none;
+	color: rgb(0, 72, 149);
+	text-decoration: none;	
 }
 .sbOptions a:hover,
 .sbOptions a:focus,
 .sbOptions a.sbFocus{
-	color: #EBB52D;
+	color: #ea6a15;
 }
 .sbOptions di.last a{
 	border-bottom: none;
@@ -101,7 +101,7 @@
 }
 .sbOptions .sbGroup{
 	border-bottom: dotted 1px #515151;
-	color: #EBB52D;
+	color: #ea6a15;
 	display: block;
 	font-weight: bold;
 	padding: 7px 0 7px 3px;
