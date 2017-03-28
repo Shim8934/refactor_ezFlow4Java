@@ -5971,4 +5971,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	
+	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkResend(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("checkResend started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("DOCID").item(0).getTextContent();
+		
+		String result = ezApprovalGService.checkResend(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("result=" + result);
+		logger.debug("checkResend ended");
+		
+		return result;
+	}
 }

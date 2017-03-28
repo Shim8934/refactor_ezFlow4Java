@@ -1116,3 +1116,16 @@ function check_presence2() {
             alert(InformationString);
         }
     }
+    
+    function CheckResend(pDocID) {
+        var xmlpara = createXmlDom();
+        var xmlhttp = createXMLHttpRequest();
+        var objRoot;
+
+        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
+        createNodeAndInsertText(xmlpara, objRoot, "DOCID", pDocID);
+        xmlhttp.open("Post", "/ezApprovalG/checkResend.do", false);
+        xmlhttp.send(xmlpara);
+
+        return xmlhttp.responseText.trim();
+    }
