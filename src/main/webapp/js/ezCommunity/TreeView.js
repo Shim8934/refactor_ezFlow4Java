@@ -91,7 +91,7 @@ function TreeNode() {
                 color = strDataValue;
 
         }
-        treeDiv.style.height = "18px";
+        treeDiv.style.height = "21px";
         treeDiv.style.whiteSpace = "nowrap";
 
 
@@ -103,7 +103,7 @@ function TreeNode() {
             bExpanded = true;
 
         if(bExpanded)
-            treeDiv.style.height = "18px";
+            treeDiv.style.height = "21px";
 
         //부모노드의 점선 이미지와 동일하게 세팅한다.
         var arrParentDotImg = GetParentDotImg(pParentNode);
@@ -599,7 +599,7 @@ function TreeView() {
                         strWidth = "18";
 
                     if (strHeight == "")
-                        strHeight = "18";
+                        strHeight = "21";
 
                     TreeIconSizes["width"] = strWidth;
                     TreeIconSizes["height"] = strHeight;
@@ -644,7 +644,7 @@ function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
             objNodeIcon.src = TreeIcons["node_minus"];
         }
         else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0) {
-            document.getElementById(pNodeID).style.height = "18px";
+            document.getElementById(pNodeID).style.height = "21px";
             objNodeIcon.src = TreeIcons["node_plus"];
         }
     }

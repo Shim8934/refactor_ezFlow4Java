@@ -543,7 +543,7 @@
            <tr>
                <td>
                    <h2><span id="menu01" ><spring:message code="ezResource.t342" /></span></h2>
-                   <div class="box" id="TreeView" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto; vertical-align:top"></div>             
+                   <div class="box" id="TreeView" style="height:300px;width:230px;overflow-x:auto;overflow-y:auto; vertical-align:top"></div>             
                </td>
                <td style="padding:6px 6px 6px 6px">
                    <img src="/images/kr/cm/arr_right.gif" alt="" style="cursor:pointer; width:16px; height:16px; border:0px" onClick="InsertReceiver()"><br/><br/>
@@ -552,7 +552,7 @@
                <td>
                    <h2><span id="Span1" ><spring:message code="ezResource.t374" /></span></h2>
                    <div class="listview">
-                       <div id="pListView" STYLE="border:0px solid #B6B6B6; Width:240px; Height:296px; overflow : auto;"  ></div>
+                       <div id="pListView" STYLE="border:0px solid #B6B6B6; Width:242px; Height:301px; overflow : auto;"  ></div>
                    </div>
                </td>
            </tr>

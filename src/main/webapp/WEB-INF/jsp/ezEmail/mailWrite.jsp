@@ -984,7 +984,7 @@
 	        </tr>
 	        <tr>
 	            <td style="height:380px;" id="EdtorSize">
-	                <table style="width:100%;height:100%;">
+	                <table style="width:99.8%;height:100%;">
 	                    <tr>
 	                        <td style="height:100%;">
 	                            <%-- if (Use_Editor == "TAGFREE") { %>
