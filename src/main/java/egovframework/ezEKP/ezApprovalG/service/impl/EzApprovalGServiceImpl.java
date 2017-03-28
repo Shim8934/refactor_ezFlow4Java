@@ -800,8 +800,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				if (publicityCode.equals("Y")){
 					publicityCode = "1";
-				} else if(publicityCode.equals("")) {
-					publicityCode = "1"; 
+				} if (publicityCode.length() <= 0) {
+					publicityCode = "1";
 				} else {
 					publicityCode = "3"; 
 				}
@@ -8164,7 +8164,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 					
 					if (rtnVal) {
-						subSQL = doBansong(docID, userID, aprState, dirPath, companyID, lang, userInfo);
+						subSQL = doBansong(docID, userID, aprState, dirPath, deptID, companyID, lang, userInfo);
 						
 						if (subSQL.toUpperCase().equals("FALSE")) {
 							rtnVal = false;
@@ -10514,44 +10514,139 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 
-	public String doBansong(String docID, String userID, String aprState, String dirPath, String companyID, String lang, LoginVO userInfo) throws Exception{
+	public String doBansong(String docID, String userID, String aprState, String dirPath, String deptID, String companyID, String lang, LoginVO userInfo) throws Exception{
 		StringBuilder strSQL = new StringBuilder();
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyID", companyID);
-		map.put("v_DOCID", docID);
-		map.put("v_TENANTID", userInfo.getTenantId());
-		map.put("v_APRMEMBERID", userID);
 		
-		List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
-		
-		try {
-			if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
-				strSQL.append(doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo));
-				sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
-				
-				if (strSQL.toString().toUpperCase().equals("FALSE")) {
-					return "FALSE";
-				} 
-			} else {
-				
-				map.put("v_AprState", aprState);
-				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-				map.put("v_AprState2", staASJinHang);
-				map.put("v_AprState3", staASBoRyu);
-				
-				ezApprovalGDAO.updateBanSongAprLineInfo(map);
-				ezApprovalGDAO.updateBanSongAprDocInfo(map);
-				ezApprovalGDAO.updateBanSongAprLineInfo2(map);
-	            
-	            sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		if (approvalFlag.equals("G")) {
+			map.put("companyID", companyID);
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("v_APRMEMBERID", userID);
+			
+			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
+			
+			try {
+				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+					doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo);
+					sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
+					
+				} else {
+					
+					map.put("v_AprState", aprState);
+					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+					map.put("v_AprState2", staASJinHang);
+					map.put("v_AprState3", staASBoRyu);
+					
+					ezApprovalGDAO.updateBanSongAprLineInfo(map);
+					ezApprovalGDAO.updateBanSongAprDocInfo(map);
+					ezApprovalGDAO.updateBanSongAprLineInfo2(map);
+		            
+		            sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-			return "FALSE";
+		} else {
+			map.put("companyID", companyID);
+			map.put("v_DOCID", docID);
+			map.put("v_TENANTID", userInfo.getTenantId());
+			map.put("v_APRMEMBERID", userID);
+			map.put("v_STAASJINHANG", staASJinHang);
+			map.put("v_STAASBORYU", staASBoRyu);
+			
+			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprTypeS(map);
+			
+			try {
+				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+					doApprove(docID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo);
+					sendMsg(docID, "", "BAN", companyID, lang, userInfo.getTenantId());
+					
+				} else {
+					String pBansongType = getCode2Name("SA25", "002", companyID, lang, userInfo.getTenantId());		// 이 값이 Y면 반송함 자동 등록.
+					if (pBansongType.equals("Y")) {
+						doReturnDocComplete(docID, "3", dirPath, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset());
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "FALSE";
+			}
 		}
+		
 		return "TRUE";
 	}
+
+	private void doReturnDocComplete(String docID, String pFlag, String dirPath, String deptID, String companyID, String lang, int tenantID, String offSet) throws Exception{
+		boolean rtnVal = true;
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID.trim());
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_FLAG", "APR");
+		
+		String href = ezApprovalGDAO.getDocInfoHref(map);
+		
+		String docState = StaDSHesong;
+		
+		if (pFlag.equals("0") || pFlag.equals("2") || pFlag.equals("3")) {
+			docState = staDSBansong;
+		} else if (pFlag.equals("4")) {
+			docState = staDSGamSaBu;
+		}
+		
+		String containerID = returnContainerID(deptID, docState, companyID, tenantID);
+		
+		if (pFlag.equals("4")) {
+			docState = StaDSHesong;
+		}
+		
+		String NewID = getNewID(companyID, tenantID);
+		
+		String extFileName = getExtendedFileName(href);
+		String oldYear = getDocHrefYear(docID, companyID, tenantID);
+		String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName;
+		
+		rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + extFileName,
+				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID) + commonUtil.separator + NewID + "." + extFileName,
+				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID));
+		
+		
+//		if (rtnVal) {
+//			map.put("v_DOCID", docID);
+//			map.put("v_endURL", endURL);
+//			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+//			map.put("v_ContainerID", containerID);
+//			map.put("companyID", companyID);
+//			map.put("v_TENANTID", tenantID);
+//
+//		try {
+//			ezApprovalGDAO.insertApprovEndAprDocInfo(map);
+//			ezApprovalGDAO.insertApprovEndAprLineInfo(map);
+//			ezApprovalGDAO.insertApprovEndAttachInfo(map);
+//			ezApprovalGDAO.insertApprovEndAprDocAttachInfo(map);
+//			ezApprovalGDAO.insertApprovEndAprOpinionInfo(map);
+//			ezApprovalGDAO.insertApprovEndReceiptPointInfo(map);
+//			ezApprovalGDAO.insertApprovEndReceiptProcessInfo(map);
+//			ezApprovalGDAO.insertApprovExpEndAprDocInfo(map);
+//			ezApprovalGDAO.insertApprovExpEndAprLine(map);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//			return "FALSE";
+//		}
+//	}
+//	if (rtnVal) {
+//		return "TRUE";
+//	} else {
+//		return "FALSE";
+//	}
+		}
 
 	public String doApprove(String docID, String userID, String aprState, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception{
 		logger.debug("doApprove started");
@@ -11113,12 +11208,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String doDocComplete(String docID, String userID, String userName, String userName2, String dirPath, String deptID, String proxyUserID, String companyID, String lang, LoginVO userInfo) throws Exception{
 		String subSQL = "";
 		boolean rtnVal = true;
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID);
 		map.put("companyID", userInfo.getCompanyID());
 		map.put("v_TENANTID", userInfo.getTenantId());
-		
+
 		List<ApprGAprLineVO> apprGAprLineVOList =  ezApprovalGDAO.doDocCompleteDocInfo(map);
 		
 		StringBuffer sb = new StringBuffer();
@@ -11181,9 +11277,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (!realDocType.equals("001")) {
 				subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 				
-				if (subSQL.toUpperCase().equals("FALSE")) {
-					rtnVal = false;
-				} 
+				if(approvalFlag.equals("G")) {
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} 
+				} else {
+					if (subSQL.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					} else {
+						sendFlag = true;
+					}
+				}
 			} else {
 				String autoDeptID = getCode2Name("A55", "001", companyID, lang,userInfo.getTenantId()).trim();
 
@@ -11236,9 +11340,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "004":
 			subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			} 
+			if(approvalFlag.equals("G")) {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			} else {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} else {
+					sendFlag = true;
+				}
+			}
 			
 			if (rtnVal) {
 				sendMsg(docID, "", "BAL", companyID, lang, userInfo.getTenantId());
@@ -11253,9 +11365,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "011":
 			subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			} 
+			if(approvalFlag.equals("G")) {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			} else {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} else {
+					sendFlag = true;
+				}
+			}
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
@@ -11302,9 +11422,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		case "012":
 			subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			} 
+			if(approvalFlag.equals("G")) {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			} else {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} else {
+					sendFlag = true;
+				}
+			}
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());
@@ -11546,9 +11674,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		default:
 			subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
 			
-			if (subSQL.toUpperCase().equals("FALSE")) {
-				rtnVal = false;
-			} 
+			if(approvalFlag.equals("G")) {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} 
+			} else {
+				if (subSQL.toUpperCase().equals("FALSE")) {
+					rtnVal = false;
+				} else {
+					sendFlag = true;
+				}
+			}
 			
 			if (rtnVal) {
 				subSQL = doApproveEnd(docID, dirPath, deptID, sendFlag, companyID, userInfo.getTenantId());

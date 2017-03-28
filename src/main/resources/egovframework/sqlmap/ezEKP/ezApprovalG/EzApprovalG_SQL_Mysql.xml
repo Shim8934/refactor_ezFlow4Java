@@ -21164,6 +21164,7 @@
    			B.FORMID = #formID#
    	</select>
    	
+<<<<<<< Updated upstream
    	<select id="EzApprovalG.doSendOffer_AprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
    		<![CDATA[
    			SELECT 
@@ -21239,5 +21240,23 @@
 			A.CONTAINERID = B.CONTAINERID
 		WHERE 
 			A.DOCID = #pDocID#
+	</select>
+	
+   	<select id="EzApprovalG.doBanSongAprTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
+   		SELECT 
+   			APRTYPE 
+        FROM 
+        	TBL_APRLINEINFO 
+       	WHERE  
+       		DOCID = #v_DOCID#
+        AND 
+        	APRMEMBERID = #v_APRMEMBERID#
+        AND 
+        	( APRSTATE = #v_STAASJINHANG# OR APRSTATE = #v_STAASBORYU# )
+        AND
+        	TENANT_ID = #v_TENANTID#
+        AND
+        	COMPANYID = #companyID#
+
    	</select>
 </sqlMap>

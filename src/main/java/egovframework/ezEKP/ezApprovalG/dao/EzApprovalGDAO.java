@@ -680,6 +680,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGContInfoVO>) list("EzApprovalG.getSpecialContTree", userInfo);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> doBanSongAprTypeS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.doBanSongAprTypeS", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
