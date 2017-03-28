@@ -666,7 +666,7 @@ function ChangeBtnStateTrue() {
         alert("ChangeBtnStateTrue  :: " + e.description);
     }
 }
-function chkBtn(pBtnflag) {
+function chkBtn(pBtnflag, approvalFlag) {
     setMenuBar("btnApprove", pBtnflag);
     setMenuBar("btnReject", pBtnflag);
     setMenuBar("btnStay", pBtnflag);
@@ -683,7 +683,13 @@ function chkBtn(pBtnflag) {
     setMenuBar("btnSetTaskCode", pBtnflag);
     setMenuBar("btnAddSepAttach", pBtnflag);
     setMenuBar("btnhistory", pBtnflag);
-    setMenuBar("tbtnTotalSave", pBtnflag);
+    
+    if (approvalFlag == 'S') {
+    	
+    } else {
+    	setMenuBar("tbtnTotalSave", pBtnflag);
+    }
+    
     setMenuBar("btntotaldocinfo", pBtnflag);
 
     if (trim(pDraftFlag) == "GONGRAM" || trim(pDraftFlag) == "CHAMJO") {

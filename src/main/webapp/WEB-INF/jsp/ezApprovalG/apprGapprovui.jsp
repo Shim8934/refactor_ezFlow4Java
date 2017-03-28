@@ -1285,7 +1285,7 @@
 		        if (modeflag) {
 		            modeflag = false;
 		            chkBtnConfirm("1");
-		            chkBtn(false);            
+		            chkBtn(false, approvalFlag);            
 		            beforeHtml = message.Get_EditorBodyHTML();
 		            message.SetEditable(true);
 		            var contentEditable = message.DocumentBodyGetAttribute("contentEditable");

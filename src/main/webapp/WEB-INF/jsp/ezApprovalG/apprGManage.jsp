@@ -454,13 +454,73 @@
 		            //    document.getElementById("tbtnUserInfo").style.display = "";
 		        }
 		    }
+		    
 		    function lvAprLine_DBSelChange() {
+				var DocList = new ListView();
+	            DocList.LoadFromID("AprLine");
+	            var oArrRows = DocList.GetSelectedRows();
+	            var tr = oArrRows[0];
+	            
 		        switch (pDocInfoValue) {
 		            case "1":
 		                openUserInfo();
 		                break;
 		            case "2":
 		                break;
+		            case "4":
+		            	var AttachfilenameA1 = tr.cells[1].innerHTML;
+                        if (AttachfilenameA1 != null) {
+                            var AttachfilenameN1 = AttachfilenameA1.lastIndexOf(".");
+                            var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
+                            var AttachUrlA1 = GetAttribute(tr,"DATA1");
+                            var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
+                            var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
+                            AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
+                            if (AttachfilenameN1 < 0) {
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML + AttachUrlA2);
+                            }
+                            else {
+                                Attachfilename = encodeURIComponent(tr.cells[1].innerHTML);
+                            }
+                            var regData = "";
+
+                            if (document.all)
+                                regData = navigator.systemLanguage;
+                            else if (document.layers)
+                                regData = navigator.systemLanguage;
+                            else if (document.getElementById) {
+                                if (navigator && navigator.systemLanguage)
+                                    regData = navigator.systemLanguage.substr(0, 2)
+                                else {
+                                    if (typeof clientInformation != 'undefined')
+                                        regData = clientInformation.systemLanguage;
+                                    else
+                                        regData = "";
+                                }
+                            }
+                            else {
+                                if (typeof clientInformation != 'undefined') {
+                                    if (clientInformation && clientInformation.systemLanguage)
+                                        regData = clientInformation.systemLanguage;
+                                }
+                            }
+
+                            if (AttachUrl != "null") {
+                                var tempINGFlag = "";
+                                if (pListTypeValue == "9")
+                                    tempINGFlag = "TMP"
+                                else if (pListTypeValue == "6")
+                                    tempINGFlag = "END"
+                                else
+                                    tempINGFlag = "APR"
+                                if (GetAttribute(tr,"data4") == "file")
+                                    window.open(document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=APPROVAL&DOCID=" + GetAttribute(tr, "data3") + "&DOCSTATUS=" + tempINGFlag + "&DOCATTACHSN=" + GetAttribute(tr,"data2"));
+                                else
+                                    window.open("/myoffice/Common/DownloadAttach.aspx?filename=" + Attachfilename + "&filepath=" + AttachUrl + "&regData=" + regData);
+                            }
+
+                        }
+		            	break;
 		            default:
 		        }
 		    }
