@@ -7451,22 +7451,45 @@
 <!-- 	<procedure id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap"> -->
 <!-- 		{CALL EZSP_GETDOCTYPE(#v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
-	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap">
-		SELECT 
-			CODE2, 
-			NAME$v_LANGTYPE$ AS NAME
-		FROM 
-			TBL_CODELIST 
-		WHERE 
-			CODE1 = 'A01' 
-		AND
-			TENANT_ID = #v_TENANTID#
-		AND
-			COMPANYID = #companyID#
-		AND  
-			ISUSE = 1
-		ORDER BY 
-			CODE2
+	<select id="EzApprovalG.getDocType" parameterClass="Map" resultClass="HashMap" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT 
+					code2, 
+					name$v_LANGTYPE$ AS name
+				FROM 
+					TBL_CODELIST 
+				WHERE 
+					code1 = 'SA01' 
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+					companyid = #companyID#
+				AND
+					isuse = 1
+				ORDER BY 
+					code2
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT 
+					code2, 
+					name$v_LANGTYPE$ AS name
+				FROM 
+					TBL_CODELIST 
+				WHERE 
+					code1 = 'A01' 
+				AND
+					tenant_id = #v_TENANTID#
+				AND
+					companyid = #companyID#
+				AND  
+					isuse = 1
+				ORDER BY 
+					code2
+			]]>
+		</isEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getCode2Name" parameterClass="Map" resultClass="String"> -->
 <!-- 		{CALL EZSP_GETCODE2NAME(#v_CODE1#, #v_CODE2#, #v_LANGTYPE#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->

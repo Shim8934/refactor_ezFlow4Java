@@ -587,9 +587,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getFormCont.do")
 	public String getFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getFormCont started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String deptID = userInfo.getDeptID();
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
 		String docFileType = "";
 		
@@ -601,6 +604,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docType", docType);
 		model.addAttribute("userForm", userForm);
 		model.addAttribute("docFileType", docFileType);
+		
+		logger.debug("getFormCont ended.");
 		
 		return "ezApprovalG/apprGFormCont";
 	}

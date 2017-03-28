@@ -46,7 +46,7 @@ public interface EzApprovalGService {
 
 	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getDocType(String selected, String companyID, String lang, int tenantID) throws Exception;
+	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
 
