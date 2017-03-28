@@ -19145,7 +19145,7 @@
     	</isNotEmpty>
     	
     	<isNotEmpty property="v_StoragePeriod">
-    		, StoragePeriod = = #v_StoragePeriod#
+    		, StoragePeriod = #v_StoragePeriod#
     	</isNotEmpty>
     	
     	<isNotEmpty property="v_KeyWord">
@@ -21184,7 +21184,7 @@
 			FROM
 			    TBL_ENDAPRDOCINFO
 			WHERE
-				TENANT_ID = #tenantID#
+				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
 			AND
@@ -21216,7 +21216,7 @@
 			FROM
 			    TBL_EXPENDAPRDOCINFO
 			WHERE
-				TENANT_ID = #tenantID#
+				TENANT_ID = #v_TENANTID#
 			AND
 				COMPANYID = #companyID#
 			AND

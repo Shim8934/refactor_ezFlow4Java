@@ -541,7 +541,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("orgDocID", orgDocID);
 			map.put("companyID", companyID);
-			map.put("tenantID", tenantID);
+			map.put("v_TENANTID", tenantID);
 	
 			ApprGDocListVO endAprDoc = ezApprovalGDAO.doSendOffer_AprDocInfo(map);
 			

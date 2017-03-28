@@ -6024,6 +6024,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docHref", docHref);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("oldYear", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 4));
 		
 		logger.debug("docReSend ended");
 		

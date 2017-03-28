@@ -43,7 +43,7 @@
 	        arr_userinfo[16] = "${userInfo.deptName2}";
 	        var companyID = "${userInfo.companyID}";
 	        var pUserID = arr_userinfo[1];
-	        var CurrYear = "${oldyear}";
+	        var CurrYear = "${oldYear}";
 	        var g_szUserID = arr_userinfo[8];
 	        var g_senderinfo = "${userInfo.companyName}" + ", " + "${userInfo.deptName}" + ", " + "${userInfo.title}";
 	        var pUse_Editor = "${useEditor}";
@@ -418,11 +418,11 @@
 	            var dataNodes = GetChildNodes(result);
 	            return getNodeText(dataNodes[0]);
 	        }
-	        var chk_passwd_dialogArgument = new Array();
+	        var ezchkpasswd_cross_dialogArguments = new Array();
 	        function chk_Passwd(FunctionName) {
 	            var url = "/ezApprovalG/ezchkPasswd.do";
-	            chk_passwd_dialogArgument[0] = pUserID;
-	            chk_passwd_dialogArgument[1] = FunctionName;
+	            ezchkpasswd_cross_dialogArguments[0] = pUserID;
+	            ezchkpasswd_cross_dialogArguments[1] = FunctionName;
 	            DivPopUpShow(330, 200, url);
 	        }
 	        var ezapprovalinfo_dialogArguments = new Array();
