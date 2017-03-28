@@ -3882,6 +3882,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 		
 		logger.debug("arrQuestionLength="+arrQuestion.length);
 		if(arrQuestion.length > 0) {
+			int ansNo = 0;
 			for(int i=0; i<arrQuestion.length; i++) {
 				arrLine = arrQuestion[i].trim().split("\\|\\|");
 				
@@ -3891,6 +3892,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				strQstNo = arrLine[0];
 				
 				if(!strQstNo.trim().equals(lastItemNo.trim())) {
+					ansNo = 0;
 					strResult = strResult.replace("| "+arrLine[1], "");
 					strResult = strResult + "| "+arrLine[1]+";"+arrLine[5];
 					
@@ -3921,8 +3923,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstAttachVO.setBrdID(5);
 					qstAttachVO.setItemNo(itemNo);
 					qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
+					qstAttachVO.setAnswerNo(0);
 					
-					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo3(qstAttachVO, loginVO.getTenantId());
+					List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
 					
 					Document xmlTemp = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 					
@@ -4011,6 +4014,46 @@ public class EzQuestionController extends EgovFileMngUtil {
 				nodeTitle.setTextContent(arrLine[8]);
 				}
 				nodeData.appendChild(nodeTitle);
+				
+				ansNo++;
+				
+				QstAttachVO qstAttachVO = new QstAttachVO();
+				qstAttachVO.setBrdID(5);
+				qstAttachVO.setItemNo(itemNo);
+				qstAttachVO.setQuestionNo(Integer.parseInt(arrLine[0]));
+				qstAttachVO.setAnswerNo(ansNo);
+				
+				List<QstAttachVO> qstAttach =  ezQuestionService.getAttachInfo(qstAttachVO, loginVO.getTenantId());
+				
+				Document xmlTemp2 = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+				
+				if(qstAttach.size() > 0) {
+					for(int k=0; k<qstAttach.size(); k++) {
+						String rtv2 = commonUtil.getQueryResult(qstAttach.get(k));
+						xmlTemp2 = commonUtil.convertStringToDocument(rtv2);
+					}
+				}
+				
+				if(xmlTemp2.getElementsByTagName("ATTACHNO").getLength() > 0) {
+					Node nodeAttach = resultXML.createElement("ATTACH");
+					nodeData.appendChild(nodeAttach);
+					for(int j = 0; j < xmlTemp2.getElementsByTagName("ATTACHNO").getLength(); j++) {
+						Node nodeData2 = resultXML.createElement("ROW");
+						nodeAttach.appendChild(nodeData2);
+						Node nodeData3 = resultXML.createElement("TYPE");
+						
+						nodeData3.setTextContent(xmlTemp2.getElementsByTagName("ATTACHTYPE").item(j).getTextContent());
+						nodeData2.appendChild(nodeData3);
+						
+						nodeData3 = resultXML.createElement("ATTACHTITLE");
+						nodeData3.setTextContent(xmlTemp2.getElementsByTagName("ATTACHNAME").item(j).getTextContent());
+						nodeData2.appendChild(nodeData3);
+						
+						nodeData3 = resultXML.createElement("HREF");
+						nodeData3.setTextContent(xmlTemp2.getElementsByTagName("ATTACHURL").item(j).getTextContent());
+						nodeData2.appendChild(nodeData3);
+					}
+				}
 				
 				lastItemNo = strQstNo;
 			}
