@@ -471,15 +471,14 @@ function getsearchDocListS_after() {
 
     try {
         hideProgress();
+        
+        Resultxml = xmlhttp.responseXML;
 
-        var XmlNode = loadXMLString(xmlhttp.responseText);
-        Resultxml = XmlNode;
-
-        if (XmlNode.xml != "") {
+        if (Resultxml.xml != "") {
 
             SelYearFlag = false;
-            ListViewNode = SelectSingleNodeNew(XmlNode, "DOCLIST/LISTVIEWDATA");
-            NodeList2 = SelectSingleNodeNew(XmlNode, "DOCLIST/TOTALCNT");
+            ListViewNode = SelectSingleNodeNew(Resultxml, "DOCLIST/LISTVIEWDATA");
+            NodeList2 = SelectSingleNodeNew(Resultxml, "DOCLIST/TOTALCNT");
             NodeListLen = 0;
             if (NodeList2 != null) {
                 var dataNode = getNodeText(NodeList2);
