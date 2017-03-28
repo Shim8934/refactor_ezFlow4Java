@@ -570,7 +570,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("vo", vo);
 		
-		logger.debug("getFormInfo ended. vo" + vo.getFormName());
+		logger.debug("getFormInfo ended.");
 		
 		return "json";
 	}
