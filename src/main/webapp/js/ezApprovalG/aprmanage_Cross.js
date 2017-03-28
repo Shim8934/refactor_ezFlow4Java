@@ -1947,8 +1947,6 @@ function selFirstRow(Resultxml) {
 }
 
 function getDataInfo(jobState) {
-	var xmlpara = createXmlDom();
-
     switch (jobState) {
         case "3":
         	var pFlag = "";
@@ -1969,7 +1967,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(loadXMLString(xml));
+        			getdoclistSub_after(xml);
         		}        			
         	});
             break;
@@ -1993,7 +1991,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(loadXMLString(xml));
+        			getdoclistSub_after(xml);
         		}        			
         	});
             break;
@@ -2017,7 +2015,7 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(loadXMLString(xml));
+        			getdoclistSub_after(xml);
         		}        			
         	});
             break;
@@ -2041,37 +2039,31 @@ function getDataInfo(jobState) {
         				flag  : pFlag
         				},
         		success: function(xml){
-        			getdoclistSub_after(loadXMLString(xml));
+        			getdoclistSub_after(xml);
         		}        			
         	});
             break;
     }
-    xmlhttp.onreadystatechange = getdoclistSub_after;
-    xmlhttp.send(xmlpara);
 }
 
-function getdoclistSub_after() {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        try {
-            if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-            if (xmlhttp.responseText == "NOTPERMISSION") {
-                document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
-                document.getElementById("lvAprLine").style.textAlign = "center";
-                return;
-            }
-
-            var AprLine = new ListView();
-            AprLine.SetID("AprLine");
-            AprLine.SetMulSelectable(false);
-            AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
-            AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
-            AprLine.DataSource(xmlDoc);
-            AprLine.DataBind("lvAprLine");
+function getdoclistSub_after(xml) {
+    try {
+        if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
+        if (xml == "NOTPERMISSION") {
+            document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+            document.getElementById("lvAprLine").style.textAlign = "center";
+            return;
         }
-        catch (e) { }
+
+        var AprLine = new ListView();
+        AprLine.SetID("AprLine");
+        AprLine.SetMulSelectable(false);
+        AprLine.SetTitleIdx(arrySubTab[subTabLastCol]);
+        AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+        AprLine.DataSource(loadXMLString(xml));
+        AprLine.DataBind("lvAprLine");
     }
-    else
-        return;
+    catch (e) { }
 }
 
 var g_progresswin = null;

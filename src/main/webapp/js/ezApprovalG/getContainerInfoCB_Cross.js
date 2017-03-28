@@ -36,22 +36,23 @@ function getDataInfo() {
 				mode  : "END"
 				},
 		success: function(xml){
-			getdoclistSub_after(loadXMLString(xml));
+			getdoclistSub_after(xml);
 		}        			
 	});
 }
 
 function getdoclistSub_after(xml) {
     try {
-        Resultxml = xml;
         if (document.getElementById("lvtDetail").innerHTML != "")
             document.getElementById("lvtDetail").innerHTML = "";
 
-        if (xml.documentElement.textContent == "NOTPERMISSION") {
+        if (xml == "NOTPERMISSION") {
             document.getElementById("lvtDetail").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
             document.getElementById("lvtDetail").style.textAlign = "center";
             return;
         }
+        
+        Resultxml = loadXMLString(xml);
 
         var DocList = new ListView();      
         DocList.SetID("SubDocList");                               
