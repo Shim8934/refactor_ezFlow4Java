@@ -81,7 +81,7 @@
 	        var pEndAprType = "${endAprType}";
 	        var pEndAprState = "${endAprState}";
 	        var DocType ="";
-	        var DocState = "";
+ 	        var DocState = "";
 	        document.onselectstart = function () { return false; };
 	
 	        $(function () {
