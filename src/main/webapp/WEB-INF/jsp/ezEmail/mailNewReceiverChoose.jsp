@@ -3173,7 +3173,7 @@
 	                            </div>
 	                            <table style="margin-top: 3px;">
 	                                <tr>
-	                                    <td class="box">
+	                                    <td class="box" style="border-right:0px">
 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>

@@ -1775,7 +1775,7 @@
 	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="height: 497px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                    <div class="box" style="height: 497px; width: 220px; overflow-x: auto; overflow-y: auto; border-right:0px" id="TreeView"></div>
 	                                </td>	                                
 	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto; border-top:0px">
 	                                    <table style="width: 100%; margin-top: -3px;" class="popup_mainlist">
@@ -1818,7 +1818,7 @@
 	                        <table>
 	                            <tr>
 	                                <td>
-	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 495px; BACKGROUND-COLOR: #ffffff;padding-top:5px" id="AddressTreeView"></div>
+	                                    <div class="box" style="OVERFLOW-Y: auto; OVERFLOW-X: auto; WIDTH: 220px; HEIGHT: 495px; BACKGROUND-COLOR: #ffffff;padding-top:5px;border-right:0px" id="AddressTreeView"></div>
 	                                </td>	                                
 	                                <td>
 	                                    <div style="vertical-align: middle; border: 1px solid #bdbdbd; border-bottom: 0px; height: 20px; padding-top: 5px; padding-left: 5px;">
