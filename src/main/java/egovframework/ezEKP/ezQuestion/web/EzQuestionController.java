@@ -3979,7 +3979,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 					qstCompleteVO.setItemNo(itemNo);
 					qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
 					qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
-					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+					logger.debug("arrLineLength="+arrLine.length);
+					//주관식일경우, arrLine[8]이 없다.
+					if (arrLine.length == 9) {
+						qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+					}
 					
 					ezQuestionService.insertQuestion(qstCompleteVO, loginVO.getTenantId());
 				}
@@ -3992,7 +3996,10 @@ public class EzQuestionController extends EgovFileMngUtil {
 				qstCompleteVO.setItemNo(itemNo);
 				qstCompleteVO.setQuesNo(Integer.parseInt(arrLine[0]));
 				qstCompleteVO.setAnswerNo(Integer.parseInt(arrLine[7]));
-				qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+				//주관식일경우, arrLine[8]이 없다.
+				if (arrLine.length == 9) {
+					qstCompleteVO.setAnswerContent(arrLine[8].replace("'", "''"));
+				}
 				
 				ezQuestionService.insertAnswerContent(qstCompleteVO, loginVO.getTenantId());
 				
@@ -4000,7 +4007,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 				node.appendChild(nodeData);
 				
 				Node nodeTitle = resultXML.createElement("ANSWERTITLE");
+				if (arrLine.length == 9) {
 				nodeTitle.setTextContent(arrLine[8]);
+				}
 				nodeData.appendChild(nodeTitle);
 				
 				lastItemNo = strQstNo;

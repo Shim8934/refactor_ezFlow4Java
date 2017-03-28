@@ -1263,13 +1263,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocType(String selected, String companyID, String lang, int tenantID) throws Exception {
+	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getDocType started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", commonUtil.getMultiData(lang, tenantID));
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<HashMap<String, Object>> docTypes = ezApprovalGDAO.getDocType(map);
 		
@@ -1277,8 +1278,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder sb = new StringBuilder();
 		
 		for (int k = 0; k < dlength; k++) {
-			String code2 = (String) docTypes.get(k).get("CODE2");
-			String name = (String) docTypes.get(k).get("NAME");
+			String code2 = (String) docTypes.get(k).get("code2");
+			String name = (String) docTypes.get(k).get("name");
 			
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");
@@ -2158,6 +2159,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</LISTVIEWDATA>");
 		
 		return resultXML.toString();
+	}
+	
+	@Override
+	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception {
+		logger.debug("getAutoDocNumItem started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formID", formID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ApprGFormVO apprGFormVO = ezApprovalGDAO.getAutoDocNumItem(map);
+
+		String rtnValue = apprGFormVO.getIsPublic() + ";" + apprGFormVO.getItemCode() + ";" + apprGFormVO.getItemName() + ";" + apprGFormVO.getItemName2() + ";" + apprGFormVO.getUseFlag() + ";" + 
+						  apprGFormVO.getKeepPeriod() + ";" + apprGFormVO.getSecurityLevel() + ";" + apprGFormVO.getKeepPeriodCode() + ";" + apprGFormVO.getCabinetID();
+		
+		logger.debug("getAutoDocNumItem ended");
+		
+		return rtnValue;
 	}
 
 	@Override
@@ -19660,9 +19680,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 				
 		if (userSecurityCode.equals("") || userSecurityCode == null) {
-			map.put("v_PUSERSECURITYCODE", "0");
+			map.put("v_USERSECCODE", "0");
 		} else {
-			map.put("v_PUSERSECURITYCODE", userSecurityCode);
+			map.put("v_USERSECCODE", userSecurityCode);
 		}
 		
 		isUsed = getIsUse("SA22", "004", companyID, lang, tenantID);
@@ -19673,7 +19693,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			map.put("v_PUBLICFLAG", "N");
 		}
 		
-		int totalCount = ezApprovalGDAO.getContDocListCountS(map);
+		int totalCount = ezApprovalGDAO.getContDocListCount(map);
 		
 		resultXML.append("<DOCLIST>");
 		resultXML.append("<TOTALCNT>"+ totalCount +"</TOTALCNT>");
@@ -19745,10 +19765,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_TOTALCOUNT", totalCount);
 		map.put("v_CONTID", contID);
 		map.put("v_PLISTCOUNT", pageSize);
-		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
-		map.put("v_PQUERYSIZESUB", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
-		
-		List <ApprGDocListVO> conDocList = ezApprovalGDAO.getContDocListS(map);
+//		map.put("v_PQUERYSIZEMAIN", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
+//		map.put("v_PQUERYSIZESUB", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
+		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
+		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
+		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
+
+		List <ApprGDocListVO> conDocList = ezApprovalGDAO.getContDocList(map);
 		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
@@ -19996,7 +20019,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_MULTIDATALANG", strMultiData);
 		map.put("v_USERID", userID);
-		map.put("v_CONTAINERID", containerID);
+		map.put("v_CONTID", containerID);
 		map.put("v_DOCNUMBER", docNumber);
 		map.put("v_DOCTITLE", docTitle);
 		map.put("v_DRAFTER", drafter);
@@ -20125,14 +20148,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.APRMEMBERNAME = '" + pApprovUser + "'";
 		}
 		
-		if (containerID == null || containerID.equals("")) {
-			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.APRMEMBERID = '" + userID + "'";
-			aprFlag = "";
-		} else if (containerID.equals("ADMIN")) {
-			whereStr = whereStr + " AND CONTAINERID IS NOT NULL";
-		} else {
-			whereStr = whereStr + " AND CONTAINERID IN (" + containerID +" )";
-		}
+//		if (containerID == null || containerID.equals("")) {
+//			whereStr = whereStr + " AND TBL_ENDAPRLINEINFO.APRMEMBERID = '" + userID + "'";
+//			aprFlag = "";
+//		} else if (containerID.equals("ADMIN")) {
+//			whereStr = whereStr + " AND CONTAINERID IS NOT NULL";
+//		} else {
+//			whereStr = whereStr + " AND CONTAINERID IN (" + containerID +" )";
+//		}
 		
 		if (aprFlag.equals("INMYAPPRSEARCH")) {
 			whereStr = whereStr + "  AND TBL_ENDAPRLINEINFO.AprMemberID = '" + userID + "'" ;
@@ -20215,18 +20238,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
             		FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
  				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
 			
 				if ( i == 0) { 
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "</DATA2>");
-					resultXML.append("<DATA3>" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
-					resultXML.append("<DATA5>" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "</DATA5>");
-					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
-					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATENAME").item(k).getTextContent() + "</DATA7>");
-					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</DATA8>");
-					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATENAME").item(k).getTextContent() + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
 					resultXML.append("<DATA10></DATA10>");
 					resultXML.append("<DATA11></DATA11>");
 				}

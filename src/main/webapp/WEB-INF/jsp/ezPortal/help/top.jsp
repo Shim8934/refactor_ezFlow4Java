@@ -132,7 +132,9 @@
 			      <!-- <td class="normal" id="menu01" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">업무관리</td> -->
 			      <td class="normal" id="menu03" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">게시판</td>
 			      <td class="normal" id="menu11" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자설문</td>  
-			      <!-- <td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td> -->
+			      <c:if test="${userApprovalG == 'YES'}">
+			      	<td class="normal" id="menu04" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 </td>
+			      </c:if>
 			      <!-- <td class="normal" id="menu10" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">전자결재 G</td> -->
 			      <td class="normal" id="menu05" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">커뮤니티</td>
 			      <td class="normal" id="menu07" style="cursor:pointer" onClick="mclick(this);" onMouseOver="mover(this);" onMouseOut="mout(this);">자원관리</td>

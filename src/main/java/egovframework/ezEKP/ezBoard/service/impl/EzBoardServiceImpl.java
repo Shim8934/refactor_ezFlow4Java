@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -1810,6 +1811,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		myFavoriteVO.setUserId(userInfo.getId());
         myFavoriteVO.setType(pBoardType);
         myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+        myFavoriteVO.setTenantID(userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		String orderOption1 = "";
@@ -1822,10 +1824,12 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int i = 0;
 		int hLength = list.size();
 		
-		int boardCount = getThumbNailCount(myFavoriteVO);
-		BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
-        int personalCount = boardConfigVO.getListCount();
-		
+		//int boardCount = getThumbNailCount(myFavoriteVO);
+		int boardCount = ezBoardDAO.getPhotoCount(myFavoriteVO);
+		//BoardConfigVO boardConfigVO = getPersonalCount(userInfo);
+        //int personalCount = boardConfigVO.getListCount();
+        int personalCount = 5;
+        
 		sb.append("<DOCLIST>");
 		sb.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
 		sb.append("<PAGECNT>" + boardCount + "</PAGECNT>");
@@ -2792,7 +2796,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] itemIDArray = orgItemIDList.split(";");
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
-//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
@@ -3104,8 +3108,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] itemIDArray = orgItemIDList.split(";");
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
-//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
-		
+		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
@@ -3116,7 +3120,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			destItemID = "{" + UUID.randomUUID() + "}";		
-			
+
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));

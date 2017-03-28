@@ -17,13 +17,13 @@
 		 			<c:choose>
 		 				<c:when test="${pExist == 'true'}">
 		 					<ul id="photoul">
-                				<li class="btn_area">
+                				<!-- <li class="btn_area">
                     				<img src="/images/kr/main/btn_prev2.gif" width="10" height="17" onclick="Pagenationimage('PREV')">
                 				</li>
             			
                 				<li class="btn_next">
 	                    			<img src="/images/kr/main/btn_next2.gif" width="10" height="17" onclick="Pagenationimage('NEXT')">
-    	            			</li>
+    	            			</li> -->
         	    			</ul>
 		 				</c:when>
 		 				<c:otherwise>
@@ -139,11 +139,9 @@
 	            	document.getElementById("photoul").appendChild(end_li);
 	        	} else {
 	        		var nodata = "";
-	            	nodata += "<li class='btn_area'><img src=\"/images/kr/main/btn_prev2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('PREV')\"></li>"
 	            	nodata += "<div class='nodata_portlet '>";
 	            	nodata += "<p><img src='/images/kr/main/nodata_white.gif' width='107' height='70'></p>";
 	            	nodata += "<p>" + strLang1_NewPhoto + "</p></div>";
-	            	nodata += "<li class='btn_next'><img src=\"/images/kr/main/btn_next2.gif\" width=\"10\" height=\"17\" onclick=\"Pagenationimage('NEXT')\"></li>"
 
 	            	$('#photoul').html(nodata);
 	        	}

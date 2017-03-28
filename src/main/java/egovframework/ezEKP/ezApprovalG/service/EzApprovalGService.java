@@ -46,7 +46,7 @@ public interface EzApprovalGService {
 
 	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
 	
-	public String getDocType(String selected, String companyID, String lang, int tenantID) throws Exception;
+	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
 	
 	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String companyID, String lang, int tenantID) throws Exception;
 
@@ -423,5 +423,7 @@ public interface EzApprovalGService {
 			String draftDeptName, String docState, String string,	String pageSize, String pageNum, String orderCell,	String orderOption, String companyID, String lang, String string2,	int tenantID, String offSet, String approvalFlag, Locale locale) throws Exception;
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
+
+	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception;
 
 }

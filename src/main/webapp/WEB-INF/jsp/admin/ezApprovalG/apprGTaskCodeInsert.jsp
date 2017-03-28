@@ -72,6 +72,9 @@
 
 	                InitCode();
 	            } else {
+	            	$("#ilbanCode").hide();
+	            	$("#tbTaskCode").attr ("style", "width:100%;");
+	            	
 	                gState = "U";
 	                TaskCode = RetValue[1];
 	                PCode = RetValue[2];
@@ -544,7 +547,8 @@
 	        	<c:choose>
 	        		<c:when test="${approvalFlag == 'S'}">
 	        			<th><spring:message code = 'ezApprovalG.t729' /> <span style="color:red">*</span></th>
-	        			<td><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 100%" maxlength="6"></td>
+<!-- 	        			<td><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 100%" maxlength="6"></td> -->
+						<td><input type="text" id="ilbanCode" style="WIDTH: 6.4%; border:0px; background:white;" value="ZZ" disabled="disabled"><input type="text" id="tbTaskCode" name="tbTaskCode" style="WIDTH: 93.6%; box-sizing: border-box; -moz-box-sizing: border-box; " maxlength="6"></td>
 	        		</c:when>
 	        		<c:otherwise>
 	        			<th><spring:message code = 'ezApprovalG.t576' /><br>(8<spring:message code = 'ezApprovalG.t754' /> <span style="color:red">*</span></th>

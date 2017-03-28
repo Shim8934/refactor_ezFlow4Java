@@ -389,11 +389,11 @@
 			<tr>          
 				<th><spring:message code='ezCommunity.t28' /></th>
 	  			<td>
-					<select name="s_radio" id ="s_radio">
+					<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 20px;">
 						<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
 						<option value="writer"><spring:message code='ezCommunity.t445' /></option>
 					</select>
-					<input type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px">
+					<input type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
 					<a class="imgbtn"><span onClick="search();"><spring:message code='ezCommunity.t31' /></span></a>
 	  			</td>
 			</tr>
@@ -401,6 +401,7 @@
 		
 		<form name="del" id= "formDel" action = "/ezCommunity/guestEditOk.do" method = "post">
 			<input type=hidden name=code value="<c:out value='${code}' />">
+			<input type=hidden name=memo value="<c:out value='${memo}' />">
 			<input type=hidden name=mode value=delete>
 
 		</form>

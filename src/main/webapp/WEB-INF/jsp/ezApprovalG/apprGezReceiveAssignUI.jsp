@@ -217,6 +217,7 @@
 	}
 	function textUser_onkeypress() {
 	    if (window.event.keyCode == "13") {
+	    	btn_searchUser_onclick();
 	        btn_searchUser.focus();
 	    }
 	

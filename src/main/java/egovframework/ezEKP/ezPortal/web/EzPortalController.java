@@ -1434,10 +1434,11 @@ public class EzPortalController extends EgovFileMngUtil {
 							
 							if (!isDuplication) {
 								String strAnswer = xmlDom.getElementsByTagName("ANSWER"+i).item(0).getTextContent();
+								String titleString = strAnswer;
 								if (strAnswer.length() > 13) {
 									strAnswer = strAnswer.substring(0, 13) + "...";
 								}
-								pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + i + "." + strAnswer + " (" +
+								pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + i + "." + strAnswer + " (" +
 	                                    						"<strong>0</strong>"+egovMessageSource.getMessage("main.t20000", locale)+"/ " + "<strong class=\"redtxt\">0</strong>%)</dt>" +
 	                                    						"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:0%\"></p></dd>" + "</dl>";
 																resultPrintCnt++;
@@ -3106,6 +3107,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezPortal/help/top";

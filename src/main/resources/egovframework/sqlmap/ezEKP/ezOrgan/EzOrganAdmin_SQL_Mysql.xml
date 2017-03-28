@@ -2814,5 +2814,149 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
     </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompany_D1" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTALPAGE_GENERAL
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+    </delete>
+    
+     <delete id="EzOrganAdminDAO.deleteCompany_D2" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTLET_GENERAL
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D3" parameterClass="Map">
+        DELETE FROM
+            TBL_THEME_GENERAL
+        WHERE  
+            COMPANAYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D4" parameterClass="Map">
+        DELETE FROM
+            TBL_TOPMENU_GENERAL
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D5" parameterClass="Map">
+        DELETE FROM
+            TBL_TASKMIDDLECATEGORY
+        WHERE  
+            TENANT_ID = #v_TENANT_ID#
+        AND 
+            COMPANYID = #v_CN#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D6" parameterClass="Map">
+        DELETE FROM
+            TBL_LASTDOCID
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D7" parameterClass="Map">
+        DELETE FROM
+            TBL_FORMCONTAINER
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D8" parameterClass="Map">
+        DELETE FROM
+            TBL_CONTAINERTYPE
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+       <delete id="EzOrganAdminDAO.deleteCompany_D9" parameterClass="Map">
+        DELETE FROM
+            TBL_CONTAINERTODOCSTATE
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D10" parameterClass="Map">
+        DELETE FROM
+            TBL_TASKCATEGORY
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D11" parameterClass="Map">
+        DELETE FROM
+            TBL_FORMPROPERTY
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D12" parameterClass="Map">
+        DELETE FROM
+            TBL_CODELIST
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D13" parameterClass="Map">
+        DELETE FROM
+            TBL_LISTOPTION
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D14" parameterClass="Map">
+        DELETE FROM
+            TBL_LISTINFO
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D15" parameterClass="Map">
+        DELETE FROM
+            TBL_CABINETCODELIST
+        WHERE  
+            COMPANYID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
+     
+      <delete id="EzOrganAdminDAO.deleteCompany_D16" parameterClass="Map">
+        DELETE FROM
+            TBL_RS_BRD    
+        WHERE  
+            BRD_COMPANY = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
  
 </sqlMap>

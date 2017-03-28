@@ -1908,6 +1908,70 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void deleteDBData_D5(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D5", map);
     }
+	
+	public void deleteCompany_D1(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D1", map);
+    }
+	
+	public void deleteCompany_D2(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D2", map);
+    }
+	
+	public void deleteCompany_D3(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D3", map);
+    }
+	
+	public void deleteCompany_D4(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D4", map);
+    }
+	
+	public void deleteCompany_D5(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D5", map);
+    }
+	
+	public void deleteCompany_D6(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D6", map);
+    }
+	
+	public void deleteCompany_D7(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D7", map);
+    }
+	
+	public void deleteCompany_D8(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D8", map);
+    }
+	
+	public void deleteCompany_D9(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D9", map);
+    }
+	
+	public void deleteCompany_D10(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D10", map);
+    }
+	
+	public void deleteCompany_D11(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D11", map);
+    }
+	
+	public void deleteCompany_D12(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D12", map);
+    }
+	
+	public void deleteCompany_D13(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D13", map);
+    }
+	
+	public void deleteCompany_D14(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D14", map);
+    }
+	
+	public void deleteCompany_D15(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D15", map);
+    }
+	
+	public void deleteCompany_D16(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteCompany_D16", map);
+    }
 		
 	public OrganDeptVO moveDBData_S (Map<String, Object> map) throws Exception {
 		return (OrganDeptVO)select("EzOrganAdminDAO.moveDBData_S", map);

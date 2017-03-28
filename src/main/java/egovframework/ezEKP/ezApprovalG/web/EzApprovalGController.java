@@ -11,7 +11,6 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.util.ArrayList;
-import java.util.Base64.Encoder;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -43,11 +42,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xml.internal.security.utils.JavaUtils;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
-import egovframework.ezEKP.ezApproval.vo.ApprContInfoVO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -591,9 +587,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getFormCont.do")
 	public String getFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getFormCont started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String deptID = userInfo.getDeptID();
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
 		String docFileType = "";
 		
@@ -605,6 +604,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docType", docType);
 		model.addAttribute("userForm", userForm);
 		model.addAttribute("docFileType", docFileType);
+		
+		logger.debug("getFormCont ended.");
 		
 		return "ezApprovalG/apprGFormCont";
 	}
@@ -5957,6 +5958,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 
 		logger.debug("savePCTmpFile ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getAutoDocNumItemCode.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getAutoDocNumItemCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getAutoDocNumItemCode started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formID = request.getParameter("formID");
+		String result = ezApprovalGService.getAutoDocNumItem(formID, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("getAutoDocNumItemCode ended");
 		
 		return result;
 	}
