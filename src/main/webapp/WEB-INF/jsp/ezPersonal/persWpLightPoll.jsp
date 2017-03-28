@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t380' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<style type="text/css">
         	.question {
             	background:url(/images/kr/main/popup_pollimg.gif) no-repeat #f2f2f2 0px 0px;

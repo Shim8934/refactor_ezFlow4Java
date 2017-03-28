@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>ChangePersonInfo</title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3'/>" type="text/css">
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/datepicker.htc.js"></script>
 		<script type="text/javascript" src="/js/ezPersonal/controls/composeappt.js"></script>
 		<link rel="stylesheet" href="/js/jquery/dateControls/jquery.ui.all.css">
