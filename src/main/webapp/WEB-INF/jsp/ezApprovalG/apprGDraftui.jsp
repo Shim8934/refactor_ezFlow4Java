@@ -136,6 +136,7 @@
 		    var SummaryOuterReceiverList = "";
 		    var hideCabinet = "${hideCabinet}";
 		    var checkdocinfo = false;
+		    var DocType = "";
 		    window.onload = function ()
 		    {
 		        try{
