@@ -160,7 +160,7 @@ form{display:inline;margin:0}
 	border: solid #8c8c8c;
 	border-width: 0px 1px 0px 0px;
 	}
-.leftbody ul{background-color:#e6e6e6;list-style-type:none;padding:0;margin:0; width:100%;}
+.leftbody ul{background-color:#ffffff;list-style-type:none;padding:0;margin:0; width:100%;}
 .leftbody ul li{
 	border-bottom: 1px solid #dedede;
 	background:url('/images/kr/left/left_dot02.gif') no-repeat 25px 9px #fff;
@@ -168,7 +168,7 @@ form{display:inline;margin:0}
 	cursor:pointer;
 }
 
-.leftbody #iconul {background-color:#e6e6e6;list-style-type:none;padding:0;margin:0;}
+.leftbody #iconul {background-color:#ffffff;list-style-type:none;padding:0;margin:0;}
 .leftbody #iconul li{
 	border-bottom: 1px solid #dedede;
 	background:#fff;
@@ -1401,7 +1401,7 @@ form{display:inline;margin:0}
 .popup_mainlist tr td  img{vertical-align:middle;}
 .popup_mainlist tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .popup_mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
-.td_gray {background:#e6e6e6;}
+.td_gray {background:#f2f2f2;}
 
 
 .popup_notice{height:100%;}
