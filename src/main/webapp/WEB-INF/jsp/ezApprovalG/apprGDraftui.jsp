@@ -145,6 +145,16 @@
 		        }catch(e){
 		            alert(e.description + ": window_onload");
 		        }
+		        
+		        if(approvalFlag == "G") {
+		      		if(hideCabinet == "0") {
+		        		$(".approvalG").css("display","");
+		        		$(".approval").css("display","none");
+		      		}
+	        	} else{
+	        		$(".approvalG").css("display","none");
+	        		$(".approval").css("display","");
+	        	}
 		    };
 		    function dragNdrapNo()
 		    {
@@ -1344,11 +1354,7 @@
 		                <li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 		                <li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
 		                <li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-		                <c:if test="${approvalFlag == 'G'}">
-		                <c:if test="${hideCabinet == '0'}">
-		                <li id="btnAddSepAttach"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
-		                </c:if>
-		                </c:if>
+		                <li id="btnAddSepAttach" class ="approvalG"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 		                <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
 		                <li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
