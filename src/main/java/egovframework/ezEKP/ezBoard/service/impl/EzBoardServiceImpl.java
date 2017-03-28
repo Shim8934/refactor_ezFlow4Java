@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2795,7 +2796,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] itemIDArray = orgItemIDList.split(";");
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
-//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
 		
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
@@ -3107,8 +3108,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String[] itemIDArray = orgItemIDList.split(";");
 		String[] boardIDArray = orgBoardIDList.split(";");
 		
-//		itemIDArray = new HashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
-		
+		itemIDArray = new LinkedHashSet<String>(Arrays.asList(itemIDArray)).toArray(new String[0]);
+logger.debug("### " + orgItemIDList + " / " + orgBoardIDList);
 		for (int i = 0; i < itemIDArray.length; i++) {
 			String orgItemID = itemIDArray[i];
 			
@@ -3119,7 +3120,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			destItemID = "{" + UUID.randomUUID() + "}";		
-			
+logger.debug(orgItemID + " / " + orgBoardID);			
 			BoardListVO boardLisitVO = getCopyItem(orgItemID, orgBoardID, userInfo.getTenantId());
 			//MHT 파일위치 변경
 			boardLisitVO.setContentLocation(boardLisitVO.getContentLocation().replace(orgBoardID, destBoardID).replace(orgItemID, destItemID));

@@ -390,7 +390,7 @@
           <li onClick="MailListRefresh()"><span class="img_Newbtn"><spring:message code="ezEmail.t515" /></span></li>
 		  <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
           <li id="btnReject" style="display:none"><span onClick="reject_onclick()"><spring:message code="ezEmail.t270" /></span></li>
-		  <li id="right"><spring:message code="ezEmail.t99000034" /><img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
+		  <li id="right"><spring:message code="ezEmail.t99000034" />&nbsp;<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" /> <!-- 레이어나왔을경우btn_arrow_up.gif --></li>
           </ul>
         </div>
 		<script type="text/javascript">
@@ -462,7 +462,7 @@
             <span id="PreContent_RayerH" style="position:absolute; border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">            
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderH" style="border: solid 0px black;width:100%;display:none;">
+                        <div id="Preview_HeaderH" style="border-bottom: solid 1px #dadada; width:100%;display:none;">
 		                    <p class="mail_title" style="margin-left:0px;"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreH_subject" style="display:none;"><span id="PreH_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span>
 		                    <dl class="mail_item">
@@ -492,7 +492,7 @@
             <span id="PreContent_RayerW" style="display:block;border:0px solid red;">
                 <span style="width:100%;height:100px;display:block;">
 	                <span class="previewmail_info" style="display:block;width:100%;">
-                        <div id="Preview_HeaderW" style="border: solid 0px black;display:none;">
+                        <div id="Preview_HeaderW" style="border-bottom: solid 1px #dadada; display:none;">
 		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
 		                    <dl class="mail_item">

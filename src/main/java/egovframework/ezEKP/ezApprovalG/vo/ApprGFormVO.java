@@ -35,6 +35,8 @@ public class ApprGFormVO {
 	private String deptID;
 	/** 양식별 고정수신처 순번*/
 	private String deptSn;
+	/** 캐비넷아이디*/
+	private String cabinetID;
 	
 	/** 속성값 조회를 위한 */
 	private String code;
@@ -243,6 +245,12 @@ public class ApprGFormVO {
 	}
 	public void setUserID(String userID) {
 		this.userID = userID;
+	}
+	public String getCabinetID() {
+		return cabinetID;
+	}
+	public void setCabinetID(String cabinetID) {
+		this.cabinetID = cabinetID;
 	}
 	
 }

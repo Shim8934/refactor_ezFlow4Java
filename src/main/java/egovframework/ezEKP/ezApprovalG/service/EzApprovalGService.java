@@ -424,4 +424,6 @@ public interface EzApprovalGService {
 
 	public List<ApprGContInfoVO> getSpecialContTree(LoginVO userInfo) throws Exception;
 
+	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception;
+
 }

@@ -2159,6 +2159,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return resultXML.toString();
 	}
+	
+	@Override
+	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception {
+		logger.debug("getAutoDocNumItem started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("formID", formID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ApprGFormVO apprGFormVO = ezApprovalGDAO.getAutoDocNumItem(map);
+
+		String rtnValue = apprGFormVO.getIsPublic() + ";" + apprGFormVO.getItemCode() + ";" + apprGFormVO.getItemName() + ";" + apprGFormVO.getItemName2() + ";" + apprGFormVO.getUseFlag() + ";" + 
+						  apprGFormVO.getKeepPeriod() + ";" + apprGFormVO.getSecurityLevel() + ";" + apprGFormVO.getKeepPeriodCode() + ";" + apprGFormVO.getCabinetID();
+		
+		logger.debug("getAutoDocNumItem ended");
+		
+		return rtnValue;
+	}
 
 	@Override
 	public String getTempList(String userID, String formID, String companyID, String lang, int tenantID) throws Exception {
