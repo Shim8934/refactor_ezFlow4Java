@@ -961,10 +961,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("apprGGetContDocType started.");
 		
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String companyID = request.getParameter("comID");
 		String primary = userInfo.getPrimary();
 		
-		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId());
+		String result = ezApprovalGAdminService.getContainerToDocStateInfo(companyID, primary, userInfo.getTenantId(), approvalFlag);
 		
 		logger.debug("apprGGetContDocType ended.");
 		

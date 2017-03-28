@@ -50,47 +50,89 @@
 	<!-- {CALL EZSP_GETCONTAINERTODOCSTATEINF(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 	<!-- ]]> -->
 	<!-- </procedure> -->
-	<select id="EzApprovalGAdmin.getContainerToDocStateInfo"
-		parameterClass="Map" resultClass="ApprGDocStateVO">
-		<![CDATA[
-			SELECT
-				TBL_CONTAINERTODOCSTATE.containertypeid,
-				TBL_CODELIST.code2 DocumentState,
-				TBL_CONTAINERTYPE.containertypename,
-				TBL_CONTAINERTYPE.containertypename2,
-				TBL_CODELIST.name DOCUMENTSTATENAME,
-				TBL_CODELIST.name2 DOCUMENTSTATENAME2,
-				TBL_CODELIST.name3 DOCUMENTSTATENAME3,
-				TBL_CODELIST.name4 DOCUMENTSTATENAME4  
-			FROM
-				TBL_CODELIST
-			LEFT JOIN
-				TBL_CONTAINERTODOCSTATE
-			ON
-				TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
-			AND
-				TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
-			AND
-				TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
-			LEFT JOIN
-				TBL_CONTAINERTYPE
-			ON
-				TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
-			AND
-				TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
-			AND
-				TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
-			WHERE
-				TBL_CODELIST.tenant_id = #tenantID#
-			AND
-				TBL_CODELIST.companyid = #companyID#
-			AND
-				TBL_CODELIST.code1 = 'A02'
-			AND
-				TBL_CODELIST.isuse = '1'
-			ORDER BY
-				TBL_CONTAINERTODOCSTATE.documentstate
-		]]>
+	<select id="EzApprovalGAdmin.getContainerToDocStateInfo" parameterClass="Map" resultClass="ApprGDocStateVO" remapResults="true">
+		<isEqual property="approvalFlag" compareValue="S">
+			<![CDATA[
+				SELECT
+					TBL_CONTAINERTODOCSTATE.containertypeid,
+					TBL_CODELIST.code2 DocumentState,
+					TBL_CONTAINERTYPE.containertypename,
+					TBL_CONTAINERTYPE.containertypename2,
+					TBL_CODELIST.name DOCUMENTSTATENAME,
+					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
+					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+				FROM
+					TBL_CODELIST
+				LEFT JOIN
+					TBL_CONTAINERTODOCSTATE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
+				LEFT JOIN
+					TBL_CONTAINERTYPE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
+				WHERE
+					TBL_CODELIST.tenant_id = #tenantID#
+				AND
+					TBL_CODELIST.companyid = #companyID#
+				AND
+					TBL_CODELIST.code1 = 'SA02'
+				AND
+					TBL_CODELIST.isuse = '1'
+				ORDER BY
+					TBL_CONTAINERTODOCSTATE.documentstate
+			]]>
+		</isEqual>
+		<isEqual property="approvalFlag" compareValue="G">
+			<![CDATA[
+				SELECT
+					TBL_CONTAINERTODOCSTATE.containertypeid,
+					TBL_CODELIST.code2 DocumentState,
+					TBL_CONTAINERTYPE.containertypename,
+					TBL_CONTAINERTYPE.containertypename2,
+					TBL_CODELIST.name DOCUMENTSTATENAME,
+					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
+					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+				FROM
+					TBL_CODELIST
+				LEFT JOIN
+					TBL_CONTAINERTODOCSTATE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CODELIST.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CODELIST.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.documentstate = TBL_CODELIST.code2
+				LEFT JOIN
+					TBL_CONTAINERTYPE
+				ON
+					TBL_CONTAINERTODOCSTATE.tenant_id = TBL_CONTAINERTYPE.tenant_id
+				AND
+					TBL_CONTAINERTODOCSTATE.companyid = TBL_CONTAINERTYPE.companyid
+				AND
+					TBL_CONTAINERTODOCSTATE.containertypeid = TBL_CONTAINERTYPE.containertypeid
+				WHERE
+					TBL_CODELIST.tenant_id = #tenantID#
+				AND
+					TBL_CODELIST.companyid = #companyID#
+				AND
+					TBL_CODELIST.code1 = 'A02'
+				AND
+					TBL_CODELIST.isuse = '1'
+				ORDER BY
+					TBL_CONTAINERTODOCSTATE.documentstate
+			]]>
+		</isEqual>
 	</select>
 
 	<!-- <procedure id="EzApprovalGAdmin.getContainerUseDeptInfo" parameterClass="Map" 
