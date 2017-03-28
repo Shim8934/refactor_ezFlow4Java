@@ -98,7 +98,7 @@ var ezapropinion_cross_dialogArguments = new Array();
 function OpenInformationUI(pInformationContent, FunctionName, Type) {
     var parameter = pInformationContent;
     var url = "/ezApprovalG/ezAprOpinion.do";
-    if (CrossYN() || pNoneActiveX == "YES") {
+    if (CrossYN()) {
         ezapropinion_cross_dialogArguments[0] = parameter;
         if (FunctionName != undefined)
             ezapropinion_cross_dialogArguments[1] = FunctionName;
@@ -118,10 +118,42 @@ function OpenInformationUI(pInformationContent, FunctionName, Type) {
         return RtnVal;
     }
 }
+
 function OpenInformationUI_Complete(RtnVal, Complete_Function)
 {
     DivPopUpHidden();
     if (RtnVal) {
         Complete_Function(RtnVal);   
+    }
+}
+
+
+function OpenInformationTFUI(pInformationContent, FunctionName, Type) {
+    var parameter = pInformationContent;
+    var url = "/ezApprovalG/ezAprOpinion.do";
+    if (CrossYN()) {
+    	ezapropinion_cross_dialogArguments[0] = parameter;
+    	if (FunctionName != undefined)
+            ezapropinion_cross_dialogArguments[1] = FunctionName;
+        else
+            ezapropinion_cross_dialogArguments[1] = OpenInformationTFUI_Complete;
+    	
+        if (Type == undefined) {
+            DivPopUpShow(330, 205, url);
+        } else {
+            var result = GetOpenWindow(url + "?type=open", "ezAPROPINION_Cross", 325, 200, "NO");
+        }
+    } else {
+        var feature = "status:no;dialogWidth:325px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+        feature = feature + GetShowModalPosition(325, 200);
+        var RtnVal = window.showModalDialog(url, parameter, feature);
+        return RtnVal;
+    }
+}
+
+function OpenInformationTFUI_Complete(RtnVal, Complete_Function) {
+    DivPopUpHidden();
+    if (RtnVal) {
+    	Complete_Function(RtnVal);
     }
 }

@@ -201,6 +201,13 @@
 	                }
 	            } catch (e) { }
 	        }
+	        
+	        function Set_HtmlDocument() {
+	            try {
+	                document.getElementById('div_Content').innerHTML = OrgBodyHtml;
+	            } catch (e) {
+	            }
+	        }
 	
 	        function Set_EditorContentURL(url) {
 	            try {

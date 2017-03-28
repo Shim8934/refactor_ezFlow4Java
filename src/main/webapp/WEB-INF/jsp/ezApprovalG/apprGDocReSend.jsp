@@ -150,6 +150,8 @@
 	        }
 	        function Edit_Complete(RtnVal)
 	        {
+	        	DivPopUpHidden();
+	        	
 	            if (RtnVal) {
 	                modeflag = true;
 	            }
@@ -266,8 +268,11 @@
 	        
 	        function chkReceipt_Complete(RtnVal)
 	        {
-	            if (RtnVal)
-	                btnApprovalInfo("5");            
+	        	DivPopUpHidden();
+	        	
+	            if (RtnVal) {
+	                btnApprovalInfo("10");            
+	            }
 	        }
 	        
 	        function Send_Complete(RtnVal) {

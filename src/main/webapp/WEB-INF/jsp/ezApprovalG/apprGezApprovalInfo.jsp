@@ -878,7 +878,7 @@
 		            			}
 		            			
 		                        ret[0] = "OK";
-		                        ret[2] = SAPRLINETEMPLETXMLParsing();
+		                        ret[2] = AprDeptListXML();
 		                        ret[5] = MakertnVal();
 		                        
 		                        if (ReturnFunction != null) {

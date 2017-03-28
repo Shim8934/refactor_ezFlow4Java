@@ -4854,8 +4854,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			throws Exception {
 		StringBuilder strSQL = new StringBuilder();
 		boolean rtn = true;
+		//"G"면 심사시에만 문서 발송
 		String gFlag = getCode2Name("A35", "002", companyID, lang, userInfo.getTenantId()).toUpperCase().trim();
-		
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -4866,20 +4867,37 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 
 		try {
-			ezApprovalGDAO.doSendOfferApprove1(map);
-			if(gFlag.equals("G")) {
+			if (approvalFlag.equals("S")) {
+				ezApprovalGDAO.doSendOfferApprove1(map);
+				
 				ezApprovalGDAO.deleteTbAprAttachInfo(map);
 				ezApprovalGDAO.insertTbAprAttachInfo(map);
 				
 				ezApprovalGDAO.deleteTbAprDocAttachInfo(map);
 				ezApprovalGDAO.insertTbAprDocAttachInfo(map);
-			}
+				
 				ezApprovalGDAO.deleteTbAprLineInfo(map);
 				ezApprovalGDAO.insertTbAprLineInfo(map);
 				
 				ezApprovalGDAO.deleteTbExpAprLine(map);
 				ezApprovalGDAO.insertTbExpAprLine(map);
-			
+			} else {
+				ezApprovalGDAO.doSendOfferApprove1(map);
+				
+				if (gFlag.equals("G")) {
+					ezApprovalGDAO.deleteTbAprAttachInfo(map);
+					ezApprovalGDAO.insertTbAprAttachInfo(map);
+					
+					ezApprovalGDAO.deleteTbAprDocAttachInfo(map);
+					ezApprovalGDAO.insertTbAprDocAttachInfo(map);
+				}
+				
+				ezApprovalGDAO.deleteTbAprLineInfo(map);
+				ezApprovalGDAO.insertTbAprLineInfo(map);
+				
+				ezApprovalGDAO.deleteTbExpAprLine(map);
+				ezApprovalGDAO.insertTbExpAprLine(map);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -4888,23 +4906,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		strSQL.append(doDocComplete(docID, userID, userName, userName2, dirPath, deptID, proxyUserID, companyID, lang, userInfo));
 		
-		if (!strSQL.toString().toUpperCase().equals("FALSE")) {
-			
-			try {
-				map.put("v_DOCID", docID);
-				ezApprovalGDAO.updateProEndAprDocInfo(map);  
-				
-				map.put("v_DOCID", orgDocID);
-				ezApprovalGDAO.updateProEndAprDocInfo(map);	
-    			rtn = true;
-    		} catch (Exception e) {
-    			e.printStackTrace();
-				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-    			rtn = false;
-    		}
-    		
+		if (approvalFlag.equals("S")) {
+			if (!strSQL.toString().toUpperCase().equals("FALSE")) {
+				rtn = true;
+			} else {
+				rtn = false;
+			}
 		} else {
-			rtn = false;
+			if (!strSQL.toString().toUpperCase().equals("FALSE")) {
+				try {
+					map.put("v_DOCID", docID);
+					ezApprovalGDAO.updateProEndAprDocInfo(map);  
+					
+					map.put("v_DOCID", orgDocID);
+					ezApprovalGDAO.updateProEndAprDocInfo(map);	
+					rtn = true;
+				} catch (Exception e) {
+					e.printStackTrace();
+					TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+					rtn = false;
+				}
+			} else {
+				rtn = false;
+			}
 		}
 		
 		if (rtn) {
@@ -4913,11 +4937,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return "<RESULT>TRUE</RESULT>";
 		} else {
 			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-			try{
+			
+			try {
 				ezApprovalGDAO.doSendOfferApprove2(map);
 			} catch (Exception e) {
 				e.printStackTrace();
 				TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+				return "<RESULT>FALSE</RESULT>";
 			}
 			chkDocDelete(docID, orgDocID, rtn, userID, deptID, dirPath, companyID, userInfo.getTenantId());
 			
@@ -11148,7 +11174,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		String flag = getCode2Name("A35", "002", companyID, lang, userInfo.getTenantId()).toUpperCase().trim();
 		
-		switch (docType) {
+		switch (docType) { //변수는 docType 이지만 내용은 docState임
 		case "001":
 			if (!realDocType.equals("001")) {
 				subSQL = doSendDoc(docID, deptID, dirPath, staDSSuSin, companyID, lang, userInfo.getTenantId());
@@ -12626,6 +12652,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	                            map.put("v_DocState", docState);
 	                            //S 버젼 수신처 변경
 	                            if (ezCommonService.getTenantConfig("ApprovalFlag", tenantID).equals("S")) {
+	                            	map.put("v_ReceiveSN", 1);
+	                            	
 	                            	if (receiptMemberID != null && !receiptMemberID.equals("")) {
 	                            		map.put("v_AprState", staASJiJung);
 	                            	} else {
