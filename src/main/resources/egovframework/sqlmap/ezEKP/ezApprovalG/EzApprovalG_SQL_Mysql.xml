@@ -10315,6 +10315,10 @@
    		AND
    			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		<isEqual property="approvalFlag" compareValue="S">
+		 AND  
+		 		C.CODE1 ='A02'
+   		 AND  
+   		 		D.CODE1 ='A04'
 		$v_WHERESTR$
 		</isEqual>
    		<isNotEmpty property="v_DOCNUMBER"> 
