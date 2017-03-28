@@ -505,11 +505,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document docXML = commonUtil.convertStringToDocument(docList);
 						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 								String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {
-									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
 										checkPermission = false;
 										break;
 									}
@@ -527,7 +527,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
 						
 						if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-							return "<RESULT>NOTPERMISSION</RESULT>";
+							return "NOTPERMISSION";
 						}
 					}
 				}
@@ -536,7 +536,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
-					return "<RESULT>NOTPERMISSION</RESULT>";
+					return "NOTPERMISSION";
 				}
 			}
 		}
@@ -741,11 +741,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 						
 						for (int j = 0; j < proxyUserArray.length; j++) {
-							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
 								checkPermission = false;
 								break;
 							}

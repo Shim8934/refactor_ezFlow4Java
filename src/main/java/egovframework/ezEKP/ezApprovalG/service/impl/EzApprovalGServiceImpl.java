@@ -18,6 +18,9 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -3430,19 +3433,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					map.put("v_AprMemberJobTitle", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent());
 					map.put("v_AprMemberJobTitle2", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent());
 				} else {
+					 // xpath 생성
+					XPath  xpath = XPathFactory.newInstance().newXPath();
+					NodeList nodes = (NodeList)xpath.evaluate("//ROWS/ROW", doc, XPathConstants.NODESET);
+					
 					map.put("v_AprDeptMemberSN", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(0).getTextContent());
-					map.put("v_AprMemberDeptID", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(4).getTextContent());
-					map.put("v_AprMemberDeptName", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(12).getTextContent());
-					map.put("v_AprMemberDeptName2", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(13).getTextContent());
-					map.put("v_ExtReceptYN", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(5).getTextContent());
-					map.put("v_ProcessYN", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(6).getTextContent());
-					map.put("v_CanEditYN", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(7).getTextContent());
-					map.put("v_ExtReceptEmail", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(8).getTextContent());
-					map.put("v_AprMemberID", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(9).getTextContent());
-					map.put("v_AprMemberName", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(10).getTextContent());
-					map.put("v_AprMemberName2", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(14).getTextContent());
-					map.put("v_AprMemberJobTitle", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(11).getTextContent());
-					map.put("v_AprMemberJobTitle2", doc.getElementsByTagName("ROW").item(i).getChildNodes().item(15).getTextContent());
+					map.put("v_AprMemberDeptID", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptPointID']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberDeptName", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='AprMemberDeptName']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberDeptName2", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='AprMemberDeptName2']", doc, XPathConstants.STRING));
+					map.put("v_ExtReceptYN", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ExtReceptYN']", doc, XPathConstants.STRING));
+					map.put("v_ProcessYN", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ProcessYN']", doc, XPathConstants.STRING));
+					map.put("v_CanEditYN", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='CanEditYN']", doc, XPathConstants.STRING));
+					map.put("v_ExtReceptEmail", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ExtReceptEmail']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberID",xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptMemberID']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberName", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptMemberName']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberName2", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptMemberName2']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberJobTitle", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptMemberJobTitle']", doc, XPathConstants.STRING));
+					map.put("v_AprMemberJobTitle2", xpath.evaluate("//ROWS/ROW["+(i+1)+"]/DATA[@name='ReceiptMemberJobTitle2']", doc, XPathConstants.STRING));
 				}
 				try {
 					ezApprovalGDAO.insertDeptTempletDetail(map);

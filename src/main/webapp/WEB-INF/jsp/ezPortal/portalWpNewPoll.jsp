@@ -15,7 +15,7 @@
  	 				<c:choose>
   						<c:when test="${pPollItemSeq != 0}">
   							<p class="qusetion">
-   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span style="margin-left:3px">${pPollTitle }</span>
+   								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="${pPollTitle }" style="margin-left:3px">${pPollTitle }</span>
     						</p>
       						${pPollResultContent}
   						</c:when>

@@ -2190,7 +2190,8 @@ function CheckLen(pStr, pSize) {
         return true;
 }
 function AprLineAddDeptAddress(AddressName) {
-    Resultxml.async = false;
+	//2017-03-28 이효민
+    //Resultxml.async = false;
     if(approvalFlag == "G") {
     	Resultxml = loadXMLFile(strLangEtcFile1);
     } else {
