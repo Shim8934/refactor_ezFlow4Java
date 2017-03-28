@@ -590,7 +590,7 @@ function getAprLine(tr) {
 				flag  : pFlag
 				},
 		success: function(xml){
-			getAprovSub_after(loadXMLString(xml));
+			getAprovSub_after(xml);
 		}        			
 	});
     
@@ -598,14 +598,14 @@ function getAprLine(tr) {
 
 function getAprovSub_after(xml) {
     if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-    if (xml == "NOTPERMISSTION") {
+    if (xml == "NOTPERMISSION") {
         document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
         document.getElementById("lvAprLine").style.textAlign = "center";
         return;
     }
 
 
-    var listNode = SelectSingleNodeNew(xml, "LISTVIEWDATA");
+    var listNode = SelectSingleNodeNew(loadXMLString(xml), "LISTVIEWDATA");
 
     var xmlDoc;
     if (CrossYN()) {
@@ -1287,7 +1287,7 @@ function getAprDocAproveInfo(tr) {
 
     if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
 
-    if (RtnVal == "NOTPERMISSTION") {
+    if (RtnVal == "NOTPERMISSION") {
         document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
         document.getElementById("lvAprLine").style.textAlign = "center";
         return;
@@ -2054,7 +2054,7 @@ function getdoclistSub_after() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
         try {
             if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-            if (xmlhttp.responseText == "NOTPERMISSTION") {
+            if (xmlhttp.responseText == "NOTPERMISSION") {
                 document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
                 document.getElementById("lvAprLine").style.textAlign = "center";
                 return;
