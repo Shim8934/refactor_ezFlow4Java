@@ -519,6 +519,7 @@
 	            } else if (jobState == "ATTACH") {
 	            	//여기여기여기
 	            	var AttachfilenameA1 = tr.cells[1].innerHTML;
+	            	
                     if (AttachfilenameA1 != null) {
                         var AttachfilenameN1 = AttachfilenameA1.lastIndexOf(".");
                         var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
@@ -534,18 +535,9 @@
                         }
 
                         if (AttachUrl != "null") {
-                            var tempINGFlag = "";
-                            
-                            if (pListTypeValue == "9")
-                                tempINGFlag = "TMP"
-                            else if (pListTypeValue == "6")
-                                tempINGFlag = "END"
-                            else
-                                tempINGFlag = "APR"
-                                
-                            if (GetAttribute(tr,"data4") == "file")
-                                window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
-                            else
+//                             if (GetAttribute(tr,"data4") == "file")
+//                                 window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
+//                             else
                                 window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
                         }
 
