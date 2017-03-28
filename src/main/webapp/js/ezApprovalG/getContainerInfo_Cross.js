@@ -608,22 +608,23 @@ function getDataInfo() {
 				mode  : "END"
 				},
 		success: function(xml){
-			getdoclistSub_after(loadXMLString(xml));
+			getdoclistSub_after(xml);
 		}        			
 	});
 }
 
 function getdoclistSub_after(xml) {
     try {
-        Resultxml = xml;
         if (document.getElementById("lvtDetail").innerHTML != "")
             document.getElementById("lvtDetail").innerHTML = "";
 
-        if (xml.documentElement.textContent == "NOTPERMISSION") {
+        if (xml == "NOTPERMISSION") {
             document.getElementById("lvtDetail").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
             document.getElementById("lvtDetail").style.textAlign = "center";
             return;
         }
+        
+        Resultxml = loadXMLString(xml);
 
         var DocList = new ListView();      
         DocList.SetID("SubDocList");                               
@@ -1113,4 +1114,17 @@ function check_presence2() {
                 InformationString = strLang1124;
             alert(InformationString);
         }
+    }
+    
+    function CheckResend(pDocID) {
+        var xmlpara = createXmlDom();
+        var xmlhttp = createXMLHttpRequest();
+        var objRoot;
+
+        objRoot = createNodeInsert(xmlpara, objRoot, "DATA");
+        createNodeAndInsertText(xmlpara, objRoot, "DOCID", pDocID);
+        xmlhttp.open("Post", "/ezApprovalG/checkResend.do", false);
+        xmlhttp.send(xmlpara);
+
+        return xmlhttp.responseText.trim();
     }

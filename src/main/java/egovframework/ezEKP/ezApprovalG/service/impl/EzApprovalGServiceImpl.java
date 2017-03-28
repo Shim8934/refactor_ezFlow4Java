@@ -800,6 +800,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			} else {
 				if (publicityCode.equals("Y")){
 					publicityCode = "1";
+				} else if(publicityCode.equals("")) {
+					publicityCode = "1"; 
 				} else {
 					publicityCode = "3"; 
 				}
@@ -20462,6 +20464,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return apprContInfoVOs;
 		
+	}
+
+	@Override
+	public String checkResend(String docID, String companyID, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("pDocID", docID);
+		return ezApprovalGDAO.checkResend(map);
 	}
 
 }

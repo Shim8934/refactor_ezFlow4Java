@@ -908,6 +908,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (String) select("EzApprovalG.setCabinetRecvAprMemberDeptId", map);
 	}
 	
+	public String checkResend(Map<String, Object> map) {
+		return (String) select("EzApprovalG.checkResend", map);
+	}
+	
 	public int selectDoCallBack(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.selectDoCallBack", map);
 	}

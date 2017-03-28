@@ -262,7 +262,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         	
         	for (int k = 0; k < deptList.length; k++) {
         		String[] subList = deptList[k].split(":");
-        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[0]) : commonUtil.cleanValue(subList[1]);
+        		String pTitle_ = userInfo.getPrimary().equals("1") ? commonUtil.cleanValue(subList[1]) : commonUtil.cleanValue(subList[2]);
                 String pTitle1_ = ""; 
                 String pTitle2_ = "";
                 
@@ -6042,6 +6042,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String result = ezApprovalGService.doSendOfferS(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
 		
 		logger.debug("sendOffer ended");
+		
+		return result;
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String checkResend(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("checkResend started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		String docID = doc.getElementsByTagName("DOCID").item(0).getTextContent();
+		
+		String result = ezApprovalGService.checkResend(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("result=" + result);
+		logger.debug("checkResend ended");
 		
 		return result;
 	}

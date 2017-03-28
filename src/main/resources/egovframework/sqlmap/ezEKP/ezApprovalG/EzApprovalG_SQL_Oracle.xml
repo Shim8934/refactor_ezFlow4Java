@@ -18119,4 +18119,17 @@
         VALUES 
         ( #v_DOCID#, #v_SN#, #v_URL#, #v_USERID#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, #v_SYSDSATE#, ' ' );
    	</insert>
+   	
+   	<select id="EzApprovalG.checkResend" parameterClass="Map" resultClass="String">
+   		SELECT 
+   			B.CONTAINERTYPEID 
+		FROM 
+			TBL_ENDAPRDOCINFO A
+		INNER JOIN 
+			TBL_CONTAINER B
+		ON 
+			A.CONTAINERID = B.CONTAINERID
+		WHERE 
+			A.DOCID = #pDocID#
+   	</select>
 </sqlMap>
