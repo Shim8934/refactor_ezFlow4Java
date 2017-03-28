@@ -1263,13 +1263,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getDocType(String selected, String companyID, String lang, int tenantID) throws Exception {
+	public String getDocType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getDocType started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", commonUtil.getMultiData(lang, tenantID));
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("approvalFlag", approvalFlag);
 		
 		List<HashMap<String, Object>> docTypes = ezApprovalGDAO.getDocType(map);
 		
@@ -1277,8 +1278,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder sb = new StringBuilder();
 		
 		for (int k = 0; k < dlength; k++) {
-			String code2 = (String) docTypes.get(k).get("CODE2");
-			String name = (String) docTypes.get(k).get("NAME");
+			String code2 = (String) docTypes.get(k).get("code2");
+			String name = (String) docTypes.get(k).get("name");
 			
 			if (code2.equals(selected)) {
 				sb.append("<OPTION value=" + code2 + " selected>" + name + "</OPTION>");

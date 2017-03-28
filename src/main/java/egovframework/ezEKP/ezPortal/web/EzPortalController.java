@@ -3106,6 +3106,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	public String top(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
+		model.addAttribute("userApprovalG", config.getProperty("config.UserInfo_ApprovalG"));
 		model.addAttribute("userInfo", userInfo);
 		
 		return "/ezPortal/help/top";
