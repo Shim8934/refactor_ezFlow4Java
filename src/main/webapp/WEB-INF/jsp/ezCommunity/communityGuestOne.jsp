@@ -401,6 +401,7 @@
 		
 		<form name="del" id= "formDel" action = "/ezCommunity/guestEditOk.do" method = "post">
 			<input type=hidden name=code value="<c:out value='${code}' />">
+			<input type=hidden name=memo value="<c:out value='${memo}' />">
 			<input type=hidden name=mode value=delete>
 
 		</form>
