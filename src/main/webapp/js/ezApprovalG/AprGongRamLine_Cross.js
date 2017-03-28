@@ -178,7 +178,7 @@ function InitListView() {
     	});
 
         var LVData = null;
-        if (result == "NOTPERMISSTION") {
+        if (result == "NOTPERMISSION") {
             alert(strLang1132);
             window.close();
         } else {

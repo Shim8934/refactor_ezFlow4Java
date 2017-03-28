@@ -388,7 +388,7 @@ function getAprovSub_after() {
     try {
         if (xmlhttp.responseText == "") return;
 
-        if (xmlhttp.responseText == "NOTPERMUSSTION") {
+        if (xmlhttp.responseText == "NOTPERMUSSION") {
             document.getElementById("lvAprLine").style.textAlign = "center";
             document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' style='padding-top:10px' width='136' height='112'><h1 style='margin-top:0px'>" + strLang606 + "</h1>";
             return;

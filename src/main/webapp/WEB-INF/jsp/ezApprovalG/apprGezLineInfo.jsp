@@ -77,7 +77,7 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(loadXMLString(xml));
+		    			getAprovSub_after(xml);
 		    		}        			
 		    	});
 		    }
@@ -92,7 +92,7 @@
 		    				mode  : "END"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(loadXMLString(xml));
+		    			getAprovSub_after(xml);
 		    		}        			
 		    	});
 		    }
@@ -107,7 +107,7 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(loadXMLString(xml));
+		    			getAprovSub_after(xml);
 		    		}        			
 		    	});
 		    }
@@ -122,7 +122,7 @@
 		    				mode  : "END"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(loadXMLString(xml));
+		    			getAprovSub_after(xml);
 		    		}        			
 		    	});
 		    }
@@ -136,7 +136,7 @@
 		            listview.SetID("AprLine");                              
 		            listview.SetMulSelectable(false);                       
 		            listview.SetRowOnDblClick("lvAprLine_DBSelChange");
-		            listview.DataSource(xml);                            
+		            listview.DataSource(loadXMLString(xml));                            
 		            listview.DataBind("lvAprLine");                        
 		
 		            var tr = listview.GetDataRows();
@@ -255,7 +255,7 @@
 		    				mode  : "APR"
 		    				},
 		    		success: function(xml){
-		    			getAprovSub_after(loadXMLString(xml));
+		    			getAprovSub_after(xml);
 		    		}        			
 		    	});
 		    }
