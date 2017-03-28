@@ -182,6 +182,15 @@
 		        document.getElementById("EdtorSize").style.height = document.body.clientHeight - 220 + "PX";
 	    	}
 		    
+		    window.onunload = function () {
+		        try {
+		            m_Arguments = opener.schedule_add_ck_dialogArguments[0];
+		            opener.close();
+		        }
+		        catch (e) {
+		        }
+		    }
+		    
 		    $(function () {
 	    	    $("#Sdatepicker").datepicker({
 	        	    changeMonth: true,

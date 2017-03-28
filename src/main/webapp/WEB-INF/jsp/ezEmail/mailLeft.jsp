@@ -441,7 +441,7 @@
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"></div>
 	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
 	        <ul>
-	            <div class="tree" style="width: 179px; height: 100%; background-color: #e6e6e6; overflow: auto; margin-left: 20px;" id="PostTreeView"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="PostTreeView"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
 	            <li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
 	            <li><span onclick="Open_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t641" /></span></li>
@@ -454,7 +454,7 @@
 	        </ul>
 	        <h2><span onclick="Address_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000041" /></span></h2>
 	        <ul>
-	            <div class="tree" style="width: 179px; height: 100%; background-color: #e6e6e6; overflow: auto; margin-left: 20px;" id="AddressTreeView"></div>
+	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #dedede; overflow: auto; padding-left: 20px;" id="AddressTreeView"></div>
 	            <li><span id='Address_Search' onclick="address_Search();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000042" /></span></li>
 	            <li evt="0"><span onclick="address_foldermanage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000043" /></span></li>
 	        </ul>
