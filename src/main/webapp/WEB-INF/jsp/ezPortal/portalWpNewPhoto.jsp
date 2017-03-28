@@ -39,7 +39,7 @@
 		</section>
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript">
 			var pBoardType_NewPhoto = "4";

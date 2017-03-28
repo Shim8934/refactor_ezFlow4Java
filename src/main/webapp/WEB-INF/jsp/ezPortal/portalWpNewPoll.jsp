@@ -34,7 +34,7 @@
 		</section>
 		
 		<link href="<spring:message code='main.e6' />" rel="stylesheet" type="text/css">
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 var votepoll = "${votePoll}";
 		    var itemseq = "${pPollItemSeq}";
