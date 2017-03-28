@@ -497,27 +497,51 @@
 	                    var left = (parseInt(width) - 525) / 2;
 	                    var top = (parseInt(heigth) - 220) / 2;
 	                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA3") + "&deptID=" + encodeURI(tr.getAttribute("DATA4")) + "&docState=012", "", "height=270px,width=525px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	                }
-	                else
+	                } else {
 	                    window.open("/ezCommon/showPersonInfo.do?id=" + tr.getAttribute("DATA4"), "", "height=450px,width=600px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-	            }
-	            else if (jobState == "RECIPENT") {
-	
+	                }
+	            } else if (jobState == "RECIPENT") {
 	                var heigth = window.screen.availHeight;
 	                var width = window.screen.availWidth;
 	                var left = (parseInt(width) - 540) / 2;
 	                var top = (parseInt(heigth) - 220) / 2;
 	
 	                var isExtYN = tr.getAttribute("DATA3");
+	                
 	                if (isExtYN.toUpperCase() == "Y") {
 	                    var url = "/ezApprovalG/ezReceiptHistoryInfo.do?docID=" + DocID + "&deptID=" + encodeURI(tr.getAttribute("DATA1"));
 	                    var feature = "status:no;dialogWidth:555px;dialogHeight:240px;help:no;scroll:no;edge:sunken";
 	                    feature = feature + GetShowModalPosition(555, 240);
 	                    var ret = window.showModalDialog(url, "", feature);
-	                }
-	                else {
+	                } else {
 	                    window.open("/ezApprovalG/ezLineInfo.do?docID=" + DocID + "&deptID=" + escape(tr.getAttribute("DATA1")) + "&docState=011", "", "height=270px,width=600px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	                }
+	            } else if (jobState == "ATTACH") {
+	            	//여기여기여기
+	            	var AttachfilenameA1 = tr.cells[1].innerHTML;
+	            	
+                    if (AttachfilenameA1 != null) {
+                        var AttachfilenameN1 = AttachfilenameA1.lastIndexOf(".");
+                        var AttachfilenameA2 = AttachfilenameA1.substr(AttachfilenameN1, AttachfilenameA1.length);
+                        var AttachUrlA1 = GetAttribute(tr,"DATA1");
+                        var AttachUrlN1 = AttachUrlA1.lastIndexOf(".");
+                        var AttachUrlA2 = AttachUrlA1.substr(AttachUrlN1, AttachUrlA1.length);
+                        AttachUrl = encodeURIComponent(GetAttribute(tr,"DATA1"));
+                        
+                        if (AttachfilenameN1 < 0) {
+                            Attachfilename = encodeURIComponent(tr.cells[1].innerHTML + AttachUrlA2);
+                        } else {
+                            Attachfilename = encodeURIComponent(tr.cells[1].innerHTML);
+                        }
+
+                        if (AttachUrl != "null") {
+//                             if (GetAttribute(tr,"data4") == "file")
+//                                 window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
+//                             else
+                                window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl);
+                        }
+
+                    }
 	            }
 	        }
 	    }
