@@ -883,7 +883,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			susinAdmin = "NO";
 		}
 		
-		if (initFlag.trim().equals("")) {
+		if (initFlag == null || initFlag.trim().equals("")) {
 			initFlag = "0";
 		}
 		
@@ -5848,6 +5848,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재S 결재정보 분류코드탭 서브트리
+	 */	
 	@RequestMapping(value = "/ezApprovalG/getCodeSubTreeInfo.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getCodeSubTreeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -5865,6 +5868,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재S 결재정보 분류코드 즐겨찾기
+	 */	
 	@RequestMapping(value = "/ezApprovalG/getFrequencyClassList.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getFrequencyClassList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -5879,6 +5885,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 
+	/**
+	 * 전자결재 문서정보이력 상세보기
+	 */	
 	@RequestMapping(value = "/ezApprovalG/docViewerCK.do")
 	public String docViewerCK(HttpServletRequest request, Model model) throws Exception {
 		logger.debug("docViewerCK started");
@@ -5892,6 +5901,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGdocViewerCK";
 	}
 	
+	/**
+	 * 전자결재 문서정보이력에서 상세내역 저장하기
+	 */	
 	@RequestMapping(value = "/ezApprovalG/savePCTmpFile.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String savePCTmpFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -5957,6 +5969,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	/**
+	 * 전자결재S 양식 자동분류코드 겟
+	 */	
 	@RequestMapping(value = "/ezApprovalG/getAutoDocNumItemCode.do", produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getAutoDocNumItemCode(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
@@ -5972,4 +5987,62 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
+	@RequestMapping(value = "/ezApprovalG/docReSend.do")
+	public String docReSend(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("docReSend started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String susinAdmin = "";
+		
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+		String docID = request.getParameter("docID");
+		String docHref = request.getParameter("docHref");
+		
+		String docInfo = ezApprovalGService.getDocInfo(docID, "END", "ALL", userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		Document doc = commonUtil.convertStringToDocument(docInfo);
+		
+		String formID = doc.getElementsByTagName("FORMID").item(0).getTextContent();
+		String writerID = doc.getElementsByTagName("WRITERID").item(0).getTextContent();
+		
+		if (!userInfo.getId().equals(writerID)) {
+			return "main/warning";
+		}
+		
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("docID", docID);
+		model.addAttribute("formID", formID);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("docHref", docHref);
+		model.addAttribute("useEditor", useEditor);
+		model.addAttribute("approvalPWD", approvalPWD);
+		
+		logger.debug("docReSend ended");
+		
+		return "ezApprovalG/apprGDocReSend";
+	}
+
+	@RequestMapping(value = "/ezApprovalG/sendOffer.do", produces ="text/xml;charset=utf-8")
+	@ResponseBody
+	public String sendOffer(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
+		logger.debug("sendOffer started");
+
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		Document docXML = commonUtil.convertStringToDocument(xmlPara);
+		
+		String result = ezApprovalGService.doSendOfferS(docXML, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		
+		logger.debug("sendOffer ended");
+		
+		return result;
+	}
 }

@@ -510,6 +510,148 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public String doSendOfferS(Document xmlDom, String companyID, String lang, int tenantID) throws Exception {
+		logger.debug("doSendOfferS started");
+		
+		String result = "";
+		
+		try {
+			String docID = xmlDom.getElementsByTagName("DOCID").item(0).getTextContent();
+			String orgDocID = xmlDom.getElementsByTagName("ORGDOCID").item(0).getTextContent();
+			String docTitle = xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent();
+			String href = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
+			String userID = xmlDom.getElementsByTagName("SIMSAUSERID").item(0).getTextContent();
+			String userName = xmlDom.getElementsByTagName("SIMSAUSERNAME").item(0).getTextContent();
+			String userName2 = xmlDom.getElementsByTagName("SIMSAUSERNAME2").item(0).getTextContent();
+			String userJobTitle = xmlDom.getElementsByTagName("SIMSAUSERJOBTITLE").item(0).getTextContent();
+			String userJobTitle2 = xmlDom.getElementsByTagName("SIMSAUSERJOBTITLE2").item(0).getTextContent();
+			String deptID = xmlDom.getElementsByTagName("SIMSAUSERDEPTID").item(0).getTextContent();
+			String deptName = xmlDom.getElementsByTagName("SIMSAUSERDEPTNAME").item(0).getTextContent();
+			String deptName2 = xmlDom.getElementsByTagName("SIMSAUSERDEPTNAME2").item(0).getTextContent();
+			
+			String docType = "";
+			
+			if (xmlDom.getElementsByTagName("DOCTYPE").getLength() > 0) {
+				docType = xmlDom.getElementsByTagName("DOCTYPE").item(0).getTextContent();
+			}
+			
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("orgDocID", orgDocID);
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+	
+			ApprGDocListVO endAprDoc = ezApprovalGDAO.doSendOffer_AprDocInfo(map);
+			
+			String sentDeptID = "";
+			String sentDeptName = "";
+			String sentDeptName2 = "";
+			
+			if (endAprDoc != null) {
+				if (docTitle.trim().equals("")) {
+					docTitle = endAprDoc.getDocTitle();
+				}
+				
+				if (docType.trim().equals("")) {
+					docType = endAprDoc.getDocType();
+				}
+				
+				map.put("v_OrgDocID", orgDocID);
+				map.put("v_DOCID", docID);
+				
+				String startDate = ezApprovalGDAO.getStartDateTime(map);
+	            String endDate = ezApprovalGDAO.getEndDateTime(map);
+	            
+				map.put("v_DocType", docType);
+				map.put("v_DocState", staDSPumYui);
+				map.put("v_FunctionType", staASJinHang);
+				map.put("v_Href", href);
+				map.put("v_DocTitle", docTitle);
+				map.put("v_DocNo", endAprDoc.getDocNo());
+				map.put("v_HasAttachYN", endAprDoc.getHasAttachYn());
+				map.put("v_StartDate", startDate.substring(0, startDate.length() -2));
+				map.put("v_EndDate", endDate.substring(0, endDate.length() -2));
+				map.put("v_WriterID", endAprDoc.getWriterID());
+				map.put("v_WriterName", endAprDoc.getWriterName());
+				map.put("v_WriterName2", endAprDoc.getWriterName2());
+				map.put("v_WriterJobTitle", endAprDoc.getWriterJobTitle());
+				map.put("v_WriterJobTitle2", endAprDoc.getWriterJobTitle2());
+				map.put("v_WriterDeptID", endAprDoc.getWriterDeptID());
+				map.put("v_WriterDeptName", endAprDoc.getWriterDeptName());
+				map.put("v_WriterDeptName2", endAprDoc.getWriterDeptName2());
+				map.put("v_isPublic", endAprDoc.getIsPublic().trim());
+		        
+				ezApprovalGDAO.updateDoSendAprDocInfo(map);
+				
+				sentDeptID = endAprDoc.getWriterDeptID();
+				sentDeptName = endAprDoc.getWriterDeptName();
+				sentDeptName2 = endAprDoc.getWriterDeptName2();
+			} else {
+				return "<RESULT>FALSE</RESULT>";
+			}
+			
+			ApprGDocListVO expEndAprDoc = ezApprovalGDAO.doSendOffer_expAprDocInfo(map);
+			
+			if (expEndAprDoc != null) {
+				map.put("v_FormName", expEndAprDoc.getFormName());
+				map.put("v_FormName2", expEndAprDoc.getFormName2());
+				map.put("v_SecurityCode", expEndAprDoc.getSecurityCode());
+				map.put("v_StoragePeriod", expEndAprDoc.getStoragePeriod());
+				map.put("v_KeyWord", expEndAprDoc.getKeyword());
+				map.put("v_companyID", expEndAprDoc.getCompanyID());
+				map.put("v_ItemCode", expEndAprDoc.getItemCode());
+				map.put("v_ItemName", expEndAprDoc.getItemName());
+				map.put("v_ItemName2", expEndAprDoc.getItemName2());
+				map.put("v_UrgentApproval", expEndAprDoc.getUrgentApproval());
+				map.put("v_TempAttribute", expEndAprDoc.getTempAttribute());
+				map.put("v_Status", expEndAprDoc.getStatus());
+				map.put("v_PublicityCode", expEndAprDoc.getPublicityCode());
+				map.put("v_CabinetID", expEndAprDoc.getCabinetID());
+				map.put("v_TaskCode", expEndAprDoc.getTaskCode());
+				map.put("v_DocNumCode", expEndAprDoc.getDocNumCode());
+				map.put("v_Summary", expEndAprDoc.getSummary());
+				map.put("v_SecurityApproval", expEndAprDoc.getSecurityApproval());
+				map.put("v_DOCID", docID);
+	
+				ezApprovalGDAO.updateDoSendExpAprDocInfo(map);
+			} else {
+				return "<RESULT>FALSE</RESULT>";
+			}
+			
+			int receivedSN = 0;
+		   
+		   	map.put("v_ReceiveSN", Integer.toString(receivedSN));
+			map.put("v_DOCID", docID);
+			map.put("v_SentDeptID", sentDeptID);
+			map.put("v_sentDeptName", sentDeptName);
+			map.put("v_sentDeptName2", sentDeptName2);
+			map.put("v_deptID", deptID);
+			map.put("v_deptName", deptName);
+			map.put("v_deptName2", deptName2);
+			map.put("v_DocState", staDSSimSa);
+			map.put("v_AprState", staASJinHang);
+			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map.put("v_ProcessorID", userID);
+			map.put("v_ProcessorName", userName);
+			map.put("v_ProcessorName2", userName2);
+			map.put("v_ProcessorJobTitle", userJobTitle);
+			map.put("v_ProcessorJobTitle2", userJobTitle2);
+			map.put("v_ORGDOCID", orgDocID);
+	
+		   	ezApprovalGDAO.insertDosendAprReceiptProcessInfo(map);
+		   	
+		   	result = "<RESULT>TRUE</RESULT>";
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = "<RESULT>FALSE</RESULT>";
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+		}
+		
+		logger.debug("doSendOfferS ended");
+		
+		return result;
+	}
+
+	@Override
 	// 해당 부서에서 볼 수 있는 문서함의 리스트를 가져온다.
 	// OwnFlag : "0"-자기 부서의 문서함, "1"-타부서의 문서함, "2"-전부
 	public List<ApprGLeftVO> getUseContInfo(LoginVO userInfo, String ownFlag) throws Exception{

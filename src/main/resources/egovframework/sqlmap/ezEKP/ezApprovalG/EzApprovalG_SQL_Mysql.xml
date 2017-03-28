@@ -21136,4 +21136,68 @@
    		AND
    			B.FORMID = #formID#
    	</select>
+   	
+   	<select id="EzApprovalG.doSendOffer_AprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+   		<![CDATA[
+   			SELECT 
+			    DOCTYPE,
+			    DOCSTATE,
+			    FUNCTIONTYPE,
+			    DOCTITLE,
+			    DOCNO,
+			    HASATTACHYN,
+			    HASOPINIONYN,
+			    STARTDATE,
+			    ENDDATE,
+			    WRITERID,
+			    WRITERNAME,
+			    WRITERNAME2,
+			    WRITERJOBTITLE,
+			    WRITERJOBTITLE2,
+			    WRITERDEPTID,
+			    WRITERDEPTNAME,
+			    WRITERDEPTNAME2,
+			    ISPUBLIC
+			FROM
+			    TBL_ENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #orgDocID#
+		]]>
+   	</select>
+   	
+   	<select id="EzApprovalG.doSendOffer_expAprDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+   		<![CDATA[
+   			SELECT 
+			    SECURITYCODE,
+			    STORAGEPERIOD,
+			    KEYWORD,
+			    FORMNAME,
+			    FORMNAME2,
+			    COMPANYID,
+			    ITEMCODE,
+			    ITEMNAME,
+			    ITEMNAME2,
+			    URGENTAPPROVAL,
+			    TEMPATTRIBUTE,
+			    STATUS,
+			    PUBLICITYCODE,
+			    CABINETID,
+			    TASKCODE,
+			    DOCNUMCODE,
+			    SUMMARY,
+			    SECURITYAPPROVAL
+			FROM
+			    TBL_EXPENDAPRDOCINFO
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #orgDocID#
+		]]>
+   	</select>
 </sqlMap>

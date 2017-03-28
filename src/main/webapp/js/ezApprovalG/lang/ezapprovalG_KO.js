@@ -1474,3 +1474,13 @@ var strLangS251 = "없습니다.";
 var strLangS252 = "기안시 , 결재선 변경시 적용";
 var strLangS253 = "재기안시 ";
 var strLangS254 = "최종결재자는 결재선을 변경할 수 없습니다.";
+
+var strLangS163 = "수신처목록 저장시 오류가 ";
+
+var strLangS106 = "결재순번";
+var strLangS107 = "성명";
+var strLangS108 = "부서";
+var strLangS109 = "결재상태";
+var strLangS110 = "결재일";
+var strLangS111 = "수신일";
+var strLangS38  = "결재유형";

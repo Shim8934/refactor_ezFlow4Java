@@ -1397,7 +1397,109 @@ function APRLINETEMPLETXMLParsing() {
     return pAprLineXml[0];    
 }
 
+function SAPRLINETEMPLETXMLParsing() {
+    var pAPRLINE = new ListView();
+    pAPRLINE.LoadFromID("lvAPRLINE");
 
+    var AprLineRow = pAPRLINE.GetDataRows();
+    var CurListLen = AprLineRow.length;
+    var CurCellLen = AprLineRow[0].cells.length;
+
+    var i;
+    var j;
+    var k = 0;
+    var GetXml;
+    var AprLineTotalLen;
+    GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLangS106 + "</NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME>" + strLangS107 + "</NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME>" + strLangS108 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLangS38 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLangS109 + "</NAME><WIDTH>100</WIDTH></HEADER><HEADER><NAME>" + strLangS110 + "</NAME><WIDTH>120</WIDTH></HEADER><HEADER><NAME>" + strLangS111 + "</NAME><WIDTH>120</WIDTH></HEADER></HEADERS>";
+    GetXml = GetXml + "<ROWS>";
+
+    for (i = 0; i < CurListLen; i++) {
+        var tr = AprLineRow[i];
+        GetXml = GetXml + "<ROW>";
+        for (j = 0; j < CurCellLen - 1; j++)
+            if (tr.cells[j].childNodes[0].nodeName == "SELECT") {
+                var pAprTypeObjId = GetAttribute(AprLineRow[i], "id") + "select";
+                var pAprTypeCode_, pAprTypeName_;
+                var pAprSelectindex = document.getElementById(pAprTypeObjId).selectedIndex;
+                pAprTypeCode_ = GetAttribute(document.getElementById(pAprTypeObjId)[pAprSelectindex], "value");
+                pAprTypeName_ = GetAttribute(document.getElementById(pAprTypeObjId)[pAprSelectindex], "value2");
+                GetXml = GetXml + "<COLUMN>" + MakeXMLString(pAprTypeName_) + "</COLUMN>";
+            }
+            else {
+                GetXml = GetXml + "<COLUMN>" + MakeXMLString(getNodeText(tr.cells[j])) + "</COLUMN>";
+            }
+
+        if (pReDraftFlag == "REDRAFT") {
+            GetXml = GetXml + "<DATA name='ProcessDate'></DATA>";
+            GetXml = GetXml + "<DATA name='ReceivedDate'></DATA>";
+        }
+        else {
+            GetXml = GetXml + "<DATA name='ProcessDate'>" + GetAttribute(tr, "DATA1") + "</DATA>";
+            GetXml = GetXml + "<DATA name='ReceivedDate'>" + GetAttribute(tr, "DATA2") + "</DATA>";
+        }
+        if (trim_Cross(GetAttribute(tr, "DATA3")) != "")
+            GetXml = GetXml + "<DATA name='DocID'>" + GetAttribute(tr, "DATA3") + "</DATA>";
+        else
+            GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
+
+        GetXml = GetXml + "<DATA name='AprMemberID'>" + MakeXMLString(GetAttribute(tr, "DATA4")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='AprmemberIsDeptYN'>" + GetAttribute(tr, "DATA5") + "</DATA>";
+        GetXml = GetXml + "<DATA name='AprMemberDeptID'>" + MakeXMLString(GetAttribute(tr, "DATA6")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='ReasonDoNotApprov'>" + MakeXMLString(GetAttribute(tr, "DATA7")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='isProposerYN'>" + GetAttribute(tr, "DATA8") + "</DATA>";
+        GetXml = GetXml + "<DATA name='isBriefUserYN'>" + GetAttribute(tr, "DATA9") + "</DATA>";
+        GetXml = GetXml + "<DATA name='isCompanyID'>" + GetAttribute(tr, "DATA10") + "</DATA>";
+        GetXml = GetXml + "<DATA name='AprType'>" + GetAttribute(tr, "DATA11") + "</DATA>";
+        GetXml = GetXml + "<DATA name='AprState'>" + GetAttribute(tr, "DATA12") + "</DATA>";
+        GetXml = GetXml + "<DATA name='PMemberName'>" + MakeXMLString(GetAttribute(tr, "DATA13")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='SMemberName'>" + MakeXMLString(GetAttribute(tr, "DATA14")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='PMemberDeptName'>" + MakeXMLString(GetAttribute(tr, "DATA15")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='SMemberDeptName'>" + MakeXMLString(GetAttribute(tr, "DATA16")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='PMemberJobTitle'>" + MakeXMLString(GetAttribute(tr, "DATA17")) + "</DATA>";
+        GetXml = GetXml + "<DATA name='SMemberJobTitle'>" + MakeXMLString(GetAttribute(tr, "DATA18")) + "</DATA>";
+        GetXml = GetXml + "</ROW>";
+    }
+
+    GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
+    pAprLineXml[0] = GetXml;
+
+    if (!pReDraftAprLineFlag) {
+        var TmpAprLineState = strAprState2;
+        var TmpAprLineStateName = strLangAprState2;
+        if (pReDraftAprLineChangeFlag) {
+            var ChangeXml = createXmlDom();
+            ChangeXml = loadXMLString(GetXml);
+            var NodeList = SelectNodes(ChangeXml, "LISTVIEWDATA/ROWS/ROW");
+
+            if (NodeList.length != 0) {
+                var pDraftDay = getGyulJeDateDB();
+
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[17], TmpAprLineState);
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[5], TmpAprLineStateName);
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[7], pDraftDay);
+                pAprLineXml[0] = getXmlString(ChangeXml);
+
+            }
+        }
+        else if (pReDraftFlag == "DRAFT" || pReDraftFlag == "SUSIN" || pReDraftFlag == "HAPYUI" || pReDraftFlag == "HABYUI" || pReDraftFlag == "GAMSABU" || pReDraftFlag == "WHOKYUL") {
+            var ChangeXml = createXmlDom();
+            ChangeXml = loadXMLString(GetXml);
+            var NodeList = SelectNodes(ChangeXml, "LISTVIEWDATA/ROWS/ROW");
+
+            if (NodeList.length != 0) {
+                var pDraftDay = getGyulJeDateDB();
+
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[17], TmpAprLineState);
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[5], TmpAprLineStateName);
+                setNodeText(GetChildNodes(NodeList[(NodeList.length - 1)])[7], pDraftDay);
+
+                pAprLineXml[0] = getXmlString(ChangeXml);
+            }
+        }
+    }
+
+    return pAprLineXml[0];
+}
 
 function CheckHapYuiCellValue()
 {

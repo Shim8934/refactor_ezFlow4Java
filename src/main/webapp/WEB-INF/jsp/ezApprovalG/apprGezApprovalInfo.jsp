@@ -264,6 +264,17 @@
 	                         else
 	                             document.getElementById("1tab3").click();
 	                     }
+	                     else if (pIniGubun == "10") { //수신자
+	                    	onlydocinfiview = true;
+	     	                document.getElementById("showDocinfo").style.display = "none";
+	     	                document.getElementById("showAprLine").style.display = "none";
+	     	                document.getElementById("showCabinetinfo").style.display = "none";
+	     	                document.getElementById("Lineinfo").style.display = "none";
+	     	                document.getElementById("Cabinetinfo").style.display = "none";
+	     	                document.getElementById("Docinfo").style.display = "none";
+	     	                document.getElementById("1tab2").onclick();
+	     	                ChangeTab(document.getElementById("1tab2"));
+	     	            }
 	                 }
 	                 catch (e) {
 	                 }
@@ -333,6 +344,7 @@
 	            chkReDraft = RetValue[13];
 	            if (pReDraftAprLineFlag) pOrgApruserid = RetValue[13];
 	
+	            onlyviewsusin = RetValue[27];
 	            onlydocinfiview = RetValue[28];
 	            pItemCode = RetValue[29];
 	            pkeeperiod = RetValue[20];
@@ -351,7 +363,8 @@
 	            vPublicFlag = RetValue[35];
 	            vtreatment = RetValue[36];
 	            vPageNum = RetValue[37];
-	            vAprSecurity = trim(RetValue[38]);
+// 	            vAprSecurity = trim(RetValue[38]);
+	            vAprSecurity = RetValue[38];
 	            SummaryFlag = RetValue[39];
 	
 	            if (pSuSinFlag == "N") {
@@ -691,6 +704,22 @@
 		            alert("getGyulJeDateDB()" + e.description);
 		        }
 		    }
+		    
+		    function checkReceptLine() {
+		    	var listview = new ListView();
+		        listview.LoadFromID("lvRECEPTLIST");
+		        var receptRow = listview.GetDataRows();
+
+		        var CurListLen = receptRow.length;
+		        if (CurListLen == 0 || (CurListLen == 1 && receptRow[0].id == "lvRECEPTLIST_TR_noItems")) {
+		            OpenAlertUI(linealt14);
+		            var tabshow = document.getElementById("1tab2");
+		            Tab1_MouseClick(tabshow);
+		            return false;
+		        }
+		        
+		        return true;
+		    }
 		
 		    function btn_OK() {
 // 		        try {
@@ -842,10 +871,41 @@
 		                window.close();
 		            }
 		            else {
-		                var docinfo = MakeDocInfo();
-		                ret[0] = "OK";
-		                ret[1] = docinfo;
-		                ret[6] = "OnlyDocInfo";
+		            	if (approvalFlag == "S") {
+		            		if (onlyviewsusin) {
+		            			if (!checkReceptLine()) {
+		            				return ;
+		            			}
+		            			
+		                        ret[0] = "OK";
+		                        ret[2] = SAPRLINETEMPLETXMLParsing();
+		                        ret[5] = MakertnVal();
+		                        
+		                        if (ReturnFunction != null) {
+				                    ReturnFunction(ret);
+				                } else {
+				                    window.returnValue = ret;
+				                }
+		                    } else {
+		                        var docinfo = MakeDocInfo();
+		                        ret[0] = "OK";
+		                        ret[1] = docinfo;
+		                        ret[6] = "OnlyDocInfo";
+		                        
+		                        if (ReturnFunction != null) {
+				                    ReturnFunction(ret);
+				                } else {
+				                    window.returnValue = ret;
+				                }
+		                    }
+		            	} else {
+			                var docinfo = MakeDocInfo();
+			                ret[0] = "OK";
+			                ret[1] = docinfo;
+			                ret[6] = "OnlyDocInfo";
+		            	}
+		            	
+                        window.close();
 		            }
 // 		        }
 // 		        catch (e) {

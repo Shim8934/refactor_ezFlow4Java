@@ -426,4 +426,6 @@ public interface EzApprovalGService {
 
 	public String getAutoDocNumItem(String formID, String lang, String companyID, int tenantID) throws Exception;
 
+	public String doSendOfferS(Document docXML, String companyID, String lang, int tenantID) throws Exception;
+
 }

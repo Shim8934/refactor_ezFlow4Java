@@ -1255,7 +1255,7 @@
 		        </tr>
 		        <tr>
 		        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:88px;overflow:auto;"></div>
+		            	<div id="MainContent" style="height:88px; padding-left:22%; padding-right:20%; overflow-y:auto;"></div>
 		            </td>
 		        </tr>
 		        </table>
