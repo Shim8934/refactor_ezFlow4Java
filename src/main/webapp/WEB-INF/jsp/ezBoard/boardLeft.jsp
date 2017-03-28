@@ -149,7 +149,7 @@
 		                    selectItem = selectItem.parentElement;
 		                }
 		                else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
-		                    selectItem.childNodes[0].onclick();
+		                    selectItem.childNodes[0].click();
 		                    var j = clicknode.length;
 		                    for (var k = j; k > 0; k--) {
 		                        document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();

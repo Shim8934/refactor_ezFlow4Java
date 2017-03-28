@@ -1127,7 +1127,6 @@
 		        initdatepicker();
 		        document.getElementById("taSummery").value = "";
 		
-		        onload_window();
 		        if (vSecurity.trim() == "")
 		            document.getElementById("selSecLevel").options[0].selected = true;
 		        else

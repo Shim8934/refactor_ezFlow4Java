@@ -8,8 +8,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title><spring:message code='ezPersonal.t999900011' /></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPersonal.e3' />" type="text/css">
-		<script src="/js/mouseeffect.js" type="text/javascript" ></script>
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		 window.onload = function () {
 		        if ("${funCode}" == "1") {

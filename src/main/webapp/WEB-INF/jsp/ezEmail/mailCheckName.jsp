@@ -281,9 +281,9 @@
 	<h1><spring:message code='ezEmail.t331' /></h1>
 	<div class="txt"><spring:message code='ezEmail.t335' /><br>
 	      <spring:message code='ezEmail.t336' />
-	  <br><br>
-	  <spring:message code='ezEmail.t337' /><span class="point" id="unresolveName"><spring:message code='ezEmail.t338' /></span></div>
-	<div class="listview" style="height:200px;overflow:auto"><div id="ListViewid" STYLE="border:0px;"></div></div>
+	  <br><br>	  
+	  ▒&nbsp;<spring:message code='ezEmail.t337' /><span class="point" id="unresolveName" style="padding-left:5px"><spring:message code='ezEmail.t338' /></span></div>
+	<div class="listview" style="height:200px;overflow:auto;margin-top:5px"><div id="ListViewid" STYLE="border:0px;"></div></div>
 	<div class="btnposition">
 	    <a class="imgbtn" onClick="delete_onClick()" ><span><spring:message code='ezEmail.t95' /></span></a>
 	    <a class="imgbtn" onClick="change_onClick()" ><span><spring:message code='ezEmail.t38' /></span></a>

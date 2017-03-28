@@ -79,75 +79,67 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 
 			logger.debug("companyID=" + companyID + ", deptID=" + deptID);
 			
-			if (!companyID.toUpperCase().equals("TOP")) {
-				Map<String, Object> map1 = new HashMap<String, Object>();		
-				map1.put("v_DEPTID", deptID);
-				map1.put("companyID", companyID);
-				map1.put("tenantID", tenantID);
+			Map<String, Object> map1 = new HashMap<String, Object>();		
+			map1.put("v_DEPTID", deptID);
+			map1.put("companyID", companyID);
+			map1.put("tenantID", tenantID);
+			
+			List<ApprGContInfoVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
+			
+			String strMultiData = commonUtil.getMultiData(primary, tenantID);
+			
+			if (type.equals("LIST")){
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("v_LISTTYPE", "106");
+				map.put("v_LANGTYPE", primary);
+				map.put("companyID", companyID);
+				map.put("v_TENANTID", tenantID);
 				
-				List<ApprGContInfoVO> listBody = ezApprovalGAdminDAO.getContainerInfoManage(map1);
+				List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
 				
-				String strMultiData = commonUtil.getMultiData(primary, tenantID);
+				sb.append("<LISTVIEWDATA><HEADERS>");
 				
-				if (type.equals("LIST")){
-					Map<String, Object> map = new HashMap<String, Object>();
-					map.put("v_LISTTYPE", "106");
-					map.put("v_LANGTYPE", primary);
-					map.put("companyID", companyID);
-					map.put("v_TENANTID", tenantID);
+				for (int i = 0; i < listHeader.size(); i++) {
+					ApprGListHeaderVO vo = listHeader.get(i);
 					
-					List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
-					
-					sb.append("<LISTVIEWDATA><HEADERS>");
-					
-					for (int i = 0; i < listHeader.size(); i++) {
-						ApprGListHeaderVO vo = listHeader.get(i);
-						
-						sb.append("<HEADER>");
-						sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
-						sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-						sb.append("</HEADER>");
-					}				
-					sb.append("</HEADERS><ROWS>");
-					
-					for (ApprGContInfoVO vo : listBody) {
-						sb.append("<ROW><CELL>");
-											
-						if(strMultiData.equals("")){
-							sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
-							sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</DATA3>");
-						}else{
-							sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
-							sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</DATA3>");
-						}
-						sb.append("<DATA1>" + vo.getContainerID().trim() + "</DATA1>");
-						sb.append("<DATA2>" + vo.getContainerTypeID().trim() + "</DATA2>");
-						sb.append("<DATA4>" + vo.getContainerOwnDepID().trim() + "</DATA4>");
-						sb.append("</CELL></ROW>");
-					}				
-					sb.append("</ROWS></LISTVIEWDATA>");
-				}else{
-					sb.append("<PARAMETER>");
-					
-					for (ApprGContInfoVO vo : listBody) {
-						int i = listBody.indexOf(vo);
-						
-						sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
-											
-						if(strMultiData.equals("")){
-							sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
-						}else{
-							sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
-						}					
+					sb.append("<HEADER>");
+					sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+					sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+					sb.append("</HEADER>");
+				}				
+				sb.append("</HEADERS><ROWS>");
+				
+				for (ApprGContInfoVO vo : listBody) {
+					sb.append("<ROW><CELL>");
+										
+					if(strMultiData.equals("")){
+						sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</VALUE>");
+						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</DATA3>");
+					}else{
+						sb.append("<VALUE>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</VALUE>");
+						sb.append("<DATA3>" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</DATA3>");
 					}
-					sb.append("</PARAMETER>");
-				}
+					sb.append("<DATA1>" + vo.getContainerID().trim() + "</DATA1>");
+					sb.append("<DATA2>" + vo.getContainerTypeID().trim() + "</DATA2>");
+					sb.append("<DATA4>" + vo.getContainerOwnDepID().trim() + "</DATA4>");
+					sb.append("</CELL></ROW>");
+				}				
+				sb.append("</ROWS></LISTVIEWDATA>");
 			}else{
-				if (type.equals("LIST")){
-					sb.append("<LISTVIEWDATA><HEADERS><HEADERS><ROWS></ROWS></LISTVIEWDATA>");
-				}else{
-					sb.append("<PARAMETER></PARAMETER>");
-				}			
+				sb.append("<PARAMETER>");
+				
+				for (ApprGContInfoVO vo : listBody) {
+					int i = listBody.indexOf(vo);
+					
+					sb.append("<CONTID" + i + ">" + vo.getContainerID().trim() + "</CONTID" + i + ">");
+										
+					if(strMultiData.equals("")){
+						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName()) + "</NAME" + i + ">");
+					}else{
+						sb.append("<NAME" + i + ">" + commonUtil.cleanValue(vo.getContainerTypeName2()) + "</NAME" + i + ">");
+					}					
+				}
+				sb.append("</PARAMETER>");
 			}
 			
 			logger.debug("getContainerInfoManage ended.");
@@ -262,7 +254,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 	}
 
 	@Override
-	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID) throws Exception {
+	public String getContainerToDocStateInfo(String companyID, String primary, int tenantID, String approvalFlag) throws Exception {
 		logger.debug("getContainerToDocStateInfo started.");
 		String strMultiData = commonUtil.getMultiData(primary, tenantID);
 		
@@ -294,6 +286,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map1.put("v_LANGTYPE", primary);
 		map1.put("companyID", companyID);
 		map1.put("tenantID", tenantID);
+		map1.put("approvalFlag", approvalFlag);
 		
 		List<ApprGDocStateVO> listBody = ezApprovalGAdminDAO.getContainerToDocStateInfo(map1);
 		
@@ -547,99 +540,95 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		StringBuilder sb = new StringBuilder();
 		sb.append("<LISTVIEWDATA><HEADERS>");
 		
-		if (companyID.toUpperCase().equals("TOP")) {
-			sb.append("</HEADERS><ROWS></ROWS></LISTVIEWDATA>");
+		String code = "";
+		if (approvalFlag.equals("S")) {
+			code = "S091";
+			
+			if (mode.equals("ITEM")) {
+				code = "S092";
+			}
 		} else {
-			String code = "";
-			if (approvalFlag.equals("S")) {
-				code = "S091";
-				
-				if (mode.equals("ITEM")) {
-					code = "S092";
-				}
-			} else {
-				code = "091";
-				
-				if (mode.equals("ITEM")) {
-					code = "092";
-				}
+			code = "091";
+			
+			if (mode.equals("ITEM")) {
+				code = "092";
 			}
-			
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_LISTTYPE", code);
-			map.put("v_LANGTYPE", lang);
-			map.put("companyID", companyID);
-			map.put("v_TENANTID", tenantID);
-			
-			logger.debug("getListHeader started.");
-			List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
-			logger.debug("getListHeader ended.");
-			
-			for (int i = 0; i < listHeader.size(); i++) {
-				ApprGListHeaderVO vo = listHeader.get(i);
-				
-				sb.append("<HEADER>");
-				sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
-				sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-				sb.append("<COLNAME>" + commonUtil.cleanValue(vo.getColName()) + "</COLNAME>");
-				sb.append("</HEADER>");
-			}
-			
-			if (pid.equals("")){
-				pid = "0";
-			}
-			sb.append("</HEADERS><ROWS>");
-			
-			Map<String, Object> map1 = new HashMap<String, Object>();
-			map1.put("v_MAINID", pid);
-			map1.put("v_MODE", mode);
-			map1.put("companyID", companyID);
-			map1.put("tenantID", tenantID);
-			
-			logger.debug("getReceiveGroupInfo started.");
-			List<ApprGAdminReceiveVO> listBody = ezApprovalGAdminDAO.getReceiveGroupInfo(map1);
-			logger.debug("getReceiveGroupInfo ended.");
-			
-			for (int i = 0; i < listBody.size(); i++) {
-				ApprGAdminReceiveVO bodyVo = listBody.get(i);
-				
-				for (int j = 0; j < listHeader.size(); j++) {	
-					ApprGListHeaderVO headerVo = listHeader.get(j);				
-					String fieldName = headerVo.getColName();
-					String fieldValue = "";
-									
-					if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")){
-						fieldName = fieldName + "2";
-					}
-					
-					for (Field field : bodyVo.getClass().getDeclaredFields()) {
-				        field.setAccessible(true);
-											
-						if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
-							fieldValue = String.valueOf(field.get(bodyVo));
-						}					   
-				    }
-					
-					sb.append("<ROW>");
-					sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offSet)) + "</VALUE>");
-					
-					if (j == 0) {
-						if (mode.equals("GROUP") || mode.equals("JOIN")) {
-							sb.append("<DATA1>" + bodyVo.getMainID() + "</DATA1>");
-						} else {
-							sb.append("<DATA1>" + bodyVo.getSubID() + "</DATA1>");
-							sb.append("<DATA2>" + bodyVo.getMainID() + "</DATA2>");
-							sb.append("<DATA3>" + bodyVo.getDeptID() + "</DATA3>");
-							sb.append("<DATA4>" + bodyVo.getCompanyID() + "</DATA4>");
-							sb.append("<DATA5>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</DATA5>");
-							sb.append("<DATA6>" + commonUtil.cleanValue(bodyVo.getDeptName2()) + "</DATA6>");
-						}
-					}					
-					sb.append("</CELL></ROW>");
-				}
-			}
-			sb.append("</ROWS></LISTVIEWDATA>");
 		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LISTTYPE", code);
+		map.put("v_LANGTYPE", lang);
+		map.put("companyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getListHeader started.");
+		List<ApprGListHeaderVO> listHeader = ezApprovalGDAO.getListHeader(map);
+		logger.debug("getListHeader ended.");
+		
+		for (int i = 0; i < listHeader.size(); i++) {
+			ApprGListHeaderVO vo = listHeader.get(i);
+			
+			sb.append("<HEADER>");
+			sb.append("<NAME>" + commonUtil.cleanValue(vo.getName()) + "</NAME>");
+			sb.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			sb.append("<COLNAME>" + commonUtil.cleanValue(vo.getColName()) + "</COLNAME>");
+			sb.append("</HEADER>");
+		}
+		
+		if (pid.equals("")){
+			pid = "0";
+		}
+		sb.append("</HEADERS><ROWS>");
+		
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("v_MAINID", pid);
+		map1.put("v_MODE", mode);
+		map1.put("companyID", companyID);
+		map1.put("tenantID", tenantID);
+		
+		logger.debug("getReceiveGroupInfo started.");
+		List<ApprGAdminReceiveVO> listBody = ezApprovalGAdminDAO.getReceiveGroupInfo(map1);
+		logger.debug("getReceiveGroupInfo ended.");
+		
+		for (int i = 0; i < listBody.size(); i++) {
+			ApprGAdminReceiveVO bodyVo = listBody.get(i);
+			
+			for (int j = 0; j < listHeader.size(); j++) {	
+				ApprGListHeaderVO headerVo = listHeader.get(j);				
+				String fieldName = headerVo.getColName();
+				String fieldValue = "";
+								
+				if (!lang.equals("1") && fieldName.toUpperCase().equals("DEPTNAME")){
+					fieldName = fieldName + "2";
+				}
+				
+				for (Field field : bodyVo.getClass().getDeclaredFields()) {
+			        field.setAccessible(true);
+										
+					if (field.getName().toUpperCase().equals(fieldName.toUpperCase())) {
+						fieldValue = String.valueOf(field.get(bodyVo));
+					}					   
+			    }
+				
+				sb.append("<ROW>");
+				sb.append("<CELL><VALUE>" + commonUtil.cleanValue(ezApprovalGService.getListField(fieldName, fieldValue, companyID, lang, tenantID, offSet)) + "</VALUE>");
+				
+				if (j == 0) {
+					if (mode.equals("GROUP") || mode.equals("JOIN")) {
+						sb.append("<DATA1>" + bodyVo.getMainID() + "</DATA1>");
+					} else {
+						sb.append("<DATA1>" + bodyVo.getSubID() + "</DATA1>");
+						sb.append("<DATA2>" + bodyVo.getMainID() + "</DATA2>");
+						sb.append("<DATA3>" + bodyVo.getDeptID() + "</DATA3>");
+						sb.append("<DATA4>" + bodyVo.getCompanyID() + "</DATA4>");
+						sb.append("<DATA5>" + commonUtil.cleanValue(bodyVo.getDeptName()) + "</DATA5>");
+						sb.append("<DATA6>" + commonUtil.cleanValue(bodyVo.getDeptName2()) + "</DATA6>");
+					}
+				}					
+				sb.append("</CELL></ROW>");
+			}
+		}
+		sb.append("</ROWS></LISTVIEWDATA>");
 		
 		logger.debug("result = " + sb.toString());
 		

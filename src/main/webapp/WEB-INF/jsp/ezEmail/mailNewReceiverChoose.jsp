@@ -3076,7 +3076,7 @@
 		        <WIDTH>60</WIDTH>
 		      </HEADER>
 		      <HEADER>
-		        <NAME><spring:message code='ezEmail.t26' /></NAME>
+		        <NAME></NAME>
 		        <WIDTH>70</WIDTH>
 		      </HEADER>
 		      <HEADER>
@@ -3173,11 +3173,11 @@
 	                            </div>
 	                            <table style="margin-top: 3px;">
 	                                <tr>
-	                                    <td class="box">
+	                                    <td class="box" style="border-right:0px">
 	                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
-	                                    <td class="listview" style="width: 426px" id="orglistView">
+	                                    <td class="listview" style="width: 432px" id="orglistView">
 	                                        <table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
 	                                            <tr>
 	                                                <th style="white-space:normal">
@@ -3191,11 +3191,11 @@
 	                                                </th>
 	                                            </tr>
 	                                        </table>
-	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 440px;" id="txtlist_Layer">
+	                                        <div style="vertical-align: top; height: 410px; overflow: auto; width: 446px;" id="txtlist_Layer">
 	                                            <table style="width: 100%; border: 1px solid #B6B6B6; display: none;" id="txtlist_table" class="mainlist">
 	                                                <tr>
-	                                                    <td style="width: 150px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
-	                                                    <td style="width: 80px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
+	                                                    <td style="width: 130px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t31' /></td>
+	                                                    <td style="width: 100px; font-weight: bold;" class="td_gray"><spring:message code='ezEmail.t28' /></td>
 	                                                    <td class="td_gray" style="font-weight: bold;"><spring:message code='ezEmail.t99000045' /></td>
 	                                                </tr>
 	                                            </table>
@@ -3259,7 +3259,7 @@
 	                    </tr>
 	                    <tr>
 	                        <td>
-	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 466px; width: 220px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin-top: 3px;padding-top:5px"></div>
+	                            <div id="AddressTreeView" style="overflow-x: auto; overflow-y: auto; height: 468px; width: 220px; border: 1px solid #b6b6b6; background-color: #FFFFFF; margin-top: 3px;padding-top:5px"></div>
 	                        </td>
 	                        <td style="width: 5px;"></td>
 	                        <td style="vertical-align: top;">
@@ -3268,7 +3268,7 @@
 	                                <span id="addressFolderName" style="font-weight: bold;"></span>
 	                                -[<span id="addressFolderCnt" style="color: #017BEC; font-weight: bold;"></span>]
 	                            </div>
-	                            <div style="width: 435px; height: 414px; overflow: auto; background-color: #ffffff;" id="AddressListView" class="border_gray">
+	                            <div style="width: 441px; height: 417px; overflow: auto; background-color: #ffffff;" id="AddressListView" class="border_gray">
 	                            </div>
 	                            <div id="tblPageRayer"  style="left: 445px; vertical-align: middle; border: 1px solid #bdbdbd; border-top: 0px; height: 30px;"></div>
 	                            <div id="tblpage" style="display: none; padding-top: 2px; text-align: center; vertical-align: middle; left: 445px; border: 1px solid #bdbdbd; border-top: 0px; height: 27px;">
@@ -3302,7 +3302,7 @@
 	                                    </table>
 	                                </div>
 	                            </div>
-	                            <div style="width: 664px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
+	                            <div style="width: 668px; height: 474px; overflow: auto; background-color: #ffffff; margin-top: 3px;" id="ListViewDL" class="border_gray">
 	                            </div>
 	                        </td>
 	                    </tr>
@@ -3310,7 +3310,7 @@
 	                <table id="ListViewINPUT" style="display: none">
 	                    <tr>
 	                        <td>
-	                            <div id="ManualView" style="HEIGHT: 504px; width: 664px;" class="box">
+	                            <div id="ManualView" style="HEIGHT: 504px; width: 668px;" class="box">
 	                                <table class="content">
 	                                    <tr>
 	                                        <th><spring:message code='ezEmail.t31' /></th>

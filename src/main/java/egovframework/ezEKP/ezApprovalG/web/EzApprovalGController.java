@@ -364,12 +364,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
-		String subQuery = request.getParameter("subQuery");
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
  		String userLang = userInfo.getLang();
 		Document domSub = null;
 		
+		if (pageNum.equals("0")) {
+			pageNum = "1";
+		}
 		if (searchQuery != null && searchQuery.length() > 10) {
 			String tempQuery = "";
 			String returnQuery = "(1 = 1) ";
@@ -462,14 +464,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND URGENTAPPROVAL = '" + domSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             
-//            if (subQuery.trim() != "")
-//            {
-//                if (subQuery.equals("") || subQuery == null){
-//                	returnQuery += subQuery;
-//                } else {
-//                	returnQuery += " AND " +subQuery;
-//                }
-//            }
             searchQuery = returnQuery;
 		}
 		
@@ -505,11 +499,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document docXML = commonUtil.convertStringToDocument(docList);
 						
 						for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+							if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 								String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {
-									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+									if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
 										checkPermission = false;
 										break;
 									}
@@ -527,7 +521,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 						Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), checkMode, userInfo.getCompanyID(), userInfo.getTenantId());
 						
 						if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-							return "<RESULT>NOTPERMISSION</RESULT>";
+							return "NOTPERMISSION";
 						}
 					}
 				}
@@ -536,7 +530,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				String pass = ezApprovalGService.getAccessYNG(docID, userInfo.getId(), accessInfo, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId(), approvalFlag);
 				
 				if (!pass.equals("<RESULT>TRUE</RESULT>")) {
-					return "<RESULT>NOTPERMISSION</RESULT>";
+					return "NOTPERMISSION";
 				}
 			}
 		}
@@ -587,9 +581,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezApprovalG/getFormCont.do")
 	public String getFormCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception{
+		logger.debug("getFormCont started.");
+		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
 		String deptID = userInfo.getDeptID();
-		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+		String docType = ezApprovalGService.getDocType("", userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), approvalFlag);
 		String userForm = ezApprovalGService.getOptionInfo("A57", "001", userInfo, "CODE");
 		String docFileType = "";
 		
@@ -601,6 +598,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docType", docType);
 		model.addAttribute("userForm", userForm);
 		model.addAttribute("docFileType", docFileType);
+		
+		logger.debug("getFormCont ended.");
 		
 		return "ezApprovalG/apprGFormCont";
 	}
@@ -736,11 +735,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				Document docXML = commonUtil.convertStringToDocument(docList);
 				
 				for (int k = 0; k < docXML.getDocumentElement().getChildNodes().getLength(); k++) {
-					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002")) {
+					if (docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("002") || docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().equals("005")) {
 						String curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 						
 						for (int j = 0; j < proxyUserArray.length; j++) {
-							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 2))) {
+							if (curAprUserID.equals(proxyUserArray[j].trim().substring(1, proxyUserArray[j].trim().length() - 1))) {
 								checkPermission = false;
 								break;
 							}

@@ -8,10 +8,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>UserManageWebPart</title>
 		<link rel="stylesheet"  href="<spring:message code='ezPortal.i2'/>" type="text/css">
-		<script src="/js/mouseeffect.js" type="text/javascript" ></script>
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
-		<script src="/js/ezPortal/functionLib.js" type="text/javascript" ></script>
-		<script src="/js/ezPortal/string_component.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/mouseeffect.js"></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
+		<script type="text/javascript" src="/js/ezPortal/functionLib.js"></script>
+		<script type="text/javascript" src="/js/ezPortal/string_component.js"></script>
 		<script type="text/javascript">
 		var g_SelectedObj = null;
 		var g_UID = "";

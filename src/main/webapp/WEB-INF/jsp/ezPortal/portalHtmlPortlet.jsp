@@ -8,7 +8,7 @@
 		<title><spring:message code='ezPortal.t147'/></title>
 		<link rel="stylesheet"  href="<spring:message code='ezPortal.e2'/>" type="text/css">
 		<script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
-		<script src="/js/XmlHttpRequest.js" type="text/javascript" ></script>
+		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript">
 		var htmlData = "${htmlData}";
 		function MhtConvertCross() {

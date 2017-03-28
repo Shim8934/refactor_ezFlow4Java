@@ -86,7 +86,7 @@
 		    <li><span onClick="window.returnValue=0;window.close()"><spring:message code='ezEmail.t63' /></span></li>
 		  </ul>
 		</div>
-		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;">
+		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #bdbdbd">
 			<table class="mainlist" style="table-layout:fixed;width:100%;">
 				<tr>
 					<th><spring:message code='ezEmail.t98' /></th>
