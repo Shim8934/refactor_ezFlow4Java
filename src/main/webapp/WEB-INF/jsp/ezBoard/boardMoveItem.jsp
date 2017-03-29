@@ -211,7 +211,7 @@
 	</head>
 	<body class="popup"> 
 		<h1><spring:message code='ezBoard.t135'/></h1>
-		<div class="box" style="width:316px;height:490px;overflow:auto" id=TopBoardsList></div>
+		<div class="box" style="width:316px;height:490px;overflow:auto;overflow-x:hidden"  id=TopBoardsList></div>
 		<div class="btnposition">
 		    <a class="imgbtn" name="Submit"  onClick="Select()" ><span><spring:message code='ezBoard.t47'/></span></a>
 		    <a class="imgbtn" name="Submit"  onClick="javascript:window.close();" ><span><spring:message code='ezBoard.t15'/></span></a>
