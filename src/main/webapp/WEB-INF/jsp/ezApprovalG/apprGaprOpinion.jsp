@@ -152,35 +152,37 @@
 		            alert("btn_OpinionSave  :: " + e.description);
 		        }
 		    }
+		    
 		    function OPINIONOnSelChange_onclick() {
 		        try {
 		            var OpinionList = new ListView();
 		            OpinionList.LoadFromID("OpinionList");
 		            var pSelectedRow = OpinionList.GetSelectedRows();
 		            if (pSelectedRow != null) {
-		                txt_OpinionContent.value = GetAttribute(pSelectedRow[0], "DATA3");
-		                document.getElementById("bbtn_OpinionDel").style.display = "none";
-		                if (document.getElementById("btn_OpinionAdd").textContent != "<spring:message code='ezApprovalG.t269'/>" && OpinionAddFlag == 0) {
-		                    document.getElementById("btn_OpinionAdd").textContent = "<spring:message code='ezApprovalG.t421'/>";
+		                txt_OpinionContent.value = GetAttribute(pSelectedRow[0], "DATA3") != null ? GetAttribute(pSelectedRow[0], "DATA3") : "";
+		                document.getElementById("bbtn_OpinionDel").style.display = "none"
+		                if (getNodeText(document.getElementById("btn_OpinionAdd")) != "<spring:message code='ezApprovalG.t269'/>" && OpinionAddFlag == 0) {
+		                    setNodeText(document.getElementById("btn_OpinionAdd") , "<spring:message code='ezApprovalG.t421'/>");
 		                    document.getElementById("txt_OpinionContent").readOnly = true;
 		                }
 		                else {
 		                    if (pUserID == GetAttribute(pSelectedRow[0], "DATA2") && pDisplay != "Show") {
-		                        document.getElementById("btn_OpinionAdd").textContent = "<spring:message code='ezApprovalG.t269'/>";
+		                        setNodeText(document.getElementById("btn_OpinionAdd") , "<spring:message code='ezApprovalG.t269'/>");
 		                        document.getElementById("btn_OpinionAdd").disabled = false;
 		                        document.getElementById("btn_OpinionDel").disabled = false;
-		                        document.getElementById("bbtn_OpinionAdd").style.display = "";
-		                        document.getElementById("bbtn_OpinionDel").style.display = "";
+		                        document.getElementById("bbtn_OpinionAdd").style.display = ""
+		                        document.getElementById("bbtn_OpinionDel").style.display = ""
 		                        document.getElementById("txt_OpinionContent").readOnly = false;
 		                    }
 		                    else {
-		                        document.getElementById("bbtn_OpinionAdd").style.display = "none";
-		                        document.getElementById("bbtn_OpinionDel").style.display = "none";
+		                        document.getElementById("bbtn_OpinionAdd").style.display = "none"
+		                        document.getElementById("bbtn_OpinionDel").style.display = "none"
 		                        document.getElementById("txt_OpinionContent").readOnly = true;
 		                    }
 		                }
 		            }
 		            if (pOrgDocID == "REDRAFT") {
+		                document.getElementById("bbtn_OpinionDel").style.display = ""
 		                document.getElementById("btn_OpinionDel").disabled = false;
 		            }
 		        }
@@ -188,6 +190,7 @@
 		            alert("OPINIONOnSelChange :: " + e.description);
 		        }
 		    }
+		    
 		    function txt_OpinionContent_onfocus() {
 		        if (pDisplay == "Show") {
 		            document.getElementById("btn_OpinionCancel").focus();

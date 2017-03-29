@@ -317,96 +317,97 @@ function GetDraftAprLineInfo(ret)
 }
 
 function setRecevInfo(ret) {
+    var fields = message.GetFieldsList();
     setDeptLinesXML(ret);
 
-    var fields = message.GetFieldsList();
-    var i;
-    var strMailAdd = "";
-    var precipent = "";
-    var precipents = "";
+    if (ret == "NONE") {
+        var field = message.GetListItem(fields, "hrecipients");
+        if (field) {
+            field.innerHTML = "&nbsp;";
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+
+        var field = message.GetListItem(fields, "recipient");
+        if (field) {
+            field.innerHTML = "&nbsp;";
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+
+        var field = message.GetListItem(fields, "recipients");
+        if (field) {
+            field.innerHTML = "&nbsp;";
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
+        return;
+    }
+    var i
+    var strMailAdd = ""
+    var precipent = ""
+    var precipents = ""
     var mailflag = true;
     var recipflag = true;
     var mailList = "";
     var mailcnt = 0;
     var xmldom = createXmlDom();
     xmldom.async = false;
-    xmldom = loadXMLString(ret);
+    xmldom = loadXMLString(ret)
 
-    if (getXmlString(xmldom) == "") {
+    var rows = GetChildNodes(xmldom.documentElement);
+
+    if (rows.length == 0) {
         var field = message.GetListItem(fields, "hrecipients");
         if (field) {
-            field.textContent = "";
+            field.innerHTML = "&nbsp;";
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
 
         var field = message.GetListItem(fields, "recipient");
         if (field) {
-            field.textContent = "";
+            field.innerHTML = "&nbsp;";
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
 
         var field = message.GetListItem(fields, "recipients");
         if (field) {
-            field.textContent = "";
+            field.innerHTML = "&nbsp;";
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
-
         return;
     }
-    if (xmldom.documentElement.childElementCount == 0) {
-        var field = message.GetListItem(fields, "hrecipients");
-        if (field) {
-            field.textContent = "";
-            if (new RegExp(/Firefox/).test(navigator.userAgent))
-                field.innerHTML = "<br type='_moz'>";
-        }
 
-        var field = message.GetListItem(fields, "recipient");
-        if (field) {
-            field.textContent = "";
-            if (new RegExp(/Firefox/).test(navigator.userAgent))
-                field.innerHTML = "<br type='_moz'>";
-        }
-
-        var field = message.GetListItem(fields, "recipients");
-        if (field) {
-            field.textContent = "";
-            if (new RegExp(/Firefox/).test(navigator.userAgent))
-                field.innerHTML = "<br type='_moz'>";
-        }
-
-        return;
-    }
-    btnReceivLineEnable = true;
-
-    var rows = SelectNodes(xmldom, "ROWS/ROW");
     var field = message.GetListItem(fields, "hrecipients");
     if (field) {
-        field.textContent = "";
+        field.innerHTML = "&nbsp;";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
     }
 
     var field = message.GetListItem(fields, "recipient");
     if (field) {
-        field.textContent = "";
+        field.innerHTML = "&nbsp;";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
     }
 
     var field = message.GetListItem(fields, "recipients");
     if (field) {
-        field.textContent = "";
+        field.innerHTML = "&nbsp;";
         if (new RegExp(/Firefox/).test(navigator.userAgent))
             field.innerHTML = "<br type='_moz'>";
     }
 
     for (i = rows.length - 1; i >= 0; i--) {
         var row = rows[i];
-        var dataNodes = GetChildNodes(row);
+        var params = new Array();
+        params[0] = "0";
+
+        var dataNodes = GetChildNodes(rows[i], params);
 
         if (getNodeText(dataNodes[3]) == "Y") {
             if (mailflag) {
@@ -420,6 +421,7 @@ function setRecevInfo(ret) {
             }
             mailcnt = mailcnt + 1;
         }
+
         if (recipflag) {
             if (getNodeText(dataNodes[3]) == "Y") {
                 precipent = getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -440,7 +442,7 @@ function setRecevInfo(ret) {
             }
         }
         else {
-            precipent = strLang92;
+            precipent = strLang68;
 
             if (getNodeText(dataNodes[3]) == "Y")
                 precipents = precipents + "," + getNodeText(dataNodes[7]) + " " + getNodeText(dataNodes[0]);
@@ -453,48 +455,42 @@ function setRecevInfo(ret) {
         }
     }
     message.DocumentBodySetAttribute("sendMailInfo", strMailAdd);
+
     var field = message.GetListItem(fields, "recipient");
     if (field) {
-        if (precipent == strLang92) {
-            field.textContent = precipent;
-
-            /* 2015-06-30 표준모듈:추가(외부수신자요약) */
-            if (SummaryOuterReceiverList != "") {
-                var field = message.GetListItem(fields, "recipients");
-                if (field) {
-                    field.textContent = SummaryOuterReceiverList;
-                    var field = message.GetListItem(fields, "hrecipients");
-                    if (field)
-                        field.textContent = strLang129;
-                }
-            } else {
+        if (precipent == strLang68) {
+            setNodeText(field , precipent);
             var field = message.GetListItem(fields, "recipients");
             if (field) {
-                field.textContent = precipents;
+                setNodeText(field , precipents);
                 var field = message.GetListItem(fields, "hrecipients");
                 if (field)
-                    field.textContent = strLang129;
-                }
+                    setNodeText(field , strLang70);
             }
         }
         else {
-            field.textContent = precipent;
+            setNodeText(field , precipent);
 
             if (precipents == "") {
                 var field = message.GetListItem(fields, "hrecipients");
                 if (field) {
-                    field.textContent = " ";
+                    field.innerHTML = "&nbsp;";
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
                 var field = message.GetListItem(fields, "recipients");
-                if (field){
-                    field.textContent = " ";
+                if (field) {
+                    field.innerHTML = "&nbsp;";
                     if (new RegExp(/Firefox/).test(navigator.userAgent))
                         field.innerHTML = "<br type='_moz'>";
                 }
             }
         }
+    }
+
+    var field = message.GetListItem(fields, "recipients");
+    if (field) {
+        setNodeText(field , precipents);
     }
 }
 
@@ -606,6 +602,7 @@ function ClearDocCellInfo() {
         alert("ClearDocCellInfo()" + e.description);
     }
 }
+
 function setClearSusinCellInfo() {
     try {
         var fields = message.GetFieldsList();

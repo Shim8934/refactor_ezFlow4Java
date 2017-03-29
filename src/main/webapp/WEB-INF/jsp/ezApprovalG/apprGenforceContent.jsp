@@ -210,7 +210,7 @@
 	        }
 	
 	        function Set_EditorContentURL(url) {
-	            try {
+// 	            try {
 	                var tempXML = createXmlDom();
 	                var XmlBodyDATA = createXmlDom();
 	                var tempStr = "";
@@ -246,8 +246,8 @@
 	                    BodyTagsDisabled(document.getElementById('div_Content'));
 	                    parent.FieldsAvailable();
 	                }
-	            } catch (e)
-	            { }
+// 	            } catch (e)
+// 	            { }
 	        }
 	
 	        function BodyTagsEnabled(HtmlObject) {

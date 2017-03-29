@@ -251,11 +251,13 @@ function CheckOpinionExist() {
     }
 }
 
+
 function AddOpinionContent(Opstate, OpContent) {
     try {
         var objXML = createXmlDom();
+
         if (Opstate == strLang391) {
-            document.getElementById("btn_OpinionAdd").textContent = strLang389;
+            setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
             document.getElementById("txt_OpinionContent").readOnly = false;
             document.getElementById("txt_OpinionContent").value = "";
             document.getElementById("txt_OpinionContent").focus();
@@ -265,7 +267,7 @@ function AddOpinionContent(Opstate, OpContent) {
             var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
 
-            //var pTotalRows = OpinionList.GetDataRows();
+            
             var pTotalRows = OpinionList.GetDataRows().length;
             if (pTotalRows == 1) {
                 var tr = OpinionList.GetDataRows();
@@ -291,7 +293,7 @@ function AddOpinionContent(Opstate, OpContent) {
             }
             else {
                 var MaxID = 0;
-                for (var j = 0 ; j < pTotalRows.length ; j++) {
+                for (var j = 0 ; j < pTotalRows; j++) {
                     var curnum = Number(OpinionList.GetSelectedRowID(j).substring(OpinionList.GetSelectedRowID(j).lastIndexOf('_') + 1), OpinionList.GetSelectedRowID(j).length);
                     if (MaxID < curnum)
                         MaxID = curnum;
@@ -302,8 +304,8 @@ function AddOpinionContent(Opstate, OpContent) {
             }
             OpinionAddFlag = 1;
 
-            document.getElementById("btn_OpinionAdd").textContent = strLang390;
-            document.getElementById("btn_OpinionCancel").textContent = strLang397;
+            setNodeText(document.getElementById("btn_OpinionAdd") , strLang390);
+            setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
             document.getElementById("bbtn_OpinionAdd").style.display = "none";
         }
         else if (Opstate == strLang390 && OpContent != "") {
@@ -319,7 +321,7 @@ function AddOpinionContent(Opstate, OpContent) {
                     tr.cells[0].innerHTML = GetOpinionTypeName(pOpinionType);
                     SetAttribute(tr, "DATA6", pOpinionType);
                     SetAttribute(tr, "DATA3", OpContent);
-                    document.getElementById("btn_OpinionAdd").textContent = strLang390;
+                    setNodeText(document.getElementById("btn_OpinionAdd") , strLang390);
                     var tmpKyljeaDeptName = arr_userinfo[15];
                     var tmpKyljeaJobtitle = arr_userinfo[13];
                     var tmpKyljeaDeptID = arr_userinfo[4];
@@ -342,7 +344,7 @@ function AddOpinionContent(Opstate, OpContent) {
                     			result = text;
                     		}        			
                     	});
-                    	
+
                         var xmldom = createXmlDom();
                         xmldom = loadXMLString(result);
                         objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
@@ -375,7 +377,7 @@ function AddOpinionContent(Opstate, OpContent) {
                     SetAttribute(pSelectedRow[0], "DATA10", tmpKyljeaJobtitle2);
                     SetAttribute(pSelectedRow[0], "DATA11", tmpKyljeaDeptName);
                     SetAttribute(pSelectedRow[0], "DATA12", tmpKyljeaDeptName2);
-                    document.getElementById("btn_OpinionCancel").textContent = "" + strLang397 + "";
+                    setNodeText(document.getElementById("btn_OpinionCancel") , "" + strLang397 + "");
 
                     var pAlertContent = strLang1027;
                     OpenAlertUI(pAlertContent);
@@ -401,7 +403,6 @@ function AddOpinionContent(Opstate, OpContent) {
         alert("AddOpinionContent :: " + e.description);
     }
 }
-
 
 function CheckOpinionType() {
     try {
@@ -447,7 +448,7 @@ function InitOpinionInfo() {
 
         for (var x = 0; x < opCountLen; x++) {
             if (GetAttribute(opCount[x], "DATA2") == arr_userinfo[1] && pDisplay == "BanSong") {
-                document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3");
+            	document.getElementById("txt_OpinionContent").value = GetAttribute(opCount[x], "DATA3") != null ? GetAttribute(opCount[x], "DATA3") : "";
             }
         }
 
@@ -456,7 +457,7 @@ function InitOpinionInfo() {
             var pTotalRowsLen = pTotalRows.length;
 
             if (pTotalRowsLen != 0) {
-                document.getElementById("txt_OpinionContent").value = GetAttribute(pTotalRows[0], "DATA3");
+            	document.getElementById("txt_OpinionContent").value = GetAttribute(pTotalRows[0], "DATA3") != null ? GetAttribute(pTotalRows[0], "DATA3") : "";
                 document.getElementById("txt_OpinionContent").readOnly = true;
             }
         } else if (pDisplay != "Show") {
@@ -483,8 +484,8 @@ function deleteOpinionInfo() {
 
                     OpinionList.DeleteRow(selIdx);
                     document.getElementById("txt_OpinionContent").value = "";
-                    document.getElementById("btn_OpinionAdd").textContent = strLang389;
-                    document.getElementById("btn_OpinionCancel").textContent = strLang397;
+                    setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
+                    setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
                     OpinionAddFlag = 0;
                 }
             }
@@ -507,8 +508,8 @@ function deleteOpinionInfo_Complete(Rtnval) {
         var selIdx = GetAttribute(pSelectedRow[0], "id");
         OpinionList.DeleteRow(selIdx);
         document.getElementById("txt_OpinionContent").value = "";
-        document.getElementById("btn_OpinionAdd").textContent = strLang389;
-        document.getElementById("btn_OpinionCancel").textContent = strLang397;
+        setNodeText(document.getElementById("btn_OpinionAdd") , strLang389);
+        setNodeText(document.getElementById("btn_OpinionCancel") , strLang397);
         OpinionAddFlag = 0;
     }
 }
@@ -570,7 +571,7 @@ function saveOpinionInfo() {
 
         if (selRow.length == 0 && document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value == "")// 의견목록에 사용자가 추가한지 여부 판단      
         {
-            if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && document.getElementById("btn_OpinionCancel").textContent != strLang407) {
+        	if ((pDisplay == "BanSong" || pDisplay == "HeSong" || pDisplay == "BoRyu") && getNodeText(document.getElementById("btn_OpinionCancel")) != strLang407) {
                 var pAlertContent = GetOpinionTypeName(pOpinionType) + strLang410;
                 OpenAlertUI(pAlertContent);
                 return;
@@ -583,16 +584,16 @@ function saveOpinionInfo() {
                     return;
                 }
                 if (ReturnFunction != null) {
-                    ReturnFunction("<LISTVIEWDATA><ROWS><RTN>Clear</RTN></ROWS></LISTVIEWDATA>");
+                    ReturnFunction("Clear");
                     window.close();
                 }
                 else {
-                    window.returnValue = "<LISTVIEWDATA><ROWS><RTN>Clear</RTN></ROWS></LISTVIEWDATA>";
+                    window.returnValue = "Clear";
                     window.close();
                 }
             }
         }
-        else if (document.getElementById("btn_OpinionAdd").textContent == strLang389 && document.getElementById("txt_OpinionContent").value != "" && pDisplay != "Show") {
+        else if (getNodeText(document.getElementById("btn_OpinionAdd")) == strLang389 && document.getElementById("txt_OpinionContent").value != "" && pDisplay != "Show") {
             var pInformationContent = strLang411;
             var Rtnval = OpenInformationUI(pInformationContent, saveOpinionInfo_Complete);
             if (!CrossYN() && Rtnval) {

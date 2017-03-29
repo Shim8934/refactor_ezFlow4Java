@@ -5,8 +5,8 @@
 	<head>
 	    <title><spring:message code='ezApproval.t157'/></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-	    <link rel="stylesheet" href="<spring:message code='ezApproval.e2'/>" type="text/css">
-	    <script type="text/javascript" src="<spring:message code='ezApproval.e1'/>" ></script>
+	    <link rel="stylesheet" href="<spring:message code='ezApprovalG.e2'/>" type="text/css">
+	    <script type="text/javascript" src="<spring:message code='ezApprovalG.e1'/>" ></script>
 	    <script type="text/javascript" src="/js/jquery/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>

@@ -3983,33 +3983,34 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
     var GetXml;
 
     GetXml = "<LISTVIEWDATA><HEADERS><HEADER><NAME>" + strLang236 + "</NAME><WIDTH>150</WIDTH></HEADER><HEADER><NAME>" + strLang237 + "</NAME><WIDTH>600</WIDTH></HEADER></HEADERS>";
-    GetXml = GetXml + "<ROWS>";
+    GetXml += "<ROWS>";
 
     for (i = 0 ; i < CurListLen ; i++) {
-        GetXml = GetXml + "<ROW>";
-        for (j = 0 ; j < CurCellLen ; j++)
-            GetXml = GetXml + "<COLUMN>" + MakeXMLString(AprDeptRow[i].cells[j].innerText) + "</COLUMN>";
+        GetXml += "<ROW>";
+        for (j = 0 ; j < CurCellLen - 1; j++) {
+        	GetXml += "<COLUMN>" + MakeXMLString(getNodeText(AprDeptRow[i].cells[j])) + "</COLUMN>";
+        }
 
         if (trim_Cross(GetAttribute(AprDeptRow[i], "DATA2")) == "") {
-            GetXml = GetXml + "<DATA name='DocID'>" + pDocID + "</DATA>";
+            GetXml += "<DATA name='DocID'>" + pDocID + "</DATA>";
         }
         else {
-            GetXml = GetXml + "<DATA name='DocID'>" + GetAttribute(AprDeptRow[i], "DATA2") + "</DATA>";
+            GetXml += "<DATA name='DocID'>" + GetAttribute(AprDeptRow[i], "DATA2") + "</DATA>";
         }
-        GetXml = GetXml + "<DATA name='ReceiptPointID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA1")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ExtReceptYN'>" + GetAttribute(AprDeptRow[i], "DATA3") + "</DATA >";
-        GetXml = GetXml + "<DATA name='ProcessYN'>" + GetAttribute(AprDeptRow[i], "DATA4") + "</DATA>";
-        GetXml = GetXml + "<DATA name='CanEditYN'>" + GetAttribute(AprDeptRow[i], "DATA5") + "</DATA>";
-        GetXml = GetXml + "<DATA name='ExtReceptEmail'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA6")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA7")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA8")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA9")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA10")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='ReceiptMemberName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA11")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='JobTitle2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA12")) + "</DATA>";
-        GetXml = GetXml + "<DATA name='JobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA13")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptPointID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA1")) + "</DATA>";
+        GetXml += "<DATA name='ExtReceptYN'>" + GetAttribute(AprDeptRow[i], "DATA3") + "</DATA >";
+        GetXml += "<DATA name='ProcessYN'>" + GetAttribute(AprDeptRow[i], "DATA4") + "</DATA>";
+        GetXml += "<DATA name='CanEditYN'>" + GetAttribute(AprDeptRow[i], "DATA5") + "</DATA>";
+        GetXml += "<DATA name='ExtReceptEmail'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA6")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberID'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA7")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA8")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberJobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA9")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberName'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA10")) + "</DATA>";
+        GetXml += "<DATA name='ReceiptMemberName2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA11")) + "</DATA>";
+        GetXml += "<DATA name='JobTitle2'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA12")) + "</DATA>";
+        GetXml += "<DATA name='JobTitle'>" + MakeXMLString(GetAttribute(AprDeptRow[i], "DATA13")) + "</DATA>";
 
-        GetXml = GetXml + "</ROW>";
+        GetXml += "</ROW>";
     }
     GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
     

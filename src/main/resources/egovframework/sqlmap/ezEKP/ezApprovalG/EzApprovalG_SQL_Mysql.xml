@@ -21227,11 +21227,11 @@
 		AND
 			A.COMPANYID = B.COMPANYID
 		WHERE 
-			A.DOCID = #pDocID#
+        	A.TENANT_ID = #v_TENANTID#
 		AND
-        	TENANT_ID = #v_TENANTID#
+        	A.COMPANYID = #companyID#
         AND
-        	COMPANYID = #companyID#
+			A.DOCID = #pDocID#
 	</select>
 	
    	<select id="EzApprovalG.doBanSongAprTypeS" parameterClass="Map" resultClass="ApprGDocListVO">
