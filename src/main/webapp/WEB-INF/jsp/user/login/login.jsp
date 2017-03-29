@@ -15,8 +15,7 @@
 		<script type="text/javascript" src="/js/rsa/rsa.js"></script>
 		<script type="text/javascript" src="/js/rsa/prng4.js"></script>
 		<script type="text/javascript" src="/js/rsa/rng.js"></script>
-		<script type="text/javascript">
-		
+		<script type="text/javascript">		
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
@@ -54,11 +53,14 @@
 			            // set index of beginning of value
 			            end = document.cookie.indexOf(";", offset);     
 			            document.getElementById("uid").className = "input_text focus";
+			            document.getElementById("upw").focus();
 			            // 쿠키 값의 마지막 위치 인덱스 번호 설정
 			            if (end == -1)
 			                end = document.cookie.length
 			            return unescape(document.cookie.substring(offset, end))
 			        }
+			    } else {			    	
+					document.getElementById("uid").focus();			        
 			    }
 			    return "";
 			}
@@ -87,7 +89,7 @@
 			    if (message != "") {
 			        alert(message);
 			    }
-			    getid(document.loginForm);
+			    getid(document.loginForm);			    
 			}
 			function setting_click() {
 			    var ver = navigator.userAgent;
