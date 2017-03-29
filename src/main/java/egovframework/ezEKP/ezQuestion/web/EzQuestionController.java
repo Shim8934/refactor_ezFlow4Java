@@ -4287,7 +4287,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	        for(QstAttachVO attachVO : qstAttachVOList){
 	        	if (bFirst){
 	        		if (strAnswer.equals("0")){
-	        			strResult.append("</th></tr><tr><td colspan=\"2\" bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
+	        			strResult.append("</th></tr><tr><td bgcolor=\"#e4f1f9\" class=\"subtxt\" style=\"word-break:break-all;padding:5px\">");
 	        			strResult.append("<table><tr>");
 	        		}else{
 	        			strResult.append("<br><table><tr>");
@@ -4311,7 +4311,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 	            	
 	            case "4":
 	            	//url
-	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>");
+	            	strResult.append("<td nowrap style=\"padding:5px\"><img src=\"/images/poll/link.gif\" width=\"26\" height=\"17\" align=\"absmiddle\"><a href=\"http://" + URLDecoder.decode(strAttachUrl, "utf-8") + "\" target=\"_blink\">" + URLDecoder.decode(strAttachName, "utf-8") + "</a></td>");
 	            	break;
 	            	
 	            case "5":
@@ -4501,10 +4501,11 @@ public class EzQuestionController extends EgovFileMngUtil {
 	public String dataProcessType2(LoginVO userInfo, int brdID, int itemNo, int questionNo, String strContent, String strSel, int answerType, int iDataCount, Locale locale) throws Exception{
 		String strData = "";
 		strData += "<table class=\"question\"><tr>";
-		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "</th>";
-		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
-		strData += "<a class=\"imgbtn\" style=\"cursor:pointer\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
-		strData += "</th></tr><tr><td colspan=2 style=\"padding:0\">";
+		strData += "<th>" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent); 
+//				+ "</th>";
+//		strData += "<th style=\"width:150px;text-align:right;padding:0 10px\">";
+		strData += "<a class=\"imgbtn\" style=\"cursor:pointer; position:relative; float:right;\"><span onclick=\"fun_ResponseView(" + questionNo + ");\">" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
+		strData += "</th></tr><tr><td style=\"padding:0\">";
 		strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo) + "</td>";
 		strData += "</tr>";
 		strData += "</table>";
@@ -4600,13 +4601,14 @@ public class EzQuestionController extends EgovFileMngUtil {
         strData += "<tr>\n";
         strData += "<th title=\"" + commonUtil.cleanValue(strContent) + "\">" + egovMessageSource.getMessage("ezQuestion.t333", locale) + iDataCount + " : " + commonUtil.cleanValue(strContent) + "";
         strData += "<span class=\"subtxt\">[" + egovMessageSource.getMessage("ezQuestion.t400", locale) + "</span>";
-        strData += "</th>\n";
-        strData += "<th style=\"text-align:right;width:150px;padding:0 10px\">";
-        strData += "<A class=\"imgbtn\" onclick=\"fun_ResponseView('" + questionNo + "');\" style=\"cursor:pointer\"><span>" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
-        strData += "</th></tr></table>\n";
+//        strData += "</th>\n";
+//        strData += "<th style=\"text-align:right;width:150px;padding:0 10px\">";
+        strData += "<A class=\"imgbtn\" onclick=\"fun_ResponseView('" + questionNo + "');\" style=\"cursor:pointer; position:relative; float:right;\"><span>" + egovMessageSource.getMessage("ezQuestion.t396", locale) + "</span></A>";
+        strData += "</th></tr><tr>\n";
 
-        strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo);
-        strData += "<table class=\"ex\">";
+        strData += getAttachList(userInfo, Integer.toString(questionNo), "0", brdID, itemNo)+"</tr>";
+        strData += "<tr>";
+//        +"<table class=\"ex\">";
         
         for(QstAnswerVO qstAnswerVO : qstAnswerVOList){
         	iAnsCount++;
@@ -4628,7 +4630,7 @@ public class EzQuestionController extends EgovFileMngUtil {
             strData += "</tr>";
         }
         
-        strData += "</table>";
+        strData += "</tr></table>";
         strData += "<br>";
         
 		return strData; 
