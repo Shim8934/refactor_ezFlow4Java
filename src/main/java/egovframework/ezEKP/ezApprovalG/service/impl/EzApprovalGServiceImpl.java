@@ -10099,7 +10099,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (modifySN == 0 || String.valueOf(modifySN).equals("")) {
 			return true;
 		}
-		map.remove("v_FLAG");
 		map.put("v_FLAG", "2");
 		map.put("v_MODIFYSN", modifySN);
 		
@@ -10119,7 +10118,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			return false;
 		}
 		
-		map.remove("v_FLAG");
 		map.put("v_FLAG", "3");
 		
 		List<ApprGAprLineVO> apprGAprLineVOList1 = ezApprovalGDAO.compareLineHistory1(map);
