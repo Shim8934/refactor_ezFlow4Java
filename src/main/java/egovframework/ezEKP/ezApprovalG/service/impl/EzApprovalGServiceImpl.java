@@ -20290,27 +20290,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 	}
                 }
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "</VALUE>");
+				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
 			
 				if ( i == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "</DATA2>");
-					resultXML.append("<DATA3>" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
-					resultXML.append("<DATA5>" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "</DATA5>");
-					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
-					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
-					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</DATA8>");
-					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
-					resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
 				}
 				
 				if (FieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					resultXML.append("<HASATTACHYN><![CDATA[" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "]]></HASATTACHYN>");
 				}
 				
 				if (FieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					resultXML.append("<ISPUBLIC><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></ISPUBLIC>");
 				}
 				resultXML.append("</CELL>");
 			}
