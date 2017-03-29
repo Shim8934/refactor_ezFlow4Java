@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="/js/XmlHttpRequest.js"></script>
 		<script type="text/javascript" src="/js/mouseeffect.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
+		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/SendMailApprove.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
 	    <script type="text/javascript" src="/js/ezApprovalG/ezDraftCK_Common.js"></script>

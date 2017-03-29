@@ -14,6 +14,7 @@
 		<script type="text/javascript" src="/js/ezApprovalG/docnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recvdocnumber_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/getDocAttach_Cross.js"></script>
+		<script type="text/javascript" src="/js/escapenew.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/Recev_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/signSplit_Cross.js"></script>
 		<script type="text/javascript" src="/js/ezApprovalG/appandbody_Cross.js"></script>
