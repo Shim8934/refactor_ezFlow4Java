@@ -13,8 +13,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,7 +88,7 @@ public class LoginController {
     
     @RequestMapping(value="/user/login/login.do")
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
-    	if (commonUtil.isLoginCookieExists(request)) {
+    	if (commonUtil.isLoginCookieExists(request, response)) {
     	    return "redirect:/ezPortal/portalMain.do"; 
     	}
         	
@@ -116,7 +116,7 @@ public class LoginController {
 	 * @exception Exception
 	 */
     @RequestMapping(value="/user/login/actionLogin.do")
-    public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+    public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	logger.debug("=========================================== 로그인 ============================================");
     	
     	String prm = egovFileScrty.getPrm();
@@ -246,6 +246,7 @@ public class LoginController {
 				    serverName = serverName + ":" + serverPort;
 				}
 				
+				//Cookie 생성
 				String cInfo = serverName + "///" + _uid + "///" + _pwd + "///" + ip + "///" + rpwd + "///" + locale + "///" + lang + "///" + timeZone + "///" + tenantId;
 				String loginCookie = egovFileScrty.encryptAES(cInfo);
 				
@@ -257,7 +258,9 @@ public class LoginController {
 	        	cookieName.setPath("/");
 	        	response.addCookie(cookieName);
 	        	
-	        	//return "redirect:/cmm/main/mainPage.do";
+	        	//세션 생성
+	        	//session = request.getSession();	        	
+	        	
 	        	if (config.getProperty("config.IsJMochaStandAlone").equals("YES")) {
 	        	    return "redirect:/ezEmail/mailAloneMain.do";
 	        	} else {

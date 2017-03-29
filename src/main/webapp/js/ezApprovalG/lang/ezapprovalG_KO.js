@@ -1356,6 +1356,7 @@ var strLangS313 = "조직도 정보를 읽고 있습니다."
 var strLangS574 = "리스트를 선택해 주십시오."
 var strLangS576 = "이동 할 수 없습니다.";
 var strLangS577 = "전결 상태에서 이동 할 수 없습니다."
+var strLangS174 ="추가할 문서를 선택하세요."	
 
 var strAprStateS0 = "A04000";
 var strAprStateS1 = "A04001";

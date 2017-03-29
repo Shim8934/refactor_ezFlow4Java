@@ -484,10 +484,10 @@
 	        function GetDocTitle() {
 	            try {
 	                if (document.getElementById("frame_doctitle") == null) {
-	                    return document.getElementById("doctitle").textContent;
+	                    return getNodeText(document.getElementById("doctitle"));
 	                }
 	                else {
-	                    return document.getElementById("frame_doctitle").value;
+	                    return getNodeText(document.getElementById("frame_doctitle"));
 	                }
 	            } catch (e) {
 	                return "";
@@ -513,20 +513,36 @@
 	        }
 	
 	        var Doc_ContentHtml;
+	        
 	        function Get_EditorBodyHTML() {
 	            try {
 	                var HTML = document.createElement("HTML");
 	                var HEAD = document.createElement("HEAD");
-	                //var META = document.createElement("META");
-	                //META.content = "text/html; charset=utf-8";
-	                //META.httpEquiv = "Content-Type";
-	                //var META2 = document.createElement("META");
-	                //META2.name = "GENERATOR";
-	                //META2.content = "MSHTML 10.00.9200.16721";
-	                //HEAD.appendChild(META);
-	                //HEAD.appendChild(META2);
+	                var META = document.createElement("META");
+	                META.content = "text/html; charset=utf-8";
+	                META.httpEquiv = "Content-Type";
+	                var META2 = document.createElement("META");
+	                META2.name = "GENERATOR";
+	                META2.content = "MSHTML 10.00.9200.16721";
+	                var META3 = document.createElement("META");
+	                META3.httpEquiv = "X-UA-Compatible";
+	                META3.content = "IE=edge";
+	                HEAD.appendChild(META);
+	                HEAD.appendChild(META2);
+	                HEAD.appendChild(META3);
 	                HTML.appendChild(HEAD);
 	                var BODY = document.createElement("BODY");
+	                var attributeBody;
+	                if (document.getElementById("body").hasAttribute("SA_DocID"))
+	                    attributeBody = document.getElementById("body");
+	                else
+	                    attributeBody = document.getElementsByTagName("body")[0];
+
+	                attributeBody.style.width = "auto";
+	                for (var i = 0; i < attributeBody.attributes.length; i++) {
+	                    if (attributeBody.attributes[i].name.toUpperCase() != "ID")
+	                        SetAttribute(BODY, attributeBody.attributes[i].name, attributeBody.attributes[i].value);
+	                }
 	                Doc_ContentHtml = document.createElement("DIV");
 	                Doc_ContentHtml.innerHTML = document.getElementById('div_Content').innerHTML;
 	                BODY.appendChild(Doc_ContentHtml);
