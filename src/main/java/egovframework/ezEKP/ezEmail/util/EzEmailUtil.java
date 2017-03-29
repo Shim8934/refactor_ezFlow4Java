@@ -585,6 +585,7 @@ public class EzEmailUtil {
 			String strContent = null;			
 			String contentType = part.getContentType();
 			
+			/*
 			if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 				InputStream is = getContentInputStream(part);
 				
@@ -594,7 +595,8 @@ public class EzEmailUtil {
 					
 					strContent = new String(buf, "ms949");
 				}				
-			} else {							
+			} else {
+			*/							
 				String[] headers = part.getHeader("Content-Type");
 				String rawContentType = "";
 				
@@ -642,7 +644,7 @@ public class EzEmailUtil {
 						strContent = decodeNonAsciiBytes(buf);						
 					}
 				}
-			}
+//			}
 			
 			// process in-line images
 			int index1 = -1;
@@ -710,6 +712,7 @@ public class EzEmailUtil {
 			else {
 				String contentType = part.getContentType();
 				
+				/*
 				if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
 					InputStream is = getContentInputStream(part);
 					
@@ -719,7 +722,8 @@ public class EzEmailUtil {
 						
 						strContent = new String(buf, "ms949");
 					}				
-				} else {							
+				} else {
+				*/							
 					try {
 						strContent = part.getContent().toString();
 					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
@@ -737,7 +741,7 @@ public class EzEmailUtil {
 						}
 					}
 				}				
-			}
+//			}
 			
 			htmlBody += strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			
