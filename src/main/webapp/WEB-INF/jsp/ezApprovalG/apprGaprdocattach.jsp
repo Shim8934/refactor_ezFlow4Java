@@ -16,6 +16,7 @@
     <script id="clientEventHandlersJS" type="text/javascript">
         var xmlhttp = createXMLHttpRequest();
         var xmldoc = createXmlDom();
+        var approvalFlag = "${approvalFlag}";
         var Check = false;
         var NodeList, curpage, nowblock, totalPage, block, p_page, p_nowblock, NodeListLen, Init_Flag, pChackYN, subCondition;
         var DocListType = "getDocList";
