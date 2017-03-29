@@ -6381,7 +6381,7 @@
 							   			 TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 							   	
 							   	<isEqual property="approvalFlag" compareValue="S">
-							   	   AND  C.CODE1 ='A02'
+							   	   AND  C.CODE1 ='SA02'
    									AND  D.CODE1 ='A04'
 								$v_WHERESTR$
 							   	</isEqual>
@@ -10316,7 +10316,7 @@
    			TBL_ENDAPRDOCINFO.COMPANYID = #companyID#
 		<isEqual property="approvalFlag" compareValue="S">
 		 AND  
-		 		C.CODE1 ='A02'
+		 		C.CODE1 ='SA02'
    		 AND  
    		 		D.CODE1 ='A04'
 		$v_WHERESTR$
@@ -19041,6 +19041,22 @@
         	COMPANYID = #companyID#)
 	</insert>
 	
+	<insert id="EzApprovalG.insertBebuAprReceiptProcessInfoS" parameterClass="Map">
+	 	INSERT INTO 
+	 		TBL_APRRECEIPTPROCESSINFO 
+	 	(	ReceiveSN, DocID,     SentDeptID, SentDeptName, SentDeptName2, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, DocState, AprState,     ProcessDate,                                ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+	 	(SELECT 	
+	 		#v_maxSN#, #v_NEWID#, WriterDeptID, WriterDeptName, WriterDeptName2, #v_DEPTID#, #v_DEPTNAME#,       #v_DEPTNAME2#,     '011', #v_APRSTATE#, #v_SYSDATE#, 'N',           NULL,           NULL,         NULL,              NULL,             NULL,                NULL,               DocID, TENANT_ID, COMPANYID 
+	 	 FROM 
+	 	 	TBL_APRDOCINFO A
+	 	 WHERE 
+	 	 	DocID = #v_DOCID# 
+	 	 AND 
+	 	 	TENANT_ID = #v_TENANTID#
+	 	 AND 
+        	COMPANYID = #companyID#)
+	</insert>
+	
 	<update id="EzApprovalG.updateBebuDocDeivery" parameterClass="Map">
 		UPDATE 
 			TBL_DOCDELIVERY 
@@ -19462,6 +19478,24 @@
 		  	COMPANYID = #companyID#)
    	</insert>
    	
+   	<insert id="EzApprovalG.insertSetBebuAprReceiptProcessInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		(	ReceiveSN,      DocID,      SentDeptID,     SentDeptName,    SentDeptName2,      ReceivedDeptID,      ReceivedDeptName,     ReceivedDeptName2, DocState, AprState,   ProcessDate,  ProcessYN, ProcessDocID, ProcessorID, ProcessorName, ProcessorName2, ProcessorJobTitle, ProcessorJobTitle2, ParentsDocID, TENANT_ID, COMPANYID) 
+		(SELECT 
+			#v_maxSN#, #v_NEWID#, ReceivedDeptID, ReceivedDeptName, ReceivedDeptName2, #v_DEPTID#, #v_DEPTNAME#, #v_DEPTNAME2#, '011', #v_APRSTATE#, #v_SYSDATE#,  'N',       NULL,  NULL,         NULL,          NULL,               NULL,           NULL,            DocID, TENANT_ID, COMPANYID
+		 FROM 
+            TBL_APRRECEIPTPROCESSINFO A
+         WHERE 
+         	DocID = #v_DOCID#
+		 AND 
+		 	ReceiveSN = #v_TEMPSN# 
+		 AND 
+		 	TENANT_ID = #v_TENANTID#
+		 AND
+		  	COMPANYID = #companyID#)
+   	</insert>
+   	
    	<update id="EzApprovalG.updateSetBebuAprReceiptProcessInfo" parameterClass="Map">
    		UPDATE 
    			TBL_APRRECEIPTPROCESSINFO 
@@ -19477,6 +19511,34 @@
 			TENANT_ID = #v_TENANTID#
 		AND
 		  	COMPANYID = #companyID#
+   	</update>
+   	
+   	<update id="EzApprovalG.updateSetBebuReceiptProcessInfoS" parameterClass="Map">
+   		UPDATE 
+   			TBL_APRRECEIPTPROCESSINFO 
+   		SET 
+   			AprState = #v_AprState#, 
+   			ProcessDate = #v_SYSDATE#,
+   			ProcessYN = 'Y' 
+   		WHERE 
+   			DocID = #v_DOCID# 
+   		AND 
+   			ReceiveSN = #v_ReceiveSN#
+   		AND
+   			COMPANYID = #companyID#
+   		AND 
+   			TENANT_ID = #v_TENANTID#
+   		<isEqual property="v_AprState" compareValue="015">
+   		AND 
+   			SentDeptID = #v_sentDeptID# 
+   		AND 
+   			ReceivedDeptID = #v_receiveDeptID#
+   		</isEqual>
+   		
+   		<isNotEqual property="v_AprState" compareValue="015">
+   		AND 
+   			ReceivedDeptID = #v_receiveDeptID#
+   		</isNotEqual>
    	</update>
    	
    	<delete id="EzApprovalG.deleteSetBebuExpAprLine" parameterClass="Map">
@@ -21395,4 +21457,56 @@
           	  COMPANYID = #companyID#)
    </insert>
    
+   <insert id="EzApprovalG.insertSetBebuLineInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_APRLINEINFO 
+   			(DocID, AprMemberSN, AprType, AprState, AprMemberID, AprMemberIsDeptYN, AprMemberName, AprMemberName2, AprMemberJobTitle, AprMemberJobTitle2, AprMemberDeptID, AprMemberDeptName, AprMemberDeptName2, AprMemberLDAPPath, ReceivedDate, ProcessDate, ReasonDoNotApprov, isProposerYN, isBriefUserYN, COMPANYID, TENANT_ID) 
+   		VALUES 
+   			(#v_DOCID#, '1',       '014', '014',    #v_USERID#,    'N',             #v_USERNAME#, #v_USERNAME2#,     #v_USERTITLE#,    #v_USERTITLE2#,       #v_DEPTID#,      #v_DEPTNAME#,     #v_DEPTNAME2# ,     #companyID#,       #v_SYSDATE#,  #v_SYSDATE#,  NULL,        'N', 'N', #companyID# , #v_TENANTID#)
+   </insert>
+   
+   <insert id="EzApprovalG.insertSetBebuExpLineInfoS" parameterClass="Map">
+   		INSERT INTO 
+   			TBL_EXPAPRLINE 
+   			(docid,  aprmemberSN, orguserid, proxyuserid, proxyusername, proxyusername2, proxyuserjobtitle, proxyuserjobtitle2, proxyuserdeptid, proxyuserdeptname, proxyuserdeptname2, COMPANYID, TENANT_ID) 
+   		VALUES 
+   			(#v_DOCID#, '1',        #v_USERID#, '',           '',               '',            '',               '',                '',                  '',                  '', #companyID#, #v_TENANTID#)
+   </insert>
+   
+   <update id="EzApprovalG.updateSetBebuDocInfoS" parameterClass="Map">
+      	UPDATE 
+      		TBL_APRDOCINFO
+      	SET 
+      		DOCSTATE = #v_DOCSTATE#
+    	WHERE  
+    		DOCID = #v_DOCID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+   </update>
+   
+   <update id="EzApprovalG.updateBebuReceiptInfoS" parameterClass="Map">
+   		UPDATE 
+   			TBL_ENDRECEIPTPOINTINFO
+   		SET
+   			PROCESSYN = 'B'
+   		WHERE
+   			DOCID = (SELECT 
+   						ORGDOCID
+   					FROM 
+   						TBL_ENDAPRDOCINFO
+   					WHERE 
+   						DOCID = #v_DOCID#
+   					AND
+   						COMPANYID = #companyID#
+   					AND
+   						TENANT_ID = #v_TENANTID#)	
+   		AND
+   			RECEIPTPOINTID = #v_DEPTID#
+   		AND
+   			TENANT_ID = #v_TENANTID#
+   		AND
+   			COMPANYID = #companyID#
+   </update>
 </sqlMap>
