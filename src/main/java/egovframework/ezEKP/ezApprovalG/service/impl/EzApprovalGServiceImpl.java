@@ -10101,6 +10101,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		map.remove("v_FLAG");
 		map.put("v_FLAG", "2");
+		map.put("v_MODIFYSN", modifySN);
 		
 		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.compareLineHistory1(map);
 		

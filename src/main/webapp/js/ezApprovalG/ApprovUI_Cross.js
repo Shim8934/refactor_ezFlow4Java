@@ -2412,7 +2412,7 @@ function UpdateLineHistory() {
 			userJobTitle : arr_userinfo[13],
 			userDeptID : arr_userinfo[4],
 			userDeptName : arr_userinfo[15],
-			chkFlag : "MUST",
+			chkFlag : "CHECK",
 			userName2 : arr_userinfo[12],
 			userJobTitle2 : arr_userinfo[14],
 			userDeptName2 : arr_userinfo[16]
