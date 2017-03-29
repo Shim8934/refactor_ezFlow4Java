@@ -390,8 +390,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	public void insertPopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pCompanyID", vo.getCompanyID());
-		map.put("v_pStartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		map.put("v_pEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("v_pStartDate", vo.getStartDate());
+		map.put("v_pEndDate", vo.getEndDate());
 		map.put("v_pWidth", vo.getWidth());
 		map.put("v_pHeight", vo.getHeight());
 		map.put("v_pPosition", vo.getPosition());
@@ -407,8 +407,8 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	public void updatePopup(PersonalPopupVO vo, int tenantID, String offset) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pItemSeq", vo.getItemSeq());
-		map.put("v_pStartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), offset, true));
-		map.put("v_pEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), offset, true));
+		map.put("v_pStartDate", vo.getStartDate());
+		map.put("v_pEndDate", vo.getEndDate());
 		map.put("v_pWidth", vo.getWidth());
 		map.put("v_pHeight", vo.getHeight());
 		map.put("v_pPosition", vo.getPosition());
