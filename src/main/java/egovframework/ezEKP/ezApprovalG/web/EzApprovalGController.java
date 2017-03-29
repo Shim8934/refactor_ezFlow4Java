@@ -2900,19 +2900,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String docID = request.getParameter("docID");
-		String result = ezApprovalGService.getSignInfo(docID, userInfo.getCompanyID(), userInfo.getTenantId());
-
-		Document xmlResult = commonUtil.convertStringToDocument(result);
-		
-		for (int k = 0; k < xmlResult.getElementsByTagName("CONTENT").getLength(); k++) {
-			String strCont = xmlResult.getElementsByTagName("CONTENT").item(k).getTextContent().toLowerCase();
-			
-			if (strCont.equals("b1") || strCont.equals("b2") || strCont.equals("b3") || strCont.equals("b4") || strCont.equals("b5") || strCont.equals("b6") || strCont.equals("b7") || strCont.equals("b8") || strCont.equals("b9") || strCont.equals("b10") || strCont.equals("b11") || strCont.equals("b12")) {
-				xmlResult.getElementsByTagName("CONTENT").item(k).setTextContent(messageSource.getMessage("ezApprovalG." + strCont, locale));
-			}
-		}
-		
-		result = commonUtil.convertDocumentToString(xmlResult);
+		String result = ezApprovalGService.getSignInfo(docID, userInfo.getLocale(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		return result;
 	}

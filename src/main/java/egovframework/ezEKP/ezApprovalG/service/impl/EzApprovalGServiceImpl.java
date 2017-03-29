@@ -8476,7 +8476,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getSignInfo(String docID, String companyID, int tenantID) throws Exception {
+	public String getSignInfo(String docID, Locale locale, String companyID, int tenantID) throws Exception {
 		StringBuilder resultXML = new StringBuilder();
 		
 		resultXML.append("<SIGNINFOS>");
@@ -8503,8 +8503,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<APRSN>" + makeListField(docXML.getElementsByTagName("APRSN").item(k).getTextContent()) + "</APRSN>");
 			resultXML.append("<SIGNTYPE>" + makeListField(docXML.getElementsByTagName("SIGNTYPE").item(k).getTextContent()) + "</SIGNTYPE>");
-			resultXML.append("<SIGNNAME>" + makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent()) + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + makeXMLString(makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent())) + "</CONTENT>");
+			
+			String tempSignName = makeListField(docXML.getElementsByTagName("SIGNNAME").item(k).getTextContent());
+			String tempContent = makeListField(docXML.getElementsByTagName("CONTENT").item(k).getTextContent());
+			
+			resultXML.append("<SIGNNAME>" + tempSignName + "</SIGNNAME>");
+			
+			if (tempSignName.indexOf("date") > -1 && tempContent.length() > 18) {
+				resultXML.append("<CONTENT>" + makeXMLString(tempContent.substring(5, 10).replace("-", ".")) + "</CONTENT>");
+			} else {
+				resultXML.append("<CONTENT>" + makeXMLString(tempContent) + "</CONTENT>");
+			}
 			resultXML.append("</SIGNINFO>");
 		}
 		
@@ -10805,7 +10814,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 					whileFlag = false;
 				} else {
-					subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId());
+					subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", userInfo.getLocale(), companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -10840,7 +10849,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						if (absentReason.trim().equals("")) {
 							sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 						} else {
-							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", companyID, lang, userInfo.getTenantId());
+							subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "AST", userInfo.getLocale(), companyID, lang, userInfo.getTenantId());
 							
 							if (subSQL.toUpperCase().equals("FALSE")) {
 								rtnVal = false;
@@ -11041,7 +11050,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					sendMsg(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), "ING", companyID, lang, userInfo.getTenantId());
 					whileFlag = false;
 				} else {
-					subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", companyID, lang, userInfo.getTenantId());
+					subSQL = setBujaeInfo(docID, docXML2.getElementsByTagName("APRMEMBERID").item(k).getTextContent(), docXML2.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), absentReason, "APR", userInfo.getLocale(), companyID, lang, userInfo.getTenantId());
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
@@ -11768,8 +11777,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("").substring(6, 10).replace("-", ".") + "</CONTENT>");
 		resultXML.append("</SIGNINFO>");
 		resultXML.append("</SIGNINFOS>");
-		
-		System.out.println(resultXML.toString());
 		
 		subSQL = updateSignInfo(resultXML, orgCompanyID, "QUERY", userInfo.getTenantId());
 		
@@ -12907,7 +12914,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		return "TRUE";
 	}
 
-	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, String companyID, String lang, int tenantID) throws Exception{
+	public String setBujaeInfo(String docID, String aprMemberID, String aprMemberDeptID, String absentReason, String aprType, Locale locale, String companyID, String lang, int tenantID) throws Exception{
 		String strSQL = "";
 		StringBuilder resultXML = new StringBuilder();
 		String susinSN = getSusinSNInside(docID, companyID, tenantID);
@@ -12938,6 +12945,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent().toUpperCase().equals(aprMemberDeptID.toUpperCase()) &&
 					!docXML.getElementsByTagName("APRSTATE").item(k).getTextContent().toUpperCase().equals(staASSungIn)) {
 					aprSN = String.valueOf(cnt);
+					
+					break;
 				} else {
 					cnt += 1;
 				}
@@ -12951,26 +12960,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "sign" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + absentReason + "</CONTENT>");
+			resultXML.append("<CONTENT>" + messageSource.getMessage("ezApprovalG." + absentReason, locale) + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "seumyungdate" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("").substring(6, 10) + "</CONTENT>");
+			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("") + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 		} else {
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "habyuisign" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + absentReason + "</CONTENT>");
+			resultXML.append("<CONTENT>" + messageSource.getMessage("ezApprovalG." + absentReason, locale) + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 			resultXML.append("<SIGNINFO>");
 			resultXML.append("<DOCID>" + docID + "</DOCID>");
 			resultXML.append("<SIGNTYPE>" + "TEXT" + "</SIGNTYPE>");
 			resultXML.append("<SIGNNAME>" + susinSN + "habyuidate" + aprSN + "</SIGNNAME>");
-			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("").substring(6, 10) + "</CONTENT>");
+			resultXML.append("<CONTENT>" + commonUtil.getTodayUTCTime("") + "</CONTENT>");
 			resultXML.append("</SIGNINFO>");
 		}
 		
