@@ -114,7 +114,11 @@ function DocMove() {
     }
 
     if (length <= 0) {
-        alert(strLang174);
+    	if (approvalFlag == 'G') {
+    		alert(strLang174);
+    	} else {
+    		alert(strLangS174);
+    	}
     }
     else {
         DocInfo = listview.GetSelectedRows()[0];

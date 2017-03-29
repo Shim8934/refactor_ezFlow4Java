@@ -17284,7 +17284,7 @@
    		UPDATE 
    			TBL_APRLINEINFO 
    		SET 
-   			AprState = #v_STAASSUNGIN#, 
+   			AprState = #v_APRSTATE#, 
    		    ProcessDate = #v_SYSDATE#,
 			ReasonDoNotApprov = #v_REASONDONOTAPPROV#
 		WHERE 
