@@ -961,10 +961,11 @@
                 	<td colspan="2">
                     	<input onclick="javascript:TypeDetermination(1)" type="radio" value="1" name="selView" style="vertical-align:-2px;"/><spring:message code='ezQuestion.t487' />
                     	<input type="checkbox" value="0" name="MultiResponse" disabled="disabled" style="vertical-align:-2px;"/>
-                    	<c:if test="${userInfo.lang != '3'}">
-                    		<spring:message code='ezQuestion.t518' />
-                    	</c:if>
-                    	<spring:message code='ezQuestion.t519' />
+<%--                     	<c:if test="${userInfo.lang != '3'}"> --%>
+<%--                     		<spring:message code='ezQuestion.t518' /> --%>
+<%--                     	</c:if> --%>
+<%--                     	<spring:message code='ezQuestion.t519' /> --%>
+						<spring:message code='ezQuestion.t548' />
 	                </td>
     	        </tr>
 	            <tr>
