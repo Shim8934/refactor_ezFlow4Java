@@ -37,7 +37,7 @@
 	                var nowDate = new Date();
 	                document.getElementById("Sdatepicker").value = DateFormat(nowDate)
 	    	        document.getElementById("Edatepicker").value = DateFormat(nowDate)
-
+	            }
 	            message.SetEditorContent("${personalPopupVO.content}");
 	            
 	            if (startdate != "") {

@@ -680,6 +680,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 		return (List<ApprGContInfoVO>) list("EzApprovalG.getSpecialContTree", userInfo);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> doBanSongAprTypeS(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.doBanSongAprTypeS", map);
+	}
+	
 	public ApprGDocListVO doSendOfferRejectAprDoc(Map<String, Object> map) throws Exception{
 		return (ApprGDocListVO) select("EzApprovalG.doSendOfferRejectAprDoc", map);
 	}
@@ -1568,11 +1573,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	public void insertRejectEndAprDocInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertRejectEndAprDocInfo", map);
 	}
-	
-	public void insertRejectEndAprDocInfo2(Map<String, Object> map) throws Exception{
-		insert("EzApprovalG.insertRejectEndAprDocInfo2", map);
-	}
-	
+		
 	public void insertRejectEndAprLineInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.insertRejectEndAprLineInfo", map);
 	}
@@ -1907,6 +1908,42 @@ public class EzApprovalGDAO extends EgovAbstractDAO{
 	
 	public void inserUserContList(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.inserUserContList", map);
+	}
+
+	public void insertRejectEndAprDocInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndAprDocInfoS", map);
+	}
+
+	public void insertRejectEndAprLineInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndAprLineInfoS", map);
+	}
+
+	public void insertRejectEndAttachInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndAttachInfoS", map);
+	}
+
+	public void insertRejectEndDocAttachInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndDocAttachInfoS", map);
+	}
+
+	public void insertRejectEndAprOpinionInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndAprOpinionInfoS", map);
+	}
+
+	public void insertRejectEndReceiptPointInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndReceiptPointInfoS", map);
+	}
+
+	public void insertRejectEndAprReceiptProcessInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectEndAprReceiptProcessInfoS", map);
+	}
+
+	public void insertRejectExpendAprDocInfoS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectExpendAprDocInfoS", map);
+	}
+
+	public void insertRejectExpendAprLineS(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertRejectExpendAprLineS", map);
 	}
 	
 	public void setJijung(Map<String, Object> map) throws Exception{

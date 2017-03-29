@@ -225,7 +225,7 @@
 	
 		        }
 	
-		        //window.print();
+		        window.print();
 			});
 		</script>
 	</head>
@@ -259,5 +259,5 @@
           </table>
 		  <div style="vertical-align:top;text-align:center;height:auto;display:none;width:425px;" id="Print_DeptUserImgList">    
           </div>    
-</body>
+	</body>
 </html>
