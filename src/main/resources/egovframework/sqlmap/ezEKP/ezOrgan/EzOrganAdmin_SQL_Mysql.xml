@@ -2958,5 +2958,14 @@
         AND 
             TENANT_ID = #v_TENANT_ID#
      </delete>
+     
+     <delete id="EzOrganAdminDAO.deleteCompany_D17" parameterClass="Map">
+        DELETE FROM
+            TBL_PORTAL_ACL    
+        WHERE  
+            ACCESSID = #v_CN#
+        AND 
+            TENANT_ID = #v_TENANT_ID#
+     </delete>
  
 </sqlMap>

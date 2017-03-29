@@ -1409,11 +1409,12 @@ public class EzPortalController extends EgovFileMngUtil {
 							float poolRstCnt = list.get(i).getCount();
 							float poolRstPer = ((poolRstCnt / pTotalCnt) * 100);
 							String strAnswer =  xmlDom.getElementsByTagName("ANSWER"+list.get(i).getResult()).item(0).getTextContent();
+							String titleString = strAnswer;
 							if (strAnswer.length() > 11) {
 								strAnswer = strAnswer.substring(0, 11) + "…";
 							}
 							pPollResultList.add(list.get(i).getResult());
-							pPollResultContent += "<dl class=\"poll_list\">" + "<dt>" + list.get(i).getResult() + "." + strAnswer + " (" + 
+							pPollResultContent += "<dl class=\"poll_list\">" + "<dt title="+titleString+">" + list.get(i).getResult() + "." + strAnswer + " (" + 
 							"<strong>" + list.get(i).getCount() + "</strong>" + egovMessageSource.getMessage("main.t20000", locale) +
 							"<strong class=\"redtxt\">" + String.format("%.1f", poolRstPer)  + "</strong>%)</dt>" +
 							"<dd  class=\"graphbar\"><p class=\"gx_bar1\" style=\"width:" + String.format("%.1f", poolRstPer) + "%\"></p></dd>" +
