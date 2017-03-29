@@ -244,7 +244,7 @@
 		                            <th style="width:240px;"><spring:message code='ezApprovalG.t106'/></th>
 		                            <th style="width:100px;"><spring:message code='ezApprovalG.t1331'/></th>
 		                            <th style="width:80px;"><spring:message code='ezApprovalG.t445'/></th>
-		                            <th ><spring:message code='ezApprovalG.t9996'/></th>
+		                            <th style="width:100px;"><spring:message code='ezApprovalG.t9996'/></th>
 		                        </tr>
 		                        ${sbStr}
 		                    </table>
