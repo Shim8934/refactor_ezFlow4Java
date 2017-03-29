@@ -41,6 +41,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -344,32 +345,44 @@ public class CommonUtil {
 		}		
 	}
 	
-	public boolean isLoginCookieExists(HttpServletRequest request) {
+	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
         boolean isCookie = false;     
         Cookie[] cookies = request.getCookies();
+        /* session time을 위한 처리 주석 */
+        //HttpSession session = request.getSession(false);
         
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if("loginCookie".equals(cookie.getName())){
-                    //접속한 클라이언트 IP
-                    String ip = ClientUtil.getClientIP(request);
-                    String cValue = "";
-                    try {
-                        //쿠기에 저장되어 있는 IP
-                        cValue = egovFileScrty.decryptAES(cookie.getValue());
-
-                        if(cValue.split("///")[3].equals(ip)){                  
-                            isCookie = true;
-                        }
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        //e.printStackTrace();
-                    }
-                }
-            }
-        }
-	    
-        
+        //if (session != null) {
+	        if (cookies != null) {
+	            for (Cookie cookie : cookies) {
+	                if("loginCookie".equals(cookie.getName())){
+	                    //접속한 클라이언트 IP
+	                    String ip = ClientUtil.getClientIP(request);
+	                    String cValue = "";
+	                    try {
+	                        //쿠기에 저장되어 있는 IP
+	                        cValue = egovFileScrty.decryptAES(cookie.getValue());
+	
+	                        if(cValue.split("///")[3].equals(ip)){                  
+	                            isCookie = true;
+	                        }
+	                    } catch (Exception e) {
+	                        // TODO Auto-generated catch block
+	                        //e.printStackTrace();
+	                    }
+	                }
+	            }
+	        }
+        /*} else {
+        	if (cookies != null) {
+        		for (Cookie cookie : cookies) {
+        			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+        				cookie.setMaxAge(0);
+        				cookie.setPath("/");
+        				response.addCookie(cookie);
+        			}
+        	    }
+        	}
+        }     */   
         return isCookie;
 	}
 	
