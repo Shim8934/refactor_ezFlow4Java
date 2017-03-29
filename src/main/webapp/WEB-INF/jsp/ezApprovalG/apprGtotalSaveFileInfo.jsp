@@ -94,7 +94,7 @@
 	                    if (new RegExp(/Firefox/).test(navigator.userAgent))
 	                        SPAN.innerHTML = getNodeText(SelectNodes(docAttach, "FILENAME")[i]).replace(/&amp;/gi, "&");
 	                    else
-	                        SPAN.innerText = getNodeText(SelectNodes(docAttach, "FILENAME")[i]).replace(/&amp;/gi, "&");
+	                        SPAN.innerText = getNodeText(SelectNodes(docAttach, "FILENAME")[i]).replace(/&amp;/gi, "&").replace("\r", "").replace("\n", "");
 	
 	                    TD2.appendChild(IMG);
 	                    TD2.appendChild(SPAN);
