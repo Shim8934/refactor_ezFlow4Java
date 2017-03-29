@@ -1312,7 +1312,7 @@
 		        SearchFlag = true;
 		        var TYPE = "";
 		        var DATA = "";
-				if (approvlaFlag =='G') {
+				if (approvalFlag =='G') {
 			        if (SearchCond[0] != "")		// DocNumber
 			        {
 			            TYPE += "DOCNO;";
