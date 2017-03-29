@@ -108,19 +108,15 @@ function DocMove() {
     length = listview.GetSelectedRows().length;
     Doclength = Doclistview.GetDataRows().length;
 
-    if (Doclength == 1 && Doclistview.GetDataRows()[0].id == "lvTDocList_TR_noItems") {
-        Doclistview.DeleteRow(Doclistview.GetDataRows()[0].id);
-        Doclength--;
-    }
-
     if (length <= 0) {
-    	if (approvalFlag == 'G') {
-    		alert(strLang174);
-    	} else {
-    		alert(strLangS174);
-    	}
+    	alert(strLang257);
     }
     else {
+    	if (Doclength == 1 && Doclistview.GetDataRows()[0].id == "lvTDocList_TR_noItems") {
+            Doclistview.DeleteRow(Doclistview.GetDataRows()[0].id);
+            Doclength--;
+        }
+    	
         DocInfo = listview.GetSelectedRows()[0];
 
         for (count1 = 0; count1 < length; count1++) {
