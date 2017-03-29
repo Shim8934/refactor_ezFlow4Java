@@ -2192,10 +2192,10 @@ function putSignXML(SignXML) {
                 var SignType = getNodeText(SelectSingleNode(NodeList[i], "SIGNTYPE"));
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
-//                
-//                if (!SignName.indexOf("habyui") > -1) {
-//                	continue;
-//                }
+                
+                if (!SignName.indexOf("habyui") > -1) {
+                	continue;
+                }
                 
                 var field = message.GetListItem(fields, SignName);
                 
