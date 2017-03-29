@@ -2,7 +2,6 @@ package egovframework.com.cmm.interceptor;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
-import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -53,7 +51,7 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws ServletException {
-		if (commonUtil.isLoginCookieExists(request)) {
+		if (commonUtil.isLoginCookieExists(request, response)) {
 			return true;
 		} else {
 			ModelAndView modelAndView = new ModelAndView("redirect:/user/login/login.do");
