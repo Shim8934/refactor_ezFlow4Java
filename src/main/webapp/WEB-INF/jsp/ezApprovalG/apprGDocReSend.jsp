@@ -146,21 +146,19 @@
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t45'/>";
-	                OpenInformationTFUI(pInformationContent, Edit_Complete);
+	                OpenInformationUI(pInformationContent, Edit_Complete);
 	            }
 	        }
 	        function Edit_Complete(RtnVal)
 	        {
 	        	DivPopUpHidden();
-	        	
+
 	            if (RtnVal) {
 	                modeflag = true;
-	            }
-	            else {
+	            } else {
 	                message.Set_EditorInputBodyHTML(modifiOrgBody);
 	                message.Set_HtmlDocument();
 	            }
-	
 	            message.SetEditable(false);
 	            setNodeText(btnEdit.childNodes.item(0) , "<spring:message code='ezApproval.t46'/>");
 	            setMenuBar("btnOpinion", true);

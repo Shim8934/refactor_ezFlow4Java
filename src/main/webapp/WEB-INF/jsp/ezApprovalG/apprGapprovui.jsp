@@ -827,8 +827,12 @@
 		                OpenAlertUI(pAlertContent);
 		                return;
 		            }
+		            
+		            signInfo = putBansongSign();
+		            
 		            var RtnVal = SaveApproveInfo("2");
 		            if (RtnVal != "TRUE") {
+		            	UndoSignInfo(signInfo);
 		                var rtnVal = ExcuteInfo("BANSONG_FAIL", "");
 		                if (!rtnVal) {
 		                    var pAlertContent = "[" + "<spring:message code='ezApprovalG.t7'/>";
@@ -846,6 +850,7 @@
 		                    OpenAlertUI(pAlertContent);
       						return;
 		                }
+		                
 		                SendMailBansongtoDrafter();
 		                SendAckForExch("approval", "ING");
 		                process_AfterApprove("2");
