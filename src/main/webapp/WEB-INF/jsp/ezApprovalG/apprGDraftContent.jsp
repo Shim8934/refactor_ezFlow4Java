@@ -230,6 +230,7 @@
 	                                Document_Ptag[i].style.marginBottom = "0px";
 	                            if (Document_Ptag[i].style.marginTop == "")
 	                                Document_Ptag[i].style.marginTop = "0px";
+	                            Document_Ptag[i].style.fontFamily = "굴림체";
 	                        }
 	                    }
 	                    
