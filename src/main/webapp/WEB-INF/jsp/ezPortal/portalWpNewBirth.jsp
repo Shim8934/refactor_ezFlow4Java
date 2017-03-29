@@ -73,6 +73,7 @@
 	    	}
 	    	
 	    	function getbirthUserList() {
+	    		window.clearTimeout(timer);
 	        	 $.ajax({
 	    	        	type : "POST",
 	    	        	dataType : "text",
@@ -91,7 +92,6 @@
 	    	}
 	    	var userPrimary = "${userInfo.primary}";
 	    	function getbirthUserList_after(xml) {
-
 		        if (xml == null) return;
 
 		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
@@ -139,7 +139,7 @@
 	        	        curPage = 0;
 	            	}
 	            	if (totalCnt > EndCnt) {
-		                timer = window.setInterval("intervalList()", 10000);
+		                timer = window.setInterval("intervalList()", 5000);
 		            }
 	    	    } else {
 	            	document.getElementById("birthcont").style.display = "none";
