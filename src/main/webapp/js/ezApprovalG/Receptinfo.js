@@ -697,6 +697,8 @@ function APRDeptXMLParsing(APRDEPT, pDocID) {
 function textUser_onkeypress2() {
     if (window.event.keyCode == "13") {
         document.getElementById("Span2").focus();
+        //document.getElementById("btn_searchUser").onclick();
+        btn_searchUser_onclick2();
     }
 }
 //############################################################################################################################################# 조직도 사용자 검색 

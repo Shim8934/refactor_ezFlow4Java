@@ -2193,7 +2193,7 @@ function putSignXML(SignXML) {
                 var SignName = getNodeText(SelectSingleNode(NodeList[i], "SIGNNAME"));
                 var SignCont = getNodeText(SelectSingleNode(NodeList[i], "CONTENT"));
                 
-                if (!SignName.indexOf("habyui") > -1) {
+                if (!(SignName.indexOf("habyui") > -1)) {
                 	continue;
                 }
                 
