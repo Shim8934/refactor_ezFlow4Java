@@ -55,7 +55,7 @@ function getDocList() {
 
     objRoot = createNodeInsert(xmlpara, objRoot, "PARAMETER");
     createNodeAndInsertText(xmlpara, objNode, "NODE", selSContName.value);
-    createNodeAndInsertText(xmlpara, objNode, "BlockNum", nowblock + 1);
+    createNodeAndInsertText(xmlpara, objNode, "BlockNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
 
     xmlhttp.open("POST", "/ezApprovalG/aprDocAttachList.do", false);
