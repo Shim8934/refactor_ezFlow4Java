@@ -21,6 +21,7 @@
 		            ParentID.value = window.dialogArguments;
 		        }
 		        
+		        /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
 		        try {
 			        var ua = navigator.userAgent;
 			        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
@@ -29,6 +30,7 @@
 			            KeEventControl(document.getElementById("CompanyName2"));
 			        }
 			    }catch (e) { }
+			    */
 			});
 			
 			function Check_ID(pValue){
