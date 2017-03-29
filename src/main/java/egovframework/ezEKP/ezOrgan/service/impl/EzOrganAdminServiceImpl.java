@@ -656,6 +656,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		        ezOrganAdminDao.deleteCompany_D14(map);
 		        ezOrganAdminDao.deleteCompany_D15(map);
 		        ezOrganAdminDao.deleteCompany_D16(map);
+		        ezOrganAdminDao.deleteCompany_D17(map);
 		        
 		    } else {
 		        ezOrganAdminDao.deleteDBDataForJMocha(map);
