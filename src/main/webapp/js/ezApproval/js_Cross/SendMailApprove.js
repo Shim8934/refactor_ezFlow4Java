@@ -625,8 +625,6 @@ function GetDocInfoData(mode, filed) {
 
 
 function SendMailBansongtoDrafter() {
-    
-
     getOpinionInfo(pDocID, "APR");
     if (pDraftFlag == "DRAFT") {
 
@@ -640,7 +638,6 @@ function SendMailBansongtoDrafter() {
         }
         else {
             DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
-
         }
         var NextUser = pwriterID;
 
@@ -662,7 +659,6 @@ function SendMailBansongtoDrafter() {
         }
         else {
             DocTitle = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[7]));
-
         }
 
         sendmail(NextUser, DocTitle, Drafter, pstartdate, "bansong", "");

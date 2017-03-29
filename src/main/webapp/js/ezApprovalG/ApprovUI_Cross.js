@@ -76,7 +76,6 @@ function putBansongSign() {
     return signInfo;
 }
 function AprrovMappingSign(ret) {
-alert(2020);
     var fields = message.GetFieldsList();
     var field;
     var SingFlag = true;
