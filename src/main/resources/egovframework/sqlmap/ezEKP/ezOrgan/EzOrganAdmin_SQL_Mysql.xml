@@ -1690,7 +1690,7 @@
                  ('S057', 4, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 100, 'TBL_ENDAPRDOCINFO', 'WriterDeptName', NULL, NULL, '문서함문서', '기안부서명', #companyID#, #tenantID#),
                  ('S057', 5, '등록일시', 'Date registered', '登録日時', '注册日', 160, 'TBL_ENDAPRDOCINFO', 'EndDate', NULL, NULL, '문서함문서', '완료일시', #companyID#, #tenantID#),
                  ('S057', 6, '문서명', 'Form title', '文書名', '文件名', 150, 'TBL_ENDAPRDOCINFO', 'FormName', NULL, NULL, '문서함문서', '양식명', #companyID#, #tenantID#),
-                 ('S061', 1, '변경내용', 'Content', '変更内容', '变更内容', 60, 'TBHISTORYATTACHINFO', 'ModifyFlagName', NULL, NULL, '첨부파일이력리스트', '변경내용', #companyID#, #tenantID#),
+                 ('S061', 1, '변경내용', 'Content', '変更内容', '变更内容', 60, 'TBHISTORYATTACHINFO', 'ModifyFlag', NULL, NULL, '첨부파일이력리스트', '변경내용', #companyID#, #tenantID#),
                  ('S061', 2, '첨부이름', 'Filename', '添付名', '附件名', 200, 'TBHISTORYATTACHINFO', 'AttachFileName', NULL, NULL, '첨부파일이력리스트', '첨부이름', #companyID#, #tenantID#),
                  ('S061', 3, '첨부사이즈', 'Size', '添付サイズ', '附件大小', 100, 'TBHISTORYATTACHINFO', 'AttachFileSize', NULL, NULL, '첨부파일이력리스트', '첨부사이즈', #companyID#, #tenantID#),
                  ('S061', 4, '변경일자', 'Date', '変更日付', '变更日', 100, 'TBHISTORYATTACHINFO', 'ModifyDate', NULL, NULL, '첨부파일이력리스트', '변경일자', #companyID#, #tenantID#),
