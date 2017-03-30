@@ -167,18 +167,25 @@
 		        });	        
 		    }
 			
-			function CheckPassword(upw) {
-			    if(!/^[a-zA-Z0-9]{6,50}$/.test(upw)) { 
-			        return false;
-			    }			    
-			    var chk_num = upw.search(/[0-9]/g); 
-			    var chk_eng = upw.search(/[a-z]/ig); 
-
-			    if(chk_num < 0 || chk_eng < 0) {			         
-			        return false;
-			    }
-			    return true;
-			} 
+			function CheckPassword(str){
+				var pw = str;
+				var num = pw.search(/[0-9]/g);
+				var eng = pw.search(/[a-z]/ig);
+				var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
+				
+				if (pw.length < 6 || pw.length > 50) {
+					return false;
+				}
+				
+				if (pw.search(/₩s/) != -1) {
+					return false;
+				}
+				
+				if (num < 0 || eng < 0 || spe < 0 ) {
+					return false;
+				}
+				return true;
+			}
 
 		</script>
 	</head>
