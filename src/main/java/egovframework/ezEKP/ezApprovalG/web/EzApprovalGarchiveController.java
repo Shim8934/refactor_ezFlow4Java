@@ -1384,7 +1384,6 @@ public class EzApprovalGarchiveController {
 		String p_UserLang = userInfo.getLang();
 		if ( xmlDom.getDocumentElement().getChildNodes().item(3).getTextContent().length() > 10)
         {
-
             try
             {
             	String TempQuery = "";

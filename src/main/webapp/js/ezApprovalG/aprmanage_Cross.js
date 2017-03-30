@@ -1142,7 +1142,7 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
             createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
         }
 
-        xmlhttp.open("POST", "ezAPRRECEIVE/aspx/setHeSongHapyuiDocInfo.aspx", false);
+        xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
         xmlhttp.send(xmlpara);
 
         if (getNodeText(xmlhttp.responseXML.documentElement) != "TRUE") {
@@ -1204,9 +1204,14 @@ function setHeSongDocInfo(pCurSelRow) {
     else {
         var pAlertContent = strLang878;
         OpenAlertUI(pAlertContent, "", "OPEN");
+        //일반결재에서 회송 문서 지워지는 곳이 없다... 만듬...
+        if(approvalFlag == 'S') {
+        	RemoveDoc(pCurSelRow.getAttribute("DATA1"));
+        }
         openergetDocInfo();
     }
 }
+
 
 function getAprDocAproveInfo(tr) {
     var pDocID;
@@ -1606,7 +1611,7 @@ function selafterBlock_one() {
 }
 
 function setbuttonenable() {
-    var DocList = new ListView();
+	var DocList = new ListView();
     DocList.LoadFromID("DocList");
     var oArrRows = DocList.GetSelectedRows();
     var tr = oArrRows[0];
@@ -1627,7 +1632,7 @@ function setbuttonenable() {
         document.getElementById("tbar1").style.display = "";
 
     if (pListTypeValue != 1 && pListTypeValue != 4 && pListTypeValue != 10 && pListTypeValue != 99) {
-        document.getElementById("tbtnRedraft").style.display = "none";		
+    	document.getElementById("tbtnRedraft").style.display = "none";		
         //SwapImage(document.getElementById("btnRedraft"), "dis");
         document.getElementById("tbtnRemoveDoc").style.display = "none";		
         document.getElementById("tbtnApprove").style.display = "none";		
@@ -1801,9 +1806,7 @@ function setbuttonenable() {
             document.getElementById("tbtnApproveALL").style.display = "none";
             document.getElementById("tbtnGongRam").style.display = "none";
         }
-    }
-    else
-    {
+    } else {
         document.getElementById("tbtnSimsa").style.display = "none";
         //20130311 cpno.64
         document.getElementById("tbtnGongRam").style.display = "none";
@@ -1822,7 +1825,6 @@ function setbuttonenable() {
                 //document.getElementById("tbtnApproveALL").style.display = "none";
                 document.getElementById("tbtnReceipt").style.display = "";
                 document.getElementById("tbtnRegList").style.display = "none";
-
                 if (tr.getAttribute("DATA9") == "003" || tr.getAttribute("DATA9") == "014")
                     document.getElementById("tbtnReturn").style.display = "none";
                 else {
@@ -2142,7 +2144,7 @@ function doCancel(pDocID, tempListType) {
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/doCancel.do",
+		url : "/ezApprovalG/doCancelForce.do",
 		data : {
 			docID : pDocID,
 			userID : pUserID
