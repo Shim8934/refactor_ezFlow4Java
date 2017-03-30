@@ -171,8 +171,9 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String cn = request.getParameter("cn");
 		String displayName = request.getParameter("displayName");
 		String displayName2 = request.getParameter("displayName2");
+		String mailId = request.getParameter("mailId");
 		
-		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2);
+		logger.debug("parentCn=" + parentCn + ",cn=" + cn + ",displayName=" + displayName + ",displayName2=" + displayName2 + ",mailId=" + mailId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
         int tenantID = userInfo.getTenantId();        
@@ -182,62 +183,78 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String domain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		
 		logger.debug("domain=" + domain);
-		
+        
 		String result = "";
-		String ldapPath = "";
 		
-        // 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
-        int cnt = ezOrganAdminService.userCheck(cn, tenantID);
-        
-        logger.debug("userCheck cnt=" + cnt);
-        
-		if (cnt > 0) {
-			result = "PRE";
-		} else {
+		// 회사정보를 수정하는 경우
+        if (parentCn == null) {
 			String mailAddr = cn + "@" + domain;
 			
-			logger.debug("mailAddr=" + mailAddr);
+			// 최상위 회사(Top)의 경우에만 이메일 아이디를 변경할 수 있다.
+			if (cn.equalsIgnoreCase("Top")) {
+				mailAddr = mailId + "@" + domain;
+				
+				logger.debug("new mailAddr=" + mailAddr);
+			}
+        	
+        	ezOrganAdminService.updateDBData_company(cn, displayName, displayName2, mailAddr, tenantID);
+        // 새로운 회사를 생성하는 경우	
+        } else {			
+			String ldapPath = "";
 			
-			// skyblue0o0
-			int rc = ezEmailUserAdminService.addGroup(mailAddr);
-			
-			logger.debug("addGroup rc=" + rc);
-			
-			if (rc == 0) { // addGroup 성공
+	        // 사용자, 부서, 퇴직자, 회사 상관없이 기존에 사용되는 아이디를 체크한다.
+	        int cnt = ezOrganAdminService.userCheck(cn, tenantID);
+	        
+	        logger.debug("userCheck cnt=" + cnt);
+	        
+			if (cnt > 0) {
+				result = "PRE";
+			} else {
+				String mailAddr = cn + "@" + domain;
 				
-				String groupAddr = parentCn + "@" + domain;
+				logger.debug("mailAddr=" + mailAddr);
 				
-				logger.debug("groupAddr=" + groupAddr);
+				// skyblue0o0
+				int rc = ezEmailUserAdminService.addGroup(mailAddr);
 				
-				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+				logger.debug("addGroup rc=" + rc);
 				
-				logger.debug("updateGroupAdd rc=" + rc);
-				
-				if (rc == 0) { // updateGroupAdd 성공
+				if (rc == 0) { // addGroup 성공
 					
-					// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
-					try {
-						ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID, userInfo);
-						result = "OK";	
-					} catch (Exception e) {
-						e.printStackTrace();
-						ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
-						ezEmailUserAdminService.removeGroup(mailAddr);
+					String groupAddr = parentCn + "@" + domain;
+					
+					logger.debug("groupAddr=" + groupAddr);
+					
+					rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+					
+					logger.debug("updateGroupAdd rc=" + rc);
+					
+					if (rc == 0) { // updateGroupAdd 성공
+						
+						// insertDBData_company 실패했을 경우 JMocha에서 회사 다시 삭제.
+						try {
+							ezOrganAdminService.insertDBData_company(cn, displayName, displayName2, mailAddr, parentCn, ldapPath, tenantID, userInfo);
+							result = "OK";	
+						} catch (Exception e) {
+							e.printStackTrace();
+							ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+							ezEmailUserAdminService.removeGroup(mailAddr);
+							result = "EMAIL_ERROR";
+						}
+						
+						
+									
+					} else {
+					    ezEmailUserAdminService.removeGroup(mailAddr);
 						result = "EMAIL_ERROR";
 					}
-					
-					
-								
 				} else {
-				    ezEmailUserAdminService.removeGroup(mailAddr);
 					result = "EMAIL_ERROR";
 				}
-			} else {
-				result = "EMAIL_ERROR";
+				// skyblue0o0 - end
+				
 			}
-			// skyblue0o0 - end
-			
-		}
+        }
 		
 		logger.debug("saveCompanyInfo ended.");
 		
